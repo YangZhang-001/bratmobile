@@ -295,10 +295,6 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 			a = Angle(disturbance.getAngle(robotTransform));
 			//local level if D
 			if (robot!=NULL){
-				//b2Vec2 pos_local=disturbance.getPosition();
-				//need to take into account box
-				
-				//pos_local=robot->GetLocalPoint(pos_local);
 				std::vector <b2Vec2> local_vertices=GetLocalPoints(disturbance.vertices(), robot);
 				b2Vec2 pos_local=*(std::min_element(local_vertices.begin(), local_vertices.end(), CompareX()));
 				r.ended=fabs(round(pos_local.x*100)/100)<=((endCriteria.distance.get()-0.001)/2); //-0.001 //was /2

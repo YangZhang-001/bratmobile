@@ -249,7 +249,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 	EndedResult er;
 	printf("v=%i, initial plan size=%i\n",v, plan_prov.size());
 	// printf("GOAL IS: ");
-	// debug::print_pose(controlGoal.disturbance.pose());
+	debug::print_pose(controlGoal.disturbance.pose(), "Goal at:");
 	do{
 		v=bestNext;
 		closed.emplace(*priorityQueue.begin().base());
@@ -1200,9 +1200,10 @@ void Configurator::trackTaskExecution(Task & t){
 	adjust_rw_task(movingVertex, transitionSystem, &t, deltaPose); //readjust end criteria
 	updateGraph(transitionSystem, deltaPose);//lateral error is hopefully noise and is ignored
 	//TO REMOVE ONCE YOU APPY FULLY CLOSED LOOP INSTEAD OF DEAD RECKONING
-	math::applyAffineTrans(-deltaPose, t.disturbance); //remove later
-	printf("TASK DISTURBANCE Is ");
-	debug::print_pose(t.disturbance.pose());
+	math::applyAffineTrans(deltaPose, t.disturbance); //remove later
+	//debug::print_pose(t.disturbance.pose(), "TASK DISTURBANCE IS");
+	//debug::print_pose(t.start, "TASK start IS");
+
 	if(t.motorStep==0 || (t.checkEnded()).ended){
 		t.change=1;
 	}
@@ -1307,7 +1308,7 @@ void Configurator::planPriority(TransitionSystem&g, vertexDescriptor v){
 void Configurator::updateGraph(TransitionSystem&g, const b2Transform & deltaPose){
 	math::applyAffineTrans(deltaPose, g);
 	math::applyAffineTrans(-deltaPose, &controlGoal);
-	math::applyAffineTrans(-deltaPose, getTask()->start); //d update happens in get_transform
+	math::applyAffineTrans(deltaPose, getTask()->start); //d update happens in get_transform
 }
 
 float Configurator::approximate_angle(const float & angle, const Direction & d, const simResult::resultType & outcome){
