@@ -1308,7 +1308,7 @@ void Configurator::updateGraph(TransitionSystem&g, const b2Transform & deltaPose
 	math::applyAffineTrans(deltaPose, g);
 	math::applyAffineTrans(-deltaPose, &controlGoal);
 	math::applyAffineTrans(deltaPose, getTask()->start); //d update happens in get_transform
-	debug::print_pose(getTask()->start);
+	//debug::print_pose(getTask()->start);
 }
 
 float Configurator::approximate_angle(const float & angle, const Direction & d, const simResult::resultType & outcome){

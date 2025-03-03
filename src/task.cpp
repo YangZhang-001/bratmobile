@@ -80,12 +80,6 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, bo
 		int stepb2d=0;
 		float traj_error=0;
 		for (stepb2d; stepb2d < (HZ*remaining); stepb2d++) {//3 second
-			// if (direction==DEFAULT){
-			// 	traj_error=remainder(robot.body->GetTransform().q.GetAngle(), M_PI_2);
-			// 	correct.update(traj_error);
-			// 	correct(action, stepb2d);
-			// 	printf("angle =%f,error =%f\n", robot.body->GetTransform().q.GetAngle(),traj_error);
-			// }
 			instVelocity.x = action.getLinearSpeed()*cos(theta);
 			instVelocity.y = action.getLinearSpeed()*sin(theta);
 			robot->SetLinearVelocity(instVelocity);
