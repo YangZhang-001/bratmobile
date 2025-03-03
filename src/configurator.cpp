@@ -1198,7 +1198,7 @@ void Configurator::trackTaskExecution(Task & t){
 	b2Transform deltaPose=t.action.getTransform(MOTOR_CALLBACK);
 	// printf("shift graph by:\n");
 	// debug::print_pose(deltaPose);
-	adjust_rw_task(movingVertex, transitionSystem, &t, deltaPose); //readjust end criteria
+	//adjust_rw_task(movingVertex, transitionSystem, &t, deltaPose); //readjust end criteria
 	updateGraph(transitionSystem, deltaPose);//lateral error is hopefully noise and is ignored
 	//TO REMOVE ONCE YOU APPY FULLY CLOSED LOOP INSTEAD OF DEAD RECKONING
 	math::applyAffineTrans(deltaPose, t.disturbance); //remove later
@@ -1206,8 +1206,9 @@ void Configurator::trackTaskExecution(Task & t){
 	//debug::print_pose(t.start, "TASK start IS");
 	// bool (t.checkEnded()).ended;s
 	// debug::print_pose(t.from_Di(b2), "TASK start IS");
+	printf("in track: end criteria d= %f ",t.endCriteria.distance.get());
 	bool ended=(t.checkEnded(b2Transform_zero)).ended;
-	printf("in track: ended = %i, end criteria d= %f ", ended, t.endCriteria.distance);
+	printf("ended in track =%i\n", ended);
 	if(t.motorStep==0 || ended ){
 		t.change=1;
 	}

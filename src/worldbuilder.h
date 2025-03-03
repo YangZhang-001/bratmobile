@@ -102,7 +102,7 @@ class WorldBuilder{
         public:
         cv::Rect2f real_world_focus(const Task * );
 
-        b2Transform get_transform(Task *, const CoordinateContainer &);
+        b2Transform get_transform(const Task &, const CoordinateContainer &, BodyFeatures * observed_disturbance=NULL); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
 
         std::pair <bool, BodyFeatures> bounding_rotated_box(std::vector <cv::Point2f>nb);
 
