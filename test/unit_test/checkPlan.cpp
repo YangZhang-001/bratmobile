@@ -30,7 +30,7 @@ int main(int argc, char** argv){
     b2World world(b2Vec2(0,0));
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     conf.dummy_vertex(conf.currentVertex);
-    conf.explorer(conf.currentVertex, conf.transitionSystem, *conf.getTask(), world);
+    conf.explorer(conf.currentVertex, conf.transitionSystem, world);
     conf.ts_cleanup(&conf.transitionSystem);		
 
     
@@ -76,7 +76,7 @@ int main(int argc, char** argv){
     conf.resetPhi(conf.transitionSystem);
     //int og_step=0;
     //conf.changeTask(true, og_step, conf.planVertices);
-    conf.explorer(conf.movingVertex, conf.transitionSystem, *conf.getTask(), world);
+    conf.explorer(conf.movingVertex, conf.transitionSystem, world);
     conf.ts_cleanup(&conf.transitionSystem);
     bool finished=false;	
     plan=conf.planner(conf.transitionSystem, conf.currentVertex,TransitionSystem::null_vertex(), false, NULL, &finished);

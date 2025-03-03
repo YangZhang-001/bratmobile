@@ -55,7 +55,7 @@ int main(int argc, char** argv){
     b2World world(b2Vec2(0,0));
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     conf.dummy_vertex(conf.currentVertex);
-    conf.explorer(conf.currentVertex, conf.transitionSystem, *conf.getTask(), world);
+    conf.explorer(conf.currentVertex, conf.transitionSystem, world);
     Connected connected(&conf.transitionSystem);
     NotSelfEdge nse(&conf.transitionSystem);
 	FilteredTS fts(conf.transitionSystem, nse, connected); //boost::keep_all()

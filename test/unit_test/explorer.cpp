@@ -29,7 +29,7 @@ int main(int argc, char** argv){
     b2World world(b2Vec2(0,0));
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     conf.dummy_vertex(conf.currentVertex);
-    conf.planVertices =conf.explorer(conf.currentVertex, conf.transitionSystem, *conf.getTask(), world);
+    conf.planVertices =conf.explorer(conf.currentVertex, conf.transitionSystem, world);
     if (!conf.planVertices.empty()){
         return 1;
     }

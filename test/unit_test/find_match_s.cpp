@@ -30,7 +30,7 @@ int main(int argc, char** argv){
     b2World world(b2Vec2(0,0));
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     conf.dummy_vertex(conf.currentVertex);
-    conf.explorer(conf.currentVertex, conf.transitionSystem, *conf.getTask(), world);
+    conf.explorer(conf.currentVertex, conf.transitionSystem, world);
     std::vector <vertexDescriptor> options_src;
     State state_tmp;
     b2Transform shift= b2Transform(b2Vec2(1,0), b2Rot(0));
