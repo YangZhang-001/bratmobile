@@ -107,7 +107,7 @@ void step( AlphaBot &motors){
 	// }
 	c->trackTaskExecution(*c->getTask());
 	EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
-	if (er.ended && c->getTask()->motorStep==0){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
+	if (er.ended && c->getTask()->change){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
 		run++;
 		Disturbance new_goal=set_target(run, c->controlGoal.start);
 		c->controlGoal = Task(new_goal, UNDEFINED);

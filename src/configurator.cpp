@@ -319,7 +319,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 							// }
 							if (finished){
 								plan_prov=plan_tmp;
-								if (planVertices.empty()){ // task_start==currentVertex instead of pv empty
+								if (plan_prov.empty()){ // task_start==currentVertex instead of pv empty
 									//printf("inserting current vertex\n");
 									plan_prov.insert(plan_prov.begin(), task_start);
 								}
@@ -1207,7 +1207,7 @@ void Configurator::trackTaskExecution(Task & t){
 	// debug::print_pose(t.from_Di(b2), "TASK start IS");
 	//printf("in track: end criteria d= %f ",t.endCriteria.distance.get());
 	bool ended=(t.checkEnded(b2Transform_zero)).ended;
-	if(t.motorStep==0 || ended ){
+	if(t.motorStep==0 || ended){
 		t.change=1;
 	}
 
@@ -1229,6 +1229,7 @@ int Configurator::motorStep(Task::Action a){
     }
 
 std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std::vector <vertexDescriptor> pv){
+	printf("current vertex in change Task: %i, change =%i\n", currentVertex, currentTask.change);
 	if (!b){
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 		return pv;
@@ -1240,7 +1241,7 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 			currentTask.action.L=0;
 			currentTask.action.R=0;
 			currentTask.change=1;
-			currentVertex=movingVertex;
+			//currentVertex=movingVertex;
 			return pv;
 		}
 		std::pair<edgeDescriptor, bool> ep=boost::add_edge(currentVertex, pv[0], transitionSystem);

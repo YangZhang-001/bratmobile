@@ -9,7 +9,7 @@ Disturbance set_target(int& run, b2Transform start){
 		result= Disturbance(PURSUE, b2Vec2(1.0f, 0.0f), 0.0f);
 	}
 	else{
-		result= Disturbance(PURSUE, b2Vec2(-1.0f, 0.0f), 0.0f);
+		result= Disturbance(PURSUE, b2Vec2(-1.0f, 0.0f), M_PI);
 	}
 	return result;
 }
