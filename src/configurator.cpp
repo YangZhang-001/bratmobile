@@ -83,7 +83,7 @@ bool Configurator::Spawner(){
 			dummy_vertex(currentVertex);
 			currentTask.change=1;
 		}
-		if (!planVertices.empty() || currentTask.motorStep!=0){ //
+		if (!planVertices.empty() || !currentTask.change){ //
 			src=movingVertex;
 		}
 		else{
@@ -95,7 +95,7 @@ bool Configurator::Spawner(){
 			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, planVertices, currentVertex);
 		}		
 		ts_cleanup(&transitionSystem);
-		if (planVertices.empty() && (!transitionSystem[currentVertex].visited() || currentTask.motorStep==0)){ //currentv not visited means that it wasn't observed ()
+		if (planVertices.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
 			printf("no plan, searchign from %i\n", src);
 			bool finished=false;
 			planVertices= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
@@ -303,7 +303,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 							//printf("added edge: %i -> %i, step=%i\n", v0, v1, sk.second.step);
 							g[edge.first]=sk.second; //doesn't update motorstep
 						}
-					if (currentTask.motorStep==0){
+					if (currentTask.change){
 						std::vector <vertexDescriptor> task_vertices=gt::task_vertices(v1, g, iteration, currentVertex);
 						vertexDescriptor task_start= task_vertices[0];
 						if (plan_prov.empty()){
@@ -657,8 +657,8 @@ std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, verte
 	for (std::vector<vertexDescriptor> p: paths){
 		vertexDescriptor end_plan= *(p.rbegin().base()-1);
 		//LAMBDA
-		auto skip_first= [](const std::vector<vertexDescriptor> &_plan, const vertexDescriptor & _cv, const TransitionSystem & _g, const int & _step){
-			if (_plan.size()==1 && _plan[0]==_cv && _step==0){
+		auto skip_first= [](const std::vector<vertexDescriptor> &_plan, const vertexDescriptor & _cv, const TransitionSystem & _g, const bool & _change){
+			if (_plan.size()==1 && _plan[0]==_cv && _change){
 				printf("getting whole plan\n");
 				return std::vector(_plan.begin()+0, _plan.end());
 			}
@@ -669,11 +669,11 @@ std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, verte
 			}
 		};
 		if (end_plan==goal){
-			plan=skip_first(p, currentVertex, g, currentTask.motorStep);
+			plan=skip_first(p, currentVertex, g, currentTask.change);
 			break;
 		}
 		else if (g[end_plan].phi<final_phi){
-			plan=skip_first(p, currentVertex, g, currentTask.motorStep);
+			plan=skip_first(p, currentVertex, g, currentTask.change);
 			final_phi=g[end_plan].phi;
 		}
 	}
@@ -1095,19 +1095,13 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 				q.start=g[vertices[0]].start;
 			}			
 		}
-		if (v==currentVertex && currentTask.motorStep!=0){
+		if (v==currentVertex && !currentTask.change){
 			q.start=b2Transform_zero;
 		}
 		StateDifference sd(s, q);
 		bool condition=0;
 		StateMatcher::MATCH_TYPE m=StateMatcher::_FALSE;
 		float sum_tmp=sd.get_sum(match_type);
-		// if (v==currentVertex){
-		// 	printf("Di difference:");
-		// 	debug::print_pose(sd.Di.pose);
-		// 	printf("Dn difference:");
-		// 	debug::print_pose(sd.Dn.pose);
-		// }
 		if (!relax){
 			m=matcher.isMatch(sd, s.endPose.p.Length());
 			condition=matcher.match_equal(m, match_type);
@@ -1127,8 +1121,13 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 				result.first=match_type;
 			}
 			result.second=v;
+		}	
+		if (!condition && v==2 && dir==DEFAULT){
+		debug::print_pose(sd.Di.pose, "Di difference:");
+		debug::print_pose(sd.Dn.pose, "Dn difference:");
 		}
 	}
+
 	if (others==NULL){
 		return result;
 	}
@@ -1252,7 +1251,7 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 		transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
 		boost::clear_vertex(movingVertex, transitionSystem);
 		transitionSystem[movingVertex].outcome=simResult::successful;
-		printf("in changeTask: plan size= %i\n", pv.size());
+		//printf("in changeTask: plan size= %i\n", pv.size());
 		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
 		transitionSystem[movingEdge].direction=transitionSystem[ep.first].direction;
 		transitionSystem[movingEdge].step=currentTask.motorStep;
