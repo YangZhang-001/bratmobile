@@ -43,7 +43,7 @@ protected:
 public:
 	ConfiguratorInterface * ci=NULL;
 	bool running =0;
-	std::thread * t=NULL;
+	std::thread * thread=NULL;
 	bool debugOn=0;
 	float simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);
 	b2Transform ogGoal;
