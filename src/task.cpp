@@ -300,7 +300,6 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 			}
 			else{
 				r.ended = d.get()<=endCriteria.distance.get(); 
-				printf("distance from d=%f, ended =%i\n", d.get(), r.ended);
 			}
 		}
 	}

@@ -248,7 +248,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 	Task t;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
 	EndedResult er;
-	printf("v=%i, initial plan size=%i\n",v, plan_prov.size());
+	//printf("v=%i, initial plan size=%i\n",v, plan_prov.size());
 	// printf("GOAL IS: ");
 	debug::print_pose(controlGoal.disturbance.pose(), "Goal at:");
 	do{
@@ -267,7 +267,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				std::vector <vertexDescriptor> propagated;
 				do {
 				start=g[v0].endPose +shift;
-				debug::print_pose(start, "siulation start");
+				//debug::print_pose(start, "siulation start");
 				Disturbance Di=getDisturbance(g, v0, w, g[v0].options[0], start);
 				t = Task(Di, g[v0].options[0], start, true);//need to update end crit
 				std::pair <State, Edge> sk(State(start, Di), Edge(g[v0].options[0]));
@@ -275,9 +275,9 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				//adjustStepDistance(v0, g, &t, _simulationStep);
 				adjust_simulated_task(v0, g, &t);
 				worldBuilder.buildWorld(w, data2fp, t.start, t.direction, t.disturbance, 0.15, WorldBuilder::PARTITION); //was g[v].endPose
-				printf("v0=%i, dir=%s\n", v0, (*dirmap.find(t.direction)).second);
+				//printf("v0=%i, dir=%s\n", v0, (*dirmap.find(t.direction)).second);
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
-				printf("sim step=%i\n", sim.step);
+				//printf("sim step=%i\n", sim.step);
 				if (v==0 && sim.resultCode==sim.crashed){
 					printf("IM GONNA CRASH!!!! at");
 					debug::print_pose(sim.collision.pose());
@@ -297,7 +297,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				if (matcher.match_equal(match.first, desired_match)){
 					g[v0].options.erase(g[v0].options.begin());
 					v1=match.second; //frontier
-					printf("match with %i\n", v1);
+				//	printf("match with %i\n", v1);
 						edge= gt::add_edge(v0, v1, g, iteration, t.direction); //assumes edge added
 						if (edge.second){
 							//printf("added edge: %i -> %i, step=%i\n", v0, v1, sk.second.step);
@@ -370,8 +370,8 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 	}
 	backtrack(evaluationQueue, priorityQueue, closed, g, plan_prov);
 	bestNext=priorityQueue[0];
-	printf("best=%i end", bestNext);
-	debug::print_pose(g[bestNext].endPose);
+	// printf("best=%i end", bestNext);
+	// debug::print_pose(g[bestNext].endPose);
 	std::vector <edgeDescriptor> best_in_edges= gt::inEdges(g,bestNext);
 	if (best_in_edges.empty()){
 		direction=currentTask.direction;
@@ -381,7 +381,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 		g[best_in_edges[0]].it_observed=iteration;
 	}
 }while(g[bestNext].options.size()>0 && !er.ended);
-printf("finished exploring, plan =%i\n", plan_prov.size());
+//printf("finished exploring, plan =%i\n", plan_prov.size());
 return plan_prov;
 }
 
@@ -1206,9 +1206,8 @@ void Configurator::trackTaskExecution(Task & t){
 	//debug::print_pose(t.start, "TASK start IS");
 	// bool (t.checkEnded()).ended;s
 	// debug::print_pose(t.from_Di(b2), "TASK start IS");
-	printf("in track: end criteria d= %f ",t.endCriteria.distance.get());
+	//printf("in track: end criteria d= %f ",t.endCriteria.distance.get());
 	bool ended=(t.checkEnded(b2Transform_zero)).ended;
-	printf("ended in track =%i\n", ended);
 	if(t.motorStep==0 || ended ){
 		t.change=1;
 	}
