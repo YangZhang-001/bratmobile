@@ -90,7 +90,7 @@ bool Configurator::Spawner(){
 			src=currentVertex;
 		}
 		resetPhi(transitionSystem);
-		planVertices=explorer(src, transitionSystem, currentTask, world);
+		planVertices=explorer(src, transitionSystem, world);
 		if (debugOn){
 			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, planVertices, currentVertex);
 		}		
@@ -240,11 +240,12 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	}
 
 
-std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, TransitionSystem& g, Task t, b2World & w){
+std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, TransitionSystem& g, b2World & w){
 	vertexDescriptor v1=v, v0=v, bestNext=v, v0_exp=v;
 	Direction direction=currentTask.direction;
 	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=planVertices;
 	std::set <vertexDescriptor> closed;
+	Task t;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
 	EndedResult er;
 	printf("v=%i, initial plan size=%i\n",v, plan_prov.size());
@@ -266,6 +267,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				std::vector <vertexDescriptor> propagated;
 				do {
 				start=g[v0].endPose +shift;
+				debug::print_pose(start, "siulation start");
 				Disturbance Di=getDisturbance(g, v0, w, g[v0].options[0], start);
 				t = Task(Di, g[v0].options[0], start, true);//need to update end crit
 				std::pair <State, Edge> sk(State(start, Di), Edge(g[v0].options[0]));
@@ -1202,8 +1204,11 @@ void Configurator::trackTaskExecution(Task & t){
 	math::applyAffineTrans(deltaPose, t.disturbance); //remove later
 	//debug::print_pose(t.disturbance.pose(), "TASK DISTURBANCE IS");
 	//debug::print_pose(t.start, "TASK start IS");
-
-	if(t.motorStep==0 || (t.checkEnded()).ended){
+	// bool (t.checkEnded()).ended;s
+	// debug::print_pose(t.from_Di(b2), "TASK start IS");
+	bool ended=(t.checkEnded(b2Transform_zero)).ended;
+	printf("in track: ended = %i, end criteria d= %f ", ended, t.endCriteria.distance);
+	if(t.motorStep==0 || ended ){
 		t.change=1;
 	}
 

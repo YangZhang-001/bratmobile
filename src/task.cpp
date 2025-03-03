@@ -299,7 +299,8 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 				r.ended = d<=_d; 
 			}
 			else{
-				r.ended = d<=endCriteria.distance; 
+				r.ended = d.get()<=endCriteria.distance.get(); 
+				printf("distance from d=%f, ended =%i\n", d.get(), r.ended);
 			}
 		}
 	}
