@@ -53,7 +53,7 @@ b2Vec2 GetWorldPoints(b2Body* b, b2Vec2 v){
 	printf("x=%f, y=%f\t", wp.x, wp.y);
 }
 
-void debug::print_pose(const b2Transform& p, char * msg){
+void debug::print_pose(const b2Transform& p, char* msg){
 	if (NULL!=msg){
 		printf("%s\t", msg);
 	}
