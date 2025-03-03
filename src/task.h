@@ -24,15 +24,15 @@ public:
     EndCriteria endCriteria; //end criteria other than task encounters a disturbance
     Direction direction= DEFAULT;
     int motorStep=0;
-    int stepError=0;
+   // int stepError=0;
     AffordanceIndex affordance=NONE;
 
 struct Action{
 private:
     float linearSpeed=WHEEL_SPEED_DEFAULT*2; //used to calculate instantaneous velocity using omega
-    float recordedSpeed=linearSpeed;
+  //  float recordedSpeed=linearSpeed;
     float omega=0; //initial angular velocity is 0
-    float recordedOmega = omega;
+   // float recordedOmega = omega;
     bool valid=0;
 public:
     float R=WHEEL_SPEED_DEFAULT;
@@ -65,9 +65,9 @@ public:
 
 void setVelocities(const float & l,const float &r){
     omega = (MAX_SPEED*(r-l)/BETWEEN_WHEELS); //instant velocity, determines angle increment in willcollide
-    recordedOmega = omega;
+   // recordedOmega = omega;
     linearSpeed = MAX_SPEED*(l+r)/2;
-    recordedSpeed=linearSpeed;
+    //recordedSpeed=linearSpeed;
     valid=1;
 }
 
@@ -116,26 +116,26 @@ void setVelocities(const float & l,const float &r){
         linearSpeed =s;
     }
 
-    void setRecSpeed(const float &s){
-        recordedSpeed =s;
-    }
+    // void setRecSpeed(const float &s){
+    //     recordedSpeed =s;
+    // }
 
-    void setRecOmega(const float &w){
-        recordedOmega=w;
-    }
+    // void setRecOmega(const float &w){
+    //     recordedOmega=w;
+    // }
 
-    float getRecSpeed(){
-        return recordedSpeed;
-    }
+    // float getRecSpeed(){
+    //     return recordedSpeed;
+    // }
 
-    float getRecOmega(){
-        return recordedOmega;
-    }
-    //friend class Configurator;
-    void setRec(const float& _speed, const float & _omega){
-        recordedSpeed=_speed;
-        recordedOmega=_omega;
-    }
+    // float getRecOmega(){
+    //     return recordedOmega;
+    // }
+    // //friend class Configurator;
+    // void setRec(const float& _speed, const float & _omega){
+    //     recordedSpeed=_speed;
+    //     recordedOmega=_omega;
+    // }
 
 };
 
@@ -309,6 +309,8 @@ EndedResult checkEnded(b2Transform robotTransform = b2Transform(b2Vec2(0.0, 0.0)
 
 EndedResult checkEnded(State, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)))); //usually used to check against control goal
 
+//EndedResult checkEnded(Direction dir=UNDEFINED, Stae);
+
 Task(){
     start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));
     direction = DEFAULT;
@@ -328,16 +330,15 @@ Task(Disturbance ob, Direction d, b2Transform _start=b2Transform(b2Vec2(0.0, 0.0
     direction = H(disturbance, d, topDown);  
     action.init(direction);
     setEndCriteria();
-    //DELETE!
-    // if (ob.getAffIndex()==PURSUE){
-    //     debug_k=true;
-    // }
 }
 
 
 simResult bumping_that(b2World &, int, b2Body *,bool debug =0, float remaining = SIM_DURATION);
 
 EndCriteria getEndCriteria(const Disturbance&);
+
+b2Transform from_Di( b2Transform * custom_start=NULL);
+
 };
 
 #endif

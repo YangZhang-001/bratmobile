@@ -247,9 +247,9 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 	std::set <vertexDescriptor> closed;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
 	EndedResult er;
-	printf("v=%i, initial plan size=%i\n",v, plan_prov.size());
-	// printf("GOAL IS: ");
-	// debug::print_pose(controlGoal.disturbance.pose());
+	//printf("v=%i, initial plan size=%i\n",v, plan_prov.size());
+	printf("GOAL IS: ");
+	debug::print_pose(controlGoal.disturbance.pose());
 	do{
 		v=bestNext;
 		closed.emplace(*priorityQueue.begin().base());
@@ -788,7 +788,6 @@ void Configurator::registerInterface(ConfiguratorInterface * _ci){
 }
 
 void Configurator::run(Configurator * c){
-	//printf("run\n");
 	while (c->running){
 		if (c->ci->stop){
 			c->ci=NULL;
@@ -1200,9 +1199,10 @@ void Configurator::trackTaskExecution(Task & t){
 	adjust_rw_task(movingVertex, transitionSystem, &t, deltaPose); //readjust end criteria
 	updateGraph(transitionSystem, deltaPose);//lateral error is hopefully noise and is ignored
 	//TO REMOVE ONCE YOU APPY FULLY CLOSED LOOP INSTEAD OF DEAD RECKONING
-	math::applyAffineTrans(-deltaPose, t.disturbance); //remove later
+	math::applyAffineTrans(deltaPose, t.disturbance); //remove later
 	printf("TASK DISTURBANCE Is ");
 	debug::print_pose(t.disturbance.pose());
+	t.motorStep--;
 	if(t.motorStep==0 || (t.checkEnded()).ended){
 		t.change=1;
 	}
@@ -1307,12 +1307,12 @@ void Configurator::planPriority(TransitionSystem&g, vertexDescriptor v){
 void Configurator::updateGraph(TransitionSystem&g, const b2Transform & deltaPose){
 	math::applyAffineTrans(deltaPose, g);
 	math::applyAffineTrans(-deltaPose, &controlGoal);
-	math::applyAffineTrans(-deltaPose, getTask()->start); //d update happens in get_transform
+	math::applyAffineTrans(deltaPose, getTask()->start); //d update happens in get_transform
+	debug::print_pose(getTask()->start);
 }
 
 float Configurator::approximate_angle(const float & angle, const Direction & d, const simResult::resultType & outcome){
 	float result=angle, decimal, integer;
-;
 	if ((d==LEFT || d==RIGHT)&& outcome!=simResult::crashed){
 		float ratio= angle/ANGLE_RESOLUTION;
 		decimal=std::modf(ratio, &integer);

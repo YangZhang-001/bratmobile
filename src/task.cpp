@@ -260,6 +260,7 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 		r.ended =true;
 	}
 	if (disturbance.isValid()){
+		//this shoudl be replaced by (d orientation == orientation+-PI/2), no robot position at alll
 		b2Vec2 v = disturbance.getPosition() - robotTransform.p; //distance between disturbance and robot
 		d= Distance(v.Length());
 		if (action.getOmega()!=0){
@@ -295,10 +296,6 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 			a = Angle(disturbance.getAngle(robotTransform));
 			//local level if D
 			if (robot!=NULL){
-				//b2Vec2 pos_local=disturbance.getPosition();
-				//need to take into account box
-				
-				//pos_local=robot->GetLocalPoint(pos_local);
 				std::vector <b2Vec2> local_vertices=GetLocalPoints(disturbance.vertices(), robot);
 				b2Vec2 pos_local=*(std::min_element(local_vertices.begin(), local_vertices.end(), CompareX()));
 				r.ended=fabs(round(pos_local.x*100)/100)<=((endCriteria.distance.get()-0.001)/2); //-0.001 //was /2
@@ -332,6 +329,30 @@ EndedResult Task::checkEnded(State n,  Direction dir, bool relax, std::pair<bool
 	r = checkEnded(n.endPose, dir, relax,NULL, use_start);
 	r.estimatedCost+= endCriteria.getStandardError(a,d, n);
 	return r;
+}
+
+// bool Task::checkEnded(Direction dir){
+// 	if (dir==UNDEFINED){
+// 		dir=direction;
+// 	}
+// 	EndedResult r;
+// 	Angle a;
+// 	Distance d;
+// 	if (disturbance.isValid()){
+// 		if (action.getOmega()!=0){
+
+// 		}
+// 	}
+// }
+
+b2Transform Task::from_Di(b2Transform * custom_start){
+    if (disturbance.getAffIndex()==NONE){
+		return b2Transform_inf;
+	}
+    if (NULL==custom_start){
+        *custom_start=start;
+    }
+	return b2MulT(*custom_start, disturbance.pose());
 }
 
 EndCriteria Task::getEndCriteria(const Disturbance &d){

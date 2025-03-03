@@ -1,17 +1,17 @@
 #include "graphTools.h"
 
-orientation subtract(orientation o1, orientation o2){
-	orientation result;
-	if (!o1.first){
-		o1.second=0;
-	}
-	if (!o2.first){
-		o2.second=0;
-	}
-	result.first= o1.first ||o2.first;
-	result.second=o1.second-o2.second;
-	return result;
-}
+// orientation subtract(orientation o1, orientation o2){
+// 	orientation result;
+// 	if (!o1.first){
+// 		o1.second=0;
+// 	}
+// 	if (!o2.first){
+// 		o2.second=0;
+// 	}
+// 	result.first= o1.first ||o2.first;
+// 	result.second=o1.second-o2.second;
+// 	return result;
+// }
 
 
 
