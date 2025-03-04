@@ -320,7 +320,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 							if (finished){
 								plan_prov=plan_tmp;
 								if (plan_prov.empty()){ // task_start==currentVertex instead of pv empty
-									//printf("inserting current vertex\n");
+									printf("inserting current vertex\n");
 									plan_prov.insert(plan_prov.begin(), task_start);
 								}
 								boost::remove_edge(edge.first, g);
@@ -1229,7 +1229,8 @@ int Configurator::motorStep(Task::Action a){
     }
 
 std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std::vector <vertexDescriptor> pv){
-	printf("current vertex in change Task: %i, change =%i\n", currentVertex, currentTask.change);
+	printf("moving edge = %i -> %i exists %i\n", movingEdge.m_source, movingEdge.m_target, boost::edge(movingEdge.m_source, movingEdge.m_target, transitionSystem).second);
+	printf("current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
 	if (!b){
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 		return pv;
@@ -1244,16 +1245,24 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 			//currentVertex=movingVertex;
 			return pv;
 		}
+		
 		std::pair<edgeDescriptor, bool> ep=boost::add_edge(currentVertex, pv[0], transitionSystem);
 		currentVertex= pv[0];
 		printf("current v=%i, direction=%s\n", currentVertex, (*dirmap.find(transitionSystem[ep.first].direction)).second);
 		pv.erase(pv.begin());
-		currentEdge=ep.first;
+
 		transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
-		boost::clear_vertex(movingVertex, transitionSystem);
+		//boost::clear_vertex(movingVertex, transitionSystem);
 		transitionSystem[movingVertex].outcome=simResult::successful;
 		//printf("in changeTask: plan size= %i\n", pv.size());
 		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
+		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
+		if (ep.first.m_source==ep.first.m_target){
+			currentEdge=movingEdge;
+		}
+		else{
+			currentEdge=ep.first;
+		}
 		transitionSystem[movingEdge].direction=transitionSystem[ep.first].direction;
 		transitionSystem[movingEdge].step=currentTask.motorStep;
 		currentTask = task_to_execute(transitionSystem, currentEdge);
@@ -1269,7 +1278,7 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 			currentTask = Task(transitionSystem[currentVertex].Dn, DEFAULT); //reactive
 		}
 		else if(currentTask.direction!=DEFAULT){
-				currentTask = Task(transitionSystem[currentVertex].Dn, DEFAULT); //reactive
+			currentTask = Task(transitionSystem[currentVertex].Dn, DEFAULT); //reactive
 		}
 		else{
 			currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
