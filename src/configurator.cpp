@@ -94,7 +94,9 @@ bool Configurator::Spawner(){
 		if (debugOn){
 			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, planVertices, currentVertex);
 		}		
+		printf("before cleanup: current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
 		ts_cleanup(&transitionSystem);
+		printf("after cleanup: current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
 		if (planVertices.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
 			printf("no plan, searchign from %i\n", src);
 			bool finished=false;
@@ -107,7 +109,6 @@ bool Configurator::Spawner(){
 			printf("recycled plan in explorer:\n");
 		}
 		printPlan(&planVertices);
-//		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 
 
 	}
@@ -302,7 +303,6 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 					if (edge.second){
 						//printf("added edge: %i -> %i, step=%i\n", v0, v1, sk.second.step);
 						g[edge.first]=sk.second; //doesn't update motorstep
-						printf("assigned to this edge");
 					}
 					if (currentTask.change){
 						std::vector <vertexDescriptor> task_vertices=gt::task_vertices(v1, g, iteration, currentVertex);
@@ -325,6 +325,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 									printf("inserting current vertex\n");
 									plan_prov.insert(plan_prov.begin(), task_start);
 								}
+								printf("removing edge %i -> %i\n", edge.first.m_source, edge.first.m_target);
 								boost::remove_edge(edge.first, g);
 								edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first].direction);
 								//printf("edge %i -> %i added\n", v0, task_start);
@@ -757,7 +758,7 @@ void Configurator::printPlan(std::vector <vertexDescriptor>* p){
 		}
 		else{
 			auto a=dirmap.find(transitionSystem[edge.first].direction);
-			printf("%i, %s, ", edge.first.m_target, (*a).second);
+			printf("%i, %s, (%i steps) ", edge.first.m_target, (*a).second, transitionSystem[edge.first].step);
 		}
 		pre=edge.first.m_target;
 		}
@@ -903,6 +904,9 @@ void Configurator::applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0
 	}
 	else if (auto it =check_vector_for(plan_prov, v0); it!=plan_prov.end() && it!=(plan_prov.end()-1)){
 		auto e=boost::edge(src, v0, g);
+		if (!e.second){
+			printf("no edge wtf\n");
+		}
 		skip_reduced(e.first, g, plan_prov, it);
 		if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
 			g[v0].options={g[e.first].direction};
@@ -1234,7 +1238,9 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 	printf("moving edge = %i -> %i exists %i\n", movingEdge.m_source, movingEdge.m_target, boost::edge(movingEdge.m_source, movingEdge.m_target, transitionSystem).second);
 	printf("current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
 	if (!b){
+		printf("about to remove edge\n");
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
+		printf("not change, removed edge tho\n");
 		return pv;
 	}
 	if (planning){
@@ -1252,13 +1258,14 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 		currentVertex= pv[0];
 		printf("current v=%i, direction=%s\n", currentVertex, (*dirmap.find(transitionSystem[ep.first].direction)).second);
 		pv.erase(pv.begin());
-
+		printf("erased\n");
 		transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
 		//boost::clear_vertex(movingVertex, transitionSystem);
 		transitionSystem[movingVertex].outcome=simResult::successful;
 		//printf("in changeTask: plan size= %i\n", pv.size());
 		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
+		printf("removed out edges of moving v\n");
 		if (ep.first.m_source==ep.first.m_target){
 			currentEdge=movingEdge;
 		}
@@ -1353,8 +1360,6 @@ void Configurator::ts_cleanup(TransitionSystem * g){
 	boost::copy_graph(fts, tmp);
 	g->clear();
 	g->swap(tmp);		
-
-
 }
  
 void Configurator::shift_states(TransitionSystem & g, const std::vector<vertexDescriptor>& p, const b2Transform & shift_start){

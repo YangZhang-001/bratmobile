@@ -105,10 +105,11 @@ void step( AlphaBot &motors){
 	// if (c->getIteration()>1){
 	// 	og_plan=c->transitionSystem.m_vertices.size();
 	// }
+	printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 	c->trackTaskExecution(*c->getTask());
 	EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
 	if (er.ended && c->getTask()->change){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
-		if (c->controlGoal.from_Di(&c->transitionSystem[0].endPose).p.Length()>0.01){
+		if (SignedVectorLength(c->controlGoal.from_Di(&c->transitionSystem[0].endPose).p)>0.01){
 			c->getTask()->change=0;
 		}
 		run++;
