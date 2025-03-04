@@ -134,7 +134,6 @@ Task * getTask(int advance=0){ //returns Task being executed
 
 void dummy_vertex(vertexDescriptor src);
 
-float taskRotationError(); // returns lateral displacement error (local y)
 
 //inputs: g, src vertex, b2d world, direction of the task to be created
 Disturbance getDisturbance(TransitionSystem&, const vertexDescriptor&, b2World &, const Direction &, const b2Transform&);

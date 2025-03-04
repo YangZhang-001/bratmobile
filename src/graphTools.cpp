@@ -332,7 +332,7 @@ std::pair <edgeDescriptor, bool> gt::add_edge(const vertexDescriptor & u, const 
 		float delta=0;
 		auto values =(*default_kinematics.find(d)).second;
 		g[result.first].step=distanceToSimStep(g[v].distance(), values.first);
-		printf("u=%i, v=%i, step=%i\n", g[result.first].step);
+		printf("u=%i, v=%i, step=%i\n", u, v, g[result.first].step);
 	}
 	g[result.first].it_observed=it;
 	return result;

@@ -299,10 +299,11 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 					v1=match.second; //frontier
 				//	printf("match with %i\n", v1);
 						edge= gt::add_edge(v0, v1, g, iteration, t.direction); //assumes edge added
-						if (edge.second){
-							//printf("added edge: %i -> %i, step=%i\n", v0, v1, sk.second.step);
-							g[edge.first]=sk.second; //doesn't update motorstep
-						}
+					if (edge.second){
+						//printf("added edge: %i -> %i, step=%i\n", v0, v1, sk.second.step);
+						g[edge.first]=sk.second; //doesn't update motorstep
+						printf("assigned to this edge");
+					}
 					if (currentTask.change){
 						std::vector <vertexDescriptor> task_vertices=gt::task_vertices(v1, g, iteration, currentVertex);
 						vertexDescriptor task_start= task_vertices[0];
@@ -313,13 +314,14 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 							shift_start= b2MulT(b2MulT(sk.first.start, controlGoal.start), g[task_start].start);
 							math::applyAffineTrans(shift_start, &controlGoal_adjusted); //as start
 							auto plan_tmp=planner(g, task_start, TransitionSystem::null_vertex(), been, &controlGoal_adjusted, &finished);
+							printf("out of explore planner\n");
 							bool filler=0;
 							// if (match.second!=v){
 							// 	shift= b2MulT(g[task_start].start, start);
 							// }
 							if (finished){
 								plan_prov=plan_tmp;
-								if (plan_prov.empty()){ // task_start==currentVertex instead of pv empty
+								if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
 									printf("inserting current vertex\n");
 									plan_prov.insert(plan_prov.begin(), task_start);
 								}
@@ -501,44 +503,44 @@ void Configurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,Transitio
 	return;
 }
 
-void Configurator::pruneEdges(std::vector<std::pair<vertexDescriptor, vertexDescriptor>> vertices, TransitionSystem& g, vertexDescriptor& src, vertexDescriptor& active_src, std::vector <vertexDescriptor>& pq, std::vector<std::pair<vertexDescriptor, vertexDescriptor>>&toRemove){ //clears edges out of redundant vertices, removes the vertices from PQ, returns vertices to remove at the end
-	for (std::pair<vertexDescriptor, vertexDescriptor> pair:vertices){
-		if (pair.first==src){
-			src=pair.second;
-		}
-		if (pair.first==active_src){
-			active_src=pair.second;
-		}
-		std::vector<edgeDescriptor> ie =gt::inEdges(g, pair.second, DEFAULT); //first vertex that satisfies that edge requirement
-		std::vector <edgeDescriptor> toReassign=gt::inEdges(g, pair.first, DEFAULT);
-		edgeDescriptor e =edgeDescriptor(), r_visited=edgeDescriptor(), e2;
-		std::pair <bool,edgeDescriptor> ep2 = gt::visitedEdge(toReassign, g);
-		e2=ep2.second;
-		if (ie.empty()){
-		}
-		else{
-			e=ie[0];
-			toReassign.push_back(e);
-		}
-		gt::update(e, std::pair <State, Edge>(g[pair.first], g[e2]),g, pair.second==currentVertex, iteration);
-		float match_distance=10000;
-		for (edgeDescriptor r:toReassign){ //reassigning edges
-			auto new_edge= gt::add_edge(r.m_source, pair.second, g, iteration);
-			// if (g[r.m_source].visited()){
-			// 	EndedResult er=estimateCost(g[pair.second], g[r.m_source].endPose); //reassign cost
-			// 	g[pair.second].phi =evaluationFunction(er);	
-			// }
-		}
-		boost::clear_vertex(pair.first, g);
-		toRemove.push_back(pair);
-		for (int i=0; i<pq.size(); i++){ //REMOVE FROM PQ
-			if(pq[i]==pair.first){
-				pq.erase(pq.begin()+i);
-			}
-		}
-		gt::adjustProbability(g, e);
-	}
-}
+// void Configurator::pruneEdges(std::vector<std::pair<vertexDescriptor, vertexDescriptor>> vertices, TransitionSystem& g, vertexDescriptor& src, vertexDescriptor& active_src, std::vector <vertexDescriptor>& pq, std::vector<std::pair<vertexDescriptor, vertexDescriptor>>&toRemove){ //clears edges out of redundant vertices, removes the vertices from PQ, returns vertices to remove at the end
+// 	for (std::pair<vertexDescriptor, vertexDescriptor> pair:vertices){
+// 		if (pair.first==src){
+// 			src=pair.second;
+// 		}
+// 		if (pair.first==active_src){
+// 			active_src=pair.second;
+// 		}
+// 		std::vector<edgeDescriptor> ie =gt::inEdges(g, pair.second, DEFAULT); //first vertex that satisfies that edge requirement
+// 		std::vector <edgeDescriptor> toReassign=gt::inEdges(g, pair.first, DEFAULT);
+// 		edgeDescriptor e =edgeDescriptor(), r_visited=edgeDescriptor(), e2;
+// 		std::pair <bool,edgeDescriptor> ep2 = gt::visitedEdge(toReassign, g);
+// 		e2=ep2.second;
+// 		if (ie.empty()){
+// 		}
+// 		else{
+// 			e=ie[0];
+// 			toReassign.push_back(e);
+// 		}
+// 		gt::update(e, std::pair <State, Edge>(g[pair.first], g[e2]),g, pair.second==currentVertex, iteration);
+// 		float match_distance=10000;
+// 		for (edgeDescriptor r:toReassign){ //reassigning edges
+// 			auto new_edge= gt::add_edge(r.m_source, pair.second, g, iteration);
+// 			// if (g[r.m_source].visited()){
+// 			// 	EndedResult er=estimateCost(g[pair.second], g[r.m_source].endPose); //reassign cost
+// 			// 	g[pair.second].phi =evaluationFunction(er);	
+// 			// }
+// 		}
+// 		boost::clear_vertex(pair.first, g);
+// 		toRemove.push_back(pair);
+// 		for (int i=0; i<pq.size(); i++){ //REMOVE FROM PQ
+// 			if(pq[i]==pair.first){
+// 				pq.erase(pq.begin()+i);
+// 			}
+// 		}
+// 		gt::adjustProbability(g, e);
+// 	}
+// }
 
 // void Configurator::clearFromMap(std::vector<std::pair<vertexDescriptor, vertexDescriptor>> matches , TransitionSystem&g, std::unordered_map<State*, ExecutionError>map){
 // 		for (std::pair<vertexDescriptor, vertexDescriptor> pair:matches){
@@ -658,13 +660,13 @@ std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, verte
 		vertexDescriptor end_plan= *(p.rbegin().base()-1);
 		//LAMBDA
 		auto skip_first= [](const std::vector<vertexDescriptor> &_plan, const vertexDescriptor & _cv, const TransitionSystem & _g, const bool & _change){
+			printf("plan size=%i, first v =%i, change=%i\n", _plan.size()==1, _plan[0]==_cv, _change);
 			if (_plan.size()==1 && _plan[0]==_cv && _change){
-				printf("getting whole plan\n");
+				//printf("getting whole plan\n");
 				return std::vector(_plan.begin()+0, _plan.end());
 			}
 			else{
-				//printf("getting plan from index 1\n");
-				printf("plan size before skip %i, first=%i ", _plan.size() , _plan[0]);
+//				printf("plan size before skip %i, first=%i ", _plan.size() , _plan[0]);
 				return std::vector((_plan.begin()+1), _plan.end());
 			}
 		};
@@ -1123,8 +1125,8 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 			result.second=v;
 		}	
 		if (!condition && v==2 && dir==DEFAULT){
-		debug::print_pose(sd.Di.pose, "Di difference:");
-		debug::print_pose(sd.Dn.pose, "Dn difference:");
+		// debug::print_pose(sd.Di.pose, "Di difference:");
+//		debug::print_pose(sd.Dn.pose, "Dn difference:");
 		}
 	}
 
