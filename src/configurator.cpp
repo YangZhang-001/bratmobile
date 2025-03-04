@@ -94,9 +94,7 @@ bool Configurator::Spawner(){
 		if (debugOn){
 			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, planVertices, currentVertex);
 		}		
-		printf("before cleanup: current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
 		ts_cleanup(&transitionSystem);
-		printf("after cleanup: current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
 		if (planVertices.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
 			printf("no plan, searchign from %i\n", src);
 			bool finished=false;
@@ -108,7 +106,7 @@ bool Configurator::Spawner(){
 		else{
 			printf("recycled plan in explorer:\n");
 		}
-		printPlan(&planVertices);
+		printPlan(&ci->plan_on_hold);
 
 
 	}
