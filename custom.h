@@ -122,7 +122,7 @@ void step( AlphaBot &motors){
 			fclose(f);			
 		}
 	}
-	c->planVertices = c->changeTask(c->getTask()->change,  ogStep, ci->plan_on_hold);
+	c->planVertices = c->changeTask(c->getTask()->change,  ogStep, c->ci->plan_on_hold);
 	R= c->getTask()->getAction().getRWheelSpeed();
 	L=c->getTask()->getAction().getLWheelSpeed(); //*1.05
 	if (c->getTask()->direction==LEFT){
