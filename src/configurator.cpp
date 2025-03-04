@@ -78,17 +78,7 @@ bool Configurator::Spawner(){
 	auto startTime =std::chrono::high_resolution_clock::now();
 	bool explored=0;
 	if (planning){
-		vertexDescriptor src=movingVertex; 
-		if (transitionSystem.m_vertices.size()==1){
-			dummy_vertex(currentVertex);
-			currentTask.change=1;
-		}
-		if (!planVertices.empty() || !currentTask.change){ //
-			src=movingVertex;
-		}
-		else{
-			src=currentVertex;
-		}
+		vertexDescriptor src=get_explore_start(transitionSystem);
 		resetPhi(transitionSystem);
 		ci->plan_on_hold=explorer(src, transitionSystem, world);
 		if (debugOn){
@@ -288,9 +278,9 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				sk.second.it_observed=iteration;
 				er  = estimateCost(sk.first, g[v0].endPose, sk.second.direction);
 				State * source=NULL;
-				StateMatcher::MATCH_TYPE vm= matcher.isMatch(g[v], g[currentEdge.m_source]); //see if we are at the beginning of the exploration:
-																					//v=0 and currentEdge =src will match so we try to prevent
-																			//changing the movign vertex which is by default the origin
+				// StateMatcher::MATCH_TYPE vm= matcher.isMatch(g[v], g[currentEdge.m_source]); //see if we are at the beginning of the exploration:
+				// 																	//v=0 and currentEdge =src will match so we try to prevent
+				// 															//changing the movign vertex which is by default the origin
 				bool closest_match=false, match_task=true;
 				StateMatcher::MATCH_TYPE desired_match=StateMatcher::MATCH_TYPE::ABSTRACT;
 				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.direction, desired_match, NULL, closest_match, match_task );		//, closest_match	
@@ -1235,12 +1225,10 @@ int Configurator::motorStep(Task::Action a){
     }
 
 std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std::vector <vertexDescriptor> pv){
-	printf("moving edge = %i -> %i exists %i\n", movingEdge.m_source, movingEdge.m_target, boost::edge(movingEdge.m_source, movingEdge.m_target, transitionSystem).second);
-	printf("current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
+	// printf("moving edge = %i -> %i exists %i\n", movingEdge.m_source, movingEdge.m_target, boost::edge(movingEdge.m_source, movingEdge.m_target, transitionSystem).second);
+	// printf("current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
 	if (!b){
-		printf("about to remove edge\n");
-		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
-		printf("not change, removed edge tho\n");
+		// boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 		return pv;
 	}
 	if (planning){
@@ -1254,31 +1242,31 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 			return pv;
 		}
 		
-		std::pair<edgeDescriptor, bool> ep=boost::add_edge(currentVertex, pv[0], transitionSystem);
+		// std::pair<edgeDescriptor, bool> ep=boost::add_edge(currentVertex, pv[0], transitionSystem);
 		currentVertex= pv[0];
 		pv.erase(pv.begin());
 		printf("erased\n");
-		transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
-		transitionSystem[movingVertex].outcome=simResult::successful;
-		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
+		// transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
+		// transitionSystem[movingVertex].outcome=simResult::successful;
+		// movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
 		printf("added edge %i->%i\n", movingVertex, currentVertex);
-		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
+		// boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 		printf("removed out edges of moving v\n");
-		if (ep.first.m_source==ep.first.m_target){
-			currentEdge=movingEdge;
-		}
-		else{
-			currentEdge=ep.first;
-		}
-		transitionSystem[movingEdge].direction=transitionSystem[ep.first].direction;
-		transitionSystem[movingEdge].step=currentTask.motorStep;
+		// if (ep.first.m_source==ep.first.m_target){
+		// 	currentEdge=movingEdge;
+		// }
+		// else{
+		// 	currentEdge=ep.first;
+		// }
+		// transitionSystem[movingEdge].direction=transitionSystem[ep.first].direction;
+		// transitionSystem[movingEdge].step=currentTask.motorStep;
 		currentTask = task_to_execute(transitionSystem, currentEdge);
-		if (currentTask.action.getLinearSpeed()==0){
-			currentTask.motorStep=transitionSystem[currentEdge].step;
-		}
-		else{
-			currentTask.motorStep = gt::distanceToSimStep(transitionSystem[currentVertex].distance(), currentTask.action.getLinearSpeed());// 			
-		}
+		// if (currentTask.action.getLinearSpeed()==0){
+		// 	currentTask.motorStep=transitionSystem[currentEdge].step;
+		// }
+		// else{
+		// 	currentTask.motorStep = gt::distanceToSimStep(transitionSystem[currentVertex].distance(), currentTask.action.getLinearSpeed());// 			
+		// }
 	}
 	else{
 		if (transitionSystem[currentVertex].Dn.isValid()){
@@ -1368,3 +1356,33 @@ void Configurator::shift_states(TransitionSystem & g, const std::vector<vertexDe
 		math::applyAffineTrans(shift_start, g[v]);
 	}
 }
+
+vertexDescriptor Configurator::get_explore_start(TransitionSystem & g){
+	if (g.m_vertices.size()==1){
+		dummy_vertex(currentVertex);
+		currentTask.change=1;
+	}
+	if (!planVertices.empty() || !currentTask.change){ //
+		return movingVertex;
+	}
+	else{
+		return currentVertex;
+	}
+}
+
+void Configurator::pre_explore(TransitionSystem & g, const std::vector<vertexDescriptor>& p, const bool& change){
+	if (!change){
+		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
+	}
+	else{
+		std::pair<edgeDescriptor, bool> ep=boost::add_edge(currentVertex, p[0], g);
+		transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
+		transitionSystem[movingVertex].outcome=simResult::successful;
+		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
+		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
+		transitionSystem[movingEdge].direction=transitionSystem[ep.first].direction;
+		transitionSystem[movingEdge].step=currentTask.motorStep;
+
+	}
+}
+

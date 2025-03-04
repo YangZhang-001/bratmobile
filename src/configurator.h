@@ -271,6 +271,11 @@ float approximate_angle(const float &, const Direction &, const simResult::resul
 void ts_cleanup(TransitionSystem *);
 
 void shift_states(TransitionSystem &, const std::vector<vertexDescriptor>&, const b2Transform &); //shifts a sequence of states by a certain transform
+
+vertexDescriptor get_explore_start(TransitionSystem &);
+
+void pre_explore(TransitionSystem &, const std::vector<vertexDescriptor>&, const bool& );
+
 };
 
 
