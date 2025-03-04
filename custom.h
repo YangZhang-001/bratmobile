@@ -109,9 +109,9 @@ void step( AlphaBot &motors){
 	c->trackTaskExecution(*c->getTask());
 	EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
 	if (er.ended && c->getTask()->change){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
-		if (SignedVectorLength(c->controlGoal.from_Di(&c->transitionSystem[0].endPose).p)>0.01){
-			c->getTask()->change=0;
-		}
+		// if (SignedVectorLength(c->controlGoal.from_Di(&c->transitionSystem[0].endPose).p)>0.01){
+		// 	c->getTask()->change=0;
+		// }
 		run++;
 		Disturbance new_goal=set_target(run, c->controlGoal.start);
 		c->controlGoal = Task(new_goal, UNDEFINED);
@@ -122,7 +122,7 @@ void step( AlphaBot &motors){
 			fclose(f);			
 		}
 	}
-	c->planVertices = c->changeTask(c->getTask()->change,  ogStep, c->planVertices);
+	c->planVertices = c->changeTask(c->getTask()->change,  ogStep, ci->plan_on_hold);
 	R= c->getTask()->getAction().getRWheelSpeed();
 	L=c->getTask()->getAction().getLWheelSpeed(); //*1.05
 	if (c->getTask()->direction==LEFT){

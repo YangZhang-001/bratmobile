@@ -25,8 +25,9 @@ public:
 	int iteration=0;
 	CoordinateContainer data2fp;
 	bool ready=0;
-	bool newData=0;
 	bool stop=0;
+	std::vector <vertexDescriptor> plan_on_hold;
+
 
 	void setReady(bool b);
 

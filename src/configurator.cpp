@@ -90,7 +90,7 @@ bool Configurator::Spawner(){
 			src=currentVertex;
 		}
 		resetPhi(transitionSystem);
-		planVertices=explorer(src, transitionSystem, world);
+		ci->plan_on_hold=explorer(src, transitionSystem, world);
 		if (debugOn){
 			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, planVertices, currentVertex);
 		}		
@@ -100,7 +100,7 @@ bool Configurator::Spawner(){
 		if (planVertices.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
 			printf("no plan, searchign from %i\n", src);
 			bool finished=false;
-			planVertices= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
+			ci->plan_on_hold= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
 			// if (!finished && planVertices.empty()){
 			// 	controlGoal=Task();
 			// }
@@ -1256,7 +1256,7 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 		
 		std::pair<edgeDescriptor, bool> ep=boost::add_edge(currentVertex, pv[0], transitionSystem);
 		currentVertex= pv[0];
-		printf("current v=%i, direction=%s\n", currentVertex, (*dirmap.find(transitionSystem[ep.first].direction)).second);
+	//	printf("current v=%i, direction=%s\n", currentVertex, (*dirmap.find(transitionSystem[ep.first].direction)).second);
 		pv.erase(pv.begin());
 		printf("erased\n");
 		transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
@@ -1264,6 +1264,7 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 		transitionSystem[movingVertex].outcome=simResult::successful;
 		//printf("in changeTask: plan size= %i\n", pv.size());
 		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
+		printf("added edge %i->%i\n", movingVertex, currentVertex);
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 		printf("removed out edges of moving v\n");
 		if (ep.first.m_source==ep.first.m_target){
