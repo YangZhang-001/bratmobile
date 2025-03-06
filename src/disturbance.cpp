@@ -9,6 +9,17 @@ bool BodyFeatures::match(const BodyFeatures& bf){
     return match_x && match_y && match_w && match_h;
 }
 
+std::vector <b2Vec2> BodyFeatures::three_points()const{
+    b2Vec2 p1, p2;
+    p1.x=pose.p.x+(pose.q.c)*halfWidth;
+    p1.y=pose.p.y+(pose.q.s)*halfLength;
+    p2.x=pose.p.x-(pose.q.c)*halfWidth;
+    p2.y=pose.p.y-(pose.q.s)*halfLength;
+    std::vector <b2Vec2> result={pose.p, p1, p2};
+    return result;
+}
+
+
 std::vector <b2Vec2> Disturbance::vertices()const{
     std::vector <b2Vec2> result;
     if (getAffIndex()==NONE){

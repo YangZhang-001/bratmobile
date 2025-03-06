@@ -192,17 +192,17 @@ Disturbance Configurator::getDisturbance(TransitionSystem&g, const  vertexDescri
 
 Task Configurator::task_to_execute(const TransitionSystem & g, const edgeDescriptor& e){
 	Task t=controlGoal;
-	// if (Disturbance Dn= g[e.m_target].Dn; Dn.getAffIndex()==AVOID){
-	// 	Disturbance Di= Dn;
-	// 	Di.affordanceIndex=PURSUE;
-	// 	t=Task(Di, g[e].direction, b2Transform_zero, true);
-	// 	float distance = g[e.m_target].end_from_Dn().p.Length();
-	// 	t.setEndCriteria(Distance(distance));
-	// }
-	// else{
+	if (Disturbance Dn= g[e.m_target].Dn; Dn.getAffIndex()==AVOID){
+		Disturbance Di= Dn;
+		Di.affordanceIndex=PURSUE;
+		t=Task(Di, g[e].direction, b2Transform_zero, true);
+		float distance = g[e.m_target].end_from_Dn().p.Length();
+		t.setEndCriteria(Distance(distance));
+	}
+	else{
 		t=Task(g[e.m_target].Di, g[e].direction, b2Transform_zero, true);
 
-	// }
+	}
 	return t;
 
 }
@@ -676,19 +676,19 @@ std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, verte
 }
 
 
-void Configurator::skip_reduced(edgeDescriptor& e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan,  std::vector<vertexDescriptor>::iterator it){ 
+std::vector<vertexDescriptor>::iterator Configurator::to_task_end(edgeDescriptor& e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan,  std::vector<vertexDescriptor>::iterator it){ 
 edgeDescriptor e_start=e;
-//adjust here
-	do{
-		auto ep=boost::edge(*it, *(it+1), g);
-		it++;
-		if (!ep.second){
-			return;
-		}
-		else{
-			e=ep.first;
-		}
-	}	while(g[e].direction==g[e_start].direction && it != plan.end() && it!=(plan.end()-1)&& g[e].direction==DEFAULT && (g[e.m_target].Di==g[e_start.m_source].Di));
+do{
+	auto ep=boost::edge(*it, *(it+1), g);
+	it++;
+	if (!ep.second){
+		break;
+	}
+	else{
+		e=ep.first;
+	}
+}while(g[e].direction==g[e_start].direction && it != plan.end() && it!=(plan.end()-1)&& g[e].direction==DEFAULT && (g[e.m_target].Di==g[e_start.m_source].Di));
+return it;
 }
 
 
@@ -897,7 +897,7 @@ void Configurator::applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0
 		if (!e.second){
 			printf("no edge wtf\n");
 		}
-		skip_reduced(e.first, g, plan_prov, it);
+		to_task_end(e.first, g, plan_prov, it);
 		if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
 			g[v0].options={g[e.first].direction};
 		}
@@ -1224,7 +1224,7 @@ int Configurator::motorStep(Task::Action a){
 	    return abs(result);
     }
 
-std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std::vector <vertexDescriptor> pv){
+std::vector <vertexDescriptor> Configurator::changeTask(bool b, std::vector <vertexDescriptor> pv, const TransitionSystem & g){
 	// printf("moving edge = %i -> %i exists %i\n", movingEdge.m_source, movingEdge.m_target, boost::edge(movingEdge.m_source, movingEdge.m_target, transitionSystem).second);
 	// printf("current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
 	if (!b){
@@ -1243,15 +1243,14 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 		}
 		
 		// std::pair<edgeDescriptor, bool> ep=boost::add_edge(currentVertex, pv[0], transitionSystem);
-		currentVertex= pv[0];
-		pv.erase(pv.begin());
+
 		printf("erased\n");
 		// transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
 		// transitionSystem[movingVertex].outcome=simResult::successful;
 		// movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
-		printf("added edge %i->%i\n", movingVertex, currentVertex);
+		//printf("added edge %i->%i\n", movingVertex, currentVertex);
 		// boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
-		printf("removed out edges of moving v\n");
+		//printf("removed out edges of moving v\n");
 		// if (ep.first.m_source==ep.first.m_target){
 		// 	currentEdge=movingEdge;
 		// }
@@ -1260,8 +1259,14 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 		// }
 		// transitionSystem[movingEdge].direction=transitionSystem[ep.first].direction;
 		// transitionSystem[movingEdge].step=currentTask.motorStep;
-		currentTask = task_to_execute(transitionSystem, currentEdge);
-		// if (currentTask.action.getLinearSpeed()==0){
+		auto nextEdge=boost::edge(currentVertex, pv[0], g);
+		if (!nextEdge.second){
+			throw std::invalid_argument("no edge between current v and next in plan!");
+		}
+		std::vector<vertexDescriptor>::iterator task_end=to_task_end(nextEdge.first, transitionSystem, pv, pv.begin());
+		currentTask = task_to_execute(transitionSystem, nextEdge.first);		
+		currentVertex= pv[0];
+		pv.erase(pv.begin(), task_end);// if (currentTask.action.getLinearSpeed()==0){
 		// 	currentTask.motorStep=transitionSystem[currentEdge].step;
 		// }
 		// else{
@@ -1283,7 +1288,7 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, int &ogStep, std
 		transitionSystem[movingEdge].step=currentTask.motorStep;
 		printf("changed to %f\n", currentTask.action.getOmega());
 	}
-	ogStep = currentTask.motorStep;
+//	ogStep = currentTask.motorStep;
 	return pv;
 }
 

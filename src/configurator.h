@@ -226,7 +226,7 @@ void setStateLabel(State& s, vertexDescriptor src, Direction d){
 
 std::vector <vertexDescriptor> planner(TransitionSystem&, vertexDescriptor, vertexDescriptor goal=TransitionSystem::null_vertex(), bool been=0, const Task* custom_ctrl_goal=NULL, bool * finished =NULL) ;
 
-void skip_reduced(edgeDescriptor &, TransitionSystem &, const std::vector<vertexDescriptor> &, std::vector<vertexDescriptor>::iterator);
+std::vector<vertexDescriptor>::iterator to_task_end(edgeDescriptor &, TransitionSystem &, const std::vector<vertexDescriptor> &, std::vector<vertexDescriptor>::iterator); //in a vector, finds vertices belonging to the same task and skips to the end fo the task
 
 std::vector <vertexDescriptor> back_planner(TransitionSystem&, vertexDescriptor, vertexDescriptor root=0);
 
@@ -254,7 +254,7 @@ void addToPriorityQueue(Frontier, std::vector <Frontier>&, TransitionSystem&, ve
 
 void trackTaskExecution(Task &);
 
-std::vector <vertexDescriptor> changeTask(bool, int&, std::vector <vertexDescriptor>);
+std::vector <vertexDescriptor> changeTask(bool, std::vector <vertexDescriptor>, const TransitionSystem&);
 
 int motorStep(Task::Action a);
 

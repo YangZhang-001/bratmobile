@@ -1,8 +1,7 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 #include "task.h"
-#include <opencv2/imgproc.hpp>
-#include <opencv2/tracking.hpp>
+
 
 class ConfiguratorInterface;
 class Configurator;

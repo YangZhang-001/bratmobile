@@ -173,6 +173,11 @@ namespace math {
 
 	void applyAffineTrans(const b2Transform&, Disturbance&);
 
+	// b2Mat33 b2d_affine_matrix33(const b2Transform &); //returns a box2d object
+
+	cv::Mat cv_affine_matrix33(const b2Transform &); //returns an opencv object
+
+	b2Transform transform_2d(const cv::Mat&); //bets box2d 2dtransform from 3x3 matrix
 };
 
 struct is_not_v{
@@ -199,13 +204,6 @@ struct Connected{
 private:
 TransitionSystem * g;
 };
-
-// struct MoreLikely{
-// 	bool operator()(Edge e1, Edge e2){//const
-// 		return e1.probability >e2.probability;
-// 	}
-// };
-
 
 
 
@@ -430,4 +428,5 @@ auto check_vector_for(std::vector <I>& vector, const I& item){
 	}
 	return vector.end();
 }
+
 #endif

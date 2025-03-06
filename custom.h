@@ -54,7 +54,7 @@ public:
 		//ci->data.clear();
 		ci->data2fp.clear();
 		mapCount++;
-		Pointf p, p2f;
+		Pointf p2f;
 		FILE *f;
 		char name[256];
 		sprintf(name,"/tmp/map%04i.dat", mapCount);
@@ -64,7 +64,7 @@ public:
 		}
 		for (A1LidarData &data:data){
 			if (data.valid&& data.r <LIDAR_RANGE){
-				float x2 = round(data.x*100)/100;
+				float x2 = round(data.x*100)/100; //resolution adjus
 				float y2 = round(data.y*100)/100;
 				p2f=Pointf(x2, y2);
 				ci->data2fp.insert(p2f);

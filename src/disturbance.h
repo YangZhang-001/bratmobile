@@ -4,6 +4,8 @@
 #include "robot.h"
 #include <algorithm>
 #include <stdexcept>
+#include <opencv2/imgproc.hpp> //useful down the line! (graphTools)
+#include <opencv2/tracking.hpp>
 
 struct CompareY{
 	template <typename T>
@@ -76,6 +78,8 @@ class BodyFeatures{
     float length()const{
         return halfLength*2;
     }
+
+    std::vector <b2Vec2> three_points()const; //get three points 
 
 };
 

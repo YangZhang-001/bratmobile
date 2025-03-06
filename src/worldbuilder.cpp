@@ -384,7 +384,7 @@ cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
     for (std::vector<b2Vec2> box2d_v =t->disturbance.vertices(); b2Vec2 & v: box2d_v){
         vertices.push_back(cv::Point2f(v.x, v.y));
     }   
-    return cv::boundingRect(vertices); 
+    return cv::boundingRect(vertices); //upright bounding rectangle: increases area represented
 }
 
 
@@ -400,12 +400,21 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
             focus_points.push_back(p_cv);
         }
     }
+   // cv::Mat pt_rotation_matrix= cv::estimateAffinePartial2D; (get 3 points on disturbance)
     std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
     if (observed_disturbance!=NULL && new_d.first){
         *observed_disturbance=new_d.second;
     }
    // t->disturbance.bf=new_d.second; //update task
-    return new_d.second.pose- t.disturbance.pose();
+   //transform that maps transform TB (new d)to TA (d pose): TAB=TB * inv(TA)
+   //b2Mat33 Ta=math::affine_matrix33(t.disturbance.pose()), *Ta_inv; //need to get inverse
+   
+   cv::Mat old_matrix=math::cv_affine_matrix33(t.disturbance.pose());
+   cv::Mat inv_old_matrix=old_matrix.inv();
+   b2Transform inv_old_transform= math::transform_2d(inv_old_matrix);
+    //cv::Mat new_matrix=math::cv_affine_matrix33(new_d.second.pose);
+       //return new_d.second.pose- t.disturbance.pose(); //estimate transform
+    return t.action.getTransform(MOTOR_CALLBACK);
     //what's the most likely angle??
 }
 
