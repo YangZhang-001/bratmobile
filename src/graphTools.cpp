@@ -59,7 +59,7 @@ float angle_subtract(float a1, float a2){
 
 
 void math::applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose){
-	pose =b2Mul(deltaPose, pose);
+	pose =b2MulT(deltaPose, pose);
 }
 
 void math::applyAffineTrans(const b2Transform& deltaPose, State& state){

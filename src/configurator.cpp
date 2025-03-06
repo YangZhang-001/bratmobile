@@ -1202,6 +1202,7 @@ void Configurator::trackTaskExecution(Task & t){
 	// bool (t.checkEnded()).ended;s
 	// debug::print_pose(t.from_Di(b2), "TASK start IS");
 	//printf("in track: end criteria d= %f ",t.endCriteria.distance.get());
+	t.motorStep--;
 	bool ended=(t.checkEnded(b2Transform_zero)).ended;
 	if(t.motorStep==0 || ended){
 		t.change=1;

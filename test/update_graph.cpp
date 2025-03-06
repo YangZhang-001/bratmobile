@@ -24,7 +24,7 @@ public:
         if (er.ended || start==c->movingVertex){
 		    start=c->currentVertex;
 	    }
-	    c->planVertices =c->changeTask(c->getTask()->change,  ogStep, c->planVertices);
+	    c->planVertices =c->changeTask(c->getTask()->change, c->ci->plan_on_hold, c->transitionSystem);
         L=c->getTask()->getAction().getLWheelSpeed();
         R= c->getTask()->getAction().getRWheelSpeed();
         printf("L=%f, R=%f\n", L, R);

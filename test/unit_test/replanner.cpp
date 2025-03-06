@@ -38,7 +38,7 @@ int main(int argc, char** argv){
     conf.printPlan(&conf.planVertices);
     conf.addIteration();
     int og_step=0;
-    conf.changeTask(1, og_step, conf.planVertices);
+    conf.changeTask(1, conf.ci->plan_on_hold, conf.transitionSystem);
     conf.getTask()->motorStep=0;
     conf.currentVertex=*(conf.planVertices.end()-1);
     vertexDescriptor prev=*(conf.planVertices.end()-2);
