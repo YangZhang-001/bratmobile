@@ -268,7 +268,7 @@ void setSimulationStep(float f){
 
 float approximate_angle(const float &, const Direction &, const simResult::resultType &);
 
-void ts_cleanup(TransitionSystem *);
+void ts_cleanup(TransitionSystem *, std::vector <vertexDescriptor>&);
 
 void shift_states(TransitionSystem &, const std::vector<vertexDescriptor>&, const b2Transform &); //shifts a sequence of states by a certain transform
 
