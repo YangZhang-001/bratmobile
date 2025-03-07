@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <sys/stat.h>
 #include "debug.h"
+#include "planner.h"
 
 //FOR DEBUG
 //
@@ -47,10 +48,10 @@ public:
 	std::thread * thread=NULL;
 	bool debugOn=0;
 	float simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);
-	b2Transform ogGoal;
+	//b2Transform ogGoal;
 	Task controlGoal;
 	std::chrono::high_resolution_clock::time_point previousTimeScan;
-	float timeElapsed =0;
+	//float timeElapsed =0;
 	CoordinateContainer data2fp;
 	bool planning =1;
 	char statFile[100];
@@ -70,7 +71,6 @@ Configurator()=default;
 Configurator(Task _task, bool debug =0, bool noTimer=0): controlGoal(_task), currentTask(_task), debugOn(debug), timerOff(noTimer){
 	previousTimeScan = std::chrono::high_resolution_clock::now();
 	worldBuilder.debug=debug;
-	ogGoal=controlGoal.disturbance.pose();
 	movingVertex=boost::add_vertex(transitionSystem);
 	transitionSystem[movingVertex].Di=controlGoal.disturbance;
 	currentVertex=movingVertex;
@@ -275,6 +275,7 @@ void shift_states(TransitionSystem &, const std::vector<vertexDescriptor>&, cons
 vertexDescriptor get_explore_start(TransitionSystem &);
 
 void pre_explore(TransitionSystem &, const std::vector<vertexDescriptor>&, const bool& );
+
 
 };
 

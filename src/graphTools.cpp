@@ -58,76 +58,6 @@ float angle_subtract(float a1, float a2){
 
 
 
-void math::applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose){
-	pose =b2MulT(deltaPose, pose);
-}
-
-void math::applyAffineTrans(const b2Transform& deltaPose, State& state){
-	applyAffineTrans(deltaPose, state.endPose);
-	applyAffineTrans(deltaPose, state.start);
-	if (state.Dn.getAffIndex()!=NONE){
-		applyAffineTrans(deltaPose, state.Dn.bf.pose);
-	}
-	if (state.Di.getAffIndex()!=NONE){
-		applyAffineTrans(deltaPose, state.Di.bf.pose);
-	}
-
-}
-
-
-void math::applyAffineTrans(const b2Transform& deltaPose, TransitionSystem& g){
-	auto vPair =boost::vertices(g);
-	for (auto vIt= vPair.first; vIt!=vPair.second; ++vIt){ //each node is adjusted in explorer, so now we update
-		if (*vIt!=0){
-			math::applyAffineTrans(deltaPose, g[*vIt]);
-		}
-		else{
-			math::applyAffineTrans(deltaPose, g[*vIt].Di);
-			math::applyAffineTrans(deltaPose, g[*vIt].Dn);
-		}
-	}
-}
-
-void math::applyAffineTrans(const b2Transform& deltaPose, Disturbance& d){
-	if (d.getAffIndex()!=NONE){
-		math::applyAffineTrans(deltaPose, d.bf.pose);
-	}
-}
-
-// b2Mat33 math::b2d_affine_matrix33(const b2Transform & t){
-// 	b2Vec3 c1(t.q.c, t.q.s, 0), c2(-t.q.s, t.q.c, 0), c3(t.p.x, t.p.y, 1); //columns
-// 	return b2Mat33(c1, c2, c3);
-// }
-
-// cv::Mat math::cv_affine_matrix33(const b2Transform & t){
-// 	cv::Mat result=cv::Mat::eye(3, 3, CV_32F);
-// 	result.at<float>(1, 1)=t.q.c;
-// 	result.at<float>(1, 2)=-t.q.s;
-// 	result.at<float>(1, 3)=-t.p.x;
-// 	result.at<float>(2, 1)=t.q.s;
-// 	result.at<float>(2, 2)=t.q.c;
-// 	result.at<float>(2, 3)=-t.p.y;
-// 	return result;
-	
-// }
-
-cv::Mat math::cv_affine_matrix33(const b2Transform & t){
-	cv::Mat result=cv::getRotationMatrix2D(cv::Point2f(t.p.x, t.p.y), t.q.GetAngle()*(1/DEG_TO_RAD_K), 1);
-	cv::Mat bottom_row=cv::Mat::zeros(1, 3, CV_32F);
-	bottom_row.at<float>(1, 3)=1;
-	result.push_back(bottom_row);
-	return result;
-	
-}
-
-b2Transform math::transform_2d(const cv::Mat & m){
-	if (m.rows!=3 || m.cols!=3){
-		throw std::invalid_argument("not 3x3 matrix");
-	}                          //x                 //y                              //sin                //cos
-	return b2Transform(b2Vec2(m.at<float>(1, 3), m.at<float>(2,3)), b2Rot(atan2(m.at<float>(2,1), m.at<float>(1,1))));
-}
-
-
 
 float StateDifference::get_sum(int mt){
 	if (mt==StateMatcher::_FALSE || mt==StateMatcher::ANY){
@@ -365,7 +295,7 @@ std::pair <edgeDescriptor, bool> gt::add_edge(const vertexDescriptor & u, const 
 		float delta=0;
 		auto values =(*default_kinematics.find(d)).second;
 		g[result.first].step=distanceToSimStep(g[v].distance(), values.first);
-		printf("u=%i, v=%i, step=%i\n", u, v, g[result.first].step);
+		//printf("u=%i, v=%i, step=%i\n", u, v, g[result.first].step);
 	}
 	g[result.first].it_observed=it;
 	return result;

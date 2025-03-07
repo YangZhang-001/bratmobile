@@ -2,12 +2,6 @@
 #include <chrono>
 
 
-void math::applyAffineTrans(const b2Transform& deltaPose, Task* task){
-	math::applyAffineTrans(-deltaPose, task->start);
-	applyAffineTrans(-deltaPose, task->disturbance);
-}
-
-
 void ConfiguratorInterface::setReady(bool b){
 	ready = b;
 }
@@ -64,11 +58,11 @@ bool Configurator::Spawner(){
 	//BENCHMARK + FIND TRUE SAMPLING RATE
 	auto now =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>diff= now - previousTimeScan; //in seconds
-	timeElapsed=float(diff.count())/1000; //express in seconds
+	//timeElapsed=float(diff.count())/1000; //express in seconds
 	previousTimeScan=now; //update the time of sampling
 
 	if (timerOff){
-		timeElapsed = .2;
+	//	timeElapsed = .2;
 	}
 
 	//CREATE BOX2D ENVIRONMENT
@@ -78,14 +72,15 @@ bool Configurator::Spawner(){
 	auto startTime =std::chrono::high_resolution_clock::now();
 	bool explored=0;
 	if (planning){
+		pre_explore(transitionSystem, planVertices, currentTask.change);
 		vertexDescriptor src=get_explore_start(transitionSystem);
 		resetPhi(transitionSystem);
 		ci->plan_on_hold=explorer(src, transitionSystem, world);
 		if (debugOn){
 			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, planVertices, currentVertex);
 		}		
-		ts_cleanup(&transitionSystem);
-		if (planVertices.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
+		ts_cleanup(&transitionSystem, ci->plan_on_hold);
+		if (ci->plan_on_hold.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
 			printf("no plan, searchign from %i\n", src);
 			bool finished=false;
 			ci->plan_on_hold= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
@@ -327,7 +322,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 								}
 							}
 						}
-						if (planVertices.empty()){
+						if (planVertices.empty() && g[task_start].options.empty()){
 							shift_states(g, task_vertices, shift_start);
 						}
 					}
@@ -545,8 +540,9 @@ void Configurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,Transitio
 // 		}
 // }
 
+
+
 std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, vertexDescriptor src, vertexDescriptor goal, bool been, const Task* custom_ctrl_goal, bool *finished){
-	std::vector <vertexDescriptor> plan;
 	std::vector<std::vector<vertexDescriptor>> paths;
 	paths.push_back(std::vector<vertexDescriptor>()={src});
 	std::vector <Frontier> frontier_v;
@@ -565,70 +561,22 @@ std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, verte
 	vertexDescriptor path_end=src;
 	auto start_time=std::chrono::high_resolution_clock::now();
 	do{
-		frontier_v=frontierVertices(src, g, DEFAULT, been);
-		// if (src==currentVertex){
-		// }
+		frontier_v=frontierVertices(src, g, DEFAULT, been); // get next default tasks (plus non-default connecting tasks)
 		priorityQueue.erase(priorityQueue.begin());
 		for (Frontier f: frontier_v){ //add to priority queue
-			//printf("frontier count:%i\n", frontier_v.size());
 			planPriority(g, f.first);
 			addToPriorityQueue(f, priorityQueue, g);
 		}
-		if (priorityQueue.empty()){
-			break;
-		}
-		src=priorityQueue.begin()->first;
-		add=std::vector <vertexDescriptor>(priorityQueue.begin()->second.begin(), priorityQueue.begin()->second.end());
-		add.push_back(src);
-		std::pair<edgeDescriptor, bool> edge(edgeDescriptor(), false);
-		std::vector<vertexDescriptor>::reverse_iterator pend=(path->rbegin());
-		while (!edge.second){//|| ((*(pend.base()-1)!=goal &goal!=TransitionSystem::null_vertex())&!controlGoal.checkEnded(g[*(pend.base()-1)]).ended)
-			vertexDescriptor end=*(pend.base()-1);
-			edge= boost::edge(end,add[0], g);
-			if (!add.empty()&!edge.second & path!=paths.rend()){ //if this path does not have an edge and there are 
-													//other possible paths, go to previous paths
-				if (pend.base()-1!=(path->begin())){ //if the current vertex is not the root of the path
-					pend++; //go back a step
-				}
-				else{
-					path++; //go back a previously explored path
-					pend=(*path).rbegin(); 
-				}
+		if (!priorityQueue.empty()){
+			src=priorityQueue.begin()->first; //lowest phi vertex
+			add=std::vector <vertexDescriptor>(priorityQueue.begin()->second.begin(), priorityQueue.begin()->second.end());//lowest phi frontier
+			add.push_back(src);
+			Planner::path2add2(path, add, paths, g); //find path to add frontier (add) to
+			for (vertexDescriptor c:add){
+				g[c].label=VERTEX_LABEL::UNLABELED;
+				path->push_back(c);	
+				path_end=c;			
 			}
-			else if (edge.second & pend.base()!=path->rbegin().base()){  //if there is an edge with the end of current path
-				bool found=0;
-				for (auto _p=paths.rbegin(); _p!=paths.rend(); _p++ ){
-					if (std::vector <vertexDescriptor>(path->begin(), pend.base())==*_p){
-						path=_p; //
-						found=1;
-					}
-				}
-				if (!found){
-					paths.emplace_back(std::vector <vertexDescriptor>(path->begin(), pend.base()));
-					path=paths.rbegin();				
-				}
-				break;
-			}
-			if ( path==paths.rend()) { //if there are no other paths
-				paths.push_back(std::vector<vertexDescriptor>()); //make a new one
-				path=paths.rbegin();
-				break;
-			}
-			printf("end pose of end vertex:");
-			debug::print_pose(g[end].endPose);	
-			auto now_time=std::chrono::high_resolution_clock::now();
-			std::chrono::duration<float, std::milli>time_elapsed= now_time - start_time;
-			//printf("inner loop count= %f\n", time_elapsed.count());
-			if (abs(time_elapsed.count()) >100){
-				printf("stuck planning, exiting\n");
-			break;
-		}
-		}
-//		priorityQueue.erase(priorityQueue.begin());
-		for (vertexDescriptor c:add){
-			g[c].label=VERTEX_LABEL::UNLABELED;
-			path->push_back(c);	
-			path_end=c;			
 		}
 		_finished=overarching_goal.checkEnded(g[path_end].endPose, UNDEFINED, true).ended;
 		if (NULL!=finished){
@@ -637,42 +585,8 @@ std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, verte
 		if (_finished){
 			goal=path_end;
 		}
-		auto now_time=std::chrono::high_resolution_clock::now();
-		std::chrono::duration<float, std::milli>time_elapsed= now_time -start_time;
-		//printf("outer loop count= %f\n", time_elapsed.count());
-		if (abs(time_elapsed.count()) >100){
-			printf("stuck planning, exiting\n");
-			break;
-		}
 	}while(!priorityQueue.empty() && (path_end!=goal && !(_finished)));
-	auto vs=boost::vertices(g);
-	float final_phi=10000;
-	for (std::vector<vertexDescriptor> p: paths){
-		vertexDescriptor end_plan= *(p.rbegin().base()-1);
-		//LAMBDA
-		auto skip_first= [](const std::vector<vertexDescriptor> &_plan, const vertexDescriptor & _cv, const TransitionSystem & _g, const bool & _change){
-			printf("plan size=%i, first v =%i, change=%i\n", _plan.size()==1, _plan[0]==_cv, _change);
-			if (_plan.size()==1 && _plan[0]==_cv && _change){
-				//printf("getting whole plan\n");
-				return std::vector(_plan.begin()+0, _plan.end());
-			}
-			else{
-//				printf("plan size before skip %i, first=%i ", _plan.size() , _plan[0]);
-				return std::vector((_plan.begin()+1), _plan.end());
-			}
-		};
-		if (end_plan==goal){
-			plan=skip_first(p, currentVertex, g, currentTask.change);
-			break;
-		}
-		else if (g[end_plan].phi<final_phi){
-			plan=skip_first(p, currentVertex, g, currentTask.change);
-			final_phi=g[end_plan].phi;
-		}
-	}
-	printf("PLANNED! size=%i\n",plan.size());
-	return plan;
-
+	return Planner::best_path(paths, goal, currentVertex, currentTask.change, g);
 }
 
 
@@ -1344,8 +1258,8 @@ float Configurator::approximate_angle(const float & angle, const Direction & d, 
 }
 
 
-void Configurator::ts_cleanup(TransitionSystem * g){
-	Connected connected(g);
+void Configurator::ts_cleanup(TransitionSystem * g, std::vector <vertexDescriptor>& p){
+	Connected connected(g, p);
 	NotSelfEdge nse(g);
 	FilteredTS fts(*g, nse, connected); //boost::keep_all()
 	TransitionSystem tmp;
@@ -1381,14 +1295,17 @@ void Configurator::pre_explore(TransitionSystem & g, const std::vector<vertexDes
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 	}
 	else{
-		std::pair<edgeDescriptor, bool> ep=boost::add_edge(currentVertex, p[0], g);
+
 		transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
 		transitionSystem[movingVertex].outcome=simResult::successful;
 		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
-		transitionSystem[movingEdge].direction=transitionSystem[ep.first].direction;
+		std::pair<edgeDescriptor, bool> ep(edgeDescriptor(), false);
+		if (!p.empty()){
+			ep=boost::edge(currentVertex, p[0], g);
+			transitionSystem[movingEdge].direction=transitionSystem[ep.first].direction;
+		}
 		transitionSystem[movingEdge].step=currentTask.motorStep;
-
 	}
 }
 

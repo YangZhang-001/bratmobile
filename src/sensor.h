@@ -1,6 +1,6 @@
 #ifndef SENSOR_H
 #define SENSOR_H
-#include "task.h"
+#include "CloCK_math.h"
 
 
 class ConfiguratorInterface;

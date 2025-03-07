@@ -16,12 +16,21 @@
 #include <utility>
 #include "disturbance.h"
 
-namespace math{
-	void applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose);
+// namespace math{
+// //	void applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose);
 
 
-	b2Transform returnAffineTrans(const b2Transform & dp, b2Transform pose);
-};
+// };
+
+template <class I>
+auto check_vector_for(std::vector <I>& vector, const I& item){
+	for (int i=0; i<vector.size(); i++){
+		if (vector[i]==item){
+			return vector.begin()+i;
+		}
+	}
+	return vector.end();
+}
 
 const float NAIVE_PHI=10.0;
 
@@ -71,6 +80,8 @@ struct State{
 	State* ID=this;
 	float phi=NAIVE_PHI; //arbitrarily large phi
 	VERTEX_LABEL label=VERTEX_LABEL::UNLABELED;
+	Direction direction=DEFAULT;
+
 
 	
 	State()=default;
@@ -151,8 +162,8 @@ Transform operator-( Transform const &, Transform const &);
 Transform operator-(Transform const &);
 
 
-typedef std::pair<bool, float> orientation;
-orientation subtract(orientation, orientation);
+// typedef std::pair<bool, float> orientation;
+// orientation subtract(orientation, orientation);
 
 typedef boost::adjacency_list<boost::setS, boost::vecS, boost::bidirectionalS, State, Edge> TransitionSystem;
 typedef boost::graph_traits<TransitionSystem>::vertex_iterator vertexIterator; 
@@ -163,22 +174,6 @@ typedef boost::graph_traits<TransitionSystem>::edge_iterator edgeIterator;
 // typedef boost::subgraph<boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS>> CognitiveMap;
 
 
-namespace math {
-
-	void applyAffineTrans(const b2Transform&, State& );
-
-	void applyAffineTrans(const b2Transform& , Task* );
-
-	void applyAffineTrans(const b2Transform&, TransitionSystem&);
-
-	void applyAffineTrans(const b2Transform&, Disturbance&);
-
-	// b2Mat33 b2d_affine_matrix33(const b2Transform &); //returns a box2d object
-
-	cv::Mat cv_affine_matrix33(const b2Transform &); //returns an opencv object
-
-	b2Transform transform_2d(const cv::Mat&); //bets box2d 2dtransform from 3x3 matrix
-};
 
 struct is_not_v{
 	is_not_v(){}
@@ -199,7 +194,7 @@ struct Connected{
 	bool operator()(const vertexDescriptor& v)const{
 	 	bool in= boost::in_degree(v, *g)>0;
 		bool out =boost::out_degree(v, *g)>0;
-	 	return (in || out) || v==0;
+	 	return (in || out) || v==0 ;
 	}
 private:
 TransitionSystem * g;
@@ -265,18 +260,19 @@ namespace gt{
 }
 
 struct NotSelfEdge{
-	NotSelfEdge(){}
-	NotSelfEdge(TransitionSystem * _g): g(_g){}
+	NotSelfEdge()=default;
+	NotSelfEdge(TransitionSystem * _g, std::vector <vertexDescriptor> & _p): g(_g), plan(_p){}
 
 	bool operator()(const edgeDescriptor & e) const {
 		bool not_self= e.m_source!=e.m_target && (*g)[e].step!=0 ; 
 		if (e.m_source==e.m_target){
 			auto def_kin =(*default_kinematics.find((*g)[e].direction)).second;
 		}
-		return not_self;
+		return not_self && check_vector_for(plan, e.m_target)!=plan.end();
 	}
 	private:
 	TransitionSystem * g;
+	std::vector <vertexDescriptor> & plan;
 };
 
 
@@ -419,14 +415,5 @@ class StateMatcher{
 	const float COEFFICIENT_INCREASE_THRESHOLD=0.0;
 };
 
-template <class I>
-auto check_vector_for(std::vector <I>& vector, const I& item){
-	for (int i=0; i<vector.size(); i++){
-		if (vector[i]==item){
-			return vector.begin()+i;
-		}
-	}
-	return vector.end();
-}
 
 #endif

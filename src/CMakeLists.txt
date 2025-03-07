@@ -2,9 +2,9 @@ include(GNUInstallDirs)
 
 set (CMAKE_CXX_STANDARD 17)
 
-set(SRC disturbance.cpp configurator.cpp task.cpp graphTools.cpp measurement.cpp worldbuilder.cpp sensor.cpp debug.cpp)
+set(SRC disturbance.cpp configurator.cpp task.cpp graphTools.cpp measurement.cpp worldbuilder.cpp sensor.cpp debug.cpp CloCK_math.cpp planner.cpp)
 
-set(HEAD disturbance.h configurator.h robot.h task.h graphTools.h affordance.h settings.h measurement.h worldbuilder.h sensor.h debug.h)
+set(HEAD disturbance.h configurator.h robot.h task.h graphTools.h affordance.h settings.h measurement.h worldbuilder.h sensor.h debug.h CloCK_math.h planner.h)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 

@@ -409,12 +409,9 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
    //transform that maps transform TB (new d)to TA (d pose): TAB=TB * inv(TA)
    //b2Mat33 Ta=math::affine_matrix33(t.disturbance.pose()), *Ta_inv; //need to get inverse
    
-   cv::Mat old_matrix=math::cv_affine_matrix33(t.disturbance.pose());
-   cv::Mat inv_old_matrix=old_matrix.inv();
-   b2Transform inv_old_transform= math::transform_2d(inv_old_matrix);
     //cv::Mat new_matrix=math::cv_affine_matrix33(new_d.second.pose);
        //return new_d.second.pose- t.disturbance.pose(); //estimate transform
-    return t.action.getTransform(MOTOR_CALLBACK);
+    return math::solveAxB(t.disturbance.pose(), new_d.second.pose); 
     //what's the most likely angle??
 }
 

@@ -30,19 +30,23 @@ int main(int argc, char** argv){
     }
     conf.data2fp = ci.data2fp;
     conf.Spawner();
+    auto og_plan=conf.ci->plan_on_hold;
     int n_v=conf.transitionSystem.m_vertices.size();
-    auto og_plan=conf.planVertices;
-    if (argv[1]=="empty"){
-        og_plan={2};
-    }
-    conf.printPlan(&conf.planVertices);
+
     conf.addIteration();
     int og_step=0;
-    conf.changeTask(1, conf.ci->plan_on_hold, conf.transitionSystem);
-    conf.getTask()->motorStep=0;
-    conf.currentVertex=*(conf.planVertices.end()-1);
-    vertexDescriptor prev=*(conf.planVertices.end()-2);
-    conf.currentEdge=boost::edge(prev, conf.currentVertex, conf.transitionSystem).first;
+    conf.planVertices= conf.changeTask(1, conf.ci->plan_on_hold, conf.transitionSystem);
+   // conf.getTask()->motorStep=0;
+    if (argv[1]=="empty"){
+        og_plan={2};
+    }    
+    conf.printPlan(&conf.planVertices);
+    if (!conf.planVertices.empty()){
+        conf.currentVertex=*(conf.planVertices.end()-1);
+        vertexDescriptor prev=*(conf.planVertices.end()-2);
+        conf.currentEdge=boost::edge(prev, conf.currentVertex, conf.transitionSystem).first;
+
+    }
     std::vector <vertexDescriptor> options_src;
     State state_tmp;
     b2Transform shift= b2Transform(b2Vec2(1,0), b2Rot(0));
@@ -59,15 +63,16 @@ int main(int argc, char** argv){
         og_plan={3, 5, 2};
         n_v+=7;
     }
-    printf("wohoo 61\n");
+    conf.getTask()->change=1;
     conf.planVertices.clear();
     conf.Spawner();
+    conf.planVertices= conf.changeTask(1, conf.ci->plan_on_hold, conf.transitionSystem);
     conf.printPlan(&conf.planVertices);
     if (conf.transitionSystem.m_vertices.size() > n_v){
         printf("size error = %i\n", conf.transitionSystem.m_vertices.size()-n_v);
         return 2;
     }
-    if (og_plan!=conf.planVertices){
+    if (og_plan!=conf.ci->plan_on_hold){
         printf("wrong plan\n");
         return 1;
     }
