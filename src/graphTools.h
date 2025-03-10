@@ -49,14 +49,14 @@ struct ComparePair{
 };
 
 struct Edge{
-	Direction direction=DEFAULT;
+	//Direction direction=DEFAULT;
 	float probability=1.0;
 	int step=0;
 	int it_observed=-1; //last iteration where this edge was observed
 
 	Edge()=default;
 
-	Edge(Direction d):direction(d){}
+	//Edge(Direction d):direction(d){}
 
 	float weighted_probability(int it){
 		float result=0;
@@ -88,7 +88,7 @@ struct State{
 
 	State(const b2Transform &_start): start(_start){}
 
-	State(const b2Transform &_start, const Disturbance& di): start(_start), Di(di){}
+	State(const b2Transform &_start, const Disturbance& di, const Direction & dir): start(_start), Di(di), direction(dir){}
 
 	bool visited(){
 		return phi<NAIVE_PHI;
@@ -250,7 +250,7 @@ namespace gt{
 
 	std::pair <bool,edgeDescriptor> visitedEdge(const std::vector <edgeDescriptor>&, TransitionSystem&, vertexDescriptor cv=TransitionSystem::null_vertex());
 
-	void adjustProbability(TransitionSystem&, edgeDescriptor);
+	void adjustProbability(TransitionSystem&, const edgeDescriptor &);
 
 	std::pair <edgeDescriptor, bool> add_edge(const vertexDescriptor&, const vertexDescriptor &, TransitionSystem&, const int &, Direction d=UNDEFINED); //wrapper around boost function, disallows edges to self
 
@@ -259,22 +259,53 @@ namespace gt{
 	std::vector <vertexDescriptor> task_vertices(vertexDescriptor, TransitionSystem&, const int &, const vertexDescriptor &, std::pair<bool, edgeDescriptor>* ep=NULL);
 }
 
+struct InPlan{
+	InPlan()=default;
+
+	InPlan(std::vector <vertexDescriptor>* _p):plan(_p){}
+
+	bool operator()(const edgeDescriptor & e)const{
+		return (check_vector_for(*plan, e.m_target)!=plan->end());
+	}
+
+	private:
+	std::vector<vertexDescriptor> *plan;
+};
+
+
 struct NotSelfEdge{
 	NotSelfEdge()=default;
-	NotSelfEdge(TransitionSystem * _g, std::vector <vertexDescriptor> & _p): g(_g), plan(_p){}
+	NotSelfEdge(TransitionSystem * _g): g(_g){}
 
 	bool operator()(const edgeDescriptor & e) const {
 		bool not_self= e.m_source!=e.m_target && (*g)[e].step!=0 ; 
-		if (e.m_source==e.m_target){
-			auto def_kin =(*default_kinematics.find((*g)[e].direction)).second;
-		}
-		return not_self && check_vector_for(plan, e.m_target)!=plan.end();
+		// if (e.m_source==e.m_target){
+		// 	//auto def_kin =(*default_kinematics.find((*g)[e.m_target].direction)).second;
+		// }
+		return not_self;
 	}
 	private:
 	TransitionSystem * g;
-	std::vector <vertexDescriptor> & plan;
 };
 
+
+struct KeepEdge{
+	KeepEdge()=default;
+	KeepEdge(TransitionSystem * _g,std::vector <vertexDescriptor>* _p): g(_g), plan(_p){
+		nse=NotSelfEdge(g);
+		ip=InPlan(plan);
+	}
+
+	bool operator()(const edgeDescriptor & e)const{
+		return nse(e) && ip(e);
+	}
+
+	private:
+	TransitionSystem* g;
+	std::vector <vertexDescriptor> * plan;
+	NotSelfEdge nse;
+	InPlan ip;
+};
 
 
 typedef boost::filtered_graph<TransitionSystem, NotSelfEdge, Connected> FilteredTS;

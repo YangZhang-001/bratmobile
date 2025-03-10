@@ -196,7 +196,7 @@ std::vector <edgeDescriptor> gt::outEdges(TransitionSystem&g, vertexDescriptor v
 	std::vector <edgeDescriptor> result;
 	auto es = boost::out_edges(v, g);
 	for (auto ei = es.first; ei!=es.second; ++ei){
-		if (g[(*ei)].direction == d || d==UNDEFINED){
+		if (g[(*ei).m_target].direction == d || d==UNDEFINED){
 			result.push_back(*ei);
 		}
 	}
@@ -210,7 +210,7 @@ std::vector <edgeDescriptor> gt::inEdges(TransitionSystem&g, const vertexDescrip
 		return result;
 	}
 	for (auto ei = es.first; ei!=es.second; ++ei){
-		if (g[(*ei)].direction == d || d==UNDEFINED){
+		if (g[(*ei).m_target].direction == d || d==UNDEFINED){
 			if ((*ei).m_source!=v){
 				result.push_back(*ei);
 			}
@@ -259,11 +259,11 @@ std::pair <bool,edgeDescriptor>  gt::visitedEdge(const std::vector <edgeDescript
 }
 
 
-void gt::adjustProbability(TransitionSystem &g, edgeDescriptor e){
+void gt::adjustProbability(TransitionSystem &g, const edgeDescriptor &e){
 	if (e.m_target==TransitionSystem::null_vertex()){
 		return;
 	}
-	std::vector <edgeDescriptor> es=gt::outEdges(g, e.m_source, g[e].direction);
+	std::vector <edgeDescriptor> es=gt::outEdges(g, e.m_source, g[e.m_target].direction);
 	float totObs=0;
 	//find total observations
 	for (edgeDescriptor & ei:es){
@@ -304,7 +304,7 @@ std::pair <edgeDescriptor, bool> gt::add_edge(const vertexDescriptor & u, const 
 bool gt::check_edge_direction(const std::pair<edgeDescriptor, bool> & ep, TransitionSystem& g, Direction d){
 	bool result=false;
 	if (ep.second){
-		result=g[ep.first].direction==d;
+		result=g[ep.first.m_target].direction==d;
 	}
 	return result;
 }
@@ -323,18 +323,18 @@ std::vector <vertexDescriptor> gt::task_vertices( vertexDescriptor v, Transition
 		if (ep2.first){
 			if (ep2.second.m_target==result[0]){ //size 1
 				_ep=ep2; //assign ep to define direction
-				d= g[_ep.second].direction;
+				d= g[_ep.second.m_target].direction;
 				if (ep!=NULL){
 					g[_ep.second].it_observed=it;
 				}
 				for (edgeDescriptor e: ie){
-					if (g[e].direction==d && e!=ep2.second && g[e.m_source].Di == g[_ep.second.m_source].Di &&g[e.m_source].Dn == g[_ep.second.m_target].Dn){
+					if (g[e.m_target].direction==d && e!=ep2.second && g[e.m_source].Di == g[_ep.second.m_source].Di &&g[e.m_source].Dn == g[_ep.second.m_target].Dn){
 						ep2.second=e;
 						break;
 					}
 			}
 			}
-			else if (g[ep2.second].direction==d &&
+			else if (g[ep2.second.m_target].direction==d &&
 			 		g[ep2.second.m_target].Di == g[_ep.second.m_target].Di &&
 			 		g[ep2.second.m_target].Dn == g[_ep.second.m_target].Dn){ //same task!
 				result.push_back(ep2.second.m_target); //source
@@ -349,7 +349,7 @@ std::vector <vertexDescriptor> gt::task_vertices( vertexDescriptor v, Transition
 		if (ep2.second.m_target==current_v){ //source
 			break;
 		}
-	}while(g[ep2.second].direction==d);
+	}while(g[ep2.second.m_target].direction==d);
 	std::reverse(result.begin(), result.end());
 	if (NULL!=ep){
 		*ep=_ep;
@@ -418,7 +418,7 @@ std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> StateMatcher::match_vertex
 	for (auto ei=edges.first; ei!=edges.second; ++ei){
 		//MATCH_TYPE match = isMatch(s, g[ei.dereference().m_source]);
 		MATCH_TYPE match = isMatch(s, g[ei.dereference().m_target]);
-		if (g[(*ei)].direction && match_equal(match, mt)){
+		if (g[(*ei).m_target].direction && match_equal(match, mt)){
 			result.first=match;
 			result.second=(*ei).m_target;
 			break;

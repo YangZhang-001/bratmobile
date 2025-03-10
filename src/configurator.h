@@ -139,7 +139,7 @@ void dummy_vertex(vertexDescriptor src);
 //inputs: g, src vertex, b2d world, direction of the task to be created
 Disturbance getDisturbance(TransitionSystem&, const vertexDescriptor&, b2World &, const Direction &, const b2Transform&);
 
-Task task_to_execute(const TransitionSystem &, const edgeDescriptor&);
+Task task_to_execute(const TransitionSystem &, const vertexDescriptor&);
 
 simResult simulate(Task, b2World &);
 
@@ -196,7 +196,7 @@ std::pair<edgeDescriptor, bool> addVertex(vertexDescriptor & src, vertexDescript
 		v1 = boost::add_vertex(g);
 		result = add_edge(src, v1, g);
 		g[result.first] =edge;
-		g[result.first].direction=g[src].options[0];
+		g[v1].direction=g[src].options[0];
 		g[result.first].it_observed=iteration;
 		if (!topDown){
 			g[src].options.erase(g[src].options.begin());

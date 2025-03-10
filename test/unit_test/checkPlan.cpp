@@ -28,16 +28,17 @@ int main(int argc, char** argv){
     conf.data2fp = ci.data2fp;
     conf.addIteration();
     b2World world(b2Vec2(0,0));
-    boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
-    conf.dummy_vertex(conf.currentVertex);
-    conf.explorer(conf.currentVertex, conf.transitionSystem, world);
-    conf.ts_cleanup(&conf.transitionSystem);		
+    // boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
+    // conf.dummy_vertex(conf.currentVertex);
+    // conf.ci->plan_on_hold=conf.explorer(conf.currentVertex, conf.transitionSystem, world);
+    // conf.ts_cleanup(&conf.transitionSystem, &(conf.ci->plan_on_hold));		
 
     
-    std::vector <vertexDescriptor> plan=conf.planner(conf.transitionSystem, conf.currentVertex);
-    conf.planVertices=plan;
+    // std::vector <vertexDescriptor> plan=conf.planner(conf.transitionSystem, conf.currentVertex);
+    conf.Spawner();
+    conf.planVertices=conf.ci->plan_on_hold;
     int n_v=conf.transitionSystem.m_vertices.size();
-    conf.printPlan(&plan);
+    conf.printPlan(&conf.planVertices);
     int og=0;
     conf.changeTask(true, conf.ci->plan_on_hold, conf.transitionSystem);
     std::vector <vertexDescriptor> options_src;
@@ -61,32 +62,34 @@ int main(int argc, char** argv){
         di.newScanAvail();          
         conf.data2fp = ci.data2fp;
     }
-//     conf.debugOn=1;
-//   //  bool plan_works= conf.checkPlan(world,conf.planVertices, conf.transitionSystem, conf.transitionSystem[solution].Dn, conf.transitionSystem[conf.movingVertex].start);
+// //     conf.debugOn=1;
+// //   //  bool plan_works= conf.checkPlan(world,conf.planVertices, conf.transitionSystem, conf.transitionSystem[solution].Dn, conf.transitionSystem[conf.movingVertex].start);
     
 
-    boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
-    vertexDescriptor src; //ve=TransitionSystem::null_vertex(),
-    if (!conf.planVertices.empty() && conf.getTask()->motorStep!=0){
-        src=conf.movingVertex;
-    }
-    else {
-        src=conf.currentVertex;
-    }
-    conf.resetPhi(conf.transitionSystem);
-    //int og_step=0;
-    //conf.changeTask(true, og_step, conf.planVertices);
-    conf.explorer(conf.movingVertex, conf.transitionSystem, world);
-    conf.ts_cleanup(&conf.transitionSystem);
-    bool finished=false;	
-    plan=conf.planner(conf.transitionSystem, conf.currentVertex,TransitionSystem::null_vertex(), false, NULL, &finished);
-    conf.planVertices=plan;
-    conf.printPlan(&plan);    
+//     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
+//     vertexDescriptor src; //ve=TransitionSystem::null_vertex(),
+//     if (!conf.planVertices.empty() && conf.getTask()->motorStep!=0){
+//         src=conf.movingVertex;
+//     }
+//     else {
+//         src=conf.currentVertex;
+//     }
+//     conf.resetPhi(conf.transitionSystem);
+//     //int og_step=0;
+//     //conf.changeTask(true, og_step, conf.planVertices);
+//     conf.explorer(conf.movingVertex, conf.transitionSystem, world);
+//     conf.ts_cleanup(&conf.transitionSystem);
+//     bool finished=false;	
+//     plan=conf.planner(conf.transitionSystem, conf.currentVertex,TransitionSystem::null_vertex(), false, NULL, &finished);
+    conf.Spawner();
+    conf.planVertices=conf.ci->plan_on_hold;
+    conf.printPlan(&conf.planVertices);    
     int n_v_2=conf.transitionSystem.m_vertices.size();
     if (n_v_2>n_v&& atoi(argv[4])<18){
         printf("difference=%i\n", n_v_2-n_v);
         return 1;
     }
+    bool finished=conf.controlGoal.checkEnded(conf.transitionSystem[*(conf.planVertices.end()-1)].endPose).ended;
     if (finished){
         printf("plan works");
         return 0;
