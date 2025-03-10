@@ -22,7 +22,7 @@ int main(int argc, char** argv){
     } 
     conf.dummy_vertex(conf.movingVertex);
     //ASSUMING SRC ALREADY SIMULATED
-    conf.transitionSystem[conf.currentEdge].direction=src_d;
+    conf.transitionSystem[conf.currentVertex].direction=src_d;
     conf.transitionSystem[conf.currentVertex].Di=obstacle;
     if (argc>1){
         int code =atoi(argv[1]);

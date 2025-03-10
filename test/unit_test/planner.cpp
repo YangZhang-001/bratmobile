@@ -7,7 +7,7 @@ std::vector <Direction> getPlan(const TransitionSystem & g, const std::vector <v
 		if (edge.second){
 			// auto a=dirmap.find(g[edge.first].direction);
 			// printf("%i, %s, ", edge.first.m_target, (*a).second);
-            result.push_back(g[edge.first].direction);
+            result.push_back(g[v].direction);
 		}
 		pre=edge.first.m_target;
 		}

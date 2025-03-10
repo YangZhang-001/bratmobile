@@ -272,6 +272,13 @@ struct InPlan{
 	std::vector<vertexDescriptor> *plan;
 };
 
+//check if two states belong to the same task
+// bool same_task(const vertexDescriptor & v, const vertexDescriptor & v1, const TransitionSystem& g) {
+// 	return (g[v].Di==g[v1].Di && g[v].direction==g[v1].direction && g[v].Dn==g[v1].Dn);
+// }
+
+
+
 
 struct NotSelfEdge{
 	NotSelfEdge()=default;
@@ -297,7 +304,7 @@ struct KeepEdge{
 	}
 
 	bool operator()(const edgeDescriptor & e)const{
-		return nse(e) && ip(e);
+		return nse(e) || (!nse(e) && ip(e));
 	}
 
 	private:
@@ -306,6 +313,7 @@ struct KeepEdge{
 	NotSelfEdge nse;
 	InPlan ip;
 };
+
 
 
 typedef boost::filtered_graph<TransitionSystem, NotSelfEdge, Connected> FilteredTS;

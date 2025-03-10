@@ -111,7 +111,7 @@ int main(int argc, char** argv){
     if (argc>3){
         outcome=getOutcome(*argv[3]);
     }
-    conf.transitionSystem[e.first].direction=direction;
+    conf.transitionSystem[v1].direction=direction;
     conf.transitionSystem[v1].outcome=outcome;
     int expected_options=expectedOptions(direction, outcome, target1);
     conf.applyTransitionMatrix(conf.transitionSystem, v1, direction, false, conf.currentVertex,conf.planVertices );

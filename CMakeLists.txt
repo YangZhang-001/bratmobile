@@ -30,7 +30,7 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   message("detected architecture aarch64, building executables")
 else()
 #	add_subdirectory(test)
-  add_subdirectory(test "${CMAKE_CURRENT_BINARY_DIR}/test")
+  #add_subdirectory(test "${CMAKE_CURRENT_BINARY_DIR}/test")
 
   add_subdirectory(test/unit_test "${CMAKE_CURRENT_BINARY_DIR}/test/unit_test")
 

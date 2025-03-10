@@ -18,7 +18,7 @@ int main(int argc, char** argv){
     simResult result=task.bumping_that(world, 1, robot.body);
     gt::fill(result, &conf.transitionSystem[v1], &conf.transitionSystem[e1.first]);
     int total_step=result.step, counted_step=0;
-    std::vector <vertexDescriptor> split =conf.splitTask(v1, conf.transitionSystem, conf.transitionSystem[e1.first].direction, conf.currentVertex);
+    std::vector <vertexDescriptor> split =conf.splitTask(v1, conf.transitionSystem, conf.transitionSystem[v1].direction, conf.currentVertex);
     for (vertexDescriptor v:split){ 
         auto ie = gt::inEdges(conf.transitionSystem,v , DEFAULT);
         if (!ie.empty()){

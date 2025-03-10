@@ -32,7 +32,6 @@ int main(int argc, char** argv){
     conf.Spawner();
     auto og_plan=conf.ci->plan_on_hold;
     int n_v=conf.transitionSystem.m_vertices.size();
-
     conf.addIteration();
     int og_step=0;
     conf.planVertices= conf.changeTask(1, conf.ci->plan_on_hold, conf.transitionSystem);
@@ -59,11 +58,14 @@ int main(int argc, char** argv){
     if (argc > 5){
         conf.controlGoal.disturbance.bf.pose = -shift;
         conf.controlGoal.disturbance.bf.pose.q.Set(M_PI);
+
         printf("back\n");
         og_plan={3, 5, 2};
         n_v+=7;
     }
     conf.getTask()->change=1;
+    conf.planVertices= conf.changeTask(1, std::vector<vertexDescriptor>(), conf.transitionSystem);
+
     conf.planVertices.clear();
     conf.Spawner();
     conf.planVertices= conf.changeTask(1, conf.ci->plan_on_hold, conf.transitionSystem);

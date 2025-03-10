@@ -1019,7 +1019,7 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, std::vector <ver
 	if (planning){
 		if (pv.empty()){
 			printf("I DON'T KNOW WHAT TO DO NOW\n");
-			currentTask=Task(controlGoal.disturbance, DEFAULT);
+			currentTask=Task(controlGoal.disturbance, UNDEFINED);
 			currentTask.action.L=0;
 			currentTask.action.R=0;
 			currentTask.change=1;
@@ -1050,7 +1050,7 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, std::vector <ver
 		}
 		std::vector<vertexDescriptor>::iterator task_end=to_task_end(nextEdge.first, transitionSystem, pv, pv.begin());
 		currentTask = task_to_execute(transitionSystem, nextEdge.first.m_target);		
-		currentVertex= pv[0];
+		currentVertex= *task_end;
 		pv.erase(pv.begin(), task_end);// if (currentTask.action.getLinearSpeed()==0){
 		// 	currentTask.motorStep=transitionSystem[currentEdge].step;
 		// }
@@ -1165,8 +1165,9 @@ void Configurator::pre_explore(TransitionSystem & g, const std::vector<vertexDes
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 	}
 	else{
+	//	transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
+		transitionSystem[movingVertex].Di=currentTask.disturbance;
 
-		transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
 		transitionSystem[movingVertex].outcome=simResult::successful;
 		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);

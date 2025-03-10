@@ -43,7 +43,7 @@ void printEdges(TransitionSystem& g, Predicate p){
     auto es = boost::edges(g);
     for (auto ei=es.first; ei!=es.second;ei++){
         if (!p(*ei)){
-            printf("%i->%i, direction=%i,probability=%f, step=%i\n", (*ei).m_source, (*ei).m_target, g[(*ei)].direction, g[*ei].probability, g[*ei].step);
+            printf("%i->%i, direction=%i,probability=%f, step=%i\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability, g[*ei].step);
         }
     }
 }
@@ -51,7 +51,7 @@ void printEdges(TransitionSystem& g, Predicate p){
 void printEdges(TransitionSystem& g){
     auto es = boost::edges(g);
     for (auto ei=es.first; ei!=es.second;ei++){
-        printf("%i->%i, direction=%i,probability=%f, step=%i\n", (*ei).m_source, (*ei).m_target, g[(*ei)].direction, g[*ei].probability, g[*ei].step);
+        printf("%i->%i, direction=%i,probability=%f, step=%i\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability, g[*ei].step);
     }
 }
 
@@ -66,7 +66,7 @@ float print_belowP(TransitionSystem& g, float p){
     for (auto ei=es.first; ei!=es.second;ei++){
         if (g[*ei].probability<p){
             ct++;
-            //printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
+            printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
         }
     }
     return ct/g.m_vertices.size();
@@ -78,7 +78,7 @@ void getVisited(TransitionSystem& g, vertexDescriptor cv){
     for (auto ei=es.first; ei!=es.second;ei++){
         if ((g[(*ei).m_source].visited()|| (*ei).m_source==0 || (*ei).m_source==cv)& g[(*ei).m_target].visited()){
             ct++;
-            //printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
+            printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
         }
     }
 }
@@ -157,11 +157,11 @@ public:
 	    // if (c->getTask()->motorStep==0 && c->planVertices.empty() & c->transitionSystem.m_vertices.size()>2){ //&& (c->transitionSystem[c->movingEdge].step==0 || c->getIteration()<2)
         //     er.ended=1;
         // }
-        printf(" task step =%i, vertices empty = %i, direction stop=%i, is it i =%i\n", c->getTask()->motorStep==0,  c->planVertices.empty(), (c->transitionSystem[c->movingEdge].step==0), c->getIteration()<2);
+    // printf(" task step =%i, vertices empty = %i, direction stop=%i, is it i =%i\n", c->getTask()->motorStep==0,  c->planVertices.empty(), (c->transitionSystem[c->movingEdge].step==0), c->getIteration()<2);
         if (c->controlGoal.disturbance.isValid()){
             printf("distance from goal=%f\n", c->controlGoal.disturbance.getPosition().Length());
         }
-        if (er.ended &( c->getTask()->motorStep<1 & c->transitionSystem[c->movingEdge].direction!=STOP && c->planVertices.empty() && c->getIteration()>1)){ //& c->getTask()->motorStep<1
+        if (er.ended &( c->getTask()->motorStep<1 & c->transitionSystem[c->currentVertex].direction!=STOP && c->planVertices.empty() && c->getIteration()>1)){ //& c->getTask()->motorStep<1
         //    if (!er.ended){
         //         printf("task step = %i\n", c->getTask()->motorStep);
         //    }

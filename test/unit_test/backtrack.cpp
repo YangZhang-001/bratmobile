@@ -38,7 +38,7 @@ int main(int argc, char** argv){
     //vertex simulating straight task (cul de sac)
     auto v1 = boost::add_vertex(conf.transitionSystem);
     auto e1 = boost::add_edge(conf.movingVertex, v1, conf.transitionSystem);
-    conf.transitionSystem[e1.first].direction=DEFAULT;
+    conf.transitionSystem[v1].direction=DEFAULT;
     conf.transitionSystem[e1.first].step=1;
     conf.transitionSystem[v1].outcome=simResult::crashed;    
     conf.transitionSystem[v1].endPose=b2Transform(pos, rot);
@@ -52,13 +52,13 @@ int main(int argc, char** argv){
     //simulating left
     auto v2 = boost::add_vertex(conf.transitionSystem);
     auto e2 = boost::add_edge(conf.movingVertex, v2, conf.transitionSystem);
-    conf.transitionSystem[e2.first].direction=DEFAULT;
+    conf.transitionSystem[v2].direction=DEFAULT;
     conf.transitionSystem[e2.first].step=1;
     conf.transitionSystem[v2].endPose=pos2;
     //simulating right
     auto v3 = boost::add_vertex(conf.transitionSystem);
     auto e3 = boost::add_edge(conf.movingVertex, v3, conf.transitionSystem);
-    conf.transitionSystem[e3.first].direction=DEFAULT;
+    conf.transitionSystem[v3].direction=DEFAULT;
     conf.transitionSystem[e3.first].step=1;
     conf.transitionSystem[v3].endPose=pos3;
     //add to ev queue
