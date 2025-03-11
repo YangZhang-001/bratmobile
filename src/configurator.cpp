@@ -79,7 +79,7 @@ bool Configurator::Spawner(){
 		if (debugOn){
 			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, planVertices, currentVertex);
 		}		
-		ts_cleanup(&transitionSystem, ci->plan_on_hold);
+		ts_cleanup(transitionSystem, ci->plan_on_hold);
 		if (ci->plan_on_hold.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
 			printf("no plan, searchign from %i\n", src);
 			bool finished=false;
@@ -1143,14 +1143,14 @@ float Configurator::approximate_angle(const float & angle, const Direction & d, 
 }
 
 
-void Configurator::ts_cleanup(TransitionSystem * g, std::vector <vertexDescriptor>& p){
-	Connected connected(g);
-	ViableEdge ke(g);
-	FilteredTS fts(*g, ke, connected); //boost::keep_all()
+void Configurator::ts_cleanup(TransitionSystem & g, std::vector <vertexDescriptor>& p){
+	Connected connected(&g);
+	ViableEdge ke(&g);
+	FilteredTS fts(g, ke, connected); //boost::keep_all()
 	TransitionSystem tmp;
 	boost::copy_graph(fts, tmp);
-	g->clear();
-	g->swap(tmp);		
+	g.clear();
+	g.swap(tmp);		
 }
  
 void Configurator::shift_states(TransitionSystem & g, const std::vector<vertexDescriptor>& p, const b2Transform & shift_start){

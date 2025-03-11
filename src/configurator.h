@@ -228,7 +228,7 @@ std::vector <vertexDescriptor> planner(TransitionSystem&, vertexDescriptor, vert
 
 std::vector<vertexDescriptor>::iterator to_task_end(edgeDescriptor &, TransitionSystem &, const std::vector<vertexDescriptor> &, std::vector<vertexDescriptor>::iterator); //in a vector, finds vertices belonging to the same task and skips to the end fo the task
 
-std::vector <vertexDescriptor> back_planner(TransitionSystem&, vertexDescriptor, vertexDescriptor root=0);
+//std::vector <vertexDescriptor> back_planner(TransitionSystem&, vertexDescriptor, vertexDescriptor root=0);
 
 EndedResult estimateCost(State&, b2Transform, Direction); //returns whether the controlGoal has ended and fills node with cost and error
 
@@ -268,7 +268,7 @@ void setSimulationStep(float f){
 
 float approximate_angle(const float &, const Direction &, const simResult::resultType &);
 
-void ts_cleanup(TransitionSystem *, std::vector <vertexDescriptor>&);
+void ts_cleanup(TransitionSystem &, std::vector <vertexDescriptor>&);
 
 void shift_states(TransitionSystem &, const std::vector<vertexDescriptor>&, const b2Transform &); //shifts a sequence of states by a certain transform
 

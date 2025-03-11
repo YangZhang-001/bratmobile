@@ -56,7 +56,7 @@ int main(int argc, char** argv){
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     conf.dummy_vertex(conf.currentVertex);
     conf.explorer(conf.currentVertex, conf.transitionSystem, world);
-    conf.ts_cleanup(&conf.transitionSystem, conf.ci->plan_on_hold);
+    conf.ts_cleanup(conf.transitionSystem, conf.ci->plan_on_hold);
     std::vector <vertexDescriptor> plan=conf.planner(conf.transitionSystem, conf.currentVertex);
     std::vector <Direction> plan_d=getPlan(conf.transitionSystem, plan, conf.currentVertex);
     conf.printPlan(&plan);
