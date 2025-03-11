@@ -40,7 +40,7 @@ int main(int argc, char** argv){
     int n_v=conf.transitionSystem.m_vertices.size();
     conf.printPlan(&conf.planVertices);
     int og=0;
-    conf.changeTask(true, conf.ci->plan_on_hold, conf.transitionSystem);
+   // conf.changeTask(true, conf.ci->plan_on_hold, conf.transitionSystem);
     std::vector <vertexDescriptor> options_src;
     State state_tmp;
     int steps= atoi(argv[4]);
@@ -54,7 +54,12 @@ int main(int argc, char** argv){
     int ogstep=conf.transitionSystem[conf.currentEdge].step;
     for (int i=0;i<di.iteration*2; i++){
         conf.trackTaskExecution(*conf.getTask());
+        conf.getTask()->motorStep--;
+        bool ch=conf.getTask()->change;
         conf.changeTask(conf.getTask()->change, conf.ci->plan_on_hold, conf.transitionSystem);
+        if (ch){
+            conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
+        }
     }
     if (argc>4){
         di.iteration=steps;

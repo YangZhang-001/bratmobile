@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include "debug.h"
 #include "planner.h"
+#include "control_interface.h"
 
 //FOR DEBUG
 //
@@ -20,30 +21,31 @@ const std::map<Direction, char*> dirmap={{DEFAULT, "DEFAULT"}, {LEFT, "LEFT"}, {
 
 //typedef b2Transform DeltaPose;
 
-class ConfiguratorInterface{
+class ConfiguratorInterface{ //data interface for configurator
 public:
 	bool debugOn=0;
 	int iteration=0;
 	CoordinateContainer data2fp;
 	bool ready=0;
 	bool stop=0;
-	std::vector <vertexDescriptor> plan_on_hold;
-
+	//std::vector <vertexDescriptor> plan_on_hold;
 
 	void setReady(bool b);
 
 	bool isReady();
 
-
 };
+
+
 
 class Configurator{
 protected:
 	int iteration=0; //represents that hasn't started yet, robot isn't moving and there are no map data
-	Task currentTask;
+	Task currentTask; //need to make thread safe?
 	bool benchmark=0;
 public:
 	ConfiguratorInterface * ci=NULL;
+	ControlInterface * control=NULL;
 	bool running =0;
 	std::thread * thread=NULL;
 	bool debugOn=0;
@@ -78,6 +80,8 @@ Configurator(Task _task, bool debug =0, bool noTimer=0): controlGoal(_task), cur
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
 }
 
+
+
 void setBenchmarking(bool b, char * new_folder, char * _dir=NULL){
 	benchmark =b;
 		if (benchmark){
@@ -93,7 +97,6 @@ void setBenchmarking(bool b, char * new_folder, char * _dir=NULL){
 		}
 		char new_path[60];
 		sprintf(new_path, "%s/%s", dirName, new_folder);
-		printf("%s", new_path);
 		if (!opendir(new_path)){
 			mkdir(new_path, 0777); //""
 		}
@@ -107,12 +110,9 @@ void setBenchmarking(bool b, char * new_folder, char * _dir=NULL){
 		h= ltm->tm_hour;
 		min = ltm->tm_min;
 		sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
-		printf("%s\n", statFile);
 		FILE * f = fopen(statFile, "w");
-		printf("open\n");
 		fclose(f);
 	}
-	printf("set\n");
 }
 
 bool is_benchmarking(){
@@ -139,7 +139,6 @@ void dummy_vertex(vertexDescriptor src);
 //inputs: g, src vertex, b2d world, direction of the task to be created
 Disturbance getDisturbance(TransitionSystem&, const vertexDescriptor&, b2World &, const Direction &, const b2Transform&);
 
-Task task_to_execute(const TransitionSystem &, const vertexDescriptor&);
 
 simResult simulate(Task, b2World &);
 
@@ -152,19 +151,11 @@ void propagateD(vertexDescriptor, vertexDescriptor, TransitionSystem&, std::vect
 void pruneEdges(std::vector<std::pair<vertexDescriptor, vertexDescriptor>>, TransitionSystem&, vertexDescriptor&, vertexDescriptor&,std::vector <vertexDescriptor>&, std::vector<std::pair<vertexDescriptor, vertexDescriptor>>&); //clears edges out of redundant vertices, removes the vertices from PQ, returns vertices to remove at the end
 
 
-
-void updateGraph(TransitionSystem&, const b2Transform & _deltaPose);
-
 void planPriority(TransitionSystem&, vertexDescriptor); 
 
 void adjust_simulated_task(const vertexDescriptor&, TransitionSystem &, Task*);
 
-
 void adjust_rw_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);
-
-//std::vector <edgeDescriptor> inEdgesRecursive(vertexDescriptor, TransitionSystem&, Direction ); //returns a vector of all in-edges leading to the vertex which have the same direction (most proximal first)
-
-//std::vector <edgeDescriptor> frontierVertices(vertexDescriptor, TransitionSystem&, Direction , bool been=0); //returns the closest vertices to the start vertex which are reached by executing a task of the specified direction
 
 std::vector <Frontier> frontierVertices(vertexDescriptor, TransitionSystem&, Direction , bool been=0); //returns the closest vertices to the start vertex which are reached by executing a task of the specified direction
 
@@ -173,13 +164,6 @@ void recall_plan_from(const vertexDescriptor&, TransitionSystem & , b2World &, s
 std::pair <edgeDescriptor, bool> maxProbability(std::vector<edgeDescriptor>, TransitionSystem&);
 
 std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> findMatch(State, TransitionSystem&, State * src, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, std::vector <vertexDescriptor>* others=NULL, bool relax=0, bool wholeTask=false); //matches to most likely
-
-//std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> findMatch(vertexDescriptor, TransitionSystem&, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, std::vector <vertexDescriptor>* others=NULL); //has a safety to prevent matching a vertex with self
-
-//void changeStart(b2Transform&, vertexDescriptor, TransitionSystem&, const b2Transform& shift=b2Transform_zero); //if task at vertex v fails, start is set to v's predecessor's end
-
-//void match_setup(bool&, StateMatcher::MATCH_TYPE&, const vertexDescriptor &, std::vector<vertexDescriptor>&, const Direction&, TransitionSystem &);
-
 
 std::vector<vertexDescriptor> explorer(vertexDescriptor, TransitionSystem&, b2World &); //evaluates only after DEFAULT, internal one step lookahead
 
@@ -210,20 +194,6 @@ std::pair <edgeDescriptor, bool> add_vertex_now(vertexDescriptor &, vertexDescri
 
 std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &, vertexDescriptor &, TransitionSystem &, Disturbance,Edge edge=Edge(), bool topDown=0);
 
-
-void setStateLabel(State& s, vertexDescriptor src, Direction d){
-	if(d!=currentTask.direction & src==movingVertex){
-		if ( d!=DEFAULT){
-			s.label=VERTEX_LABEL::ESCAPE;
-		}	
-	}		
-	else if (transitionSystem[src].label==ESCAPE &d==DEFAULT){ //not two defaults
-		s.label=ESCAPE2;
-	}
-
-}
-
-
 std::vector <vertexDescriptor> planner(TransitionSystem&, vertexDescriptor, vertexDescriptor goal=TransitionSystem::null_vertex(), bool been=0, const Task* custom_ctrl_goal=NULL, bool * finished =NULL) ;
 
 std::vector<vertexDescriptor>::iterator to_task_end(edgeDescriptor &, TransitionSystem &, const std::vector<vertexDescriptor> &, std::vector<vertexDescriptor>::iterator); //in a vector, finds vertices belonging to the same task and skips to the end fo the task
@@ -252,11 +222,6 @@ void addToPriorityQueue(vertexDescriptor, std::vector <vertexDescriptor>&, Trans
 
 void addToPriorityQueue(Frontier, std::vector <Frontier>&, TransitionSystem&, vertexDescriptor goal=TransitionSystem::null_vertex());
 
-void trackTaskExecution(Task &);
-
-std::vector <vertexDescriptor> changeTask(bool, std::vector <vertexDescriptor>, const TransitionSystem&);
-
-int motorStep(Task::Action a);
 
 void setSimulationStep(float f){
 	simulationStep=f;
@@ -275,6 +240,8 @@ void shift_states(TransitionSystem &, const std::vector<vertexDescriptor>&, cons
 vertexDescriptor get_explore_start(TransitionSystem &);
 
 void pre_explore(TransitionSystem &, const std::vector<vertexDescriptor>&, const bool& );
+
+
 
 
 };

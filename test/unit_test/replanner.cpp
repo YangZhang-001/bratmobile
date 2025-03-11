@@ -65,10 +65,11 @@ int main(int argc, char** argv){
     }
     conf.getTask()->change=1;
    conf.planVertices= conf.changeTask(1, std::vector<vertexDescriptor>(), conf.transitionSystem);
-
+    conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
     conf.planVertices.clear();
     conf.Spawner();
     conf.planVertices= conf.changeTask(1, conf.ci->plan_on_hold, conf.transitionSystem);
+    conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
     conf.printPlan(&conf.planVertices);
     if (conf.transitionSystem.m_vertices.size() > n_v){
         printf("size error = %i\n", conf.transitionSystem.m_vertices.size()-n_v);

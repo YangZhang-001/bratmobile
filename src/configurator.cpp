@@ -198,6 +198,7 @@ Task Configurator::task_to_execute(const TransitionSystem & g, const vertexDescr
 		t=Task(g[v].Di, g[v].direction, b2Transform_zero, true);
 
 	}
+	//t.motorStep=100;
 	return t;
 
 }
@@ -257,25 +258,17 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				Disturbance Di=getDisturbance(g, v0, w, g[v0].options[0], start);
 				t = Task(Di, g[v0].options[0], start, true);//need to update end crit
 				std::pair <State, Edge> sk(State(start, Di, g[v0].options[0]), Edge());
-				//float _simulationStep=BOX2DRANGE;
-				//adjustStepDistance(v0, g, &t, _simulationStep);
 				adjust_simulated_task(v0, g, &t);
 				worldBuilder.buildWorld(w, data2fp, t.start, t.direction, t.disturbance, 0.15, WorldBuilder::PARTITION); //was g[v].endPose
-				//printf("v0=%i, dir=%s\n", v0, (*dirmap.find(t.direction)).second);
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
-				//printf("sim step=%i\n", sim.step);
 				if (v==0 && sim.resultCode==sim.crashed){
 					printf("IM GONNA CRASH!!!! at");
 					debug::print_pose(sim.collision.pose());
 				}
 				gt::fill(sim, &sk.first, &sk.second); //find simulation result
-				//sk.second.direction=t.direction;
 				sk.second.it_observed=iteration;
 				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction);
 				State * source=NULL;
-				// StateMatcher::MATCH_TYPE vm= matcher.isMatch(g[v], g[currentEdge.m_source]); //see if we are at the beginning of the exploration:
-				// 																	//v=0 and currentEdge =src will match so we try to prevent
-				// 															//changing the movign vertex which is by default the origin
 				bool closest_match=false, match_task=true;
 				StateMatcher::MATCH_TYPE desired_match=StateMatcher::MATCH_TYPE::ABSTRACT;
 				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.direction, desired_match, NULL, closest_match, match_task );		//, closest_match	
@@ -338,7 +331,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 						debug::print_pose(g[exp].endPose);
 
 					}
-					auto d_print=dirmap.find(t.direction);
+					//auto d_print=dirmap.find(t.direction);
 					//printf("added v %i to %i, direction %s", v1, v0, (*d_print).second);
 					shift=b2Transform_zero;
 				}
@@ -548,13 +541,17 @@ do{
 	else{
 		e=ep.first;
 	}
-	it++; //includes the next vertex not belonging to this task
+	if (g[e.m_target].direction==g[e_start.m_target].direction){
+		it++;
+	}
+	//it++; //includes the next vertex not belonging to this task
 }while(g[e.m_target].direction==g[e_start.m_target].direction &&
 		 it != plan.end() && it!=(plan.end()-1)               && 
 		// g[e.m_target].direction==DEFAULT                     && 
 		 (g[e.m_target].Di==g[e_start.m_source].Di)
 		 //&& ep.second
 		 );
+
 return (it); 
 }
 
@@ -963,10 +960,7 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 			}
 			result.second=v;
 		}	
-		if (!condition && v==2 && dir==DEFAULT){
-		// debug::print_pose(sd.Di.pose, "Di difference:");
-//		debug::print_pose(sd.Dn.pose, "Dn difference:");
-		}
+
 	}
 
 	if (others==NULL){
@@ -998,7 +992,7 @@ void Configurator::trackTaskExecution(Task & t){
 	// bool (t.checkEnded()).ended;s
 	// debug::print_pose(t.from_Di(b2), "TASK start IS");
 	//printf("in track: end criteria d= %f ",t.endCriteria.distance.get());
-	t.motorStep--;
+	//t.motorStep--; //delete this
 	bool ended=(t.checkEnded(b2Transform_zero)).ended;
 	if(t.motorStep==0 || ended){
 		t.change=1;
@@ -1061,8 +1055,8 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, std::vector <ver
 			throw std::invalid_argument("no edge between current v and next in plan!");
 		}
 		std::vector<vertexDescriptor>::iterator task_end=to_task_end(nextEdge.first, transitionSystem, pv, pv.begin());
-		currentTask = task_to_execute(transitionSystem, nextEdge.first.m_target);		
 		currentVertex= *task_end;
+		currentTask = task_to_execute(transitionSystem, currentVertex);		
 		if (g[*task_end].Di==g[currentVertex].Di){
 			task_end++;
 		}
