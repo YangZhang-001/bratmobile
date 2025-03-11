@@ -539,17 +539,23 @@ std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, verte
 
 std::vector<vertexDescriptor>::iterator Configurator::to_task_end(edgeDescriptor& e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan,  std::vector<vertexDescriptor>::iterator it){ 
 edgeDescriptor e_start=e;
+std::pair<edgeDescriptor, bool> ep;
 do{
-	auto ep=boost::edge(*it, *(it+1), g);
-	it++;
+	ep=boost::edge(*it, *(it+1), g);
 	if (!ep.second){
 		break;
 	}
 	else{
 		e=ep.first;
 	}
-}while(g[e.m_target].direction==g[e_start.m_target].direction && it != plan.end() && it!=(plan.end()-1)&& g[e.m_target].direction==DEFAULT && (g[e.m_target].Di==g[e_start.m_source].Di));
-return it;
+	it++; //includes the next vertex not belonging to this task
+}while(g[e.m_target].direction==g[e_start.m_target].direction &&
+		 it != plan.end() && it!=(plan.end()-1)               && 
+		// g[e.m_target].direction==DEFAULT                     && 
+		 (g[e.m_target].Di==g[e_start.m_source].Di)
+		 //&& ep.second
+		 );
+return (it); 
 }
 
 
@@ -686,7 +692,13 @@ void Configurator::transitionMatrix(State& state, Direction d, vertexDescriptor 
 		}
 		else {
 			if (src==TransitionSystem::null_vertex()){
-				state.options={currentTask.direction};
+				if (!currentTask.change){
+					state.options={currentTask.direction};
+				}
+				else{
+					state.options={DEFAULT, LEFT, RIGHT};
+				}
+				
 			}
 			else if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
 				state.options.push_back(temp.direction);
@@ -1011,7 +1023,7 @@ int Configurator::motorStep(Task::Action a){
 
 std::vector <vertexDescriptor> Configurator::changeTask(bool b, std::vector <vertexDescriptor> pv, const TransitionSystem & g){
 	// printf("moving edge = %i -> %i exists %i\n", movingEdge.m_source, movingEdge.m_target, boost::edge(movingEdge.m_source, movingEdge.m_target, transitionSystem).second);
-	// printf("current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
+	// printpf("current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
 	if (!b){
 		// boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 		return pv;
@@ -1051,6 +1063,9 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, std::vector <ver
 		std::vector<vertexDescriptor>::iterator task_end=to_task_end(nextEdge.first, transitionSystem, pv, pv.begin());
 		currentTask = task_to_execute(transitionSystem, nextEdge.first.m_target);		
 		currentVertex= *task_end;
+		if (g[*task_end].Di==g[currentVertex].Di){
+			task_end++;
+		}
 		pv.erase(pv.begin(), task_end);// if (currentTask.action.getLinearSpeed()==0){
 		// 	currentTask.motorStep=transitionSystem[currentEdge].step;
 		// }
@@ -1130,7 +1145,7 @@ float Configurator::approximate_angle(const float & angle, const Direction & d, 
 
 void Configurator::ts_cleanup(TransitionSystem * g, std::vector <vertexDescriptor>& p){
 	Connected connected(g);
-	NotSelfEdge ke(g);
+	ViableEdge ke(g);
 	FilteredTS fts(*g, ke, connected); //boost::keep_all()
 	TransitionSystem tmp;
 	boost::copy_graph(fts, tmp);

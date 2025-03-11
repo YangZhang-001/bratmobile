@@ -273,7 +273,11 @@ struct InPlan{
 };
 
 //check if two states belong to the same task
-// bool same_task(const vertexDescriptor & v, const vertexDescriptor & v1, const TransitionSystem& g) {
+// IsTaskStep{
+// 	IsTaskStep()=default;
+// 	bool operator()(const TransitionSystem & g, )
+// };
+// bool is_task_step(const vertexDescriptor & v, const vertexDescriptor & v1, const TransitionSystem& g) {
 // 	return (g[v].Di==g[v1].Di && g[v].direction==g[v1].direction && g[v].Dn==g[v1].Dn);
 // }
 
@@ -285,10 +289,11 @@ struct NotSelfEdge{
 	NotSelfEdge(TransitionSystem * _g): g(_g){}
 
 	bool operator()(const edgeDescriptor & e) const {
-		bool not_self= e.m_source!=e.m_target && (*g)[e].step!=0 ; 
-		// if (e.m_source==e.m_target){
-		// 	//auto def_kin =(*default_kinematics.find((*g)[e.m_target].direction)).second;
-		// }
+		bool not_self= e.m_source!=e.m_target && (*g)[e].step!=0  ; 
+		if (e.m_source==e.m_target){
+			auto def_kin =(*default_kinematics.find((*g)[e.m_target].direction)).second;
+
+		}
 		return not_self;
 	}
 	private:
@@ -296,27 +301,41 @@ struct NotSelfEdge{
 };
 
 
-struct KeepEdge{
-	KeepEdge()=default;
-	KeepEdge(TransitionSystem * _g,std::vector <vertexDescriptor>* _p): g(_g), plan(_p){
-		nse=NotSelfEdge(g);
-		ip=InPlan(plan);
-	}
+struct ViableEdge{
+	ViableEdge()=default;
+	ViableEdge(TransitionSystem * _g): g(_g){}
 
-	bool operator()(const edgeDescriptor & e)const{
-		return nse(e) || (!nse(e) && ip(e));
+	bool operator()(const edgeDescriptor & e) const {
+		NotSelfEdge nse(g);
+		bool not_self= nse(e) || e.m_source==e.m_target && (*g)[e].step!=0;
+		return not_self;
 	}
-
 	private:
-	TransitionSystem* g;
-	std::vector <vertexDescriptor> * plan;
-	NotSelfEdge nse;
-	InPlan ip;
+	TransitionSystem * g;
 };
 
 
+// struct KeepEdge{
+// 	KeepEdge()=default;
+// 	KeepEdge(TransitionSystem * _g,std::vector <vertexDescriptor>* _p): g(_g), plan(_p){
+// 		nse=NotSelfEdge(g);
+// 		ip=InPlan(plan);
+// 	}
 
-typedef boost::filtered_graph<TransitionSystem, NotSelfEdge, Connected> FilteredTS;
+// 	bool operator()(const edgeDescriptor & e)const{
+// 		return nse(e) || (!nse(e) && ip(e));
+// 	}
+
+// 	private:
+// 	TransitionSystem* g;
+// 	std::vector <vertexDescriptor> * plan;
+// 	NotSelfEdge nse;
+// 	InPlan ip;
+// };
+
+
+
+typedef boost::filtered_graph<TransitionSystem, ViableEdge, Connected> FilteredTS;
 typedef boost::filtered_graph<TransitionSystem, boost::keep_all, Visited> VisitedTS;
 
 

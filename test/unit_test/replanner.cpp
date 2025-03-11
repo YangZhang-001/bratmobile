@@ -64,7 +64,7 @@ int main(int argc, char** argv){
         n_v+=7;
     }
     conf.getTask()->change=1;
-    conf.planVertices= conf.changeTask(1, std::vector<vertexDescriptor>(), conf.transitionSystem);
+   conf.planVertices= conf.changeTask(1, std::vector<vertexDescriptor>(), conf.transitionSystem);
 
     conf.planVertices.clear();
     conf.Spawner();
