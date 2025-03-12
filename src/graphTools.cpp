@@ -357,6 +357,33 @@ std::vector <vertexDescriptor> gt::task_vertices( vertexDescriptor v, Transition
 	return result;
 }
 
+
+std::vector<vertexDescriptor>::iterator gt::to_task_end(edgeDescriptor& e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan,  std::vector<vertexDescriptor>::iterator it){ 
+edgeDescriptor e_start=e;
+std::pair<edgeDescriptor, bool> ep;
+do{
+	ep=boost::edge(*it, *(it+1), g);
+	if (!ep.second){
+		break;
+	}
+	else{
+		e=ep.first;
+	}
+	if (g[e.m_target].direction==g[e_start.m_target].direction){
+		it++;
+	}
+	//it++; //includes the next vertex not belonging to this task
+}while(g[e.m_target].direction==g[e_start.m_target].direction &&
+		 it != plan.end() && it!=(plan.end()-1)               && 
+		// g[e.m_target].direction==DEFAULT                     && 
+		 (g[e.m_target].Di==g[e_start.m_source].Di)
+		 //&& ep.second
+		 );
+
+return (it); 
+}
+
+
 bool StateMatcher::match_equal(const MATCH_TYPE& candidate, const MATCH_TYPE& desired){
 	bool result=false;
 	switch (desired){ //the desired match

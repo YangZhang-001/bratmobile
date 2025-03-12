@@ -1,7 +1,6 @@
 #ifndef TASK_H
 #define TASK_H
 #include "measurement.h"
-const float SIM_DURATION = int(BOX2DRANGE*2 /MAX_SPEED);
 
 b2Fixture * GetSensor(b2Body * body);
 

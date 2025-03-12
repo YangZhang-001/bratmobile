@@ -30,19 +30,19 @@ int main(int argc, char** argv){
     }
     conf.data2fp = ci.data2fp;
     conf.Spawner();
-    auto og_plan=conf.ci->plan_on_hold;
+    auto og_plan=conf.control->plan;
     int n_v=conf.transitionSystem.m_vertices.size();
     conf.addIteration();
     int og_step=0;
-    conf.planVertices= conf.changeTask(1, conf.ci->plan_on_hold, conf.transitionSystem);
+    conf.control->plan= conf.changeTask(1, conf.control->plan, conf.transitionSystem);
    // conf.getTask()->motorStep=0;
     if (argv[1]=="empty"){
         og_plan={2};
     }    
-    conf.printPlan(&conf.planVertices);
-    if (!conf.planVertices.empty()){
-        conf.currentVertex=*(conf.planVertices.end()-1);
-        vertexDescriptor prev=*(conf.planVertices.end()-2);
+    conf.printPlan(&conf.control->plan);
+    if (!conf.control->plan.empty()){
+        conf.currentVertex=*(conf.control->plan.end()-1);
+        vertexDescriptor prev=*(conf.control->plan.end()-2);
         conf.currentEdge=boost::edge(prev, conf.currentVertex, conf.transitionSystem).first;
 
     }
@@ -64,18 +64,18 @@ int main(int argc, char** argv){
         n_v+=7;
     }
     conf.getTask()->change=1;
-   conf.planVertices= conf.changeTask(1, std::vector<vertexDescriptor>(), conf.transitionSystem);
+   conf.control->plan= conf.changeTask(1, std::vector<vertexDescriptor>(), conf.transitionSystem);
     conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
-    conf.planVertices.clear();
+    conf.control->plan.clear();
     conf.Spawner();
-    conf.planVertices= conf.changeTask(1, conf.ci->plan_on_hold, conf.transitionSystem);
+    conf.control->plan= conf.changeTask(1, conf.control->plan, conf.transitionSystem);
     conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
-    conf.printPlan(&conf.planVertices);
+    conf.printPlan(&conf.control->plan);
     if (conf.transitionSystem.m_vertices.size() > n_v){
         printf("size error = %i\n", conf.transitionSystem.m_vertices.size()-n_v);
         return 2;
     }
-    if (og_plan!=conf.ci->plan_on_hold){
+    if (og_plan!=conf.control->plan){
         printf("wrong plan\n");
         return 1;
     }

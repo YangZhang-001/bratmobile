@@ -7,6 +7,9 @@
 #include <opencv2/imgproc.hpp> //useful down the line! (graphTools)
 #include <opencv2/tracking.hpp>
 
+typedef unsigned int AffordanceIndex; //was thinking of this being a character but doesn't have to be maybe enum is fine
+
+
 struct CompareY{
 	template <typename T>
     bool operator() ( T a, T b ){ //
@@ -111,38 +114,25 @@ public:
 
     Disturbance(){};
     Disturbance(AffordanceIndex i){
-        if (i>affordances.size()-1){
-            throw std::invalid_argument("Not a valid affordance index\n");
-        }
-        else{
-            affordanceIndex = i;
-        }
+        affordanceIndex = i;
     }
     Disturbance(AffordanceIndex i, b2Vec2 p){
-        if (i>affordances.size()-1){
-            throw std::invalid_argument("Not a valid affordance index\n");
-        }
-        else{
+
             affordanceIndex = i;
-        }
+        
 		bf.pose.Set(p, 0);
         valid =1;
     }    
 
         Disturbance(AffordanceIndex i, b2Vec2 p, float a){
-        if (i>affordances.size()-1){
-            throw std::invalid_argument("Not a valid affordance index\n");
-        }
-        else{
-            affordanceIndex = i;
-        }
+        affordanceIndex = i;
         bf.pose.Set(p,a);
         valid =1;
     }   
 
     Disturbance(BodyFeatures _bf): bf(_bf){
        // valid=1;
-        affordanceIndex=1;
+        affordanceIndex=AVOID;
     } 
 
     Disturbance(b2Body* b){

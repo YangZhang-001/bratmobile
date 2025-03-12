@@ -55,12 +55,12 @@ public:
 	std::chrono::high_resolution_clock::time_point previousTimeScan;
 	//float timeElapsed =0;
 	CoordinateContainer data2fp;
-	bool planning =1;
+	//bool planning =1;
 	char statFile[100];
 	char bodyFile[100];
 	bool timerOff=0;
 	int bodies=0;
-	std::vector <vertexDescriptor> planVertices;
+	//std::vector <vertexDescriptor> planVertices;
 	TransitionSystem transitionSystem;
 	StateMatcher matcher;
 	WorldBuilder worldBuilder;
@@ -196,7 +196,6 @@ std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &, vertexDesc
 
 std::vector <vertexDescriptor> planner(TransitionSystem&, vertexDescriptor, vertexDescriptor goal=TransitionSystem::null_vertex(), bool been=0, const Task* custom_ctrl_goal=NULL, bool * finished =NULL) ;
 
-std::vector<vertexDescriptor>::iterator to_task_end(edgeDescriptor &, TransitionSystem &, const std::vector<vertexDescriptor> &, std::vector<vertexDescriptor>::iterator); //in a vector, finds vertices belonging to the same task and skips to the end fo the task
 
 //std::vector <vertexDescriptor> back_planner(TransitionSystem&, vertexDescriptor, vertexDescriptor root=0);
 
@@ -208,7 +207,7 @@ void start(); //data interface class collecting position of bodies
 
 void stop();
 
-void registerInterface(ConfiguratorInterface *);
+void registerInterface(ConfiguratorInterface *, ControlInterface *);
 
 static void run(Configurator *);
 

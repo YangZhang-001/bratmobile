@@ -69,29 +69,33 @@ bool Configurator::Spawner(){
 	b2Vec2 gravity = {0.0, 0.0};
 	b2World world= b2World(gravity);
 	char name[256];
-	auto startTime =std::chrono::high_resolution_clock::now();
 	bool explored=0;
-	if (planning){
-		pre_explore(transitionSystem, planVertices, currentTask.change);
+	float duration=0; //tine for planning and exploring
+	if (PLANNING){
+		auto startTime =std::chrono::high_resolution_clock::now();
+		//start mutex here
+		pre_explore(transitionSystem, control->plan, currentTask.change);
 		vertexDescriptor src=get_explore_start(transitionSystem);
 		resetPhi(transitionSystem);
-		ci->plan_on_hold=explorer(src, transitionSystem, world);
+		control->plan=explorer(src, transitionSystem, world);
 		if (debugOn){
-			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, planVertices, currentVertex);
+			std::vector<vertexDescriptor> _plan=(control->plan);
+			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
 		}		
-		ts_cleanup(transitionSystem, ci->plan_on_hold);
-		if (ci->plan_on_hold.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
+		ts_cleanup(transitionSystem, control->plan);
+		if (control->plan.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
 			printf("no plan, searchign from %i\n", src);
 			bool finished=false;
-			ci->plan_on_hold= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
-			// if (!finished && planVertices.empty()){
-			// 	controlGoal=Task();
-			// }
+			control->plan= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
 		}
 		else{
 			printf("recycled plan in explorer:\n");
 		}
-		printPlan(&ci->plan_on_hold);
+		auto endTime =std::chrono::high_resolution_clock::now();
+		std::chrono::duration<float, std::milli>d= startTime- endTime; //in seconds
+		duration=abs(float(d.count())/1000); //express in seconds
+		printPlan(&control->plan);
+		//unlock mutex
 
 
 	}
@@ -113,14 +117,10 @@ bool Configurator::Spawner(){
 			printf("crashed, curre\n");
 		}
 	}
-	float duration=0;
-	auto endTime =std::chrono::high_resolution_clock::now();
-	std::chrono::duration<float, std::milli>d= startTime- endTime; //in seconds
- 	duration=abs(float(d.count())/1000); //express in seconds
 	if (benchmark){
 		FILE * f = fopen(statFile, "a+");
 		if (explored){
-			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, planVertices, currentVertex);
+			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, control->plan, currentVertex);
 			fprintf(f, "*");
 		}
 		fprintf(f,"%i\t%i\t%f\n", worldBuilder.getBodies(), transitionSystem.m_vertices.size(), duration);
@@ -185,23 +185,7 @@ Disturbance Configurator::getDisturbance(TransitionSystem&g, const  vertexDescri
 }
 
 
-Task Configurator::task_to_execute(const TransitionSystem & g, const vertexDescriptor& v){
-	Task t=controlGoal;
-	if (Disturbance Dn= g[v].Dn; Dn.getAffIndex()==AVOID){
-		Disturbance Di= Dn;
-		Di.affordanceIndex=PURSUE;
-		t=Task(Di, g[v].direction, b2Transform_zero, true);
-		float distance = g[v].end_from_Dn().p.Length();
-		t.setEndCriteria(Distance(distance));
-	}
-	else{
-		t=Task(g[v].Di, g[v].direction, b2Transform_zero, true);
 
-	}
-	//t.motorStep=100;
-	return t;
-
-}
 
 
 simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State src, 
@@ -228,7 +212,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, TransitionSystem& g, b2World & w){
 	vertexDescriptor v1=v, v0=v, bestNext=v, v0_exp=v;
 	Direction direction=currentTask.direction;
-	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=planVertices;
+	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=control->plan;
 	std::set <vertexDescriptor> closed;
 	Task t;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
@@ -315,7 +299,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 								}
 							}
 						}
-						if (planVertices.empty() && g[task_start].options.empty()){
+						if (control->plan.empty() && g[task_start].options.empty()){
 							shift_states(g, task_vertices, shift_start);
 						}
 					}
@@ -530,30 +514,6 @@ std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, verte
 }
 
 
-std::vector<vertexDescriptor>::iterator Configurator::to_task_end(edgeDescriptor& e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan,  std::vector<vertexDescriptor>::iterator it){ 
-edgeDescriptor e_start=e;
-std::pair<edgeDescriptor, bool> ep;
-do{
-	ep=boost::edge(*it, *(it+1), g);
-	if (!ep.second){
-		break;
-	}
-	else{
-		e=ep.first;
-	}
-	if (g[e.m_target].direction==g[e_start.m_target].direction){
-		it++;
-	}
-	//it++; //includes the next vertex not belonging to this task
-}while(g[e.m_target].direction==g[e_start.m_target].direction &&
-		 it != plan.end() && it!=(plan.end()-1)               && 
-		// g[e.m_target].direction==DEFAULT                     && 
-		 (g[e.m_target].Di==g[e_start.m_source].Di)
-		 //&& ep.second
-		 );
-
-return (it); 
-}
 
 
 EndedResult Configurator::estimateCost(State &state, b2Transform start, Direction d){
@@ -614,8 +574,9 @@ void Configurator::stop(){
 	}
 }
 
-void Configurator::registerInterface(ConfiguratorInterface * _ci){
+void Configurator::registerInterface(ConfiguratorInterface * _ci, ControlInterface * _control){
 	ci = _ci;
+	control=_control;
 }
 
 void Configurator::run(Configurator * c){
@@ -739,7 +700,7 @@ void Configurator::applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0
 		if (!e.second){
 			printf("no edge wtf\n");
 		}
-		to_task_end(e.first, g, plan_prov, it);
+		gt::to_task_end(e.first, g, plan_prov, it);
 		if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
 			g[v0].options={g[e.first.m_target].direction};
 		}
@@ -976,116 +937,6 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 
 
 
-
-void Configurator::trackTaskExecution(Task & t){
-	//b2Transform deltaPose=worldBuilder.wb_bridger.get_transform(&t, data2fp); //track using obstacle OR dead reckoning
-	//here can insert something for wb.bridger, wheel speed control (for step)
-	b2Transform deltaPose=t.action.getTransform(MOTOR_CALLBACK);
-	// printf("shift graph by:\n");
-	// debug::print_pose(deltaPose);
-	//adjust_rw_task(movingVertex, transitionSystem, &t, deltaPose); //readjust end criteria
-	updateGraph(transitionSystem, deltaPose);//lateral error is hopefully noise and is ignored
-	//TO REMOVE ONCE YOU APPY FULLY CLOSED LOOP INSTEAD OF DEAD RECKONING
-	math::applyAffineTrans(deltaPose, t.disturbance); //remove later
-	//debug::print_pose(t.disturbance.pose(), "TASK DISTURBANCE IS");
-	//debug::print_pose(t.start, "TASK start IS");
-	// bool (t.checkEnded()).ended;s
-	// debug::print_pose(t.from_Di(b2), "TASK start IS");
-	//printf("in track: end criteria d= %f ",t.endCriteria.distance.get());
-	//t.motorStep--; //delete this
-	bool ended=(t.checkEnded(b2Transform_zero)).ended;
-	if(t.motorStep==0 || ended){
-		t.change=1;
-	}
-
-}
-
-
-int Configurator::motorStep(Task::Action a){
-	int result=0;
-        if (a.getOmega()>0){ //LEFT
-            result = (SAFE_ANGLE)/(MOTOR_CALLBACK * a.getOmega());
-        }
-		else if (a.getOmega()<0){ //RIGHT
-            result = (SAFE_ANGLE)/(MOTOR_CALLBACK * a.getOmega());
-		}
-		else if (a.getLinearSpeed()>0){
-			result = (simulationStep)/(MOTOR_CALLBACK*a.getLinearSpeed());
-		}
-	    return abs(result);
-    }
-
-std::vector <vertexDescriptor> Configurator::changeTask(bool b, std::vector <vertexDescriptor> pv, const TransitionSystem & g){
-	// printf("moving edge = %i -> %i exists %i\n", movingEdge.m_source, movingEdge.m_target, boost::edge(movingEdge.m_source, movingEdge.m_target, transitionSystem).second);
-	// printpf("current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
-	if (!b){
-		// boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
-		return pv;
-	}
-	if (planning){
-		if (pv.empty()){
-			printf("I DON'T KNOW WHAT TO DO NOW\n");
-			currentTask=Task(controlGoal.disturbance, UNDEFINED);
-			currentTask.action.L=0;
-			currentTask.action.R=0;
-			currentTask.change=1;
-			//currentVertex=movingVertex;
-			return pv;
-		}
-		
-		// std::pair<edgeDescriptor, bool> ep=boost::add_edge(currentVertex, pv[0], transitionSystem);
-
-		printf("erased\n");
-		// transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
-		// transitionSystem[movingVertex].outcome=simResult::successful;
-		// movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
-		//printf("added edge %i->%i\n", movingVertex, currentVertex);
-		// boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
-		//printf("removed out edges of moving v\n");
-		// if (ep.first.m_source==ep.first.m_target){
-		// 	currentEdge=movingEdge;
-		// }
-		// else{
-		// 	currentEdge=ep.first;
-		// }
-		// transitionSystem[movingEdge].direction=transitionSystem[ep.first].direction;
-		// transitionSystem[movingEdge].step=currentTask.motorStep;
-		auto nextEdge=boost::edge(currentVertex, pv[0], g);
-		if (!nextEdge.second){
-			throw std::invalid_argument("no edge between current v and next in plan!");
-		}
-		std::vector<vertexDescriptor>::iterator task_end=to_task_end(nextEdge.first, transitionSystem, pv, pv.begin());
-		currentVertex= *task_end;
-		currentTask = task_to_execute(transitionSystem, currentVertex);		
-		if (g[*task_end].Di==g[currentVertex].Di){
-			task_end++;
-		}
-		pv.erase(pv.begin(), task_end);// if (currentTask.action.getLinearSpeed()==0){
-		// 	currentTask.motorStep=transitionSystem[currentEdge].step;
-		// }
-		// else{
-		// 	currentTask.motorStep = gt::distanceToSimStep(transitionSystem[currentVertex].distance(), currentTask.action.getLinearSpeed());// 			
-		// }
-	}
-	else{
-		if (transitionSystem[currentVertex].Dn.isValid()){
-			currentTask = Task(transitionSystem[currentVertex].Dn, DEFAULT); //reactive
-		}
-		else if(currentTask.direction!=DEFAULT){
-			currentTask = Task(transitionSystem[currentVertex].Dn, DEFAULT); //reactive
-		}
-		else{
-			currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
-		}
-		gt::fill(simResult(), &transitionSystem[currentVertex]);
-		currentTask.motorStep = motorStep(currentTask.getAction());
-		transitionSystem[movingEdge].step=currentTask.motorStep;
-		printf("changed to %f\n", currentTask.action.getOmega());
-	}
-//	ogStep = currentTask.motorStep;
-	return pv;
-}
-
 // void Configurator::trackDisturbance(b2Transform & pose, Task::Action a, float error){
 // 	float angleTurned =MOTOR_CALLBACK*a.getOmega();
 // 	pose.q.Set(pose.q.GetAngle()-angleTurned);	
@@ -1104,7 +955,7 @@ std::vector <vertexDescriptor> Configurator::changeTask(bool b, std::vector <ver
 
 
 void Configurator::planPriority(TransitionSystem&g, vertexDescriptor v){
-    for (vertexDescriptor p:planVertices){
+    for (vertexDescriptor p:control->plan){
 		if (p==v){
        		g[v].phi-=.1;
 			break;
@@ -1112,11 +963,7 @@ void Configurator::planPriority(TransitionSystem&g, vertexDescriptor v){
     } 
 }
 
-void Configurator::updateGraph(TransitionSystem&g, const b2Transform & deltaPose){
-	math::applyAffineTrans(deltaPose, g);
-	math::applyAffineTrans(-deltaPose, &controlGoal);
-	math::applyAffineTrans(deltaPose, getTask()->start); //d update happens in get_transform
-}
+
 
 float Configurator::approximate_angle(const float & angle, const Direction & d, const simResult::resultType & outcome){
 	float result=angle, decimal, integer;
@@ -1161,7 +1008,7 @@ vertexDescriptor Configurator::get_explore_start(TransitionSystem & g){
 		dummy_vertex(currentVertex);
 		currentTask.change=1;
 	}
-	if (!planVertices.empty() || !currentTask.change){ //
+	if (!control->plan.empty() || !currentTask.change){ //
 		return movingVertex;
 	}
 	else{

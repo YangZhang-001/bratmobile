@@ -36,7 +36,7 @@ void print_graph(const T& g, const Disturbance & goal, std::vector <vertexDescri
 
 
 template <class T>
-void graph_file(const int &it, const T &g, const Disturbance &goal, std::vector<vertexDescriptor>plan, const vertexDescriptor &c)
+void graph_file(const int &it, const T &g, const Disturbance &goal, std::vector<vertexDescriptor>&plan, const vertexDescriptor &c)
 {
     char fileName[50];
 	sprintf(fileName, "/tmp/graph%04i.txt", it);
@@ -52,7 +52,7 @@ void graph_file(const int &it, const T &g, const Disturbance &goal, std::vector<
 				fprintf(f,"*");
 			}
 		}
-		fprintf(f,"%i -> ", *vi);
+		fprintf(f,"%i -> ", (*vi));
 		for (auto ei=es.first; ei!=es.second; ei++){
 
 			fprintf(f, "%i (%f) ", (*ei).m_target, g[(*ei)].probability);

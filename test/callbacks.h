@@ -151,7 +151,7 @@ public:
         c->trackTaskExecution(*c->getTask());
         Task::Action action= c->getTask()->getAction();
         EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, true);//true
-        if (er.ended &( c->getTask()->motorStep<1 & c->transitionSystem[c->currentVertex].direction!=STOP && c->planVertices.empty() && c->getIteration()>1)){ //& c->getTask()->motorStep<1
+        if (er.ended &( c->getTask()->motorStep<1 & c->transitionSystem[c->currentVertex].direction!=STOP && c->control->plan.empty() && c->getIteration()>1)){ //& c->getTask()->motorStep<1
             Disturbance new_goal(PURSUE, c->controlGoal.start.p, c->controlGoal.start.q.GetAngle());
 		    c->controlGoal = Task(new_goal, UNDEFINED);
             b2Vec2 v = c->controlGoal.disturbance.getPosition() - b2Vec2(0,0);
@@ -160,7 +160,7 @@ public:
             fclose(f);
 
 	    }
-	    c->planVertices =c->changeTask(c->getTask()->change,  c->ci->plan_on_hold,c->transitionSystem);
+	    c->control->plan =c->changeTask(c->getTask()->change,  c->control->plan,c->transitionSystem);
         L=c->getTask()->getAction().getLWheelSpeed();
         R= c->getTask()->getAction().getRWheelSpeed();
     }

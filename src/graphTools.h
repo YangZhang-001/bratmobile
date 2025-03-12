@@ -257,6 +257,9 @@ namespace gt{
 	bool check_edge_direction(const std::pair<edgeDescriptor, bool> &, TransitionSystem&, Direction);
 
 	std::vector <vertexDescriptor> task_vertices(vertexDescriptor, TransitionSystem&, const int &, const vertexDescriptor &, std::pair<bool, edgeDescriptor>* ep=NULL);
+
+	std::vector<vertexDescriptor>::iterator to_task_end(edgeDescriptor &, TransitionSystem &, const std::vector<vertexDescriptor> &, std::vector<vertexDescriptor>::iterator); //in a vector, finds vertices belonging to the same task and skips to the end fo the task
+
 }
 
 struct InPlan{
