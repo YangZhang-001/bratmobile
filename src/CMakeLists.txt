@@ -4,7 +4,7 @@ set (CMAKE_CXX_STANDARD 17)
 
 set(SRC disturbance.cpp configurator.cpp task.cpp graphTools.cpp measurement.cpp worldbuilder.cpp sensor.cpp debug.cpp CloCK_math.cpp planner.cpp control_interface.cpp)
 
-set(HEAD disturbance.h configurator.h robot.h task.h graphTools.h affordance.h settings.h const.h measurement.h worldbuilder.h sensor.h debug.h CloCK_math.h planner.h control_interface.h)
+set(HEAD disturbance.h configurator.h robot.h task.h graphTools.h const.h measurement.h worldbuilder.h sensor.h debug.h CloCK_math.h planner.h control_interface.h)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
