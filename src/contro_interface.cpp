@@ -23,7 +23,7 @@ void ControlInterface::track_task_execution(Task & t){
 
 }
 
-std::vector <vertexDescriptor> Configurator::change_task(bool b, std::vector <vertexDescriptor> pv, const TransitionSystem & g){
+std::vector <vertexDescriptor> ControlInterface::change_task(bool b, std::vector <vertexDescriptor> pv, const TransitionSystem & g, const Task & controlGoal, Task &currentTask){
 	// printf("moving edge = %i -> %i exists %i\n", movingEdge.m_source, movingEdge.m_target, boost::edge(movingEdge.m_source, movingEdge.m_target, transitionSystem).second);
 	// printpf("current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
 	if (!b){
@@ -95,13 +95,13 @@ std::vector <vertexDescriptor> Configurator::change_task(bool b, std::vector <ve
 	return pv;
 }
 
-void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t){
+void ControlInterface::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t){
 	math::applyAffineTrans(deltaPose, g);
 	math::applyAffineTrans(-deltaPose, &controlGoal);
 	math::applyAffineTrans(deltaPose, t->start); //d update happens in get_transform
 }
 
-int Configurator::motorStep(Task::Action a){
+int ControlInterface::motorStep(Task::Action a){
 	int result=0;
         if (a.getOmega()>0){ //LEFT
             result = (SAFE_ANGLE)/(MOTOR_CALLBACK * a.getOmega());
@@ -115,3 +115,20 @@ int Configurator::motorStep(Task::Action a){
 	    return abs(result);
     }
 
+
+Task ControlInterface::task_to_execute(const TransitionSystem & g, const vertexDescriptor& v, const Task& controlGoal){
+	Task t=controlGoal;
+	if (Disturbance Dn= g[v].Dn; Dn.getAffIndex()==AVOID){
+		Disturbance Di= Dn;
+		Di.affordanceIndex=PURSUE;
+		t=Task(Di, g[v].direction, b2Transform_zero, true);
+		float distance = g[v].end_from_Dn().p.Length();
+		t.setEndCriteria(Distance(distance));
+	}
+	else{
+		t=Task(g[v].Di, g[v].direction, b2Transform_zero, true);
+
+	}
+	return t;
+
+}
