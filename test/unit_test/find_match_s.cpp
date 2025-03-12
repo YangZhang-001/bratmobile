@@ -1,5 +1,8 @@
 #include "../callbacks.h"
 
+std::mutex ctr_mutex;
+
+
 int main(int argc, char** argv){
     bool debug=0;
     Disturbance target1;
@@ -19,7 +22,8 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     conf.simulationStep=0.27;
     ConfiguratorInterface ci;
-    conf.registerInterface(&ci);
+    ControlInterface control;
+    conf.registerInterface(&ci, &control);
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];

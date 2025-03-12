@@ -1,4 +1,5 @@
 #include "../callbacks.h"
+std::mutex ctr_mutex;
 
 int main(int argc, char** argv){
     bool debug=0;
@@ -11,7 +12,7 @@ int main(int argc, char** argv){
     Task goal(target1,DEFAULT);
     Configurator conf(goal);
     ConfiguratorInterface ci;
-    conf.registerInterface(&ci);
+    conf.registerInterface(&ci, NULL);
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];

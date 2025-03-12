@@ -1,4 +1,5 @@
 #include "../callbacks.h"
+std::mutex ctr_mutex;
 
 int main(int argc, char** argv){
     bool debug=0;
@@ -19,7 +20,8 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     conf.simulationStep=0.27;
     ConfiguratorInterface ci;
-    conf.registerInterface(&ci);
+    ControlInterface control;
+    conf.registerInterface(&ci, &control);
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];
@@ -36,7 +38,6 @@ int main(int argc, char** argv){
     
     // std::vector <vertexDescriptor> plan=conf.planner(conf.transitionSystem, conf.currentVertex);
     conf.Spawner();
-    conf.control->plan=conf.control->plan;
     int n_v=conf.transitionSystem.m_vertices.size();
     conf.printPlan(&conf.control->plan);
     int og=0;
@@ -53,10 +54,10 @@ int main(int argc, char** argv){
     // math::applyAffineTrans(-shift, conf.controlGoal.disturbance);
     int ogstep=conf.transitionSystem[conf.currentEdge].step;
     for (int i=0;i<di.iteration*2; i++){
-        conf.trackTaskExecution(*conf.getTask());
+        control.track_task_execution(*conf.getTask(), conf.transitionSystem, &conf.controlGoal);
         conf.getTask()->motorStep--;
         bool ch=conf.getTask()->change;
-        conf.changeTask(conf.getTask()->change, conf.control->plan, conf.transitionSystem);
+        control.change_task(conf.getTask()->change, conf.control->plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);
         if (ch){
             conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
         }

@@ -74,6 +74,7 @@ bool Configurator::Spawner(){
 	if (PLANNING){
 		auto startTime =std::chrono::high_resolution_clock::now();
 		//start mutex here
+		ctr_mutex.lock(); //const.h
 		pre_explore(transitionSystem, control->plan, currentTask.change);
 		vertexDescriptor src=get_explore_start(transitionSystem);
 		resetPhi(transitionSystem);
@@ -82,7 +83,7 @@ bool Configurator::Spawner(){
 			std::vector<vertexDescriptor> _plan=(control->plan);
 			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
 		}		
-		ts_cleanup(transitionSystem, control->plan);
+		ts_cleanup(transitionSystem, control->plan); //remove self-edge and singleton states
 		if (control->plan.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
 			printf("no plan, searchign from %i\n", src);
 			bool finished=false;
@@ -91,6 +92,7 @@ bool Configurator::Spawner(){
 		else{
 			printf("recycled plan in explorer:\n");
 		}
+		ctr_mutex.unlock();
 		auto endTime =std::chrono::high_resolution_clock::now();
 		std::chrono::duration<float, std::milli>d= startTime- endTime; //in seconds
 		duration=abs(float(d.count())/1000); //express in seconds
@@ -157,7 +159,7 @@ Disturbance Configurator::getDisturbance(TransitionSystem&g, const  vertexDescri
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 			if (visited.first ||out.empty()){
-				if (g[v].Di.isValid() && g[v].Di.affordanceIndex==AVOID && g[visited.second.m_target].direction!=dir){
+				if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[visited.second.m_target].direction!=dir){
 					Task task(g[v].Di, DEFAULT, g[v].endPose, true);
 					Robot robot(&world);
 					robot.body->SetTransform(task.start.p, task.start.q.GetAngle());
@@ -275,7 +277,9 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 							Task controlGoal_adjusted= controlGoal;
 							shift_start= b2MulT(b2MulT(sk.first.start, controlGoal.start), g[task_start].start);
 							math::applyAffineTrans(shift_start, &controlGoal_adjusted); //as start
-							auto plan_tmp=planner(g, task_start, TransitionSystem::null_vertex(), been, &controlGoal_adjusted, &finished);
+							boost::remove_edge(edge.first, g);
+							edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
+							auto plan_tmp=planner(g, v, TransitionSystem::null_vertex(), been, &controlGoal_adjusted, &finished); //not v but task start
 							printf("out of explore planner\n");
 							bool filler=0;
 							// if (match.second!=v){
@@ -288,8 +292,8 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 									plan_prov.insert(plan_prov.begin(), task_start);
 								}
 								printf("removing edge %i -> %i\n", edge.first.m_source, edge.first.m_target);
-								boost::remove_edge(edge.first, g);
-								edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
+								// boost::remove_edge(edge.first, g);
+								// edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
 								//printf("edge %i -> %i added\n", v0, task_start);
 								if (t.direction== g[task_start].direction){
 									g[v0].options.clear();
@@ -299,7 +303,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 								}
 							}
 						}
-						if (control->plan.empty() && g[task_start].options.empty()){
+						if (control->plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
 							shift_states(g, task_vertices, shift_start);
 						}
 					}
@@ -308,7 +312,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				else{
 					auto out_expected=gt::outEdges(g, v0, t.direction);
 					edge= add_vertex_now(v0, v1,g,sk.first.Di, sk.second); //addVertex
-					g[edge.first.m_target].label=sk.first.label; //new edge, valid
+					//g[edge.first.m_target].label=sk.first.label; //new edge, valid
 					if (!out_expected.empty()){
 						vertexDescriptor exp=out_expected[0].m_target;
 						printf("thought it'd be vertex %i , end pose:", exp );

@@ -12,15 +12,6 @@
 #include "planner.h"
 #include "control_interface.h"
 
-//FOR DEBUG
-//
-
-const std::map<Direction, char*> dirmap={{DEFAULT, "DEFAULT"}, {LEFT, "LEFT"}, {RIGHT, "RIGHT"}, {STOP, "STOP"}, {UNDEFINED, "UNDEFINED"}, {BACK, "BACK"}};
-
-
-
-//typedef b2Transform DeltaPose;
-
 class ConfiguratorInterface{ //data interface for configurator
 public:
 	bool debugOn=0;
@@ -50,17 +41,13 @@ public:
 	std::thread * thread=NULL;
 	bool debugOn=0;
 	float simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);
-	//b2Transform ogGoal;
 	Task controlGoal;
 	std::chrono::high_resolution_clock::time_point previousTimeScan;
-	//float timeElapsed =0;
 	CoordinateContainer data2fp;
-	//bool planning =1;
 	char statFile[100];
 	char bodyFile[100];
 	bool timerOff=0;
 	int bodies=0;
-	//std::vector <vertexDescriptor> planVertices;
 	TransitionSystem transitionSystem;
 	StateMatcher matcher;
 	WorldBuilder worldBuilder;
@@ -142,24 +129,29 @@ Disturbance getDisturbance(TransitionSystem&, const vertexDescriptor&, b2World &
 
 simResult simulate(Task, b2World &);
 
+//add waypoints to proprity queue
 void backtrack(std::vector <vertexDescriptor>&, std::vector <vertexDescriptor>&, const std::set<vertexDescriptor>&, TransitionSystem&, std::vector <vertexDescriptor>&);
 
+//split this state into sub-state representing waypoints
 std::vector <vertexDescriptor> splitTask(vertexDescriptor v, TransitionSystem&, Direction, vertexDescriptor src=TransitionSystem::null_vertex());
 
+//if same task, it will terminate in the same disturbance
 void propagateD(vertexDescriptor, vertexDescriptor, TransitionSystem&, std::vector<vertexDescriptor>*propagated=NULL, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE);
 
-void pruneEdges(std::vector<std::pair<vertexDescriptor, vertexDescriptor>>, TransitionSystem&, vertexDescriptor&, vertexDescriptor&,std::vector <vertexDescriptor>&, std::vector<std::pair<vertexDescriptor, vertexDescriptor>>&); //clears edges out of redundant vertices, removes the vertices from PQ, returns vertices to remove at the end
+//void pruneEdges(std::vector<std::pair<vertexDescriptor, vertexDescriptor>>, TransitionSystem&, vertexDescriptor&, vertexDescriptor&,std::vector <vertexDescriptor>&, std::vector<std::pair<vertexDescriptor, vertexDescriptor>>&); //clears edges out of redundant vertices, removes the vertices from PQ, returns vertices to remove at the end
 
-
+//if in plan the vertex gets priority
 void planPriority(TransitionSystem&, vertexDescriptor); 
 
 void adjust_simulated_task(const vertexDescriptor&, TransitionSystem &, Task*);
 
+//adjust real-world task
 void adjust_rw_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);
 
+//finds frontier: closest states with DEFAULT tasks reachable from a vertex v
 std::vector <Frontier> frontierVertices(vertexDescriptor, TransitionSystem&, Direction , bool been=0); //returns the closest vertices to the start vertex which are reached by executing a task of the specified direction
 
-void recall_plan_from(const vertexDescriptor&, TransitionSystem & , b2World &, std::vector <vertexDescriptor>&, bool&, Disturbance *dist);
+//void recall_plan_from(const vertexDescriptor&, TransitionSystem & , b2World &, std::vector <vertexDescriptor>&, bool&, Disturbance *dist);
 
 std::pair <edgeDescriptor, bool> maxProbability(std::vector<edgeDescriptor>, TransitionSystem&);
 
@@ -190,10 +182,13 @@ std::pair<edgeDescriptor, bool> addVertex(vertexDescriptor & src, vertexDescript
 	return result;
 }
 
+//adds vertex after discovering it in exploration
 std::pair <edgeDescriptor, bool> add_vertex_now(vertexDescriptor &, vertexDescriptor &, TransitionSystem &, Disturbance,Edge edge=Edge(), bool topDown=0);
 
+//adds vertex retroactively (e.g. if in split task)
 std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &, vertexDescriptor &, TransitionSystem &, Disturbance,Edge edge=Edge(), bool topDown=0);
 
+//search the TS for a plan
 std::vector <vertexDescriptor> planner(TransitionSystem&, vertexDescriptor, vertexDescriptor goal=TransitionSystem::null_vertex(), bool been=0, const Task* custom_ctrl_goal=NULL, bool * finished =NULL) ;
 
 

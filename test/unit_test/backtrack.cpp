@@ -1,5 +1,6 @@
 #include "configurator.h"
 
+std::mutex ctr_mutex;
 
 std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer &, const b2Transform&){
     std::vector <BodyFeatures> result;
@@ -25,7 +26,8 @@ int main(int argc, char** argv){
     math::applyAffineTrans(t2, pos3);
     conf.simulationStep=std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH)*2;
     ConfiguratorInterface ci;
-    conf.registerInterface(&ci);
+    ControlInterface control;
+    conf.registerInterface(&ci, NULL);
     b2Transform start=conf.transitionSystem[conf.movingVertex].endPose;
     if (argc>=7){
         start.p.x=atof(argv[4]);
@@ -65,7 +67,7 @@ int main(int argc, char** argv){
     std::vector <vertexDescriptor> evaluationQ={v1, v2, v3}, priorityQ;
     std::set <vertexDescriptor> closed;
     //backtrack
-    conf.backtrack(evaluationQ, priorityQ, closed, conf.transitionSystem, conf.planVertices);
+    conf.backtrack(evaluationQ, priorityQ, closed, conf.transitionSystem, control.plan);
     boost::print_graph(conf.transitionSystem);
     auto vs=boost::vertices(conf.transitionSystem);
     for (auto vi=vs.first; vi!=vs.second;vi++){

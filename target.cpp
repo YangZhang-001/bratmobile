@@ -20,6 +20,7 @@ int main(int argc, char** argv) {
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
 	ConfiguratorInterface configuratorInterface;
+	ControlInterface controlInterface;
     Configurator configurator(controlGoal);
 	configurator.planning =1;
 	if (argc>2){
@@ -34,7 +35,7 @@ int main(int argc, char** argv) {
 	}
 	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
-	configurator.registerInterface(&configuratorInterface);
+	configurator.registerInterface(&configuratorInterface, &controlInterface);
 	MotorCallback cb(&configurator);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);

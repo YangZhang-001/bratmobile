@@ -1,6 +1,9 @@
 #include "../callbacks.h"
 #include <string>
 
+std::mutex ctr_mutex;
+
+
 Direction getDirection(char d){
     
     if (d=='l'){
@@ -97,7 +100,8 @@ int main(int argc, char** argv){
     Task goal(target1,DEFAULT);
     Configurator conf(goal);
     ConfiguratorInterface ci;
-    conf.registerInterface(&ci);
+    ControlInterface control;
+    conf.registerInterface(&ci, NULL);
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     conf.dummy_vertex(conf.currentVertex);
     vertexDescriptor v1=boost::add_vertex(conf.transitionSystem);
@@ -114,7 +118,7 @@ int main(int argc, char** argv){
     conf.transitionSystem[v1].direction=direction;
     conf.transitionSystem[v1].outcome=outcome;
     int expected_options=expectedOptions(direction, outcome, target1);
-    conf.applyTransitionMatrix(conf.transitionSystem, v1, direction, false, conf.currentVertex,conf.planVertices );
+    conf.applyTransitionMatrix(conf.transitionSystem, v1, direction, false, conf.currentVertex, control.plan);
     printf("expected options=%i\n", expected_options);
     print_directions(conf.transitionSystem[v1].options);
     if (int(conf.transitionSystem[v1].options.size())!=expected_options){

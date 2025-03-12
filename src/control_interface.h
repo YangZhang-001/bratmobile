@@ -3,9 +3,7 @@
 
 #include "worldbuilder.h"
 #include "task.h"
-#include <mutex>
-
-//std::mutex mutex;
+//extern std::mutex ctr_mutex;
 
 class ControlInterface{ //tracks task execution
     public:
@@ -14,9 +12,9 @@ class ControlInterface{ //tracks task execution
 
 	ControlInterface(){}
 
-	void track_task_execution(Task &, TransitionSystem&);
+	void track_task_execution(Task &, TransitionSystem&, Task * controlGoal);
 
-	void change_task(bool, std::vector <vertexDescriptor>&, TransitionSystem&, const Task & controlGoal, Task &currentTask, const vertexDescriptor & currentVertex);
+	void change_task(bool, std::vector <vertexDescriptor>&, TransitionSystem&, const Task & controlGoal, Task &currentTask, vertexDescriptor & currentVertex);
 
 	int motor_step(Task::Action a);
 

@@ -1,5 +1,7 @@
 #include "configurator.h"
 
+std::mutex ctr_mutex;
+
 std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer &, const b2Transform&){
     std::vector <BodyFeatures> result;
     return result;
@@ -20,7 +22,7 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     conf.simulationStep=std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH)*2;
     ConfiguratorInterface ci;
-    conf.registerInterface(&ci);
+    conf.registerInterface(&ci, NULL);
     b2Transform start=conf.transitionSystem[conf.movingVertex].endPose;
     if (argc>=7){
         start.p.x=atof(argv[4]);

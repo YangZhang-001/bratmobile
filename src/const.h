@@ -8,6 +8,8 @@
 #include <math.h>
 #include<vector>
 #include <map>
+#include <mutex>
+
 
 const float SAFE_ANGLE =M_PI_2;
 const float MAX_TURN =M_PI;
@@ -68,5 +70,8 @@ const std::map <Direction, std::pair<float, float>> default_kinematics={{DEFAULT
                                                                          {RIGHT, std::pair<float, float>(0, -WHEEL_SPEED_TURN)}};
 
 #define PLANNING true
+extern std::mutex ctr_mutex;
+
+const std::map<Direction, char*> dirmap={{DEFAULT, "DEFAULT"}, {LEFT, "LEFT"}, {RIGHT, "RIGHT"}, {STOP, "STOP"}, {UNDEFINED, "UNDEFINED"}, {BACK, "BACK"}};
 
 #endif

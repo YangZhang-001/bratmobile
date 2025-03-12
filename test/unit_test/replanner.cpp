@@ -1,4 +1,5 @@
 #include "../callbacks.h"
+std::mutex ctr_mutex;
 
 int main(int argc, char** argv){
     printf("lin 4\n");
@@ -21,7 +22,8 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     conf.simulationStep=0.27;
     ConfiguratorInterface ci;
-    conf.registerInterface(&ci);
+    ControlInterface control;
+    conf.registerInterface(&ci, &control);
     conf.setBenchmarking(true, "simulation_benchmarking");
     DataInterface di(&ci);
     if (argc>1){
@@ -34,7 +36,8 @@ int main(int argc, char** argv){
     int n_v=conf.transitionSystem.m_vertices.size();
     conf.addIteration();
     int og_step=0;
-    conf.control->plan= conf.changeTask(1, conf.control->plan, conf.transitionSystem);
+//    conf.currentVertex=control.plan[0];
+    control.change_task(1, control.plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);
    // conf.getTask()->motorStep=0;
     if (argv[1]=="empty"){
         og_plan={2};
@@ -64,20 +67,20 @@ int main(int argc, char** argv){
         n_v+=7;
     }
     conf.getTask()->change=1;
-   conf.control->plan= conf.changeTask(1, std::vector<vertexDescriptor>(), conf.transitionSystem);
+    control.plan.clear();
+    control.change_task(1, control.plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);
     conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
-    conf.control->plan.clear();
     conf.Spawner();
-    conf.control->plan= conf.changeTask(1, conf.control->plan, conf.transitionSystem);
+    if (og_plan!=conf.control->plan){
+        printf("wrong plan\n");
+        return 1;
+    }
+    control.change_task(1, conf.control->plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);
     conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
     conf.printPlan(&conf.control->plan);
     if (conf.transitionSystem.m_vertices.size() > n_v){
         printf("size error = %i\n", conf.transitionSystem.m_vertices.size()-n_v);
         return 2;
-    }
-    if (og_plan!=conf.control->plan){
-        printf("wrong plan\n");
-        return 1;
     }
     printf("wohoo\n");
     return 0;

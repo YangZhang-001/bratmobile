@@ -1,4 +1,5 @@
 #include "../callbacks.h"
+std::mutex ctr_mutex;
 
 
 int main(int argc, char** argv){
@@ -6,7 +7,7 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     conf.simulationStep=std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH)*2;
     ConfiguratorInterface ci;
-    conf.registerInterface(&ci);
+    conf.registerInterface(&ci, NULL);
     conf.data2fp.emplace(Pointf(atof(argv[1]), atof(argv[2])));
     conf.dummy_vertex(conf.movingVertex);
     auto v1 = boost::add_vertex(conf.transitionSystem);

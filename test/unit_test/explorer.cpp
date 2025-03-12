@@ -1,5 +1,6 @@
 #include "../callbacks.h"
 
+std::mutex ctr_mutex;
 
 
 int main(int argc, char** argv){
@@ -18,7 +19,8 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     conf.simulationStep=simulationStep;
     ConfiguratorInterface ci;
-    conf.registerInterface(&ci);
+    ControlInterface control;
+    conf.registerInterface(&ci, &control);
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];
@@ -29,8 +31,8 @@ int main(int argc, char** argv){
     b2World world(b2Vec2(0,0));
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     conf.dummy_vertex(conf.currentVertex);
-    conf.planVertices =conf.explorer(conf.currentVertex, conf.transitionSystem, world);
-    if (!conf.planVertices.empty()){
+    control.plan =conf.explorer(conf.currentVertex, conf.transitionSystem, world);
+    if (!control.plan.empty()){
         return 1;
     }
     debug::print_graph(conf.transitionSystem, target1, std::vector<vertexDescriptor>(), conf.currentVertex );

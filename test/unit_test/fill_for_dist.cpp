@@ -1,5 +1,7 @@
 #include "../callbacks.h"
 
+std::mutex ctr_mutex;
+
 bool debug_draw(b2World & w, int file, char * label){
     char name_b[256], name_v[256];
     sprintf(name_b, "/tmp/debug_bodies_%s_%i.txt", label, file);
@@ -26,7 +28,7 @@ bool debug_draw(b2World & w, int file, char * label){
 int main(int argc, char** argv){
     Configurator conf;
     ConfiguratorInterface ci;
-    conf.registerInterface(&ci);
+    conf.registerInterface(&ci, NULL);
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];

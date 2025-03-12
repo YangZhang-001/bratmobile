@@ -72,6 +72,7 @@ int main(int argc, char** argv) {
 	AlphaBot motors;
     Task controlGoal;
 	ConfiguratorInterface configuratorInterface;
+	ControlInterface controlInterface;
     Configurator configurator(controlGoal);
 	configurator.planning=1;
 	char name[60];
@@ -86,7 +87,7 @@ if (argc>2){
 		configuratorInterface.debugOn = atoi(argv[1]);
 	}	configurator.setSimulationStep(.5);
 	LidarInterface dataInterface(&configuratorInterface);
-	configurator.registerInterface(&configuratorInterface);
+	configurator.registerInterface(&configuratorInterfacecontrolInterface);
 	MotorCallback cb(&configurator);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);

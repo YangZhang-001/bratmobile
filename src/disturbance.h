@@ -1,6 +1,6 @@
 #ifndef DISTURBANCE_H
 #define DISTURBANCE_H
-#include "settings.h"
+#include "robot.h"
 #include "robot.h"
 #include <algorithm>
 #include <stdexcept>
@@ -35,7 +35,7 @@ std::vector <C> arrayToVec(C* c, int ct){
 }
 
 
-class Configurator;
+class ControlInterface;
 
 class BodyFeatures{
     public:
@@ -89,7 +89,7 @@ class BodyFeatures{
 struct Disturbance{ //this generates error
 
 private:
-friend Configurator;
+friend ControlInterface;
 friend struct StateMatcher;
     AffordanceIndex affordanceIndex = NONE; //not using the enum because in the future we might want to add more affordances
     bool valid= 0;

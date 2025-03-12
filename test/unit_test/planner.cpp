@@ -15,6 +15,8 @@ std::vector <Direction> getPlan(const TransitionSystem & g, const std::vector <v
 
 }
 
+std::mutex ctr_mutex;
+
 
 int main(int argc, char** argv){
     
@@ -44,7 +46,8 @@ int main(int argc, char** argv){
     conf.simulationStep=simStep;
     ConfiguratorInterface ci;
     conf.debugOn=debug;
-    conf.registerInterface(&ci);
+    ControlInterface control;
+    conf.registerInterface(&ci, &control);
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];
@@ -56,7 +59,7 @@ int main(int argc, char** argv){
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     conf.dummy_vertex(conf.currentVertex);
     conf.explorer(conf.currentVertex, conf.transitionSystem, world);
-    conf.ts_cleanup(conf.transitionSystem, conf.ci->plan_on_hold);
+    conf.ts_cleanup(conf.transitionSystem, conf.control->plan);
     std::vector <vertexDescriptor> plan=conf.planner(conf.transitionSystem, conf.currentVertex);
     std::vector <Direction> plan_d=getPlan(conf.transitionSystem, plan, conf.currentVertex);
     conf.printPlan(&plan);

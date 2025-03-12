@@ -16,6 +16,7 @@
 // #include <filesystem>
 // #define _USE_MATH_DEFINES
 
+//std::mutex ctr_mutex;
 
 void printGraph(TransitionSystem& g){
     boost::print_graph(g);
@@ -148,7 +149,7 @@ public:
         if (!c->running ){
             return;
         }
-        c->trackTaskExecution(*c->getTask());
+        c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal));
         Task::Action action= c->getTask()->getAction();
         EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, true);//true
         if (er.ended &( c->getTask()->motorStep<1 & c->transitionSystem[c->currentVertex].direction!=STOP && c->control->plan.empty() && c->getIteration()>1)){ //& c->getTask()->motorStep<1
@@ -160,7 +161,7 @@ public:
             fclose(f);
 
 	    }
-	    c->control->plan =c->changeTask(c->getTask()->change,  c->control->plan,c->transitionSystem);
+	    c->control->change_task(c->getTask()->change,  c->control->plan,c->transitionSystem, c->controlGoal, *c->getTask(), c->currentVertex);
         L=c->getTask()->getAction().getLWheelSpeed();
         R= c->getTask()->getAction().getRWheelSpeed();
     }
