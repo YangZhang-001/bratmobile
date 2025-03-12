@@ -291,10 +291,6 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 									printf("inserting current vertex\n");
 									plan_prov.insert(plan_prov.begin(), task_start);
 								}
-								printf("removing edge %i -> %i\n", edge.first.m_source, edge.first.m_target);
-								// boost::remove_edge(edge.first, g);
-								// edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
-								//printf("edge %i -> %i added\n", v0, task_start);
 								if (t.direction== g[task_start].direction){
 									g[v0].options.clear();
 								}
