@@ -20,8 +20,10 @@ class ControlInterface{ //tracks task execution
 
 	void update_graph(TransitionSystem&, const b2Transform & _deltaPose, Task* t, Task * controlGoal);
 
+	//merge vertices into a single task
 	Task task_to_execute(const TransitionSystem &, const vertexDescriptor&, const Task& t);
 
+	vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, vertexDescriptor currentVertex);
 
 };
 
