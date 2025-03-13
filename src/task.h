@@ -10,7 +10,7 @@ b2Body * GetDisturbance(b2World *);
 
 bool overlaps(b2Body *, Disturbance *);
 
-bool overlaps(cv::RotatedRect, Disturbance *);
+bool overlaps(const cv::RotatedRect&, Disturbance *);
 
 
 
