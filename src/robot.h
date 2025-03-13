@@ -34,10 +34,28 @@ public:
 		
 	}
 
-	static std::vector <b2Vec2> get_vertices(){ //returns vertices in local frame
-		std::vector <b2Vec2>result ={b2Vec2(-ROBOT_HALFWIDTH, -ROBOT_HALFLENGTH), b2Vec2(ROBOT_HALFWIDTH, -ROBOT_HALFLENGTH), b2Vec2(-ROBOT_HALFWIDTH, ROBOT_HALFLENGTH), b2Vec2(ROBOT_HALFWIDTH, ROBOT_HALFLENGTH) };
-		return result;
+	// static std::vector <b2Vec2> get_vertices(){ //returns vertices in local frame
+	// 	std::vector <b2Vec2>result ={b2Vec2(-ROBOT_HALFWIDTH, -ROBOT_HALFLENGTH), b2Vec2(ROBOT_HALFWIDTH, -ROBOT_HALFLENGTH), b2Vec2(-ROBOT_HALFWIDTH, ROBOT_HALFLENGTH), b2Vec2(ROBOT_HALFWIDTH, ROBOT_HALFLENGTH) };
+	// 	return result;
+	// }
+
+	static cv::RotatedRect get_rect(b2Transform* t=NULL){
+		b2Transform * _t;
+		if (t!=NULL){
+			*_t=*t;
+		}
+		else{
+			*_t=b2Transform_zero;
+		}
+		cv::RotatedRect rect;
+		rect.size.width=2*ROBOT_HALFWIDTH; //should be x axis, in opencv they are swaped idk why
+		rect.size.height=2*ROBOT_HALFLENGTH; //should be y axis
+		rect.center=cv::Point2f(_t->p.x+ROBOT_BOX_OFFSET_X, _t->p.y+ROBOT_BOX_OFFSET_Y);
+		rect.angle=_t->q.GetAngle();
+		return rect;
 	}
+
+
 };
 
 

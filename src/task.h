@@ -6,9 +6,12 @@ b2Fixture * GetSensor(b2Body * body);
 
 b2Body * GetDisturbance(b2World *);
 
-bool overlaps(b2Body *, b2Body *);
+//bool overlaps(b2Body *, b2Body *);
 
 bool overlaps(b2Body *, Disturbance *);
+
+bool overlaps(cv::RotatedRect, Disturbance *);
+
 
 
 class Task{
@@ -308,7 +311,7 @@ EndedResult checkEnded(b2Transform robotTransform = b2Transform(b2Vec2(0.0, 0.0)
 
 EndedResult checkEnded(State, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)))); //usually used to check against control goal
 
-//EndedResult checkEnded(Direction dir=UNDEFINED, Stae);
+bool checkEnded( Disturbance * dist_obs=NULL, cv::RotatedRect box);
 
 Task(){
     start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));
@@ -336,7 +339,7 @@ simResult bumping_that(b2World &, int, b2Body *,bool debug =0, float remaining =
 
 EndCriteria getEndCriteria(const Disturbance&);
 
-b2Transform from_Di( b2Transform * custom_start=NULL);
+b2Transform from_Di( const b2Transform * custom_start=NULL, Disturbance * d_obs=NULL); //d_obs disturbance observed rather than D with which task was init
 
 };
 

@@ -19,22 +19,22 @@ b2Body * GetDisturbance(b2World * w){
 }
 
 
-bool overlaps(b2Body * robot, b2Body * disturbance){
-	b2Fixture * sensor=GetSensor(robot);
-	if (sensor==NULL){
-		return true;
-	}
-	if (disturbance==NULL){
-		return true;
-	}
-	b2AABB aabb=sensor->GetAABB(0);
-	b2Shape * d=disturbance->GetFixtureList()->GetShape();
-	b2Transform robot_pose=robot->GetTransform(), d_pose= disturbance->GetTransform();
-	//b2AABB aabb_shape, aabb_zero;
-	//sensor->GetShape()->ComputeAABB(&aabb_shape, robot_pose,0);
-	//sensor->GetShape()->ComputeAABB(&aabb_shape, b2Transform_zero,0);
-	return b2TestOverlap(sensor->GetShape(), 0, d, 0,robot_pose, d_pose);
-}
+// bool overlaps(b2Body * robot, b2Body * disturbance){
+// 	b2Fixture * sensor=GetSensor(robot);
+// 	if (sensor==NULL){
+// 		return true;
+// 	}
+// 	if (disturbance==NULL){
+// 		return true;
+// 	}
+// 	b2AABB aabb=sensor->GetAABB(0);
+// 	b2Shape * d=disturbance->GetFixtureList()->GetShape();
+// 	b2Transform robot_pose=robot->GetTransform(), d_pose= disturbance->GetTransform();
+// 	//b2AABB aabb_shape, aabb_zero;
+// 	//sensor->GetShape()->ComputeAABB(&aabb_shape, robot_pose,0);
+// 	//sensor->GetShape()->ComputeAABB(&aabb_shape, b2Transform_zero,0);
+// 	return b2TestOverlap(sensor->GetShape(), 0, d, 0,robot_pose, d_pose);
+// }
 
 bool overlaps(b2Body * robot, Disturbance * disturbance){
 	b2Fixture * sensor=GetSensor(robot);
@@ -44,19 +44,39 @@ bool overlaps(b2Body * robot, Disturbance * disturbance){
 	if (disturbance==NULL || disturbance->getAffIndex()!= AVOID ){
 		return true;
 	}
-	b2AABB aabb=sensor->GetAABB(0);
-	// b2Shape * d=disturbance->GetFixtureList()->GetShape();
+	//b2AABB aabb=sensor->GetAABB(0);
 	b2Transform robot_pose=robot->GetTransform(), d_pose= disturbance->pose();
-	b2AABB aabb_shape, aabb_zero, aabb_d;
-	sensor->GetShape()->ComputeAABB(&aabb_shape, robot_pose,0);
-	sensor->GetShape()->ComputeAABB(&aabb_shape, b2Transform_zero,0);
+	// b2AABB aabb_shape, aabb_zero, aabb_d;
+	//sensor->GetShape()->ComputeAABB(&aabb_shape, robot_pose,0);
+	//sensor->GetShape()->ComputeAABB(&aabb_shape, b2Transform_zero,0);
 	b2PolygonShape d_shape;
 	d_shape.SetAsBox(disturbance->bf.halfWidth, disturbance->bf.halfLength, b2Vec2(0,0), 0);
-	d_shape.ComputeAABB(&aabb_d, disturbance->pose(), 0);
+	//d_shape.ComputeAABB(&aabb_d, disturbance->pose(), 0);
 	//create AABB with disturbance vertices
 	//test overlap
 	return b2TestOverlap(sensor->GetShape(), 0, &d_shape, 0,robot_pose, d_pose);
 }
+
+bool overlaps(const cv::RotatedRect& box, Disturbance * d){
+	bool result=false;
+	if (!box.size.area() || NULL==d ){
+		return result;
+	}
+	if (d->getAffIndex()!=AVOID){
+		return result;
+	}
+
+	// cv::Point2f center(d->pose().p.x, d->pose().p.y);
+	// cv::Size2f size(d->halfWidth()*2, d->halfLength()*2);
+	// cv::RotatedRect d_rect(center, size, d->pose().q.GetAngle());
+	b2PolygonShape d_shape, box_shape;
+	d_shape.SetAsBox(d->bf.halfWidth, d->bf.halfLength, b2Vec2(0,0), 0);
+	box_shape.SetAsBox(box.size.width/2, box.size.height/2, b2Vec2(0,0), 0);
+	b2Transform box_pose(b2Vec2(box.center.x, box.center.y), b2Rot(box.angle));
+	return b2TestOverlap(&box_shape, 0, &d_shape, 0,box_pose, d->bf.pose);
+
+}
+
 
 simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, bool debugOn, float remaining){ //CLOSED LOOP CONTROL, og return simreult
 		simResult result=simResult(simResult::resultType::successful);
@@ -66,8 +86,7 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, bo
 			return result;
 		}
 		Listener listener(&disturbance);
-		//Query query(&disturbance);
-		b2Body * d_body=GetDisturbance(&_world);
+		//b2Body * d_body=GetDisturbance(&_world);
 		int _count=_world.GetBodyCount();
 		_world.SetContactListener(&listener);	
 		FILE * robotPath;
@@ -325,28 +344,30 @@ EndedResult Task::checkEnded(State n,  Direction dir, bool relax, std::pair<bool
 	return r;
 }
 
-// bool Task::checkEnded(Direction dir){
-// 	if (dir==UNDEFINED){
-// 		dir=direction;
-// 	}
-// 	EndedResult r;
-// 	Angle a;
-// 	Distance d;
-// 	if (disturbance.isValid()){
-// 		if (action.getOmega()!=0){
 
-// 		}
-// 	}
-// }
+bool Task::checkEnded(Disturbance *dist_obs){
+	EndedResult r;
+	b2Transform fromDi=from_Di(&b2Transform_zero, dist_obs);
+	Angle a(fromDi.q.GetAngle());
+	Distance d(fromDi.p.x);
 
-b2Transform Task::from_Di(b2Transform * custom_start){
-    if (disturbance.getAffIndex()==NONE){
+}
+
+b2Transform Task::from_Di(const b2Transform * custom_start, Disturbance * d_obs){
+	Disturbance *d;
+	if (d_obs==NULL){
+		d=&disturbance;
+	}
+	else{
+		d=d_obs;
+	}
+    if (d->getAffIndex()==NONE){
 		return b2Transform_inf;
 	}
     if (NULL==custom_start){
         *custom_start=start;
     }
-	return b2MulT(*custom_start, disturbance.pose());
+	return b2MulT(*custom_start, d->pose());
 }
 
 EndCriteria Task::getEndCriteria(const Disturbance &d){

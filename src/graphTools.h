@@ -71,7 +71,7 @@ struct Edge{
 struct State{
 	Disturbance Di; //initial Disturbance
 	Disturbance Dn; //new Disturbance
-	b2Transform endPose = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0)), start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0)); 
+	b2Transform endPose = b2Transform_zero, start = b2Transform_zero; 
 	simResult::resultType outcome;
 	std::vector <Direction> options;
 	//int nodesInSameSpot =0;

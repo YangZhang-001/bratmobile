@@ -96,7 +96,9 @@ class WorldBuilder{
     b2Fixture * get_chassis(b2Body *);
 
     b2AABB  makeRobotSensor(b2Body*, Disturbance *goal); //returns bounding box in world coord
-
+    
+    template <typename Pt> inline
+    cv::RotatedRect sensor_box(Pt *, int array_size, Disturbance * dist=NULL);
 
     class Bridger{
         public:
@@ -104,6 +106,7 @@ class WorldBuilder{
 
         b2Transform get_transform(const Task &, const CoordinateContainer &, BodyFeatures * observed_disturbance=NULL); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
 
+        //given points, makes minimum bounding rotated box around them
         std::pair <bool, BodyFeatures> bounding_rotated_box(std::vector <cv::Point2f>nb);
 
         void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);

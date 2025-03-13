@@ -12,7 +12,7 @@ class ControlInterface{ //tracks task execution
 
 	ControlInterface(){}
 
-	void track_task_execution(Task &, TransitionSystem&, Task * controlGoal);
+	void track_task_execution(Task &, TransitionSystem&, Task * controlGoal, vertexDescriptor &v);
 
 	void change_task(bool, std::vector <vertexDescriptor>&, TransitionSystem&, const Task & controlGoal, Task &currentTask, vertexDescriptor & currentVertex);
 
@@ -25,6 +25,8 @@ class ControlInterface{ //tracks task execution
 
 	vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, vertexDescriptor currentVertex);
 
-};
+	void makeRobotSensor(TransitionSystem&, const vertexDescriptor&, const Task&); //sensor but not linked to a body
+
+};	
 
 #endif

@@ -74,6 +74,9 @@ std::vector<cv::Point2f> set2vec2f(std::set<T> s){
     return vec;
 }
 
+template <typename T>
+std::vector<b2Vec2> cast_b2Vec2(const std::vector<T>&);//make sure vector is b2Vec2
+
 // template <typename T>
 // std::vector<cv::Point2f> set2vec_cv(std::set<T>);
 

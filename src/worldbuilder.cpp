@@ -343,29 +343,32 @@ b2Fixture * WorldBuilder::get_chassis(b2Body * r){
 
 b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, Disturbance * goal){
 	b2AABB result;
-	// if (!(goal->getAffIndex()==AVOID)){
-	// 	return result;
-	// }
     if (!goal->isValid()){
         return result;
     }
 	b2PolygonShape * poly_robo=(b2PolygonShape*)robotBody->GetFixtureList()->GetShape();
-	//b2PolygonShape * poly_d=(b2PolygonShape*)disturbance.bf.fixture.GetShape();
-	std::vector <b2Vec2> all_points=arrayToVec(poly_robo->m_vertices, poly_robo->m_count), d_vertices=goal->vertices();
-	for (b2Vec2 p: d_vertices){
-		p =robotBody->GetLocalPoint(p);
-		all_points.push_back(p);
-	}
-	float minx=(std::min_element(all_points.begin(),all_points.end(), CompareX())).base()->x;
-	float miny=(std::min_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
-	float maxx=(std::max_element(all_points.begin(), all_points.end(), CompareX())).base()->x;
-	float maxy=(std::max_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
-	float halfLength=(fabs(maxy-miny))/2; //
-    float halfWidth=(fabs(maxx-minx))/2;
-	b2Vec2 centroid(maxx-halfWidth, maxy-halfLength);
-	b2Vec2 offset=centroid - robotBody->GetLocalPoint(robotBody->GetPosition());
-	b2PolygonShape shape;
-	shape.SetAsBox(halfWidth, halfLength, offset, 0);
+	// std::vector <b2Vec2> all_points=arrayToVec(poly_robo->m_vertices, poly_robo->m_count), d_vertices=goal->vertices();
+	// for (b2Vec2 p: d_vertices){
+	// 	p =robotBody->GetLocalPoint(p);
+	// 	all_points.push_back(p);
+	// }
+	// float minx=(std::min_element(all_points.begin(),all_points.end(), CompareX())).base()->x;
+	// float miny=(std::min_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
+	// float maxx=(std::max_element(all_points.begin(), all_points.end(), CompareX())).base()->x;
+	// float maxy=(std::max_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
+	// float halfLength=(fabs(maxy-miny))/2; //
+    // float halfWidth=(fabs(maxx-minx))/2;
+	// b2Vec2 centroid(maxx-halfWidth, maxy-halfLength);
+	// b2Vec2 offset=centroid - robotBody->GetLocalPoint(robotBody->GetPosition()); //0, 0, 0
+	cv::RotatedRect box=sensor_box(poly_robo->m_vertices, poly_robo->m_count, goal);
+    b2Vec2 local_robot=robotBody->GetLocalPoint(robotBody->GetPosition());
+    if (local_robot!=b2Vec2_zero){
+        throw std::invalid_argument("center is not zero?");
+    }
+    
+    b2PolygonShape shape;
+	//shape.SetAsBox(halfWidth, halfLength, offset, 0);
+    shape.SetAsBox(box.size.width, box.size.height);
 	b2FixtureDef fixtureDef;
 	fixtureDef.isSensor=true;
 	fixtureDef.shape=&shape;
@@ -375,6 +378,33 @@ b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, Disturbance * goal){
 	return result;
 	
 }
+
+template <typename Pt> inline
+cv::RotatedRect WorldBuilder::sensor_box(Pt *first_array, int array_size, Disturbance * dist=NULL){
+    cv::RotatedRect rect;
+    if (!goal->isValid()){
+        return rect;
+    }
+    std::vector<Pt> all_points_pt=arrayToVec(first_array, array_size);
+    std::vector <b2Vec2>  d_vertices=dist->vertices(), all_points =cast_b2Vec2(all_points_pt);
+	for (b2Vec2 p: d_vertices){
+		p =robotBody->GetLocalPoint(p);
+		all_points.push_back(p);
+	}
+	// float minx=(std::min_element(all_points.begin(),all_points.end(), CompareX())).base()->x;
+	// float miny=(std::min_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
+	// float maxx=(std::max_element(all_points.begin(), all_points.end(), CompareX())).base()->x;
+	// float maxy=(std::max_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
+	rect=cv::minAreaRect(all_points);
+    // float halfLength=(fabs(maxy-miny))/2; //
+    // float halfWidth=(fabs(maxx-minx))/2;
+    return rect;
+	//b2Vec2 centroid(maxx-halfWidth, maxy-halfLength);
+
+	//b2Vec2 offset=centroid - local_robot; //0, 0, 0
+
+}
+
 
 cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
     std::vector <cv::Point2f> vertices;
