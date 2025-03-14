@@ -372,8 +372,8 @@ b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, Disturbance * goal){
     
 
     //END OLD
-    cv::RotatedRect box=sensor_box(poly_robo->m_vertices, poly_robo->m_count, robotBody->GetTransform(), goal);
-    cv::Rect2f box_upright=box.boundingRect2f();
+    cv::Rect2f box_upright=sensor_box(poly_robo->m_vertices, poly_robo->m_count, robotBody->GetTransform(), goal);
+    //cv::Rect2f box_upright=box.boundingRect2f();
     b2Vec2 local_robot=robotBody->GetLocalPoint(robotBody->GetPosition());
     if (local_robot!=b2Vec2_zero){
         throw std::invalid_argument("center is not zero?");
