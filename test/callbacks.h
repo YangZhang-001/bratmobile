@@ -149,7 +149,7 @@ public:
         if (!c->running ){
             return;
         }
-        c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal));
+        c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal), c->currentVertex);
         Task::Action action= c->getTask()->getAction();
         EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, true);//true
         if (er.ended &( c->getTask()->motorStep<1 & c->transitionSystem[c->currentVertex].direction!=STOP && c->control->plan.empty() && c->getIteration()>1)){ //& c->getTask()->motorStep<1

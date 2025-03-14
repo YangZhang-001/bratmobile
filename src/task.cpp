@@ -345,16 +345,17 @@ EndedResult Task::checkEnded(State n,  Direction dir, bool relax, std::pair<bool
 }
 
 
-bool Task::checkEnded(Disturbance *dist_obs){
-	EndedResult r;
-	b2Transform fromDi=from_Di(&b2Transform_zero, dist_obs);
-	Angle a(fromDi.q.GetAngle());
-	Distance d(fromDi.p.x);
+bool Task::checkEnded(const cv::RotatedRect &box,Disturbance *dist_obs ){
+	// EndedResult r;
+	// b2Transform fromDi=from_Di(&b2Transform_zero, dist_obs);
+	// Angle a(fromDi.q.GetAngle());
+	// Distance d(fromDi.p.x);
 
 }
 
-b2Transform Task::from_Di(const b2Transform * custom_start, Disturbance * d_obs){
+b2Transform Task::from_Di(const  b2Transform* custom_start, Disturbance * d_obs){
 	Disturbance *d;
+	b2Transform _start=start;
 	if (d_obs==NULL){
 		d=&disturbance;
 	}
@@ -364,10 +365,10 @@ b2Transform Task::from_Di(const b2Transform * custom_start, Disturbance * d_obs)
     if (d->getAffIndex()==NONE){
 		return b2Transform_inf;
 	}
-    if (NULL==custom_start){
-        *custom_start=start;
+    if (NULL!=custom_start){
+        _start=*custom_start;
     }
-	return b2MulT(*custom_start, d->pose());
+	return b2MulT(_start, d->pose());
 }
 
 EndCriteria Task::getEndCriteria(const Disturbance &d){

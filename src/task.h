@@ -311,7 +311,7 @@ EndedResult checkEnded(b2Transform robotTransform = b2Transform(b2Vec2(0.0, 0.0)
 
 EndedResult checkEnded(State, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)))); //usually used to check against control goal
 
-bool checkEnded( Disturbance * dist_obs=NULL, cv::RotatedRect box);
+bool checkEnded( const cv::RotatedRect &,Disturbance * dist_obs=NULL );
 
 Task(){
     start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));

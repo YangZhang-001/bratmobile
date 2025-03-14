@@ -54,7 +54,7 @@ int main(int argc, char** argv){
     // math::applyAffineTrans(-shift, conf.controlGoal.disturbance);
     int ogstep=conf.transitionSystem[conf.currentEdge].step;
     for (int i=0;i<di.iteration*2; i++){
-        control.track_task_execution(*conf.getTask(), conf.transitionSystem, &conf.controlGoal);
+        control.track_task_execution(*conf.getTask(), conf.transitionSystem, &conf.controlGoal, conf.currentVertex);
         conf.getTask()->motorStep--;
         bool ch=conf.getTask()->change;
         control.change_task(conf.getTask()->change, conf.control->plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);

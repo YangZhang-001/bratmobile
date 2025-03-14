@@ -113,8 +113,8 @@ add_test(NAME end_contact_goal COMMAND end_contact 1 1)
 add_test(NAME get_disturbance_0dl COMMAND get_disturbance 0 2 0) #position 1, prev: DEF, curr: LEFT
 add_test(NAME get_disturbance_1l COMMAND get_disturbance 1 0) #position 1, prev: LEFT, curr: DEF
 add_test(NAME get_disturbance_2r COMMAND get_disturbance 2 1) #position 2, prev: RIGHT, curr:DEF
-add_test(NAME get_disturbance_3 COMMAND get_disturbance 3)
-add_test(NAME get_disturbance_3dr COMMAND get_disturbance 3 2 1)
+add_test(NAME get_disturbance_3 COMMAND get_disturbance 3) #obstacle behind (pos 3), prev: DEF, curr: DEF
+add_test(NAME get_disturbance_3dr COMMAND get_disturbance 3 2 1) #pos 3, prev: DEF, curr: RIGHT
 add_test(NAME get_disturbance_3l COMMAND get_disturbance 3 0)
 add_test(NAME get_disturbance_3r COMMAND get_disturbance 3 1)
 add_test(NAME get_disturbance_4r COMMAND get_disturbance 4)

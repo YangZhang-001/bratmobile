@@ -97,8 +97,24 @@ class WorldBuilder{
 
     b2AABB  makeRobotSensor(b2Body*, Disturbance *goal); //returns bounding box in world coord
     
-    template <typename Pt> inline
-    cv::RotatedRect sensor_box(Pt *, int array_size, Disturbance * dist=NULL);
+    template <typename Pt>
+    cv::Rect2f sensor_box(Pt *first_array, int array_size, b2Transform robot_pose, Disturbance * dist){
+        cv::Rect2f rect;
+        if (!dist->isValid()){
+            return rect;
+        }
+        std::vector<Pt> all_points_pt=arrayToVec(first_array, array_size);
+        std::vector <b2Vec2>  d_vertices=dist->vertices(); 
+        std::vector <cv::Point2f> all_points=cast_Point2f(all_points_pt);
+        for (b2Vec2 p: d_vertices){
+            p=b2MulT(robot_pose, p); //get local point
+            all_points.push_back(cv::Point2f(p.x, p.y));
+        }
+        rect=cv::boundingRect(all_points);
+        return rect;
+
+    }
+
 
     class Bridger{
         public:

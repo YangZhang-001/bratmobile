@@ -9,6 +9,8 @@
 #include<vector>
 #include <map>
 #include "const.h"
+#include <opencv2/core.hpp>
+
 
 
 class Robot {

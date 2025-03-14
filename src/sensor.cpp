@@ -42,15 +42,7 @@ Pointf getPointf(T v){
 // 	cv::Point2f result(p.x, p.y);
 // 	return result;
 // }
-template <typename T> inline
-std::vector<b2Vec2> cast_b2Vec2(const std::vector<T>& v){
-	std::vector<b2Vec2> result;
-	for (const T & t:v){
-		result.push_back(b2Vec2(t.x, t.y));
-	}
-	return result;
 
-}
 
 
 Pointf Polar2f(float radius, float angle){

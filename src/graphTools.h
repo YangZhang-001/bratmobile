@@ -1,7 +1,6 @@
 #ifndef GENERAL_H
 #define GENERAL_H
 #include <set>
-#include <opencv2/core.hpp>
 #include <opencv2/calib3d.hpp> //LMEDS
 #include <vector>
 #include <utility>                   // for std::pair
