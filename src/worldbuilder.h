@@ -110,7 +110,16 @@ class WorldBuilder{
             p=b2MulT(robot_pose, p); //get local point
             all_points.push_back(cv::Point2f(p.x, p.y));
         }
-        rect=cv::boundingRect(all_points);
+        //rect=cv::boundingRect(all_points);
+        float minx=(std::min_element(all_points.begin(),all_points.end(), CompareX())).base()->x;
+        float miny=(std::min_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
+        float maxx=(std::max_element(all_points.begin(), all_points.end(), CompareX())).base()->x;
+        float maxy=(std::max_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
+        rect.height=(fabs(maxy-miny)); //
+        rect.width=(fabs(maxx-minx));
+        cv::Point2f centroid(maxx-rect.width/2, maxy-rect.heigth/2);
+        rect.x=centroid.x-rect.width/2;
+        rect.y=centroid.y-rect.height/2;
         return rect;
 
     }
