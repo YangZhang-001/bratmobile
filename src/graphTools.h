@@ -99,6 +99,8 @@ struct State{
 
 	b2Transform start_from_Di()const;
 
+	b2Transform start_from_Dn()const;
+
 	b2Transform end_from_Dn()const;
 
 	b2Transform end_from_Di()const;

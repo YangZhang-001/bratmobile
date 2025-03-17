@@ -10,7 +10,7 @@ b2Body * GetDisturbance(b2World *);
 
 bool overlaps(b2Body *, Disturbance *);
 
-bool overlaps(const cv::RotatedRect&, Disturbance *);
+bool overlaps(const b2PolygonShape&, Disturbance *, const b2Transform& robot_pose=b2Transform_zero);
 
 
 
@@ -301,7 +301,7 @@ AffordanceIndex getAffIndex(){
 Direction H(Disturbance, Direction, bool topDown=0); //topDown enables Configurator topdown control on reactive behaviour
 
 
-void setEndCriteria(Angle angle=SAFE_ANGLE, Distance distance=BOX2DRANGE);
+void setEndCriteria(const Angle& angle=SAFE_ANGLE, const Distance& distance=BOX2DRANGE);
 
 void setEndCriteria(const Distance& distance);
 
@@ -309,9 +309,9 @@ void setErrorWeights();
 
 EndedResult checkEnded(b2Transform robotTransform = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)), Direction dir=UNDEFINED, bool relax=0, b2Body* robot=NULL, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0))));
 
-EndedResult checkEnded(State, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)))); //usually used to check against control goal
+EndedResult checkEnded(const State&, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)))); //usually used to check against control goal
 
-bool checkEnded( const cv::RotatedRect &,Disturbance * dist_obs=NULL );
+bool checkEnded( const b2PolygonShape &, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL );
 
 Task(){
     start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));

@@ -98,12 +98,12 @@ class WorldBuilder{
     b2AABB  makeRobotSensor(b2Body*, Disturbance *goal); //returns bounding box in world coord
     
     template <typename Pt>
-    cv::Rect2f sensor_box(Pt *first_array, int array_size, b2Transform robot_pose, Disturbance * dist){
+    static b2PolygonShape sensor_box(const std::vector <Pt> &all_points_pt, b2Transform robot_pose, const Disturbance * dist){
+        b2PolygonShape shape;
+        b2Vec2 centroid(2.0, 2.0);
         cv::Rect2f rect;
-        if (!dist->isValid()){
-            return rect;
-        }
-        std::vector<Pt> all_points_pt=arrayToVec(first_array, array_size);
+        if (dist->isValid()){
+        //std::vector<Pt> all_points_pt=arrayToVec(first_array, array_size);
         std::vector <b2Vec2>  d_vertices=dist->vertices(); 
         std::vector <cv::Point2f> all_points=cast_Point2f(all_points_pt);
         for (b2Vec2 p: d_vertices){
@@ -117,10 +117,13 @@ class WorldBuilder{
         float maxy=(std::max_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
         rect.height=(fabs(maxy-miny)); //
         rect.width=(fabs(maxx-minx));
-        cv::Point2f centroid(maxx-rect.width/2, maxy-rect.heigth/2);
+        centroid.x=maxx-rect.width/2;
+        centroid.y=maxy-rect.height/2;
         rect.x=centroid.x-rect.width/2;
         rect.y=centroid.y-rect.height/2;
-        return rect;
+        }
+        shape.SetAsBox(rect.size().width/2, rect.size().height/2,centroid, 0);
+        return shape;
 
     }
 

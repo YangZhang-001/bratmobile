@@ -44,22 +44,15 @@ bool overlaps(b2Body * robot, Disturbance * disturbance){
 	if (disturbance==NULL || disturbance->getAffIndex()!= AVOID ){
 		return true;
 	}
-	//b2AABB aabb=sensor->GetAABB(0);
 	b2Transform robot_pose=robot->GetTransform(), d_pose= disturbance->pose();
-	// b2AABB aabb_shape, aabb_zero, aabb_d;
-	//sensor->GetShape()->ComputeAABB(&aabb_shape, robot_pose,0);
-	//sensor->GetShape()->ComputeAABB(&aabb_shape, b2Transform_zero,0);
 	b2PolygonShape d_shape;
 	d_shape.SetAsBox(disturbance->bf.halfWidth, disturbance->bf.halfLength, b2Vec2(0,0), 0);
-	//d_shape.ComputeAABB(&aabb_d, disturbance->pose(), 0);
-	//create AABB with disturbance vertices
-	//test overlap
 	return b2TestOverlap(sensor->GetShape(), 0, &d_shape, 0,robot_pose, d_pose);
 }
 
-bool overlaps(const cv::RotatedRect& box, Disturbance * d){
+bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& robot_pose){
 	bool result=false;
-	if (!box.size.area() || NULL==d ){
+	if (!box.m_radius || NULL==d ){
 		return result;
 	}
 	if (d->getAffIndex()!=AVOID){
@@ -71,9 +64,7 @@ bool overlaps(const cv::RotatedRect& box, Disturbance * d){
 	// cv::RotatedRect d_rect(center, size, d->pose().q.GetAngle());
 	b2PolygonShape d_shape, box_shape;
 	d_shape.SetAsBox(d->bf.halfWidth, d->bf.halfLength, b2Vec2(0,0), 0);
-	box_shape.SetAsBox(box.size.width/2, box.size.height/2, b2Vec2(0,0), 0);
-	b2Transform box_pose(b2Vec2(box.center.x, box.center.y), b2Rot(box.angle));
-	return b2TestOverlap(&box_shape, 0, &d_shape, 0,box_pose, d->bf.pose);
+	return b2TestOverlap(&box_shape, 0, &d_shape, 0,robot_pose, d->bf.pose);
 
 }
 
@@ -234,7 +225,7 @@ Direction Task::H(Disturbance ob, Direction d, bool topDown){
 
 
 
-void Task::setEndCriteria(Angle angle, Distance distance){
+void Task::setEndCriteria(const Angle& angle, const Distance &distance){
 	switch(disturbance.getAffIndex()){
 		case PURSUE:{
 			endCriteria.angle=Angle(0);
@@ -335,7 +326,7 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 
 }
 
-EndedResult Task::checkEnded(State n,  Direction dir, bool relax, std::pair<bool,b2Transform> use_start){ //check error of node compared to the present Task
+EndedResult Task::checkEnded(const State& n,  Direction dir, bool relax, std::pair<bool,b2Transform> use_start){ //check error of node compared to the present Task
 	EndedResult r;
 	Angle a;
 	Distance d;
@@ -345,11 +336,33 @@ EndedResult Task::checkEnded(State n,  Direction dir, bool relax, std::pair<bool
 }
 
 
-bool Task::checkEnded(const cv::RotatedRect &box,Disturbance *dist_obs ){
-	// EndedResult r;
-	// b2Transform fromDi=from_Di(&b2Transform_zero, dist_obs);
-	// Angle a(fromDi.q.GetAngle());
-	// Distance d(fromDi.p.x);
+bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,Disturbance *dist_obs ){
+	bool result=false;
+	if (dist_obs->getAffIndex()==NONE){
+		if (start.p.Length()>=BOX2DRANGE){
+			result=true;
+		}
+	}
+	else if (dist_obs->getAffIndex()==PURSUE){
+		b2Transform fromDi=from_Di(&b2Transform_zero, dist_obs);
+		Angle a(fromDi.q.GetAngle());
+		Distance d(fromDi.p.x);
+		result=d.get()<endCriteria.distance.get();
+	}
+	else if (dist_obs->getAffIndex()==AVOID){
+		if (box.m_radius==0){ //means that there is no goal 
+			b2Transform fromDi=from_Di(&b2Transform_zero, dist_obs);
+			Angle a(fromDi.q.GetAngle());
+			float _distance=std::max(fromDi.p.x, start.p.Length());
+			Distance d(_distance);
+			result=d<endCriteria.distance&&a>=endCriteria.angle; 
+		}
+		else{
+			result=overlaps(box, dist_obs, robot_pose);
+		}
+	}
+	return result;
+
 
 }
 

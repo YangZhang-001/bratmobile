@@ -45,16 +45,10 @@ int main(int argc, char** argv){
     std::vector <vertexDescriptor> options_src;
     State state_tmp;
     int steps= atoi(argv[4]);
-    //float distanceTraversed = MOTOR_CALLBACK*conf.getTask()->action.getLinearSpeed()*(steps-conf.getIteration());
-    // b2Transform shift;
-    // shift.q.Set(MOTOR_CALLBACK*conf.getTask()->action.getOmega()*steps);
-    // shift.p.x= cos(shift.q.GetAngle())*distanceTraversed;
-    // shift.p.y= sin(shift.q.GetAngle())*distanceTraversed;
-    // math::applyAffineTrans(-shift, conf.transitionSystem);    
-    // math::applyAffineTrans(-shift, conf.controlGoal.disturbance);
     int ogstep=conf.transitionSystem[conf.currentEdge].step;
+    //control.change_task(conf.getTask()->change, conf.control->plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);
     for (int i=0;i<di.iteration*2; i++){
-        control.track_task_execution(*conf.getTask(), conf.transitionSystem, &conf.controlGoal, conf.currentVertex);
+        control.track_task_execution(*conf.getTask(), conf.transitionSystem, &conf.controlGoal, conf.currentVertex, conf.data2fp);
         conf.getTask()->motorStep--;
         bool ch=conf.getTask()->change;
         control.change_task(conf.getTask()->change, conf.control->plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);

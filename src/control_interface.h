@@ -12,7 +12,7 @@ class ControlInterface{ //tracks task execution
 
 	ControlInterface(){}
 
-	void track_task_execution(Task &, TransitionSystem&, Task * controlGoal, vertexDescriptor &v);
+	Disturbance track_task_execution(Task &, TransitionSystem&, Task * controlGoal, vertexDescriptor &v, const CoordinateContainer &, WorldBuilder * wb=NULL); //returns observed disturbance
 
 	void change_task(bool, std::vector <vertexDescriptor>&, TransitionSystem&, const Task & controlGoal, Task &currentTask, vertexDescriptor & currentVertex);
 
@@ -21,12 +21,14 @@ class ControlInterface{ //tracks task execution
 	void update_graph(TransitionSystem&, const b2Transform & _deltaPose, Task* t, Task * controlGoal);
 
 	//merge vertices into a single task
-	Task task_to_execute(const TransitionSystem &, const vertexDescriptor&, const Task& t);
+	Task task_to_execute(const TransitionSystem &, const vertexDescriptor&, const Task& goal);
 
 	vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, vertexDescriptor currentVertex);
 
-	void makeRobotSensor(TransitionSystem&, const vertexDescriptor&, const Task&); //sensor but not linked to a body
+	void makeRobotSensor(TransitionSystem&, const vertexDescriptor&, const Task& t); //sensor but not linked to a body
 
+	private:
+	b2PolygonShape task_sensor;
 };	
 
 #endif

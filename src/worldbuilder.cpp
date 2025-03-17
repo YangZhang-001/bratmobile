@@ -347,47 +347,14 @@ b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, Disturbance * goal){
         return result;
     }
 	b2PolygonShape * poly_robo=(b2PolygonShape*)robotBody->GetFixtureList()->GetShape();
-    //OLD
-	std::vector <b2Vec2> all_points=arrayToVec(poly_robo->m_vertices, poly_robo->m_count), d_vertices=goal->vertices();
-	// for (b2Vec2 p: d_vertices){
-	// 	p =robotBody->GetLocalPoint(p);
-	// 	all_points.push_back(p);
-	// }
-	// float minx=(std::min_element(all_points.begin(),all_points.end(), CompareX())).base()->x;
-	// float miny=(std::min_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
-	// float maxx=(std::max_element(all_points.begin(), all_points.end(), CompareX())).base()->x;
-	// float maxy=(std::max_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
-	// float halfLength=(fabs(maxy-miny))/2; //
-    // float halfWidth=(fabs(maxx-minx))/2;
-	// b2Vec2 centroid(maxx-halfWidth, maxy-halfLength);
-	// b2Vec2 offset=centroid - robotBody->GetLocalPoint(robotBody->GetPosition()); //0, 0, 0
-	// b2PolygonShape shape_old;
-	// shape_old.SetAsBox(halfWidth, halfLength, offset, 0);
-	// b2FixtureDef fixtureDef_old;
-	// fixtureDef_old.isSensor=true;
-	// fixtureDef_old.shape=&shape_old;
-	// //robotBody->CreateFixture(&fixtureDef_old);
-    // b2AABB result_old;
-	// shape_old.ComputeAABB(&result_old, robotBody->GetTransform(), 0);
-    
-
-    //END OLD
-    cv::Rect2f box_upright=sensor_box(poly_robo->m_vertices, poly_robo->m_count, robotBody->GetTransform(), goal);
-    //cv::Rect2f box_upright=box.boundingRect2f();
+    std::vector <b2Vec2> robot_vertices=arrayToVec(poly_robo->m_vertices, poly_robo->m_count);
+    b2PolygonShape shape=sensor_box(robot_vertices,  robotBody->GetTransform(), goal);
     b2Vec2 local_robot=robotBody->GetLocalPoint(robotBody->GetPosition());
-    if (local_robot!=b2Vec2_zero){
-        throw std::invalid_argument("center is not zero?");
-    }
-    
-    b2PolygonShape shape;
-    b2Vec2 center=b2Vec2(box_upright.x+box_upright.size().width/2, box_upright.y+box_upright.size().height/2);
-    shape.SetAsBox(box_upright.size().width/2, box_upright.size().height/2,center, 0);
 	b2FixtureDef fixtureDef;
 	fixtureDef.isSensor=true;
 	fixtureDef.shape=&shape;
 	robotBody->CreateFixture(&fixtureDef);
 	shape.ComputeAABB(&result, robotBody->GetTransform(), 0);
-    
 	return result;
 	
 }

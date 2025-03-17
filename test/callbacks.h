@@ -3,22 +3,8 @@
 #include "CppTimer.h"
 #include <thread>
 #include "test_essentials.h"
-// #include "configurator.h"
-// #include <unistd.h>
-// #include <time.h>
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <iomanip> 
-// #include <sstream> //for writing string into file, for checking, std::ostringstream
-// #include <ncurses.h>
-// #include <ctime>
-// #include <dirent.h>
-// #include <filesystem>
-// #define _USE_MATH_DEFINES
 
-//std::mutex ctr_mutex;
-
-void printGraph(TransitionSystem& g){
+void printGraph(TransitionSystem& g){ //for calling in GDB
     boost::print_graph(g);
 }
 
@@ -149,7 +135,7 @@ public:
         if (!c->running ){
             return;
         }
-        c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal), c->currentVertex);
+        c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal), c->currentVertex, c->data2fp);
         Task::Action action= c->getTask()->getAction();
         EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, true);//true
         if (er.ended &( c->getTask()->motorStep<1 & c->transitionSystem[c->currentVertex].direction!=STOP && c->control->plan.empty() && c->getIteration()>1)){ //& c->getTask()->motorStep<1

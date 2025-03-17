@@ -22,6 +22,8 @@ add_executable(backtrack backtrack.cpp)
 add_executable(explorer explorer.cpp ../test_essentials.h)
 add_executable(transitionMatrix ../test_essentials.h transitionMatrix.cpp)
 add_executable(disturbance_dimensions ../test_essentials.h disturbance_dimensions.cpp)
+add_executable(processData_k ../../src/worldbuilder.h ../../src/worldbuilder.cpp processData_k.cpp)
+add_executable(kmeans_clusters ../../src/worldbuilder.h ../../src/worldbuilder.cpp kmeans_clusters.cpp)
 add_executable(planner ../test_essentials.h planner.cpp)
 add_executable(split_step ../test_essentials.h split_step.cpp)
 add_executable(affine_transformation ../test_essentials.h affine_transform.cpp)
@@ -35,10 +37,11 @@ add_executable(make_sensor ../test_essentials.h make_sensor.cpp)
 add_executable(end_contact ../test_essentials.h end_contact.cpp)
 add_executable(get_disturbance ../test_essentials.h get_disturbance.cpp)
 add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
-add_executable(subgraph ../test_essentials.h subgraph.cpp)
+add_executable(task_to_execute ../test_essentials.h task_to_execute.cpp)
+add_executable(estimate_vertex ../test_essentials.h estimate_vertex.cpp)
 
-
-target_link_libraries(subgraph CloCK ${OpenCV_LIBS} box2d rt)
+target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
+target_link_libraries(task_to_execute CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(split_task CloCK ${OpenCV_LIBS} box2d rt  )
 target_link_libraries(backtrack CloCK ${OpenCV_LIBS} box2d rt  )
 target_link_libraries(explorer CloCK ${OpenCV_LIBS} box2d rt  )
@@ -47,6 +50,20 @@ target_link_libraries(disturbance_dimensions CloCK ${OpenCV_LIBS} box2d rt  )
 target_link_libraries(planner CloCK ${OpenCV_LIBS} box2d rt  )
 target_link_libraries(split_step CloCK ${OpenCV_LIBS} box2d rt  )
 target_link_libraries(affine_transformation CloCK ${OpenCV_LIBS} box2d rt  )
+target_link_libraries(processData_k CloCK ${OpenCV_LIBS} box2d rt)
+target_link_libraries(kmeans_clusters CloCK ${OpenCV_LIBS} box2d rt)
+target_link_libraries(match CloCK ${OpenCV_LIBS} box2d )
+target_link_libraries(find_match_state CloCK ${OpenCV_LIBS} box2d )
+target_link_libraries(state_difference CloCK ${OpenCV_LIBS} box2d )
+target_link_libraries(match_equal CloCK ${OpenCV_LIBS} box2d )
+target_link_libraries(replanner CloCK ${OpenCV_LIBS} box2d )
+target_link_libraries(fill_for_dist CloCK ${OpenCV_LIBS} box2d)
+target_link_libraries(make_sensor CloCK ${OpenCV_LIBS} box2d)
+target_link_libraries(end_contact CloCK ${OpenCV_LIBS} box2d)
+target_link_libraries(get_disturbance CloCK ${OpenCV_LIBS} box2d)
+target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d )
+
+
 
 add_test(NAME split_task COMMAND split_task 0.6 0 0)
 add_test(NAME split_task_-01 COMMAND split_task 0.26 -0.01 -1.570796 0 0 -1.570796 0.265 -0.16 0)
@@ -60,6 +77,7 @@ add_test(NAME split_step COMMAND split_step 0.68 0 )
 
 add_test(NAME backtrack COMMAND backtrack 0.6 0 0)
 add_test(NAME backtrack_-01 COMMAND backtrack 0.26 -0.01 -1.570796 0 0 -1.570796 0.265 -0.16 0)
+add_test(NAME affine_transformation_ahead COMMAND affine_transformation 1 0 0)
 
 add_test(NAME transition COMMAND transitionMatrix)
 add_test(NAME transition_n_L_ok COMMAND transitionMatrix 0 l k)
@@ -74,25 +92,6 @@ add_test(NAME transition_y_D_safe COMMAND transitionMatrix y d s)
 add_test(NAME transition_y_stop_crash COMMAND transitionMatrix y s c)
 add_test(NAME transition_y_stop_ok COMMAND transitionMatrix y s k)
 add_test(NAME transition_y_stop_safe COMMAND transitionMatrix y s s)
-add_executable(processData_k ../../src/worldbuilder.h ../../src/worldbuilder.cpp processData_k.cpp)
-add_executable(kmeans_clusters ../../src/worldbuilder.h ../../src/worldbuilder.cpp kmeans_clusters.cpp)
-target_link_libraries(processData_k CloCK ${OpenCV_LIBS} box2d rt)
-target_link_libraries(kmeans_clusters CloCK ${OpenCV_LIBS} box2d rt)
-
-add_test(NAME affine_transformation_ahead COMMAND affine_transformation 1 0 0)
-
-
-target_link_libraries(match CloCK ${OpenCV_LIBS} box2d )
-target_link_libraries(find_match_state CloCK ${OpenCV_LIBS} box2d )
-target_link_libraries(state_difference CloCK ${OpenCV_LIBS} box2d )
-target_link_libraries(match_equal CloCK ${OpenCV_LIBS} box2d )
-target_link_libraries(replanner CloCK ${OpenCV_LIBS} box2d )
-target_link_libraries(fill_for_dist CloCK ${OpenCV_LIBS} box2d)
-target_link_libraries(make_sensor CloCK ${OpenCV_LIBS} box2d)
-target_link_libraries(end_contact CloCK ${OpenCV_LIBS} box2d)
-target_link_libraries(get_disturbance CloCK ${OpenCV_LIBS} box2d)
-target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d )
-
 add_test(NAME processData_k COMMAND processData_k ../170924_1321_badrun/ 1 )
 
 add_test(NAME kmeans_clusters COMMAND kmeans_clusters ../170924_1321_badrun/ 0 )
@@ -184,6 +183,7 @@ add_test(NAME replanner_back COMMAND replanner empty 2 1 100 back)
 # add_test(NAME replanner_68_12 COMMAND replanner ../251023_TAGET/ 11 1 50)
 
 
+#ARGUMENTS: vertex match, goal?, how many iterations have passed?
 add_test(NAME checkPlan COMMAND checkPlan ../251023_TAGET/ 2 1 1)
 add_test(NAME checkPlan_4 COMMAND checkPlan ../251023_TAGET/ 2 1 4)
 add_test(NAME checkPlan_21 COMMAND checkPlan ../251023_TAGET/ 2 1 21)
@@ -191,8 +191,21 @@ add_test(NAME checkPlan_21 COMMAND checkPlan ../251023_TAGET/ 2 1 21)
 #add_test(NAME checkPlan_40cm_4 COMMAND checkPlan ../170924_1321_badrun/ 2 1 4)
 add_test(NAME checkPlan_40cm_21 COMMAND checkPlan ../170924_1321_badrun/ 2 1 21)
 
-#set_property(TEST checkPlan_21 PROPERTY WILL_FAIL true)
-add_test(NAME subgraph COMMAND subgraph)
+#ARGUMENTS: Dn affordance, new task direction, Di/goal affordance
+add_test(NAME task_to_execute_default_to_ob COMMAND task_to_execute 1 2 2)
+add_test(NAME task_to_execute_left_from_ob COMMAND task_to_execute 1 0 2)
+add_test(NAME task_to_execute_default_to_goal COMMAND task_to_execute 2 1 2)
+add_test(NAME task_to_execute_default COMMAND task_to_execute 0 1 0)
+
+add_test(NAME estimate_vertex_origin COMMAND estimate_vertex 0 0 0)
+add_test(NAME estimate_vertex_split1 COMMAND estimate_vertex 1 0 0) #exactly at end of first split
+add_test(NAME estimate_vertex_split1_52 COMMAND estimate_vertex 1.52 0 0) #halfway between 1 and 2
+add_test(NAME estimate_vertex_split_pi2 COMMAND estimate_vertex 1 0 1.57) #exactly at end of first split
+add_test(NAME estimate_vertex_split_pi8 COMMAND estimate_vertex 1 0 .39) #exactly at end of first split
+add_test(NAME estimate_vertex_split_small_yshift COMMAND estimate_vertex 1 .05 0) #halfway between 1 and 2
+add_test(NAME estimate_vertex_split_large_yshift COMMAND estimate_vertex 1 1 0) #halfway between 1 and 2
+add_test(NAME estimate_vertex_split_large_out COMMAND estimate_vertex 2.5 1 0) #halfway between 1 and 2
+set_property(TEST estimate_vertex_split_large_yshift PROPERTY WILL_FAIL true)
 
 
 set(CMAKE_BUILD_TYPE Debug)

@@ -22,6 +22,13 @@ b2Transform State::start_from_Di()const{
 	return b2MulT(start, Di.pose());
 }
 
+b2Transform State::start_from_Dn()const{
+	if (Dn.getAffIndex()==NONE){
+		return b2Transform_inf;
+	}
+	return b2MulT(start, Dn.pose());
+}
+
 b2Transform State::end_from_Dn()const{
 	if (Dn.getAffIndex()==NONE){
 		return b2Transform_inf;
