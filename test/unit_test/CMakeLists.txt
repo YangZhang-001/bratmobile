@@ -40,7 +40,9 @@ add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
 add_executable(task_to_execute ../test_essentials.h task_to_execute.cpp)
 add_executable(estimate_vertex ../test_essentials.h estimate_vertex.cpp)
 add_executable(closed_loop_ended ../test_essentials.h closed_loop_ended.cpp)
+add_executable(axb axb.cpp)
 
+target_link_libraries(axb CloCK box2d)
 target_link_libraries(closed_loop_ended CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(task_to_execute CloCK ${OpenCV_LIBS} box2d rt)
@@ -232,8 +234,11 @@ set_property(TEST cle_pursue_L_fail PROPERTY WILL_FAIL true)
 add_test(NAME cle_pursue_R COMMAND closed_loop_ended         0 0   -0    1    2)
 add_test(NAME cle_pursue_R_fail COMMAND closed_loop_ended    0 0   -25    1    2)#fails
 set_property(TEST cle_pursue_R_fail PROPERTY WILL_FAIL true)
+add_test(NAME cle_avoid_D COMMAND closed_loop_ended         .2 -.2   90    0    1)#fails
+add_test(NAME cle_avoid_D_fail COMMAND closed_loop_ended    .2 0   25    0    1)#fails
+set_property(TEST cle_avoid_D_fail PROPERTY WILL_FAIL true)
 
-
+add_test(NAME axb_id COMMAND axb 0 0 0 0 0 0)
 
 set(CMAKE_BUILD_TYPE Debug)
 

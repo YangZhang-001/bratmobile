@@ -43,7 +43,7 @@ void math::applyAffineTrans(const b2Transform& deltaPose, Disturbance& d){
 }
 
 cv::Mat math::cv_affine_matrix33(const b2Transform & t){
-	cv::Mat result=cv::getRotationMatrix2D(cv::Point2f(t.p.x, t.p.y), t.q.GetAngle()*(1/DEG_TO_RAD_K), 1);
+	cv::Mat result=cv::getRotationMatrix2D(cv::Point2f(t.p.x, t.p.y), double(t.q.GetAngle()*(1/DEG_TO_RAD_K)), double(1));
 	cv::Mat bottom_row=cv::Mat::zeros(1, 3, CV_32F);
 	bottom_row.at<float>(1, 3)=1;
 	result.push_back(bottom_row);
