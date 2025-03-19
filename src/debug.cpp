@@ -60,7 +60,7 @@ void debug::print_pose(const b2Transform& p, char* msg){
 	printf("x=%f, y=%f, theta=%f\n", p.p.x, p.p.y, p.q.GetAngle());
 }
 
-void debug::print_matrix(cv::Mat m){
+void debug::print_matrix(const cv::Mat & m){
 	std::cout << "M = " << std::endl << " "  << m << std::endl << std::endl;
 }
 

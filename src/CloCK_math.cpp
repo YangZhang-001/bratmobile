@@ -1,5 +1,9 @@
 #include "CloCK_math.h"
 
+void print_matrix(const cv::Mat & m){
+	std::cout << "M = " << std::endl << " "  << m << std::endl << std::endl;
+}
+
 void math::applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose){
 	pose =b2MulT(deltaPose, pose);
 }
@@ -46,23 +50,29 @@ cv::Mat math::cv_affine_matrix33(const b2Transform & t){
 	cv::Point2f p(t.p.x, t.p.y);
 	double angle=double(t.q.GetAngle())*double(1/DEG_TO_RAD_K), scale=1.0; 
 	cv::Mat result=cv::getRotationMatrix2D(p, angle, scale);
-	cv::Mat bottom_row=cv::Mat::zeros(1, 3, CV_32F);
-	bottom_row.at<float>(1, 3)=1;
-	result.push_back(bottom_row);
+	// cv::Mat bottom_row=cv::Mat::zeros(1, 3, CV_32F);
+	// bottom_row.at<float>(1, 3)=1;
+	// result.push_back(bottom_row);
 	return result;
 	
 }
 
 b2Transform math::transform_2d(const cv::Mat & m){
-	if (m.rows!=3 || m.cols!=3){
-		throw std::invalid_argument("not 3x3 matrix");
+	if (m.rows!=2 || m.cols!=3){
+		throw std::invalid_argument("not 2x3 matrix");
 	}                          //x                 //y                              //sin                //cos
-	return b2Transform(b2Vec2(m.at<float>(1, 3), m.at<float>(2,3)), b2Rot(atan2(m.at<float>(2,1), m.at<float>(1,1))));
+	return b2Transform(b2Vec2(m.at<float>(0, 2), m.at<float>(1,2)), b2Rot(atan2(-m.at<float>(1,0), m.at<float>(1,1))));
 }
 
 b2Transform math::solveAxB(const b2Transform& x, const b2Transform & B){ //
-	cv::Mat x_matrix=math::cv_affine_matrix33(x); //x in matix form
-    cv::Mat x_inv_matrix=x_matrix.inv(); //invert
+	//cv::Mat x_matrix=math::cv_affine_matrix33(x); //x in matix form
+	cv::Point2f p(x.p.x, x.p.y);
+	double angle=double(x.q.GetAngle())*double(1/DEG_TO_RAD_K), scale=1.0; 
+	cv::Mat x_matrix=cv::getRotationMatrix2D(p, angle, scale);
+    // cv::Mat x_inv_matrix;
+	// cv::invertAffineTransform(x_matrix, x_inv_matrix);
+	cv::Mat x_inv_matrix = x_matrix.inv();
     b2Transform x_inv= math::transform_2d(x_inv_matrix);
+	
 	return b2Mul(B, x_inv);
 }

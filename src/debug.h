@@ -65,7 +65,7 @@ b2Vec2 GetWorldPoints(b2Body*, b2Vec2 );
 
 void print_pose(const b2Transform& p, char * msg=NULL);
 
-void print_matrix(cv::Mat);
+void print_matrix(const cv::Mat &);
 
 std::vector<b2Vec2> GetBodies( b2World*);
 
