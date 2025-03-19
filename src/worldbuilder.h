@@ -100,29 +100,30 @@ class WorldBuilder{
     template <typename Pt>
     static b2PolygonShape sensor_box(const std::vector <Pt> &all_points_pt, b2Transform robot_pose, const Disturbance * dist){
         b2PolygonShape shape;
-        b2Vec2 centroid(2.0, 2.0);
-        cv::Rect2f rect;
+        b2Vec2 centroid(2.0, 2.0), center=centroid, center_local=b2Vec2_zero;
+        float halfHeight=0, halfWidth=0;
+        //cv::Rect2f rect;
         if (dist->isValid()){
-        //std::vector<Pt> all_points_pt=arrayToVec(first_array, array_size);
         std::vector <b2Vec2>  d_vertices=dist->vertices(); 
         std::vector <cv::Point2f> all_points=cast_Point2f(all_points_pt);
         for (b2Vec2 p: d_vertices){
             p=b2MulT(robot_pose, p); //get local point
             all_points.push_back(cv::Point2f(p.x, p.y));
         }
-        //rect=cv::boundingRect(all_points);
         float minx=(std::min_element(all_points.begin(),all_points.end(), CompareX())).base()->x;
         float miny=(std::min_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
         float maxx=(std::max_element(all_points.begin(), all_points.end(), CompareX())).base()->x;
         float maxy=(std::max_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
-        rect.height=(fabs(maxy-miny)); //
-        rect.width=(fabs(maxx-minx));
-        centroid.x=maxx-rect.width/2;
-        centroid.y=maxy-rect.height/2;
-        rect.x=centroid.x-rect.width/2;
-        rect.y=centroid.y-rect.height/2;
+        halfHeight=(fabs(maxy-miny))/2; //
+        halfWidth=(fabs(maxx-minx))/2;
+        center.x=maxx-halfWidth;
+        center.y=maxy-halfHeight;
+       // center_local=b2MulT(robot_pose, center);
+       // rect.x=centroid.x-rect.width/2;
+       // rect.y=centroid.y-rect.height/2;
+        centroid=center-center_local;  
         }
-        shape.SetAsBox(rect.size().width/2, rect.size().height/2,centroid, 0);
+        shape.SetAsBox(halfWidth, halfHeight,centroid, 0);
         return shape;
 
     }

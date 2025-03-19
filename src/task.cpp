@@ -51,7 +51,7 @@ bool overlaps(b2Body * robot, Disturbance * disturbance){
 }
 
 bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& robot_pose){
-	bool result=false;
+	bool result=true;
 	if (!box.m_radius || NULL==d ){
 		return result;
 	}
@@ -62,9 +62,11 @@ bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& rob
 	// cv::Point2f center(d->pose().p.x, d->pose().p.y);
 	// cv::Size2f size(d->halfWidth()*2, d->halfLength()*2);
 	// cv::RotatedRect d_rect(center, size, d->pose().q.GetAngle());
-	b2PolygonShape d_shape, box_shape;
+	b2PolygonShape d_shape;
 	d_shape.SetAsBox(d->bf.halfWidth, d->bf.halfLength, b2Vec2(0,0), 0);
-	return b2TestOverlap(&box_shape, 0, &d_shape, 0,robot_pose, d->bf.pose);
+	b2AABB aabb;
+	d_shape.ComputeAABB(&aabb, d->bf.pose, 0);
+	return b2TestOverlap(&box, 0, &d_shape, 0,robot_pose, d->bf.pose);
 
 }
 
@@ -338,32 +340,32 @@ EndedResult Task::checkEnded(const State& n,  Direction dir, bool relax, std::pa
 
 bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,Disturbance *dist_obs ){
 	bool result=false;
-	if (dist_obs->getAffIndex()==NONE){
+	if (dist_obs->getAffIndex()==NONE && direction==DEFAULT){
 		if (start.p.Length()>=BOX2DRANGE){
 			result=true;
 		}
 	}
-	else if (dist_obs->getAffIndex()==PURSUE){
+	else if (dist_obs->getAffIndex()==PURSUE && direction==DEFAULT){
 		b2Transform fromDi=from_Di(&b2Transform_zero, dist_obs);
 		Angle a(fromDi.q.GetAngle());
-		Distance d(fromDi.p.x);
-		result=d.get()<endCriteria.distance.get();
+		Distance d(fromDi.p.Length());
+		//result=d.get()<endCriteria.distance.get();
+		result=endCriteria_met(a, d);
 	}
-	else if (dist_obs->getAffIndex()==AVOID){
-		if (box.m_radius==0){ //means that there is no goal 
+	else if (dist_obs->getAffIndex()==AVOID || action.getOmega()!=0){
+		if (box.m_radius==0 || action.getOmega()!=0){ //means that there is no goal 
 			b2Transform fromDi=from_Di(&b2Transform_zero, dist_obs);
-			Angle a(fromDi.q.GetAngle());
+			Angle a(fabs(fromDi.q.GetAngle()));
 			float _distance=std::max(fromDi.p.x, start.p.Length());
-			Distance d(_distance);
-			result=d<endCriteria.distance&&a>=endCriteria.angle; 
+			Distance d(fabs(_distance));
+			//result=d<endCriteria.distance&&a>=endCriteria.angle; 
+			result=endCriteria_met(a, d);
 		}
 		else{
-			result=overlaps(box, dist_obs, robot_pose);
+			result=!overlaps(box, dist_obs, robot_pose);
 		}
 	}
 	return result;
-
-
 }
 
 b2Transform Task::from_Di(const  b2Transform* custom_start, Disturbance * d_obs){
@@ -398,4 +400,14 @@ EndCriteria Task::getEndCriteria(const Disturbance &d){
 }
 }
 
+bool Task::endCriteria_met(Angle & a, Distance & d){
+	bool result=false;
+	switch (affordance){
+		case PURSUE:
+			result= d.get()<=endCriteria.distance.get() && a.get()<=endCriteria.angle.get(); break;
+		default:
+			result= d.get()>=endCriteria.distance.get() && a.get()>=endCriteria.angle.get(); break;
+	}
+	return result;
+}
 

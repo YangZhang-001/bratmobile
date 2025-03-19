@@ -39,7 +39,9 @@ add_executable(get_disturbance ../test_essentials.h get_disturbance.cpp)
 add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
 add_executable(task_to_execute ../test_essentials.h task_to_execute.cpp)
 add_executable(estimate_vertex ../test_essentials.h estimate_vertex.cpp)
+add_executable(closed_loop_ended ../test_essentials.h closed_loop_ended.cpp)
 
+target_link_libraries(closed_loop_ended CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(task_to_execute CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(split_task CloCK ${OpenCV_LIBS} box2d rt  )
@@ -194,8 +196,8 @@ add_test(NAME checkPlan_40cm_21 COMMAND checkPlan ../170924_1321_badrun/ 2 1 21)
 #ARGUMENTS: Dn affordance, new task direction, Di/goal affordance
 add_test(NAME task_to_execute_default_to_ob COMMAND task_to_execute 1 2 2)
 add_test(NAME task_to_execute_left_from_ob COMMAND task_to_execute 1 0 2)
-add_test(NAME task_to_execute_default_to_goal COMMAND task_to_execute 2 1 2)
-add_test(NAME task_to_execute_default COMMAND task_to_execute 0 1 0)
+add_test(NAME task_to_execute_default_to_goal COMMAND task_to_execute 2 2 2)
+add_test(NAME task_to_execute_default COMMAND task_to_execute 0 2 0)
 
 add_test(NAME estimate_vertex_origin COMMAND estimate_vertex 0 0 0)
 add_test(NAME estimate_vertex_split1 COMMAND estimate_vertex 1 0 0) #exactly at end of first split
@@ -206,6 +208,32 @@ add_test(NAME estimate_vertex_split_small_yshift COMMAND estimate_vertex 1 .05 0
 add_test(NAME estimate_vertex_split_large_yshift COMMAND estimate_vertex 1 1 0) #halfway between 1 and 2
 add_test(NAME estimate_vertex_split_large_out COMMAND estimate_vertex 2.5 1 0) #halfway between 1 and 2
 set_property(TEST estimate_vertex_split_large_yshift PROPERTY WILL_FAIL true)
+
+#args:
+#1: disturbance transform x
+#2: disturbance transform y
+#3: disturbance transform angle (Deg)
+#4: task direction (int) (0: LEFT, 1: RIGHT, 2: DEFALLT)
+#5: disturbance affordance (int)
+                                                        #    x  y   w    dir aff 
+add_test(NAME cle_pursue_ob_fail COMMAND closed_loop_ended 0  0   0    2    2)
+set_property(TEST cle_pursue_ob_fail PROPERTY WILL_FAIL true)
+add_test(NAME cle_pursue_ob COMMAND closed_loop_ended      0.41 0   0    2    2)
+add_test(NAME cle_pursue_ob_edge COMMAND closed_loop_ended  0.4 0   0    2    2)#fails
+set_property(TEST cle_pursue_ob_edge PROPERTY WILL_FAIL true)
+add_test(NAME cle_avoid_L COMMAND closed_loop_ended         0 0   90    0    1)#fails
+add_test(NAME cle_avoid_L_fail COMMAND closed_loop_ended    0 0   25    0    1)#fails
+set_property(TEST cle_avoid_L_fail PROPERTY WILL_FAIL true)
+add_test(NAME cle_avoid_R COMMAND closed_loop_ended         0 0   -90    1    1)#fails
+add_test(NAME cle_avoid_R_fail COMMAND closed_loop_ended    0 0   -25    1    1)#fails
+set_property(TEST cle_avoid_R_fail PROPERTY WILL_FAIL true)
+add_test(NAME cle_pursue_L COMMAND closed_loop_ended         0 0   0    0    2)
+add_test(NAME cle_pursue_L_fail COMMAND closed_loop_ended    0 0   25    0    2)#fails
+set_property(TEST cle_pursue_L_fail PROPERTY WILL_FAIL true)
+add_test(NAME cle_pursue_R COMMAND closed_loop_ended         0 0   -0    1    2)
+add_test(NAME cle_pursue_R_fail COMMAND closed_loop_ended    0 0   -25    1    2)#fails
+set_property(TEST cle_pursue_R_fail PROPERTY WILL_FAIL true)
+
 
 
 set(CMAKE_BUILD_TYPE Debug)

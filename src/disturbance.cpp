@@ -19,6 +19,27 @@ std::vector <b2Vec2> BodyFeatures::three_points()const{
     return result;
 }
 
+std::vector <b2Vec2> BodyFeatures::vertices()const{
+    std::vector <b2Vec2> result;
+   // float pm_x=halfWidth*pose().q.c;
+    //float pm_y=halfLength*pose().q.s;
+    float plus_x=(pose.p.x+halfWidth);
+    float minus_x=(pose.p.x-halfWidth);
+    float plus_y=(pose.p.y+halfLength);
+    float minus_y=(pose.p.y-halfLength);
+    result.push_back(b2Vec2(plus_x, plus_y));
+    result.push_back(b2Vec2(plus_x, minus_y));
+    result.push_back(b2Vec2(minus_x, plus_y));
+    result.push_back(b2Vec2(minus_x, minus_y)); //make upright box
+    for (b2Vec2& v: result){
+        float x=v.x, y=v.y;
+        v.x=x*pose.q.c-y*pose.q.s;
+        v.y=x*pose.q.s+y*pose.q.c;
+    }
+    return result;
+}
+
+
 
 std::vector <b2Vec2> Disturbance::vertices()const{
     std::vector <b2Vec2> result;
@@ -26,12 +47,13 @@ std::vector <b2Vec2> Disturbance::vertices()const{
         return result;
     }
     //assume orientation 0
-    float pm_x=bf.halfWidth*cos(pose().q.GetAngle());
-    float pm_y=bf.halfLength*sin(pose().q.GetAngle());
-    result.push_back(b2Vec2(pose().p.x+pm_x,pose().p.y+pm_y));
-    result.push_back(b2Vec2(pose().p.x-pm_x,pose().p.y+pm_y));
-    result.push_back(b2Vec2(pose().p.x+pm_x,pose().p.y-pm_y));
-    result.push_back(b2Vec2(pose().p.x-pm_x,pose().p.y-pm_y));
+    // float pm_x=bf.halfWidth*pose().q.c;
+    // float pm_y=bf.halfLength*pose().q.s;
+    // result.push_back(b2Vec2(pose().p.x+pm_x,pose().p.y+pm_y));
+    // result.push_back(b2Vec2(pose().p.x-pm_x,pose().p.y+pm_y));
+    // result.push_back(b2Vec2(pose().p.x+pm_x,pose().p.y-pm_y));
+    // result.push_back(b2Vec2(pose().p.x-pm_x,pose().p.y-pm_y));
+    result= bf.vertices();
     return result;
 
 }

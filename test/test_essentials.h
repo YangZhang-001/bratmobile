@@ -14,6 +14,24 @@
 #define _USE_MATH_DEFINES
 
 
+
+bool debug_draw(b2Vec2 * sensor_v, std::vector <b2Vec2> d ){
+    char name_v[256], name_s[256], name_d[256];
+    sprintf(name_s, "/tmp/debug_sensor_cli.txt");
+    sprintf(name_d, "/tmp/debug_disturbance_cl.txt");
+    FILE * f_s=fopen(name_s, "w");
+    FILE * f_d=fopen(name_d, "w");
+    for (int i=0; i<4; i++){
+        fprintf(f_s, "%f\t%f\n",  sensor_v[i].x, sensor_v[i].y);            
+    }
+    for (b2Vec2 d_v: d){
+        fprintf(f_d, "%f\t%f\n",  d_v.x, d_v.y);            
+    }
+                    
+    fclose(f_s);
+    fclose(f_d);
+}
+
 bool debug_draw(b2World & w, int file){
     char name_v[256], name_s[256], name_d[256];
     sprintf(name_v, "/tmp/debug_chassis_%i.txt",file);

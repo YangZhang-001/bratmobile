@@ -339,6 +339,8 @@ simResult bumping_that(b2World &, int, b2Body *,bool debug =0, float remaining =
 
 EndCriteria getEndCriteria(const Disturbance&);
 
+bool endCriteria_met(Angle &, Distance &);
+
 b2Transform from_Di( const b2Transform * custom_start=NULL, Disturbance * d_obs=NULL); //d_obs disturbance observed rather than D with which task was init
 
 };

@@ -84,6 +84,8 @@ class BodyFeatures{
 
     std::vector <b2Vec2> three_points()const; //get three points 
 
+    std::vector <b2Vec2> vertices()const;
+
 };
 
 struct Disturbance{ //this generates error
@@ -181,6 +183,10 @@ public:
 
     AffordanceIndex getAffIndex()const{
         return affordanceIndex;
+    }
+
+    void set_affordance(AffordanceIndex a){
+        affordanceIndex=a;
     }
 
     void invalidate(){
