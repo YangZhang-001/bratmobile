@@ -242,6 +242,12 @@ void Task::setEndCriteria(const Angle& angle, const Distance &distance){
 	if (disturbance.isValid()){
 		endCriteria.valid_d=true;
 	}
+	if (!action.getOmega()){
+		endCriteria.angle.setValid(false);
+	}
+	else{
+		endCriteria.distance.setValid(false);
+	}
 }
 
 void Task::setEndCriteria(const Distance& distance){
@@ -356,7 +362,7 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		if (box.m_radius==0 || action.getOmega()!=0){ //means that there is no goal 
 			b2Transform fromDi=from_Di(&b2Transform_zero, dist_obs);
 			Angle a(fabs(fromDi.q.GetAngle()));
-			float _distance=std::max(fromDi.p.x, start.p.Length());
+			float _distance=std::max(fromDi.p.Length(), start.p.Length());
 			Distance d(fabs(_distance));
 			//result=d<endCriteria.distance&&a>=endCriteria.angle; 
 			result=endCriteria_met(a, d);
@@ -404,9 +410,9 @@ bool Task::endCriteria_met(Angle & a, Distance & d){
 	bool result=false;
 	switch (affordance){
 		case PURSUE:
-			result= d.get()<=endCriteria.distance.get() && a.get()<=endCriteria.angle.get(); break;
+			result= d<=endCriteria.distance && a<=endCriteria.angle; break;
 		default:
-			result= d.get()>=endCriteria.distance.get() && a.get()>=endCriteria.angle.get(); break;
+			result= d>=endCriteria.distance && a>=endCriteria.angle; break;
 	}
 	return result;
 }
