@@ -65,18 +65,18 @@ b2Transform math::transform_2d(const cv::Mat & m){
 }
 
 b2Transform math::solveAxB(const b2Transform& x, const b2Transform & B){ //
-	//cv::Mat x_matrix=math::cv_affine_matrix33(x); //x in matix form
 	cv::Point2f p(x.p.x, x.p.y);
 	double angle=double(x.q.GetAngle())*double(1/DEG_TO_RAD_K), scale=1.0; 
-	//cv::Mat x_matrix=cv::getRotationMatrix2D(p, angle, scale);
-	cv::Mat x_matrix;
+	cv::Mat x_matrix(3, 3, CV_32F);
 	x_matrix.at<float>(0,0)=x.q.c;
 	x_matrix.at<float>(1,1)=x.q.c;
 	x_matrix.at<float>(0,1)=x.q.s;
 	x_matrix.at<float>(1,0)=-x.q.s;
 	x_matrix.at<float>(0,2)=x.p.x;
 	x_matrix.at<float>(1,2)=x.p.y;
-
+	x_matrix.at<float>(2,0)=0;
+	x_matrix.at<float>(2,1)=0;
+	x_matrix.at<float>(2,2)=1;
     cv::Mat x_inv_matrix;
 	cv::invertAffineTransform(x_matrix, x_inv_matrix);
     b2Transform x_inv= math::transform_2d(x_inv_matrix);

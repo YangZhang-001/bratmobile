@@ -240,10 +240,14 @@ set_property(TEST cle_avoid_D_fail PROPERTY WILL_FAIL true)
 
 add_test(NAME axb_id COMMAND axb 0 0 0 0 0 0)
 add_test(NAME axb_id_rot COMMAND axb 0 0 0 0 0 90)
+add_test(NAME axb_id_rot53 COMMAND axb 0 0 0 0 0 53)
+add_test(NAME axb_id_rot3753 COMMAND axb 0 0 37 0 0 53)
 add_test(NAME axb_id_shift_rot COMMAND axb 0 0 0 .2 .3 90)
 add_test(NAME axb_id_rot_custom COMMAND axb 1 1 0 0 0 90)
 add_test(NAME axb_id_shift_custom COMMAND axb 1 1 0 .2 .3 0)
 add_test(NAME axb_id_shift_rot_custom COMMAND axb 1 1 0 .2 .3 90)
+add_test(NAME axb_id_shift_rot_custom2 COMMAND axb 1 1 53 .2 .3 37)
+add_test(NAME axb_id_shift_rot_custom3 COMMAND axb .45 .21 53 .2 .3 37)
 
 set(CMAKE_BUILD_TYPE Debug)
 
