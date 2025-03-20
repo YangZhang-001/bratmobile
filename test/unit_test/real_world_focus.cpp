@@ -12,7 +12,7 @@ int main(int argc, char** argv){
     dist.set_affordance(AffordanceIndex(atoi(argv[4])));
     WorldBuilder::Bridger bridge;
     Task task(dist, Direction(atoi(argv[5])), b2Transform_zero, true);
-    cv::Rect2f focus=real_world_focus(&t);
+    cv::Rect2f focus=bridge.real_world_focus(&task);
     if (dist.getAffIndex()!=NONE){
         std::vector <cv::Point2f> d_vertices=dist.bf.vertices_cv();
         for (const cv::Point2f & v: d_vertices){
@@ -22,7 +22,7 @@ int main(int argc, char** argv){
         }
     }
     else{
-        if (focus.area){
+        if (focus.area()!=0){
             throw std::invalid_argument("area not 0!");
         }
     }

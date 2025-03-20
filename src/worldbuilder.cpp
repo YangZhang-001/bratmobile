@@ -363,7 +363,7 @@ b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, Disturbance * goal){
 
 cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
     std::vector <cv::Point2f> vertices;
-    if (t->disturbance.getAffIndex()!=NONE){
+    if (t->disturbance.getAffIndex()==NONE){
         return cv::Rect2f(0, 0, 0, 0);
     }
     for (std::vector<b2Vec2> box2d_v =t->disturbance.vertices(); b2Vec2 & v: box2d_v){
@@ -390,6 +390,10 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         *observed_disturbance=new_d.second;
     }
     //what to do when different dimensions??
+    if (new_d.bf.match(t.disturbance.bf)){
+        new_d.bf.halfWidth=t.disturbance.halfWidth();
+        new_d.bf.halfLength=t.disturbance.halfLength();
+    }
     cv::Mat aff_transform=cv::estimateAffinePartial2D( new_d.second.vertices_cv(), t.disturbance.bf.vertices_cv(),cv::noArray(), cv::LMEDS);
     return math::transform_2d(aff_transform);
     //what's the most likely angle??

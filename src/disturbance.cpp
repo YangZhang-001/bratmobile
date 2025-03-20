@@ -2,28 +2,20 @@
 
 
 bool BodyFeatures::match(const BodyFeatures& bf){
-    bool match_x=(pose.p.x-bf.pose.p.x)<D_POSE_MARGIN;
-    bool match_y=(pose.p.y-bf.pose.p.y)<D_POSE_MARGIN;
-    bool match_w=(halfWidth-bf.halfWidth)<D_DIMENSIONS_MARGIN;
-    bool match_h=(halfLength-bf.halfLength)<D_DIMENSIONS_MARGIN;
+    bool match_x=fabs(pose.p.x-bf.pose.p.x)<D_POSE_MARGIN;
+    bool match_y=fabs(pose.p.y-bf.pose.p.y)<D_POSE_MARGIN;
+    bool match_w=fabs(halfWidth-bf.halfWidth)<D_DIMENSIONS_MARGIN;
+    bool match_h=fabs(halfLength-bf.halfLength)<D_DIMENSIONS_MARGIN;
     return match_x && match_y && match_w && match_h;
 }
 
 std::vector <b2Vec2> BodyFeatures::vertices()const{
     std::vector <b2Vec2> result;
-    // float plus_x=(pose.p.x+halfWidth);
-    // float minus_x=(pose.p.x-halfWidth);
-    // float plus_y=(pose.p.y+halfLength);
-    // float minus_y=(pose.p.y-halfLength);
-
     result.push_back(b2Vec2(halfWidth, halfLength));
     result.push_back(b2Vec2(halfWidth, -halfLength));
     result.push_back(b2Vec2(-halfWidth, halfLength));
     result.push_back(b2Vec2(-halfWidth, -halfLength)); //make upright box
     for (b2Vec2& v: result){
-        // float x=v.x, y=v.y;
-        // v.x=x*pose.q.c+y*pose.q.s;
-        // v.y=-x*pose.q.s+y*pose.q.c;
         v=b2Mul(pose, v);
     }
     return result;
@@ -45,13 +37,6 @@ std::vector <b2Vec2> Disturbance::vertices()const{
     if (getAffIndex()==NONE){
         return result;
     }
-    //assume orientation 0
-    // float pm_x=bf.halfWidth*pose().q.c;
-    // float pm_y=bf.halfLength*pose().q.s;
-    // result.push_back(b2Vec2(pose().p.x+pm_x,pose().p.y+pm_y));
-    // result.push_back(b2Vec2(pose().p.x-pm_x,pose().p.y+pm_y));
-    // result.push_back(b2Vec2(pose().p.x+pm_x,pose().p.y-pm_y));
-    // result.push_back(b2Vec2(pose().p.x-pm_x,pose().p.y-pm_y));
     result= bf.vertices();
     return result;
 
