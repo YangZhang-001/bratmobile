@@ -57,15 +57,17 @@ cv::Mat math::cv_affine_matrix33(const b2Transform & t){
 b2Transform math::transform_2d(const cv::Mat & m){
 	if (m.rows<2 || m.cols<3){
 		throw std::invalid_argument("not 2x3 matrix");
-	}  
-	float x=m.at<float>(0, 2);
-	float y=m.at<float>(1, 2);
-	float s=m.at<float>(0,1);
-	float c=m.at<float>(0,0);
-	float t=atan2(m.at<float>(0,1), m.at<float>(0,0));
-	
-	                                 //x                 //y                              //sin                //cos
-	return b2Transform(b2Vec2(m.at<float>(0, 2), m.at<float>(1,2)), b2Rot(atan2(m.at<float>(0,1), m.at<float>(0,0))));
+	} 
+	b2Transform result; 
+	float x=m.at<double>(0, 2);
+	float y=m.at<double>(1, 2);
+	float s=m.at<double>(0,1);
+	float c=m.at<double>(0,0);
+	float t=atan2(-m.at<double>(0,1), m.at<double>(0,0));
+	result.p.x=x;
+	result.p.y=y;
+	result.q.Set(t);
+	return result;
 }
 
 b2Transform math::solveAxB(const b2Transform& x, const b2Transform & B){ //
