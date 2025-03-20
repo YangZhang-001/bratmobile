@@ -9,32 +9,31 @@ bool BodyFeatures::match(const BodyFeatures& bf){
     return match_x && match_y && match_w && match_h;
 }
 
-std::vector <b2Vec2> BodyFeatures::three_points()const{
-    b2Vec2 p1, p2;
-    p1.x=pose.p.x+(pose.q.c)*halfWidth;
-    p1.y=pose.p.y+(pose.q.s)*halfLength;
-    p2.x=pose.p.x-(pose.q.c)*halfWidth;
-    p2.y=pose.p.y-(pose.q.s)*halfLength;
-    std::vector <b2Vec2> result={pose.p, p1, p2};
+std::vector <b2Vec2> BodyFeatures::vertices()const{
+    std::vector <b2Vec2> result;
+    // float plus_x=(pose.p.x+halfWidth);
+    // float minus_x=(pose.p.x-halfWidth);
+    // float plus_y=(pose.p.y+halfLength);
+    // float minus_y=(pose.p.y-halfLength);
+
+    result.push_back(b2Vec2(halfWidth, halfLength));
+    result.push_back(b2Vec2(halfWidth, -halfLength));
+    result.push_back(b2Vec2(-halfWidth, halfLength));
+    result.push_back(b2Vec2(-halfWidth, -halfLength)); //make upright box
+    for (b2Vec2& v: result){
+        // float x=v.x, y=v.y;
+        // v.x=x*pose.q.c+y*pose.q.s;
+        // v.y=-x*pose.q.s+y*pose.q.c;
+        v=b2Mul(pose, v);
+    }
     return result;
 }
 
-std::vector <b2Vec2> BodyFeatures::vertices()const{
-    std::vector <b2Vec2> result;
-   // float pm_x=halfWidth*pose().q.c;
-    //float pm_y=halfLength*pose().q.s;
-    float plus_x=(pose.p.x+halfWidth);
-    float minus_x=(pose.p.x-halfWidth);
-    float plus_y=(pose.p.y+halfLength);
-    float minus_y=(pose.p.y-halfLength);
-    result.push_back(b2Vec2(plus_x, plus_y));
-    result.push_back(b2Vec2(plus_x, minus_y));
-    result.push_back(b2Vec2(minus_x, plus_y));
-    result.push_back(b2Vec2(minus_x, minus_y)); //make upright box
-    for (b2Vec2& v: result){
-        float x=v.x, y=v.y;
-        v.x=x*pose.q.c-y*pose.q.s;
-        v.y=x*pose.q.s+y*pose.q.c;
+std::vector <cv::Point2d> BodyFeatures::vertices_cv()const{
+    std::vector <b2Vec2> vb2d=vertices();
+    std::vector <cv::Point2d> result;
+    for (const b2Vec2 & v: vb2d){
+        result.push_back(cv::Point2d(v.x, v.y));
     }
     return result;
 }
@@ -72,7 +71,7 @@ float Disturbance::getAngle(b2Transform t){ //gets the angle of an Disturbance w
 void Disturbance::setOrientation(float s, float c){
     b2Rot og;
     og.s=s;
-    og.c=c; 
+    og.c=c;
     if (rotation_valid){
     b2Rot sup, comp, ver; //find most likely angle
         sup.s=-s;
@@ -98,13 +97,13 @@ bool Disturbance::operator==(const Disturbance & d){
     bool _pose=bf.pose.p==d.bf.pose.p && bf.pose.q.GetAngle()==d.bf.pose.q.GetAngle();
     bool dim=halfLength()==d.bf.halfLength && halfWidth()==d.bf.halfWidth;
     bool aff=affordanceIndex==d.affordanceIndex;
-}  
+}
 
 bool Disturbance::operator==(const Disturbance & d)const{
     bool _pose=bf.pose.p==d.bf.pose.p && bf.pose.q.GetAngle()==d.bf.pose.q.GetAngle();
     bool dim=bf.halfLength==d.bf.halfLength && bf.halfWidth==d.bf.halfWidth;
     bool aff=affordanceIndex==d.affordanceIndex;
-}  
+}
 
 std::vector <b2Vec2> GetLocalPoints( std::vector <b2Vec2> pts, const b2Body * body){
 	std::vector <b2Vec2> result;

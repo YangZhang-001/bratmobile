@@ -79,5 +79,14 @@ std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer& 
     return result;
 }
 
+void round_mat(b2Transform & t){
+    t.p.x=round(t.p.x*100)/100;
+    t.p.y=round(t.p.y*100)/100;
+    t.q.Set(DEG_TO_RAD_K*round(t.q.GetAngle()*(1/DEG_TO_RAD_K)));
+}
+void print_matrix(const cv::Mat & m){
+	std::cout << "M = " << std::endl << " "  << m << std::endl << std::endl;
+}
+
 
 #endif

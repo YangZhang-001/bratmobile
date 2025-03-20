@@ -390,13 +390,10 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     if (observed_disturbance!=NULL && new_d.first){
         *observed_disturbance=new_d.second;
     }
-   // t->disturbance.bf=new_d.second; //update task
-   //transform that maps transform TB (new d)to TA (d pose): TAB=TB * inv(TA)
-   //b2Mat33 Ta=math::affine_matrix33(t.disturbance.pose()), *Ta_inv; //need to get inverse
-   
-    //cv::Mat new_matrix=math::cv_affine_matrix33(new_d.second.pose);
-       //return new_d.second.pose- t.disturbance.pose(); //estimate transform
-    return math::solveAxB(t.disturbance.pose(), new_d.second.pose); 
+
+    //return math::solveAxB(t.disturbance.pose(), new_d.second.pose); 
+    cv::Mat aff_transform=cv::estimateAffinePartial2D(t.disturbance.bf.vertices_cv(), new_d.second.vertices_cv());
+    return math::transform_2d(aff_transform);
     //what's the most likely angle??
 }
 

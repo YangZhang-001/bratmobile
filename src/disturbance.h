@@ -82,9 +82,10 @@ class BodyFeatures{
         return halfLength*2;
     }
 
-    std::vector <b2Vec2> three_points()const; //get three points 
-
     std::vector <b2Vec2> vertices()const;
+
+    std::vector <cv::Point2d> vertices_cv()const; //global vertices
+
 
 };
 

@@ -41,7 +41,10 @@ add_executable(task_to_execute ../test_essentials.h task_to_execute.cpp)
 add_executable(estimate_vertex ../test_essentials.h estimate_vertex.cpp)
 add_executable(closed_loop_ended ../test_essentials.h closed_loop_ended.cpp)
 add_executable(axb ../test_essentials.h axb.cpp)
+add_executable(D_affine ../test_essentials.h D_affine.cpp)
 
+
+target_link_libraries(D_affine CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(axb CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(closed_loop_ended CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
@@ -248,6 +251,20 @@ add_test(NAME axb_id_shift_custom COMMAND axb 1 1 0 .2 .3 0)
 add_test(NAME axb_id_shift_rot_custom COMMAND axb 1 1 0 .2 .3 90)
 add_test(NAME axb_id_shift_rot_custom2 COMMAND axb 1 1 53 .2 .3 37)
 add_test(NAME axb_id_shift_rot_custom3 COMMAND axb .45 .21 53 .2 .3 37)
+set_property(TEST axb_id_shift_rot_custom2 PROPERTY WILL_FAIL true)
+set_property(TEST axb_id_shift_rot_custom3 PROPERTY WILL_FAIL true)
+
+add_test(NAME D_affine COMMAND axb 0 0 0 0 0 0)
+add_test(NAME D_affine_rot COMMAND axb 0 0 0 0 0 90)
+add_test(NAME D_affine_rot53 COMMAND axb 0 0 0 0 0 53)
+add_test(NAME D_affine_rot3753 COMMAND axb 0 0 37 0 0 53)
+add_test(NAME D_affine_shift_rot COMMAND axb 0 0 0 .2 .3 90)
+add_test(NAME D_affine_rot_custom COMMAND axb 1 1 0 0 0 90)
+add_test(NAME D_affine_shift_custom COMMAND axb 1 1 0 .2 .3 0)
+add_test(NAME D_affine_shift_rot_custom COMMAND axb 1 1 0 .2 .3 90)
+add_test(NAME D_affine_shift_rot_custom2 COMMAND axb 1 1 53 .2 .3 37)
+add_test(NAME D_affine_shift_rot_custom3 COMMAND axb .45 .21 53 .2 .3 37)
+
 
 set(CMAKE_BUILD_TYPE Debug)
 

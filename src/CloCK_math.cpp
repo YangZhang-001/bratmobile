@@ -1,8 +1,5 @@
 #include "CloCK_math.h"
 
-void print_matrix(const cv::Mat & m){
-	std::cout << "M = " << std::endl << " "  << m << std::endl << std::endl;
-}
 
 void math::applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose){
 	pose =b2MulT(deltaPose, pose);
@@ -58,7 +55,7 @@ cv::Mat math::cv_affine_matrix33(const b2Transform & t){
 }
 
 b2Transform math::transform_2d(const cv::Mat & m){
-	if (m.rows!=2 || m.cols!=3){
+	if (m.rows<2 || m.cols<3){
 		throw std::invalid_argument("not 2x3 matrix");
 	}                          //x                 //y                              //sin                //cos
 	return b2Transform(b2Vec2(m.at<float>(0, 2), m.at<float>(1,2)), b2Rot(atan2(-m.at<float>(1,0), m.at<float>(1,1))));
@@ -77,8 +74,8 @@ b2Transform math::solveAxB(const b2Transform& x, const b2Transform & B){ //
 	x_matrix.at<float>(2,0)=0;
 	x_matrix.at<float>(2,1)=0;
 	x_matrix.at<float>(2,2)=1;
-    cv::Mat x_inv_matrix;
-	cv::invertAffineTransform(x_matrix, x_inv_matrix);
+    cv::Mat x_inv_matrix=x_matrix.inv();
+	//cv::invertAffineTransform(x_matrix, x_inv_matrix);
     b2Transform x_inv= math::transform_2d(x_inv_matrix);
 	
 	return b2Mul(B, x_inv);
