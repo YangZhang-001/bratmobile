@@ -385,14 +385,12 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
             focus_points.push_back(p_cv);
         }
     }
-   // cv::Mat pt_rotation_matrix= cv::estimateAffinePartial2D; (get 3 points on disturbance)
     std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
     if (observed_disturbance!=NULL && new_d.first){
         *observed_disturbance=new_d.second;
     }
-
-    //return math::solveAxB(t.disturbance.pose(), new_d.second.pose); 
-    cv::Mat aff_transform=cv::estimateAffinePartial2D(t.disturbance.bf.vertices_cv(), new_d.second.vertices_cv());
+    //what to do when different dimensions??
+    cv::Mat aff_transform=cv::estimateAffinePartial2D( new_d.second.vertices_cv(), t.disturbance.bf.vertices_cv(),cv::noArray(), cv::LMEDS);
     return math::transform_2d(aff_transform);
     //what's the most likely angle??
 }
