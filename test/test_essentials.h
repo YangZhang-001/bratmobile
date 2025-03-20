@@ -31,6 +31,17 @@ bool debug_draw(b2Vec2 * sensor_v, std::vector <b2Vec2> d ){
     fclose(f_s);
     fclose(f_d);
 }
+ 
+template <typename T>
+bool debug_draw(std::vector <T> d , char* tag){
+    char name_d[256];
+    sprintf(name_d, "/tmp/debug_dist_%s.txt", tag);
+    FILE * f_d=fopen(name_d, "w");
+    for (T d_v: d){
+        fprintf(f_d, "%f\t%f\n",  d_v.x, d_v.y);            
+    }
+    fclose(f_d);
+}
 
 bool debug_draw(b2World & w, int file){
     char name_v[256], name_s[256], name_d[256];

@@ -84,7 +84,7 @@ class BodyFeatures{
 
     std::vector <b2Vec2> vertices()const;
 
-    std::vector <cv::Point2d> vertices_cv()const; //global vertices
+    std::vector <cv::Point2f> vertices_cv()const; //global vertices
 
 
 };

@@ -29,11 +29,11 @@ std::vector <b2Vec2> BodyFeatures::vertices()const{
     return result;
 }
 
-std::vector <cv::Point2d> BodyFeatures::vertices_cv()const{
+std::vector <cv::Point2f> BodyFeatures::vertices_cv()const{
     std::vector <b2Vec2> vb2d=vertices();
-    std::vector <cv::Point2d> result;
+    std::vector <cv::Point2f> result;
     for (const b2Vec2 & v: vb2d){
-        result.push_back(cv::Point2d(v.x, v.y));
+        result.push_back(cv::Point2f(v.x, v.y));
     }
     return result;
 }

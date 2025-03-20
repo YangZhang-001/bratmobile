@@ -13,11 +13,14 @@ int main(int argc, char** argv){
     bf.halfLength=0.05;
     Disturbance old_d(bf), new_d=old_d;
     math::applyAffineTrans(A, new_d);
-    auto v_old=old_d.bf.vertices_cv(), v_new=new_d.bf.vertices_cv();
+    std::vector<cv::Point2d> v_old=old_d.bf.vertices_cv(), v_new=new_d.bf.vertices_cv();
     std::vector <cv::Point2f> out(4);
-    cv::Mat aff_transform=cv::estimateAffine2D(v_old, v_new,cv::noArray(), cv::LMEDS, .01, 400, 0.999, 20);
+    cv::Mat aff_transform=cv::estimateAffine2D(v_old, v_new,cv::noArray(), cv::LMEDS, .01, 2000, 0.999, 20);
     A2= math::transform_2d(aff_transform);
-    round_mat(A2);
+    debug_draw(v_old, "old");
+    debug_draw(v_new, "new");
+
+   // round_mat(A2);
     if (A != A2){
         print_matrix(aff_transform);
         debug::print_pose(A2);
