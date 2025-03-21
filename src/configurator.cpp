@@ -189,10 +189,8 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 		priorityQueue.erase(priorityQueue.begin());
 		printf("befor checked ended");
 		er = controlGoal.checkEnded(g[v], t.direction);
-		printf("checked ended");
-		printf("v=%i options =%in", v, g[v].options);		
 		applyTransitionMatrix(g, v, direction, er.ended, v, plan_prov);
-		printf("v=%i options =%in", v, g[v].options);		
+		printf("v=%i options =%in", v, g[v].options.size());		
 		for (Direction d: g[v].options){ //add and evaluate all vertices
 			v0_exp=v;
 			std::vector <Direction> options=g[v0_exp].options;
