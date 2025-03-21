@@ -17,8 +17,8 @@ enable_testing()
 
 set(CTEST_OUTPUT_ON_FAILURE 1)
 
-add_executable(split_task split_task.cpp)
-add_executable(backtrack backtrack.cpp)
+add_executable(split_task ../test_essentials.h split_task.cpp)
+add_executable(backtrack ../test_essentials.h backtrack.cpp)
 add_executable(explorer explorer.cpp ../test_essentials.h)
 add_executable(transitionMatrix ../test_essentials.h transitionMatrix.cpp)
 add_executable(disturbance_dimensions ../test_essentials.h disturbance_dimensions.cpp)

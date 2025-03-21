@@ -15,8 +15,6 @@ std::vector <Direction> getPlan(const TransitionSystem & g, const std::vector <v
 
 }
 
-std::mutex ctr_mutex;
-
 
 int main(int argc, char** argv){
     

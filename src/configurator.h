@@ -235,7 +235,9 @@ vertexDescriptor get_explore_start(TransitionSystem &);
 
 void pre_explore(TransitionSystem &, const std::vector<vertexDescriptor>&, const bool& );
 
+void explore_plan(b2World&);
 
+void reactive(b2World&);
 
 
 };

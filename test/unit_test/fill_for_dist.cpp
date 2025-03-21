@@ -1,7 +1,5 @@
 #include "../callbacks.h"
 
-std::mutex ctr_mutex;
-
 bool debug_draw(b2World & w, int file, char * label){
     char name_b[256], name_v[256];
     sprintf(name_b, "/tmp/debug_bodies_%s_%i.txt", label, file);

@@ -13,7 +13,7 @@
 #include <filesystem>
 #define _USE_MATH_DEFINES
 
-
+std::mutex ctr_mutex;
 
 bool debug_draw(b2Vec2 * sensor_v, std::vector <b2Vec2> d ){
     char name_v[256], name_s[256], name_d[256];
@@ -97,6 +97,26 @@ void round_mat(b2Transform & t){
 }
 void print_matrix(const cv::Mat & m){
 	std::cout << "M = " << std::endl << " "  << m << std::endl << std::endl;
+}
+
+void Configurator::explore_plan(b2World&world){
+    pre_explore(transitionSystem, control->plan, currentTask.change);
+    vertexDescriptor src=get_explore_start(transitionSystem);
+    resetPhi(transitionSystem);
+    control->plan=explorer(src, transitionSystem, world);
+    if (debugOn){
+        std::vector<vertexDescriptor> _plan=(control->plan);
+        debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
+    }		
+    ts_cleanup(transitionSystem, control->plan); //remove self-edge and singleton states
+    if (control->plan.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
+        printf("no plan, searchign from %i\n", src);
+        bool finished=false;
+        control->plan= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
+    }
+    else{
+        printf("recycled plan in explorer:\n");
+    }
 }
 
 

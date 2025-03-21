@@ -1,7 +1,5 @@
 #include "../callbacks.h"
 
-std::mutex ctr_mutex;
-
 
 int main(int argc, char** argv){
     Disturbance goal(PURSUE, b2Vec2(1.0, 0));

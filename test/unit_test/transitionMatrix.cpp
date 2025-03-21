@@ -1,8 +1,6 @@
 #include "../callbacks.h"
 #include <string>
 
-std::mutex ctr_mutex;
-
 
 Direction getDirection(char d){
     

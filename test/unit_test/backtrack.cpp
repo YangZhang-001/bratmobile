@@ -1,12 +1,4 @@
-#include "configurator.h"
-
-std::mutex ctr_mutex;
-
-std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer &, const b2Transform&){
-    std::vector <BodyFeatures> result;
-    return result;
-}
-
+#include "../test_essentials.h"
 
 int desired_split_size(b2Vec2 pos, float simulationStep){
     return int(pos.Length()/(simulationStep+0.00001))+1;

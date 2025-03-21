@@ -1,5 +1,4 @@
 #include "../callbacks.h"
-std::mutex ctr_mutex;
 
 int main(int argc, char** argv){
     printf("lin 4\n");

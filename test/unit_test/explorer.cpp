@@ -1,8 +1,5 @@
 #include "../callbacks.h"
 
-std::mutex ctr_mutex;
-
-
 int main(int argc, char** argv){
     
     //we imagine that we have executed a plan and then the robot is instructed to go back on its steps
