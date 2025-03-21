@@ -56,7 +56,7 @@ public:
 
 Configurator()=default;
 
-Configurator(Task _task, bool debug =0, bool noTimer=0): controlGoal(_task), currentTask(_task), debugOn(debug), timerOff(noTimer){
+Configurator(Task _task, bool debug =0, bool noTimer=0): controlGoal(_task), currentTask(_task), debugOn(debug){
 	previousTimeScan = std::chrono::high_resolution_clock::now();
 	worldBuilder.debug=debug;
 	movingVertex=boost::add_vertex(transitionSystem);
