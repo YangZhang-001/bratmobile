@@ -35,6 +35,52 @@ Disturbance set_target(int& run, b2Transform start){
 	return result;
 }
 
+
+class ReducedCallback :public AlphaBot::StepCallback { //every 100ms the callback updates the plan
+    float L=0;
+	float R=0;
+public:
+Configurator * c;
+
+
+ReducedCallback(Configurator *conf): c(conf){
+}
+void step( AlphaBot &motors){
+	if (c->getIteration() <=0){
+		return;
+	}
+	if (!c->running){
+		motors.setRightWheelSpeed(0);
+ 	    motors.setLeftWheelSpeed(0);		
+	}
+	ctr_mutex.lock()
+    c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal));
+	printf("disturbance:");
+	debug::print_pose(c->getTask()->disturbance.pose());
+	EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
+	c->control->change_task(c->getTask()->change,  c->control->plan,c->transitionSystem, c->controlGoal, *c->getTask(), c->currentVertex);
+	R= c->getTask()->getAction().getRWheelSpeed();
+	L=c->getTask()->getAction().getLWheelSpeed(); //*1.05
+	if (c->getTask()->direction==LEFT){
+		R*=1.37; //23
+		L*=1.37;
+	}
+	else if (c->getTask()->direction==RIGHT){
+		R*=1.07; //17
+		L*=1.07;
+	}
+	else if (c->getTask()->direction==DEFAULT){
+		R*=1.15*1.1;
+		L*=1.15;
+	}
+	ctr_mutex.unlock();	
+    motors.setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
+    motors.setLeftWheelSpeed(L);
+	printf(",R=%f\tL=%f\n",c->getTask()->getAction().getRWheelSpeed(), c->getTask()->getAction().getLWheelSpeed());
+}
+};
+
+
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
@@ -51,7 +97,7 @@ int main(int argc, char** argv) {
 	as=AffordanceSetter(AffordanceIndex(atoi(argv[1])))
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
-	MotorCallback cb(&configurator);
+	ReducedCallback cb(&configurator);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);
 	configurator.start();

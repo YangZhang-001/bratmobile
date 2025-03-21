@@ -317,7 +317,6 @@ Task(){
     start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));
     direction = DEFAULT;
     action.init(direction);
-    printf("default constructro\n");
 }
 
 Task(Direction d){
