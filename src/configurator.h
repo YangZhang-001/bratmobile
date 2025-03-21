@@ -46,7 +46,6 @@ public:
 	CoordinateContainer data2fp;
 	char statFile[100];
 	char bodyFile[100];
-	bool timerOff=0;
 	int bodies=0;
 	TransitionSystem transitionSystem;
 	StateMatcher matcher;
@@ -220,10 +219,6 @@ void addToPriorityQueue(Frontier, std::vector <Frontier>&, TransitionSystem&, ve
 void setSimulationStep(float f){
 	simulationStep=f;
 }
-
-//void done_that(vertexDescriptor&, bool &, b2World &, std::vector <vertexDescriptor>&);
-
-//bool current_task_equivalent(const Task &,const  Task &, const vertexDescriptor&);
 
 float approximate_angle(const float &, const Direction &, const simResult::resultType &);
 

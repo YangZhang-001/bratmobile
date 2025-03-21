@@ -12,6 +12,8 @@
 #include <sys/types.h>
 #define _USE_MATH_DEFINES
 
+std::mutex ctr_mutex;
+
 void get_Foldername(char* custom, char name[60]){
     time_t now =time(0);
 	tm *ltm = localtime(&now);

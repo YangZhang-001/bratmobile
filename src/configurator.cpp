@@ -61,9 +61,9 @@ bool Configurator::Spawner(){
 	//timeElapsed=float(diff.count())/1000; //express in seconds
 	previousTimeScan=now; //update the time of sampling
 
-	if (timerOff){
-	//	timeElapsed = .2;
-	}
+	// if (timerOff){
+	// 	timeElapsed = .2;
+	// }
 
 	//CREATE BOX2D ENVIRONMENT
 	b2Vec2 gravity = {0.0, 0.0};
@@ -71,56 +71,14 @@ bool Configurator::Spawner(){
 	char name[256];
 	bool explored=0;
 	float duration=0; //tine for planning and exploring
-	//if (PLANNING){
 		auto startTime =std::chrono::high_resolution_clock::now();
-		// //start mutex here
 		ctr_mutex.lock(); //const.h
-		// pre_explore(transitionSystem, control->plan, currentTask.change);
-		// vertexDescriptor src=get_explore_start(transitionSystem);
-		// resetPhi(transitionSystem);
-		// control->plan=explorer(src, transitionSystem, world);
-		// if (debugOn){
-		// 	std::vector<vertexDescriptor> _plan=(control->plan);
-		// 	debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
-		// }		
-		// ts_cleanup(transitionSystem, control->plan); //remove self-edge and singleton states
-		// if (control->plan.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
-		// 	printf("no plan, searchign from %i\n", src);
-		// 	bool finished=false;
-		// 	control->plan= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
-		// }
-		// else{
-		// 	printf("recycled plan in explorer:\n");
-		// }
 		explore_plan(world);
-
 		ctr_mutex.unlock();
 		auto endTime =std::chrono::high_resolution_clock::now();
 		std::chrono::duration<float, std::milli>d= startTime- endTime; //in seconds
 		duration=abs(float(d.count())/1000); //express in seconds
 		printPlan(&control->plan);
-		//unlock mutex
-
-
-//	}
-	// else {
-	// 	// if (transitionSystem.m_vertices.size()==1 && iteration<=1){
-	// 	// 	movingEdge = boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
-	// 	// 	transitionSystem[movingVertex].direction=DEFAULT;
-	// 	// 	currentTask.action.init(transitionSystem[currentVertex].direction);
-	// 	// }
-	// 	// if (currentTask.action.getOmega()!=0 && currentTask.motorStep<(transitionSystem[movingEdge].step)){
-	// 	// 	return 1;
-	// 	// }
-	// 	// //adjustStepDistance(currentVertex, transitionSystem, &currentTask, _simulationStep);
-	// 	// worldBuilder.buildWorld(world, data2fp, transitionSystem[movingVertex].start, currentTask.direction); //was g[v].endPose
-	// 	// simResult result = simulate(currentTask, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],
-	// 	// gt::fill(result, transitionSystem[currentVertex].ID, &transitionSystem[currentEdge]);
-	// 	// currentTask.change = transitionSystem[currentVertex].outcome!=simResult::successful;
-	// 	// if (currentTask.change){
-	// 	// 	printf("crashed\n");
-	// 	// }
-	// }
 	if (benchmark){
 		FILE * f = fopen(statFile, "a+");
 		if (explored){
@@ -1019,43 +977,3 @@ void Configurator::pre_explore(TransitionSystem & g, const std::vector<vertexDes
 		transitionSystem[movingEdge].step=currentTask.motorStep;
 	}
 }
-
-// void Configurator::explore_plan(b2World& world){ //full length plan
-//     pre_explore(transitionSystem, control->plan, currentTask.change);
-//     vertexDescriptor src=get_explore_start(transitionSystem);
-//     resetPhi(transitionSystem);
-//     control->plan=explorer(src, transitionSystem, world);
-//     if (debugOn){
-//         std::vector<vertexDescriptor> _plan=(control->plan);
-//         debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
-//     }		
-//     ts_cleanup(transitionSystem, control->plan); //remove self-edge and singleton states
-//     if (control->plan.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
-//         printf("no plan, searchign from %i\n", src);
-//         bool finished=false;
-//         control->plan= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
-//     }
-//     else{
-//         printf("recycled plan in explorer:\n");
-//     }
-   
-// }
-
-// void Configurator::reactive(b2World& world){ //reactive
-// 	if (transitionSystem.m_vertices.size()==1 && iteration<=1){
-// 		movingEdge = boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
-// 		transitionSystem[movingVertex].direction=DEFAULT;
-// 		currentTask.action.init(transitionSystem[currentVertex].direction);
-// 	}
-// 	if (currentTask.action.getOmega()!=0 && currentTask.motorStep<(transitionSystem[movingEdge].step)){
-// 		return;
-// 	}
-// 	//adjustStepDistance(currentVertex, transitionSystem, &currentTask, _simulationStep);
-// 	worldBuilder.buildWorld(world, data2fp, transitionSystem[movingVertex].start, currentTask.direction); //was g[v].endPose
-// 	simResult result = simulate(currentTask, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],
-// 	gt::fill(result, transitionSystem[currentVertex].ID, &transitionSystem[currentEdge]);
-// 	currentTask.change = transitionSystem[currentVertex].outcome!=simResult::successful;
-// 	if (currentTask.change){
-// 		printf("crashed\n");
-// 	}
-// }
