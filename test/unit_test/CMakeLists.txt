@@ -100,14 +100,14 @@ add_test(NAME transition_y_D_safe COMMAND transitionMatrix y d s)
 add_test(NAME transition_y_stop_crash COMMAND transitionMatrix y s c)
 add_test(NAME transition_y_stop_ok COMMAND transitionMatrix y s k)
 add_test(NAME transition_y_stop_safe COMMAND transitionMatrix y s s)
-add_test(NAME processData_k COMMAND processData_k ../170924_1321_badrun/ 1 )
+add_test(NAME processData_k COMMAND processData_k ../target_40cm/ 1 )
 
-add_test(NAME kmeans_clusters COMMAND kmeans_clusters ../170924_1321_badrun/ 0 )
+add_test(NAME kmeans_clusters COMMAND kmeans_clusters ../target_40cm/ 0 )
 
 
-add_test(NAME fill_avoid1 COMMAND fill_for_dist ../251023_TAGET/ 0.37 0 1.5714 1)
-add_test(NAME fill_avoid2 COMMAND fill_for_dist ../251023_TAGET/ 0.37 0.27 0 2)
-add_test(NAME fill_avoid_close COMMAND fill_for_dist ../251023_TAGET/ 0.54 0 1.5714 3)
+add_test(NAME fill_avoid1 COMMAND fill_for_dist ../target_68cm/ 0.37 0 1.5714 1)
+add_test(NAME fill_avoid2 COMMAND fill_for_dist ../target_68cm/ 0.37 0.27 0 2)
+add_test(NAME fill_avoid_close COMMAND fill_for_dist ../target_68cm/ 0.54 0 1.5714 3)
 add_test(NAME make_sensor_start COMMAND make_sensor 0 0 0 6)
 add_test(NAME make_sensor_turned COMMAND make_sensor 0 0 1.5714 7)
 add_test(NAME make_sensor_close COMMAND make_sensor 0.54 0 1.5714 4)
@@ -133,13 +133,13 @@ add_test(NAME disturbance_dimensions_1d COMMAND disturbance_dimensions)
 
 add_test(NAME explorer_no COMMAND explorer)
 add_test(NAME explorer_cds COMMAND explorer ../cul_de_sac/ 0)
-add_test(NAME explorer_target COMMAND explorer ../251023_TAGET/ 1)
+add_test(NAME explorer_target COMMAND explorer ../target_68cm/ 1)
 
 
 add_test(NAME planner_no COMMAND planner)
 add_test(NAME planner_cds COMMAND planner ../cul_de_sac/ 0)
-add_test(NAME planner_target_40cm COMMAND planner ../170924_1321_badrun/ 1)
-add_test(NAME planner_target_68cm COMMAND planner ../251023_TAGET 1)
+add_test(NAME planner_target_40cm COMMAND planner ../target_40cm/ 1)
+add_test(NAME planner_target_68cm COMMAND planner ../target_68cm 1)
 
 
 add_test(NAME match_false COMMAND match)
@@ -162,42 +162,42 @@ add_test(NAME match_Di_shape COMMAND match 5 3)
 set_property(TEST match_Di_shape PROPERTY WILL_FAIL true)
 
 
-add_test(NAME find_match_state COMMAND find_match_state ../251023_TAGET/ 2 1)
-add_test(NAME find_match_state_f COMMAND find_match_state ../251023_TAGET/ 3 1)
-add_test(NAME find_match_3 COMMAND find_match_state ../251023_TAGET/ 3 1 29)
-add_test(NAME find_match_midtask11 COMMAND find_match_state ../251023_TAGET/ 3 1 14)
-add_test(NAME find_match_midtask2 COMMAND find_match_state ../251023_TAGET/ 2 1 14)
-add_test(NAME find_match_quarter COMMAND find_match_state ../251023_TAGET/ 2 1 7)
+add_test(NAME find_match_state COMMAND find_match_state ../target_68cm/ 2 1)
+add_test(NAME find_match_state_f COMMAND find_match_state ../target_68cm/ 3 1)
+add_test(NAME find_match_3 COMMAND find_match_state ../target_68cm/ 3 1 29)
+add_test(NAME find_match_midtask11 COMMAND find_match_state ../target_68cm/ 3 1 14)
+add_test(NAME find_match_midtask2 COMMAND find_match_state ../target_68cm/ 2 1 14)
+add_test(NAME find_match_quarter COMMAND find_match_state ../target_68cm/ 2 1 7)
 
 set_property(TEST find_match_midtask11 PROPERTY WILL_FAIL true)
 set_property(TEST find_match_state_f PROPERTY WILL_FAIL true)
 
-add_test(NAME find_match_state_turn COMMAND find_match_state ../251023_TAGET/ 9 1 55)
+add_test(NAME find_match_state_turn COMMAND find_match_state ../target_68cm/ 9 1 55)
 
-add_test(NAME state_difference COMMAND state_difference ../251023_TAGET/ 1)
-add_test(NAME state_difference_turn COMMAND state_difference ../251023_TAGET/ 1 55)
+add_test(NAME state_difference COMMAND state_difference ../target_68cm/ 1)
+add_test(NAME state_difference_turn COMMAND state_difference ../target_68cm/ 1 55)
 
 add_test(NAME match_equal COMMAND match_equal)
-#add_test(NAME replanner_40 COMMAND replanner ../170924_1321_badrun/ 2 1)
-add_test(NAME replanner_68 COMMAND replanner ../251023_TAGET/ 2 1)
+#add_test(NAME replanner_40 COMMAND replanner ../target_40cm/ 2 1)
+add_test(NAME replanner_68 COMMAND replanner ../target_68cm/ 2 1)
 add_test(NAME replanner_empty COMMAND replanner empty 2 1)
 add_test(NAME replanner_back COMMAND replanner empty 2 1 100 back)
 
 
 
-# add_test(NAME replanner_68_9 COMMAND replanner ../251023_TAGET/ 9 1 34)
-# add_test(NAME replanner_68_11 COMMAND replanner ../251023_TAGET/ 11 1 34)
-# add_test(NAME replanner_68_10 COMMAND replanner ../251023_TAGET/ 9 1 50)
-# add_test(NAME replanner_68_12 COMMAND replanner ../251023_TAGET/ 11 1 50)
+# add_test(NAME replanner_68_9 COMMAND replanner ../target_68cm/ 9 1 34)
+# add_test(NAME replanner_68_11 COMMAND replanner ../target_68cm/ 11 1 34)
+# add_test(NAME replanner_68_10 COMMAND replanner ../target_68cm/ 9 1 50)
+# add_test(NAME replanner_68_12 COMMAND replanner ../target_68cm/ 11 1 50)
 
 
 #ARGUMENTS: vertex match, goal?, how many iterations have passed?
-add_test(NAME checkPlan COMMAND checkPlan ../251023_TAGET/ 2 1 1)
-add_test(NAME checkPlan_4 COMMAND checkPlan ../251023_TAGET/ 2 1 4)
-add_test(NAME checkPlan_21 COMMAND checkPlan ../251023_TAGET/ 2 1 21)
-#add_test(NAME checkPlan_40cm COMMAND checkPlan ../170924_1321_badrun/ 2 1 1)
-#add_test(NAME checkPlan_40cm_4 COMMAND checkPlan ../170924_1321_badrun/ 2 1 4)
-add_test(NAME checkPlan_40cm_21 COMMAND checkPlan ../170924_1321_badrun/ 2 1 21)
+add_test(NAME checkPlan COMMAND checkPlan ../target_68cm/ 2 1 1)
+add_test(NAME checkPlan_4 COMMAND checkPlan ../target_68cm/ 2 1 4)
+add_test(NAME checkPlan_21 COMMAND checkPlan ../target_68cm/ 2 1 21)
+#add_test(NAME checkPlan_40cm COMMAND checkPlan ../target_40cm/ 2 1 1)
+#add_test(NAME checkPlan_40cm_4 COMMAND checkPlan ../target_40cm/ 2 1 4)
+add_test(NAME checkPlan_40cm_21 COMMAND checkPlan ../target_40cm/ 2 1 21)
 
 #ARGUMENTS: Dn affordance, new task direction, Di/goal affordance
 add_test(NAME task_to_execute_default_to_ob COMMAND task_to_execute 1 2 2)

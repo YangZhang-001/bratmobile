@@ -278,39 +278,6 @@ b2Vec2 averagePoint(const CoordinateContainer & c, Disturbance & d, float rad = 
     return result;
 }
 
-// bool WorldBuilder::occluded(consCoordinateContainer cc, Disturbance expectedD){
-//     bool result=false;
-//     if (!expectedD.isValid()){
-//         return result;
-//     }
-//     cv::Rect2f rect;
-//     std::vector <Pointf> occluding; 
-//     for (Pointf p:cc){
-//         Pointf tl(expectedD.getPosition().x-expectedD.halfWidth(), expectedD.getPosition().y+expectedD.halfWidth());
-//         Pointf br(expectedD.getPosition().x+expectedD.halfWidth(), expectedD.getPosition().y-expectedD.halfWidth());
-//         // rect=cv::Rect2f(expectedD.getPosition().x+expectedD.halfWidth(), 
-//         //                 expectedD.getPosition().y-expectedD.halfWidth(), 
-//         //                 expectedD.getPosition().x+expectedD.halfWidth(), 
-//         //                 expectedD.halfLength()*2);
-//         // if (p.inside(rect)){
-//         if (p.isin(tl, br)){
-//             occluding.push_back(p);
-//         }
-//     }
-//     if (occluding.empty()){
-//         return result;
-//     }
-//     CompareY compareY;
-//     std::vector<Pointf>::iterator miny=std::min_element(occluding.begin(), occluding.end(), compareY);
-//     std::vector<Pointf>::iterator maxy=std::max_element(occluding.begin(), occluding.end(), compareY);
-//     float length = (*maxy).y-(*miny).y;
-//     if (length>=rect.height*0.75 & occluding.size()>= rect.height*75){
-//         result=true;
-//     }
-//     //to finish
-//     return result;
-// }
-
 void WorldBuilder::world_cleanup(b2World * world){
     int ct=world->GetBodyCount();
 	for (b2Body * b = world->GetBodyList(); b; b = b->GetNext()){
@@ -390,9 +357,9 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         *observed_disturbance=new_d.second;
     }
     //what to do when different dimensions??
-    if (new_d.bf.match(t.disturbance.bf)){
-        new_d.bf.halfWidth=t.disturbance.halfWidth();
-        new_d.bf.halfLength=t.disturbance.halfLength();
+    if (new_d.second.match(t.disturbance.bf)){
+        new_d.second.halfWidth=t.disturbance.bf.halfWidth;
+        new_d.second.halfLength=t.disturbance.bf.halfLength;
     }
     cv::Mat aff_transform=cv::estimateAffinePartial2D( new_d.second.vertices_cv(), t.disturbance.bf.vertices_cv(),cv::noArray(), cv::LMEDS);
     return math::transform_2d(aff_transform);

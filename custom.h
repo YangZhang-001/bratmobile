@@ -105,6 +105,7 @@ void step( AlphaBot &motors){
 	// if (c->getIteration()>1){
 	// 	og_plan=c->transitionSystem.m_vertices.size();
 	// }
+	ctr_mutex.lock()
 	printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
         c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal));
 	EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
@@ -137,6 +138,7 @@ void step( AlphaBot &motors){
 		R*=1.15*1.1;
 		L*=1.15;
 	}
+	ctr_mutex.unlock();	
     motors.setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
     motors.setLeftWheelSpeed(L);
 	printf(",R=%f\tL=%f\n",c->getTask()->getAction().getRWheelSpeed(), c->getTask()->getAction().getLWheelSpeed());
