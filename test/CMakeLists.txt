@@ -12,11 +12,9 @@ find_package(Threads)
 
 include(CTest)
 
-#pkg_check_modules(clock REQUIRED IMPORTED_TARGET libCLoCK)
-
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
 	add_executable(closed_loop_task ../custom.h cl_task.cpp)
-	target_link_libraries(closed_loop_task box2d ${OpenCV_LIBS} CloCK alphabot pthread pigpio)
+	target_link_libraries(closed_loop_task box2d ${OpenCV_LIBS} CloCK a1lidarrpi alphabot pthread pigpio)
 	message("build test cases")
 endif()
 

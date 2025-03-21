@@ -1,10 +1,12 @@
 #include "custom.h"
 
+#define PLANNING false
 void forget(Configurator *c){}
 
 class AffordanceSetter{
 	public:
 	AffordanceIndex affordance=NONE;
+	AffordanceSetter()=default;
 	AffordanceSetter(AffordanceIndex i):affordance(i){}
 
 }as;
@@ -22,7 +24,7 @@ void Configurator::explore_plan(b2World &world){
 	worldBuilder.buildWorld(world, data2fp, transitionSystem[movingVertex].start, currentTask.direction); //was g[v].endPose
 	simResult result = simulate(currentTask, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],
 	gt::fill(result, transitionSystem[currentVertex].ID, &transitionSystem[currentEdge]);
-	transistionSystem[currentVertex].Dn.set_affordance(as.affordance);
+	transitionSystem[currentVertex].Dn.set_affordance(as.affordance);
 	currentTask.change = transitionSystem[currentVertex].outcome!=simResult::successful;
 	if (currentTask.change){
 		printf("crashed\n");
@@ -53,8 +55,8 @@ void step( AlphaBot &motors){
 		motors.setRightWheelSpeed(0);
  	    motors.setLeftWheelSpeed(0);		
 	}
-	ctr_mutex.lock()
-    c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal));
+	ctr_mutex.lock();
+	c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal), c->currentVertex, c->data2fp);
 	printf("disturbance:");
 	debug::print_pose(c->getTask()->disturbance.pose());
 	EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
@@ -84,17 +86,16 @@ void step( AlphaBot &motors){
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
-    Task controlGoal();
+    Task controlGoal;
 	ConfiguratorInterface configuratorInterface;
 	ControlInterface controlInterface;
     Configurator configurator(controlGoal);
-	configurator.planning =0;
 	if (argc>2){
 		configurator.debugOn= atoi(argv[2]);
 		configuratorInterface.debugOn = configurator.debugOn;
 	}
 	configurator.setSimulationStep(.5);
-	as=AffordanceSetter(AffordanceIndex(atoi(argv[1])))
+	as=AffordanceSetter(AffordanceIndex(atoi(argv[1])));
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
 	ReducedCallback cb(&configurator);

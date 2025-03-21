@@ -104,17 +104,11 @@ void step( AlphaBot &motors){
 		motors.setRightWheelSpeed(0);
  	    motors.setLeftWheelSpeed(0);		
 	}
-	// if (c->getIteration()>1){
-	// 	og_plan=c->transitionSystem.m_vertices.size();
-	// }
-	ctr_mutex.lock()
+	//ctr_mutex.lock();
 	printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
-        c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal));
+	c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal), c->currentVertex, c->data2fp);
 	EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
 	if (er.ended && c->getTask()->change){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
-		// if (SignedVectorLength(c->controlGoal.from_Di(&c->transitionSystem[0].endPose).p)>0.01){
-		// 	c->getTask()->change=0;
-		// }
 		run++;
 		Disturbance new_goal=set_target(run, c->controlGoal.start);
 		c->controlGoal = Task(new_goal, UNDEFINED);
@@ -140,7 +134,7 @@ void step( AlphaBot &motors){
 		R*=1.15*1.1;
 		L*=1.15;
 	}
-	ctr_mutex.unlock();	
+	//ctr_mutex.unlock();	
     motors.setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
     motors.setLeftWheelSpeed(L);
 	printf(",R=%f\tL=%f\n",c->getTask()->getAction().getRWheelSpeed(), c->getTask()->getAction().getLWheelSpeed());
