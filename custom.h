@@ -107,12 +107,13 @@ void step( AlphaBot &motors){
 	//ctr_mutex.lock();
 	//printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 	c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal), c->currentVertex, c->data2fp);
-	printf("tracked\n");
+	//printf("tracked\n");
 	EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
 	if (er.ended && c->getTask()->change){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
 		run++;
 		Disturbance new_goal=set_target(run, c->controlGoal.start);
 		c->controlGoal = Task(new_goal, UNDEFINED);
+		printf("setting new goal");
 		c->transitionSystem[c->movingVertex].Di=new_goal;
 		if (c->is_benchmarking()){
 			FILE * f = fopen(c->statFile, "a+");
