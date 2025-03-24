@@ -72,9 +72,9 @@ bool Configurator::Spawner(){
 	bool explored=0;
 	float duration=0; //tine for planning and exploring
 		auto startTime =std::chrono::high_resolution_clock::now();
-		ctr_mutex.lock(); //const.h
+		//ctr_mutex.lock(); //const.h
 		explore_plan(world);
-		ctr_mutex.unlock();
+		//ctr_mutex.unlock();
 		auto endTime =std::chrono::high_resolution_clock::now();
 		std::chrono::duration<float, std::milli>d= startTime- endTime; //in seconds
 		duration=abs(float(d.count())/1000); //express in seconds
@@ -187,9 +187,10 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 		closed.emplace(*priorityQueue.begin().base());
 		printf("emplaced\n");
 		priorityQueue.erase(priorityQueue.begin());
+		printf("befor checked ended");
 		er = controlGoal.checkEnded(g[v], t.direction);
-		printf("check ended\n");
 		applyTransitionMatrix(g, v, direction, er.ended, v, plan_prov);
+		printf("v=%i options =%in", v, g[v].options.size());		
 		for (Direction d: g[v].options){ //add and evaluate all vertices
 			v0_exp=v;
 			std::vector <Direction> options=g[v0_exp].options;
@@ -660,6 +661,7 @@ void Configurator::applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0
 		if (!e.second){
 			printf("no edge wtf\n");
 		}
+		printf("about to find task end");
 		gt::to_task_end(e.first, g, plan_prov, it);
 		if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
 			g[v0].options={g[e.first.m_target].direction};

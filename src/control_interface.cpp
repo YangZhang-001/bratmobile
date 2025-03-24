@@ -34,7 +34,7 @@ Disturbance ControlInterface::track_task_execution(Task & t, TransitionSystem& g
 	if(t.motorStep==0 || ended){
 		t.change=1;
 	}
-	estimate_current_vertex(g, t,v);
+	//estimate_current_vertex(g, t,v);
 	return d_obs;
 }
 
