@@ -6,7 +6,7 @@ void Configurator::explore_plan(b2World&world){
     pre_explore(transitionSystem, control->plan, currentTask.change);
     vertexDescriptor src=get_explore_start(transitionSystem);
     resetPhi(transitionSystem);
-    control->plan=explorer(src, transitionSystem, world);
+  //  control->plan=explorer(src, transitionSystem, world);
     if (debugOn){
         std::vector<vertexDescriptor> _plan=(control->plan);
         debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
