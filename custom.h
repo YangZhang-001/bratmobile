@@ -104,9 +104,6 @@ void step( AlphaBot &motors){
 		motors.setRightWheelSpeed(0);
  	    motors.setLeftWheelSpeed(0);		
 	}
-	// if (c->getIteration()>1){
-	// 	og_plan=c->transitionSystem.m_vertices.size();
-	// }
 	ctr_mutex.lock()
 	printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
         c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal));
