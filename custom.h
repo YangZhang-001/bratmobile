@@ -92,49 +92,50 @@ class MotorCallback :public AlphaBot::StepCallback { //every 100ms the callback 
 	float R=0;
 public:
 int ogStep=0;
-Configurator * c;
+Motor_IO * mio;
 int run=0;
 
-MotorCallback(Configurator *conf): c(conf){
+MotorCallback(Motor_IO *_mio): mio(_mio){
 }
 void step( AlphaBot &motors){
 	if (c->getIteration() <=0){
 		return;
 	}
-	if (!c->running){
+	if (!mio->running){
 		motors.setRightWheelSpeed(0);
  	    motors.setLeftWheelSpeed(0);		
 	}
 	//ctr_mutex.lock();
 	//printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
-	c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal), c->currentVertex, c->data2fp);
+	mio->setReady(false);
+	mio->track_task_execution();
 	//printf("tracked\n");
-	EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
-	if (er.ended && c->getTask()->change){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
+	EndedResult er = mio->goal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
+	if (er.ended && mio->task.change){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
 		run++;
-		Disturbance new_goal=set_target(run, c->controlGoal.start);
-		c->controlGoal = Task(new_goal, UNDEFINED);
+		Disturbance new_goal=set_target(run, mio->goal.start);
+		mio->goal = Task(new_goal, UNDEFINED);
 		printf("setting new goal");
-		c->transitionSystem[c->movingVertex].Di=new_goal;
+		//c->transitionSystem[c->movingVertex].Di=new_goal;
 		if (c->is_benchmarking()){
-			FILE * f = fopen(c->statFile, "a+");
+			FILE * f = fopen(statFile, "a+");
 			fprintf(f, "!");
 			fclose(f);			
 		}
 	}
-	c->control->change_task(c->getTask()->change,  c->control->plan,c->transitionSystem, c->controlGoal, *c->getTask(), c->currentVertex);
+	mio->change_task(mio->task.change,  mio->plan,c->transitionSystem, c->controlGoal, *c->getTask(), c->currentVertex);
 	printf("changed\n");
-	R= c->getTask()->getAction().getRWheelSpeed();
-	L=c->getTask()->getAction().getLWheelSpeed(); //*1.05
-	if (c->getTask()->direction==LEFT){
+	R= mio->task.getAction().getRWheelSpeed();
+	L=mio->task.getAction().getLWheelSpeed(); //*1.05
+	if (mio->task->direction==LEFT){
 		R*=1.37; //23
 		L*=1.37;
 	}
-	else if (c->getTask()->direction==RIGHT){
+	else if (mio->task.direction==RIGHT){
 		R*=1.07; //17
 		L*=1.07;
 	}
-	else if (c->getTask()->direction==DEFAULT){
+	else if (mio->task.direction==DEFAULT){
 		R*=1.15*1.1;
 		L*=1.15;
 	}

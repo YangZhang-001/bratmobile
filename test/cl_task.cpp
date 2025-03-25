@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
 	AlphaBot motors;
     Task controlGoal;
 	LIDAR_In configuratorInterface;
-	ControlInterface controlInterface;
+	Motor_IO controlInterface;
     Configurator configurator(controlGoal);
 	if (argc>2){
 		configurator.debugOn= atoi(argv[2]);

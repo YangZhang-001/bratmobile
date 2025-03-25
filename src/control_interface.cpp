@@ -1,42 +1,26 @@
 #include "control_interface.h"
 
-Disturbance ControlInterface::track_task_execution(Task & t, TransitionSystem& g, Task * controlGoal,vertexDescriptor &v, const CoordinateContainer & data2fp, WorldBuilder* wb){
+void ControlInterface::track_task_execution(){
 	//b2Transform deltaPose=worldBuilder.wb_bridger.get_transform(&t, data2fp); //track using obstacle OR dead reckoning
 	//here can insert something for wb.bridger, wheel speed control (for step)
-	BodyFeatures *obs_bf;
-	Disturbance d_obs;
-	b2Transform deltaPose;
-	if (NULL!=wb){
-		deltaPose=wb->wb_bridger.get_transform(t, data2fp, obs_bf);
-	}
-	else{
-		deltaPose=t.action.getTransform(MOTOR_CALLBACK);
-	}
-
-	// printf("shift graph by:\n");
-	// debug::print_pose(deltaPose);
-	//adjust_rw_task(movingVertex, transitionSystem, &t, deltaPose); //readjust end criteria
-	update_graph(g, deltaPose, &t, controlGoal);//lateral error is hopefully noise and is ignored
-	//TO REMOVE ONCE YOU APPY FULLY CLOSED LOOP INSTEAD OF DEAD RECKONING
-	math::applyAffineTrans(deltaPose, t.disturbance); 
-	//debug::print_pose(t.disturbance.pose(), "TASK DISTURBANCE IS");
-	//debug::print_pose(t.start, "TASK start IS");
-	// bool (t.checkEnded()).ended;s
-	// debug::print_pose(t.from_Di(b2), "TASK start IS");
-	//printf("in track: end criteria d= %f ",t.endCriteria.distance.get());
-	//t.motorStep--; //delete this
-
+	//BodyFeatures *obs_bf;
+	b2Transform deltaPose_10Hz=deltaPose;
+	deltaPose.p.x/=2;
+	deltaPose.p.y/=2;
+	deltaPose.q.Set(deltaPose.q.GetAngle()/=2);
+	task.endCriteria.adjust(deltaPose_10Hz); //adjusting in task so system can be memoryless
+	math::applyAffineTrans(-deltaPose_10Hz, goal); //only update goal
+	//math::applyAffineTrans(deltaPose_10Hz, task); 
 	bool ended=false;
-	if (wb==NULL){ended=(t.checkEnded(b2Transform_zero)).ended;}
-	else{
-		d_obs=Disturbance(*obs_bf);
+	// if (wb==NULL){ended=(t.checkEnded(b2Transform_zero)).ended;}
+	// else{
+	Disturbance	d_obs=Disturbance(*obs_bf);
 		ended=t.checkEnded(task_sensor, b2Transform_zero, &d_obs); //the sensor moves with the robot
-	}
+//	}
 	if(t.motorStep==0 || ended){
 		t.change=1;
 	}
 	//estimate_current_vertex(g, t,v);
-	return d_obs;
 }
 
 void ControlInterface::change_task(bool b, std::vector <vertexDescriptor>& pv, TransitionSystem & g, const Task & controlGoal, Task &currentTask, vertexDescriptor & currentVertex){

@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
-	ControlInterface controlInterface;
+	Motor_IO controlInterface;
     Configurator configurator(controlGoal);
 	configurator.setBenchmarking(1, "rt-update", "/tmp");
 	if (argc>1){
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
 	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
-	MotorCallback cb(&configurator);
+	MotorCallback cb(&controlInterface);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);
 	configurator.start();

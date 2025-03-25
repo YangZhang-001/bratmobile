@@ -33,7 +33,6 @@ public:
 //	bool ready=0;
 	bool stop=0;
 	CoordinateContainer data2fp;
-
 	//std::vector <vertexDescriptor> plan_on_hold;
 
 	// void setReady(bool b);
@@ -46,14 +45,15 @@ public:
 
 };
 
-class ControlInterface{ //tracks task execution
+class Motor_IO:public IOInterface{ //tracks task execution
     public:
     float simulationStep=BOX2DRANGE;
     std::vector <vertexDescriptor> plan, current_vertices;
+	Task task, goal;
+	b2Transform deltaPose=b2Transform_zero;
+	bool running=false;
 
-	ControlInterface(){}
-
-	Disturbance track_task_execution(Task &, TransitionSystem&, Task * controlGoal, vertexDescriptor &v, const CoordinateContainer &, WorldBuilder * wb=NULL); //returns observed disturbance
+	void track_task_execution(); //returns observed disturbance
 
 	void change_task(bool, std::vector <vertexDescriptor>&, TransitionSystem&, const Task & controlGoal, Task &currentTask, vertexDescriptor & currentVertex);
 

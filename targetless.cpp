@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 	AlphaBot motors;
     Task controlGoal;
 	LIDAR_In configuratorInterface;
-	ControlInterface controlInterface;
+	Motor_IO controlInterface;
     Configurator configurator(controlGoal);
 	char name[60];
 	configurator.setBenchmarking(1, "rt-update-targetless", "/tmp");
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 	}	configurator.setSimulationStep(.5);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
-	MotorCallback cb(&configurator);
+	MotorCallback cb(&controlInterface);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);
 	lidar.start();

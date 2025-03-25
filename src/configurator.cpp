@@ -74,11 +74,11 @@ bool Configurator::Spawner(){
 		auto endTime =std::chrono::high_resolution_clock::now();
 		std::chrono::duration<float, std::milli>d= startTime- endTime; //in seconds
 		duration=abs(float(d.count())/1000); //express in seconds
-		printPlan(&control->plan);
+		printPlan(&plan);
 	if (benchmark){
 		FILE * f = fopen(statFile, "a+");
 		if (explored){
-			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, control->plan, currentVertex);
+			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, plan, currentVertex);
 			fprintf(f, "*");
 		}
 		fprintf(f,"%i\t%i\t%f\n", worldBuilder.getBodies(), transitionSystem.m_vertices.size(), duration);
@@ -170,7 +170,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, TransitionSystem& g, b2World & w){
 	vertexDescriptor v1=v, v0=v, bestNext=v, v0_exp=v;
 	Direction direction=currentTask.direction;
-	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=control->plan;
+	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=plan;
 	std::set <vertexDescriptor> closed;
 	Task t;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
@@ -256,7 +256,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 								}
 							}
 						}
-						if (control->plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
+						if (plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
 							shift_states(g, task_vertices, shift_start);
 						}
 					}
@@ -516,6 +516,7 @@ void Configurator::start(){
 		return;
 	}
 	running =1;
+	c->control->running=running;
 	if (thread!=NULL){ //already running
 		return;
 	}
@@ -531,7 +532,7 @@ void Configurator::stop(){
 	}
 }
 
-void Configurator::registerInterface(LIDAR_In * _ci, ControlInterface * _control){
+void Configurator::registerInterface(LIDAR_In * _ci, Motor_IO * _control){
 	ci = _ci;
 	control=_control;
 }
@@ -540,21 +541,40 @@ void Configurator::run(Configurator * c){
 	while (c->running){
 		if (c->ci->stop){
 			c->ci=NULL;
+			c->control=NULL;
 		}
 		if (c->ci == NULL){
-			printf("null pointer to interface\n");
+			printf("null pointer to lidar input\n");
+			c->running=0;
+			return;
+		}
+		if (c->control == NULL){
+			printf("null pointer to motor IO\n");
 			c->running=0;
 			return;
 		}
 		if (c == NULL){
 			printf("null pointer to configurator\n");
 			c->running=0;
+			control->running=0;
 			return;
 		}
 		if (c->ci->isReady()){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
+			BodyFeatures bf;
+			b2Transform deltaPose_20Hz=WorldBuilder::get_transform(*c->getTask(), c->data2fp, &bf);
+			c->getTask()->disturbance=Disturbance(bf);
+			if (c->control->isReady()){
+				c->control->setReady(false); //transfer data to control int
+				c->control->task=*c->getTask();
+				c->control->deltaPose=deltaPose_20Hz;
+				c->control.setReady(true);				
+			}
 			c->Spawner();
+			c->control->setReady(false); //transfer data to control int
+			c->control->plan=c->plan;
+			c->control->setReady(true);
 		}
 	}
 
@@ -895,7 +915,7 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 
 
 void Configurator::planPriority(TransitionSystem&g, vertexDescriptor v){
-    for (vertexDescriptor p:control->plan){
+    for (vertexDescriptor p:plan){
 		if (p==v){
        		g[v].phi-=.1;
 			break;
@@ -948,7 +968,7 @@ vertexDescriptor Configurator::get_explore_start(TransitionSystem & g){
 		dummy_vertex(currentVertex);
 		currentTask.change=1;
 	}
-	if (!control->plan.empty() || !currentTask.change){ //
+	if (!plan.empty() || !currentTask.change){ //
 		return movingVertex;
 	}
 	else{

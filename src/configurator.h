@@ -11,7 +11,8 @@
 #include "debug.h"
 #include "planner.h"
 #include "control_interface.h"
-
+char statFile[100];
+char bodyFile[100];
 
 class Configurator{
 protected:
@@ -20,7 +21,7 @@ protected:
 	bool benchmark=0;
 public:
 	LIDAR_In * ci=NULL;
-	ControlInterface * control=NULL;
+	Motor_IO * control=NULL;
 	bool running =0;
 	std::thread * thread=NULL;
 	bool debugOn=0;
@@ -28,8 +29,7 @@ public:
 	Task controlGoal;
 	std::chrono::high_resolution_clock::time_point previousTimeScan;
 	CoordinateContainer data2fp;
-	char statFile[100];
-	char bodyFile[100];
+
 	int bodies=0;
 	TransitionSystem transitionSystem;
 	StateMatcher matcher;
@@ -37,6 +37,7 @@ public:
 	vertexDescriptor movingVertex;
 	vertexDescriptor currentVertex;
 	edgeDescriptor movingEdge, currentEdge;
+	std::vector<vertexDescriptor>plan;
 
 Configurator()=default;
 
@@ -186,7 +187,7 @@ void start(); //data interface class collecting position of bodies
 
 void stop();
 
-void registerInterface(LIDAR_In *, ControlInterface *);
+void registerInterface(LIDAR_In *, Motor_IO *);
 
 static void run(Configurator *);
 

@@ -76,3 +76,13 @@ float SignedVectorLength(b2Vec2 v){
 bool EndCriteria::hasEnd(){
     return angle.isValid() || distance.isValid();
 }
+
+void EndCriteria::adjust(const b2Transform& delta){
+    if (angle.isValid()){
+        angle=Angle(angle.get-delta.q.GetAngle());
+    }
+    if (distance.isValid()){
+        distance=Distance(distance-delta.p.Length());
+    }
+}
+

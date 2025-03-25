@@ -61,6 +61,8 @@ struct EndCriteria{
     float getStandardError(Angle, Distance, State);
     bool hasEnd();
 
+    void adjust(const b2Transform&);
+
 };
 
 
