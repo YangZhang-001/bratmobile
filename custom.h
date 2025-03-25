@@ -127,7 +127,7 @@ void step( AlphaBot &motors){
 	printf("changed\n");
 	R= mio->task.getAction().getRWheelSpeed();
 	L=mio->task.getAction().getLWheelSpeed(); //*1.05
-	if (mio->task->direction==LEFT){
+	if (mio->task.direction==LEFT){
 		R*=1.37; //23
 		L*=1.37;
 	}
@@ -139,6 +139,7 @@ void step( AlphaBot &motors){
 		R*=1.15*1.1;
 		L*=1.15;
 	}
+	mio->setReady(true);
 	//ctr_mutex.unlock();	
     motors.setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
     motors.setLeftWheelSpeed(L);

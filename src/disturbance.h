@@ -92,7 +92,7 @@ class BodyFeatures{
 struct Disturbance{ //this generates error
 
 private:
-friend ControlInterface;
+friend class ControlInterface;
 friend struct StateMatcher;
     AffordanceIndex affordanceIndex = NONE; //not using the enum because in the future we might want to add more affordances
     bool valid= 0;

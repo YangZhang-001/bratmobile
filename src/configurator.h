@@ -23,7 +23,7 @@ public:
 	LIDAR_In * ci=NULL;
 	Motor_IO * control=NULL;
 	bool running =0;
-	std::thread * thread=NULL;
+	std::thread * LIDAR_thread=NULL, * motor_output_thread=NULL, * motor_input_thread=NULL;
 	bool debugOn=0;
 	float simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);
 	Task controlGoal;
@@ -37,7 +37,7 @@ public:
 	vertexDescriptor movingVertex;
 	vertexDescriptor currentVertex;
 	edgeDescriptor movingEdge, currentEdge;
-	std::vector<vertexDescriptor>plan;
+	std::vector<vertexDescriptor>plan, current_vertices;
 
 Configurator()=default;
 
@@ -189,7 +189,11 @@ void stop();
 
 void registerInterface(LIDAR_In *, Motor_IO *);
 
-static void run(Configurator *);
+static void get_LIDAR_input(Configurator *);
+
+static void set_motor_output(Configurator *); //sending tracking info to motor IO interface
+
+static void get_motor_input(Configurator *); //sending tracking info to motor IO interface
 
 void unexplored_transitions(TransitionSystem&, const vertexDescriptor&);
 
@@ -219,6 +223,8 @@ void pre_explore(TransitionSystem &, const std::vector<vertexDescriptor>&, const
 void explore_plan(b2World&);
 
 void reactive(b2World&);
+
+std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const TransitionSystem &);
 
 
 };

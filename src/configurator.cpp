@@ -512,23 +512,47 @@ void Configurator::printPlan(std::vector <vertexDescriptor>* p){
 
 void Configurator::start(){
 	if (ci == NULL){
-		throw std::invalid_argument("no data interface found");
+		throw std::invalid_argument("no LIDAR interface found");
+		return;
+	}
+	if (control==NULL){
+		throw std::invalid_argument("no motor interface found");
 		return;
 	}
 	running =1;
-	c->control->running=running;
-	if (thread!=NULL){ //already running
+	control->running=running;
+	if (LIDAR_thread!=NULL){ //already running
 		return;
 	}
-	thread= new std::thread(Configurator::run, this);
+	if (motor_input_thread!=NULL){ //already running
+		return;
+	}	
+	if (motor_output_thread!=NULL){ //already running
+		return;
+	}
+	LIDAR_thread= new std::thread(Configurator::get_LIDAR_input, this);
+	motor_input_thread=new std::thread(Configurator::get_motor_input, this);
+	motor_output_thread=new std::thread(Configurator::set_motor_output, this);
+
 }
 
 void Configurator::stop(){
 	running =0;
-	if (thread!=NULL){
-		thread->join();
-		delete thread;
-		thread=NULL;
+	control->running=0;
+	if (LIDAR_thread!=NULL){
+		LIDAR_thread->join();
+		delete LIDAR_thread;
+		LIDAR_thread=NULL;
+	}
+	if (motor_input_thread!=NULL){
+		motor_input_thread->join();
+		delete motor_input_thread;
+		motor_input_thread=NULL;
+	}
+	if (motor_output_thread!=NULL){
+		motor_output_thread->join();
+		delete motor_output_thread;
+		motor_output_thread=NULL;
 	}
 }
 
@@ -537,7 +561,7 @@ void Configurator::registerInterface(LIDAR_In * _ci, Motor_IO * _control){
 	control=_control;
 }
 
-void Configurator::run(Configurator * c){
+void Configurator::get_LIDAR_input(Configurator * c){
 	while (c->running){
 		if (c->ci->stop){
 			c->ci=NULL;
@@ -556,29 +580,83 @@ void Configurator::run(Configurator * c){
 		if (c == NULL){
 			printf("null pointer to configurator\n");
 			c->running=0;
-			control->running=0;
+			c->control->running=0;
 			return;
 		}
 		if (c->ci->isReady()){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
-			BodyFeatures bf;
-			b2Transform deltaPose_20Hz=WorldBuilder::get_transform(*c->getTask(), c->data2fp, &bf);
-			c->getTask()->disturbance=Disturbance(bf);
-			if (c->control->isReady()){
-				c->control->setReady(false); //transfer data to control int
-				c->control->task=*c->getTask();
-				c->control->deltaPose=deltaPose_20Hz;
-				c->control.setReady(true);				
-			}
 			c->Spawner();
-			c->control->setReady(false); //transfer data to control int
-			c->control->plan=c->plan;
-			c->control->setReady(true);
 		}
 	}
 
 }
+
+void Configurator::set_motor_output(Configurator * c){
+	while (c->running){
+		if (!c->control->running){
+			c->ci=NULL;
+			c->control=NULL;
+		}
+		if (c->control == NULL){
+			printf("null pointer to motor IO\n");
+			c->running=0;
+			return;
+		}
+		if (c == NULL){
+			printf("null pointer to configurator\n");
+			c->running=0;
+			c->control->running=0;
+			c->ci->stop=true;
+			return;
+		}
+		if (c->control->isReady()){
+			BodyFeatures bf;
+			b2Transform deltaPose_20Hz=c->worldBuilder.wb_bridger.get_transform(*c->getTask(), c->data2fp, &bf);
+			c->getTask()->disturbance=Disturbance(bf);
+			c->control->setReady(false); //transfer data to control int
+			c->control->task=*c->getTask();
+			c->control->deltaPose=deltaPose_20Hz;
+			if(PLANNING){
+				c->control->plan=c->output_plan(c->plan, c->transitionSystem);
+			}
+			else{
+				c->control->plan={c->transitionSystem[0]};
+			}
+			c->control->setReady(true);
+		}
+	}
+}
+
+void Configurator::get_motor_input(Configurator * c){
+	while (c->running){
+		if (!c->control->running){
+			c->ci=NULL;
+			c->control=NULL;
+		}
+		if (c->control == NULL){
+			printf("null pointer to motor IO\n");
+			c->running=0;
+			return;
+		}
+		if (c == NULL){
+			printf("null pointer to configurator\n");
+			c->running=0;
+			c->control->running=0;
+			c->ci->stop=true;
+			return;
+		}
+		if (c->control->isReady()){
+			c->control->setReady(false);
+			*c->getTask()=c->control->task;
+			c->current_vertices=std::vector<vertexDescriptor>(c->plan.begin(), c->plan.begin()+c->control->plan_iterator);
+			c->plan.erase(c->plan.begin(), c->plan.begin()+c->control->plan_iterator);
+			c->control->setReady(true);
+			
+		}
+	}
+}
+
 
 void Configurator::unexplored_transitions(TransitionSystem& g, const vertexDescriptor& v){
 	std::vector <Direction> to_remove;
@@ -995,3 +1073,12 @@ void Configurator::pre_explore(TransitionSystem & g, const std::vector<vertexDes
 		transitionSystem[movingEdge].step=currentTask.motorStep;
 	}
 }
+
+std::vector <State> Configurator::output_plan(const std::vector <vertexDescriptor>& p, const TransitionSystem &g){
+	std::vector <State> rho;
+	for (const vertexDescriptor &v: p){
+		rho.push_back(g[v]);
+	}
+	return rho;
+}
+

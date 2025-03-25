@@ -48,10 +48,11 @@ public:
 class Motor_IO:public IOInterface{ //tracks task execution
     public:
     float simulationStep=BOX2DRANGE;
-    std::vector <vertexDescriptor> plan, current_vertices;
+    std::vector <State> plan;
 	Task task, goal;
 	b2Transform deltaPose=b2Transform_zero;
 	bool running=false;
+	int plan_iterator=0;
 
 	void track_task_execution(); //returns observed disturbance
 
@@ -62,12 +63,13 @@ class Motor_IO:public IOInterface{ //tracks task execution
 	void update_graph(TransitionSystem&, const b2Transform & _deltaPose, Task* t, Task * controlGoal);
 
 	//merge vertices into a single task
-	Task task_to_execute(const TransitionSystem &, const vertexDescriptor&, const Task& goal);
+	Task task_to_execute(const std::vector<State>&, int);
 
 	vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, vertexDescriptor currentVertex);
 
 	void makeRobotSensor(TransitionSystem&, const vertexDescriptor&, const Task& t); //sensor but not linked to a body
 
+	int to_task_end();
 	private:
 	b2PolygonShape task_sensor;
 };	
