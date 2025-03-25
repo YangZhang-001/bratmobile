@@ -15,7 +15,7 @@ int main(int argc, char** argv){
     Task goal(target1,DEFAULT);
     Configurator conf(goal);
     conf.simulationStep=simulationStep;
-    ConfiguratorInterface ci;
+    LIDAR_In ci;
     ControlInterface control;
     conf.registerInterface(&ci, &control);
     DataInterface di(&ci);

@@ -20,7 +20,7 @@ int main(int argc, char** argv){
     Task goal(target1,DEFAULT);
     Configurator conf(goal);
     conf.simulationStep=0.27;
-    ConfiguratorInterface ci;
+    LIDAR_In ci;
     ControlInterface control;
     conf.registerInterface(&ci, &control);
     conf.setBenchmarking(true, "simulation_benchmarking");

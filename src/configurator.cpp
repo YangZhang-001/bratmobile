@@ -2,14 +2,10 @@
 #include <chrono>
 
 
-void ConfiguratorInterface::setReady(bool b){
-	ready = b;
-}
 
-
-bool ConfiguratorInterface::isReady(){
-	return ready;
-}
+// bool LIDAR_In::isReady(){
+// 	return ready;
+// }
 
 void Configurator::dummy_vertex(vertexDescriptor src){
 	vertexDescriptor prev_current=currentVertex;
@@ -535,7 +531,7 @@ void Configurator::stop(){
 	}
 }
 
-void Configurator::registerInterface(ConfiguratorInterface * _ci, ControlInterface * _control){
+void Configurator::registerInterface(LIDAR_In * _ci, ControlInterface * _control){
 	ci = _ci;
 	control=_control;
 }
@@ -556,8 +552,9 @@ void Configurator::run(Configurator * c){
 			return;
 		}
 		if (c->ci->isReady()){
-			c->ci->ready=0;
+			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
+			//c->ci->transfer_data(c);
 			c->Spawner();
 		}
 	}

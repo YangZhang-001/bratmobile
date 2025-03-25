@@ -17,7 +17,7 @@ int main(int argc, char** argv){
     math::applyAffineTrans(t1, pos2);
     math::applyAffineTrans(t2, pos3);
     conf.simulationStep=std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH)*2;
-    ConfiguratorInterface ci;
+    LIDAR_In ci;
     ControlInterface control;
     conf.registerInterface(&ci, NULL);
     b2Transform start=conf.transitionSystem[conf.movingVertex].endPose;

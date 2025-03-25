@@ -42,11 +42,11 @@ std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer& 
 
 
 class LidarInterface : public A1Lidar::DataInterface{
-ConfiguratorInterface * ci;
+LIDAR_In * ci;
 public: 
     int mapCount =0;
 
-    LidarInterface(ConfiguratorInterface * _ci): ci(_ci){}
+    LidarInterface(LIDAR_In * _ci): ci(_ci){}
 
 	void newScanAvail(float, A1LidarData (&data)[A1Lidar::nDistance]){ //uncomment sections to write x and y to files
 		if (ci == NULL){
@@ -54,6 +54,7 @@ public:
 			return;
 		}
 		//ci->data.clear();
+    	ci->setReady(false);
 		ci->data2fp.clear();
 		mapCount++;
 		Pointf p2f;
@@ -143,4 +144,5 @@ void step( AlphaBot &motors){
 	printf(",R=%f\tL=%f\n",c->getTask()->getAction().getRWheelSpeed(), c->getTask()->getAction().getLWheelSpeed());
 }
 };
+
 

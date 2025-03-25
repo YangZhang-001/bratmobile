@@ -10,7 +10,7 @@ int main(int argc, char** argv){
     }
     Task goal(target1,DEFAULT);
     Configurator conf(goal);
-    ConfiguratorInterface ci;
+    LIDAR_In ci;
     conf.registerInterface(&ci, NULL);
     DataInterface di(&ci);
     if (argc>1){

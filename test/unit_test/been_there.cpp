@@ -5,7 +5,7 @@ int main(int argc, char**argv){
     Task goal(target,DEFAULT);
    Configurator conf(goal);
     conf.setSimulationStep(0.27);
-    ConfiguratorInterface ci;
+    LIDAR_In ci;
     conf.registerInterface(&ci);
     DataInterface di(&ci);
     di.folder=argv[1];

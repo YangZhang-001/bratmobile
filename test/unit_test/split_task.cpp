@@ -15,7 +15,7 @@ int main(int argc, char** argv){
     Task goal=Task();
     Configurator conf(goal);
     conf.simulationStep=std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH)*2;
-    ConfiguratorInterface ci;
+    LIDAR_In ci;
     conf.registerInterface(&ci, NULL);
     b2Transform start=conf.transitionSystem[conf.movingVertex].endPose;
     if (argc>=7){

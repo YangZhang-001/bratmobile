@@ -97,7 +97,7 @@ int main(int argc, char** argv){
     }
     Task goal(target1,DEFAULT);
     Configurator conf(goal);
-    ConfiguratorInterface ci;
+    LIDAR_In ci;
     ControlInterface control;
     conf.registerInterface(&ci, NULL);
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);

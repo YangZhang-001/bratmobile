@@ -12,22 +12,6 @@
 #include "planner.h"
 #include "control_interface.h"
 
-class ConfiguratorInterface{ //data interface for configurator
-public:
-	bool debugOn=0;
-	int iteration=0;
-	CoordinateContainer data2fp;
-	bool ready=0;
-	bool stop=0;
-	//std::vector <vertexDescriptor> plan_on_hold;
-
-	void setReady(bool b);
-
-	bool isReady();
-
-};
-
-
 
 class Configurator{
 protected:
@@ -35,7 +19,7 @@ protected:
 	Task currentTask; //need to make thread safe?
 	bool benchmark=0;
 public:
-	ConfiguratorInterface * ci=NULL;
+	LIDAR_In * ci=NULL;
 	ControlInterface * control=NULL;
 	bool running =0;
 	std::thread * thread=NULL;
@@ -65,6 +49,7 @@ Configurator(Task _task, bool debug =0, bool noTimer=0): controlGoal(_task), cur
 	currentTask.action.setVelocities(0,0);
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
 }
+
 
 
 
@@ -201,7 +186,7 @@ void start(); //data interface class collecting position of bodies
 
 void stop();
 
-void registerInterface(ConfiguratorInterface *, ControlInterface *);
+void registerInterface(LIDAR_In *, ControlInterface *);
 
 static void run(Configurator *);
 
@@ -236,7 +221,6 @@ void reactive(b2World&);
 
 
 };
-
 
 
 

@@ -42,7 +42,7 @@ int main(int argc, char** argv){
     Task goal(target1,DEFAULT);
     Configurator conf(goal);
     conf.simulationStep=simStep;
-    ConfiguratorInterface ci;
+    LIDAR_In ci;
     conf.debugOn=debug;
     ControlInterface control;
     conf.registerInterface(&ci, &control);

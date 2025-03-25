@@ -25,7 +25,7 @@ bool debug_draw(b2World & w, int file, char * label){
 
 int main(int argc, char** argv){
     Configurator conf;
-    ConfiguratorInterface ci;
+    LIDAR_In ci;
     conf.registerInterface(&ci, NULL);
     DataInterface di(&ci);
     if (argc>1){

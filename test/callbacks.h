@@ -73,14 +73,14 @@ void getVisited(TransitionSystem& g, vertexDescriptor cv){
 class DataInterface {
 public:
 int iteration = 0;
-ConfiguratorInterface * ci;
+LIDAR_In * ci;
 
 char * folder;
-    DataInterface(ConfiguratorInterface * _ci): ci(_ci){}
+    DataInterface(LIDAR_In * _ci): ci(_ci){}
 
 	bool newScanAvail(){ //uncomment sections to write x and y to files		
         iteration++;
-    	ci->ready=0;
+    	ci->setReady(false);
       //  ci->updatePCProc();
 	//	ci->data.clear();
 		ci->data2fp.clear();
