@@ -36,6 +36,7 @@ public:
 	vertexDescriptor currentVertex;
 	edgeDescriptor movingEdge, currentEdge;
 	std::vector<vertexDescriptor>plan, current_vertices;
+	bool ready=true;
 
 Configurator()=default;
 

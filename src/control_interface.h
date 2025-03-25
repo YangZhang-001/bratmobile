@@ -47,6 +47,9 @@ public:
 
 class Motor_IO:public IOInterface{ //tracks task execution
     public:
+	Motor_IO(){
+		ready=1;
+	}
     float simulationStep=BOX2DRANGE;
     std::vector <State> plan;
 	Task task, goal;

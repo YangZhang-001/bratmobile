@@ -100,20 +100,32 @@ MotorCallback(Motor_IO *_mio): mio(_mio){
 }
 void step( AlphaBot &motors){
 	if (mio->iteration <=0){
+		printf("r");
 		return;
 	}
+	if (mio==NULL){
+		printf("mio null\n");
+	}
+	if (!mio->isReady()){
+		printf("not ready");
+		return;
+	}
+	mio->setReady(false);
+	printf("n");
 	if (!mio->running){
+		printf("not running\n");
 		motors.setRightWheelSpeed(0);
  	    motors.setLeftWheelSpeed(0);		
 	}
-	mio->setReady(false);
+	printf("pre=set ready\n");
+	printf("post-set ready\n");
 	mio->track_task_execution();
+	printf("tracked");
 	EndedResult er = mio->goal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
 	if (er.ended && mio->task.change){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
 		run++;
 		Disturbance new_goal=set_target(run, mio->goal.start);
 		mio->goal = Task(new_goal, UNDEFINED);
-		printf("setting new goal");
 		if (BENCHMARKING){
 			FILE * f = fopen(statFile, "a+");
 			fprintf(f, "!");

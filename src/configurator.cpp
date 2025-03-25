@@ -42,6 +42,7 @@ std::pair <edgeDescriptor, bool> Configurator::add_vertex_retro(vertexDescriptor
 bool Configurator::Spawner(){ 
 	//PREPARE VECTORS TO RECEIVE DATA
 	iteration++; //iteration set in getVelocity
+	printf("iteration=%i. control =%i\n", iteration, control->iteration);
 	worldBuilder.iteration++;
 
 
@@ -154,15 +155,11 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 	Task t;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
 	EndedResult er;
-	//printf("v=%i, initial plan size=%i\n",v, plan_prov.size());
-	// printf("GOAL IS: ");
 	debug::print_pose(controlGoal.disturbance.pose(), "Goal at:");
 	do{
 		v=bestNext;
 		closed.emplace(*priorityQueue.begin().base());
-		printf("emplaced\n");
 		priorityQueue.erase(priorityQueue.begin());
-		printf("befor checked ended");
 		er = controlGoal.checkEnded(g[v], t.direction);
 		applyTransitionMatrix(g, v, direction, er.ended, v, plan_prov);
 		printf("v=%i options =%in", v, g[v].options.size());		
@@ -271,7 +268,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 	}
 	backtrack(evaluationQueue, priorityQueue, closed, g, plan_prov);
 	bestNext=priorityQueue[0];
-	// printf("best=%i end", bestNext);
+	printf("best=%i end", bestNext);
 	// debug::print_pose(g[bestNext].endPose);
 	std::vector <edgeDescriptor> best_in_edges= gt::inEdges(g,bestNext);
 	if (best_in_edges.empty()){
@@ -500,6 +497,7 @@ void Configurator::start(){
 	}
 	running =1;
 	control->running=running;
+	control->goal=controlGoal;
 	if (LIDAR_thread!=NULL){ //already running
 		return;
 	}
@@ -545,6 +543,7 @@ void Configurator::get_LIDAR_input(Configurator * c){
 		if (c->ci->stop){
 			c->ci=NULL;
 			c->control=NULL;
+			printf("ci not started\n");
 		}
 		if (c->ci == NULL){
 			printf("null pointer to lidar input\n");
@@ -565,7 +564,9 @@ void Configurator::get_LIDAR_input(Configurator * c){
 		if (c->ci->isReady()){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
+			c->ready=false;
 			c->Spawner();
+			c->ready=true;
 		}
 	}
 
@@ -589,10 +590,10 @@ void Configurator::set_motor_output(Configurator * c){
 			c->ci->stop=true;
 			return;
 		}
-		if (c->control->isReady()){
-			BodyFeatures bf;
-			b2Transform deltaPose_20Hz=c->worldBuilder.wb_bridger.get_transform(*c->getTask(), c->data2fp, &bf);
-			c->getTask()->disturbance=Disturbance(bf);
+		BodyFeatures bf;
+		b2Transform deltaPose_20Hz=c->worldBuilder.wb_bridger.get_transform(*c->getTask(), c->data2fp, &bf);
+		c->getTask()->disturbance=Disturbance(bf);
+		if (c->control->isReady() && c->ready){
 			c->control->setReady(false); //transfer data to control int
 			c->control->task=*c->getTask();
 			c->control->deltaPose=deltaPose_20Hz;
@@ -604,21 +605,13 @@ void Configurator::set_motor_output(Configurator * c){
 				c->control->plan={c->transitionSystem[0]};
 			}
 			c->control->setReady(true);
+			//printf("control ready (set)=%i", c->control->isReady());
 		}
 	}
 }
 
 void Configurator::get_motor_input(Configurator * c){
 	while (c->running){
-		if (!c->control->running){
-			c->ci=NULL;
-			c->control=NULL;
-		}
-		if (c->control == NULL){
-			printf("null pointer to motor IO\n");
-			c->running=0;
-			return;
-		}
 		if (c == NULL){
 			printf("null pointer to configurator\n");
 			c->running=0;
@@ -626,7 +619,17 @@ void Configurator::get_motor_input(Configurator * c){
 			c->ci->stop=true;
 			return;
 		}
-		if (c->control->isReady()){
+		if (c->control == NULL){
+			printf("null pointer to motor IO\n");
+			c->running=0;
+			return;
+		}
+		if (!c->control->running){
+			printf("control not running (get)");
+			c->ci=NULL;
+			c->control=NULL;
+		}
+		if (c->control->isReady() && c->ready){
 			c->control->setReady(false);
 			*c->getTask()=c->control->task;
 			c->current_vertices=std::vector<vertexDescriptor>(c->plan.begin(), c->plan.begin()+c->control->plan_iterator);
@@ -635,6 +638,7 @@ void Configurator::get_motor_input(Configurator * c){
 			c->control->setReady(true);
 			
 		}
+		//printf("control ready (get)=%i", c->control->isReady());
 	}
 }
 

@@ -346,6 +346,9 @@ EndedResult Task::checkEnded(const State& n,  Direction dir, bool relax, std::pa
 
 bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,Disturbance *dist_obs ){
 	bool result=false;
+	if (box.m_count<4){
+		return true;
+	}
 	if (dist_obs->getAffIndex()==NONE && direction==DEFAULT){
 		if (start.p.Length()>=BOX2DRANGE){
 			result=true;
