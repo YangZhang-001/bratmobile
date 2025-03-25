@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
     Task controlGoal;
-	ConfiguratorInterface configuratorInterface;
+	LIDAR_In configuratorInterface;
 	ControlInterface controlInterface;
     Configurator configurator(controlGoal);
 	char name[60];

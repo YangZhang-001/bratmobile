@@ -12,6 +12,7 @@ Disturbance ControlInterface::track_task_execution(Task & t, TransitionSystem& g
 	else{
 		deltaPose=t.action.getTransform(MOTOR_CALLBACK);
 	}
+
 	// printf("shift graph by:\n");
 	// debug::print_pose(deltaPose);
 	//adjust_rw_task(movingVertex, transitionSystem, &t, deltaPose); //readjust end criteria

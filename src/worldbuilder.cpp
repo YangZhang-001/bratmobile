@@ -340,7 +340,7 @@ cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
 }
 
 
-b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, BodyFeatures * observed_disturbance){
+static b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, BodyFeatures * observed_disturbance){
    if (t.disturbance.getAffIndex()!=AVOID){
         return t.action.getTransform(MOTOR_CALLBACK); //LIDAR_SAMPLING_RATE
     }

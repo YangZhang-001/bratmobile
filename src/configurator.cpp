@@ -554,7 +554,6 @@ void Configurator::run(Configurator * c){
 		if (c->ci->isReady()){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
-			//c->ci->transfer_data(c);
 			c->Spawner();
 		}
 	}

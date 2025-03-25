@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
 	AlphaBot motors;
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
-	ConfiguratorInterface configuratorInterface;
+	LIDAR_In configuratorInterface;
 	ControlInterface controlInterface;
     Configurator configurator(controlGoal);
 	configurator.setBenchmarking(1, "rt-update", "/tmp");
