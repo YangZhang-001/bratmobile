@@ -23,7 +23,7 @@ void Motor_IO::track_task_execution(){
 	//estimate_current_vertex(g, t,v);
 }
 
-void Motor_IO::change_task(bool b, std::vector <vertexDescriptor>& pv, TransitionSystem & g, const Task & controlGoal, Task &currentTask, vertexDescriptor & currentVertex){
+void Motor_IO::change_task(bool b, const std::vector<State>&pv){
 	// printf("moving edge = %i -> %i exists %i\n", movingEdge.m_source, movingEdge.m_target, boost::edge(movingEdge.m_source, movingEdge.m_target, transitionSystem).second);
 	// printpf("current edge = %i -> %i exists %i\n", currentEdge.m_source, currentEdge.m_target, boost::edge(currentEdge.m_source, currentEdge.m_target, transitionSystem).second);
 	if (!b){
@@ -47,8 +47,8 @@ void Motor_IO::change_task(bool b, std::vector <vertexDescriptor>& pv, Transitio
 		int i=to_task_end();
 		//current_vertices=std::vector<vertexDescriptor>(pv.begin(), task_end+1); //sus
        	//currentVertex= *pv.begin();
-		task = task_to_execute(plan, i);	
-		task_sensor=WorldBuilder::sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
+		task = task_to_execute(pv, i);	
+		task_sensor=WorldBuilder::sensor_box(Robot::get_vertices(),b2Transform_zero, &(goal.disturbance));
 		// if (g[*task_end].Di==g[currentVertex].Di){
 		// 	task_end++;
 		// }
@@ -60,8 +60,8 @@ void Motor_IO::change_task(bool b, std::vector <vertexDescriptor>& pv, Transitio
 		// }
 	}
 	else{
-		if (plan[0].Dn.isValid()){
-			task = Task(plan[0].Dn, DEFAULT); //reactive
+		if (pv[0].Dn.isValid()){
+			task = Task(pv[0].Dn, DEFAULT); //reactive
 		}
 		// else if(currentTask.direction!=DEFAULT){
 		// 	ctask = Task(g[currentVertex].Dn, DEFAULT); //reactive
@@ -115,44 +115,7 @@ Task Motor_IO::task_to_execute(const std::vector<State>& p, int i){
 
 }
 
-vertexDescriptor Motor_IO::estimate_current_vertex(TransitionSystem& g, Task& currentTask, vertexDescriptor currentVertex){
-	vertexDescriptor task_start;
-	try {
-		task_start=current_vertices.at(0);
-	}
-	catch(const std::out_of_range& oor){
-		printf("current vertices empty\n");
-		return currentVertex;
-	}
-	//State q(b2Transform_zero, currentTask.disturbance, currentTask.direction);
-	// if ((g[task_start].Dn.getAffIndex()==AVOID && currentTask.disturbance.affordanceIndex==PURSUE)){
-	// 	//return 0;//moving
-	// 	q.Di=currentTask.disturbance;
-	// 	q.Di.affordanceIndex=AVOID;
-	// 	q.Dn=Disturbance();
-	// }
-	b2Transform Di_distance=currentTask.from_Di(), v_from_D=b2Transform_zero;
 
-	float sum=10000;
-	StateMatcher matcher;
-//	State q(b2Transform_zero, currentTask.disturbance, currentTask.direction);
-	for (vertexDescriptor & v:current_vertices){
-		if ((g[task_start].Dn.getAffIndex()==AVOID && currentTask.disturbance.getAffIndex()==PURSUE)){
-			v_from_D=g[v].start_from_Dn();
-		}
-		else{
-			v_from_D=g[v].start_from_Di();
-		}
-		b2Transform transform_diff=Di_distance-v_from_D;
-		float sum_diff=fabs(transform_diff.p.x+transform_diff.p.y+transform_diff.q.GetAngle());
-		if (sum_diff<sum){
-			currentVertex=v;
-			sum=sum_diff;
-		}				
-	}
-	return currentVertex;
-
-}
 
 int Motor_IO::to_task_end(){
 	int i=0;

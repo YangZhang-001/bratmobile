@@ -52,11 +52,11 @@ class Motor_IO:public IOInterface{ //tracks task execution
 	Task task, goal;
 	b2Transform deltaPose=b2Transform_zero;
 	bool running=false;
-	int plan_iterator=0;
+	int plan_iterator=0, iteration=0;
 
 	void track_task_execution(); //returns observed disturbance
 
-	void change_task(bool, std::vector <vertexDescriptor>&, TransitionSystem&, const Task & controlGoal, Task &currentTask, vertexDescriptor & currentVertex);
+	void change_task(bool b, const std::vector<State>&pv);
 
 	int motor_step(Task::Action a);
 
@@ -64,8 +64,6 @@ class Motor_IO:public IOInterface{ //tracks task execution
 
 	//merge vertices into a single task
 	Task task_to_execute(const std::vector<State>&, int);
-
-	vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, vertexDescriptor currentVertex);
 
 	void makeRobotSensor(TransitionSystem&, const vertexDescriptor&, const Task& t); //sensor but not linked to a body
 

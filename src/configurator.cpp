@@ -44,13 +44,7 @@ bool Configurator::Spawner(){
 	iteration++; //iteration set in getVelocity
 	worldBuilder.iteration++;
 
-	sprintf(bodyFile, "/tmp/bodies%04i.txt", iteration);
-	sprintf(worldBuilder.bodyFile, "%s",bodyFile);
-	FILE *f;
-	if (debugOn){
-		f = fopen(bodyFile, "w");
-		fclose(f);
-	}
+
 	//BENCHMARK + FIND TRUE SAMPLING RATE
 	auto now =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>diff= now - previousTimeScan; //in seconds
@@ -65,25 +59,10 @@ bool Configurator::Spawner(){
 	b2Vec2 gravity = {0.0, 0.0};
 	b2World world= b2World(gravity);
 	char name[256];
-	bool explored=0;
-	float duration=0; //tine for planning and exploring
-		auto startTime =std::chrono::high_resolution_clock::now();
+		//auto startTime =std::chrono::high_resolution_clock::now();
 		//ctr_mutex.lock(); //const.h
-		explore_plan(world);
+	explore_plan(world);
 		//ctr_mutex.unlock();
-		auto endTime =std::chrono::high_resolution_clock::now();
-		std::chrono::duration<float, std::milli>d= startTime- endTime; //in seconds
-		duration=abs(float(d.count())/1000); //express in seconds
-		printPlan(&plan);
-	if (benchmark){
-		FILE * f = fopen(statFile, "a+");
-		if (explored){
-			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, plan, currentVertex);
-			fprintf(f, "*");
-		}
-		fprintf(f,"%i\t%i\t%f\n", worldBuilder.getBodies(), transitionSystem.m_vertices.size(), duration);
-		fclose(f);
-	}
 	worldBuilder.resetBodies();
 	//printf("end explor\n");
 	return 1;
@@ -617,6 +596,7 @@ void Configurator::set_motor_output(Configurator * c){
 			c->control->setReady(false); //transfer data to control int
 			c->control->task=*c->getTask();
 			c->control->deltaPose=deltaPose_20Hz;
+			c->control->iteration=c->iteration;
 			if(PLANNING){
 				c->control->plan=c->output_plan(c->plan, c->transitionSystem);
 			}
@@ -651,6 +631,7 @@ void Configurator::get_motor_input(Configurator * c){
 			*c->getTask()=c->control->task;
 			c->current_vertices=std::vector<vertexDescriptor>(c->plan.begin(), c->plan.begin()+c->control->plan_iterator);
 			c->plan.erase(c->plan.begin(), c->plan.begin()+c->control->plan_iterator);
+			c->controlGoal=c->control->goal;
 			c->control->setReady(true);
 			
 		}
@@ -1082,3 +1063,33 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 	return rho;
 }
 
+vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task& currentTask, vertexDescriptor currentVertex){
+	vertexDescriptor task_start;
+	try {
+		task_start=current_vertices.at(0);
+	}
+	catch(const std::out_of_range& oor){
+		printf("current vertices empty\n");
+		return currentVertex;
+	}
+	b2Transform Di_distance=currentTask.from_Di(), v_from_D=b2Transform_zero;
+
+	float sum=10000;
+	StateMatcher matcher;
+	for (vertexDescriptor & v:current_vertices){
+		if ((g[task_start].Dn.getAffIndex()==AVOID && currentTask.disturbance.getAffIndex()==PURSUE)){
+			v_from_D=g[v].start_from_Dn();
+		}
+		else{
+			v_from_D=g[v].start_from_Di();
+		}
+		b2Transform transform_diff=Di_distance-v_from_D;
+		float sum_diff=fabs(transform_diff.p.x+transform_diff.p.y+transform_diff.q.GetAngle());
+		if (sum_diff<sum){
+			currentVertex=v;
+			sum=sum_diff;
+		}				
+	}
+	return currentVertex;
+
+}

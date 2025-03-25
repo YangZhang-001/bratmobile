@@ -11,14 +11,12 @@
 #include "debug.h"
 #include "planner.h"
 #include "control_interface.h"
-char statFile[100];
-char bodyFile[100];
+//char bodyFile[100];
 
 class Configurator{
 protected:
 	int iteration=0; //represents that hasn't started yet, robot isn't moving and there are no map data
 	Task currentTask; //need to make thread safe?
-	bool benchmark=0;
 public:
 	LIDAR_In * ci=NULL;
 	Motor_IO * control=NULL;
@@ -49,46 +47,6 @@ Configurator(Task _task, bool debug =0, bool noTimer=0): controlGoal(_task), cur
 	currentVertex=movingVertex;
 	currentTask.action.setVelocities(0,0);
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
-}
-
-
-
-
-void setBenchmarking(bool b, char * new_folder, char * _dir=NULL){
-	benchmark =b;
-		if (benchmark){
-		char dirName[50];
-		if (_dir==NULL){
-			sprintf(dirName, "benchmark");
-		}
-		else{
-			sprintf(dirName, _dir);
-		}
-		if (!opendir(dirName)){
-			mkdir(dirName, 0777);
-		}
-		char new_path[60];
-		sprintf(new_path, "%s/%s", dirName, new_folder);
-		if (!opendir(new_path)){
-			mkdir(new_path, 0777); //""
-		}
-		//TODAYS DATE AND TIME
-		time_t now =time(0);
-		tm *ltm = localtime(&now);
-		int y,m,d, h, min;
-		y=ltm->tm_year-100;
-		m = ltm->tm_mon +1;
-		d=ltm->tm_mday;
-		h= ltm->tm_hour;
-		min = ltm->tm_min;
-		sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
-		FILE * f = fopen(statFile, "w");
-		fclose(f);
-	}
-}
-
-bool is_benchmarking(){
-	return benchmark;
 }
 
 bool Spawner(); 
@@ -225,6 +183,8 @@ void explore_plan(b2World&);
 void reactive(b2World&);
 
 std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const TransitionSystem &);
+
+vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, vertexDescriptor currentVertex);
 
 
 };

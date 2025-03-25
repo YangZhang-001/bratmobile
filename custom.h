@@ -13,6 +13,7 @@
 #define _USE_MATH_DEFINES
 
 std::mutex ctr_mutex;
+char statFile[100];
 
 void get_Foldername(char* custom, char name[60]){
     time_t now =time(0);
@@ -98,32 +99,28 @@ int run=0;
 MotorCallback(Motor_IO *_mio): mio(_mio){
 }
 void step( AlphaBot &motors){
-	if (c->getIteration() <=0){
+	if (mio->iteration <=0){
 		return;
 	}
 	if (!mio->running){
 		motors.setRightWheelSpeed(0);
  	    motors.setLeftWheelSpeed(0);		
 	}
-	//ctr_mutex.lock();
-	//printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 	mio->setReady(false);
 	mio->track_task_execution();
-	//printf("tracked\n");
 	EndedResult er = mio->goal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
 	if (er.ended && mio->task.change){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
 		run++;
 		Disturbance new_goal=set_target(run, mio->goal.start);
 		mio->goal = Task(new_goal, UNDEFINED);
 		printf("setting new goal");
-		//c->transitionSystem[c->movingVertex].Di=new_goal;
-		if (c->is_benchmarking()){
+		if (BENCHMARKING){
 			FILE * f = fopen(statFile, "a+");
 			fprintf(f, "!");
 			fclose(f);			
 		}
 	}
-	mio->change_task(mio->task.change,  mio->plan,c->transitionSystem, c->controlGoal, *c->getTask(), c->currentVertex);
+	mio->change_task(mio->task.change,  mio->plan);
 	printf("changed\n");
 	R= mio->task.getAction().getRWheelSpeed();
 	L=mio->task.getAction().getLWheelSpeed(); //*1.05
@@ -140,11 +137,43 @@ void step( AlphaBot &motors){
 		L*=1.15;
 	}
 	mio->setReady(true);
-	//ctr_mutex.unlock();	
     motors.setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
     motors.setLeftWheelSpeed(L);
-	printf(",R=%f\tL=%f\n",c->getTask()->getAction().getRWheelSpeed(), c->getTask()->getAction().getLWheelSpeed());
+	printf(",R=%f\tL=%f\n",mio->task.getAction().getRWheelSpeed(), mio->task.getAction().getLWheelSpeed());
 }
 };
+
+
+void dump_benchmarks(char * new_folder, char * _dir=NULL){
+		if (BENCHMARKING){
+		char dirName[50];
+		if (_dir==NULL){
+			sprintf(dirName, "benchmark");
+		}
+		else{
+			sprintf(dirName, _dir);
+		}
+		if (!opendir(dirName)){
+			mkdir(dirName, 0777);
+		}
+		char new_path[60];
+		sprintf(new_path, "%s/%s", dirName, new_folder);
+		if (!opendir(new_path)){
+			mkdir(new_path, 0777); //""
+		}
+		//TODAYS DATE AND TIME
+		time_t now =time(0);
+		tm *ltm = localtime(&now);
+		int y,m,d, h, min;
+		y=ltm->tm_year-100;
+		m = ltm->tm_mon +1;
+		d=ltm->tm_mday;
+		h= ltm->tm_hour;
+		min = ltm->tm_min;
+		sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
+		FILE * f = fopen(statFile, "w");
+		fclose(f);
+	}
+}
 
 

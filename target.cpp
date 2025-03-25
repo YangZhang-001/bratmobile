@@ -3,23 +3,39 @@
 void forget(Configurator *c){}
 
 void Configurator::explore_plan(b2World&world){
-    pre_explore(transitionSystem, control->plan, currentTask.change);
+	auto startTime =std::chrono::high_resolution_clock::now();
+    pre_explore(transitionSystem, plan, currentTask.change);
     vertexDescriptor src=get_explore_start(transitionSystem);
     resetPhi(transitionSystem);
-    control->plan=explorer(src, transitionSystem, world);
+    plan=explorer(src, transitionSystem, world);
     if (debugOn){
-        std::vector<vertexDescriptor> _plan=(control->plan);
+        std::vector<vertexDescriptor> _plan=(plan);
         debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
     }		
-    ts_cleanup(transitionSystem, control->plan); //remove self-edge and singleton states
-    if (control->plan.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
+    ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
+    if (plan.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
         printf("no plan, searchign from %i\n", src);
         bool finished=false;
-        control->plan= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
+        plan= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
     }
     else{
         printf("recycled plan in explorer:\n");
     }
+	float duration=0; //tine for planning and exploring
+	bool explored=0;
+	auto endTime =std::chrono::high_resolution_clock::now();
+	std::chrono::duration<float, std::milli>d= startTime- endTime; //in seconds
+	duration=abs(float(d.count())/1000); //express in seconds
+	printPlan(&plan);
+	if (BENCHMARKING){
+		FILE * f = fopen(statFile, "a+");
+		if (explored){
+			debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, plan, currentVertex);
+			fprintf(f, "*");
+		}
+		fprintf(f,"%i\t%i\t%f\n", worldBuilder.getBodies(), transitionSystem.m_vertices.size(), duration);
+		fclose(f);
+	}
 }
 
 
@@ -42,7 +58,7 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	Motor_IO controlInterface;
     Configurator configurator(controlGoal);
-	configurator.setBenchmarking(1, "rt-update", "/tmp");
+	dump_benchmarks( "rt-update", "/tmp");
 	if (argc>1){
 		configurator.debugOn= atoi(argv[1]);
 		configuratorInterface.debugOn = atoi(argv[1]);
