@@ -3,10 +3,12 @@
 
 #include "worldbuilder.h"
 #include "task.h"
-//extern std::mutex ctr_mutex;
-//#include "configurator.h"
+
 class Configurator; 
 
+/**
+* Input/Output interface for Configurator
+*/
 class IOInterface{
 	protected:
 	bool ready=false;
@@ -21,58 +23,34 @@ class IOInterface{
 		ready=b;
 	}
 
-	//virtual void transfer_data(Configurator *);
 };
 
-class LIDAR_In:public IOInterface{ //data interface for configurator
-protected:
-
+/**
+* Receives LIDAR data
+*/
+class LIDAR_In:public IOInterface{ 
 public:
 	bool debugOn=0;
 	int iteration=0;
-//	bool ready=0;
 	bool stop=0;
 	CoordinateContainer data2fp;
-	//std::vector <vertexDescriptor> plan_on_hold;
-
-	// void setReady(bool b);
-
-	// bool isReady();
-
-	// void transfer_data(Configurator * c){
-	// 	c->data2fp=data2fp;
-	// }
-
 };
 
-class Motor_IO:public IOInterface{ //tracks task execution
+/**
+* Output from Configurator to Motors
+*/
+class Motor_Out:public IOInterface { 
     public:
-	Motor_IO(){
-		ready=1;
-	}
-    float simulationStep=BOX2DRANGE;
-    std::vector <State> plan;
-	Task task, goal;
-	b2Transform deltaPose=b2Transform_zero;
-	bool running=false;
-	int plan_iterator=0, iteration=0;
 
-	void track_task_execution(); //returns observed disturbance
+	Task::Action action;
 
-	void change_task(bool b, const std::vector<State>&pv);
-
-	int motor_step(Task::Action a);
-
-	void update_graph(TransitionSystem&, const b2Transform & _deltaPose, Task* t, Task * controlGoal);
-
-	//merge vertices into a single task
-	Task task_to_execute(const std::vector<State>&, int);
-
-	void makeRobotSensor(TransitionSystem&, const vertexDescriptor&, const Task& t); //sensor but not linked to a body
-
-	int to_task_end();
-	private:
-	b2PolygonShape task_sensor;
 };	
 
+/**
+* Customizable, for changing goals.
+* arg: control goal pointer
+*/
+struct GoalChanger{
+	virtual void change_goal(Task *);
+};
 #endif

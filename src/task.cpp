@@ -71,7 +71,7 @@ bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& rob
 }
 
 
-simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, bool debugOn, float remaining){ //CLOSED LOOP CONTROL, og return simreult
+simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, float remaining){ //CLOSED LOOP CONTROL, og return simreult
 		simResult result=simResult(simResult::resultType::successful);
 		result.endPose = start;
 		if (action.L==0 & action.R==0){
@@ -79,11 +79,10 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, bo
 			return result;
 		}
 		Listener listener(&disturbance);
-		//b2Body * d_body=GetDisturbance(&_world);
 		int _count=_world.GetBodyCount();
 		_world.SetContactListener(&listener);	
 		FILE * robotPath;
-		if (debugOn){
+		if (DEBUG){
 			sprintf(planFile, "/tmp/robot%04i.txt", iteration);
 			robotPath = fopen(planFile, "a");
 		}
@@ -97,7 +96,7 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, bo
 			robot->SetLinearVelocity(instVelocity);
 			robot->SetAngularVelocity(action.getOmega());
 			robot->SetTransform(robot->GetPosition(), theta);
-			if (debugOn){
+			if (DEBUG){
 				fprintf(robotPath, "%f\t%f\n", robot->GetPosition().x, robot->GetPosition().y); //save predictions/
 			}
 			bool out_x= fabs(robot->GetTransform().p.x)>=(BOX2DRANGE-0.001);
@@ -128,13 +127,9 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, bo
 		}
 		result.endPose = robot->GetTransform();
 		result.step=stepb2d;
-		// for (b2Body * b = _world.GetBodyList(); b; b = b->GetNext()){
-		// 	_world.DestroyBody(b);
-		// }
-		if (debugOn){
+		if (DEBUG){
 			fclose(robotPath);
 		}
-		//int bodies = _world.GetBodyCount();
 		return result;
 	
 }

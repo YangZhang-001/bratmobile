@@ -19,15 +19,13 @@ protected:
 	Task currentTask; //need to make thread safe?
 public:
 	LIDAR_In * ci=NULL;
-	Motor_IO * control=NULL;
+	Motor_Out * control=NULL;
 	bool running =0;
-	std::thread * LIDAR_thread=NULL, * motor_output_thread=NULL, * motor_input_thread=NULL;
-	bool debugOn=0;
+	std::thread * LIDAR_thread=NULL;
 	float simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);
 	Task controlGoal;
 	std::chrono::high_resolution_clock::time_point previousTimeScan;
 	CoordinateContainer data2fp;
-
 	int bodies=0;
 	TransitionSystem transitionSystem;
 	StateMatcher matcher;
@@ -36,19 +34,19 @@ public:
 	vertexDescriptor currentVertex;
 	edgeDescriptor movingEdge, currentEdge;
 	std::vector<vertexDescriptor>plan, current_vertices;
-	bool ready=true;
+	GoalChanger * goal_changer=NULL;	
 
 Configurator()=default;
 
-Configurator(Task _task, bool debug =0, bool noTimer=0): controlGoal(_task), currentTask(_task), debugOn(debug){
+Configurator(Task _task): controlGoal(_task), currentTask(_task){
 	previousTimeScan = std::chrono::high_resolution_clock::now();
-	worldBuilder.debug=debug;
 	movingVertex=boost::add_vertex(transitionSystem);
 	transitionSystem[movingVertex].Di=controlGoal.disturbance;
 	currentVertex=movingVertex;
 	currentTask.action.setVelocities(0,0);
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
 }
+
 
 bool Spawner(); 
 
@@ -146,13 +144,13 @@ void start(); //data interface class collecting position of bodies
 
 void stop();
 
-void registerInterface(LIDAR_In *, Motor_IO *);
+void registerInterface(LIDAR_In *, Motor_Out *);
 
-static void get_LIDAR_input(Configurator *);
+static void run(Configurator *);
 
-static void set_motor_output(Configurator *); //sending tracking info to motor IO interface
+// static void set_motor_output(Configurator *); //sending tracking info to motor IO interface
 
-static void get_motor_input(Configurator *); //sending tracking info to motor IO interface
+// static void get_motor_input(Configurator *); //sending tracking info to motor IO interface
 
 void unexplored_transitions(TransitionSystem&, const vertexDescriptor&);
 
@@ -187,6 +185,22 @@ std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const Tra
 
 vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, vertexDescriptor currentVertex);
 
+void track_task_execution(); //returns observed disturbance
+
+void change_task();
+
+int motor_step(Task::Action a);
+
+void update_graph(TransitionSystem&, const b2Transform & _deltaPose, Task* t, Task * goal);
+
+//merge vertices into a single task
+Task task_to_execute(const std::vector<vertexDescriptor>&, const TransitionSystem&, int);
+
+//void makeRobotSensor(TransitionSystem&, const vertexDescriptor&, const Task& t); //sensor but not linked to a body
+
+int to_task_end();
+private:
+b2PolygonShape task_sensor;
 
 };
 

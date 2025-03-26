@@ -19,7 +19,6 @@ class WorldBuilder{
     };
 
     int iteration=0;
-    bool debug =0;
     char bodyFile[100];
     float simulationStep=BOX2DRANGE;
     //int buildType=0;
@@ -87,8 +86,6 @@ class WorldBuilder{
         bodies =0;
     }
 
-    // bool occluded(CoordinateContainer, Disturbance);
-
     void world_cleanup(b2World *);
 
     b2Body * get_robot(b2World *);
@@ -102,7 +99,6 @@ class WorldBuilder{
         b2PolygonShape shape;
         b2Vec2 centroid(2.0, 2.0), center=centroid, center_local=b2Vec2_zero;
         float halfHeight=0, halfWidth=0;
-        //cv::Rect2f rect;
         if (dist->isValid()){
         std::vector <b2Vec2>  d_vertices=dist->vertices(); 
         std::vector <cv::Point2f> all_points=cast_Point2f(all_points_pt);
@@ -118,9 +114,6 @@ class WorldBuilder{
         halfWidth=(fabs(maxx-minx))/2;
         center.x=maxx-halfWidth;
         center.y=maxy-halfHeight;
-       // center_local=b2MulT(robot_pose, center);
-       // rect.x=centroid.x-rect.width/2;
-       // rect.y=centroid.y-rect.height/2;
         centroid=center-center_local;  
         }
         shape.SetAsBox(halfWidth, halfHeight,centroid, 0);
@@ -135,7 +128,9 @@ class WorldBuilder{
 
         b2Transform get_transform(const Task &, const CoordinateContainer &, BodyFeatures * observed_disturbance=NULL); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
 
-        //given points, makes minimum bounding rotated box around them
+        /*
+        *given points, makes minimum bounding rotated box around them
+        */
         std::pair <bool, BodyFeatures> bounding_rotated_box(std::vector <cv::Point2f>nb);
 
         void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);

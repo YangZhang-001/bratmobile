@@ -71,6 +71,7 @@ const std::map <Direction, std::pair<float, float>> default_kinematics={{DEFAULT
 
 #define PLANNING true
 #define BENCHMARKING true
+#define DEBUG false
 extern std::mutex ctr_mutex;
 
 const std::map<Direction, char*> dirmap={{DEFAULT, "DEFAULT"}, {LEFT, "LEFT"}, {RIGHT, "RIGHT"}, {STOP, "STOP"}, {UNDEFINED, "UNDEFINED"}, {BACK, "BACK"}};

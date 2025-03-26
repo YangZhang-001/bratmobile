@@ -334,7 +334,7 @@ Task(Disturbance ob, Direction d, b2Transform _start=b2Transform(b2Vec2(0.0, 0.0
 }
 
 
-simResult bumping_that(b2World &, int, b2Body *,bool debug =0, float remaining = SIM_DURATION);
+simResult bumping_that(b2World &, int, b2Body *, float remaining = SIM_DURATION);
 
 EndCriteria getEndCriteria(const Disturbance&);
 

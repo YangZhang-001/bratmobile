@@ -42,7 +42,6 @@ std::pair <edgeDescriptor, bool> Configurator::add_vertex_retro(vertexDescriptor
 bool Configurator::Spawner(){ 
 	//PREPARE VECTORS TO RECEIVE DATA
 	iteration++; //iteration set in getVelocity
-	printf("iteration=%i. control =%i\n", iteration, control->iteration);
 	worldBuilder.iteration++;
 
 
@@ -60,12 +59,8 @@ bool Configurator::Spawner(){
 	b2Vec2 gravity = {0.0, 0.0};
 	b2World world= b2World(gravity);
 	char name[256];
-		//auto startTime =std::chrono::high_resolution_clock::now();
-		//ctr_mutex.lock(); //const.h
 	explore_plan(world);
-		//ctr_mutex.unlock();
 	worldBuilder.resetBodies();
-	//printf("end explor\n");
 	return 1;
 }
 
@@ -138,7 +133,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	worldBuilder.bodies++;
 	robot.body->SetTransform(t.start.p, t.start.q.GetAngle());
 	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body, &controlGoal.disturbance);
-	result =t.bumping_that(w, iteration, robot.body, debugOn, remaining); //default start from 0
+	result =t.bumping_that(w, iteration, robot.body, remaining); //default start from 0
 	worldBuilder.world_cleanup(&w);
 	//approximate angle to avoid stupid rounding errors
 	float approximated_angle=approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode);
@@ -496,49 +491,28 @@ void Configurator::start(){
 		return;
 	}
 	running =1;
-	control->running=running;
-	control->goal=controlGoal;
 	if (LIDAR_thread!=NULL){ //already running
 		return;
 	}
-	if (motor_input_thread!=NULL){ //already running
-		return;
-	}	
-	if (motor_output_thread!=NULL){ //already running
-		return;
-	}
-	LIDAR_thread= new std::thread(Configurator::get_LIDAR_input, this);
-	motor_input_thread=new std::thread(Configurator::get_motor_input, this);
-	motor_output_thread=new std::thread(Configurator::set_motor_output, this);
-
+	LIDAR_thread= new std::thread(Configurator::run, this);
 }
 
 void Configurator::stop(){
 	running =0;
-	control->running=0;
 	if (LIDAR_thread!=NULL){
 		LIDAR_thread->join();
 		delete LIDAR_thread;
 		LIDAR_thread=NULL;
 	}
-	if (motor_input_thread!=NULL){
-		motor_input_thread->join();
-		delete motor_input_thread;
-		motor_input_thread=NULL;
-	}
-	if (motor_output_thread!=NULL){
-		motor_output_thread->join();
-		delete motor_output_thread;
-		motor_output_thread=NULL;
-	}
+
 }
 
-void Configurator::registerInterface(LIDAR_In * _ci, Motor_IO * _control){
+void Configurator::registerInterface(LIDAR_In * _ci, Motor_Out * _control){
 	ci = _ci;
 	control=_control;
 }
 
-void Configurator::get_LIDAR_input(Configurator * c){
+void Configurator::run(Configurator * c){
 	while (c->running){
 		if (c->ci->stop){
 			c->ci=NULL;
@@ -558,88 +532,18 @@ void Configurator::get_LIDAR_input(Configurator * c){
 		if (c == NULL){
 			printf("null pointer to configurator\n");
 			c->running=0;
-			c->control->running=0;
 			return;
 		}
 		if (c->ci->isReady()){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
-			c->ready=false;
 			c->Spawner();
-			c->ready=true;
+			c->track_task_execution();
 		}
+		c->change_task();
+		c->goal_changer->change_goal(&c->controlGoal);
 	}
 
-}
-
-void Configurator::set_motor_output(Configurator * c){
-	while (c->running){
-		if (!c->control->running){
-			c->ci=NULL;
-			c->control=NULL;
-		}
-		if (c->control == NULL){
-			printf("null pointer to motor IO\n");
-			c->running=0;
-			return;
-		}
-		if (c == NULL){
-			printf("null pointer to configurator\n");
-			c->running=0;
-			c->control->running=0;
-			c->ci->stop=true;
-			return;
-		}
-		BodyFeatures bf;
-		b2Transform deltaPose_20Hz=c->worldBuilder.wb_bridger.get_transform(*c->getTask(), c->data2fp, &bf);
-		c->getTask()->disturbance=Disturbance(bf);
-		if (c->control->isReady() && c->ready){
-			c->control->setReady(false); //transfer data to control int
-			c->control->task=*c->getTask();
-			c->control->deltaPose=deltaPose_20Hz;
-			c->control->iteration=c->iteration;
-			if(PLANNING){
-				c->control->plan=c->output_plan(c->plan, c->transitionSystem);
-			}
-			else{
-				c->control->plan={c->transitionSystem[0]};
-			}
-			c->control->setReady(true);
-			//printf("control ready (set)=%i", c->control->isReady());
-		}
-	}
-}
-
-void Configurator::get_motor_input(Configurator * c){
-	while (c->running){
-		if (c == NULL){
-			printf("null pointer to configurator\n");
-			c->running=0;
-			c->control->running=0;
-			c->ci->stop=true;
-			return;
-		}
-		if (c->control == NULL){
-			printf("null pointer to motor IO\n");
-			c->running=0;
-			return;
-		}
-		if (!c->control->running){
-			printf("control not running (get)");
-			c->ci=NULL;
-			c->control=NULL;
-		}
-		if (c->control->isReady() && c->ready){
-			c->control->setReady(false);
-			*c->getTask()=c->control->task;
-			c->current_vertices=std::vector<vertexDescriptor>(c->plan.begin(), c->plan.begin()+c->control->plan_iterator);
-			c->plan.erase(c->plan.begin(), c->plan.begin()+c->control->plan_iterator);
-			c->controlGoal=c->control->goal;
-			c->control->setReady(true);
-			
-		}
-		//printf("control ready (get)=%i", c->control->isReady());
-	}
 }
 
 
@@ -863,14 +767,11 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 					}
 					if (g[(*ei3).m_target].direction==d){
 						Frontier f;
-						//f_added=1;
 						f.first= (*ei3).m_target;
 						f.second=connecting2;
 						result.push_back(f);
 						if (ei3!=ei){
 							ei3++;
-							//connecting2.clear();
-							//ei2=ei3;
 						}
 						else{
 							connecting.clear();
@@ -1096,4 +997,102 @@ vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task
 	}
 	return currentVertex;
 
+}
+
+void Configurator::track_task_execution(){
+	BodyFeatures bf;
+	b2Transform deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &bf); //track using obstacle OR dead reckoning
+	currentTask.endCriteria.adjust(deltaPose); //adjusting in task so system can be memoryless
+	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
+	Disturbance dist(bf);
+	bool ended=false;
+	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, &dist); //the sensor moves with the robot
+	if(currentTask.motorStep==0 || ended){
+		currentTask.change=1;
+	}
+	estimate_current_vertex(transitionSystem, currentTask,currentVertex);
+}
+
+void Configurator::change_task(){
+	if (!currentTask.change){
+		return;
+	}
+	if (PLANNING){
+		if (plan.empty()){
+			printf("I DON'T KNOW WHAT TO DO NOW\n");
+			currentTask=Task(controlGoal.disturbance, UNDEFINED);
+			currentTask.action.L=0;
+			currentTask.action.R=0;
+			currentTask.change=1;
+			return;
+		}
+		printf("erased\n");
+		int i=to_task_end();
+		currentTask = task_to_execute(plan, transitionSystem, i);	
+		task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
+	}
+	else{
+		if (transitionSystem[0].Dn.isValid()){
+			currentTask= Task(transitionSystem[0].Dn, DEFAULT); //reactive
+		}
+		else{
+			currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
+		}
+		currentTask.motorStep = motor_step(currentTask.getAction());
+		printf("changed to %f\n", currentTask.action.getOmega());
+	}
+	control->setReady(0);
+	control->action=currentTask.action;
+	control->setReady(1);
+	return;
+}
+
+void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
+	math::applyAffineTrans(deltaPose, g);
+	math::applyAffineTrans(-deltaPose, controlGoal);
+	//math::applyAffineTrans(deltaPose, t->start); //d update happens in get_transform
+}
+
+int Configurator::motor_step(Task::Action a){
+	int result=0;
+        if (a.getOmega()>0){ //LEFT
+            result = (SAFE_ANGLE)/(MOTOR_CALLBACK * a.getOmega());
+        }
+		else if (a.getOmega()<0){ //RIGHT
+            result = (SAFE_ANGLE)/(MOTOR_CALLBACK * a.getOmega());
+		}
+		else if (a.getLinearSpeed()>0){
+			result = (simulationStep)/(MOTOR_CALLBACK*a.getLinearSpeed());
+		}
+	    return abs(result);
+    }
+
+
+Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const TransitionSystem& g,  int i){
+	Task t=controlGoal;
+	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
+		//Disturbance Di= Dn;
+		Dn.set_affordance(PURSUE);
+		t=Task(Dn, g[p[0]].direction, b2Transform_zero, true);
+		float distance = g[p[i-1]].end_from_Dn().p.Length();
+		t.setEndCriteria(Distance(distance)); //set task to get within a certain distance from an object (as planned) and then terminate
+	}
+	else{
+		t=Task(g[p[0]].Di, g[p[0]].direction, b2Transform_zero, true);
+
+	}
+	return t;
+
+}
+
+
+
+int Configurator::to_task_end(){
+	int i=0;
+	Direction d=transitionSystem[plan[i]].direction;
+	while(i<plan.size() &&transitionSystem[plan[i]].direction==d){
+		i++;
+	}
+	return i;
+	
 }
