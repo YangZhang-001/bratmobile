@@ -541,7 +541,9 @@ void Configurator::run(Configurator * c){
 			c->track_task_execution();
 		}
 		c->change_task();
-		c->goal_changer->change_goal(&c->controlGoal);
+		if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
+			c->goal_changer->change_goal(&c->controlGoal);
+		}
 	}
 
 }
@@ -1026,9 +1028,10 @@ void Configurator::change_task(){
 			currentTask.change=1;
 			return;
 		}
-		printf("erased\n");
+		printf("changing\n");
 		int i=to_task_end();
 		currentTask = task_to_execute(plan, transitionSystem, i);	
+		//set end criteria to adjust error??
 		task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
 	}
 	else{
@@ -1041,9 +1044,7 @@ void Configurator::change_task(){
 		currentTask.motorStep = motor_step(currentTask.getAction());
 		printf("changed to %f\n", currentTask.action.getOmega());
 	}
-	control->setReady(0);
-	control->action=currentTask.action;
-	control->setReady(1);
+	control->getData(currentTask.action);
 	return;
 }
 

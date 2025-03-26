@@ -21,7 +21,6 @@ class WorldBuilder{
     int iteration=0;
     char bodyFile[100];
     float simulationStep=BOX2DRANGE;
-    //int buildType=0;
     std::pair <CoordinateContainer, bool> salientPoints(b2Transform, const CoordinateContainer &, std::pair <Pointf, Pointf>); //gets points from the raw data that are relevant to the task based on bounding boxes
                                                                                                                                         //std::pair<points, obstaclestillthere>
     b2Body* makeBody(b2World&, BodyFeatures);

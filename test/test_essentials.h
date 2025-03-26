@@ -119,5 +119,20 @@ void Configurator::explore_plan(b2World&world){
     }
 }
 
+struct Goal_Changer:public GoalChanger{
+    void change_goal(Task * goal){
+        EndedResult er = goal->checkEnded(b2Transform_zero, UNDEFINED, true);//true
+        if (er.ended){ //& c->getTask()->motorStep<1
+            Disturbance new_goal(PURSUE, b2Vec2(-1, 0), -1);
+		    *goal = Task(new_goal, UNDEFINED);
+        	FILE * f = fopen(statFile, "a+");
+            fprintf(f, "!");
+            fclose(f);
+
+	    }
+
+    }
+}
+
 
 #endif

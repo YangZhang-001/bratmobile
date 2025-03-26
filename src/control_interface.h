@@ -40,9 +40,24 @@ public:
 * Output from Configurator to Motors
 */
 class Motor_Out:public IOInterface { 
+	float L=0, R=0;
     public:
 
-	Task::Action action;
+	void getData(const Task::Action &a){
+		setReady(0);
+		L=a.L;
+		R=a.R;
+		setReady(1);
+	}
+
+	float get_L(){
+		return L;
+	}
+
+	float get_R(){
+		return R;
+	}
+
 
 };	
 
