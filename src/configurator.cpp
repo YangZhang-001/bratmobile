@@ -525,7 +525,7 @@ void Configurator::run(Configurator * c){
 			return;
 		}
 		if (c->control == NULL){
-			printf("null pointer to motor IO\n");
+			printf("null pointer to motor output\n");
 			c->running=0;
 			return;
 		}
@@ -540,10 +540,11 @@ void Configurator::run(Configurator * c){
 			c->Spawner();
 			c->track_task_execution();
 		}
-		c->change_task();
 		if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
 			c->goal_changer->change_goal(&c->controlGoal);
-		}
+		}		
+		c->change_task();
+
 	}
 
 }
