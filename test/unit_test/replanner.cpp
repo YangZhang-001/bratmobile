@@ -21,9 +21,8 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     conf.simulationStep=0.27;
     LIDAR_In ci;
-    ControlInterface control;
-    conf.registerInterface(&ci, &control);
-    conf.setBenchmarking(true, "simulation_benchmarking");
+    conf.registerInterface(&ci, NULL);
+//    dump_benchmarks(true, "simulation_benchmarking");
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];
@@ -31,20 +30,20 @@ int main(int argc, char** argv){
     }
     conf.data2fp = ci.data2fp;
     conf.Spawner();
-    auto og_plan=conf.control->plan;
+    auto og_plan=conf.plan;
     int n_v=conf.transitionSystem.m_vertices.size();
     conf.addIteration();
     int og_step=0;
 //    conf.currentVertex=control.plan[0];
-    control.change_task(1, control.plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);
+    conf.change_task();
    // conf.getTask()->motorStep=0;
     if (argv[1]=="empty"){
         og_plan={2};
     }    
-    conf.printPlan(&conf.control->plan);
-    if (!conf.control->plan.empty()){
-        conf.currentVertex=*(conf.control->plan.end()-1);
-        vertexDescriptor prev=*(conf.control->plan.end()-2);
+    conf.printPlan(&conf.plan);
+    if (!conf.plan.empty()){
+        conf.currentVertex=*(conf.plan.end()-1);
+        vertexDescriptor prev=*(conf.plan.end()-2);
         conf.currentEdge=boost::edge(prev, conf.currentVertex, conf.transitionSystem).first;
 
     }
@@ -66,17 +65,17 @@ int main(int argc, char** argv){
         n_v+=7;
     }
     conf.getTask()->change=1;
-    control.plan.clear();
-    control.change_task(1, control.plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);
+    conf.plan.clear();
+    conf.change_task();
     conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
     conf.Spawner();
-    if (og_plan!=conf.control->plan){
+    if (og_plan!=conf.plan){
         printf("wrong plan\n");
         return 1;
     }
-    control.change_task(1, conf.control->plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);
+    conf.change_task();
     conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
-    conf.printPlan(&conf.control->plan);
+    conf.printPlan(&conf.plan);
     if (conf.transitionSystem.m_vertices.size() > n_v){
         printf("size error = %i\n", conf.transitionSystem.m_vertices.size()-n_v);
         return 2;

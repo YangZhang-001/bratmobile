@@ -1031,6 +1031,7 @@ void Configurator::change_task(){
 		}
 		printf("changing\n");
 		int i=to_task_end();
+		current_vertices=std::vector(plan.begin(), plan.begin()+1+i);
 		currentTask = task_to_execute(plan, transitionSystem, i);	
 		//set end criteria to adjust error??
 		task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));

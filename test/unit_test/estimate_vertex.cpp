@@ -1,8 +1,8 @@
 #include "../callbacks.h"
 
 int main(int argc, char** argv){
-    ControlInterface control;
-    control.current_vertices={1, 2, 3};
+    Configurator c;
+    c.current_vertices={1, 2, 3};
     b2Transform Di_pose(b2Vec2(0.68, 0), b2Rot(0));
     Disturbance Di(PURSUE, b2Vec2(1.0, 0), 0);
     Disturbance Dn(AVOID, Di_pose.p, Di_pose.q.GetAngle());
@@ -22,10 +22,10 @@ int main(int argc, char** argv){
     g[4].endPose=g[4].start;
     g[4].endPose.q.Set(M_PI_2);
     g[4].Di=Dn;
-    for (int i=0; i<control.current_vertices.size();i++){
-        boost::add_edge(control.current_vertices[i], control.current_vertices[i+1], g);
+    for (int i=0; i<c.current_vertices.size();i++){
+        boost::add_edge(c.current_vertices[i], c.current_vertices[i+1], g);
     }
-    Task t =control.task_to_execute(g, 1, t);
+    Task t =c.task_to_execute(c.current_vertices, g, 1);
     float x=0,y=0, theta=0;
     double decimal=0, ratio=0, integer=0;
     if (argc>1){
@@ -42,16 +42,16 @@ int main(int argc, char** argv){
         t.disturbance.bf.pose.q.Set(t.disturbance.bf.pose.q.GetAngle()+theta);
     }
     vertexDescriptor currentVertex=0, solution=currentVertex;
-    currentVertex= control.estimate_current_vertex(g, t, currentVertex);
+    currentVertex= c.estimate_current_vertex(g, t, currentVertex);
     decimal=std::modf(x/0.27, &integer);
     if (decimal>0.5){
         integer+=1;
     }
     try{
-        solution=control.current_vertices.at(int(integer));
+        solution=c.current_vertices.at(int(integer));
     }
 	catch(const std::out_of_range& oor){
-        solution=control.current_vertices.at(int(control.current_vertices.size()-1));
+        solution=c.current_vertices.at(int(c.current_vertices.size()-1));
 		printf("not in range!\n");
 		//return -1;
 	}

@@ -4,7 +4,7 @@ int main(int argc, char ** argv){
     //argv[1] = next task affordance, argv[2] = next task direction, argv[3] =goal or no goal
     Disturbance goal(PURSUE, b2Vec2(1.0, 0), 0);
     Disturbance obstacle(AVOID, b2Vec2(0.50, 0), 0);
-    ControlInterface control;
+    Configurator c;
     Task controlGoal=Task(goal, UNDEFINED);
     TransitionSystem g(1);
     g[0].endPose.p.x=0.35;
@@ -25,7 +25,8 @@ int main(int argc, char ** argv){
     //set direction
     g[0].direction=Direction(atoi(argv[2]));
     //function to test
-    Task tte= control.task_to_execute(g, 0, controlGoal);
+    c.plan={0};
+    Task tte= c.task_to_execute(c.plan, c.transitionSystem, 0);
     //check that task is correct
     bool pos=tte.disturbance.pose()==g[0].Di.pose();
     bool affordance=tte.disturbance.getAffIndex()==g[0].Di.getAffIndex();

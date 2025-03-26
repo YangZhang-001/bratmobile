@@ -19,8 +19,7 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     conf.simulationStep=0.27;
     LIDAR_In ci;
-    ControlInterface control;
-    conf.registerInterface(&ci, &control);
+    conf.registerInterface(&ci, NULL);
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];

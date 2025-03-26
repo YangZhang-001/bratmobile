@@ -19,13 +19,11 @@ std::vector <Direction> getPlan(const TransitionSystem & g, const std::vector <v
 int main(int argc, char** argv){
     
     //we imagine that we have executed a plan and then the robot is instructed to go back on its steps
-    bool debug=0;
     Disturbance target1;
     std::vector <Direction> solution={DEFAULT}, solution2=solution, solution3=solution, solution4=solution;
     float simStep=0.5;
     if (argc>2){
         if (atoi(argv[2])==1){
-            debug=1;
             target1= Disturbance(PURSUE, b2Vec2(1.0,0), 0);  
             solution={DEFAULT, DEFAULT, LEFT, DEFAULT, RIGHT, DEFAULT, RIGHT, DEFAULT, LEFT, DEFAULT };  
             simStep=std::max(ROBOT_HALFWIDTH*2, ROBOT_HALFLENGTH*2);
@@ -43,9 +41,7 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     conf.simulationStep=simStep;
     LIDAR_In ci;
-    conf.debugOn=debug;
-    ControlInterface control;
-    conf.registerInterface(&ci, &control);
+    conf.registerInterface(&ci, NULL);
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];
@@ -57,7 +53,7 @@ int main(int argc, char** argv){
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     conf.dummy_vertex(conf.currentVertex);
     conf.explorer(conf.currentVertex, conf.transitionSystem, world);
-    conf.ts_cleanup(conf.transitionSystem, conf.control->plan);
+    conf.ts_cleanup(conf.transitionSystem, conf.plan);
     std::vector <vertexDescriptor> plan=conf.planner(conf.transitionSystem, conf.currentVertex);
     std::vector <Direction> plan_d=getPlan(conf.transitionSystem, plan, conf.currentVertex);
     conf.printPlan(&plan);

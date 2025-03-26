@@ -100,19 +100,19 @@ void print_matrix(const cv::Mat & m){
 }
 
 void Configurator::explore_plan(b2World&world){
-    pre_explore(transitionSystem, control->plan, currentTask.change);
+    pre_explore(transitionSystem, plan, currentTask.change);
     vertexDescriptor src=get_explore_start(transitionSystem);
     resetPhi(transitionSystem);
-    control->plan=explorer(src, transitionSystem, world);
-    if (debugOn){
-        std::vector<vertexDescriptor> _plan=(control->plan);
+    plan=explorer(src, transitionSystem, world);
+    if (DEBUG){
+        std::vector<vertexDescriptor> _plan=(plan);
         debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
     }		
-    ts_cleanup(transitionSystem, control->plan); //remove self-edge and singleton states
-    if (control->plan.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
+    ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
+    if (plan.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
         printf("no plan, searchign from %i\n", src);
         bool finished=false;
-        control->plan= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
+        plan= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
     }
     else{
         printf("recycled plan in explorer:\n");
@@ -125,14 +125,14 @@ struct Goal_Changer:public GoalChanger{
         if (er.ended){ //& c->getTask()->motorStep<1
             Disturbance new_goal(PURSUE, b2Vec2(-1, 0), -1);
 		    *goal = Task(new_goal, UNDEFINED);
-        	FILE * f = fopen(statFile, "a+");
-            fprintf(f, "!");
-            fclose(f);
+        	// FILE * f = fopen(statFile, "a+");
+            // fprintf(f, "!");
+            // fclose(f);
 
 	    }
 
     }
-}
+};
 
 
 #endif

@@ -1,7 +1,6 @@
 #include "../test_essentials.h"
 
 int main(int argc, char ** argv){
-    ControlInterface control;
     WorldBuilder wb;
     BodyFeatures bf_ob;
     bf_ob.halfWidth=0.05;

@@ -19,8 +19,7 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     conf.simulationStep=0.27;
     LIDAR_In ci;
-    ControlInterface control;
-    conf.registerInterface(&ci, &control);
+    conf.registerInterface(&ci, NULL);
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];
@@ -29,28 +28,19 @@ int main(int argc, char** argv){
     conf.data2fp = ci.data2fp;
     conf.addIteration();
     b2World world(b2Vec2(0,0));
-    // boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
-    // conf.dummy_vertex(conf.currentVertex);
-    // conf.control->plan=conf.explorer(conf.currentVertex, conf.transitionSystem, world);
-    // conf.ts_cleanup(&conf.transitionSystem, &(conf.control->plan));		
-
-    
-    // std::vector <vertexDescriptor> plan=conf.planner(conf.transitionSystem, conf.currentVertex);
     conf.Spawner();
     int n_v=conf.transitionSystem.m_vertices.size();
-    conf.printPlan(&conf.control->plan);
+    conf.printPlan(&conf.plan);
     int og=0;
-   // conf.changeTask(true, conf.control->plan, conf.transitionSystem);
     std::vector <vertexDescriptor> options_src;
     State state_tmp;
     int steps= atoi(argv[4]);
     int ogstep=conf.transitionSystem[conf.currentEdge].step;
-    //control.change_task(conf.getTask()->change, conf.control->plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);
     for (int i=0;i<di.iteration*2; i++){
-        control.track_task_execution(*conf.getTask(), conf.transitionSystem, &conf.controlGoal, conf.currentVertex, conf.data2fp);
+        conf.track_task_execution();
         conf.getTask()->motorStep--;
         bool ch=conf.getTask()->change;
-        control.change_task(conf.getTask()->change, conf.control->plan, conf.transitionSystem, conf.controlGoal, *conf.getTask(), conf.currentVertex);
+        conf.change_task();
         if (ch){
             conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
         }
@@ -62,13 +52,13 @@ int main(int argc, char** argv){
         conf.data2fp = ci.data2fp;
     }
     conf.Spawner();
-    conf.printPlan(&conf.control->plan);    
+    conf.printPlan(&conf.plan);    
     int n_v_2=conf.transitionSystem.m_vertices.size();
     if (n_v_2>n_v&& atoi(argv[4])<18){
         printf("difference=%i\n", n_v_2-n_v);
         return 1;
     }
-    bool finished=conf.controlGoal.checkEnded(conf.transitionSystem[*(conf.control->plan.end()-1)].endPose).ended;
+    bool finished=conf.controlGoal.checkEnded(conf.transitionSystem[*(conf.plan.end()-1)].endPose).ended;
     if (finished){
         printf("plan works");
         return 0;
