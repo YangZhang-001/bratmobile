@@ -21,7 +21,8 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     conf.simulationStep=0.27;
     LIDAR_In ci;
-    conf.registerInterface(&ci, NULL);
+    Motor_Out m;
+    conf.registerInterface(&ci, &m);
 //    dump_benchmarks(true, "simulation_benchmarking");
     DataInterface di(&ci);
     if (argc>1){
@@ -44,7 +45,7 @@ int main(int argc, char** argv){
     if (!conf.plan.empty()){
         conf.currentVertex=*(conf.plan.end()-1);
         vertexDescriptor prev=*(conf.plan.end()-2);
-        conf.currentEdge=boost::edge(prev, conf.currentVertex, conf.transitionSystem).first;
+     //   conf.currentEdge=boost::edge(prev, conf.currentVertex, conf.transitionSystem).first;
 
     }
     std::vector <vertexDescriptor> options_src;

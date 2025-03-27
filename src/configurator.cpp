@@ -1071,13 +1071,16 @@ int Configurator::motor_step(Task::Action a){
     }
 
 
-Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const TransitionSystem& g,  int i){
+Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const TransitionSystem& g,  int end_it){
 	Task t=controlGoal;
+	if (p.empty()){
+		return t;
+	}	
 	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
 		//Disturbance Di= Dn;
 		Dn.set_affordance(PURSUE);
 		t=Task(Dn, g[p[0]].direction, b2Transform_zero, true);
-		float distance = g[p[i-1]].end_from_Dn().p.Length();
+		float distance = g[p[end_it]].end_from_Dn().p.Length();
 		t.setEndCriteria(Distance(distance)); //set task to get within a certain distance from an object (as planned) and then terminate
 	}
 	else{

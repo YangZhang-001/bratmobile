@@ -138,6 +138,7 @@ std::vector <vertexDescriptor> planner(TransitionSystem&, vertexDescriptor, vert
 
 EndedResult estimateCost(State&, b2Transform, Direction); //returns whether the controlGoal has ended and fills node with cost and error
 
+//calculates cumulative cost phi
 float evaluationFunction(EndedResult);
 
 void start(); //data interface class collecting position of bodies
@@ -171,14 +172,18 @@ float approximate_angle(const float &, const Direction &, const simResult::resul
 
 void ts_cleanup(TransitionSystem &, std::vector <vertexDescriptor>&);
 
+//apply affine transformation to states (e.g. if the same situation encountered in the past is reencountered)
 void shift_states(TransitionSystem &, const std::vector<vertexDescriptor>&, const b2Transform &); //shifts a sequence of states by a certain transform
 
+//return vertex from which exploration of the environment starts (explorer)
 vertexDescriptor get_explore_start(TransitionSystem &);
 
 void pre_explore(TransitionSystem &, const std::vector<vertexDescriptor>&, const bool& );
 
+//wrapper around environment explorer and planners
 void explore_plan(b2World&);
 
+//reactive behaviour: simulate task to find disturbances and react to them
 void reactive(b2World&);
 
 std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const TransitionSystem &);
@@ -187,14 +192,28 @@ vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, v
 
 void track_task_execution(); //returns observed disturbance
 
+//changes task to be executed, updates plan by snipping out vertices corresponding to the current task
 void change_task();
 
+//return motor instruction (in step callbacks for a task - deprecated)
 int motor_step(Task::Action a);
 
+//updates environment representation with time
+/*
+\param g the cognitive map
+\param _deltaPose the transform to apply
+\param t pointer to current task
+\param goal pointer to goal task
+*/
 void update_graph(TransitionSystem&, const b2Transform & _deltaPose, Task* t, Task * goal);
 
-//merge vertices into a single task
-Task task_to_execute(const std::vector<vertexDescriptor>&, const TransitionSystem&, int);
+// merge vertices into a single task
+/*
+	\param p the plan
+	\param g the cognitive map
+	\param end_it integer representing iterator pointing to the last vertex in the task beginning at p.begin()
+*/
+Task task_to_execute(const std::vector<vertexDescriptor>& p, const TransitionSystem& g, int end_it);
 
 //void makeRobotSensor(TransitionSystem&, const vertexDescriptor&, const Task& t); //sensor but not linked to a body
 
