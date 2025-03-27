@@ -106,8 +106,8 @@ char * folder;
             std::ifstream file(filePath);
             float x2, y2;
             while (file>>x2>>y2){
-                x2 = round(x2*100)/100;
-                y2 = round(y2*100)/100;
+              //  x2 = round(x2*100)/100;
+                //y2 = round(y2*100)/100;
                 Pointf  p2(x2,y2);
                 ci->data2fp.insert(p2);
             }
@@ -132,22 +132,6 @@ public:
 
     StepCallback(Motor_Out * _m): m(_m){}
     void step(){
-        // if (!m->running ){
-        //     return;
-        // }
-        // c->control->track_task_execution(*c->getTask(), c->transitionSystem, &(c->controlGoal), c->currentVertex, c->data2fp);
-        // Task::Action action= c->getTask()->getAction();
-        // EndedResult er = c->controlGoal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, true);//true
-        // if (er.ended &( c->getTask()->motorStep<1 & c->transitionSystem[c->currentVertex].direction!=STOP && c->control->plan.empty() && c->getIteration()>1)){ //& c->getTask()->motorStep<1
-        //     Disturbance new_goal(PURSUE, c->controlGoal.start.p, c->controlGoal.start.q.GetAngle());
-		//     c->controlGoal = Task(new_goal, UNDEFINED);
-        //     b2Vec2 v = c->controlGoal.disturbance.getPosition() - b2Vec2(0,0);
-        // 	FILE * f = fopen(c->statFile, "a+");
-        //     fprintf(f, "!");
-        //     fclose(f);
-
-	    // }
-	    // c->control->change_task(c->getTask()->change,  c->control->plan,c->transitionSystem, c->controlGoal, *c->getTask(), c->currentVertex);
         L=m->get_L();
         R= m->get_R();
     }

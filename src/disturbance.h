@@ -82,6 +82,10 @@ class BodyFeatures{
         return halfLength*2;
     }
 
+    float area()const{
+        return width()*length();
+    }
+
     std::vector <b2Vec2> vertices()const;
 
     std::vector <cv::Point2f> vertices_cv()const; //global vertices

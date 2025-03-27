@@ -43,7 +43,9 @@ add_executable(closed_loop_ended ../test_essentials.h closed_loop_ended.cpp)
 add_executable(axb ../test_essentials.h axb.cpp)
 add_executable(D_affine ../test_essentials.h D_affine.cpp)
 add_executable(rwf ../test_essentials.h real_world_focus.cpp)
+add_executable(wb_get_transform_sim ../test_essentials.h wb_get_transform_sim.cpp)
 
+target_link_libraries(wb_get_transform_sim CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(rwf CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(D_affine CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(axb CloCK ${OpenCV_LIBS} box2d)
@@ -290,6 +292,8 @@ add_test(NAME rwf_tar_r COMMAND rwf .45 .21 53 2 1)
 add_test(NAME rwf_none_D COMMAND rwf .45 .21 53 0 2)
 add_test(NAME rwf_none_l COMMAND rwf .45 .21 53 0 0)
 add_test(NAME rwf_none_r COMMAND rwf .45 .21 53 0 1)
+
+add_test(NAME wb_gt COMMAND wb_get_transform_sim ../target_68cm)
 
 
 set(CMAKE_BUILD_TYPE Debug)

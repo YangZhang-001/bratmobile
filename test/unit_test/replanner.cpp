@@ -23,7 +23,6 @@ int main(int argc, char** argv){
     LIDAR_In ci;
     Motor_Out m;
     conf.registerInterface(&ci, &m);
-//    dump_benchmarks(true, "simulation_benchmarking");
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];
@@ -35,9 +34,7 @@ int main(int argc, char** argv){
     int n_v=conf.transitionSystem.m_vertices.size();
     conf.addIteration();
     int og_step=0;
-//    conf.currentVertex=control.plan[0];
     conf.change_task();
-   // conf.getTask()->motorStep=0;
     if (argv[1]=="empty"){
         og_plan={2};
     }    
@@ -45,8 +42,6 @@ int main(int argc, char** argv){
     if (!conf.plan.empty()){
         conf.currentVertex=*(conf.plan.end()-1);
         vertexDescriptor prev=*(conf.plan.end()-2);
-     //   conf.currentEdge=boost::edge(prev, conf.currentVertex, conf.transitionSystem).first;
-
     }
     std::vector <vertexDescriptor> options_src;
     State state_tmp;

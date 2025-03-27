@@ -15,11 +15,19 @@ int main(int argc, char** argv){
     cv::Rect2f focus=bridge.real_world_focus(&task);
     if (dist.getAffIndex()!=NONE){
         std::vector <cv::Point2f> d_vertices=dist.bf.vertices_cv();
-        for (const cv::Point2f & v: d_vertices){
-            if (!focus.contains(v)){
-                throw std::invalid_argument("not in focus");
-            }
+        cv::Point2f center, br=focus.br();
+        center.x=focus.x+task.disturbance.bf.width()/2;
+        center.y=focus.y+task.disturbance.bf.length()/2;
+        d_vertices.push_back(center);
+        // for (const cv::Point2f & v: d_vertices){
+        //     if (!focus.contains(v)){
+        //         throw std::invalid_argument("not in focus");
+        //     }
+        // }
+        if (fabs(center.x-dist.bf.pose.p.x)>0.01 || fabs(center.y-dist.bf.pose.p.y)>0.01 ){
+            throw std::invalid_argument("off center!");
         }
+        
     }
     else{
         if (focus.area()!=0){

@@ -333,16 +333,19 @@ cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
     if (t->disturbance.getAffIndex()==NONE){
         return cv::Rect2f(0, 0, 0, 0);
     }
-    for (std::vector<b2Vec2> box2d_v =t->disturbance.vertices(); b2Vec2 & v: box2d_v){
-        vertices.push_back(cv::Point2f(v.x, v.y));
-    }   
-    return cv::boundingRect(vertices); //upright bounding rectangle: increases area represented
+    cv::Point2f bl; //bottom left (documentation CV says top left but not true)
+    bl.x=t->disturbance.pose().p.x-(t->disturbance.bf.halfWidth+0.01);
+    bl.y=t->disturbance.pose().p.y-(t->disturbance.bf.halfLength+0.01);
+    float max_dimension=std::max(t->disturbance.bf.width(), t->disturbance.bf.length());
+    max_dimension+=0.02;
+    cv::Rect2f focus(bl.x, bl.y, max_dimension, max_dimension);
+    return focus; //upright bounding rectangle: increases area represented
 }
 
 
 b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, BodyFeatures * observed_disturbance){
-   if (t.disturbance.getAffIndex()!=AVOID){
-        return t.action.getTransform(MOTOR_CALLBACK); //LIDAR_SAMPLING_RATE
+   if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()>0.001){
+        return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     cv::Rect2f focus=real_world_focus(&t);
     std::vector <cv::Point2f> focus_points;
@@ -355,6 +358,9 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
     if (observed_disturbance!=NULL && new_d.first){
         *observed_disturbance=new_d.second;
+    }
+    if (!new_d.first){
+        return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     //what to do when different dimensions??
     if (new_d.second.match(t.disturbance.bf)){
