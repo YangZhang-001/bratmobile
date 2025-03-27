@@ -1,4 +1,4 @@
-#include "callbacks.h"
+#include "../callbacks.h"
 
 //argv: 1. directory to open 2. timeoff (0=timeron) 3. planning on 4. debug on
 
@@ -39,21 +39,21 @@ int main(int argc, char** argv) {
 
     //DATA INTERCFACE
 
-    bool timerOff=atoi(argv[2]);
+    bool RT=atoi(argv[2]);
 	Disturbance target(PURSUE, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
-    Configurator configurator(controlGoal, 1, timerOff);
-    configurator.planning=1;
+    Configurator configurator(controlGoal);
+    LIDAR_In ci;
+    Motor_Out m;
     if (argc>3){
 		configurator.setSimulationStep(atof(argv[3]));
     }
-    ConfiguratorInterface configuratorInterface;
-    configurator.registerInterface(&configuratorInterface);
-    DataInterface dataInterface(&configuratorInterface); 
+    configurator.registerInterface(&ci, &m);
+    DataInterface dataInterface(&ci); 
     dataInterface.folder = argv[1];
-    StepCallback cb(&configurator);
+    StepCallback cb(&m);
 
-    if (!timerOff){
+    if (RT){
         TimerDI lidar(dataInterface);
         TimerStep motors(cb);
         lidar.startms(200);
@@ -64,24 +64,10 @@ int main(int argc, char** argv) {
         motors.stop();
         configurator.stop();
     }
-    else if (timerOff){
-                // b2Vec2 velocity = {0,0};
-        //for (int i=0; i<40;i++){
+    else if (!RT){
         while  (dataInterface.newScanAvail()){
             configurator.running=1;           
-            //configurator.Spawner(configuratorInterface.data, configuratorInterface.data2fp);
-            if (configuratorInterface.isReady()){
-                if (configuratorInterface.data2fp != configurator.data2fp){
-                    //printf("confINt data size = %i\n", configuratorInterface.data.size());
-                    configurator.data2fp=configuratorInterface.data2fp;
-                    configurator.Spawner();
-                    // configuratorInterface.data.clear();
-                    // configuratorInterface.data2fp.clear();
-                    // configuratorInterface.ready=0;
-			}
-            }
-            cb.step();
-            cb.step();
+            configurator.run(&configurator);
         }
         configurator.running=0;
     }
