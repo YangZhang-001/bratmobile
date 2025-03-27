@@ -334,21 +334,22 @@ cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
         return cv::Rect2f(0, 0, 0, 0);
     }
     cv::Point2f bl; //bottom left (documentation CV says top left but not true)
-    bl.x=t->disturbance.pose().p.x-(t->disturbance.bf.halfWidth+0.01);
-    bl.y=t->disturbance.pose().p.y-(t->disturbance.bf.halfLength+0.01);
     float max_dimension=std::max(t->disturbance.bf.width(), t->disturbance.bf.length());
-    max_dimension+=0.02;
+    max_dimension+=0.02;    
+    bl.x=t->disturbance.pose().p.x-(max_dimension/2);
+    bl.y=t->disturbance.pose().p.y-(max_dimension/2);
     cv::Rect2f focus(bl.x, bl.y, max_dimension, max_dimension);
     return focus; //upright bounding rectangle: increases area represented
 }
 
 
 b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, BodyFeatures * observed_disturbance){
-   if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()>0.001){
+   if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     cv::Rect2f focus=real_world_focus(&t);
     std::vector <cv::Point2f> focus_points;
+    cv::Point2f tr=focus.br();
     for (auto p: pts){
         cv::Point2f p_cv=cv::Point2f(p.x, p.y);
         if (focus.contains(p_cv)){
@@ -356,19 +357,22 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         }
     }
     std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
-    if (observed_disturbance!=NULL && new_d.first){
-        *observed_disturbance=new_d.second;
-    }
+ 
     if (!new_d.first){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
-    //what to do when different dimensions??
+    b2Transform mulT=b2MulT(t.disturbance.pose(), new_d.second.pose);
+//what to do when different dimensions??
     if (new_d.second.match(t.disturbance.bf)){
         new_d.second.halfWidth=t.disturbance.bf.halfWidth;
         new_d.second.halfLength=t.disturbance.bf.halfLength;
     }
-    cv::Mat aff_transform=cv::estimateAffinePartial2D( new_d.second.vertices_cv(), t.disturbance.bf.vertices_cv(),cv::noArray(), cv::LMEDS);
-    return math::transform_2d(aff_transform);
+    if (observed_disturbance!=NULL && new_d.first){
+        *observed_disturbance=new_d.second;
+    }
+   // cv::Mat aff_transform=cv::estimateAffinePartial2D( new_d.second.vertices_cv(), t.disturbance.bf.vertices_cv(),cv::noArray(), cv::LMEDS);
+    //return math::transform_2d(aff_transform);
+    return mulT;
     //what's the most likely angle??
 }
 
