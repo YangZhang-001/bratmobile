@@ -1017,6 +1017,7 @@ void Configurator::track_task_execution(){
 
 void Configurator::change_task(){
 	if (!currentTask.change){
+		//printf("not changing\n");
 		return;
 	}
 	if (PLANNING){
@@ -1031,7 +1032,9 @@ void Configurator::change_task(){
 		printf("changing\n");
 		int i=to_task_end();
 		current_vertices=std::vector(plan.begin(), plan.begin()+1+i);
+		printPlan(&plan);
 		currentTask = task_to_execute(plan, transitionSystem, i);	
+		plan.erase(plan.begin(), plan.begin()+i+1);
 		//set end criteria to adjust error??
 		task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
 	}

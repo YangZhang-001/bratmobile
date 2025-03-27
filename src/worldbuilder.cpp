@@ -363,13 +363,14 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     }
     b2Transform mulT=b2MulT(t.disturbance.pose(), new_d.second.pose);
 //what to do when different dimensions??
+    if (observed_disturbance!=NULL && new_d.first){
+        *observed_disturbance=new_d.second;
+    }
     if (new_d.second.match(t.disturbance.bf)){
         new_d.second.halfWidth=t.disturbance.bf.halfWidth;
         new_d.second.halfLength=t.disturbance.bf.halfLength;
     }
-    if (observed_disturbance!=NULL && new_d.first){
-        *observed_disturbance=new_d.second;
-    }
+
    // cv::Mat aff_transform=cv::estimateAffinePartial2D( new_d.second.vertices_cv(), t.disturbance.bf.vertices_cv(),cv::noArray(), cv::LMEDS);
     //return math::transform_2d(aff_transform);
     return mulT;
