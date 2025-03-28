@@ -149,13 +149,16 @@ void registerInterface(LIDAR_In *, Motor_Out *);
 
 static void run(Configurator *);
 
-// static void set_motor_output(Configurator *); //sending tracking info to motor IO interface
+//only keeps unexplored transitions out of vertex v
+void unexplored_transitions(TransitionSystem&, const vertexDescriptor& v);
 
-// static void get_motor_input(Configurator *); //sending tracking info to motor IO interface
-
-void unexplored_transitions(TransitionSystem&, const vertexDescriptor&);
-
-void transitionMatrix(State&, Direction, vertexDescriptor); //DEFAULT, LEFT, RIGHT
+//combines edges K and jump function: represents possible transitions out of a state
+/*
+\param state the state to which transitions are being assigned
+\param d state direction (redundant)
+\param src source vertex of state
+*/
+void transitionMatrix(State& state, Direction d, vertexDescriptor src); 
 
 void applyTransitionMatrix(TransitionSystem&, vertexDescriptor, Direction,bool, vertexDescriptor, std::vector<vertexDescriptor>&);
 
@@ -168,8 +171,10 @@ void setSimulationStep(float f){
 	simulationStep=f;
 }
 
+//round angle to a divisor of PI/2
 float approximate_angle(const float &, const Direction &, const simResult::resultType &);
 
+//removes singleton vertices and self-edges
 void ts_cleanup(TransitionSystem &, std::vector <vertexDescriptor>&);
 
 //apply affine transformation to states (e.g. if the same situation encountered in the past is reencountered)
@@ -190,13 +195,18 @@ std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const Tra
 
 vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, vertexDescriptor currentVertex);
 
-void track_task_execution(); //returns observed disturbance
+//uses LIDAR data to calculate an affine transform of disturbance Di if present
+void track_task_execution();
 
 //changes task to be executed, updates plan by snipping out vertices corresponding to the current task
 void change_task();
 
 //return motor instruction (in step callbacks for a task - deprecated)
-int motor_step(Task::Action a);
+/*
+\param a the action of the task
+\param distance the distance travelled in a task, default is robot length
+*/
+int motor_step(Task::Action a, float distance=0.27);
 
 //updates environment representation with time
 /*
@@ -217,9 +227,10 @@ Task task_to_execute(const std::vector<vertexDescriptor>& p, const TransitionSys
 
 //void makeRobotSensor(TransitionSystem&, const vertexDescriptor&, const Task& t); //sensor but not linked to a body
 
+//returns last vertex of the task starting at plan[0]
 int to_task_end();
 private:
-b2PolygonShape task_sensor;
+b2PolygonShape task_sensor; //to track task execution
 
 };
 

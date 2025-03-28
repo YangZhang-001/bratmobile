@@ -1034,6 +1034,7 @@ void Configurator::change_task(){
 		current_vertices=std::vector(plan.begin(), plan.begin()+1+i);
 		printPlan(&plan);
 		currentTask = task_to_execute(plan, transitionSystem, i);	
+		printf("change task=%i, task step=%i\n", currentTask.change, currentTask.motorStep);
 		plan.erase(plan.begin(), plan.begin()+i+1);
 		//set end criteria to adjust error??
 		task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
@@ -1045,7 +1046,7 @@ void Configurator::change_task(){
 		else{
 			currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
 		}
-		currentTask.motorStep = motor_step(currentTask.getAction());
+		currentTask.motorStep = motor_step(currentTask.getAction(), );
 		printf("changed to %f\n", currentTask.action.getOmega());
 	}
 	control->getData(currentTask.action);
@@ -1058,7 +1059,7 @@ void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPos
 	//math::applyAffineTrans(deltaPose, t->start); //d update happens in get_transform
 }
 
-int Configurator::motor_step(Task::Action a){
+int Configurator::motor_step(Task::Action a, float distance){
 	int result=0;
         if (a.getOmega()>0){ //LEFT
             result = (SAFE_ANGLE)/(MOTOR_CALLBACK * a.getOmega());
@@ -1067,7 +1068,7 @@ int Configurator::motor_step(Task::Action a){
             result = (SAFE_ANGLE)/(MOTOR_CALLBACK * a.getOmega());
 		}
 		else if (a.getLinearSpeed()>0){
-			result = (simulationStep)/(MOTOR_CALLBACK*a.getLinearSpeed());
+			result = (distance)/(MOTOR_CALLBACK*a.getLinearSpeed());
 		}
 	    return abs(result);
     }
@@ -1078,6 +1079,7 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	if (p.empty()){
 		return t;
 	}	
+	b2Transform start_to_end= g[p[0]].start - g[p[end_it]].endPose;
 	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
 		//Disturbance Di= Dn;
 		Dn.set_affordance(PURSUE);
@@ -1089,6 +1091,7 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 		t=Task(g[p[0]].Di, g[p[0]].direction, b2Transform_zero, true);
 
 	}
+	t.motorStep=motor_step(t.getAction(), start_to_end.p.Length());
 	return t;
 
 }
