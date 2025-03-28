@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     struct dirent *ep;     
     dp = opendir(argv[1]);
 
-    if (dp != NULL)
+    if (dp != NULL && argv[1]!="empty")
     {
         while (ep = readdir(dp)){
             i++;
@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
         closedir(dp);
     }
     else{
-        printf("Couldn't open the directory%s", argv[1]);
+        printf("Couldn't open the directory %s", argv[1]);
     }
     char filePrefix[5];
     sprintf(filePrefix, "map");
@@ -45,12 +45,11 @@ int main(int argc, char** argv) {
     Configurator configurator(controlGoal);
     LIDAR_In ci;
     Motor_Out m;
-    if (argc>3){
-		configurator.setSimulationStep(atof(argv[3]));
-    }
     configurator.registerInterface(&ci, &m);
     DataInterface dataInterface(&ci); 
-    dataInterface.folder = argv[1];
+    if (argc>1 && argv[1]){
+        dataInterface.folder = argv[1];
+    }
     StepCallback cb(&m);
 
     if (RT){
@@ -59,15 +58,25 @@ int main(int argc, char** argv) {
         lidar.startms(200);
         motors.startms(100);
         configurator.start();
-        std::this_thread::sleep_for(std::chrono::milliseconds(200*fileCount)); //simulates lidar
+        do {
+        }while (getchar());
         lidar.stop();
         motors.stop();
         configurator.stop();
     }
     else if (!RT){
         while  (dataInterface.newScanAvail()){
-            configurator.running=1;           
-            configurator.run(&configurator);
+		if (configurator.ci->isReady()){
+			configurator.ci->setReady(false);
+			configurator.data2fp= CoordinateContainer(configurator.ci->data2fp);
+			configurator.Spawner();
+			configurator.track_task_execution();
+		}
+		if (( configurator.getTask()->change& configurator.transitionSystem[configurator.currentVertex].direction!=STOP && configurator.plan.empty() && configurator.getIteration()>1)){
+			configurator.goal_changer->change_goal(&configurator.controlGoal);
+		}		
+		configurator.change_task();
+
         }
         configurator.running=0;
     }

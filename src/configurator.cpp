@@ -183,11 +183,9 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				sk.second.it_observed=iteration;
 				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction);
 				State * source=NULL;
-				bool closest_match=false, match_task=true;
-				StateMatcher::MATCH_TYPE desired_match=StateMatcher::MATCH_TYPE::ABSTRACT;
-				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.direction, desired_match, NULL, closest_match, match_task );		//, closest_match	
+				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.direction, StateMatcher::MATCH_TYPE::ABSTRACT, NULL, false, true );		//, closest_match	
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
-				if (matcher.match_equal(match.first, desired_match)){
+				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
 					g[v0].options.erase(g[v0].options.begin());
 					v1=match.second; //frontier
 				//	printf("match with %i\n", v1);
@@ -241,7 +239,6 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 						vertexDescriptor exp=out_expected[0].m_target;
 						printf("thought it'd be vertex %i , end pose:", exp );
 						debug::print_pose(g[exp].endPose);
-
 					}
 					//auto d_print=dirmap.find(t.direction);
 					//printf("added v %i to %i, direction %s", v1, v0, (*d_print).second);
@@ -1046,7 +1043,7 @@ void Configurator::change_task(){
 		else{
 			currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
 		}
-		currentTask.motorStep = motor_step(currentTask.getAction(), );
+		currentTask.motorStep = motor_step(currentTask.getAction());
 		printf("changed to %f\n", currentTask.action.getOmega());
 	}
 	control->getData(currentTask.action);
@@ -1054,8 +1051,9 @@ void Configurator::change_task(){
 }
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
-	math::applyAffineTrans(deltaPose, g);
+	//math::applyAffineTrans(deltaPose, g);
 	math::applyAffineTrans(-deltaPose, controlGoal);
+	debug::print_pose(deltaPose, "delta pose");
 	//math::applyAffineTrans(deltaPose, t->start); //d update happens in get_transform
 }
 

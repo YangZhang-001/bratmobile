@@ -81,13 +81,11 @@ char * folder;
 	bool newScanAvail(){ //uncomment sections to write x and y to files		
         iteration++;
     	ci->setReady(false);
-      //  ci->updatePCProc();
-	//	ci->data.clear();
 		ci->data2fp.clear();
 		char filePath[256];
         char folderName[256];
         sprintf(folderName,"%s", folder);
-        if (folderName != "empty"){
+        if (folderName != NULL){
             sprintf(filePath, "%smap%04d.dat", folderName, iteration);
             printf("%s\n", filePath);
             FILE *f;
