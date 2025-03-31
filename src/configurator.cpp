@@ -182,8 +182,9 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				gt::fill(sim, &sk.first, &sk.second); //find simulation result
 				sk.second.it_observed=iteration;
 				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction);
-				State * source=NULL;
-				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.direction, StateMatcher::MATCH_TYPE::ABSTRACT, NULL, false, true );		//, closest_match	
+				//State * source=NULL;
+				StateDifference sd;
+				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.direction, StateMatcher::MATCH_TYPE::ABSTRACT, &sd);		//, closest_match	
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
 				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
 					g[v0].options.erase(g[v0].options.begin());
@@ -238,7 +239,10 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 					if (!out_expected.empty()){
 						vertexDescriptor exp=out_expected[0].m_target;
 						printf("thought it'd be vertex %i , end pose:", exp );
-						debug::print_pose(g[exp].endPose);
+						FILE * err_file=fopen("/tmp/err_file.txt");
+						StateDifference sd_exp(g[v1], g[exp]);
+						fprintf(err_file, "%s\t%s", debug::print_pose(sd_exp.Di), debug::print_pose(sd_exp.Dn));
+						//debug::print_pose(g[exp].endPose);
 					}
 					//auto d_print=dirmap.find(t.direction);
 					//printf("added v %i to %i, direction %s", v1, v0, (*d_print).second);
@@ -816,7 +820,7 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 
 
 
-	std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> Configurator::findMatch(State s, TransitionSystem& g, State * src, Direction dir, StateMatcher::MATCH_TYPE match_type, std::vector <vertexDescriptor> * others, bool relax,bool wholeTask){
+	std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> Configurator::findMatch(State s, TransitionSystem& g, State * src, Direction dir, StateMatcher::MATCH_TYPE match_type. StateDifference * _sd){
 	std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex());
 	auto vs= boost::vertices(g);
 	float prob=0, sum=10000;
@@ -825,16 +829,16 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 	std::set <std::pair <vertexDescriptor, float>, ComparePair>others_set(comparePair);
 	for (auto vi=vs.first; vi!= vs.second; vi++){
 		vertexDescriptor v=*vi;
-		bool Tmatch=true;
-		std::vector <edgeDescriptor> ie=gt::inEdges(g, v, dir);
-		Tmatch=!ie.empty()||dir==Direction::UNDEFINED;
+		bool Tmatch=dir==Direction::UNDEFINED ||g[v].direction==dir;
+		//std::vector <edgeDescriptor> ie=gt::inEdges(g, v, dir);
+		//Tmatch=!ie.empty()||dir==Direction::UNDEFINED;
 		//make state representing a whole task, this is inefficient and when i have time should be susbtituted with subgraph
 		State q= g[v];
-		if (wholeTask){
+//		if (wholeTask){
 			if (auto vertices=gt::task_vertices(v, g, iteration, currentVertex); vertices.size()>1){
 				q.start=g[vertices[0]].start;
 			}			
-		}
+//		}
 		if (v==currentVertex && !currentTask.change){
 			q.start=b2Transform_zero;
 		}
@@ -842,15 +846,21 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 		bool condition=0;
 		StateMatcher::MATCH_TYPE m=StateMatcher::_FALSE;
 		float sum_tmp=sd.get_sum(match_type);
-		if (!relax){
+		//if (!relax){
 			m=matcher.isMatch(sd, s.endPose.p.Length());
 			condition=matcher.match_equal(m, match_type);
-		}
-		else{
-			condition= sum_tmp<sum;
+		//}
+		//else{
+			//condition= sum_tmp<sum;
+		//}
+		if (sum_tmp<sum){
+			sum=sum_tmp;
+			if (NULL!=_sd){
+				*_sd=sd;
+			}
 		}
 		if ( condition&& v!=movingVertex && boost::in_degree(v, g)>0 &&Tmatch ){ 
-			sum=sum_tmp;
+			//sum=sum_tmp;
 			if (NULL!=others){
 			 	others_set.emplace(std::pair< vertexDescriptor, float>(v, sum));
 			 }
@@ -1051,10 +1061,9 @@ void Configurator::change_task(){
 }
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
-	//math::applyAffineTrans(deltaPose, g);
+	math::applyAffineTrans(deltaPose, g);
 	math::applyAffineTrans(-deltaPose, controlGoal);
 	debug::print_pose(deltaPose, "delta pose");
-	//math::applyAffineTrans(deltaPose, t->start); //d update happens in get_transform
 }
 
 int Configurator::motor_step(Task::Action a, float distance){

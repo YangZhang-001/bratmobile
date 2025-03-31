@@ -53,11 +53,13 @@ b2Vec2 GetWorldPoints(b2Body* b, b2Vec2 v){
 	printf("x=%f, y=%f\t", wp.x, wp.y);
 }
 
-void debug::print_pose(const b2Transform& p, char* msg){
+char* debug::print_pose(const b2Transform& p, char* msg){
 	if (NULL!=msg){
 		printf("%s\t", msg);
 	}
-	printf("x=%f, y=%f, theta=%f\n", p.p.x, p.p.y, p.q.GetAngle());
+	char str[256];
+	sprintf(str,"x=%f, y=%f, theta=%f", p.p.x, p.p.y, p.q.GetAngle());
+	printf("%s\n", str);
 }
 
 void debug::print_matrix(const cv::Mat & m){
