@@ -643,7 +643,7 @@ void Configurator::applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0
 		}
 	}
 	std::vector <vertexDescriptor> full_plan=current_vertices;
-	full_plan.push_back(plan_prov.begin(), plan_prov.end());
+	full_plan.insert(full_plan.end(), plan_prov.begin(), plan_prov.end());
 	if (v0==movingVertex || src==TransitionSystem::null_vertex()){
 		transitionMatrix(g[v0], DEFAULT, TransitionSystem::null_vertex());	
 	}
