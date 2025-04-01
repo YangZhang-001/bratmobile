@@ -239,9 +239,11 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 					if (!out_expected.empty()){
 						vertexDescriptor exp=out_expected[0].m_target;
 						printf("thought it'd be vertex %i , end pose:", exp );
-						FILE * err_file=fopen("/tmp/err_file.txt");
+						FILE * err_file=fopen("/tmp/err_file.txt", "a+");
 						StateDifference sd_exp(g[v1], g[exp]);
-						fprintf(err_file, "%s\t%s", debug::print_pose(sd_exp.Di), debug::print_pose(sd_exp.Dn));
+						char * sd_di=  debug::print_pose(sd_exp.Di.pose), *sd_dn=debug::print_pose(sd_exp.Dn.pose);
+						fprintf(err_file, "%s\t%s",*sd_di, *sd_dn );
+						fclose(err_file);
 						//debug::print_pose(g[exp].endPose);
 					}
 					//auto d_print=dirmap.find(t.direction);
@@ -820,8 +822,8 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 
 
 
-	std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> Configurator::findMatch(State s, TransitionSystem& g, State * src, Direction dir, StateMatcher::MATCH_TYPE match_type. StateDifference * _sd){
-	std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex());
+	std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> Configurator::findMatch(State s, TransitionSystem& g, State * src, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd){
+	std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex()), backup=result;
 	auto vs= boost::vertices(g);
 	float prob=0, sum=10000;
 	//need to find best match too
@@ -853,35 +855,41 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 		//else{
 			//condition= sum_tmp<sum;
 		//}
-		if (sum_tmp<sum){
+		
+		if (v!=movingVertex && boost::in_degree(v, g)>0 &&Tmatch ){ 
+			//sum=sum_tmp;
+			// if (NULL!=others){
+			//  	others_set.emplace(std::pair< vertexDescriptor, float>(v, sum));
+			//  }
+//			if (!relax){
+			if (condition){
+				result.first= m;
+				result.second=v;
+				break;
+			}
+			else if (sum_tmp<sum){
 			sum=sum_tmp;
+			result.first=m;
+			result.second=v;			
 			if (NULL!=_sd){
 				*_sd=sd;
 			}
-		}
-		if ( condition&& v!=movingVertex && boost::in_degree(v, g)>0 &&Tmatch ){ 
-			//sum=sum_tmp;
-			if (NULL!=others){
-			 	others_set.emplace(std::pair< vertexDescriptor, float>(v, sum));
-			 }
-			if (!relax){
-				result.first= m;
 			}
-			else{
-				result.first=match_type;
-			}
-			result.second=v;
+			// }
+			// else{
+			// 	result.first=match_type;
+			// }
 		}	
 
 	}
 
-	if (others==NULL){
-		return result;
-	}
-	printf("others not null\n");
-	for (auto vp:others_set){
-		others->push_back(vp.first);
-	}
+	// if (others==NULL){
+	// 	return result;
+	// }
+	// printf("others not null\n");
+	// for (auto vp:others_set){
+	// 	others->push_back(vp.first);
+	// }
 	return result;
 }
 

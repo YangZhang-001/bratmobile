@@ -19,15 +19,11 @@ int main(int argc, char** argv){
         center.x=focus.x+task.disturbance.bf.width()/2;
         center.y=focus.y+task.disturbance.bf.length()/2;
         d_vertices.push_back(center);
-        // for (const cv::Point2f & v: d_vertices){
-        //     if (!focus.contains(v)){
-        //         throw std::invalid_argument("not in focus");
-        //     }
-        // }
-        if (fabs(center.x-dist.bf.pose.p.x)>0.01 || fabs(center.y-dist.bf.pose.p.y)>0.01 ){
-            throw std::invalid_argument("off center!");
+        for (const cv::Point2f & v: d_vertices){
+            if (!focus.contains(v)){
+                throw std::invalid_argument("not in focus");
+            }
         }
-        
     }
     else{
         if (focus.area()!=0){

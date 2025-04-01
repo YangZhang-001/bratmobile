@@ -33,6 +33,7 @@ int main(int argc, char** argv){
     conf.explorer(conf.currentVertex, conf.transitionSystem, world);
     std::vector <vertexDescriptor> options_src;
     State state_tmp;
+    state_tmp.Di=conf.transitionSystem[solution].Di;
     b2Transform shift= b2Transform(b2Vec2(1,0), b2Rot(0));
     math::applyAffineTrans(shift, conf.transitionSystem);    
     if (argc>4){
@@ -47,21 +48,25 @@ int main(int argc, char** argv){
     bool relax_match=1;
     conf.addIteration();
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
-    conf.findMatch(state_tmp,conf.transitionSystem, NULL, UNDEFINED, StateMatcher::D_NEW, &options_src, relax_match);
-    if (options_src.empty()){
-        return 1;
-    }
-    for (vertexDescriptor o: options_src){
-        if (o==solution){
+    auto m= conf.findMatch(state_tmp,conf.transitionSystem, NULL, UNDEFINED, StateMatcher::ABSTRACT);
+    // if (options_src.empty()){
+    //     return 1;
+    // }
+    //for (vertexDescriptor o: options_src){
+        if (m.second==solution){
             return 0;
         }
+        else{
+            StateDifference sd(conf.transitionSystem[m.second], state_tmp);
+            return 1;
+        }
 
-    }
-    for (vertexDescriptor o: options_src){
-        //if (o==solution){
-            printf("match with =%i\n",  o );
-        //}
+    //}
+    // for (vertexDescriptor o: options_src){
+    //     //if (o==solution){
+    //         printf("match with =%i\n",  o );
+    //     //}
 
-    }
+    // }
     return 2;
 }
