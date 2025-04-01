@@ -642,15 +642,17 @@ void Configurator::applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0
 			}			
 		}
 	}
+	std::vector <vertexDescriptor> full_plan=current_vertices;
+	full_plan.push_back(plan_prov.begin(), plan_prov.end());
 	if (v0==movingVertex || src==TransitionSystem::null_vertex()){
 		transitionMatrix(g[v0], DEFAULT, TransitionSystem::null_vertex());	
 	}
-	else if (auto it =check_vector_for(plan_prov, v0); it!=plan_prov.end() && it!=(plan_prov.end()-1)){
+	else if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
 		auto e=boost::edge(src, v0, g);
 		if (!e.second){
 			printf("no edge wtf\n");
 		}
-		gt::to_task_end(e.first, g, plan_prov, it);
+		gt::to_task_end(e.first, g, full_plan, it);
 		if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
 			g[v0].options={g[e.first.m_target].direction};
 		}
@@ -1046,11 +1048,11 @@ void Configurator::change_task(){
 		}
 		printf("changing\n");
 		int i=to_task_end();
-		current_vertices=std::vector(plan.begin(), plan.begin()+1+i);
+		current_vertices=std::vector(plan.begin(), plan.begin()+i);
 		printPlan(&plan);
 		currentTask = task_to_execute(plan, transitionSystem, i);	
 		printf("change task=%i, task step=%i\n", currentTask.change, currentTask.motorStep);
-		plan.erase(plan.begin(), plan.begin()+i+1);
+		plan.erase(plan.begin(), plan.begin()+i);
 		//set end criteria to adjust error??
 		task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
 	}
