@@ -34,15 +34,16 @@ int main(int argc, char** argv){
     int n_v=conf.transitionSystem.m_vertices.size();
     conf.addIteration();
     int og_step=0;
+    if (!conf.plan.empty()){
+        conf.currentVertex=*(conf.plan.end()-1);
+        vertexDescriptor prev=*(conf.plan.end()-2);
+    }
     conf.change_task();
     if (argv[1]=="empty"){
         og_plan={2};
     }    
     conf.printPlan(&conf.plan);
-    if (!conf.plan.empty()){
-        conf.currentVertex=*(conf.plan.end()-1);
-        vertexDescriptor prev=*(conf.plan.end()-2);
-    }
+
     std::vector <vertexDescriptor> options_src;
     State state_tmp;
     b2Transform shift= b2Transform(b2Vec2(1,0), b2Rot(0));

@@ -239,11 +239,11 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 					if (!out_expected.empty()){
 						vertexDescriptor exp=out_expected[0].m_target;
 						printf("thought it'd be vertex %i , end pose:", exp );
-						FILE * err_file=fopen("/tmp/err_file.txt", "a+");
-						StateDifference sd_exp(g[v1], g[exp]);
-						char * sd_di=  debug::print_pose(sd_exp.Di.pose), *sd_dn=debug::print_pose(sd_exp.Dn.pose);
-						fprintf(err_file, "%s\t%s",*sd_di, *sd_dn );
-						fclose(err_file);
+						// FILE * err_file=fopen("/tmp/err_file.txt", "a+");
+						// StateDifference sd_exp(g[v1], g[exp]);
+						// char * sd_di=  debug::print_pose(sd_exp.Di.pose), *sd_dn=debug::print_pose(sd_exp.Dn.pose);
+						// fprintf(err_file, "%s\t%s",sd_di, sd_dn );
+						// fclose(err_file);
 						//debug::print_pose(g[exp].endPose);
 					}
 					//auto d_print=dirmap.find(t.direction);
@@ -642,8 +642,10 @@ void Configurator::applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0
 			}			
 		}
 	}
-	std::vector <vertexDescriptor> full_plan=current_vertices;
-	full_plan.insert(full_plan.end(), plan_prov.begin(), plan_prov.end());
+	std::vector <vertexDescriptor> full_plan=plan_prov;
+	if (!currentTask.change){
+		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
+	}
 	if (v0==movingVertex || src==TransitionSystem::null_vertex()){
 		transitionMatrix(g[v0], DEFAULT, TransitionSystem::null_vertex());	
 	}
@@ -849,7 +851,7 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 		StateDifference sd(s, q);
 		bool condition=0;
 		StateMatcher::MATCH_TYPE m=StateMatcher::_FALSE;
-		float sum_tmp=sd.get_sum(match_type);
+		float sum_tmp=fabs(sd.get_sum(match_type));
 		//if (!relax){
 			m=matcher.isMatch(sd, s.endPose.p.Length());
 			condition=matcher.match_equal(m, match_type);
@@ -867,15 +869,15 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 			if (condition){
 				result.first= m;
 				result.second=v;
-				break;
+				//break;
 			}
-			else if (sum_tmp<sum){
-			sum=sum_tmp;
-			result.first=m;
-			result.second=v;			
-			if (NULL!=_sd){
-				*_sd=sd;
-			}
+			if (sum_tmp<sum){
+				sum=sum_tmp;
+				result.first=m;
+				result.second=v;			
+				if (NULL!=_sd){
+					*_sd=sd;
+				}
 			}
 			// }
 			// else{
