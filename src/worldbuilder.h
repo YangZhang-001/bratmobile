@@ -123,8 +123,15 @@ class WorldBuilder{
 
     class Bridger{
         public:
+        //returns a rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
         cv::Rect2f real_world_focus(const Task * );
 
+        //calculates 2d affine transformation of input task's disturbance from t-1 to t
+        /*
+        /param t input task
+        /param pts point cloud
+        /param observed_disturbance body features of the observed disturbance
+        */
         b2Transform get_transform(const Task &, const CoordinateContainer &, BodyFeatures * observed_disturbance=NULL); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
 
         /*
@@ -132,7 +139,7 @@ class WorldBuilder{
         */
         std::pair <bool, BodyFeatures> bounding_rotated_box(std::vector <cv::Point2f>nb);
 
-        void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);
+        //void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);
 
         private:
         

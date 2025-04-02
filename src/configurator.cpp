@@ -238,9 +238,9 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 					//g[edge.first.m_target].label=sk.first.label; //new edge, valid
 					if (!out_expected.empty()){
 						vertexDescriptor exp=out_expected[0].m_target;
+						StateDifference sd_exp(g[v1], g[exp]);
 						printf("thought it'd be vertex %i , end pose:", exp );
 						// FILE * err_file=fopen("/tmp/err_file.txt", "a+");
-						// StateDifference sd_exp(g[v1], g[exp]);
 						// char * sd_di=  debug::print_pose(sd_exp.Di.pose), *sd_dn=debug::print_pose(sd_exp.Dn.pose);
 						// fprintf(err_file, "%s\t%s",sd_di, sd_dn );
 						// fclose(err_file);
@@ -1031,7 +1031,7 @@ void Configurator::track_task_execution(){
 	if(currentTask.motorStep==0 || ended){
 		currentTask.change=1;
 	}
-	estimate_current_vertex(transitionSystem, currentTask,currentVertex);
+	currentVertex=estimate_current_vertex(transitionSystem, currentTask,currentVertex);
 }
 
 void Configurator::change_task(){

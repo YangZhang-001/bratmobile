@@ -193,6 +193,7 @@ void reactive(b2World&);
 
 std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const TransitionSystem &);
 
+//returns estimation of current vertex based on observed or estimate position of Di in currentTask
 vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, vertexDescriptor currentVertex);
 
 //uses LIDAR data to calculate an affine transform of disturbance Di if present

@@ -379,7 +379,6 @@ do{
 	if (g[e.m_target].direction==g[e_start.m_target].direction){
 		it++;
 	}
-	printf("e target= %i\n", e_start.m_target);
 	//it++; //includes the next vertex not belonging to this task
 }while(g[e.m_target].direction==g[e_start.m_target].direction &&
 		 it != plan.end() && it!=(plan.end()-1)               && 
