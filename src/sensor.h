@@ -1,7 +1,7 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 #include "CloCK_math.h"
-
+#include <opencv2/tracking/kalman_filters.hpp>
 
 class ConfiguratorInterface;
 class Configurator;
@@ -103,6 +103,11 @@ std::set<T> vec2set(std::vector<T> vec){
     }
     return set;
 }
+
+class Kalman_Unscented: public cv::detail::tracking::kalman_filters::UnscentedKalmanFilter{
+
+};
+
 
 
 class PointCloudProc{

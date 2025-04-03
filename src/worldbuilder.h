@@ -139,10 +139,7 @@ class WorldBuilder{
         */
         std::pair <bool, BodyFeatures> bounding_rotated_box(std::vector <cv::Point2f>nb);
 
-        //void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);
-
-        private:
-        
+        //void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);                
 
     }wb_bridger;
 
