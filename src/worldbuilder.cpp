@@ -1,32 +1,58 @@
 #include "worldbuilder.h"
 
-std::pair<Pointf, Pointf> WorldBuilder::bounds(Direction d, b2Transform start, float boxLength, float halfWindowWidth){
+std::pair<Pointf, Pointf> WorldBuilder::bounds(Direction d, b2Transform start, float boxLength, float halfWindowWidth, std::vector <Pointf> *_bounds){
     //float halfWindowWidth=0.15; //wa .1
     std::pair <Pointf, Pointf>result;
+    std::vector <Pointf> bds;
     if (d ==LEFT || d==RIGHT){
         boxLength =ROBOT_HALFLENGTH -ROBOT_BOX_OFFSET_X; //og 16 cm
         result.first =Pointf(start.p.x-boxLength, start.p.y-boxLength);
         result.second =Pointf(start.p.x+boxLength, start.p.y+boxLength);
+        bds.push_back(result.first);
+        bds.push_back(result.second);
+        bds.push_back(Pointf(start.p.x+boxLength, start.p.y-boxLength));
+        bds.push_back(Pointf(start.p.x-boxLength, start.p.y+boxLength));
     }
     else{
         Pointf positionVector, radiusVector, maxFromStart, top, bottom; 
-        std::vector <Pointf> bounds;
         radiusVector = Polar2f(boxLength, start.q.GetAngle());
         maxFromStart = Pointf(start.p.x, start.p.y) + radiusVector;
         //FIND THE BOUNDS OF THE BOX
         b2Vec2 unitPerpR(-sin(start.q.GetAngle()), cos(start.q.GetAngle()));
         b2Vec2 unitPerpL(sin(start.q.GetAngle()), -cos(start.q.GetAngle()));
-        bounds.push_back(Pointf(start.p.x, start.p.y)+Pointf(unitPerpL.x *halfWindowWidth, unitPerpL.y*halfWindowWidth));
-        bounds.push_back(Pointf(start.p.x, start.p.y)+Pointf(unitPerpR.x *halfWindowWidth, unitPerpR.y*halfWindowWidth));
-        bounds.push_back(maxFromStart+Pointf(unitPerpL.x *halfWindowWidth, unitPerpL.y*halfWindowWidth)); 
-        bounds.push_back(maxFromStart+Pointf(unitPerpR.x *halfWindowWidth, unitPerpR.y*halfWindowWidth));
+        bds.push_back(Pointf(start.p.x, start.p.y)+Pointf(unitPerpL.x *halfWindowWidth, unitPerpL.y*halfWindowWidth));
+        bds.push_back(Pointf(start.p.x, start.p.y)+Pointf(unitPerpR.x *halfWindowWidth, unitPerpR.y*halfWindowWidth));
+        bds.push_back(maxFromStart+Pointf(unitPerpL.x *halfWindowWidth, unitPerpL.y*halfWindowWidth)); 
+        bds.push_back(maxFromStart+Pointf(unitPerpR.x *halfWindowWidth, unitPerpR.y*halfWindowWidth));
         CompareY compareY;
-        std::sort(bounds.begin(), bounds.end(), compareY); //sort bottom to top
-        result.first = bounds[0]; //bottom 
-        result.second = bounds[3]; //top  
+        std::sort(bds.begin(), bds.end(), compareY); //sort bottom to top
+        result.first = bds[0]; //bottom 
+        result.second = bds[3]; //top  
+    }
+    if (_bounds!=NULL){ //for debug
+        *_bounds=bds;
     }
     return result;
     }
+
+b2PolygonShape WorldBuilder::object_filtering_box(float halfWindowWidth, float boxLength, b2Transform start, Direction d){
+    b2PolygonShape box;
+    b2Vec2 centroid(0,0);
+    if (d ==LEFT || d==RIGHT){
+        halfWindowWidth =ROBOT_HALFLENGTH -ROBOT_BOX_OFFSET_X; //og 16 cm
+        boxLength=halfWindowWidth*2;
+    }
+    else{
+        // b2Vec2 shift(boxLength/2, 0);
+ //       shift=b2Mul(start.q, shift);
+   //     center+=shift
+        centroid.x=boxLength/2;
+    }
+    box.SetAsBox(boxLength/2, halfWindowWidth, centroid, 0); //this  allows to filter out objects irrelevant to this task (i.e. collision unlikely assumint they're static)
+    return box;
+}
+
+
 
 std::pair <bool, BodyFeatures> WorldBuilder::Bridger::bounding_rotated_box(std::vector <cv::Point2f>nb){
     for (cv::Point2f & p: nb){
@@ -198,25 +224,25 @@ std::pair <CoordinateContainer, bool> WorldBuilder::salientPoints(b2Transform st
 }
 
 
-std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer & current, b2Transform start, Direction d, float boxLength, float halfWindowWidth, CLUSTERING clustering){
+std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering){
     std::vector <BodyFeatures> features;
-    std::pair<Pointf, Pointf> bt = bounds(d, start, boxLength, halfWindowWidth);
-    std::pair <CoordinateContainer, bool> salient = salientPoints(start,current, bt);
-    if (salient.first.empty()){
+   // std::pair<Pointf, Pointf> bt = bounds(d, start, boxLength, halfWindowWidth);
+    //std::pair <CoordinateContainer, bool> salient = salientPoints(start,current, bt);
+    if (current.empty()){
         return features;
     }
     if (clustering==BOX){
-        features =processData(salient.first, start);
+        features =processData(current, start);
     }
     else{
-        features=cluster_data(salient.first, start,clustering);
+        features=cluster_data(current, start,clustering);
     }
     return features;
 }
 
 
 
- std::vector <BodyFeatures> WorldBuilder::buildWorld(b2World& world, const CoordinateContainer & current, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
+ void WorldBuilder::buildWorld(b2World& world, const CoordinateContainer & current, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
     float boxLength=simulationStep-ROBOT_BOX_OFFSET_X;
     std::vector <cv::Point2f> points_to_track, *pointer_to_track;
     if (NULL!=task){
@@ -232,10 +258,14 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
         float maxx= maxx_it.base()->x; //furthest D vertex from robot
         boxLength=ROBOT_HALFLENGTH*2-ROBOT_BOX_OFFSET_X+maxx;
     }
-    std::vector <BodyFeatures> features=getFeatures(current, start, d, boxLength, halfWindowWidth, clustering);
-
-    for (BodyFeatures f: features){
-        makeBody(world, f);
+   // std::vector <BodyFeatures> features =getFeatures(current, start, d, boxLength, halfWindowWidth, clustering);
+    b2PolygonShape filter_box=object_filtering_box(halfWindowWidth, boxLength,start, d);
+    for (BodyFeatures f: world_objects){
+        b2PolygonShape feature_shape;
+        feature_shape.SetAsBox(f.halfWidth, f.halfLength);
+        if (b2TestOverlap(&filter_box, 0, &feature_shape, 0, start, f.pose)){
+            makeBody(world, f);
+        }
     }
     int _count=world.GetBodyCount();
 	FILE *file;
@@ -246,7 +276,6 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
 		}
 		fclose(file);
 	}
-    return features;
 }
 
 bool WorldBuilder::checkDisturbance(Pointf p, bool& obStillThere, Task * curr, float range){

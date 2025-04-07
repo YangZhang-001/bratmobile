@@ -58,10 +58,6 @@ bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& rob
 	if (d->getAffIndex()!=AVOID){
 		return result;
 	}
-
-	// cv::Point2f center(d->pose().p.x, d->pose().p.y);
-	// cv::Size2f size(d->halfWidth()*2, d->halfLength()*2);
-	// cv::RotatedRect d_rect(center, size, d->pose().q.GetAngle());
 	b2PolygonShape d_shape;
 	d_shape.SetAsBox(d->bf.halfWidth, d->bf.halfLength, b2Vec2(0,0), 0);
 	b2AABB aabb;

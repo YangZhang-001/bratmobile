@@ -51,6 +51,7 @@ int main(int argc, char** argv){
     conf.addIteration();
     b2World world(b2Vec2(0,0));
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
+    conf.worldBuilder.world_objects=conf.worldBuilder.getFeatures(conf.data2fp, b2Transform_zero);
     conf.dummy_vertex(conf.currentVertex);
     conf.explorer(conf.currentVertex, conf.transitionSystem, world);
     conf.ts_cleanup(conf.transitionSystem, conf.plan);

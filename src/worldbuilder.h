@@ -5,6 +5,7 @@
 class WorldBuilder{
     public:
     int bodies=0;
+    std::vector <BodyFeatures> world_objects;
     enum CLUSTERING{BOX=0, KMEANS=1, PARTITION=2}; //BOX: bounding box around points
         struct CompareCluster{
         CompareCluster()=default;
@@ -31,25 +32,25 @@ class WorldBuilder{
 
     bool checkDisturbance(Pointf, bool&,Task * curr =NULL, float range=0.025);
 
-    std::vector <BodyFeatures> getFeatures(const CoordinateContainer &, b2Transform, Direction , float, float halfWindowWidth=.1, CLUSTERING clustering=BOX);
+    std::vector <BodyFeatures> getFeatures(const CoordinateContainer &, b2Transform, CLUSTERING clustering=PARTITION);
 
-    std::vector <BodyFeatures> buildWorld(b2World&,const CoordinateContainer&, b2Transform, Direction,  Disturbance disturbance=Disturbance(), float halfWindowWidth=.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task * task=NULL);
+    void buildWorld(b2World&,const CoordinateContainer&, b2Transform, Direction,  Disturbance disturbance=Disturbance(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task * task=NULL);
 
-    std::pair <Pointf, Pointf> bounds(Direction, b2Transform t, float boxLength, float halfWindowWidth); //returns bottom and top of bounding box
+    //returns top and bottom of rotated rectangle (not side-specific)
+    std::pair <Pointf, Pointf> bounds(Direction, b2Transform t, float boxLength, float halfWindowWidth,std::vector <Pointf> *_bounds=NULL); //returns bottom and top of bounding box
+
+    b2PolygonShape object_filtering_box(float halfWindowWidth, float boxLength, b2Transform start, Direction d);
 
     template <class Pt>
     std::pair<bool,BodyFeatures> bounding_box( std::vector <Pt >&nb){//gets bounding box of points
         float  l=(0.0005*2), w=(0.0005*2) ;
         float x_glob=0.0f, y_glob=0.0f;
-        // cv::Rect2f rect(x_loc,y_loc,w, h);
-        // b2Transform pose;
         std::pair <bool, BodyFeatures> result(0, BodyFeatures());
         if (nb.empty()){
             return result;
         }
         CompareX compareX;
         CompareY compareY;
-        //Pointf maxx, minx, miny, maxy;
         typename std::vector<Pt>::iterator maxx=std::max_element(nb.begin(), nb.end(), compareX);
         typename std::vector<Pt>::iterator miny=std::min_element(nb.begin(), nb.end(), compareY);
         typename std::vector<Pt>::iterator minx=std::min_element(nb.begin(), nb.end(), compareX);

@@ -41,7 +41,10 @@ int main(int argc, char** argv){
         di.newScanAvail();          
         conf.data2fp = ci.data2fp;
     }
-    std::vector <BodyFeatures> b_features=conf.worldBuilder.getFeatures(conf.data2fp, state_tmp.start, DEFAULT, BOX2DRANGE);
+    std::pair<Pointf, Pointf> bt = conf.worldBuilder.bounds(DEFAULT, state_tmp.start, BOX2DRANGE, 0.15);
+    std::pair <CoordinateContainer, bool> salient = conf.worldBuilder.salientPoints(state_tmp.start, conf.data2fp, bt);
+
+    std::vector <BodyFeatures> b_features=conf.worldBuilder.getFeatures(salient.first, state_tmp.start);
     if (!b_features.empty()){
         state_tmp.Dn= Disturbance(b_features[0]); //assumes 1 item length
     }
@@ -49,24 +52,12 @@ int main(int argc, char** argv){
     conf.addIteration();
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     auto m= conf.findMatch(state_tmp,conf.transitionSystem, NULL, UNDEFINED, StateMatcher::ABSTRACT);
-    // if (options_src.empty()){
-    //     return 1;
-    // }
-    //for (vertexDescriptor o: options_src){
-        if (m.second==solution){
-            return 0;
-        }
-        else{
-            StateDifference sd(conf.transitionSystem[m.second], state_tmp);
-            return 1;
-        }
-
-    //}
-    // for (vertexDescriptor o: options_src){
-    //     //if (o==solution){
-    //         printf("match with =%i\n",  o );
-    //     //}
-
-    // }
+    if (m.second==solution){
+        return 0;
+    }
+    else{
+        StateDifference sd(conf.transitionSystem[m.second], state_tmp);
+        return 1;
+    }
     return 2;
 }

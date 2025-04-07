@@ -26,7 +26,6 @@ add_executable(processData_k ../../src/worldbuilder.h ../../src/worldbuilder.cpp
 add_executable(kmeans_clusters ../../src/worldbuilder.h ../../src/worldbuilder.cpp kmeans_clusters.cpp)
 #visual inspection 
 add_executable(partition_clusters ../test_essentials.h partition_clusters.cpp)
-
 add_executable(planner ../test_essentials.h planner.cpp)
 add_executable(split_step ../test_essentials.h split_step.cpp)
 add_executable(affine_transformation ../test_essentials.h affine_transform.cpp)
@@ -48,7 +47,9 @@ add_executable(D_affine ../test_essentials.h D_affine.cpp)
 add_executable(rwf ../test_essentials.h real_world_focus.cpp)
 add_executable(wb_get_transform_sim ../test_essentials.h wb_get_transform_sim.cpp)
 add_executable(kalman ../test_essentials.h kalman.cpp)
+add_executable(filter_box ../test_essentials.h filter_box.cpp)
 
+target_link_libraries(filter_box CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(kalman CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(wb_get_transform_sim CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(rwf CloCK ${OpenCV_LIBS} box2d)
@@ -302,6 +303,19 @@ add_test(NAME rwf_none_r COMMAND rwf .45 .21 53 0 1)
 
 add_test(NAME wb_gt COMMAND wb_get_transform_sim ../target_68cm)
 
+#add_test(NAME filter_box_DEF1 COMMAND filter_box 0 0 0 2) #straight ahead, default direction
+add_test(NAME filter_box_LEFT1 COMMAND filter_box 0 0 0 0) #straight ahead, left direction
+add_test(NAME filter_box_RIGHT1 COMMAND filter_box 0 0 0 1) #straight ahead, right direction
+#add_test(NAME filter_box_DEF2 COMMAND filter_box 0 0 .75 2) #45 deg turn, default direction
+# add_test(NAME filter_box_DEF3 COMMAND filter_box 0 0 -1.26 2) #neg, not divisor of pi, default direction
+# add_test(NAME filter_box_DEF4 COMMAND filter_box 0 0 3.14 2) #pi turn, default direction
+# add_test(NAME filter_box_DEF5 COMMAND filter_box .35 0 2.57 2) #straight ahead, default direction
+# add_test(NAME filter_box_DEF6 COMMAND filter_box .35 .45 2.57 2) #straight ahead, default direction
+# add_test(NAME filter_box_DEF7 COMMAND filter_box .35 .45 -2.57 2) #straight ahead, default direction
+# add_test(NAME filter_box_DEF8 COMMAND filter_box -.35 .45 2.57 2) #straight ahead, default direction
+# add_test(NAME filter_box_DEF9 COMMAND filter_box .35 -.45 -2.57 2) #straight ahead, default direction
+# add_test(NAME filter_box_DEF10 COMMAND filter_box .35 -.45 2.57 2) #straight ahead, default direction
+# add_test(NAME filter_box_DEF11 COMMAND filter_box -.35 .45 -2.57 2) #straight ahead, default direction
 
 set(CMAKE_BUILD_TYPE Debug)
 

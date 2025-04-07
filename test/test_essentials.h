@@ -147,6 +147,21 @@ struct Goal_Changer:public GoalChanger{
     }
 };
 
+void get_coordinate_container(char * file_name, CoordinateContainer & points, const int& i=1){
+    char filePath[256];
+    sprintf(filePath, "%smap%04i.dat", file_name, i);
+    printf("%s\n", filePath);
+    std::ifstream file(filePath);
+    float x2, y2;
+    while (file>>x2>>y2){
+        x2 = round(x2*100)/100;
+        y2 = round(y2*100)/100;
+        Pointf  p2(x2,y2);
+        points.insert(p2);
+    }
+    file.close();
+}
+
 
 
 #endif

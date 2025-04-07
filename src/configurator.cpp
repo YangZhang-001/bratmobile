@@ -44,7 +44,6 @@ bool Configurator::Spawner(){
 	iteration++; //iteration set in getVelocity
 	worldBuilder.iteration++;
 
-
 	//BENCHMARK + FIND TRUE SAMPLING RATE
 	auto now =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>diff= now - previousTimeScan; //in seconds
@@ -59,6 +58,7 @@ bool Configurator::Spawner(){
 	b2Vec2 gravity = {0.0, 0.0};
 	b2World world= b2World(gravity);
 	char name[256];
+	worldBuilder.world_objects=worldBuilder.getFeatures(data2fp, b2Transform_zero);
 	explore_plan(world);
 	worldBuilder.resetBodies();
 	return 1;
