@@ -10,7 +10,7 @@ int main(){
     */
 
     //measuremet: rw measurement
-    int state_dim=6, measurement_dim=3; //state: x y theta (dx dy dtheta); measurement x y theta 
+    int state_dim=6, measurement_dim=6; //state: x y theta (dx dy dtheta); measurement x y theta 
     cv::KalmanFilter kf(state_dim, measurement_dim);
                                             //  offsets
                                             // x  y  th dx dy dth
@@ -22,17 +22,24 @@ int main(){
                                                0, 0, 0, 0, 0, 1); // rate update theta estimate
                                                
 
-    kf.measurementMatrix=(cv::Mat_<float>(3, 6)<< 1, 0, 0, 0, 0, 0, //shift x
+    kf.measurementMatrix=(cv::Mat_<float>(6, 6)<< 1, 0, 0, 0, 0, 0, //shift x
                                                  0, 1, 0, 0, 0, 0,
-                                                 0, 0, 1, 0, 0, 0); //shift y
+                                                 0, 0, 1, 0, 0, 0,
+                                                 0, 0, 0, 1, 0, 0, //shift x
+                                                 0, 0, 0, 0, 1, 0,
+                                                 0, 0, 0, 0, 0, 1
+                                                 ); //shift y
 
-    //for prediction (not strictly necessary)
-    //kf.controlMatrix=(cv::Mat_<float>(6,2)); //gives an offset
-    kf.statePre=(cv::Mat_<float>(6,1)<<0,0,0,0.2, 0, 0);
-    cv::Mat state_post=kf.statePost;
     //set custom process noise covariance (higher process noise -> faster adaptation, lower measurement noise ->faster adaptation)
+    setIdentity(kf.processNoiseCov, cv::Scalar(1));
+    
+    setIdentity(kf.measurementNoiseCov, cv::Scalar(1e-4));
+
+    setIdentity(kf.errorCovPost, cv::Scalar(1));
+    //initialise with known measurements
+    kf.statePre=(cv::Mat_<float>(6,1)<<.5,0,0,0.02, 0, 0);
+    kf.statePost=kf.statePre;
     cv::Mat predict=kf.predict(); //i think control goes here
-    cv::Mat measurement=(cv::Mat_<float>(3, 1)<< 0.03, 0.01, 0.01);
+    cv::Mat measurement=(cv::Mat_<float>(6, 1)<< 0.5, 0.0, 0.0, 0.029, -0.01, 0.01);
     kf.correct(measurement);
-    //probs needs to be 3x3 matrix (positions) with control matrix (velocity) to be entered in predict
 }
