@@ -82,7 +82,7 @@ std::vector <std::vector<cv::Point2f>> WorldBuilder::partition_clusters( std::ve
         bool operator()(const cv::Point2f& p1, const cv::Point2f& p2){
             float x_2=std::pow(p1.x-p2.x,2);
             float y_2=std::pow(p1.y-p2.y,2);
-            return std::sqrt(x_2 +y_2)<.1;
+            return std::sqrt(x_2 +y_2)<.05;
         }
     }dist;
     std::vector <int> labels;
@@ -90,8 +90,8 @@ std::vector <std::vector<cv::Point2f>> WorldBuilder::partition_clusters( std::ve
     int n_clusters= *(std::max_element(labels.begin(), labels.end())) +1;
     std::vector <std::vector<cv::Point2f>>result(n_clusters);
     for (int i=0; i<points.size(); i++){ //bestlabel[i] gives the index
-            int label=labels[i];
-            result[label].push_back(points[i]);
+        int label=labels[i];
+        result[label].push_back(points[i]);
     }
     return result;
 }

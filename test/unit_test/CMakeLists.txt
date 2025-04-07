@@ -24,6 +24,9 @@ add_executable(transitionMatrix ../test_essentials.h transitionMatrix.cpp)
 add_executable(disturbance_dimensions ../test_essentials.h disturbance_dimensions.cpp)
 add_executable(processData_k ../../src/worldbuilder.h ../../src/worldbuilder.cpp processData_k.cpp)
 add_executable(kmeans_clusters ../../src/worldbuilder.h ../../src/worldbuilder.cpp kmeans_clusters.cpp)
+#visual inspection 
+add_executable(partition_clusters ../test_essentials.h partition_clusters.cpp)
+
 add_executable(planner ../test_essentials.h planner.cpp)
 add_executable(split_step ../test_essentials.h split_step.cpp)
 add_executable(affine_transformation ../test_essentials.h affine_transform.cpp)
@@ -63,6 +66,7 @@ target_link_libraries(planner CloCK ${OpenCV_LIBS} box2d rt  )
 target_link_libraries(split_step CloCK ${OpenCV_LIBS} box2d rt  )
 target_link_libraries(affine_transformation CloCK ${OpenCV_LIBS} box2d rt  )
 target_link_libraries(processData_k CloCK ${OpenCV_LIBS} box2d rt)
+target_link_libraries(partition_clusters CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(kmeans_clusters CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(match CloCK ${OpenCV_LIBS} box2d )
 target_link_libraries(find_match_state CloCK ${OpenCV_LIBS} box2d )
@@ -107,6 +111,7 @@ add_test(NAME transition_y_stop_safe COMMAND transitionMatrix y s s)
 add_test(NAME processData_k COMMAND processData_k ../target_40cm/ 1 )
 
 add_test(NAME kmeans_clusters COMMAND kmeans_clusters ../target_40cm/ 0 )
+add_test(NAME partition_clusters COMMAND partition_clusters ../target_40cm/ 0 )
 
 
 add_test(NAME fill_avoid1 COMMAND fill_for_dist ../target_68cm/ 0.37 0 1.5714 1)

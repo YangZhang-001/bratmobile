@@ -121,6 +121,21 @@ void Configurator::explore_plan(b2World&world){
     printPlan(&plan);
 }
 
+//debug, to visualise 
+void flush_points(const std::vector<std::vector<cv::Point2f>> clusters, char * where){
+    char destination[256];
+    int i=1;
+    for (std::vector<cv::Point2f> v:clusters){
+        sprintf(destination, "/tmp/%s_%04f.txt", where, i);
+        FILE * f=fopen(destination, "w");
+        for (cv::Point2f p:v){
+            fprintf(f, "%f\t%f\n", p.x, p.y);
+        }
+        fclose(f);
+        i++;
+    }
+}
+
 struct Goal_Changer:public GoalChanger{
     void change_goal(Task * goal){
         EndedResult er = goal->checkEnded(b2Transform_zero, UNDEFINED, true);//true
@@ -131,6 +146,7 @@ struct Goal_Changer:public GoalChanger{
 
     }
 };
+
 
 
 #endif
