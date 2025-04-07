@@ -110,8 +110,8 @@ add_test(NAME transition_y_stop_ok COMMAND transitionMatrix y s k)
 add_test(NAME transition_y_stop_safe COMMAND transitionMatrix y s s)
 add_test(NAME processData_k COMMAND processData_k ../target_40cm/ 1 )
 
-add_test(NAME kmeans_clusters COMMAND kmeans_clusters ../target_40cm/ 0 )
-add_test(NAME partition_clusters COMMAND partition_clusters ../target_40cm/ 0 )
+add_test(NAME kmeans_clusters COMMAND kmeans_clusters)
+add_test(NAME partition_clusters COMMAND partition_clusters ../target_40cm/)
 
 
 add_test(NAME fill_avoid1 COMMAND fill_for_dist ../target_68cm/ 0.37 0 1.5714 1)

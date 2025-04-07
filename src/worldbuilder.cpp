@@ -217,7 +217,6 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
 
 
  std::vector <BodyFeatures> WorldBuilder::buildWorld(b2World& world, const CoordinateContainer & current, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
-  //  std::pair<bool, b2Vec2> result(0, b2Vec2(0,0));
     float boxLength=simulationStep-ROBOT_BOX_OFFSET_X;
     std::vector <cv::Point2f> points_to_track, *pointer_to_track;
     if (NULL!=task){
@@ -227,10 +226,10 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
     if (disturbance.getAffIndex()==AVOID && d==DEFAULT){
         std::vector <b2Vec2> d_vertices=disturbance.vertices();
         for (b2Vec2 &v: d_vertices){
-            v=v-start.p;
+            v=v-start.p; //get distance of each vertex of disturbance from start of task
         }
         auto maxx_it= std::max_element(d_vertices.begin(), d_vertices.end(), CompareX());
-        float maxx= maxx_it.base()->x;
+        float maxx= maxx_it.base()->x; //furthest D vertex from robot
         boxLength=ROBOT_HALFLENGTH*2-ROBOT_BOX_OFFSET_X+maxx;
     }
     std::vector <BodyFeatures> features=getFeatures(current, start, d, boxLength, halfWindowWidth, clustering);

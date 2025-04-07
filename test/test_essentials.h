@@ -126,7 +126,7 @@ void flush_points(const std::vector<std::vector<cv::Point2f>> clusters, char * w
     char destination[256];
     int i=1;
     for (std::vector<cv::Point2f> v:clusters){
-        sprintf(destination, "/tmp/%s_%04f.txt", where, i);
+        sprintf(destination, "/tmp/%s_%04i.txt", where, i);
         FILE * f=fopen(destination, "w");
         for (cv::Point2f p:v){
             fprintf(f, "%f\t%f\n", p.x, p.y);
