@@ -11,7 +11,8 @@ int main(int argc, char** argv){
     auto v1 = boost::add_vertex(conf.transitionSystem);
     auto e1 = boost::add_edge(conf.currentVertex, v1, conf.transitionSystem);
     b2World world(b2Vec2(0.0, 0.0));
-    conf.worldBuilder.buildWorld(world, conf.data2fp, b2Transform(b2Vec2(0,0), b2Rot(0)),DEFAULT);
+    conf.worldBuilder.world_objects=conf.worldBuilder.getFeatures(conf.data2fp, b2Transform_zero);
+    conf.worldBuilder.buildWorld(world, b2Transform(b2Vec2(0,0), b2Rot(0)),DEFAULT);
     Task task(Disturbance(), DEFAULT);
     Robot robot(&world);
     simResult result=task.bumping_that(world, 1, robot.body);

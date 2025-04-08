@@ -34,7 +34,7 @@ class WorldBuilder{
 
     std::vector <BodyFeatures> getFeatures(const CoordinateContainer &, b2Transform, CLUSTERING clustering=PARTITION);
 
-    void buildWorld(b2World&,const CoordinateContainer&, b2Transform, Direction,  Disturbance disturbance=Disturbance(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task * task=NULL);
+    void buildWorld(b2World&,b2Transform, Direction,  Disturbance disturbance=Disturbance(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task * task=NULL);
 
     //returns top and bottom of rotated rectangle (not side-specific)
     std::pair <Pointf, Pointf> bounds(Direction, b2Transform t, float boxLength, float halfWindowWidth,std::vector <Pointf> *_bounds=NULL); //returns bottom and top of bounding box

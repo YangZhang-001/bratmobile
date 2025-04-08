@@ -27,7 +27,8 @@ int main(int argc, char** argv){
     }
     Robot robot(&world);
     robot.body->SetTransform(start.p, start.q.GetAngle());
-    conf.worldBuilder.buildWorld(world, conf.data2fp, task.start, task.direction, task.disturbance,0.15, WorldBuilder::PARTITION);
+    conf.worldBuilder.world_objects=conf.worldBuilder.getFeatures(conf.data2fp, b2Transform_zero);
+    conf.worldBuilder.buildWorld(world, task.start, task.direction, task.disturbance,0.15, WorldBuilder::PARTITION);
     b2AABB aabb=conf.worldBuilder.makeRobotSensor(robot.body, &conf.controlGoal.disturbance);
     debug_draw(world, atoi(argv[4]));
     char name_v[256];

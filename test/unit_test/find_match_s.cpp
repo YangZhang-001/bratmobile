@@ -30,6 +30,7 @@ int main(int argc, char** argv){
     b2World world(b2Vec2(0,0));
     boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     conf.dummy_vertex(conf.currentVertex);
+    conf.worldBuilder.world_objects=conf.worldBuilder.getFeatures(conf.data2fp, b2Transform_zero);
     conf.explorer(conf.currentVertex, conf.transitionSystem, world);
     std::vector <vertexDescriptor> options_src;
     State state_tmp;

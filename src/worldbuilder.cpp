@@ -242,7 +242,7 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
 
 
 
- void WorldBuilder::buildWorld(b2World& world, const CoordinateContainer & current, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
+ void WorldBuilder::buildWorld(b2World& world, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
     float boxLength=simulationStep-ROBOT_BOX_OFFSET_X;
     std::vector <cv::Point2f> points_to_track, *pointer_to_track;
     if (NULL!=task){

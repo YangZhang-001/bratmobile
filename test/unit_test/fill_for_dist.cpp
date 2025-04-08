@@ -39,7 +39,8 @@ int main(int argc, char** argv){
     conf.dummy_vertex(conf.currentVertex);
     b2Transform start;
     Task task(DEFAULT);
-    conf.worldBuilder.buildWorld(world, conf.data2fp, task.start, task.direction, task.disturbance,0.15, WorldBuilder::PARTITION);
+    conf.worldBuilder.world_objects=conf.worldBuilder.getFeatures(ci.data2fp, b2Transform_zero);
+    conf.worldBuilder.buildWorld(world, task.start, task.direction, task.disturbance,0.15, WorldBuilder::PARTITION);
     debug_draw(world, atof(argv[5]), "first");
     Robot robot(&world);
     simResult sim= task.bumping_that(world, conf.getIteration(), robot.body);
@@ -50,7 +51,8 @@ int main(int argc, char** argv){
         start.q.Set(atof(argv[4]));
     }
     Task task2(obstacle, DEFAULT, start,true);
-    conf.worldBuilder.buildWorld(world, conf.data2fp, task2.start, task2.direction, task2.disturbance, 0.15, WorldBuilder::PARTITION);
+    conf.worldBuilder.world_objects=conf.worldBuilder.getFeatures(ci.data2fp, b2Transform_zero);
+    conf.worldBuilder.buildWorld(world, task2.start, task2.direction, task2.disturbance, 0.15, WorldBuilder::PARTITION);
     debug_draw(world, atof(argv[5]), "avoid");
     return 0;
 }

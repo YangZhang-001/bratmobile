@@ -173,7 +173,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				t = Task(Di, g[v0].options[0], start, true);//need to update end crit
 				std::pair <State, Edge> sk(State(start, Di, g[v0].options[0]), Edge());
 				adjust_simulated_task(v0, g, &t);
-				worldBuilder.buildWorld(w, data2fp, t.start, t.direction, t.disturbance, 0.15, WorldBuilder::PARTITION); //was g[v].endPose
+				worldBuilder.buildWorld(w, t.start, t.direction, t.disturbance, 0.15, WorldBuilder::PARTITION); //was g[v].endPose
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
 				if (v==0 && sim.resultCode==sim.crashed){
 					printf("IM GONNA CRASH!!!! at");
