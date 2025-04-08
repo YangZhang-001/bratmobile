@@ -356,16 +356,16 @@ b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, Disturbance * goal){
 
 
 
-cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
+cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Disturbance * d){
     std::vector <cv::Point2f> vertices;
-    if (t->disturbance.getAffIndex()==NONE){
+    if (d->getAffIndex()==NONE){
         return cv::Rect2f(0, 0, 0, 0);
     }
     cv::Point2f bl; //bottom left (documentation CV says top left but not true)
-    float max_dimension=std::max(t->disturbance.bf.width(), t->disturbance.bf.length());
+    float max_dimension=std::max(d->bf.width(), d->bf.length());
     max_dimension+=0.02;    
-    bl.x=t->disturbance.pose().p.x-(max_dimension/2);
-    bl.y=t->disturbance.pose().p.y-(max_dimension/2);
+    bl.x=d->pose().p.x-(max_dimension/2);
+    bl.y=d->pose().p.y-(max_dimension/2);
     cv::Rect2f focus(bl.x, bl.y, max_dimension, max_dimension);
     return focus; //upright bounding rectangle: increases area represented
 }

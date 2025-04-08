@@ -126,7 +126,7 @@ class WorldBuilder{
         Disturbance tracked_disturbance;
         public:
         //returns a rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
-        cv::Rect2f real_world_focus(const Task * );
+        cv::Rect2f real_world_focus(const Disturbance * );
 
         //calculates 2d affine transformation of input task's disturbance from t-1 to t
         /*
