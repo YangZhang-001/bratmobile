@@ -138,8 +138,8 @@ std::vector <vertexDescriptor> planner(TransitionSystem&, vertexDescriptor, vert
 
 EndedResult estimateCost(State&, b2Transform, Direction); //returns whether the controlGoal has ended and fills node with cost and error
 
-//calculates cumulative cost phi
-float evaluationFunction(EndedResult);
+//calculates cumulative cost phi, add discount factor if in plan
+float evaluationFunction(EndedResult, const vertexDescriptor &v, std::vector<vertexDescriptor>& p);
 
 void start(); //data interface class collecting position of bodies
 

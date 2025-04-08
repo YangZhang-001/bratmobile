@@ -255,7 +255,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 					gt::adjustProbability(g, edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
 				}
 				applyTransitionMatrix(g, v1, t.direction, er.ended, v0, plan_prov);
-				g[v1].phi=evaluationFunction(er);
+				g[v1].phi=evaluationFunction(er, v1, plan_prov);
 				propagateD(v1, v0, g,&propagated, &closed); //og v1 v0
 				v0_exp=v0;
 				options=g[v0_exp].options;
@@ -343,7 +343,7 @@ std::vector <vertexDescriptor> Configurator::splitTask( vertexDescriptor v, Tran
 }
 
 
-void Configurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, const std::set<vertexDescriptor>& closed, TransitionSystem&g, std::vector <vertexDescriptor>& plan){
+void Configurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, const std::set<vertexDescriptor>& closed, TransitionSystem&g, std::vector <vertexDescriptor>& plan_prov){
 	for (vertexDescriptor v:evaluation_q){
 		std::pair<bool, edgeDescriptor> ep(false, edgeDescriptor());
 		std::vector <vertexDescriptor> split = gt::task_vertices(v, g, iteration, currentVertex, &ep); 
@@ -363,8 +363,8 @@ void Configurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::
 				src=split[i-1];
 			}
 			EndedResult local_er=estimateCost(g[split_v],g[split_v].start, direction);
-			g[split_v].phi=evaluationFunction(local_er);
-			applyTransitionMatrix(g, split_v, direction, local_er.ended,src, plan);
+			g[split_v].phi=evaluationFunction(local_er, split_v, plan_prov);
+			applyTransitionMatrix(g, split_v, direction, local_er.ended,src, plan_prov);
 			addToPriorityQueue(split_v, priority_q, g, closed);
 			src=split_v;
 		}
@@ -458,8 +458,12 @@ EndedResult Configurator::estimateCost(State &state, b2Transform start, Directio
 }
 
 
-float Configurator::evaluationFunction(EndedResult er){ 
-	return (abs(er.estimatedCost)+abs(er.cost))/2; //normalised to 1
+float Configurator::evaluationFunction(EndedResult er,  const vertexDescriptor& v, std::vector<vertexDescriptor>& p){ 
+	float result=(abs(er.estimatedCost)+abs(er.cost))/2;
+	if (auto it=check_vector_for(p, v); it!=p.end()){
+		result-=0.1;
+	}
+	return result; //normalised to 1
 }
 
 
@@ -772,7 +776,7 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 				if ((g[(*ei3).m_target].visited() || been)&& not_self_edge(*ei3)){ //(*ei3).m_source!=(*ei3).m_target
 					if (!g[(*ei3).m_target].visited()){
 						EndedResult er = estimateCost(g[(*ei3).m_target], g[(*ei3).m_source].endPose, g[(*ei3).m_target].direction);
-						g[(*ei3).m_target].phi=evaluationFunction(er);
+						g[(*ei3).m_target].phi=evaluationFunction(er, (*ei3).m_target, plan);
 					}
 					if (g[(*ei3).m_target].direction==d){
 						Frontier f;
