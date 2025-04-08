@@ -419,7 +419,7 @@ std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, verte
 		frontier_v=frontierVertices(src, g, DEFAULT, been); // get next default tasks (plus non-default connecting tasks)
 		priorityQueue.erase(priorityQueue.begin());
 		for (Frontier f: frontier_v){ //add to priority queue
-			planPriority(g, f.first);
+			//planPriority(g, f.first);
 			addToPriorityQueue(f, priorityQueue, g);
 		}
 		if (!priorityQueue.empty()){
