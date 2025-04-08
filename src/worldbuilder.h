@@ -123,10 +123,10 @@ class WorldBuilder{
 
 
     class Bridger{
-        Disturbance tracked_disturbance;
+        Disturbance tracked_disturbance; //reference of disturbance to be tracked, kept in memory when task is changed
         public:
         //returns a rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
-        cv::Rect2f real_world_focus(const Disturbance * );
+        cv::Rect2f real_world_focus(const Task * );
 
         //calculates 2d affine transformation of input task's disturbance from t-1 to t
         /*
@@ -134,7 +134,7 @@ class WorldBuilder{
         /param pts point cloud
         /param observed_disturbance body features of the observed disturbance
         */
-        b2Transform get_transform(const Task &, const CoordinateContainer &, BodyFeatures * observed_disturbance=NULL); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
+        b2Transform get_transform(const Task &, const CoordinateContainer &, Disturbance * observed_disturbance); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
 
         /*
         *given points, makes minimum bounding rotated box around them
@@ -145,6 +145,10 @@ class WorldBuilder{
 
         Disturbance * get_tracked_disturbance(){
             return &tracked_disturbance;
+        }
+
+        void set_tracked_disturbance(const Disturbance & d){
+            tracked_disturbance=d;
         }
 
         

@@ -346,7 +346,7 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		}
 	}
 	else if (dist_obs->getAffIndex()==PURSUE && direction==DEFAULT){
-		b2Transform fromDi=from_Di(&b2Transform_zero, dist_obs);
+		b2Transform fromDi=from_Di(&b2Transform_zero);
 		Angle a(fromDi.q.GetAngle());
 		Distance d(fromDi.p.Length());
 		//result=d.get()<endCriteria.distance.get();
@@ -354,7 +354,7 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 	}
 	else if (dist_obs->getAffIndex()==AVOID || action.getOmega()!=0){
 		if (box.m_radius==0 || action.getOmega()!=0){ //means that there is no goal 
-			b2Transform fromDi=from_Di(&b2Transform_zero, dist_obs);
+			b2Transform fromDi=from_Di(&b2Transform_zero);
 			Angle a(fabs(fromDi.q.GetAngle()));
 			float _distance=std::max(fromDi.p.Length(), start.p.Length());
 			Distance d(fabs(_distance));
@@ -362,7 +362,7 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 			result=endCriteria_met(a, d);
 		}
 		else{
-			result=!overlaps(box, dist_obs, robot_pose);
+			result=!overlaps(box, &disturbance, robot_pose);
 		}
 	}
 	return result;

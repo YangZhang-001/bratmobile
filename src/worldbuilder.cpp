@@ -356,27 +356,29 @@ b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, Disturbance * goal){
 
 
 
-cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Disturbance * d){
+cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
     std::vector <cv::Point2f> vertices;
-    if (d->getAffIndex()==NONE){
+    if (t->disturbance.getAffIndex()==NONE){
         return cv::Rect2f(0, 0, 0, 0);
     }
     cv::Point2f bl; //bottom left (documentation CV says top left but not true)
-    float max_dimension=std::max(d->bf.width(), d->bf.length());
+    float max_dimension=std::max(t->disturbance.bf.width(), t->disturbance.bf.length());
     max_dimension+=0.02;    
-    bl.x=d->pose().p.x-(max_dimension/2);
-    bl.y=d->pose().p.y-(max_dimension/2);
+    bl.x=t->disturbance.pose().p.x-(max_dimension/2);
+    bl.y=t->disturbance.pose().p.y-(max_dimension/2);
     cv::Rect2f focus(bl.x, bl.y, max_dimension, max_dimension);
     return focus; //upright bounding rectangle: increases area represented
 }
 
 
-b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, BodyFeatures * observed_disturbance){
-   if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005){
-        tracked_disturbance=Disturbance();
+b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, Disturbance * observed_disturbance){
+    if (observed_disturbance==NULL){
+        throw std::invalid_argument("disturbance pointer cannot be null!");
+    }
+    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
-    cv::Rect2f focus=real_world_focus(&tracked_disturbance);
+    cv::Rect2f focus=real_world_focus(&t);
     std::vector <cv::Point2f> focus_points;
     cv::Point2f tr=focus.br();
     for (auto p: pts){
@@ -386,14 +388,14 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         }
     }
     std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
-    tracked_disturbance=Disturbance(new_d.second);
+
     if (!new_d.first){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     b2Transform mulT=b2MulT(t.disturbance.pose(), new_d.second.pose);
 //what to do when different dimensions??
-    if (observed_disturbance!=NULL && new_d.first){
-        *observed_disturbance=new_d.second;
+    if (new_d.first){
+        observed_disturbance->bf=new_d.second;
     }
     if (new_d.second.match(t.disturbance.bf)){
         new_d.second.halfWidth=t.disturbance.bf.halfWidth;

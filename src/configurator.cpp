@@ -1020,8 +1020,7 @@ vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task
 }
 
 void Configurator::track_task_execution(){
-	BodyFeatures bf;
-	b2Transform deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &bf); //track using obstacle OR dead reckoning
+	b2Transform deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance); //track using obstacle OR dead reckoning
 	currentTask.endCriteria.adjust(deltaPose); //adjusting in task so system can be memoryless
 	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
 	bool ended=false;
@@ -1067,6 +1066,7 @@ void Configurator::change_task(){
 		currentTask.motorStep = motor_step(currentTask.getAction());
 		printf("changed to %f\n", currentTask.action.getOmega());
 	}
+	worldBuilder.wb_bridger.set_tracked_disturbance(currentTask.disturbance);
 	control->getData(currentTask.action);
 	return;
 }
