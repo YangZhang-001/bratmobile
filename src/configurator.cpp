@@ -249,6 +249,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 					//auto d_print=dirmap.find(t.direction);
 					//printf("added v %i to %i, direction %s", v1, v0, (*d_print).second);
 					shift=b2Transform_zero;
+					plan_prov.clear();
 				}
 				if(edge.second){
 					gt::set(edge.first, sk, g, v1==currentVertex, iteration);
@@ -545,6 +546,7 @@ void Configurator::run(Configurator * c){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
+			printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 			c->track_task_execution();
 		}
 		if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
@@ -656,7 +658,7 @@ void Configurator::applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0
 	else if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
 		auto e=boost::edge(src, v0, g);
 		if (!e.second){
-			printf("no edge wtf\n");
+			printf("no edge wtf, %i -> %i\n", src, v0);
 		}
 		gt::to_task_end(e.first, g, full_plan, it);
 		if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
@@ -865,15 +867,9 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 		//}
 		
 		if (v!=movingVertex && boost::in_degree(v, g)>0 &&Tmatch ){ 
-			//sum=sum_tmp;
-			// if (NULL!=others){
-			//  	others_set.emplace(std::pair< vertexDescriptor, float>(v, sum));
-			//  }
-//			if (!relax){
 			if (condition){
 				result.first= m;
 				result.second=v;
-				//break;
 			}
 			if (sum_tmp<sum){
 				sum=sum_tmp;
@@ -1056,8 +1052,8 @@ void Configurator::change_task(){
 		int i=to_task_end();
 		current_vertices=std::vector(plan.begin(), plan.begin()+i);
 		printPlan(&plan);
-		currentTask = task_to_execute(plan, transitionSystem, i);	
 		printf("change task=%i, task step=%i\n", currentTask.change, currentTask.motorStep);
+		currentTask = task_to_execute(plan, transitionSystem, i);	
 		plan.erase(plan.begin(), plan.begin()+i);
 		//set end criteria to adjust error??
 		task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));

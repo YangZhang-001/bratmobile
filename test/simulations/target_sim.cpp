@@ -51,7 +51,6 @@ int main(int argc, char** argv) {
         dataInterface.folder = argv[1];
     }
     StepCallback cb(&m);
-
     if (RT){
         TimerDI lidar(dataInterface);
         TimerStep motors(cb);

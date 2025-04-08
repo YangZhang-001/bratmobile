@@ -431,17 +431,17 @@ class StateMatcher{
 				else if (Dn_exact()){
 					return D_NEW;
 				}
+				else if (Di_exact()){
+					return D_INIT;
+				}				
 				else if (Dn_pose()){
 					return DN_POSE;
 				}
-				else if (shape_Dn()){
-					return DN_SHAPE;
-				}
-				else if (Di_exact()){
-					return D_INIT;
-				}
 				else if (Di_pose()){
 					return DI_POSE;
+				}				
+				else if (shape_Dn()){
+					return DN_SHAPE;
 				}
 				else if (shape_Di()){
 					return DI_SHAPE;
