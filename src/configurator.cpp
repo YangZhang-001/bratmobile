@@ -249,7 +249,6 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 					//auto d_print=dirmap.find(t.direction);
 					//printf("added v %i to %i, direction %s", v1, v0, (*d_print).second);
 					shift=b2Transform_zero;
-					plan_prov.clear();
 				}
 				if(edge.second){
 					gt::set(edge.first, sk, g, v1==currentVertex, iteration);
