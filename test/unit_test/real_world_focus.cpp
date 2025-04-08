@@ -12,7 +12,7 @@ int main(int argc, char** argv){
     dist.set_affordance(AffordanceIndex(atoi(argv[4])));
     WorldBuilder::Bridger bridge;
     Task task(dist, Direction(atoi(argv[5])), b2Transform_zero, true);
-    cv::Rect2f focus=bridge.real_world_focus(&task.disturbance);
+    cv::Rect2f focus=bridge.real_world_focus(&task);
     if (dist.getAffIndex()!=NONE){
         std::vector <cv::Point2f> d_vertices=dist.bf.vertices_cv();
         cv::Point2f center, br=focus.br();
