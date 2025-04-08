@@ -123,6 +123,7 @@ class WorldBuilder{
 
 
     class Bridger{
+        Disturbance tracked_disturbance;
         public:
         //returns a rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
         cv::Rect2f real_world_focus(const Task * );
@@ -142,6 +143,11 @@ class WorldBuilder{
 
         //void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);                
 
+        Disturbance * get_tracked_disturbance(){
+            return &tracked_disturbance;
+        }
+
+        
     }wb_bridger;
 
 };

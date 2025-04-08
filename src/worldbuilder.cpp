@@ -373,9 +373,10 @@ cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
 
 b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, BodyFeatures * observed_disturbance){
    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005){
+        tracked_disturbance=Disturbance();
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
-    cv::Rect2f focus=real_world_focus(&t);
+    cv::Rect2f focus=real_world_focus(&tracked_disturbance);
     std::vector <cv::Point2f> focus_points;
     cv::Point2f tr=focus.br();
     for (auto p: pts){
@@ -385,7 +386,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         }
     }
     std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
- 
+    tracked_disturbance=Disturbance(new_d.second);
     if (!new_d.first){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
@@ -398,9 +399,6 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         new_d.second.halfWidth=t.disturbance.bf.halfWidth;
         new_d.second.halfLength=t.disturbance.bf.halfLength;
     }
-
-   // cv::Mat aff_transform=cv::estimateAffinePartial2D( new_d.second.vertices_cv(), t.disturbance.bf.vertices_cv(),cv::noArray(), cv::LMEDS);
-    //return math::transform_2d(aff_transform);
     return mulT;
     //what's the most likely angle??
 }

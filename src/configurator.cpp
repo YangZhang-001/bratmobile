@@ -1024,9 +1024,9 @@ void Configurator::track_task_execution(){
 	b2Transform deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &bf); //track using obstacle OR dead reckoning
 	currentTask.endCriteria.adjust(deltaPose); //adjusting in task so system can be memoryless
 	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
-	Disturbance dist(bf);
 	bool ended=false;
-	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, &dist); //the sensor moves with the robot
+	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
+	
 	if(currentTask.motorStep==0 || ended){
 		currentTask.change=1;
 	}
@@ -1117,11 +1117,11 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 
 
 int Configurator::to_task_end(){
-	int i=-1;
+	int i=0;
 	Direction d=transitionSystem[plan[i]].direction;
 	while(i<plan.size() &&transitionSystem[plan[i]].direction==d){
 		i++;
 	}
-	return i;
+	return i-1;
 	
 }
