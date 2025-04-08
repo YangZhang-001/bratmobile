@@ -1117,10 +1117,9 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 
 
 int Configurator::to_task_end(){
-	int i=0;
+	int i=-1;
 	Direction d=transitionSystem[plan[i]].direction;
-	while(i<plan.size() &&transitionSystem[plan[i]].direction==d ||transitionSystem[plan[i]].direction==STOP){
-		
+	while(i<plan.size() &&transitionSystem[plan[i]].direction==d){
 		i++;
 	}
 	return i;
