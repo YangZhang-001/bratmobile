@@ -46,26 +46,26 @@ class ReducedCallback :public AlphaBot::StepCallback { //every 100ms the callbac
 	float R=0;
 public:
 int ogStep=0;
-Motor_IO * mio;
+Motor_Out * mio;
 int run=0;
 
-ReducedCallback(Motor_IO *_mio): mio(_mio){
+ReducedCallback(Motor_Out *_mio): mio(_mio){
 }
 void step( AlphaBot &motors){
-	if (mio->iteration <=0){
-		return;
-	}
+	// if (mio->iteration <=0){
+	// 	return;
+	// }
 	if (!mio->running){
 		motors.setRightWheelSpeed(0);
  	    motors.setLeftWheelSpeed(0);		
 	}
-	mio->setReady(false);
-	mio->track_task_execution();
-	mio->change_task(mio->task.change,  mio->plan);
-	printf("changed\n");
-	R= mio->task.getAction().getRWheelSpeed();
-	L=mio->task.getAction().getLWheelSpeed(); //*1.05
-	mio->setReady(true);
+	// mio->setReady(false);
+	// mio->track_task_execution();
+	// mio->change_task(mio->task.change,  mio->plan);
+	// printf("changed\n");
+	// R= mio->task.getAction().getRWheelSpeed();
+	// L=mio->task.getAction().getLWheelSpeed(); //*1.05
+	// mio->setReady(true);
     motors.setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
     motors.setLeftWheelSpeed(L);
 	printf(",R=%f\tL=%f\n",mio->task.getAction().getRWheelSpeed(), mio->task.getAction().getLWheelSpeed());
@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
 	AlphaBot motors;
     Task controlGoal;
 	LIDAR_In configuratorInterface;
-	Motor_IO controlInterface;
+	Motor_Out controlInterface;
     Configurator configurator(controlGoal);
 	if (argc>2){
 		configurator.debugOn= atoi(argv[2]);

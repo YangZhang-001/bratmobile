@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 	AlphaBot motors;
     Task controlGoal;
 	LIDAR_In configuratorInterface;
-	Motor_IO controlInterface;
+	Motor_OUt controlInterface;
     Configurator configurator(controlGoal);
 	char name[60];
 	dump_benchmarks( "rt-update-targetless", "/tmp");

@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
-	Motor_IO controlInterface;
+	Motor_Out controlInterface;
     Configurator configurator(controlGoal);
 	dump_benchmarks( "rt-update", "/tmp");
 	if (argc>1){
