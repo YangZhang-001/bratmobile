@@ -134,7 +134,9 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	robot.body->SetTransform(t.start.p, t.start.q.GetAngle());
 	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body, &controlGoal.disturbance);
 	result =t.bumping_that(w, iteration, robot.body, remaining); //default start from 0
+	printf("before cleanup\n");
 	worldBuilder.world_cleanup(&w);
+	printf("after cleanup\n");
 	//approximate angle to avoid stupid rounding errors
 	float approximated_angle=approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode);
 	result.endPose.q.Set(approximated_angle);
@@ -542,6 +544,7 @@ void Configurator::run(Configurator * c){
 			return;
 		}
 		if (c->ci->isReady()){
+			printf("ci ready\n");
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
@@ -549,8 +552,12 @@ void Configurator::run(Configurator * c){
 			c->track_task_execution();
 		}
 		if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
+			printf("change goal");
 			c->goal_changer->change_goal(&c->controlGoal);
-		}		
+		}	
+		if (!PLANNING){
+			printf("no planning!");
+		}	
 		c->change_task();
 
 	}
@@ -1020,6 +1027,7 @@ vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task
 }
 
 void Configurator::track_task_execution(){
+	printf("task L=%f, R=%f\n", currentTask.action.L, currentTask.action.R);
 	b2Transform deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance); //track using obstacle OR dead reckoning
 	currentTask.endCriteria.adjust(deltaPose); //adjusting in task so system can be memoryless
 	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
@@ -1037,9 +1045,10 @@ void Configurator::change_task(){
 		//printf("not changing\n");
 		return;
 	}
+//	printf("change task planning =%i\n", PLANNING);
 	if (PLANNING){
 		if (plan.empty()){
-			printf("I DON'T KNOW WHAT TO DO NOW\n");
+			//printf("I DON'T KNOW WHAT TO DO NOW\n");
 			currentTask=Task(controlGoal.disturbance, UNDEFINED);
 			currentTask.action.L=0;
 			currentTask.action.R=0;

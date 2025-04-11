@@ -8,7 +8,7 @@ void Configurator::explore_plan(b2World&world){
     vertexDescriptor src=get_explore_start(transitionSystem);
     resetPhi(transitionSystem);
     plan=explorer(src, transitionSystem, world);
-    if (debugOn){
+    if (DEBUG){
         std::vector<vertexDescriptor> _plan=(plan);
         debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
     }		
@@ -60,8 +60,7 @@ int main(int argc, char** argv) {
     Configurator configurator(controlGoal);
 	dump_benchmarks( "rt-update", "/tmp");
 	if (argc>1){
-		configurator.debugOn= atoi(argv[1]);
-		configuratorInterface.debugOn = atoi(argv[1]);
+		#define DEBUG atoi(argv[1])
 	}
 	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
@@ -69,11 +68,12 @@ int main(int argc, char** argv) {
 	MotorCallback cb(&controlInterface);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);
+	printf("all registered\n");
 	configurator.start();
 	lidar.start();
-	//motors.start();
+	motors.start();
 	getchar();
-	//motors.stop();
+	motors.stop();
 	configurator.stop();
 	lidar.stop();
 }

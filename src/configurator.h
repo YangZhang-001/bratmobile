@@ -141,9 +141,11 @@ EndedResult estimateCost(State&, b2Transform, Direction); //returns whether the 
 //calculates cumulative cost phi, add discount factor if in plan
 float evaluationFunction(EndedResult, const vertexDescriptor &v, std::vector<vertexDescriptor>& p);
 
-void start(); //data interface class collecting position of bodies
+//starts thread
+void start(); 
 
-void stop();
+//stops thread
+void stop(); 
 
 void registerInterface(LIDAR_In *, Motor_Out *);
 

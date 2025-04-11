@@ -307,9 +307,9 @@ b2Vec2 averagePoint(const CoordinateContainer & c, Disturbance & d, float rad = 
 }
 
 void WorldBuilder::world_cleanup(b2World * world){
-    int ct=world->GetBodyCount();
-	for (b2Body * b = world->GetBodyList(); b; b = b->GetNext()){
-		world->DestroyBody(b);
+    //int ct=world->GetBodyCount();
+	for (b2Body * b = world->GetBodyList(); b!=NULL; b = b->GetNext()){
+        world->DestroyBody(b);
 	}
 }
 
@@ -375,7 +375,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     if (observed_disturbance==NULL){
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
-    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005){
+    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005 || (t.action.L==0 && t.action.R==0)){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     cv::Rect2f focus=real_world_focus(&t);

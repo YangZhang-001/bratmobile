@@ -93,65 +93,61 @@ class MotorCallback :public AlphaBot::StepCallback { //every 100ms the callback 
 	float R=0;
 public:
 int ogStep=0;
-Motor_IO * mio;
+Motor_Out * mio;
 int run=0;
 
-MotorCallback(Motor_IO *_mio): mio(_mio){
+MotorCallback(Motor_Out *_mio): mio(_mio){
 }
 void step( AlphaBot &motors){
-	if (mio->iteration <=0){
-		printf("r");
-		return;
-	}
 	if (mio==NULL){
 		printf("mio null\n");
 	}
-	if (!mio->isReady()){
-		printf("not ready");
-		return;
-	}
-	mio->setReady(false);
-	printf("n");
-	if (!mio->running){
-		printf("not running\n");
-		motors.setRightWheelSpeed(0);
- 	    motors.setLeftWheelSpeed(0);		
-	}
-	printf("pre=set ready\n");
-	printf("post-set ready\n");
-	mio->track_task_execution();
-	printf("tracked");
-	EndedResult er = mio->goal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
-	if (er.ended && mio->task.change){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
-		run++;
-		Disturbance new_goal=set_target(run, mio->goal.start);
-		mio->goal = Task(new_goal, UNDEFINED);
-		if (BENCHMARKING){
-			FILE * f = fopen(statFile, "a+");
-			fprintf(f, "!");
-			fclose(f);			
-		}
-	}
-	mio->change_task(mio->task.change,  mio->plan);
-	printf("changed\n");
-	R= mio->task.getAction().getRWheelSpeed();
-	L=mio->task.getAction().getLWheelSpeed(); //*1.05
-	if (mio->task.direction==LEFT){
-		R*=1.37; //23
-		L*=1.37;
-	}
-	else if (mio->task.direction==RIGHT){
-		R*=1.07; //17
-		L*=1.07;
-	}
-	else if (mio->task.direction==DEFAULT){
-		R*=1.15*1.1;
-		L*=1.15;
-	}
-	mio->setReady(true);
-    motors.setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
-    motors.setLeftWheelSpeed(L);
-	printf(",R=%f\tL=%f\n",mio->task.getAction().getRWheelSpeed(), mio->task.getAction().getLWheelSpeed());
+	// if (!mio->isReady()){
+	// 	printf("not ready");
+	// 	return;
+	// }
+	// mio->setReady(false);
+	// printf("n");
+	// if (!mio->running){
+	// 	printf("not running\n");
+	// 	motors.setRightWheelSpeed(0);
+ 	//     motors.setLeftWheelSpeed(0);		
+	// }
+	// printf("pre=set ready\n");
+	// printf("post-set ready\n");
+	// mio->track_task_execution();
+	// printf("tracked");
+	// EndedResult er = mio->goal.checkEnded(b2Transform(b2Vec2(0,0), b2Rot(0)), UNDEFINED, false);
+	// if (er.ended && mio->task.change){ //|| (er2.ended & c->getTask()->motorStep<1 & c->planVertices.empty())
+	// 	run++;
+	// 	Disturbance new_goal=set_target(run, mio->goal.start);
+	// 	mio->goal = Task(new_goal, UNDEFINED);
+	// 	if (BENCHMARKING){
+	// 		FILE * f = fopen(statFile, "a+");
+	// 		fprintf(f, "!");
+	// 		fclose(f);			
+	// 	}
+	// }
+	// mio->change_task(mio->task.change,  mio->plan);
+	// printf("changed\n");
+	// R= mio->task.getAction().getRWheelSpeed();
+	// L=mio->task.getAction().getLWheelSpeed(); //*1.05
+	// if (mio->task.direction==LEFT){
+	// 	R*=1.37; //23
+	// 	L*=1.37;
+	// }
+	// else if (mio->task.direction==RIGHT){
+	// 	R*=1.07; //17
+	// 	L*=1.07;
+	// }
+	// else if (mio->task.direction==DEFAULT){
+	// 	R*=1.15*1.1;
+	// 	L*=1.15;
+	// }
+	// mio->setReady(true);
+    motors.setRightWheelSpeed(mio->get_R()); //temporary fix because motors on despacito are the wrong way around
+    motors.setLeftWheelSpeed(mio->get_L());
+	printf(",R=%f\tL=%f\n",mio->get_R(), mio->get_L());
 }
 };
 
