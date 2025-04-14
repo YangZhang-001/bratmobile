@@ -256,6 +256,8 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
     }
    // std::vector <BodyFeatures> features =getFeatures(current, start, d, boxLength, halfWindowWidth, clustering);
     b2PolygonShape filter_box=object_filtering_box(halfWindowWidth, boxLength,start, d);
+    b2AABB aabb;
+    filter_box.ComputeAABB(&aabb,start, 0);
     for (BodyFeatures f: world_objects){
         b2PolygonShape feature_shape;
         feature_shape.SetAsBox(f.halfWidth, f.halfLength);

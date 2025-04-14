@@ -86,23 +86,25 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 			if (!overlap){
 				disturbance.invalidate();
 			}
-			EndedResult er=checkEnded(robot->GetTransform(), direction, false, robot);
+			bool ended=checkEnded(robot->GetTransform(), direction, false, robot).ended;
+			std::pair <Angle, Distance> measurements=get_measurement(from_Di(&robot->GetTransform()));
+			float stim_intensity=endCriteria.getStandardError(measurements.first, measurements.second);			
 			theta += action.getOmega()/HZ; //= omega *t, setting up for next iteration
-			if (er.ended || out){ //out
+			if (ended || out){ //out
 				bool keep_going_out_x=(fabs(robot->GetTransform().p.x+instVelocity.x) >fabs(robot->GetTransform().p.x))&&out_x;
 				bool keep_going_out_y=(fabs(robot->GetTransform().p.y+instVelocity.y) >fabs(robot->GetTransform().p.y))&&out_y;
-				if (er.ended){
-					er.cost=0; //cost 0= robot is going straight!
-			        action.init(direction, er.cost);		
+				if (ended){
+					stim_intensity=0; //cost 0= robot is going straight!
+			        action.init(direction, stim_intensity);		
 					break;
 				}
 				if (keep_going_out_x || keep_going_out_y){
-					er.cost=0;
-					action.init(direction, er.cost);		
+					stim_intensity=0;
+					action.init(direction, stim_intensity);		
 					break;
 				}
 			}
-			action.init(direction, er.cost);		
+			action.init(direction, stim_intensity);		
 			_world.Step(1.0f/HZ, 3, 8); //time step 100 ms which also is alphabot callback time, possibly put it higher in the future if fast
 			
 			if (listener.collisions.size()>0){ //
