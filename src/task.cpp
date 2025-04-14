@@ -19,23 +19,6 @@ b2Body * GetDisturbance(b2World * w){
 }
 
 
-// bool overlaps(b2Body * robot, b2Body * disturbance){
-// 	b2Fixture * sensor=GetSensor(robot);
-// 	if (sensor==NULL){
-// 		return true;
-// 	}
-// 	if (disturbance==NULL){
-// 		return true;
-// 	}
-// 	b2AABB aabb=sensor->GetAABB(0);
-// 	b2Shape * d=disturbance->GetFixtureList()->GetShape();
-// 	b2Transform robot_pose=robot->GetTransform(), d_pose= disturbance->GetTransform();
-// 	//b2AABB aabb_shape, aabb_zero;
-// 	//sensor->GetShape()->ComputeAABB(&aabb_shape, robot_pose,0);
-// 	//sensor->GetShape()->ComputeAABB(&aabb_shape, b2Transform_zero,0);
-// 	return b2TestOverlap(sensor->GetShape(), 0, d, 0,robot_pose, d_pose);
-// }
-
 bool overlaps(b2Body * robot, Disturbance * disturbance){
 	b2Fixture * sensor=GetSensor(robot);
 	if (sensor==NULL){
@@ -65,6 +48,7 @@ bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& rob
 	return b2TestOverlap(&box, 0, &d_shape, 0,robot_pose, d->bf.pose);
 
 }
+
 
 
 simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, float remaining){ //CLOSED LOOP CONTROL, og return simreult
@@ -102,18 +86,25 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 			if (!overlap){
 				disturbance.invalidate();
 			}
-			if (bool ended=checkEnded(robot->GetTransform(), direction, false, robot).ended; ended || out){ //out
+			EndedResult er=checkEnded(robot->GetTransform(), direction, false, robot);
+			theta += action.getOmega()/HZ; //= omega *t, setting up for next iteration
+			if (er.ended || out){ //out
 				bool keep_going_out_x=(fabs(robot->GetTransform().p.x+instVelocity.x) >fabs(robot->GetTransform().p.x))&&out_x;
 				bool keep_going_out_y=(fabs(robot->GetTransform().p.y+instVelocity.y) >fabs(robot->GetTransform().p.y))&&out_y;
-				if (ended){
+				if (er.ended){
+					er.cost=0; //cost 0= robot is going straight!
+			        action.init(direction, er.cost);		
 					break;
 				}
 				if (keep_going_out_x || keep_going_out_y){
+					er.cost=0;
+					action.init(direction, er.cost);		
 					break;
 				}
 			}
+			action.init(direction, er.cost);		
 			_world.Step(1.0f/HZ, 3, 8); //time step 100 ms which also is alphabot callback time, possibly put it higher in the future if fast
-			theta += action.getOmega()/HZ; //= omega *t
+			
 			if (listener.collisions.size()>0){ //
 				int index = int(listener.collisions.size()/2);
 				Disturbance collision = Disturbance(listener.collisions[index]);
@@ -130,59 +121,6 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 	
 }
 
-
-// void Task::Correct::operator()(Action & action, int step){
-// 	float tolerance = 0.1; //tolerance in radians/pi = just under 2 degrees degrees
-// 	if (action.getOmega()!=0){ //only check every 2 sec, og || motorstep<1
-// 		//printf("returning\n");
-// 		return;
-// 	}
-// 	//printf("error buffer sum = %f, i=%f\n", p(), get_i());
-// 	if (fabs(get_i())>tolerance){//& step>correction_rate
-// 		float p_correction= ((p()/bufferSize)*kp)/2; //do not increase one wheel speed too much
-// 		float i_correction= (get_i()*ki)/2; //do not increase one wheel speed too much
-// 		float d_correction= (get_d()*kd)/2; //do not increase one wheel speed too much
-// 			action.R -= p_correction+ i_correction; 
-// 		 	action.L+= p_correction+ i_correction;
-// 		if (action.L>1.0){
-// 		action.L=1.0;
-// 		}
-// 		if (action.R>1.0){
-// 			action.R=1;
-// 		}
-// 		if (action.L<(-1.0)){
-// 			action.L=-1;
-// 		}
-// 		if (action.R<(-1.0)){
-// 			action.R=-1;
-// 		}
-	
-// 	}
-// }
-
-// float Task::Correct::errorCalc(Action a, double x){
-// 	float result=0;
-// 	if (a.getOmega()!=0){
-// 		return result;
-// 	}
-// 	else{
-// 		return sin(a.getOmega())*MOTOR_CALLBACK-float(x); //-ve error if robot goes R, +ve error if goes L
-// 	}	
-
-// }
-
-
-// float Task::Correct::update(float e){
-// 	float p0=p();
-// 	p_buffer.erase(p_buffer.begin());
-// 	p_buffer.push_back(e);
-// 	float p1=p();
-// 	mf.buffer.erase(mf.buffer.begin());
-// 	mf.buffer.push_back(p1);
-// 	d=p1-p0;
-// 	i+=e;
-// 	return p1;
-// }
 
 
 Direction Task::H(Disturbance ob, Direction d, bool topDown){

@@ -42,19 +42,20 @@ public:
 
     Action()=default;
 
-    void init(Direction& direction){
+    void init(Direction& direction, float stim_intensity=0){
+        stim_intensity=std::round(stim_intensity*100)/100;
         switch (direction){
         case Direction::DEFAULT:
         L=WHEEL_SPEED_DEFAULT;
         R=WHEEL_SPEED_DEFAULT;
         break;
         case Direction::LEFT:
-        L=-WHEEL_SPEED_TURN;
-        R=WHEEL_SPEED_TURN;
+        L=WHEEL_SPEED_DEFAULT-1*stim_intensity;
+        R=WHEEL_SPEED_DEFAULT+1*stim_intensity;
         break;
         case Direction::RIGHT:
-        L=WHEEL_SPEED_TURN;//0.2537;
-        R=-WHEEL_SPEED_TURN;
+        L=WHEEL_SPEED_DEFAULT+1*stim_intensity;
+        R=WHEEL_SPEED_DEFAULT-1*stim_intensity;
         break;
         default:
         direction=DEFAULT;
@@ -67,9 +68,7 @@ public:
 
 void setVelocities(const float & l,const float &r){
     omega = (MAX_SPEED*(r-l)/BETWEEN_WHEELS); //instant velocity, determines angle increment in willcollide
-   // recordedOmega = omega;
     linearSpeed = MAX_SPEED*(l+r)/2;
-    //recordedSpeed=linearSpeed;
     valid=1;
 }
 
@@ -118,26 +117,10 @@ void setVelocities(const float & l,const float &r){
         linearSpeed =s;
     }
 
-    // void setRecSpeed(const float &s){
-    //     recordedSpeed =s;
-    // }
-
-    // void setRecOmega(const float &w){
-    //     recordedOmega=w;
-    // }
-
-    // float getRecSpeed(){
-    //     return recordedSpeed;
-    // }
-
-    // float getRecOmega(){
-    //     return recordedOmega;
-    // }
-    // //friend class Configurator;
-    // void setRec(const float& _speed, const float & _omega){
-    //     recordedSpeed=_speed;
-    //     recordedOmega=_omega;
-    // }
+    /*
+    Expresses the relative position of disturbance as a float which is related to the error signal to it associated.Action
+    This is used to tune wheel speed.
+    */
 
 };
 
@@ -186,96 +169,6 @@ class Listener : public b2ContactListener {
         
 	};
 	
-    // class Query : public b2QueryCallback {
-	// 	Disturbance * d_ptr=NULL;
-    //     public:
-    //         Query(Disturbance * _d_ptr):d_ptr(_d_ptr){}
-    //         std::vector<b2Body*> d;
-            
-    //         bool ReportFixture(b2Fixture* fixture) {
-    //             if (fixture->GetBody()->GetUserData().pointer==DISTURBANCE_FLAG){
-    //                 if (d_ptr==NULL){
-    //                     return false;
-    //                 }
-    //                 d_ptr->invalidate();
-    //                 return true;//keep going to find all fixtures in the query area
-    //             }
-    //             return false;
-    //         }
-    // };
-
-
-// struct Correct{
-    
-//     Correct(){}
-
-//     void operator()( Action&, int);
-
-//     float errorCalc(Action , double);
-
-//     float getError(){
-//         return p();
-//     }
-
-//     float Ki(){
-//         return ki;
-//     }
-
-//     float Kp(){
-//         return kp;
-//     }
-//     float Kd(){
-//         return kd;
-//     }
-
-//     float get_i(){
-//         return i;
-//     }
-
-//     float get_d(){
-//         return d;
-//     }
-
-//     float update(float);
-
-//     void reset(){
-//         p_buffer=std::vector <float>(bufferSize,0);
-//         i=0;
-//         d=0;
-//         mf.buffer=std::vector<float>(mf.kernelSize,0);
-//     }
-
-//     float kp=0.075;    
-//     float kd=0, ki=0;
-//     private:
-
-
-//     float p(){
-//         float sum=0;
-//         for (int j=0;j<p_buffer.size(); j++){
-//             sum+=p_buffer[j];
-//         }
-//         return sum;
-//     }
-//     int correction_rate=2; //Hz
-//     int bufferSize= correction_rate*(FPS/MOTOR_CALLBACK);
-//     std::vector <float>p_buffer=std::vector <float>(bufferSize,0);
-//     float i=0, d=0;
-//     float tolerance_upper=0.01, tolerance_lower=-0.01;
-
-//     struct MedianFilter{
-//         int kernelSize=3;
-//         std::vector<float>buffer=std::vector<float>(kernelSize,0);
-
-//         float get_median(){
-//             std::vector <float> tmp=buffer;
-//             std::sort(tmp.begin(), tmp.end());
-//             return tmp[int(kernelSize/2)];
-//         }
-//     }mf;
-    
-
-// }correct;
 
 public:
 // friend Task::Correct;    
@@ -341,6 +234,11 @@ EndCriteria getEndCriteria(const Disturbance&);
 bool endCriteria_met(Angle &, Distance &);
 
 b2Transform from_Di( const b2Transform * custom_start=NULL, Disturbance * d_obs=NULL); //d_obs disturbance observed rather than D with which task was init
+
+std::pair <Angle, Distance> get_measurement(b2Transform t){
+    std::pair<Angle, Distance> result(Angle(t.q.GetAngle()), Distance(t.p.Length()));
+    return result;
+}
 
 };
 

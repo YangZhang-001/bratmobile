@@ -48,7 +48,9 @@ add_executable(rwf ../test_essentials.h real_world_focus.cpp)
 add_executable(wb_get_transform_sim ../test_essentials.h wb_get_transform_sim.cpp)
 add_executable(kalman ../test_essentials.h kalman.cpp)
 add_executable(filter_box ../test_essentials.h filter_box.cpp)
+add_executable(flexible_turns ../test_essentials.h flexible_turns.cpp)
 
+target_link_libraries(flexible_turns CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(filter_box CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(kalman CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(wb_get_transform_sim CloCK ${OpenCV_LIBS} box2d)
@@ -303,19 +305,12 @@ add_test(NAME rwf_none_r COMMAND rwf .45 .21 53 0 1)
 
 add_test(NAME wb_gt COMMAND wb_get_transform_sim ../target_68cm)
 
-#add_test(NAME filter_box_DEF1 COMMAND filter_box 0 0 0 2) #straight ahead, default direction
 add_test(NAME filter_box_LEFT1 COMMAND filter_box 0 0 0 0) #straight ahead, left direction
 add_test(NAME filter_box_RIGHT1 COMMAND filter_box 0 0 0 1) #straight ahead, right direction
-#add_test(NAME filter_box_DEF2 COMMAND filter_box 0 0 .75 2) #45 deg turn, default direction
-# add_test(NAME filter_box_DEF3 COMMAND filter_box 0 0 -1.26 2) #neg, not divisor of pi, default direction
-# add_test(NAME filter_box_DEF4 COMMAND filter_box 0 0 3.14 2) #pi turn, default direction
-# add_test(NAME filter_box_DEF5 COMMAND filter_box .35 0 2.57 2) #straight ahead, default direction
-# add_test(NAME filter_box_DEF6 COMMAND filter_box .35 .45 2.57 2) #straight ahead, default direction
-# add_test(NAME filter_box_DEF7 COMMAND filter_box .35 .45 -2.57 2) #straight ahead, default direction
-# add_test(NAME filter_box_DEF8 COMMAND filter_box -.35 .45 2.57 2) #straight ahead, default direction
-# add_test(NAME filter_box_DEF9 COMMAND filter_box .35 -.45 -2.57 2) #straight ahead, default direction
-# add_test(NAME filter_box_DEF10 COMMAND filter_box .35 -.45 2.57 2) #straight ahead, default direction
-# add_test(NAME filter_box_DEF11 COMMAND filter_box -.35 .45 -2.57 2) #straight ahead, default direction
+
+add_test(NAME flexible_turns_LEFT COMMAND flexible_turns 0 0.5 0 0 1) #left, avoid obstacle
+add_test(NAME flexible_turns_RIGHT COMMAND flexible_turns 1 0.5 0 0 1) #right, avoid obstacle
+add_test(NAME flexible_turns_DEF COMMAND flexible_turns 0 2.5 0 0 1) #crash
 
 set(CMAKE_BUILD_TYPE Debug)
 
