@@ -63,14 +63,27 @@ public:
         R=0;
         break;
     }
+    cap_velocity(L); //because in our robot the maximum speed wheel can be 1    
+    cap_velocity(R);
     setVelocities(L, R);
     }
 
-void setVelocities(const float & l,const float &r){
-    omega = (MAX_SPEED*(r-l)/BETWEEN_WHEELS); //instant velocity, determines angle increment in willcollide
-    linearSpeed = MAX_SPEED*(l+r)/2;
-    valid=1;
-}
+    void setVelocities(const float & l,const float &r){
+        omega = (MAX_SPEED*(r-l)/BETWEEN_WHEELS); //instant velocity, determines angle increment in willcollide
+        linearSpeed = MAX_SPEED*(l+r)/2;
+        valid=1;
+    }
+
+    void cap_velocity(float & wheel){
+        if (fabs(wheel)>1.0){
+            if (wheel>0){
+                wheel=1.0;
+            }
+            if (wheel<0){
+                wheel=-1.0;
+            }
+        }
+    }
 
     b2Vec2 getLinearVelocity(const float &dt=1)const{ //dt integrates
         b2Vec2 velocity;
@@ -221,9 +234,11 @@ Task(Disturbance ob, Direction d, b2Transform _start=b2Transform(b2Vec2(0.0, 0.0
     start = _start;
     disturbance = ob;
     affordance=disturbance.getAffIndex();
-    direction = H(disturbance, d, topDown);  
-    action.init(direction);
+    direction = H(disturbance, d, topDown);
     setEndCriteria();
+    std::pair <Angle, Distance> ad=get_measurement(from_Di());
+    float stim_intensity=endCriteria.getStandardError(ad.first, ad.second);
+    action.init(direction, stim_intensity);
 }
 
 

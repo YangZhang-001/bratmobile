@@ -58,6 +58,9 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 			printf("not simulating, exiting\n");
 			return result;
 		}
+		if (direction==LEFT || direction==RIGHT){
+
+		}
 		Listener listener(&disturbance);
 		int _count=_world.GetBodyCount();
 		_world.SetContactListener(&listener);	
@@ -173,7 +176,7 @@ void Task::setEndCriteria(const Angle& angle, const Distance &distance){
 	if (disturbance.isValid()){
 		endCriteria.valid_d=true;
 	}
-	if (!action.getOmega()){
+	if (direction==LEFT ||direction==RIGHT){
 		endCriteria.angle.setValid(false);
 	}
 	else{
