@@ -39,7 +39,7 @@ b2PolygonShape WorldBuilder::object_filtering_box(float halfWindowWidth, float b
     b2PolygonShape box;
     b2Vec2 centroid(0,0);
     if (d ==LEFT || d==RIGHT){
-        halfWindowWidth =ROBOT_HALFLENGTH -ROBOT_BOX_OFFSET_X; //og 16 cm
+        halfWindowWidth =(BOX2DRANGE/2) -ROBOT_BOX_OFFSET_X; //og 16 cm
         boxLength=halfWindowWidth*2;
     }
     else{
@@ -249,7 +249,7 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
         pointer_to_track=&points_to_track;
     }
     bool has_D=false;
-    if (disturbance.getAffIndex()==AVOID && d==DEFAULT){
+    if (disturbance.getAffIndex()==AVOID){ //&& d==DEFAULT
         std::vector <b2Vec2> d_vertices=disturbance.vertices();
         for (b2Vec2 &v: d_vertices){
             v=v-start.p; //get distance of each vertex of disturbance from start of task
@@ -307,7 +307,7 @@ b2Vec2 averagePoint(const CoordinateContainer & c, Disturbance & d, float rad = 
 }
 
 void WorldBuilder::world_cleanup(b2World & world){
-    //int ct=world->GetBodyCount();
+    int ct=world.GetBodyCount();
 	for (b2Body * b = world.GetBodyList(); b!=NULL;){ // b = b->GetNext()
         b2Body * next=b->GetNext();
         world.DestroyBody(b);

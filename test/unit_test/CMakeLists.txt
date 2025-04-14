@@ -254,19 +254,6 @@ add_test(NAME cle_avoid_D COMMAND closed_loop_ended         .2 -.2   90    0    
 add_test(NAME cle_avoid_D_fail COMMAND closed_loop_ended    .2 0   25    0    1)#fails
 set_property(TEST cle_avoid_D_fail PROPERTY WILL_FAIL true)
 
-# add_test(NAME axb_id COMMAND axb 0 0 0 0 0 0)
-# add_test(NAME axb_id_rot COMMAND axb 0 0 0 0 0 90)
-# add_test(NAME axb_id_rot53 COMMAND axb 0 0 0 0 0 53)
-# add_test(NAME axb_id_rot3753 COMMAND axb 0 0 37 0 0 53)
-# add_test(NAME axb_id_shift_rot COMMAND axb 0 0 0 .2 .3 90)
-# add_test(NAME axb_id_rot_custom COMMAND axb 1 1 0 0 0 90)
-# add_test(NAME axb_id_shift_custom COMMAND axb 1 1 0 .2 .3 0)
-# add_test(NAME axb_id_shift_rot_custom COMMAND axb 1 1 0 .2 .3 90)
-# add_test(NAME axb_id_shift_rot_custom2 COMMAND axb 1 1 53 .2 .3 37)
-# add_test(NAME axb_id_shift_rot_custom3 COMMAND axb .45 .21 53 .2 .3 37)
-# set_property(TEST axb_id_shift_rot_custom2 PROPERTY WILL_FAIL true)
-# set_property(TEST axb_id_shift_rot_custom3 PROPERTY WILL_FAIL true)
-
 add_test(NAME D_affine COMMAND D_affine 0 0 0 0 0 0)
 add_test(NAME D_affine_rot COMMAND D_affine 0 0 0 0 0 90)
 add_test(NAME D_affine_rot53 COMMAND D_affine 0 0 0 0 0 53)
@@ -310,7 +297,11 @@ add_test(NAME filter_box_RIGHT1 COMMAND filter_box 0 0 0 1) #straight ahead, rig
 
 add_test(NAME flexible_turns_LEFT COMMAND flexible_turns 0 0.5 0 0 1) #left, avoid obstacle
 add_test(NAME flexible_turns_RIGHT COMMAND flexible_turns 1 0.5 0 0 1) #right, avoid obstacle
-add_test(NAME flexible_turns_DEF COMMAND flexible_turns 0 2.5 0 0 1) #crash
+add_test(NAME flexible_turns_DEF COMMAND flexible_turns 2 0.5 0 0 1) #crash
+add_test(NAME flexible_turns_LEFT2 COMMAND flexible_turns 0 0.5 .5 0 2) #left, avoid obstacle
+add_test(NAME flexible_turns_RIGHT2 COMMAND flexible_turns 1 0.5 0.5 0 2) #right, avoid obstacle
+
+set_property(TEST flexible_turns_DEF PROPERTY WILL_FAIL true)
 
 set(CMAKE_BUILD_TYPE Debug)
 
