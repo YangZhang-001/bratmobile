@@ -306,10 +306,12 @@ b2Vec2 averagePoint(const CoordinateContainer & c, Disturbance & d, float rad = 
     return result;
 }
 
-void WorldBuilder::world_cleanup(b2World * world){
+void WorldBuilder::world_cleanup(b2World & world){
     //int ct=world->GetBodyCount();
-	for (b2Body * b = world->GetBodyList(); b!=NULL; b = b->GetNext()){
-        world->DestroyBody(b);
+	for (b2Body * b = world.GetBodyList(); b!=NULL;){ // b = b->GetNext()
+        b2Body * next=b->GetNext();
+        world.DestroyBody(b);
+        b=next;
 	}
 }
 

@@ -97,7 +97,7 @@ Disturbance Configurator::getDisturbance(TransitionSystem&g, const  vertexDescri
 					b2AABB box =worldBuilder.makeRobotSensor(robot.body, &controlGoal.disturbance);
 					b2Fixture *sensor =GetSensor(robot.body);
 					bool overlap=overlaps(robot.body, &g[v].Di) && sensor;
-					worldBuilder.world_cleanup(&world);
+					worldBuilder.world_cleanup(world);
 					if (overlap){
 						Disturbance Di= g[v].Di;
 						Di.bf.pose+= start-g[v].endPose;
@@ -135,7 +135,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body, &controlGoal.disturbance);
 	result =t.bumping_that(w, iteration, robot.body, remaining); //default start from 0
 	printf("before cleanup\n");
-	worldBuilder.world_cleanup(&w);
+	worldBuilder.world_cleanup(w);
 	printf("after cleanup\n");
 	//approximate angle to avoid stupid rounding errors
 	float approximated_angle=approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode);
