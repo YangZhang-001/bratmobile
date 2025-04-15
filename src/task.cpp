@@ -216,7 +216,10 @@ void Task::setEndCriteria(const Angle& angle, const Distance &distance){
 		}
 		break;
 		default:
-		endCriteria.distance = distance;
+		endCriteria.distance = distance;1
+		if (direction==RIGHT){
+			angle.set(-angle.get());
+		}
 		endCriteria.angle = angle;
 		break;
 	}

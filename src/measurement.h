@@ -14,8 +14,13 @@ public:
         return valid;
     }
 
-    float get(){
+    float get_signed(){
         return value;
+    }
+
+    //returns unsigned value
+    float get(){ 
+        return fabs(value);
     }
 
     void set(float f){

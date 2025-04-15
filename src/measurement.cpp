@@ -79,10 +79,10 @@ bool EndCriteria::hasEnd(){
 
 void EndCriteria::adjust(const b2Transform& delta){
     if (angle.isValid()){
-        angle=Angle(angle.get()-delta.q.GetAngle());
+        angle.set(angle.get_signed()-delta.q.GetAngle());
     }
     if (distance.isValid()){
-        distance=Distance(distance.get()-delta.p.Length());
+        distance.set(distance.get_signed()-delta.p.Length());
     }
 }
 

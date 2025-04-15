@@ -1018,6 +1018,7 @@ void Configurator::track_task_execution(){
 	printf("task L=%f, R=%f\n", currentTask.action.L, currentTask.action.R);
 	b2Transform deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance); //track using obstacle OR dead reckoning
 	currentTask.endCriteria.adjust(deltaPose); //adjusting in task so system can be memoryless
+	printf("end criteria: a=%f, d=%f\n", currentTask.endCriteria.angle.get(), currentTask.endCriteria.distance.get());
 	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
 	bool ended=false;
 	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot

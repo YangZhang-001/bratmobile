@@ -306,14 +306,6 @@ b2Vec2 averagePoint(const CoordinateContainer & c, Disturbance & d, float rad = 
     return result;
 }
 
-// void WorldBuilder::world_cleanup(b2World & world){
-//     //int ct=world->GetBodyCount();
-// 	for (b2Body * b = world.GetBodyList(); b!=NULL;){ // b = b->GetNext()
-//         b2Body * next=b->GetNext();
-//         world.DestroyBody(b);
-//         b=next;
-// 	}
-// }
 
 b2Body * WorldBuilder::get_robot(b2World * world){
     for (b2Body * b=world->GetBodyList();b; b=b->GetNext()){
@@ -378,10 +370,12 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
     if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005 || (t.action.L==0 && t.action.R==0)){
-        return t.action.getTransform(LIDAR_SAMPLING_RATE);
+        return -t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     cv::Rect2f focus=real_world_focus(&t);
+
     std::vector <cv::Point2f> focus_points;
+    printf("focus center x=%f, y=%f\n", focus.x, focus.y);
     cv::Point2f tr=focus.br();
     for (auto p: pts){
         cv::Point2f p_cv=cv::Point2f(p.x, p.y);
@@ -392,7 +386,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
 
     if (!new_d.first){
-        return t.action.getTransform(LIDAR_SAMPLING_RATE);
+        return -t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     b2Transform mulT=b2MulT(t.disturbance.pose(), new_d.second.pose);
 //what to do when different dimensions??
