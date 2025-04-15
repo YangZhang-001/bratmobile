@@ -306,14 +306,14 @@ b2Vec2 averagePoint(const CoordinateContainer & c, Disturbance & d, float rad = 
     return result;
 }
 
-void WorldBuilder::world_cleanup(b2World & world){
-    //int ct=world->GetBodyCount();
-	for (b2Body * b = world.GetBodyList(); b!=NULL;){ // b = b->GetNext()
-        b2Body * next=b->GetNext();
-        world.DestroyBody(b);
-        b=next;
-	}
-}
+// void WorldBuilder::world_cleanup(b2World & world){
+//     //int ct=world->GetBodyCount();
+// 	for (b2Body * b = world.GetBodyList(); b!=NULL;){ // b = b->GetNext()
+//         b2Body * next=b->GetNext();
+//         world.DestroyBody(b);
+//         b=next;
+// 	}
+// }
 
 b2Body * WorldBuilder::get_robot(b2World * world){
     for (b2Body * b=world->GetBodyList();b; b=b->GetNext()){

@@ -97,7 +97,7 @@ Disturbance Configurator::getDisturbance(TransitionSystem&g, const  vertexDescri
 					b2AABB box =worldBuilder.makeRobotSensor(robot.body, &controlGoal.disturbance);
 					b2Fixture *sensor =GetSensor(robot.body);
 					bool overlap=overlaps(robot.body, &g[v].Di) && sensor;
-					worldBuilder.world_cleanup(world);
+					world_cleanup(world);
 					if (overlap){
 						Disturbance Di= g[v].Di;
 						Di.bf.pose+= start-g[v].endPose;
@@ -176,7 +176,6 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				worldBuilder.buildWorld(w, t.start, t.direction, t.disturbance, 0.15, WorldBuilder::PARTITION); //was g[v].endPose
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
 //				worldBuilder.world_cleanup(w);
-				printf("after cleanup\n");
 				if (v==0 && sim.resultCode==sim.crashed){
 					printf("IM GONNA CRASH!!!! at");
 					debug::print_pose(sim.collision.pose());
@@ -248,6 +247,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 						// fclose(err_file);
 						//debug::print_pose(g[exp].endPose);
 					}
+					printf("added vertex!");
 					//auto d_print=dirmap.find(t.direction);
 					//printf("added v %i to %i, direction %s", v1, v0, (*d_print).second);
 					shift=b2Transform_zero;

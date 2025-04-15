@@ -86,7 +86,7 @@ class WorldBuilder{
         bodies =0;
     }
 
-    void world_cleanup(b2World &);
+ //   void world_cleanup(b2World &);
 
     b2Body * get_robot(b2World *);
 

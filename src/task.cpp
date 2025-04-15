@@ -70,10 +70,10 @@ bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& rob
 simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, float remaining){ //CLOSED LOOP CONTROL, og return simreult
 		simResult result=simResult(simResult::resultType::successful);
 		result.endPose = start;
-		if (action.L==0 & action.R==0){
-			printf("not simulating, exiting\n");
-			return result;
-		}
+		// if (action.L==0 & action.R==0){
+		// 	printf("not simulating, exiting\n");
+		// 	return result;
+		// }
 		Listener listener(&disturbance);
 		int _count=_world.GetBodyCount();
 		_world.SetContactListener(&listener);	
@@ -123,9 +123,10 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 		}
 		result.endPose = robot->GetTransform();
 		result.step=stepb2d;
-		for (b2Body * b = _world.GetBodyList(); b!=NULL;b = b->GetNext();){ // 
-        	_world.DestroyBody(b);
-		}
+		// for (b2Body * b = _world.GetBodyList(); b!=NULL;b = b->GetNext()){ // 
+        // 	_world.DestroyBody(b);
+		// }
+		world_cleanup(_world);
 		if (DEBUG){
 			fclose(robotPath);
 		}
