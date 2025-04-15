@@ -41,6 +41,7 @@ Configurator()=default;
 Configurator(Task _task): controlGoal(_task), currentTask(_task){
 	previousTimeScan = std::chrono::high_resolution_clock::now();
 	movingVertex=boost::add_vertex(transitionSystem);
+	current_vertices={movingVertex};
 	transitionSystem[movingVertex].Di=controlGoal.disturbance;
 	currentVertex=movingVertex;
 	currentTask.action.setVelocities(0,0);

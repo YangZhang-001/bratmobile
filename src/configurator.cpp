@@ -135,8 +135,6 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body, &controlGoal.disturbance);
 	result =t.bumping_that(w, iteration, robot.body, remaining); //default start from 0
 	printf("before cleanup\n");
-	worldBuilder.world_cleanup(w);
-	printf("after cleanup\n");
 	//approximate angle to avoid stupid rounding errors
 	float approximated_angle=approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode);
 	result.endPose.q.Set(approximated_angle);
@@ -177,6 +175,8 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				adjust_simulated_task(v0, g, &t);
 				worldBuilder.buildWorld(w, t.start, t.direction, t.disturbance, 0.15, WorldBuilder::PARTITION); //was g[v].endPose
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
+				worldBuilder.world_cleanup(w);
+				printf("after cleanup\n");
 				if (v==0 && sim.resultCode==sim.crashed){
 					printf("IM GONNA CRASH!!!! at");
 					debug::print_pose(sim.collision.pose());
