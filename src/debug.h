@@ -76,9 +76,9 @@ void print_state_difference(const StateDifference & sd, vertexDescriptor v, vert
 	}
 	printf("STATE DIFFERENCE between %i and %i\n", v, v1);
 	print_pose(sd.Di.pose, "Di pose");
-	printf("Di width=%f, Di length=%f", sd.Di.halfWidth, sd.Di.halfLength)
+	printf("Di width=%f, Di length=%f", sd.Di.halfWidth, sd.Di.halfLength);
 	print_pose(sd.Di.pose, "Dn pose");
-	printf("Dn width=%f, Dn length=%f", sd.Dn.halfWidth, sd.Dn.halfLength)
+	printf("Dn width=%f, Dn length=%f", sd.Dn.halfWidth, sd.Dn.halfLength);
 
 }
 
