@@ -19,23 +19,6 @@ b2Body * GetDisturbance(b2World * w){
 }
 
 
-// bool overlaps(b2Body * robot, b2Body * disturbance){
-// 	b2Fixture * sensor=GetSensor(robot);
-// 	if (sensor==NULL){
-// 		return true;
-// 	}
-// 	if (disturbance==NULL){
-// 		return true;
-// 	}
-// 	b2AABB aabb=sensor->GetAABB(0);
-// 	b2Shape * d=disturbance->GetFixtureList()->GetShape();
-// 	b2Transform robot_pose=robot->GetTransform(), d_pose= disturbance->GetTransform();
-// 	//b2AABB aabb_shape, aabb_zero;
-// 	//sensor->GetShape()->ComputeAABB(&aabb_shape, robot_pose,0);
-// 	//sensor->GetShape()->ComputeAABB(&aabb_shape, b2Transform_zero,0);
-// 	return b2TestOverlap(sensor->GetShape(), 0, d, 0,robot_pose, d_pose);
-// }
-
 bool overlaps(b2Body * robot, Disturbance * disturbance){
 	b2Fixture * sensor=GetSensor(robot);
 	if (sensor==NULL){
@@ -64,6 +47,12 @@ bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& rob
 	d_shape.ComputeAABB(&aabb, d->bf.pose, 0);
 	return b2TestOverlap(&box, 0, &d_shape, 0,robot_pose, d->bf.pose);
 
+}
+
+void world_cleanup(b2World & _world){
+	for (b2Body * b = _world.GetBodyList(); b!=NULL;b = b->GetNext()){ // 
+		_world.DestroyBody(b);
+	}
 }
 
 

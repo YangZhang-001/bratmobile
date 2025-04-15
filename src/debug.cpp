@@ -73,3 +73,16 @@ std::vector<b2Vec2> debug::GetBodies(b2World* w){
 	}
 	return result;
 }
+
+void debug::print_state_difference(const StateDifference & sd, vertexDescriptor v, vertexDescriptor v1){
+	if (v==TransitionSystem::null_vertex()){
+		printf("no match no sd");
+		return;
+	}
+	printf("STATE DIFFERENCE between %i and %i\n", v, v1);
+	print_pose(sd.Di.pose, "Di pose");
+	printf("Di width=%f, Di length=%f", sd.Di.halfWidth, sd.Di.halfLength);
+	print_pose(sd.Di.pose, "Dn pose");
+	printf("Dn width=%f, Dn length=%f", sd.Dn.halfWidth, sd.Dn.halfLength);
+
+}

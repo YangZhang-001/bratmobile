@@ -248,6 +248,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 						//debug::print_pose(g[exp].endPose);
 					}
 					printf("added vertex!");
+					debug::print_state_difference(sd, match.second, v1);
 					//auto d_print=dirmap.find(t.direction);
 					//printf("added v %i to %i, direction %s", v1, v0, (*d_print).second);
 					shift=b2Transform_zero;

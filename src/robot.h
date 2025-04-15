@@ -43,12 +43,7 @@ public:
 
 };
 
-	//deletes all bodies in the box2d worldcd 
-	void world_cleanup(b2World & _world){
-		for (b2Body * b = _world.GetBodyList(); b!=NULL;b = b->GetNext()){ // 
-        	_world.DestroyBody(b);
-		}
-	}
+
 
 #endif
 

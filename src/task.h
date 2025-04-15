@@ -12,7 +12,8 @@ bool overlaps(b2Body *, Disturbance *);
 
 bool overlaps(const b2PolygonShape&, Disturbance *, const b2Transform& robot_pose=b2Transform_zero);
 
-
+	//deletes all bodies in the box2d worldcd 
+void world_cleanup(b2World & _world);
 
 class Task{
 
