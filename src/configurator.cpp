@@ -209,9 +209,6 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 							auto plan_tmp=planner(g, v, TransitionSystem::null_vertex(), been, &controlGoal_adjusted, &finished); //not v but task start
 							printf("out of explore planner\n");
 							bool filler=0;
-							// if (match.second!=v){
-							// 	shift= b2MulT(g[task_start].start, start);
-							// }
 							if (finished){
 								plan_prov=plan_tmp;
 								if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
@@ -240,16 +237,9 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 						vertexDescriptor exp=out_expected[0].m_target;
 						StateDifference sd_exp(g[v1], g[exp]);
 						printf("thought it'd be vertex %i , end pose:", exp );
-						// FILE * err_file=fopen("/tmp/err_file.txt", "a+");
-						// char * sd_di=  debug::print_pose(sd_exp.Di.pose), *sd_dn=debug::print_pose(sd_exp.Dn.pose);
-						// fprintf(err_file, "%s\t%s",sd_di, sd_dn );
-						// fclose(err_file);
-						//debug::print_pose(g[exp].endPose);
 					}
 					printf("added vertex!");
 					debug::print_state_difference(sd, match.second, v1);
-					//auto d_print=dirmap.find(t.direction);
-					//printf("added v %i to %i, direction %s", v1, v0, (*d_print).second);
 					shift=b2Transform_zero;
 				}
 				if(edge.second){
@@ -550,14 +540,10 @@ void Configurator::run(Configurator * c){
 			c->Spawner();
 			printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 			c->track_task_execution();
-			printf("tracked\n");
 		}
 		if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
 			printf("change goal");
 			c->goal_changer->change_goal(&c->controlGoal);
-		}	
-		if (!PLANNING){
-			printf("no planning!");
 		}	
 		c->change_task();
 
@@ -1046,6 +1032,7 @@ void Configurator::change_task(){
 	if (!currentTask.change){
 		return;
 	}
+	printf("changing\n");
 	if (PLANNING){
 		if (plan.empty()){
 			//printf("I DON'T KNOW WHAT TO DO NOW\n");
@@ -1055,7 +1042,6 @@ void Configurator::change_task(){
 			currentTask.change=1;
 			return;
 		}
-		printf("changing\n");
 		int i=to_task_end();
 		try{ //make sure current vertices is not empty!
 			if (i==0){
@@ -1075,6 +1061,7 @@ void Configurator::change_task(){
 	}
 	else{
 		if (transitionSystem[0].Dn.isValid()){
+			printf("avoid!");
 			currentTask= Task(transitionSystem[0].Dn, DEFAULT); //reactive
 		}
 		else{

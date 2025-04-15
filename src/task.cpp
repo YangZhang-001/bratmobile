@@ -59,10 +59,7 @@ void world_cleanup(b2World & _world){
 simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, float remaining){ //CLOSED LOOP CONTROL, og return simreult
 		simResult result=simResult(simResult::resultType::successful);
 		result.endPose = start;
-		// if (action.L==0 & action.R==0){
-		// 	printf("not simulating, exiting\n");
-		// 	return result;
-		// }
+
 		Listener listener(&disturbance);
 		int _count=_world.GetBodyCount();
 		_world.SetContactListener(&listener);	
@@ -72,7 +69,7 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 			robotPath = fopen(planFile, "a");
 		}
 		float theta = start.q.GetAngle();
-		b2Vec2 instVelocity = {0,0};
+		b2Vec2 instVelocity = {0,0};		
 		int stepb2d=0;
 		float traj_error=0;
 		for (stepb2d; stepb2d < (HZ*remaining); stepb2d++) {//3 second
