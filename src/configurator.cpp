@@ -1060,7 +1060,7 @@ void Configurator::change_task(){
 		int i=to_task_end();
 		current_vertices=std::vector(plan.begin(), plan.begin()+i);
 		printPlan(&plan);
-		printf("change task=%i, task step=%i\n", currentTask.change, currentTask.motorStep);
+		//printf("change task=%i, task step=%i\n", currentTask.change, currentTask.motorStep);
 		currentTask = task_to_execute(plan, transitionSystem, i);	
 		plan.erase(plan.begin(), plan.begin()+i);
 		//set end criteria to adjust error??
@@ -1132,6 +1132,6 @@ int Configurator::to_task_end(){
 	while(i<plan.size() &&transitionSystem[plan[i]].direction==d){
 		i++;
 	}
-	return i-1;
+	return i;
 	
 }
