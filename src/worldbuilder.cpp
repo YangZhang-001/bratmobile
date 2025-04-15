@@ -388,7 +388,8 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     if (!new_d.first){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
-    b2Transform mulT=b2MulT(t.disturbance.pose(), new_d.second.pose), result=b2Transform_zero;
+    //b2Transform mulT=b2MulT(t.disturbance.pose(), new_d.second.pose),
+     b2Transform mulT= t.disturbance.pose()- new_d.second.pose, result=b2Transform_zero;
 //what to do when different dimensions??
     if (new_d.first){
         observed_disturbance->bf=new_d.second;
