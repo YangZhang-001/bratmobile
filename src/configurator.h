@@ -192,7 +192,7 @@ void pre_explore(TransitionSystem &, const std::vector<vertexDescriptor>&, const
 void explore_plan(b2World&);
 
 //reactive behaviour: simulate task to find disturbances and react to them
-void reactive(b2World&);
+//void reactive(b2World&);
 
 std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const TransitionSystem &);
 
@@ -202,7 +202,7 @@ vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, v
 //uses LIDAR data to calculate an affine transform of disturbance Di if present
 void track_task_execution();
 
-//changes task to be executed, updates plan by snipping out vertices corresponding to the current task
+//changes task to be executed
 void change_task();
 
 //return motor instruction (in step callbacks for a task - deprecated)
@@ -233,6 +233,15 @@ Task task_to_execute(const std::vector<vertexDescriptor>& p, const TransitionSys
 
 //returns last vertex of the task starting at plan[0]
 int to_task_end();
+
+//customisable: how is the next task to execute chosen?
+void next_task();
+
+//updates plan by snipping out vertices corresponding to the current task
+void follow_plan();
+
+void react();
+
 private:
 b2PolygonShape task_sensor; //to track task execution
 

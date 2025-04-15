@@ -3,7 +3,6 @@
 #undef PLANNING
 #define PLANNING false
 
-void forget(Configurator *c){}
 
 class AffordanceSetter{
 	public:
@@ -36,7 +35,10 @@ void Configurator::explore_plan(b2World &world){
 	if (currentTask.change){
 		printf("crashed\n");
 	}
+}
 
+void Configurator::next_task(){
+	react();
 }
 
 Disturbance set_target(int& run, b2Transform start){

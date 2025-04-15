@@ -1032,44 +1032,8 @@ void Configurator::change_task(){
 	if (!currentTask.change){
 		return;
 	}
-	printf("changing\n");
-	if (PLANNING){
-		if (plan.empty()){
-			//printf("I DON'T KNOW WHAT TO DO NOW\n");
-			currentTask=Task(controlGoal.disturbance, UNDEFINED);
-			currentTask.action.L=0;
-			currentTask.action.R=0;
-			currentTask.change=1;
-			return;
-		}
-		int i=to_task_end();
-		try{ //make sure current vertices is not empty!
-			if (i==0){
-				throw (i);
-			}
-		}
-		catch (int index){
-			i++;
-		}
-		current_vertices=std::vector(plan.begin(), plan.begin()+i);
-		printPlan(&plan);
-		//printf("change task=%i, task step=%i\n", currentTask.change, currentTask.motorStep);
-		currentTask = task_to_execute(plan, transitionSystem, i);	
-		plan.erase(plan.begin(), plan.begin()+i);
-		//set end criteria to adjust error??
-		task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
-	}
-	else{
-		if (transitionSystem[0].Dn.isValid()){
-			printf("avoid!");
-			currentTask= Task(transitionSystem[0].Dn, DEFAULT); //reactive
-		}
-		else{
-			currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
-		}
-		currentTask.motorStep = motor_step(currentTask.getAction());
-		printf("changed to %f\n", currentTask.action.getOmega());
-	}
+	next_task();
+	task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
 	worldBuilder.wb_bridger.set_tracked_disturbance(currentTask.disturbance);
 	control->getData(currentTask.action);
 	return;
@@ -1128,4 +1092,44 @@ int Configurator::to_task_end(){
 	}
 	return i-1;
 	
+}
+
+void Configurator::follow_plan(){
+	if (plan.empty()){
+		//printf("I DON'T KNOW WHAT TO DO NOW\n");
+		currentTask=Task(controlGoal.disturbance, UNDEFINED);
+		currentTask.action.L=0;
+		currentTask.action.R=0;
+		currentTask.change=1;
+		return;
+	}
+	int i=to_task_end();
+	try{ //make sure current vertices is not empty!
+		if (i==0){
+			throw (i);
+		}
+	}
+	catch (int index){
+		i++;
+	}
+	current_vertices=std::vector(plan.begin(), plan.begin()+i);
+	printPlan(&plan);
+	//printf("change task=%i, task step=%i\n", currentTask.change, currentTask.motorStep);
+	currentTask = task_to_execute(plan, transitionSystem, i);	
+	plan.erase(plan.begin(), plan.begin()+i);
+	//set end criteria to adjust error??
+
+}
+
+void Configurator::react(){
+	if (transitionSystem[0].Dn.isValid()){
+		printf("avoid!");
+		currentTask= Task(transitionSystem[0].Dn, DEFAULT); //reactive
+	}
+	else{
+		currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
+	}
+	currentTask.motorStep = motor_step(currentTask.getAction());
+	printf("changed to %f\n", currentTask.action.getOmega());
+
 }

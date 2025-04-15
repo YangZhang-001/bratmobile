@@ -2,7 +2,9 @@
 #include "custom.h"
 
 
-void forget(Configurator *c){}
+void Configurator::next_task(){
+	follow_plan();
+}
 
 Disturbance set_target(int& run, b2Transform start){
 	Disturbance result;
