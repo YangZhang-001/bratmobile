@@ -134,8 +134,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	robot.body->SetTransform(t.start.p, t.start.q.GetAngle());
 	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body, &controlGoal.disturbance);
 	result =t.bumping_that(w, iteration, robot.body, remaining); //default start from 0
-	printf("before cleanup\n");
-	//approximate angle to avoid stupid rounding errors
+	//approximate angle to avoid rounding errors
 	float approximated_angle=approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode);
 	result.endPose.q.Set(approximated_angle);
 	return result;
@@ -551,6 +550,7 @@ void Configurator::run(Configurator * c){
 			c->Spawner();
 			printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 			c->track_task_execution();
+			printf("tracked\n");
 		}
 		if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
 			printf("change goal");
@@ -1058,7 +1058,7 @@ void Configurator::change_task(){
 		}
 		printf("changing\n");
 		int i=to_task_end();
-		try{
+		try{ //make sure current vertices is not empty!
 			if (i==0){
 				throw (i);
 			}

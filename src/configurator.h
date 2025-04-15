@@ -33,7 +33,7 @@ public:
 	vertexDescriptor movingVertex;
 	vertexDescriptor currentVertex;
 	edgeDescriptor movingEdge, currentEdge;
-	std::vector<vertexDescriptor>plan, current_vertices;
+	std::vector<vertexDescriptor>plan, current_vertices={0};
 	GoalChanger * goal_changer=NULL;	
 
 Configurator()=default;
