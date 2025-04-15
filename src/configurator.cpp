@@ -1058,6 +1058,14 @@ void Configurator::change_task(){
 		}
 		printf("changing\n");
 		int i=to_task_end();
+		try{
+			if (i==0){
+				throw (i);
+			}
+		}
+		catch (int index){
+			i++;
+		}
 		current_vertices=std::vector(plan.begin(), plan.begin()+i);
 		printPlan(&plan);
 		//printf("change task=%i, task step=%i\n", currentTask.change, currentTask.motorStep);
@@ -1132,6 +1140,6 @@ int Configurator::to_task_end(){
 	while(i<plan.size() &&transitionSystem[plan[i]].direction==d){
 		i++;
 	}
-	return i;
+	return i-1;
 	
 }
