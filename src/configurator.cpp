@@ -175,7 +175,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				adjust_simulated_task(v0, g, &t);
 				worldBuilder.buildWorld(w, t.start, t.direction, t.disturbance, 0.15, WorldBuilder::PARTITION); //was g[v].endPose
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
-				worldBuilder.world_cleanup(w);
+//				worldBuilder.world_cleanup(w);
 				printf("after cleanup\n");
 				if (v==0 && sim.resultCode==sim.crashed){
 					printf("IM GONNA CRASH!!!! at");

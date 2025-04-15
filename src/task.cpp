@@ -123,6 +123,9 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 		}
 		result.endPose = robot->GetTransform();
 		result.step=stepb2d;
+		for (b2Body * b = _world.GetBodyList(); b!=NULL;b = b->GetNext();){ // 
+        	_world.DestroyBody(b);
+		}
 		if (DEBUG){
 			fclose(robotPath);
 		}
