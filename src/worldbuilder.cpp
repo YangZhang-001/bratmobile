@@ -388,7 +388,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     if (!new_d.first){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
-    b2Transform mulT=b2MulT(t.disturbance.pose(), new_d.second.pose);
+    b2Transform mulT=b2MulT(t.disturbance.pose(), new_d.second.pose), result=b2Transform_zero;
 //what to do when different dimensions??
     if (new_d.first){
         observed_disturbance->bf=new_d.second;
@@ -397,7 +397,12 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         new_d.second.halfWidth=t.disturbance.bf.halfWidth;
         new_d.second.halfLength=t.disturbance.bf.halfLength;
     }
-    return mulT;
+    float angle=atan2(mulT.p.y, multT.p.x);
+    float distance=mulT.p.Length();
+    result.q.Set(angle);
+    result.p.x=result.q.c*distance;
+    result.p.y=result.q.s*distance;
+    return result;
     //what's the most likely angle??
 }
 
