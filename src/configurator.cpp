@@ -1003,6 +1003,7 @@ vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task
 	}
 	catch(const std::out_of_range& oor){
 		printf("current vertices empty\n");
+		current_vertices={currentVertex};
 		return currentVertex;
 	}
 	b2Transform Di_distance=currentTask.from_Di(), v_from_D=b2Transform_zero;
@@ -1043,10 +1044,8 @@ void Configurator::track_task_execution(){
 
 void Configurator::change_task(){
 	if (!currentTask.change){
-		//printf("not changing\n");
 		return;
 	}
-//	printf("change task planning =%i\n", PLANNING);
 	if (PLANNING){
 		if (plan.empty()){
 			//printf("I DON'T KNOW WHAT TO DO NOW\n");
