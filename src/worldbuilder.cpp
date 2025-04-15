@@ -397,7 +397,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         new_d.second.halfWidth=t.disturbance.bf.halfWidth;
         new_d.second.halfLength=t.disturbance.bf.halfLength;
     }
-    float angle=atan2(mulT.p.y, multT.p.x);
+    float angle=atan2(mulT.p.y, mulT.p.x);
     float distance=mulT.p.Length();
     result.q.Set(angle);
     result.p.x=result.q.c*distance;
