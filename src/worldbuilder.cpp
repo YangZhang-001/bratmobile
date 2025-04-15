@@ -370,7 +370,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
     if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005 || (t.action.L==0 && t.action.R==0)){
-        return -t.action.getTransform(LIDAR_SAMPLING_RATE);
+        return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     cv::Rect2f focus=real_world_focus(&t);
 
@@ -386,7 +386,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
 
     if (!new_d.first){
-        return -t.action.getTransform(LIDAR_SAMPLING_RATE);
+        return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     b2Transform mulT=b2MulT(t.disturbance.pose(), new_d.second.pose);
 //what to do when different dimensions??
