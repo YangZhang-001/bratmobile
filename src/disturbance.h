@@ -72,7 +72,12 @@ class BodyFeatures{
         }
     }
 
-    bool match(const BodyFeatures&);
+    /*
+    //returns true if it matches the input body features
+    @param bf input body features
+    @param v pointer to float, scalar representing difference between features
+    */
+    bool match(const BodyFeatures&, float * v=NULL);
 
     float width()const{
         return halfWidth*2;

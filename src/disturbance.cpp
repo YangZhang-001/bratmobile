@@ -1,7 +1,7 @@
 #include "disturbance.h"
 
 
-bool BodyFeatures::match(const BodyFeatures& bf){
+bool BodyFeatures::match(const BodyFeatures& bf, float * v){
     bool match_x=fabs(pose.p.x-bf.pose.p.x)<D_POSE_MARGIN;
     bool match_y=fabs(pose.p.y-bf.pose.p.y)<D_POSE_MARGIN;
     bool match_w=fabs(halfWidth-bf.halfWidth)<D_DIMENSIONS_MARGIN;

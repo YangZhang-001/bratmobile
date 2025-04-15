@@ -372,6 +372,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005 || (t.action.L==0 && t.action.R==0)){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
+    //probably here best to do ICP
     cv::Rect2f focus=real_world_focus(&t);
 
     std::vector <cv::Point2f> focus_points;
@@ -384,6 +385,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         }
     }
     std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
+
 
     if (!new_d.first){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
