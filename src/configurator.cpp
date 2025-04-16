@@ -1031,7 +1031,8 @@ void Configurator::track_task_execution(){
 	if(currentTask.motorStep==0 || ended){
 		currentTask.change=1;
 	}
-	currentVertex=estimate_current_vertex(transitionSystem, currentTask,currentVertex);
+	vertexDescriptor v=estimate_current_vertex(transitionSystem, currentTask,currentVertex);
+	currentVertex=v;
 	printf("finished tracking!");
 }
 
