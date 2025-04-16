@@ -370,15 +370,15 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
     if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005 || (t.action.L==0 && t.action.R==0)){
-        // if (t.disturbance.getAffIndex()==NONE){
-        //     throw std::invalid_argument("no disturbance!");    
-        // }
-        // if (t.disturbance.bf.area()<0.0005){
-        //     throw std::invalid_argument("petite disturbance!");    
-        // }
-        // if ((t.action.L==0 && t.action.R==0)){
-        //     throw std::invalid_argument("not moving!");    
-        // }
+        if (t.disturbance.getAffIndex()==NONE){
+            throw std::invalid_argument("no disturbance!");    
+        }
+        if (t.disturbance.bf.area()<0.0005){
+            throw std::invalid_argument("petite disturbance!");    
+        }
+        if ((t.action.L==0 && t.action.R==0)){
+            throw std::invalid_argument("not moving!");    
+        }
         throw std::invalid_argument("whoops");
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
@@ -390,12 +390,14 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     }
     BodyFeatures new_d=*new_d_it;
     b2Transform mulT= t.disturbance.pose()- new_d.pose, result=b2Transform_zero;
-    observed_disturbance->bf=new_d;
+    printf("t dist x=%f, y=%f, angle=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle());
+    printf("NEW dist x=%f, y=%f, angle=%f\n", new_d.pose.p.x, new_d.pose.p.y, new_d.pose.q.GetAngle());
+    printf("mult x=%f, y=%f, angle=%f\n", mulT.p.x, mulT.p.y, mulT.q.GetAngle());
+
     float dot=b2Dot(new_d.pose.p, t.disturbance.bf.pose.p);
     float denom=(new_d.pose.p.Length() * t.disturbance.bf.pose.p.Length());
     float cos_angle= dot/denom;
     float angle=0;
-    
     printf("dot =%f, denom=%f cos angle =%f", dot, denom, cos_angle);    
     if (fabs(cos_angle)<=1){
         angle=acos(cos_angle);
@@ -404,6 +406,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     result.q.Set(angle);
     result.p.x=result.q.c*distance;
     result.p.y=result.q.s*distance;
+    observed_disturbance->bf=new_d; //this modifies task t, do not move!
     printf("estimated angle =%f distance=%f\n", angle, distance);
     return -result;
     //what's the most likely angle??
