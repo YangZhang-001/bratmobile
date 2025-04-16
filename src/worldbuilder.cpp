@@ -404,13 +404,14 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     float angle=0;
     if (fabs(cos_angle)<=1){
         angle=acos(cos_angle);
+        printf("angle =0");
     }
     float distance=mulT.p.Length();
     result.q.Set(angle);
     result.p.x=result.q.c*distance;
     result.p.y=result.q.s*distance;
     printf("estimated angle =%f distance=%f\n", angle, distance);
-    return result;
+    return -result;
     //what's the most likely angle??
 }
 
