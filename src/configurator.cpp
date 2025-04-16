@@ -540,12 +540,13 @@ void Configurator::run(Configurator * c){
 			c->Spawner();
 			printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 			c->track_task_execution();
-		}
-		if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
-			printf("change goal");
-			c->goal_changer->change_goal(&c->controlGoal);
-		}	
-		c->change_task();
+			if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
+				printf("change goal");
+				c->goal_changer->change_goal(&c->controlGoal);
+			}	
+			c->change_task();		
+			printf("changed\n");
+			}
 
 	}
 
@@ -1036,6 +1037,7 @@ void Configurator::change_task(){
 	if (!currentTask.change){
 		return;
 	}
+	printf("change!\n");
 	next_task();
 	task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
 	worldBuilder.wb_bridger.set_tracked_disturbance(currentTask.disturbance);
