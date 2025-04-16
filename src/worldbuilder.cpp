@@ -404,7 +404,9 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     float angle=0;
     if (fabs(cos_angle)<=1){
         angle=acos(cos_angle);
-        printf("angle =0");
+    }
+    else{        
+        printf("cos angle =%f", cos_angle);
     }
     float distance=mulT.p.Length();
     result.q.Set(angle);

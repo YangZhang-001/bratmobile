@@ -45,7 +45,8 @@ Disturbance set_target(int& run, b2Transform start){
 	Disturbance result;
 	return result;
 }
-
+#undef DEBUG
+#define DEBUG true
 
 int main(int argc, char** argv) {
 	#undef PLANNING
@@ -57,9 +58,7 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
     Configurator configurator(controlGoal);
-	if (argc>2){
-		#define DEBUG atoi(argv[2])
-	}
+
 	configurator.setSimulationStep(.5);
 	as=AffordanceSetter(AffordanceIndex(atoi(argv[1])));
 	LidarInterface dataInterface(&configuratorInterface);
