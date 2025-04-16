@@ -544,6 +544,7 @@ void Configurator::run(Configurator * c){
 				printf("change goal");
 				c->goal_changer->change_goal(&c->controlGoal);
 			}	
+			printf("pre -changed\n");
 			c->change_task();		
 			printf("changed\n");
 			}
@@ -983,15 +984,15 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 	return rho;
 }
 
-vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task& currentTask, vertexDescriptor currentVertex){
+vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task& currentTask, vertexDescriptor cv){
 	vertexDescriptor task_start;
 	try {
 		task_start=current_vertices.at(0);
 	}
 	catch(const std::out_of_range& oor){
 		printf("current vertices empty\n");
-		current_vertices={currentVertex};
-		return currentVertex;
+		current_vertices={cv};
+		return cv;
 	}
 	b2Transform Di_distance=currentTask.from_Di(), v_from_D=b2Transform_zero;
 
@@ -1007,12 +1008,12 @@ vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task
 		b2Transform transform_diff=Di_distance-v_from_D;
 		float sum_diff=fabs(transform_diff.p.x+transform_diff.p.y+transform_diff.q.GetAngle());
 		if (sum_diff<sum){
-			currentVertex=v;
+			cv=v;
 			sum=sum_diff;
 		}				
 	}
-	printf("current vertex=%i\n", currentVertex);
-	return currentVertex;
+	printf("current vertex=%i\n", cv);
+	return cv;
 
 }
 
@@ -1031,6 +1032,7 @@ void Configurator::track_task_execution(){
 		currentTask.change=1;
 	}
 	currentVertex=estimate_current_vertex(transitionSystem, currentTask,currentVertex);
+	printf("finished tracking!");
 }
 
 void Configurator::change_task(){
