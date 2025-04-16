@@ -1016,7 +1016,7 @@ vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task
 
 void Configurator::track_task_execution(){
 	printf("task L=%f, R=%f\n", currentTask.action.L, currentTask.action.R);
-	b2Transform deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance); //track using obstacle OR dead reckoning
+	b2Transform deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance, worldBuilder.world_objects); //track using obstacle OR dead reckoning
 	currentTask.endCriteria.adjust(deltaPose); //adjusting in task so system can be memoryless
 	printf("end criteria: a=%f, d=%f\n", currentTask.endCriteria.angle.get_signed(), currentTask.endCriteria.distance.get_signed());
 	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);

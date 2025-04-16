@@ -365,41 +365,40 @@ cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
 }
 
 
-b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, Disturbance * observed_disturbance){
+b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects){
     if (observed_disturbance==NULL){
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
     if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005 || (t.action.L==0 && t.action.R==0)){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
-    //probably here best to do ICP
-    cv::Rect2f focus=real_world_focus(&t);
+    // //probably here best to do ICP
+    // cv::Rect2f focus=real_world_focus(&t);
 
-    std::vector <cv::Point2f> focus_points;
-    printf("focus center x=%f, y=%f\n", focus.x, focus.y);
-    cv::Point2f tr=focus.br();
-    for (auto p: pts){
-        cv::Point2f p_cv=cv::Point2f(p.x, p.y);
-        if (focus.contains(p_cv)){
-            focus_points.push_back(p_cv);
-        }
-    }
-    std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
+    // std::vector <cv::Point2f> focus_points;
+    // printf("focus center x=%f, y=%f\n", focus.x, focus.y);
+    // cv::Point2f tr=focus.br();
+    // for (auto p: pts){
+    //     cv::Point2f p_cv=cv::Point2f(p.x, p.y);
+    //     if (focus.contains(p_cv)){
+    //         focus_points.push_back(p_cv);
+    //     }
+    // }
+    // std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
+    auto new_d_it =find_disturbance(objects, t.disturbance.bf);
 
-
-    if (!new_d.first){
+    if (new_d_it!=objects.end()){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
+    BodyFeatures new_d=*new_d_it;
     //b2Transform mulT=b2MulT(t.disturbance.pose(), new_d.second.pose),
-     b2Transform mulT= t.disturbance.pose()- new_d.second.pose, result=b2Transform_zero;
+     b2Transform mulT= t.disturbance.pose()- new_d.pose, result=b2Transform_zero;
 //what to do when different dimensions??
-    if (new_d.first){
-        observed_disturbance->bf=new_d.second;
-    }
-    if (new_d.second.match(t.disturbance.bf)){
-        new_d.second.halfWidth=t.disturbance.bf.halfWidth;
-        new_d.second.halfLength=t.disturbance.bf.halfLength;
-    }
+    observed_disturbance->bf=new_d;
+    // if (new_d.second.match(t.disturbance.bf)){
+    //     new_d.second.halfWidth=t.disturbance.bf.halfWidth;
+    //     new_d.second.halfLength=t.disturbance.bf.halfLength;
+    // }
     float angle=atan(mulT.p.y/mulT.p.x);
     float distance=mulT.p.Length();
     result.q.Set(angle);
@@ -410,3 +409,18 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     //what's the most likely angle??
 }
 
+std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist){
+    float least_square=10000;
+    std::vector <BodyFeatures>::iterator result =objects.end();
+    for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
+        float sum_squares;
+        bool match =(*it).match(dist, &sum_squares);
+        if (sum_squares<least_square){
+            least_square=sum_squares;
+            if (match){ //thresholding
+                result = it;
+            }
+        }
+    }
+    return result;
+}

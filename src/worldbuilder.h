@@ -130,11 +130,12 @@ class WorldBuilder{
 
         //calculates 2d affine transformation of input task's disturbance from t-1 to t
         /*
-        /param t input task
-        /param pts point cloud
-        /param observed_disturbance body features of the observed disturbance
+        @param t input task
+        @param pts point cloud
+        @param observed_disturbance body features of the observed disturbance
+        @param objects world objects as extracted in worldbuilder
         */
-        b2Transform get_transform(const Task &, const CoordinateContainer &, Disturbance * observed_disturbance); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
+        b2Transform get_transform(const Task &, const CoordinateContainer &, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
 
         /*
         *given points, makes minimum bounding rotated box around them
@@ -150,6 +151,16 @@ class WorldBuilder{
         void set_tracked_disturbance(const Disturbance & d){
             tracked_disturbance=d;
         }
+
+        //finds the disturbance to be tracked among the worldbuilder objects
+        /*
+        @param objects worldBuilder objects
+        @param dist disturbance to be tracked
+        */
+        std::vector <BodyFeatures>::iterator find_disturbance(std::vector <BodyFeatures> & objects, const BodyFeatures & dist);
+
+        //private:
+        //kalman filter?
 
         
     }wb_bridger;

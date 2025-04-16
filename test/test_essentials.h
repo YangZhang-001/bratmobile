@@ -15,6 +15,10 @@
 
 std::mutex ctr_mutex;
 
+void Configurator::next_task(){
+    follow_plan();
+}
+
 bool debug_draw(b2Vec2 * sensor_v, std::vector <b2Vec2> d ){
     char name_v[256], name_s[256], name_d[256];
     sprintf(name_s, "/tmp/debug_sensor_cli.txt");

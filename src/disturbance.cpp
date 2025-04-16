@@ -2,10 +2,17 @@
 
 
 bool BodyFeatures::match(const BodyFeatures& bf, float * v){
-    bool match_x=fabs(pose.p.x-bf.pose.p.x)<D_POSE_MARGIN;
-    bool match_y=fabs(pose.p.y-bf.pose.p.y)<D_POSE_MARGIN;
-    bool match_w=fabs(halfWidth-bf.halfWidth)<D_DIMENSIONS_MARGIN;
-    bool match_h=fabs(halfLength-bf.halfLength)<D_DIMENSIONS_MARGIN;
+    float diff_x=pose.p.x-bf.pose.p.x;
+    float diff_y=pose.p.y-bf.pose.p.y;
+    float diff_w=halfWidth-bf.halfWidth;
+    float diff_l=halfLength-bf.halfLength;
+    bool match_x=fabs(diff_x)<D_POSE_MARGIN;
+    bool match_y=fabs(diff_y)<D_POSE_MARGIN;
+    bool match_w=fabs(diff_w)<D_DIMENSIONS_MARGIN;
+    bool match_h=fabs(diff_l)<D_DIMENSIONS_MARGIN;
+    if (v!=NULL){
+        *v=pow(diff_x, 2) + pow(diff_y, 2) +pow(diff_w, 2) +pow(diff_l, 2);
+    }
     return match_x && match_y && match_w && match_h;
 }
 
