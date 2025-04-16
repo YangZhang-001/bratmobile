@@ -370,7 +370,15 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
     if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005 || (t.action.L==0 && t.action.R==0)){
-        throw std::invalid_argument("no disturbance!");
+        if (t.disturbance.getAffIndex()==NONE){
+            throw std::invalid_argument("no disturbance!");    
+        }
+        if (t.disturbance.bf.area()<0.0005){
+            throw std::invalid_argument("petite disturbance!");    
+        }
+        if ((t.action.L==0 && t.action.R==0)){
+            throw std::invalid_argument("not moving!");    
+        }
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     auto new_d_it =find_disturbance(objects, t.disturbance.bf);

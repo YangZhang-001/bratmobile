@@ -1022,7 +1022,7 @@ void Configurator::track_task_execution(){
 		deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance, worldBuilder.world_objects); //track using obstacle OR dead reckoning
 	}
 	else{
-		wb_bridger.set_tracked_disturbance(g[currentVertex].Dn);
+		worldBuilder.wb_bridger.set_tracked_disturbance(transitionSystem[currentVertex].Dn);
 	}
 	currentTask.endCriteria.adjust(deltaPose); //adjusting in task so system can be memoryless
 	printf("end criteria: a=%f, d=%f\n", currentTask.endCriteria.angle.get_signed(), currentTask.endCriteria.distance.get_signed());
