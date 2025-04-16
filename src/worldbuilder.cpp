@@ -370,35 +370,19 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
     if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005 || (t.action.L==0 && t.action.R==0)){
+        throw "no disturbance!"
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
-    // //probably here best to do ICP
-    // cv::Rect2f focus=real_world_focus(&t);
-
-    // std::vector <cv::Point2f> focus_points;
-    // printf("focus center x=%f, y=%f\n", focus.x, focus.y);
-    // cv::Point2f tr=focus.br();
-    // for (auto p: pts){
-    //     cv::Point2f p_cv=cv::Point2f(p.x, p.y);
-    //     if (focus.contains(p_cv)){
-    //         focus_points.push_back(p_cv);
-    //     }
-    // }
-    // std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
     auto new_d_it =find_disturbance(objects, t.disturbance.bf);
 
     if (new_d_it==objects.end()){
+        throw "not found!";
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     BodyFeatures new_d=*new_d_it;
-    //b2Transform mulT=b2MulT(t.disturbance.pose(), new_d.second.pose),
      b2Transform mulT= t.disturbance.pose()- new_d.pose, result=b2Transform_zero;
 //what to do when different dimensions??
     observed_disturbance->bf=new_d;
-    // if (new_d.second.match(t.disturbance.bf)){
-    //     new_d.second.halfWidth=t.disturbance.bf.halfWidth;
-    //     new_d.second.halfLength=t.disturbance.bf.halfLength;
-    // }
     float dot=b2Dot(new_d.pose.p, t.disturbance.bf.pose.p);
     float denom=(new_d.pose.p.Length() * t.disturbance.bf.pose.p.Length());
     float cos_angle= dot/denom;
