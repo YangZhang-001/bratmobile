@@ -1032,6 +1032,7 @@ void Configurator::track_task_execution(){
 		currentTask.change=1;
 	}
 	vertexDescriptor v=estimate_current_vertex(transitionSystem, currentTask,currentVertex);
+	printf("almost finished tracking!");
 	currentVertex=v;
 	printf("finished tracking!");
 }
