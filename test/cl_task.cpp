@@ -58,7 +58,9 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
     Configurator configurator(controlGoal);
-
+	if (argc>2){
+		configuratorInterface.debugOn=atoi(argv[2]);
+	}
 	configurator.setSimulationStep(.5);
 	as=AffordanceSetter(AffordanceIndex(atoi(argv[1])));
 	LidarInterface dataInterface(&configuratorInterface);
