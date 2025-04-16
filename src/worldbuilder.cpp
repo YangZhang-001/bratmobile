@@ -387,7 +387,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     // std::pair <bool, BodyFeatures> new_d=bounding_rotated_box(focus_points);
     auto new_d_it =find_disturbance(objects, t.disturbance.bf);
 
-    if (new_d_it!=objects.end()){
+    if (new_d_it==objects.end()){
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     BodyFeatures new_d=*new_d_it;
@@ -399,7 +399,8 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     //     new_d.second.halfWidth=t.disturbance.bf.halfWidth;
     //     new_d.second.halfLength=t.disturbance.bf.halfLength;
     // }
-    float angle=atan(mulT.p.y/mulT.p.x);
+    float dot=b2Dot(new_d.pose.p, t.disturbance.bf.pose.p);
+    float angle=acos(dot/(new_d.pose.p.Length() * t.disturbance.bf.pose.p.Length()));
     float distance=mulT.p.Length();
     result.q.Set(angle);
     result.p.x=result.q.c*distance;
