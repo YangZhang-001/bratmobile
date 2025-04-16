@@ -393,7 +393,6 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     printf("t dist x=%f, y=%f, angle=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle());
     printf("NEW dist x=%f, y=%f, angle=%f\n", new_d.pose.p.x, new_d.pose.p.y, new_d.pose.q.GetAngle());
     printf("mult x=%f, y=%f, angle=%f\n", mulT.p.x, mulT.p.y, mulT.q.GetAngle());
-
     float dot=b2Dot(new_d.pose.p, t.disturbance.bf.pose.p);
     float denom=(new_d.pose.p.Length() * t.disturbance.bf.pose.p.Length());
     float cos_angle= dot/denom;
