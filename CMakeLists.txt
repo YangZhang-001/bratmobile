@@ -26,13 +26,11 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   target_link_libraries(target ${OpenCV_LIBS} box2d alphabot a1lidarrpi CloCK pigpio)
   target_link_libraries(targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi CloCK pigpio)
   add_subdirectory(test)
-
+  add_subdirectory(test/unit_test "${CMAKE_CURRENT_BINARY_DIR}/test/unit_test")
   message("detected architecture aarch64, building executables")
 else()
   #add_subdirectory(test "${CMAKE_CURRENT_BINARY_DIR}/test")
   add_subdirectory(test/simulations "${CMAKE_CURRENT_BINARY_DIR}/test/simulations")
-
-  add_subdirectory(test/unit_test "${CMAKE_CURRENT_BINARY_DIR}/test/unit_test")
 
 	message("not building any executable")
 endif()

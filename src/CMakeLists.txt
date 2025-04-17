@@ -22,7 +22,6 @@ if(box2d_FOUND)
 else()
       set(BOX2D_BIN_DIR ${"/usr/local/lib/aarch64-linux-gnu"})
        target_link_libraries(HICS ${BOX2D_BIN_DIR}/libbox2d.a ${OpenCV_LIBS} pthread)
-       #message("fetching static library from ${BOX2D_BIN_DIR}")
 	message("BOX2D NOT INSTALLED")
 endif()
 set_target_properties(CloCK PROPERTIES POSITION_INDEPENDENT_CODE TRUE 

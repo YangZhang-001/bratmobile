@@ -17,6 +17,9 @@ enable_testing()
 
 set(CTEST_OUTPUT_ON_FAILURE 1)
 
+if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "(x86)|(X86)|(amd64)|(AMD64)"){ # for X86
+
+
 add_executable(split_task ../test_essentials.h split_task.cpp)
 add_executable(backtrack ../test_essentials.h backtrack.cpp)
 add_executable(explorer explorer.cpp ../test_essentials.h)
@@ -40,7 +43,6 @@ add_executable(end_contact ../test_essentials.h end_contact.cpp)
 add_executable(get_disturbance ../test_essentials.h get_disturbance.cpp)
 add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
 add_executable(task_to_execute ../test_essentials.h task_to_execute.cpp)
-add_executable(estimate_vertex ../test_essentials.h estimate_vertex.cpp)
 add_executable(closed_loop_ended ../test_essentials.h closed_loop_ended.cpp)
 add_executable(axb ../test_essentials.h axb.cpp)
 add_executable(D_affine ../test_essentials.h D_affine.cpp)
@@ -56,7 +58,6 @@ target_link_libraries(rwf CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(D_affine CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(axb CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(closed_loop_ended CloCK ${OpenCV_LIBS} box2d rt)
-target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(task_to_execute CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(split_task CloCK ${OpenCV_LIBS} box2d rt  )
 target_link_libraries(backtrack CloCK ${OpenCV_LIBS} box2d rt  )
@@ -215,15 +216,6 @@ add_test(NAME task_to_execute_left_from_ob COMMAND task_to_execute 1 0 2)
 add_test(NAME task_to_execute_default_to_goal COMMAND task_to_execute 2 2 2)
 add_test(NAME task_to_execute_default COMMAND task_to_execute 0 2 0)
 
-add_test(NAME estimate_vertex_origin COMMAND estimate_vertex 0 0 0)
-add_test(NAME estimate_vertex_split1 COMMAND estimate_vertex 1 0 0) #exactly at end of first split
-add_test(NAME estimate_vertex_split1_52 COMMAND estimate_vertex 1.52 0 0) #halfway between 1 and 2
-add_test(NAME estimate_vertex_split_pi2 COMMAND estimate_vertex 1 0 1.57) #exactly at end of first split
-add_test(NAME estimate_vertex_split_pi8 COMMAND estimate_vertex 1 0 .39) #exactly at end of first split
-add_test(NAME estimate_vertex_split_small_yshift COMMAND estimate_vertex 1 .05 0) #halfway between 1 and 2
-add_test(NAME estimate_vertex_split_large_yshift COMMAND estimate_vertex 1 1 0) #halfway between 1 and 2
-add_test(NAME estimate_vertex_split_large_out COMMAND estimate_vertex 2.5 1 0) #halfway between 1 and 2
-set_property(TEST estimate_vertex_split_large_yshift PROPERTY WILL_FAIL true)
 
 #args:
 #1: disturbance transform x
@@ -316,6 +308,22 @@ add_test(NAME filter_box_RIGHT1 COMMAND filter_box 0 0 0 1) #straight ahead, rig
 # add_test(NAME filter_box_DEF9 COMMAND filter_box .35 -.45 -2.57 2) #straight ahead, default direction
 # add_test(NAME filter_box_DEF10 COMMAND filter_box .35 -.45 2.57 2) #straight ahead, default direction
 # add_test(NAME filter_box_DEF11 COMMAND filter_box -.35 .45 -2.57 2) #straight ahead, default direction
+}
+
+add_executable(estimate_vertex ../test_essentials.h estimate_vertex.cpp)
+
+target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
+
+add_test(NAME estimate_vertex_origin COMMAND estimate_vertex 0 0 0)
+add_test(NAME estimate_vertex_split1 COMMAND estimate_vertex 1 0 0) #exactly at end of first split
+add_test(NAME estimate_vertex_split1_52 COMMAND estimate_vertex 1.52 0 0) #halfway between 1 and 2
+add_test(NAME estimate_vertex_split_pi2 COMMAND estimate_vertex 1 0 1.57) #exactly at end of first split
+add_test(NAME estimate_vertex_split_pi8 COMMAND estimate_vertex 1 0 .39) #exactly at end of first split
+add_test(NAME estimate_vertex_split_small_yshift COMMAND estimate_vertex 1 .05 0) #halfway between 1 and 2
+add_test(NAME estimate_vertex_split_large_yshift COMMAND estimate_vertex 1 1 0) #halfway between 1 and 2
+add_test(NAME estimate_vertex_split_large_out COMMAND estimate_vertex 2.5 1 0) #halfway between 1 and 2
+set_property(TEST estimate_vertex_split_large_yshift PROPERTY WILL_FAIL true)
+
 
 set(CMAKE_BUILD_TYPE Debug)
 

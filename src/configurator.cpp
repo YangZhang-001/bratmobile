@@ -986,7 +986,9 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 }
 
 vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task& t, vertexDescriptor cv){
+	printf("task start!");
 	vertexDescriptor task_start;
+	printf("estimate!");
 	if(current_vertices.empty()){
 		printf("current vertices empty\n");
 		return movingVertex;
@@ -1024,7 +1026,9 @@ void Configurator::track_task_execution(){
 	currentTask.endCriteria.adjust(deltaPose); //adjusting in task so system can be memoryless
 	printf("end criteria: a=%f, d=%f\n", currentTask.endCriteria.angle.get_signed(), currentTask.endCriteria.distance.get_signed());
 	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
+	printf("updated\n");
 	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
+	printf("checked\n");
 	if(currentTask.motorStep==0 || ended){
 		currentTask.change=1;
 	}
