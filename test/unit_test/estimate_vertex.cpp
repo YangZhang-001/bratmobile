@@ -53,7 +53,12 @@ int main(int argc, char** argv){
         solution=c.current_vertices.at(int(integer));
     }
 	catch(const std::out_of_range& oor){
-        solution=c.current_vertices.at(int(c.current_vertices.size()-1));
+        try{
+            solution=c.current_vertices.at(int(c.current_vertices.size()-1));
+        }
+        catch(const std::out_of_range& oor2){
+            solution=c.movingVertex;
+        }   
 		printf("not in range!\n");
 		//return -1;
 	}

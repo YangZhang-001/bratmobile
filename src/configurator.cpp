@@ -1025,9 +1025,7 @@ void Configurator::track_task_execution(){
 	currentTask.endCriteria.adjust(deltaPose); //adjusting in task so system can be memoryless
 	printf("end criteria: a=%f, d=%f\n", currentTask.endCriteria.angle.get_signed(), currentTask.endCriteria.distance.get_signed());
 	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
-	printf("updated\n");
 	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
-	printf("checked\n");
 	if(currentTask.motorStep==0 || ended){
 		currentTask.change=1;
 	}
@@ -1047,7 +1045,7 @@ void Configurator::change_task(){
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
 	math::applyAffineTrans(deltaPose, g);
-	math::applyAffineTrans(-deltaPose, controlGoal);
+	math::applyAffineTrans(deltaPose, controlGoal);
 	//debug::print_pose(deltaPose, "delta pose");
 }
 
