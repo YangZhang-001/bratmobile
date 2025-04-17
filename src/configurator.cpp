@@ -534,20 +534,17 @@ void Configurator::run(Configurator * c){
 			return;
 		}
 		if (c->ci->isReady()){
-			printf("ci ready\n");
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
-			printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 			c->track_task_execution();
 			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
-			printf("pre -changed\n");
-			// if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
-			// 	printf("change goal");
-			// 	c->goal_changer->change_goal(&c->controlGoal);
-			// }	
+			if (goal_changer!=NULL){
+				if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
+					c->goal_changer->change_goal(&c->controlGoal);
+				}					
+			}
 			c->change_task();		
-			printf("changed\n");
 			}
 
 	}

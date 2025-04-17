@@ -357,6 +357,9 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		}
 		else{
 			result=!overlaps(box, &disturbance, robot_pose);
+			if (result){
+				printf("used box!");
+			}
 		}
 	}
 	return result;
