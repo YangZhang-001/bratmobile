@@ -44,6 +44,9 @@ void Configurator::next_task(){
 		return;		
 	}
 	react();
+	if (currentTask.getAffIndex()==PURSUE){
+		currentTask.endCriteria.distance.set(0.05);
+	}
 }
 
 Disturbance set_target(int& run, b2Transform start){
