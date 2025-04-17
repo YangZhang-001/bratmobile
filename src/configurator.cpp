@@ -393,7 +393,7 @@ std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, verte
 	std::vector<std::vector<vertexDescriptor>> paths;
 	paths.push_back(std::vector<vertexDescriptor>()={src});
 	std::vector <Frontier> frontier_v;
-	bool run=true, _finished=false;
+	bool _finished=false;
 	std::vector <Frontier> priorityQueue={Frontier(src, std::vector<vertexDescriptor>())};
 	Task overarching_goal;
 	if (NULL==custom_ctrl_goal){
