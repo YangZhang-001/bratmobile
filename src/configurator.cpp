@@ -1017,7 +1017,7 @@ vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task
 
 }
 
-void Configurator::track_task_execution(){
+vertexDescriptor Configurator::track_task_execution(){
 	bool ended=false;
 	printf("task L=%f, R=%f\n", currentTask.action.L, currentTask.action.R);
 	b2Transform deltaPose=b2Transform_zero;
