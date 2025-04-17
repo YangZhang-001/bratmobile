@@ -2,7 +2,9 @@
 
 int main(int argc, char** argv){
     Configurator c;
-    c.current_vertices={1, 2, 3};
+    if (argc<5){
+        c.current_vertices={1, 2, 3};
+    }
     b2Transform Di_pose(b2Vec2(0.68, 0), b2Rot(0));
     Disturbance Di(PURSUE, b2Vec2(1.0, 0), 0);
     Disturbance Dn(AVOID, Di_pose.p, Di_pose.q.GetAngle());

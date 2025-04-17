@@ -325,6 +325,7 @@ add_test(NAME estimate_vertex_split_small_yshift COMMAND estimate_vertex 1 .05 0
 add_test(NAME estimate_vertex_split_large_yshift COMMAND estimate_vertex 1 1 0) #halfway between 1 and 2
 add_test(NAME estimate_vertex_split_large_out COMMAND estimate_vertex 2.5 1 0) #halfway between 1 and 2
 set_property(TEST estimate_vertex_split_large_yshift PROPERTY WILL_FAIL true)
+add_test(NAME estimate_vertex_empty COMMAND estimate_vertex 0 0 0 0)
 
 
 set(CMAKE_BUILD_TYPE Debug)
