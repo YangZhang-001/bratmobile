@@ -383,21 +383,21 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     auto new_d_it =find_disturbance(objects, t.disturbance.bf);
-
+    printf("objects: %i\n", objects.size());
     if (new_d_it==objects.end()){
         throw std::invalid_argument("not found!");
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     BodyFeatures new_d=*new_d_it;
     b2Transform mulT= t.disturbance.pose()- new_d.pose, result=b2Transform_zero;
-    printf("t dist x=%f, y=%f, angle=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle());
-    printf("NEW dist x=%f, y=%f, angle=%f\n", new_d.pose.p.x, new_d.pose.p.y, new_d.pose.q.GetAngle());
-    printf("mult x=%f, y=%f, angle=%f\n", mulT.p.x, mulT.p.y, mulT.q.GetAngle());
+    // printf("t dist x=%f, y=%f, angle=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle());
+    // printf("NEW dist x=%f, y=%f, angle=%f\n", new_d.pose.p.x, new_d.pose.p.y, new_d.pose.q.GetAngle());
+    // printf("mult x=%f, y=%f, angle=%f\n", mulT.p.x, mulT.p.y, mulT.q.GetAngle());
     float dot=b2Dot(new_d.pose.p, t.disturbance.bf.pose.p);
     float denom=(new_d.pose.p.Length() * t.disturbance.bf.pose.p.Length());
     float cos_angle= dot/denom;
     float angle=0;
-    printf("dot =%f, denom=%f cos angle =%f", dot, denom, cos_angle);    
+    // printf("dot =%f, denom=%f cos angle =%f", dot, denom, cos_angle);    
     if (fabs(cos_angle)<=1){
         angle=acos(cos_angle);
     }

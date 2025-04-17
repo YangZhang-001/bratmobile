@@ -197,7 +197,12 @@ void explore_plan(b2World&);
 std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const TransitionSystem &);
 
 //returns estimation of current vertex based on observed or estimate position of Di in currentTask
-vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& currentTask, vertexDescriptor currentVertex);
+/*
+@param g the cognitive map
+@param t the task which is currently being executed on the robot
+@param cv the current vertex
+*/
+vertexDescriptor estimate_current_vertex(TransitionSystem&, const Task& t, vertexDescriptor cv);
 
 //uses LIDAR data to calculate an affine transform of disturbance Di if present
 void track_task_execution();

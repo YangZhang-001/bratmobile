@@ -984,7 +984,7 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 	return rho;
 }
 
-vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task& currentTask, vertexDescriptor cv){
+vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, const Task& t, vertexDescriptor cv){
 	vertexDescriptor task_start;
 	try {
 		task_start=current_vertices.at(0);
@@ -994,12 +994,12 @@ vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task
 		current_vertices={cv};
 		return cv;
 	}
-	b2Transform Di_distance=currentTask.from_Di(), v_from_D=b2Transform_zero;
+	b2Transform Di_distance=t.from_Di(), v_from_D=b2Transform_zero;
 
 	float sum=10000;
 	StateMatcher matcher;
 	for (vertexDescriptor & v:current_vertices){
-		if ((g[task_start].Dn.getAffIndex()==AVOID && currentTask.disturbance.getAffIndex()==PURSUE)){
+		if ((g[task_start].Dn.getAffIndex()==AVOID && t.disturbance.getAffIndex()==PURSUE)){
 			v_from_D=g[v].start_from_Dn();
 		}
 		else{
