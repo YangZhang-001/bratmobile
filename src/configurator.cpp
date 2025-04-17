@@ -984,7 +984,7 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 	return rho;
 }
 
-vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, const Task& t, vertexDescriptor cv){
+vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task& t, vertexDescriptor cv){
 	vertexDescriptor task_start;
 	try {
 		task_start=current_vertices.at(0);
