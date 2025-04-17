@@ -541,7 +541,6 @@ void Configurator::run(Configurator * c){
 			printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 			c->track_task_execution();
 			c->currentVertex=c->estimate_current_vertex(c->transitionSystem, c->currentTask,c->currentVertex);
-
 			if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
 				printf("change goal");
 				c->goal_changer->change_goal(&c->controlGoal);
@@ -993,11 +992,9 @@ vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task
 	}
 	catch(const std::out_of_range& oor){
 		printf("current vertices empty\n");
-		current_vertices={cv};
-		return cv;
+		return movingVertex;
 	}
 	b2Transform Di_distance=t.from_Di(), v_from_D=b2Transform_zero;
-
 	float sum=10000;
 	StateMatcher matcher;
 	for (vertexDescriptor & v:current_vertices){
@@ -1014,6 +1011,7 @@ vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task
 			sum=sum_diff;
 		}				
 	}
+	printf("current vertex=%i\n", cv);
 	printf("current vertex=%i\n", cv);
 	return cv;
 
@@ -1130,9 +1128,9 @@ void Configurator::follow_plan(){
 }
 
 void Configurator::react(){
-	if (transitionSystem[0].Dn.isValid()){
+	if (transitionSystem[currentVertex].Dn.isValid()){
 		printf("avoid!");
-		currentTask= Task(transitionSystem[0].Dn, DEFAULT); //reactive
+		currentTask= Task(transitionSystem[currentVertex].Dn, DEFAULT); //reactive
 	}
 	else{
 		currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
