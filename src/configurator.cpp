@@ -541,11 +541,11 @@ void Configurator::run(Configurator * c){
 			printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 			c->track_task_execution();
 			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
-			if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
-				printf("change goal");
-				c->goal_changer->change_goal(&c->controlGoal);
-			}	
 			printf("pre -changed\n");
+			// if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
+			// 	printf("change goal");
+			// 	c->goal_changer->change_goal(&c->controlGoal);
+			// }	
 			c->change_task();		
 			printf("changed\n");
 			}
@@ -988,8 +988,13 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
 	printf("current vertices size=%i\n", current_vertices.size());
 	if(current_vertices.empty()){
-		printf(" current vertex=0\n");
 		currentVertex=movingVertex;
+		printf(" current vertex=0\n");
+		return;
+	}
+	if (current_vertices.size()==1){
+		currentVertex=current_vertices[0];
+		return;
 	}
 	vertexDescriptor task_start=current_vertices[0], cv=TransitionSystem::null_vertex();
 	b2Transform Di_distance=t.from_Di(), v_from_D=b2Transform_zero;
