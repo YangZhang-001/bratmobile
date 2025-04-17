@@ -987,10 +987,7 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 
 vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task& t, vertexDescriptor cv){
 	vertexDescriptor task_start;
-	try {
-		task_start=current_vertices.at(0);
-	}
-	catch(const std::out_of_range& oor){
+	if(current_vertices.empty()){
 		printf("current vertices empty\n");
 		return movingVertex;
 	}
