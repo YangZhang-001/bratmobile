@@ -985,11 +985,11 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 	return rho;
 }
 
-void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t, vertexDescriptor & _cv){
+void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
 	printf("current vertices size=%i\n", current_vertices.size());
 	if(current_vertices.empty()){
 		printf(" current vertex=0\n");
-		_cv=movingVertex;
+		currentVertex=movingVertex;
 	}
 	vertexDescriptor task_start=current_vertices[0], cv=TransitionSystem::null_vertex();
 	b2Transform Di_distance=t.from_Di(), v_from_D=b2Transform_zero;
@@ -1011,7 +1011,7 @@ void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t, vertexD
 	}
 	printf("current vertex=%i\n", cv);
 	printf("current vertex=%i\n", _cv);
-	_cv=cv;
+	currentVertex=cv;
 	// return cv;
 
 }

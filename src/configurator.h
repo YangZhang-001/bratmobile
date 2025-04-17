@@ -199,9 +199,8 @@ std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const Tra
 /*
 @param g the cognitive map
 @param t the task which is currently being executed on the robot
-@param _cv the current vertex
 */
-void estimate_current_vertex(TransitionSystem&, Task& t, vertexDescriptor &_cv);
+void estimate_current_vertex(TransitionSystem&, Task& t);
 
 //uses LIDAR data to calculate an affine transform of disturbance Di if present
 void track_task_execution();
