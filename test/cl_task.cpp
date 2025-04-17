@@ -62,6 +62,7 @@ int main(int argc, char** argv) {
 		configuratorInterface.debugOn=atoi(argv[2]);
 	}
 	configurator.setSimulationStep(.5);
+	printf("current vertices size=%i\n", configurator.current_vertices.size());
 	as=AffordanceSetter(AffordanceIndex(atoi(argv[1])));
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);

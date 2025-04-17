@@ -986,8 +986,9 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 }
 
 vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task& t, vertexDescriptor cv){
+	printf("current vertices size=%i, current v[0]=%i\n", current_vertices.size(), current_vertices[0]);
 	if(current_vertices.empty()){
-		printf("current vertices size=%i: current vertex=0\n", current_vertices.size());
+		printf(" current vertex=0\n");
 		return movingVertex;
 	}
 	vertexDescriptor task_start=current_vertices[0];
