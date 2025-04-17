@@ -38,6 +38,10 @@ void Configurator::explore_plan(b2World &world){
 }
 
 void Configurator::next_task(){
+	if (iteration>1 &&currentTask.change){
+		running=0;
+		return;
+	}
 	react();
 }
 
