@@ -989,7 +989,7 @@ void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t, vertexD
 	printf("current vertices size=%i\n", current_vertices.size());
 	if(current_vertices.empty()){
 		printf(" current vertex=0\n");
-		_cv=cv;
+		_cv=movingVertex;
 	}
 	vertexDescriptor task_start=current_vertices[0], cv=TransitionSystem::null_vertex();
 	b2Transform Di_distance=t.from_Di(), v_from_D=b2Transform_zero;
