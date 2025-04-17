@@ -204,8 +204,8 @@ std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const Tra
 */
 vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& t, vertexDescriptor cv);
 
-//uses LIDAR data to calculate an affine transform of disturbance Di if present
-void track_task_execution();
+//uses LIDAR data to calculate an affine transform of disturbance Di if present, returns the estimated current vertex
+vertexDescriptor track_task_execution();
 
 //changes task to be executed
 void change_task();

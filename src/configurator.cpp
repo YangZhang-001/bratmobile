@@ -539,7 +539,7 @@ void Configurator::run(Configurator * c){
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
 			printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
-			c->track_task_execution();
+			curentVertex=c->track_task_execution();
 			if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
 				printf("change goal");
 				c->goal_changer->change_goal(&c->controlGoal);
@@ -1032,9 +1032,7 @@ void Configurator::track_task_execution(){
 		currentTask.change=1;
 	}
 	vertexDescriptor v=estimate_current_vertex(transitionSystem, currentTask,currentVertex);
-	printf("almost finished tracking!");
-	currentVertex=v;
-	printf("finished tracking!");
+	return v;
 }
 
 void Configurator::change_task(){
