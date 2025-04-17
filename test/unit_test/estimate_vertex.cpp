@@ -44,7 +44,7 @@ int main(int argc, char** argv){
         t.disturbance.bf.pose.q.Set(t.disturbance.bf.pose.q.GetAngle()+theta);
     }
     vertexDescriptor currentVertex=0, solution=currentVertex;
-    c.estimate_current_vertex(g, t, currentVertex);
+    c.estimate_current_vertex(g, t);
     decimal=std::modf(x/0.27, &integer);
     if (decimal>0.5){
         integer+=1;

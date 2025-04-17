@@ -540,7 +540,7 @@ void Configurator::run(Configurator * c){
 			c->Spawner();
 			printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 			c->track_task_execution();
-			c->estimate_current_vertex(c->transitionSystem, c->currentTask,c->currentVertex);
+			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
 			if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
 				printf("change goal");
 				c->goal_changer->change_goal(&c->controlGoal);
@@ -1009,8 +1009,7 @@ void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
 			sum=sum_diff;
 		}				
 	}
-	printf("current vertex=%i\n", cv);
-	printf("current vertex=%i\n", _cv);
+	printf("current vertex cv=%i\n", cv);
 	currentVertex=cv;
 	// return cv;
 
