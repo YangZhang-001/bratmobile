@@ -539,7 +539,7 @@ void Configurator::run(Configurator * c){
 			c->Spawner();
 			c->track_task_execution();
 			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
-			if (goal_changer!=NULL){
+			if (c->goal_changer!=NULL){
 				if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
 					c->goal_changer->change_goal(&c->controlGoal);
 				}					
