@@ -987,12 +987,12 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 
 vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task& t, vertexDescriptor cv){
 	printf("task start!");
-	vertexDescriptor task_start;
 	printf("estimate!");
 	if(current_vertices.empty()){
 		printf("current vertices empty\n");
 		return movingVertex;
 	}
+	vertexDescriptor task_start=current_vertices[0];
 	b2Transform Di_distance=t.from_Di(), v_from_D=b2Transform_zero;
 	float sum=10000;
 	StateMatcher matcher;
