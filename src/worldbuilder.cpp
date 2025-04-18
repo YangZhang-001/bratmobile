@@ -382,7 +382,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         throw std::invalid_argument("whoops");
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
-    auto new_d_it =find_disturbance(objects, t.disturbance.bf);
+    auto new_d_it =find_disturbance(objects, t.disturbance.bf, t.action.getTransform(LIDAR_SAMPLING_RATE));
     printf("objects: %i\n", objects.size());
     if (new_d_it==objects.end()){
         throw std::invalid_argument("not found!");
@@ -416,7 +416,7 @@ std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( st
     std::vector <BodyFeatures>::iterator result =objects.end();
     for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
         float sum_squares;
-        bool match =(*it).match(dist, &sum_squares);
+        bool match =(*it).match(dist, &sum_squares, t);
         if (sum_squares<least_square){
             least_square=sum_squares;
             if (match){ //thresholding
