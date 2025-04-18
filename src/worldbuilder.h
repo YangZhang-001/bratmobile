@@ -152,12 +152,13 @@ class WorldBuilder{
             tracked_disturbance=d;
         }
 
-        //finds the disturbance to be tracked among the worldbuilder objects
-        /*
-        @param objects worldBuilder objects
-        @param dist disturbance to be tracked
+        /**
+        *Finds the disturbance to be tracked among the worldbuilder objects
+        * @param objects worldBuilder objects
+        * @param dist disturbance to be tracked
+        * @param t the estimated instantaneous 2d transform associated to the currently executed task
         */
-        std::vector <BodyFeatures>::iterator find_disturbance(std::vector <BodyFeatures> & objects, const BodyFeatures & dist);
+        std::vector <BodyFeatures>::iterator find_disturbance(std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t);
 
         //private:
         //kalman filter?

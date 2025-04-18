@@ -411,7 +411,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     //what's the most likely angle??
 }
 
-std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist){
+std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t){
     float least_square=10000;
     std::vector <BodyFeatures>::iterator result =objects.end();
     for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
