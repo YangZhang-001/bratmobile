@@ -12,6 +12,17 @@ class AffordanceSetter{
 
 }as;
 
+class TaskSetter{
+	public:
+	Direction d=DEFAULT;
+	bool topDown=false;
+
+	TaskSetter(Direction _d):d(_d){
+		topDown=true;
+	}
+	
+}ts;
+
 void Configurator::explore_plan(b2World &world){
 	if (PLANNING){
 		throw std::invalid_argument("wtf");
@@ -43,7 +54,7 @@ void Configurator::next_task(){
 		currentTask.action.R=0;
 		return;		
 	}
-	react();
+	currentTask= Task(transitionSystem[currentVertex].Dn, ts.direction, b2Transform_zero, ts.topDown); //reactive
 	if (currentTask.getAffIndex()==PURSUE){
 		currentTask.endCriteria.distance.set(0.05);
 	}
@@ -72,6 +83,9 @@ int main(int argc, char** argv) {
 	configurator.setSimulationStep(.5);
 	printf("current vertices size=%i\n", configurator.current_vertices.size());
 	as=AffordanceSetter(AffordanceIndex(atoi(argv[1])));
+	if (argc>3){
+		ts =TaskSetter(Direction(atoi(argc[3])));
+	}
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
 	MotorCallback cb(&controlInterface);
