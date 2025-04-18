@@ -17,6 +17,8 @@ class TaskSetter{
 	Direction d=DEFAULT;
 	bool topDown=false;
 
+	TaskSetter()=default;
+
 	TaskSetter(Direction _d):d(_d){
 		topDown=true;
 	}
