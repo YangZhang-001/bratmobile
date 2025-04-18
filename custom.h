@@ -67,8 +67,8 @@ public:
 		}
 		for (A1LidarData &data:data){
 			if (data.valid&& data.r <LIDAR_RANGE){
-				float x2 = round(data.x*1000)/1000; //resolution adjus
-				float y2 = round(data.y*1000)/1000;
+				float x2 = round(data.x*10000)/10000; //resolution adjus
+				float y2 = round(data.y*10000)/10000;
 				p2f=Pointf(x2, y2);
 				ci->data2fp.insert(p2f);
 				if (ci->debugOn){
