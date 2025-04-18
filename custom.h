@@ -28,7 +28,6 @@ void get_Foldername(char* custom, char name[60]){
 }
 
 
-Disturbance set_target(int&, b2Transform);
 
 std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer& points, const b2Transform& start){
     std::vector <BodyFeatures> result;
@@ -68,8 +67,8 @@ public:
 		}
 		for (A1LidarData &data:data){
 			if (data.valid&& data.r <LIDAR_RANGE){
-				float x2 = round(data.x*100)/100; //resolution adjus
-				float y2 = round(data.y*100)/100;
+				float x2 = round(data.x*1000)/1000; //resolution adjus
+				float y2 = round(data.y*1000)/1000;
 				p2f=Pointf(x2, y2);
 				ci->data2fp.insert(p2f);
 				if (ci->debugOn){
