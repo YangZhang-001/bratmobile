@@ -534,20 +534,17 @@ void Configurator::run(Configurator * c){
 			return;
 		}
 		if (c->ci->isReady()){
-			printf("ci ready\n");
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
-			printf("graph size=%i\n", c->transitionSystem.m_vertices.size());
 			c->track_task_execution();
-			c->currentVertex=c->estimate_current_vertex(c->transitionSystem, c->currentTask,c->currentVertex);
-			if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
-				printf("change goal");
-				c->goal_changer->change_goal(&c->controlGoal);
-			}	
-			printf("pre -changed\n");
+			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
+			if (c->goal_changer!=NULL){
+				if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
+					c->goal_changer->change_goal(&c->controlGoal);
+				}					
+			}
 			c->change_task();		
-			printf("changed\n");
 			}
 
 	}
@@ -985,13 +982,18 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 	return rho;
 }
 
-vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task& t, vertexDescriptor cv){
+void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
 	printf("current vertices size=%i\n", current_vertices.size());
 	if(current_vertices.empty()){
+		currentVertex=movingVertex;
 		printf(" current vertex=0\n");
-		return movingVertex;
+		return;
 	}
-	vertexDescriptor task_start=current_vertices[0];
+	if (current_vertices.size()==1){
+		currentVertex=current_vertices[0];
+		return;
+	}
+	vertexDescriptor task_start=current_vertices[0], cv=TransitionSystem::null_vertex();
 	b2Transform Di_distance=t.from_Di(), v_from_D=b2Transform_zero;
 	float sum=10000;
 	StateMatcher matcher;
@@ -1009,9 +1011,9 @@ vertexDescriptor Configurator::estimate_current_vertex(TransitionSystem& g, Task
 			sum=sum_diff;
 		}				
 	}
-	printf("current vertex=%i\n", cv);
-	printf("current vertex=%i\n", cv);
-	return cv;
+	printf("current vertex cv=%i\n", cv);
+	currentVertex=cv;
+	// return cv;
 
 }
 
@@ -1022,12 +1024,9 @@ void Configurator::track_task_execution(){
 	if (iteration>1){
 		deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance, worldBuilder.world_objects); //track using obstacle OR dead reckoning
 	}
-	currentTask.endCriteria.adjust(deltaPose); //adjusting in task so system can be memoryless
 	printf("end criteria: a=%f, d=%f\n", currentTask.endCriteria.angle.get_signed(), currentTask.endCriteria.distance.get_signed());
 	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
-	printf("updated\n");
 	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
-	printf("checked\n");
 	if(currentTask.motorStep==0 || ended){
 		currentTask.change=1;
 	}
@@ -1047,7 +1046,7 @@ void Configurator::change_task(){
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
 	math::applyAffineTrans(deltaPose, g);
-	math::applyAffineTrans(-deltaPose, controlGoal);
+	math::applyAffineTrans(deltaPose, controlGoal);
 	//debug::print_pose(deltaPose, "delta pose");
 }
 

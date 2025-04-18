@@ -38,7 +38,15 @@ void Configurator::explore_plan(b2World &world){
 }
 
 void Configurator::next_task(){
+	if (iteration>1 &&currentTask.change){
+		currentTask.action.L=0;
+		currentTask.action.R=0;
+		return;		
+	}
 	react();
+	if (currentTask.getAffIndex()==PURSUE){
+		currentTask.endCriteria.distance.set(0.05);
+	}
 }
 
 Disturbance set_target(int& run, b2Transform start){

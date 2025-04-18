@@ -154,11 +154,11 @@ static void run(Configurator *);
 //only keeps unexplored transitions out of vertex v
 void unexplored_transitions(TransitionSystem&, const vertexDescriptor& v);
 
-//combines edges K and jump function: represents possible transitions out of a state
-/*
-\param state the state to which transitions are being assigned
-\param d state direction (redundant)
-\param src source vertex of state
+/**
+*Combines edges K and jump function: represents possible transitions out of a state
+*@param state the state to which transitions are being assigned
+*@param d state direction (redundant)
+*@param src source vertex of state
 */
 void transitionMatrix(State& state, Direction d, vertexDescriptor src); 
 
@@ -196,12 +196,11 @@ void explore_plan(b2World&);
 std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const TransitionSystem &);
 
 //returns estimation of current vertex based on observed or estimate position of Di in currentTask
-/*
-@param g the cognitive map
-@param t the task which is currently being executed on the robot
-@param cv the current vertex
+/**
+*@param g the cognitive map
+*@param t the task which is currently being executed on the robot
 */
-vertexDescriptor estimate_current_vertex(TransitionSystem&, Task& t, vertexDescriptor cv);
+void estimate_current_vertex(TransitionSystem&, Task& t);
 
 //uses LIDAR data to calculate an affine transform of disturbance Di if present
 void track_task_execution();
@@ -210,26 +209,26 @@ void track_task_execution();
 void change_task();
 
 //return motor instruction (in step callbacks for a task - deprecated)
-/*
-\param a the action of the task
-\param distance the distance travelled in a task, default is robot length
+/**
+*@param a the action of the task
+*@param distance the distance travelled in a task, default is robot length
 */
 int motor_step(Task::Action a, float distance=0.27);
 
 //updates environment representation with time
-/*
-\param g the cognitive map
-\param _deltaPose the transform to apply
-\param t pointer to current task
-\param goal pointer to goal task
+/**
+*@param g the cognitive map
+*@param _deltaPose the transform to apply
+*@param t pointer to current task
+*@param goal pointer to goal task
 */
 void update_graph(TransitionSystem&, const b2Transform & _deltaPose, Task* t, Task * goal);
 
 // merge vertices into a single task
-/*
-	\param p the plan
-	\param g the cognitive map
-	\param end_it integer representing iterator pointing to the last vertex in the task beginning at p.begin()
+/**
+	@param p the plan
+	@param g the cognitive map
+	@param end_it integer representing iterator pointing to the last vertex in the task beginning at p.begin()
 */
 Task task_to_execute(const std::vector<vertexDescriptor>& p, const TransitionSystem& g, int end_it);
 

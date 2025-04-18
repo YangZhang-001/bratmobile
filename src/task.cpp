@@ -354,9 +354,15 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 			Distance d(fabs(_distance));
 			//result=d<endCriteria.distance&&a>=endCriteria.angle; 
 			result=endCriteria_met(a, d);
+			if (result){
+				printf("end criteria met!");
+			}
 		}
 		else{
 			result=!overlaps(box, &disturbance, robot_pose);
+			if (result){
+				printf("used box!");
+			}
 		}
 	}
 	return result;

@@ -44,7 +44,7 @@ int main(int argc, char** argv){
         t.disturbance.bf.pose.q.Set(t.disturbance.bf.pose.q.GetAngle()+theta);
     }
     vertexDescriptor currentVertex=0, solution=currentVertex;
-    currentVertex= c.estimate_current_vertex(g, t, currentVertex);
+    c.estimate_current_vertex(g, t);
     decimal=std::modf(x/0.27, &integer);
     if (decimal>0.5){
         integer+=1;
@@ -53,7 +53,12 @@ int main(int argc, char** argv){
         solution=c.current_vertices.at(int(integer));
     }
 	catch(const std::out_of_range& oor){
-        solution=c.current_vertices.at(int(c.current_vertices.size()-1));
+        try{
+            solution=c.current_vertices.at(int(c.current_vertices.size()-1));
+        }
+        catch(const std::out_of_range& oor2){
+            solution=c.movingVertex;
+        }   
 		printf("not in range!\n");
 		//return -1;
 	}

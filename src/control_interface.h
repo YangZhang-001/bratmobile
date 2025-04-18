@@ -62,10 +62,13 @@ class Motor_Out:public IOInterface {
 };	
 
 /**
-* Customizable, for changing goals.
-* arg: control goal pointer
+* Customizable class, for changing goals.
 */
 struct GoalChanger{
-	virtual void change_goal(Task *);
+	/**
+	* Customizable, for changing goals.
+	* @param  control goal pointer
+	*/
+	virtual void change_goal(Task * t);
 };
 #endif
