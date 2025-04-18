@@ -54,7 +54,7 @@ void Configurator::next_task(){
 		currentTask.action.R=0;
 		return;		
 	}
-	currentTask= Task(transitionSystem[currentVertex].Dn, ts.direction, b2Transform_zero, ts.topDown); //reactive
+	currentTask= Task(transitionSystem[currentVertex].Dn, ts.d, b2Transform_zero, ts.topDown); //reactive
 	if (currentTask.getAffIndex()==PURSUE){
 		currentTask.endCriteria.distance.set(0.05);
 	}
@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
 	printf("current vertices size=%i\n", configurator.current_vertices.size());
 	as=AffordanceSetter(AffordanceIndex(atoi(argv[1])));
 	if (argc>3){
-		ts =TaskSetter(Direction(atoi(argc[3])));
+		ts =TaskSetter(Direction(atoi(argv[3])));
 	}
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
