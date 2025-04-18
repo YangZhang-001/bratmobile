@@ -390,8 +390,8 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     }
     BodyFeatures new_d=*new_d_it;
     b2Transform mulT= t.disturbance.pose()- new_d.pose, result=b2Transform_zero;
-    // printf("t dist x=%f, y=%f, angle=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle());
-    // printf("NEW dist x=%f, y=%f, angle=%f\n", new_d.pose.p.x, new_d.pose.p.y, new_d.pose.q.GetAngle());
+    printf("t dist x=%f, y=%f, angle=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle());
+     printf("NEW dist x=%f, y=%f, angle=%f\n", new_d.pose.p.x, new_d.pose.p.y, new_d.pose.q.GetAngle());
     // printf("mult x=%f, y=%f, angle=%f\n", mulT.p.x, mulT.p.y, mulT.q.GetAngle());
     float dot=b2Dot(new_d.pose.p, t.disturbance.bf.pose.p);
     float denom=(new_d.pose.p.Length() * t.disturbance.bf.pose.p.Length());
@@ -401,7 +401,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     if (fabs(cos_angle)<=1){
         angle=acos(cos_angle);
     }
-    float distance=mulT.p.Length();
+    float distance=t.disturbance.p.Length()-new_d.pose.p.Length();
     result.q.Set(angle);
     result.p.x=result.q.c*distance;
     result.p.y=result.q.s*distance;
