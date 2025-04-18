@@ -5,8 +5,8 @@ bool BodyFeatures::match(const BodyFeatures& bf, float * v, b2Transform t){
     float hypothenuse_square= pow(bf.pose.p.Length(), 2); //assumes robot-centric perspective
     float adj_side_square=pow(bf.pose.p.Length()*t.q.c, 2);
     float distance_adjust= sqrt(hypothenuse_square-adj_side_square);
-    float diff_x=pose.p.x -pose.q.s*distance_adjust-bf.pose.p.x;
-    float diff_y=pose.p.y+pose.q.c*distance_adjust-bf.pose.p.y;
+    float diff_x=pose.p.x -t.q.s*distance_adjust-bf.pose.p.x;
+    float diff_y=pose.p.y+t.q.c*distance_adjust-bf.pose.p.y;
     float diff_w=halfWidth-bf.halfWidth;
     float diff_l=halfLength-bf.halfLength;
     bool match_x=fabs(diff_x)<D_POSE_MARGIN;
