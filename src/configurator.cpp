@@ -55,7 +55,7 @@ bool Configurator::Spawner(){
 	explore_plan(world);
 	auto endTime =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>d= now- endTime; //in seconds
-	duration=abs(float(d.count())/1000); //express in seconds
+	float duration=abs(float(d.count())/1000); //express in seconds
 	printf("built wolrd in %f\n", duration);
 	worldBuilder.resetBodies();
 	return 1;
