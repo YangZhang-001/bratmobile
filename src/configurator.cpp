@@ -1034,7 +1034,7 @@ void Configurator::change_task(){
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
 	math::applyAffineTrans(deltaPose, g);
 	math::applyAffineTrans(-deltaPose, controlGoal);
-	debug::print_pose(controlGoal->disturbance.bf.pose, "goal pose");
+	// debug::print_pose(controlGoal->disturbance.bf.pose, "goal pose");
 }
 
 int Configurator::motor_step(Task::Action a, float distance){
@@ -1061,6 +1061,7 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
 		//Disturbance Di= Dn;
 		Dn.bf.pose=g[p[0]].start_from_Dn(); //expected input!
+		Dn.bf.pose.q.SetAngle(atan(Dn.bf.pose.q.s/Dn.bf.pose.q.c));
 		Dn.set_affordance(PURSUE);
 		t=Task(Dn, g[p[0]].direction, b2Transform_zero, true);
 		float distance = g[p[end_it]].end_from_Dn().p.Length();
@@ -1069,9 +1070,12 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	else{
 		t=Task(g[p[0]].Di, g[p[0]].direction, b2Transform_zero, true);
 		t.disturbance.bf.pose=g[p[0]].start_from_Di();
+		t.disturbance.bf.pose.q.SetAngle(atan(t.disturbance.bf.pose.q.s/t.disturbance.bf.pose.q.c));
+
 	}
 	debug::print_pose(t.disturbance.pose(), "new task disturbance is at: ");
 	t.motorStep=motor_step(t.getAction(), start_to_end.p.Length());
+	printf("new disturbance x=%f \t y=%f \t %theta=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle() );
 	return t;
 
 }
