@@ -96,7 +96,7 @@ class BodyFeatures{
 
     std::vector <cv::Point2f> vertices_cv()const; //global vertices
 
-    bool is_point(){
+    bool is_point()const{
         return halfWidth==MIN_BODY_DIMENSION && halfLength==MIN_BODY_DIMENSION;
     }
 
