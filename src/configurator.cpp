@@ -1060,7 +1060,7 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	b2Transform start_to_end= g[p[0]].start - g[p[end_it]].endPose;
 	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
 		//Disturbance Di= Dn;
-		//Dn.bf.pose=g[p[0]].start_from_Dn(); //expected input!
+		Dn.bf.pose=g[p[0]].start_from_Dn(); //expected input!
 		Dn.set_affordance(PURSUE);
 		t=Task(Dn, g[p[0]].direction, b2Transform_zero, true);
 		float distance = g[p[end_it]].end_from_Dn().p.Length();
@@ -1068,7 +1068,7 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	}
 	else{
 		t=Task(g[p[0]].Di, g[p[0]].direction, b2Transform_zero, true);
-
+		t.disturbance.bf.pose=g[p[0]].start_from_Di();
 	}
 	debug::print_pose(t.disturbance.pose(), "new task disturbance is at: ");
 	t.motorStep=motor_step(t.getAction(), start_to_end.p.Length());
