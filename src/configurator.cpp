@@ -1061,7 +1061,7 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
 		//Disturbance Di= Dn;
 		Dn.bf.pose=g[p[0]].start_from_Dn(); //expected input!
-		Dn.bf.pose.q.SetAngle(atan(Dn.bf.pose.q.s/Dn.bf.pose.q.c));
+		Dn.bf.pose.q.Set(atan(Dn.bf.pose.q.s/Dn.bf.pose.q.c));
 		Dn.set_affordance(PURSUE);
 		t=Task(Dn, g[p[0]].direction, b2Transform_zero, true);
 		float distance = g[p[end_it]].end_from_Dn().p.Length();
@@ -1070,7 +1070,7 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	else{
 		t=Task(g[p[0]].Di, g[p[0]].direction, b2Transform_zero, true);
 		t.disturbance.bf.pose=g[p[0]].start_from_Di();
-		t.disturbance.bf.pose.q.SetAngle(atan(t.disturbance.bf.pose.q.s/t.disturbance.bf.pose.q.c));
+		t.disturbance.bf.pose.q.Set(atan(t.disturbance.bf.pose.q.s/t.disturbance.bf.pose.q.c));
 
 	}
 	debug::print_pose(t.disturbance.pose(), "new task disturbance is at: ");
