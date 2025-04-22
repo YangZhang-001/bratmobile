@@ -46,13 +46,6 @@ bool Configurator::Spawner(){
 
 	//BENCHMARK + FIND TRUE SAMPLING RATE
 	auto now =std::chrono::high_resolution_clock::now();
-	std::chrono::duration<float, std::milli>diff= now - previousTimeScan; //in seconds
-	//timeElapsed=float(diff.count())/1000; //express in seconds
-	previousTimeScan=now; //update the time of sampling
-
-	// if (timerOff){
-	// 	timeElapsed = .2;
-	// }
 
 	//CREATE BOX2D ENVIRONMENT
 	b2Vec2 gravity = {0.0, 0.0};
@@ -60,6 +53,10 @@ bool Configurator::Spawner(){
 	char name[256];
 	worldBuilder.world_objects=worldBuilder.getFeatures(data2fp, b2Transform_zero);
 	explore_plan(world);
+	auto endTime =std::chrono::high_resolution_clock::now();
+	std::chrono::duration<float, std::milli>d= now- endTime; //in seconds
+	duration=abs(float(d.count())/1000); //express in seconds
+	printf("built wolrd in %f\n", duration);
 	worldBuilder.resetBodies();
 	return 1;
 }

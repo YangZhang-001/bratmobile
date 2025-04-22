@@ -9,8 +9,8 @@ bool BodyFeatures::match(const BodyFeatures& bf, float * v, b2Transform t){
     float diff_y=pose.p.y-bf.pose.p.y; //+t.q.c*distance_adjust
     float diff_w=halfWidth-bf.halfWidth;
     float diff_l=halfLength-bf.halfLength;
-    bool match_x=fabs(diff_x)<D_POSE_MARGIN;
-    bool match_y=fabs(diff_y)<D_POSE_MARGIN;
+    bool match_x=fabs(diff_x)<D_POSE_MARGIN+ fabs(t.q.s*distance_adjust);
+    bool match_y=fabs(diff_y)<D_POSE_MARGIN+fabs(t.q.c*distance_adjust);
     bool match_w=fabs(diff_w)<D_DIMENSIONS_MARGIN;
     bool match_h=fabs(diff_l)<D_DIMENSIONS_MARGIN;
     if (v!=NULL){
