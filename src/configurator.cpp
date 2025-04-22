@@ -153,7 +153,6 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.direction);
 		applyTransitionMatrix(g, v, direction, er.ended, v, plan_prov);
-		//printf("v=%i options =%in", v, g[v].options.size());		
 		for (Direction d: g[v].options){ //add and evaluate all vertices
 			v0_exp=v;
 			std::vector <Direction> options=g[v0_exp].options;
@@ -164,32 +163,23 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				std::vector <vertexDescriptor> propagated;
 				do {
 				start=g[v0].endPose +shift;
-				//debug::print_pose(start, "siulation start");
 				Disturbance Di=getDisturbance(g, v0, w, g[v0].options[0], start);
 				t = Task(Di, g[v0].options[0], start, true);//need to update end crit
 				std::pair <State, Edge> sk(State(start, Di, g[v0].options[0]), Edge());
 				adjust_simulated_task(v0, g, &t);
 				worldBuilder.buildWorld(w, t.start, t.direction, t.disturbance, 0.15, WorldBuilder::PARTITION); //was g[v].endPose
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
-//				worldBuilder.world_cleanup(w);
-				if (v==0 && sim.resultCode==sim.crashed){
-					printf("IM GONNA CRASH!!!! at");
-					debug::print_pose(sim.collision.pose());
-				}
 				gt::fill(sim, &sk.first, &sk.second); //find simulation result
 				sk.second.it_observed=iteration;
 				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction);
-				//State * source=NULL;
 				StateDifference sd;
 				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.direction, StateMatcher::MATCH_TYPE::ABSTRACT, &sd);		//, closest_match	
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
 				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
 					g[v0].options.erase(g[v0].options.begin());
 					v1=match.second; //frontier
-				//	printf("match with %i\n", v1);
 						edge= gt::add_edge(v0, v1, g, iteration, t.direction); //assumes edge added
 					if (edge.second){
-						//printf("added edge: %i -> %i, step=%i\n", v0, v1, sk.second.step);
 						g[edge.first]=sk.second; //doesn't update motorstep
 					}
 					if (currentTask.change){
@@ -204,12 +194,12 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 							boost::remove_edge(edge.first, g);
 							edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
 							auto plan_tmp=planner(g, v, TransitionSystem::null_vertex(), been, &controlGoal_adjusted, &finished); //not v but task start
-							printf("out of explore planner\n");
+							//printf("out of explore planner\n");
 							bool filler=0;
 							if (finished){
 								plan_prov=plan_tmp;
 								if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
-									printf("inserting current vertex\n");
+									//printf("inserting current vertex\n");
 									plan_prov.insert(plan_prov.begin(), task_start);
 								}
 								if (t.direction== g[task_start].direction){
@@ -229,14 +219,14 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				else{
 					auto out_expected=gt::outEdges(g, v0, t.direction);
 					edge= add_vertex_now(v0, v1,g,sk.first.Di, sk.second); //addVertex
-					//g[edge.first.m_target].label=sk.first.label; //new edge, valid
-					if (!out_expected.empty()){
-						vertexDescriptor exp=out_expected[0].m_target;
-						StateDifference sd_exp(g[v1], g[exp]);
-						printf("thought it'd be vertex %i , end pose:", exp );
-					}
-					printf("added vertex!");
-					debug::print_state_difference(sd, match.second, v1);
+					// //g[edge.first.m_target].label=sk.first.label; //new edge, valid
+					// if (!out_expected.empty()){
+					// 	vertexDescriptor exp=out_expected[0].m_target;
+					// 	StateDifference sd_exp(g[v1], g[exp]);
+					// 	printf("thought it'd be vertex %i , end pose:", exp );
+					// }
+					// printf("added vertex!");
+					// debug::print_state_difference(sd, match.second, v1);
 					shift=b2Transform_zero;
 				}
 				if(edge.second){
@@ -1079,6 +1069,7 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 		t=Task(g[p[0]].Di, g[p[0]].direction, b2Transform_zero, true);
 
 	}
+	debug::print_pose(t.disturbance.pose(), "new task disturbance is at: ");
 	t.motorStep=motor_step(t.getAction(), start_to_end.p.Length());
 	return t;
 
