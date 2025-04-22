@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
     Configurator configurator(controlGoal);
 	dump_benchmarks( "rt-update", "/tmp");
 	if (argc>1){
-		#define DEBUG atoi(argv[1])
+		configuratorInterface.debugOn=atoi(argv[1]);
 	}
 	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);

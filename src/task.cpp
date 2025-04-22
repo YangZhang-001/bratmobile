@@ -360,6 +360,12 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		}
 		else{
 			result=!overlaps(box, &disturbance, robot_pose);
+			FILE * box_file;
+			box_file = fopen("/tmp/box_file.txt", "a");
+			for (int i=0; i<box.m_count; i++){
+				fprintf(box_file, "%f\t%f\n", box.m_vertices[i].x, box.m_vertices[i].y); //save predictions/		
+			}
+			fclose(box_file);
 			if (result){
 				printf("used box!");
 			}

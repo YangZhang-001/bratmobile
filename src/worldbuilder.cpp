@@ -369,7 +369,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     if (observed_disturbance==NULL){
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
-    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.area()<0.0005 || (t.action.L==0 && t.action.R==0)){
+    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.is_point()|| (t.action.L==0 && t.action.R==0)){
         if (t.disturbance.getAffIndex()==NONE){
             throw std::invalid_argument("no disturbance!");    
         }
@@ -387,6 +387,9 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     if (new_d_it==objects.end()){
         throw std::invalid_argument("not found!");
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
+    }
+    if ((*new_d_it).is_point()){
+        throw std::invalid_argument("for some reason it's tiny!");    
     }
     BodyFeatures new_d=*new_d_it;
     b2Transform mulT= t.disturbance.pose()- new_d.pose, result=b2Transform_zero;

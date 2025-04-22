@@ -1033,7 +1033,7 @@ void Configurator::change_task(){
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
 	math::applyAffineTrans(deltaPose, g);
-	math::applyAffineTrans(deltaPose, controlGoal);
+	math::applyAffineTrans(-deltaPose, controlGoal);
 	debug::print_pose(controlGoal->disturbance.bf.pose, "goal pose");
 }
 
@@ -1108,10 +1108,8 @@ void Configurator::follow_plan(){
 	}
 	current_vertices=std::vector(plan.begin(), plan.begin()+i);
 	printPlan(&plan);
-	//printf("change task=%i, task step=%i\n", currentTask.change, currentTask.motorStep);
 	currentTask = task_to_execute(plan, transitionSystem, i);	
 	plan.erase(plan.begin(), plan.begin()+i);
-	//set end criteria to adjust error??
 
 }
 
