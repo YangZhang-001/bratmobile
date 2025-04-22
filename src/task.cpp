@@ -332,10 +332,12 @@ EndedResult Task::checkEnded(const State& n,  Direction dir, bool relax, std::pa
 bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,Disturbance *dist_obs ){
 	bool result=false;
 	if (box.m_count<4){
+		printf("no box!\n");
 		return true;
 	}
 	if (dist_obs->getAffIndex()==NONE && direction==DEFAULT){
 		if (start.p.Length()>=BOX2DRANGE){
+			printf("far af\n");
 			result=true;
 		}
 	}
@@ -343,7 +345,6 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		b2Transform fromDi=from_Di(&b2Transform_zero);
 		Angle a(fromDi.q.GetAngle());
 		Distance d(fromDi.p.Length());
-		//result=d.get()<endCriteria.distance.get();
 		result=endCriteria_met(a, d);
 	}
 	else if (dist_obs->getAffIndex()==AVOID || action.getOmega()!=0){
@@ -352,7 +353,6 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 			Angle a(fabs(fromDi.q.GetAngle()));
 			float _distance=std::max(fromDi.p.Length(), start.p.Length());
 			Distance d(fabs(_distance));
-			//result=d<endCriteria.distance&&a>=endCriteria.angle; 
 			result=endCriteria_met(a, d);
 			if (result){
 				printf("end criteria met!");

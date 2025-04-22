@@ -1034,7 +1034,7 @@ void Configurator::change_task(){
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
 	math::applyAffineTrans(deltaPose, g);
 	math::applyAffineTrans(deltaPose, controlGoal);
-	//debug::print_pose(deltaPose, "delta pose");
+	debug::print_pose(controlGoal->disturbance.bf.pose, "goal pose");
 }
 
 int Configurator::motor_step(Task::Action a, float distance){
@@ -1060,6 +1060,7 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	b2Transform start_to_end= g[p[0]].start - g[p[end_it]].endPose;
 	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
 		//Disturbance Di= Dn;
+		//Dn.bf.pose=g[p[0]].start_from_Dn(); //expected input!
 		Dn.set_affordance(PURSUE);
 		t=Task(Dn, g[p[0]].direction, b2Transform_zero, true);
 		float distance = g[p[end_it]].end_from_Dn().p.Length();
