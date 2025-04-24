@@ -151,7 +151,7 @@ int main(int argc, char** argv){
     print_transform(candidate.Dn.pose());
     print_transform(s1.Dn.pose());
     StateDifference sd;
-    StateMatcher::MATCH_TYPE result= matcher.isMatch(s1, candidate, NULL, &sd);
+    StateMatcher::MATCH_TYPE result= matcher.isMatch(s1, candidate, Threshold(), NULL, &sd);
     if (result!=desired_match){
         printf(" desired =%i, result=%i\n", desired_match, result);
         return 1;

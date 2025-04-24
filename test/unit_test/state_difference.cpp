@@ -37,7 +37,7 @@ int main(int argc, char** argv){
     s2.Dn= Disturbance(bf2[0]); //assumes 1 item length
     StateDifference sd(s2, s1);
     StateMatcher matcher;
-    StateMatcher::StateMatch sm(sd, matcher.error);
+    StateMatcher::StateMatch sm(sd, Threshold());
     if (!sm.Dn_exact()){
         printf("sum_d=%f\n", sd.sum_D(sd.Dn));
         return 1;
