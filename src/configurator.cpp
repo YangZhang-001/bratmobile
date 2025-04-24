@@ -1015,7 +1015,9 @@ void Configurator::track_task_execution(){
 	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
 	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
 	b2Rot angle_error(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle()-deltaPose.q.GetAngle());
-	control->adjust_gain(angle_error, deltaPose.q);
+	if (currentTask.direction==DEFAULT){
+		control->adjust_gain(angle_error, deltaPose.q);
+	}
 	if(currentTask.motorStep==0 || ended){
 		currentTask.change=1;
 	}
