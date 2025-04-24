@@ -3,7 +3,7 @@
 int main(int argc, char** argv){
     Configurator c;
     if (argc<5){
-        c.current_vertices={1, 2, 3};
+        c.current_vertices={0, 1, 2, 3};
     }
     b2Transform Di_pose(b2Vec2(0.68, 0), b2Rot(0));
     Disturbance Di(PURSUE, b2Vec2(1.0, 0), 0);
@@ -43,7 +43,7 @@ int main(int argc, char** argv){
         theta=DEG_TO_RAD_K* atof(argv[3]);
         t.disturbance.bf.pose.q.Set(t.disturbance.bf.pose.q.GetAngle()+theta);
     }
-    vertexDescriptor currentVertex=0, solution=currentVertex;
+    vertexDescriptor solution=c.currentVertex;
     c.estimate_current_vertex(g, t);
     decimal=std::modf(x/0.27, &integer);
     if (decimal>0.5){
@@ -62,7 +62,7 @@ int main(int argc, char** argv){
 		printf("not in range!\n");
 		//return -1;
 	}
-    if (solution!=currentVertex){
+    if (solution!=c.currentVertex){
         return 1;
     }
     return 0;
