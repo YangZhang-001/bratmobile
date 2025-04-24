@@ -40,7 +40,7 @@ public:
 * Output from Configurator to Motors
 */
 class Motor_Out:public IOInterface { 
-	float L=0, R=0;
+	float L=0, R=0, L_gain=1, R_gain=1, alpha=0.001;
     public:
 
 	void getData(const Task::Action &a){
@@ -51,13 +51,25 @@ class Motor_Out:public IOInterface {
 	}
 
 	float get_L(){
-		return L;
+		return L*L_gain;
 	}
 
 	float get_R(){
-		return R;
+		return R*R_gain;
 	}
 
+	/**
+	*Adjusts gain to R/L wheel
+	*/
+	void adjust_gain(b2Rot e, b2Rot rot){ //delta rule ()
+		float increment=alpha*e.GetAngle()*rot.GetAngle();
+		if (q<0){
+			L_gain+=increment;
+		}
+		else if (q>0){
+			R_gain+=increment;
+		}
+	}
 
 };	
 
