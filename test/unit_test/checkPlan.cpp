@@ -37,8 +37,11 @@ int main(int argc, char** argv){
     State state_tmp;
     int steps= atoi(argv[4]);
     int ogstep=conf.transitionSystem[conf.currentEdge].step;
+    conf.getTask()->action.L=0.5;
+    conf.getTask()->action.R=0.5;
     for (int i=0;i<di.iteration*2; i++){
         conf.track_task_execution();
+        conf.estimate_current_vertex(conf.transitionSystem, *conf.getTask());
         conf.getTask()->motorStep--;
         bool ch=conf.getTask()->change;
         conf.change_task();

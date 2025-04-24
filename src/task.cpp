@@ -333,7 +333,7 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 	bool result=false;
 	if (box.m_count<4){
 		printf("no box!\n");
-		return true;
+		return false;
 	}
 	if (dist_obs->getAffIndex()==NONE && direction==DEFAULT){
 		if (start.p.Length()>=BOX2DRANGE){

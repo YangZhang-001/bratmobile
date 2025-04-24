@@ -45,6 +45,7 @@ Configurator(Task _task): controlGoal(_task), currentTask(_task){
 	currentVertex=movingVertex;
 	currentTask.action.setVelocities(0,0);
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
+	task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
 }
 
 
