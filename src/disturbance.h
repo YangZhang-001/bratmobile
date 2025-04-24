@@ -1,6 +1,4 @@
 #ifndef DISTURBANCE_H
-#define DISTURBANCE_H
-#include "robot.h"
 #include "robot.h"
 #include <algorithm>
 #include <stdexcept>
@@ -8,6 +6,7 @@
 #include <opencv2/tracking.hpp>
 
 typedef unsigned int AffordanceIndex; //was thinking of this being a character but doesn't have to be maybe enum is fine
+
 
 
 struct CompareY{
@@ -100,6 +99,99 @@ class BodyFeatures{
         return halfWidth==MIN_BODY_DIMENSION && halfLength==MIN_BODY_DIMENSION;
     }
 
+};
+
+/**
+*Struct for conveniently grouping weights/threshold associated to BodyFeatures (defined in disturbance.h)
+*/
+class Bundle{
+    float x=1;
+    float y=1;
+    float angle=1;
+    float width=1;
+    float length=1;
+
+    public:
+    Bundle()=default;
+
+    Bundle(float _x, float _y, float _a, float _w, float _l): x(_x), y(_y), angle(_a), width(_w), length(_l){}
+    
+    Bundle operator*(const Bundle & b);
+
+    bool operator<(const BodyFeatures & bf);
+
+    float radius(){
+        return sqrt(pow(x,2)+pow(y,2));
+    }
+
+    float get_x(){
+        return x;
+    }
+
+    float get_y(){
+        return y;
+    }
+
+    float get_angle(){
+        return angle;
+    }
+
+    float get_width(){
+        return width;
+    }
+
+    float get_length(){
+        return length;
+    }
+};
+
+/**
+*Error threshold used to match states or components of states
+/*!
+Essentially uses distance calculations and (adaptive) thresholding
+*/
+class Threshold{
+    public:
+
+    Threshold()=default;
+
+    Threshold(float e, float a, float d, float aff, float d_dim): 
+    endPosition(e), angle(a), dPosition(d), affordance(aff), D_dimensions(d_dim){}
+
+    float for_robot_position(){
+        return endPosition;
+    }
+
+    float for_robot_angle(){
+        return angle;
+    }
+
+    float for_affordance(){
+        return affordance;
+    }
+
+    /** Returns a bundle of thresholds for the initial disturbance
+    */
+    Bundle for_Di(){ 
+        Bundle result(dPosition, dPosition, angle, D_dimensions, D_dimensions);
+        return result*Di_weights;
+    }
+
+    /** Returns a bundle of thresholds for the initial disturbance
+    */
+    Bundle for_Dn(){ 
+        Bundle result(dPosition, dPosition, angle, D_dimensions, D_dimensions);
+        return result*Dn_weights;
+    }
+
+
+    private:
+        float endPosition=0.05;// maximum radius from candidate state's end pose
+        float angle= M_PI/6; // maximum angle difference
+        float dPosition= 0.065;// maximum difference between disturbance positions
+        float affordance =0; //maximum difference between affordances
+        float D_dimensions=D_DIMENSIONS_MARGIN; //maximum differences in disturbance dimensions
+        Bundle Di_weights, Dn_weights;
 };
 
 struct Disturbance{ //this generates error

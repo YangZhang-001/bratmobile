@@ -103,7 +103,7 @@ void StateDifference::init(const State& s1, const State& s2){ //observed, desire
 	else{
 		fill_valid_bodyfeatures(Di, s1, s2, DI);
 	}
-	
+
 }
 
 void StateDifference::fill_invalid_bodyfeatures(BodyFeatures & bf){
@@ -365,7 +365,7 @@ std::vector <vertexDescriptor> gt::task_vertices( vertexDescriptor v, Transition
 }
 
 
-std::vector<vertexDescriptor>::iterator gt::to_task_end(edgeDescriptor& e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan,  std::vector<vertexDescriptor>::iterator it){ 
+std::vector<vertexDescriptor>::iterator gt::to_task_end(edgeDescriptor& e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan,  std::vector<vertexDescriptor>::iterator it){
 edgeDescriptor e_start=e;
 std::pair<edgeDescriptor, bool> ep;
 do{
@@ -381,13 +381,13 @@ do{
 	}
 	//it++; //includes the next vertex not belonging to this task
 }while(g[e.m_target].direction==g[e_start.m_target].direction &&
-		 it != plan.end() && it!=(plan.end()-1)               && 
-		// g[e.m_target].direction==DEFAULT                     && 
+		 it != plan.end() && it!=(plan.end()-1)               &&
+		// g[e.m_target].direction==DEFAULT                     &&
 		 (g[e.m_target].Di==g[e_start.m_source].Di)
 		 //&& ep.second
 		 );
 
-return (it); 
+return (it);
 }
 
 
@@ -418,48 +418,42 @@ bool StateMatcher::match_equal(const MATCH_TYPE& candidate, const MATCH_TYPE& de
 
 
 
-StateMatcher::MATCH_TYPE StateMatcher::isMatch(StateDifference sd, float endDistance){
+StateMatcher::MATCH_TYPE StateMatcher::isMatch(const StateDifference& sd, const  Threshold &threshold, float endDistance){
 	float coefficient=get_coefficient(endDistance);
-	StateMatcher::StateMatch match(sd, error, coefficient);
+	StateMatcher::StateMatch match(sd, threshold, coefficient);
     return match.what();
 }
 
-StateMatcher::MATCH_TYPE StateMatcher::isMatch(const State & s, const State &candidate, const State *src, StateDifference*_sd,bool match_outcome){
+StateMatcher::MATCH_TYPE StateMatcher::isMatch(const State & s, const State &candidate, const Threshold& threshold, const State *src, StateDifference*_sd){
 	//src is the source of candidate
 	StateDifference sd(s, candidate);
-	float stray=0;
-	// if (src!=NULL && s.label!=UNDEFINED){
-	// 	b2Vec2 stray_v;
-	// 	stray_v.x=s.endPose.p.x-src->endPose.p.x;
-	// 	stray_v.y=s.endPose.p.y-src->endPose.p.y;
-	// 	stray=(stray_v).Length();
+	// float stray=0;
+	// if ((stray>error.endPosition && s.label==candidate.label)){ //
+	// 	sd.pose.p.x=10000; // now pose will not be matched
+	// 	sd.pose.p.y=10000;
+	// 	sd.pose.q.Set(MAX_ANGLE_ERROR);
 	// }
-	if ((stray>error.endPosition && s.label==candidate.label)){ //
-		sd.pose.p.x=10000; // now pose will not be matched
-		sd.pose.p.y=10000;
-		sd.pose.q.Set(MAX_ANGLE_ERROR);
-	}
 	if (NULL!=_sd){
 		*_sd=sd;
 	}
-    return isMatch(sd, s.endPose.p.Length()) ;
+    return isMatch(sd, threshold, s.endPose.p.Length()) ;
 }
 
 
-std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> StateMatcher::match_vertex(TransitionSystem g, vertexDescriptor src, Direction d, State s, StateMatcher::MATCH_TYPE mt){
-    std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex());
-	auto edges= boost::out_edges(src, g);
-	for (auto ei=edges.first; ei!=edges.second; ++ei){
-		//MATCH_TYPE match = isMatch(s, g[ei.dereference().m_source]);
-		MATCH_TYPE match = isMatch(s, g[ei.dereference().m_target]);
-		if (g[(*ei).m_target].direction && match_equal(match, mt)){
-			result.first=match;
-			result.second=(*ei).m_target;
-			break;
-		}
-	}
-    return result;
-}
+// std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> StateMatcher::match_vertex(TransitionSystem g, vertexDescriptor src, Direction d, State s, StateMatcher::MATCH_TYPE mt){
+//     std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex());
+// 	auto edges= boost::out_edges(src, g);
+// 	for (auto ei=edges.first; ei!=edges.second; ++ei){
+// 		//MATCH_TYPE match = isMatch(s, g[ei.dereference().m_source]);
+// 		MATCH_TYPE match = isMatch(s, g[ei.dereference().m_target]);
+// 		if (g[(*ei).m_target].direction && match_equal(match, mt)){
+// 			result.first=match;
+// 			result.second=(*ei).m_target;
+// 			break;
+// 		}
+// 	}
+//     return result;
+// }
 
 float StateMatcher::get_coefficient(const float & endDistance){
 	float coefficient=1.0;

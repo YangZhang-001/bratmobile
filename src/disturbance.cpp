@@ -1,5 +1,18 @@
 #include "disturbance.h"
 
+Bundle Bundle::operator*(const Bundle & b){
+    Bundle result=*this;
+    result.x*=b.x;
+    result.y*=b.y;
+    result.angle*=b.angle;
+    result.width*=b.width;
+    result.length*=b.length;
+    return result;
+}
+
+bool Bundle::operator<(const BodyFeatures & bf){
+    return bf.pose.p.Length()<radius() && bf.pose.q.GetAngle()<angle && bf.halfWidth<width && bf.halfLength<length;
+}
 
 bool BodyFeatures::match(const BodyFeatures& bf, float * v, b2Transform t){
     float hypothenuse_square= pow(bf.pose.p.Length(), 2); //assumes robot-centric perspective

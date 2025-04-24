@@ -125,6 +125,8 @@ class WorldBuilder{
     class Bridger{
         Disturbance tracked_disturbance; //reference of disturbance to be tracked, kept in memory when task is changed
         public:
+        Threshold threshold;
+
         //returns a rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
         cv::Rect2f real_world_focus(const Task * );
 

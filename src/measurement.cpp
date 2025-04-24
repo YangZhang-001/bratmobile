@@ -65,6 +65,7 @@ float EndCriteria::getStandardError(Angle a, Distance d, State n){
     return result/3; //normalised to max value it can take
 }
 
+
 float SignedVectorLength(b2Vec2 v){
 	float signedLength = v.Length();
 	if (v.x <0){

@@ -839,8 +839,8 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 		StateMatcher::MATCH_TYPE m=StateMatcher::_FALSE;
 		float sum_tmp=fabs(sd.get_sum(match_type));
 		//if (!relax){
-			m=matcher.isMatch(sd, s.endPose.p.Length());
-			condition=matcher.match_equal(m, match_type);
+		m=matcher.isMatch(sd, worldBuilder.wb_bridger.threshold, s.endPose.p.Length());
+		condition=matcher.match_equal(m, match_type);
 		//}
 		//else{
 			//condition= sum_tmp<sum;

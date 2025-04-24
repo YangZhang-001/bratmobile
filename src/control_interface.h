@@ -41,6 +41,8 @@ public:
 */
 class Motor_Out:public IOInterface { 
 	float L=0, R=0, L_gain=1, R_gain=1, alpha=0.001;
+	float prev_error=0;
+	float integral=0;
     public:
 
 	void getData(const Task::Action &a){
@@ -63,10 +65,10 @@ class Motor_Out:public IOInterface {
 	*/
 	void adjust_gain(b2Rot e, b2Rot rot){ //delta rule ()
 		float increment=alpha*e.GetAngle()*rot.GetAngle();
-		if (e.GetAngle()<0.05){
+		if (e.GetAngle()<0.01){
 			L_gain+=increment;
 		}
-		else if (e.GetAngle()>0.05){
+		else if (e.GetAngle()>0.01){
 			R_gain+=increment;
 		}
 	}

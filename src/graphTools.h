@@ -347,13 +347,6 @@ class StateMatcher{
 	public:
 		//@brief {_FALSE=0, D_NEW=2, DN_POSE=3, _TRUE=1, ANY=4, D_INIT=5, ABSTRACT=6, DI_POSE=7, DN_SHAPE=8, DI_SHAPE=9, POSE=10};
 		enum MATCH_TYPE {_FALSE=0, D_NEW=2, DN_POSE=3, _TRUE=1, ANY=4, D_INIT=5, ABSTRACT=6, DI_POSE=7, DN_SHAPE=8, DI_SHAPE=9, POSE=10};
-		struct Error{
-			const float endPosition=0.05;//0.05;
-			const float angle= M_PI/6;
-			const float dPosition= 0.065;//0.065; 
-			const float affordance =0;
-			const float D_dimensions=D_DIMENSIONS_MARGIN;
-		}error;
 
 		float mu=0.001;
 	    StateMatcher()=default;
@@ -405,17 +398,18 @@ class StateMatcher{
 
 			StateMatch() =default;
 
-			StateMatch(const StateDifference& sd, StateMatcher::Error error, float coefficient=1){
-				position = sd.pose.p.Length()<(error.endPosition*coefficient);
-				angle=fabs(sd.pose.q.GetAngle())<error.angle;
-				Dn_position= sd.Dn.pose.p.Length()<(error.dPosition*coefficient);
-				Di_position= sd.Di.pose.p.Length()<(error.dPosition*coefficient);
-				Dn_angle=fabs(sd.Dn.pose.q.GetAngle())<error.angle;
-				Di_angle=fabs(sd.Di.pose.q.GetAngle())<error.angle;
-				bool Dn_below_threshold_w=fabs(sd.Dn.width())<(error.D_dimensions*coefficient*2);
-				bool Dn_below_threshold_l=fabs(sd.Dn.length())<(error.D_dimensions*coefficient*2);
-				bool Di_below_threshold_w=fabs(sd.Di.width())<(error.D_dimensions*coefficient*2);
-				bool Di_below_threshold_l=fabs(sd.Di.length())<(error.D_dimensions*coefficient*2);
+			StateMatch(const StateDifference& sd, Threshold threshold, float coefficient=1){
+				position = sd.pose.p.Length()<(threshold.for_robot_position()*coefficient);
+				angle=fabs(sd.pose.q.GetAngle())<threshold.for_robot_angle();
+				Bundle Dn=threshold.for_Dn(), Di=threshold.for_Di();
+				Dn_position= sd.Dn.pose.p.Length()<(Dn.radius()*coefficient);
+				Di_position= sd.Di.pose.p.Length()<(Di.radius()*coefficient);
+				Dn_angle=fabs(sd.Dn.pose.q.GetAngle())<Dn.get_angle();
+				Di_angle=fabs(sd.Di.pose.q.GetAngle())<Di.get_angle();
+				bool Dn_below_threshold_w=fabs(sd.Dn.width())<(Dn.get_width()*coefficient*2);
+				bool Dn_below_threshold_l=fabs(sd.Dn.length())<(Dn.get_length()*coefficient*2);
+				bool Di_below_threshold_w=fabs(sd.Di.width())<(Dn.get_width()*coefficient*2);
+				bool Di_below_threshold_l=fabs(sd.Di.length())<(Dn.get_length()*coefficient*2);
 				Dn_shape= Dn_below_threshold_l && Dn_below_threshold_w;
 				Di_shape= Di_below_threshold_l && Di_below_threshold_w;
 
@@ -465,11 +459,11 @@ class StateMatcher{
 
 		bool match_equal(const MATCH_TYPE& candidate, const MATCH_TYPE& desired);
 
-		MATCH_TYPE isMatch(StateDifference, float endDistance=0); //endDistance=endpose
+		MATCH_TYPE isMatch(const StateDifference &, const Threshold &, float endDistance=0); //endDistance=endpose
 
-		MATCH_TYPE isMatch(const State &, const State&, const State* src=NULL, StateDifference * _sd=NULL, bool match_outcome=false); //first state: state to find a match for, second state: candidate match
+		MATCH_TYPE isMatch(const State & s, const State& candidate, const  Threshold &, const State* src=NULL, StateDifference * _sd=NULL); //first state: state to find a match for, second state: candidate match
 
-		std::pair<MATCH_TYPE, vertexDescriptor> match_vertex(TransitionSystem, vertexDescriptor, Direction, State, StateMatcher::MATCH_TYPE mt=StateMatcher::_TRUE); //find match amoung vertex out edges
+		//std::pair<MATCH_TYPE, vertexDescriptor> match_vertex(TransitionSystem, vertexDescriptor, Direction, State, StateMatcher::MATCH_TYPE mt=StateMatcher::_TRUE); //find match amoung vertex out edges
 
 		float get_coefficient(const float &);
 	private:
