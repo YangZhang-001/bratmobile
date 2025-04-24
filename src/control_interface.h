@@ -63,10 +63,10 @@ class Motor_Out:public IOInterface {
 	*/
 	void adjust_gain(b2Rot e, b2Rot rot){ //delta rule ()
 		float increment=alpha*e.GetAngle()*rot.GetAngle();
-		if (e.GetAngle()<0){
+		if (e.GetAngle()<0.05){
 			L_gain+=increment;
 		}
-		else if (e.GetAngle()>0){
+		else if (e.GetAngle()>0.05){
 			R_gain+=increment;
 		}
 	}
