@@ -66,7 +66,7 @@ class Motor_Out:public IOInterface {
 		if (e.GetAngle()<0){
 			L_gain+=increment;
 		}
-		else if (q.GetAngle()>0){
+		else if (e.GetAngle()>0){
 			R_gain+=increment;
 		}
 	}
