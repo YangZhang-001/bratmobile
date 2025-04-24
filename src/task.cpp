@@ -352,14 +352,14 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 			b2Transform fromDi_start=from_Di(&b2Transform_zero, dist_obs); //transform at start of task
 			b2Transform fromDi_now=from_Di(&b2Transform_zero); 
 			b2Transform inst_transform=b2MulT(fromDi_now, fromDi_start);
-			Angle a(fabs(inst_transform.q.GetAngle()));
+			Angle a(fabs(inst_transform.q.GetAngle())+action.getTransform(LIDAR_SAMPLING_RATE/2).q.GetAngle()); //avoid turning too much!
 			float _distance=std::max(inst_transform.p.Length(), start.p.Length());
 			Distance d(fabs(_distance));
 			result=endCriteria_met(a, d);
 			if (result){
 				printf("end criteria met!\t");
 			}
-			printf("angle=%i\n", a.get());
+			printf("angle=%f\n", a.get());
 		}
 		else{
 			result=!overlaps(box, &disturbance, robot_pose);
