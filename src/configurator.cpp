@@ -1059,7 +1059,6 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	}	
 	b2Transform start_to_end= g[p[0]].start - g[p[end_it]].endPose;
 	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
-		//Disturbance Di= Dn;
 		Dn.bf.pose=g[p[0]].start_from_Dn(); //expected input!
 		Dn.bf.pose.q.Set(atan(Dn.bf.pose.q.s/Dn.bf.pose.q.c));
 		Dn.set_affordance(PURSUE);

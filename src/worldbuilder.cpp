@@ -392,7 +392,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         throw std::invalid_argument("for some reason it's tiny!");    
     }
     BodyFeatures new_d=*new_d_it;
-    b2Transform mulT= t.disturbance.pose()- new_d.pose, result=b2Transform_zero;
+    b2Transform result=b2Transform_zero; //mulT= t.disturbance.pose()- new_d.pose,
     printf("t dist x=%f, y=%f, angle=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle());
      printf("NEW dist x=%f, y=%f, angle=%f\n", new_d.pose.p.x, new_d.pose.p.y, new_d.pose.q.GetAngle());
     // printf("mult x=%f, y=%f, angle=%f\n", mulT.p.x, mulT.p.y, mulT.q.GetAngle());
@@ -400,7 +400,6 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     float denom=(new_d.pose.p.Length() * t.disturbance.bf.pose.p.Length());
     float cos_angle= dot/denom;
     float angle=0;
-    // printf("dot =%f, denom=%f cos angle =%f", dot, denom, cos_angle);    
     if (fabs(cos_angle)<=1){
         angle=acos(cos_angle);
     }
@@ -424,6 +423,7 @@ std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( st
             least_square=sum_squares;
             if (match){ //thresholding
                 result = it;
+                
             }
         }
     }
