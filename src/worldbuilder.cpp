@@ -423,7 +423,14 @@ std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( st
             least_square=sum_squares;
             if (match){ //thresholding
                 result = it;
-                
+                if (fabs((*it).pose.q.GetAngle()-dist.pose.q.GetAngle())>(3*M_PI_4)){
+                    if (dist.pose.q.GetAngle()>0){
+                        (*it).pose.q.Set((*it).pose.p.GetAngle()-M_PI);
+                    }
+                    else if (dist.pose.q.GetAngle()<0){
+                        (*it).pose.q.Set((*it).pose.p.GetAngle()+M_PI);
+                    }
+                }
             }
         }
     }
