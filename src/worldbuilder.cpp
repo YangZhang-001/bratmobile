@@ -373,7 +373,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         if (t.disturbance.getAffIndex()==NONE){
             throw std::invalid_argument("no disturbance!");    
         }
-        if (t.disturbance.bf.area()<0.0005){
+        if (t.disturbance.bf.is_point()){
             throw std::invalid_argument("petite disturbance!");    
         }
         if ((t.action.L==0 && t.action.R==0)){
