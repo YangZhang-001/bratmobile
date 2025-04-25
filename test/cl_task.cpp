@@ -96,10 +96,10 @@ int main(int argc, char** argv) {
 	motors.registerStepCallback(&cb);
 	configurator.start();
 	lidar.start();
-	//motors.start();
+	motors.start();
 	getchar();
 	configurator.stop();
-	//motors.stop();
+	motors.stop();
 	lidar.stop();
 }
 	

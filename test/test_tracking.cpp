@@ -77,9 +77,9 @@ int main(int argc, char** argv) {
 	printf("all registered\n");
 	configurator.start();
 	lidar.start();
-	//motors.start();
+	motors.start();
 	getchar();
-	//motors.stop();
+	motors.stop();
 	configurator.stop();
 	lidar.stop();
 }

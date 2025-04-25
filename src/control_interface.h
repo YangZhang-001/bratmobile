@@ -53,11 +53,11 @@ class Motor_Out:public IOInterface {
 	}
 
 	float get_L(){
-		return L*L_gain;
+		return L;
 	}
 
 	float get_R(){
-		return R*R_gain;
+		return R;
 	}
 
 	/**
