@@ -4,8 +4,8 @@ int main(int argc, char ** argv){
     //argv[1] = next task affordance, argv[2] = next task direction, argv[3] =goal or no goal
     Disturbance goal(PURSUE, b2Vec2(1.0, 0), 0);
     Disturbance obstacle(AVOID, b2Vec2(0.50, 0), 0);
-    Configurator c;
     Task controlGoal=Task(goal, UNDEFINED);
+    Configurator c;
     TransitionSystem g(1);
     g[0].endPose.p.x=0.35;
     //set goal/Di

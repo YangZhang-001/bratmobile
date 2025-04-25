@@ -104,8 +104,11 @@ char * folder;
             std::ifstream file(filePath);
             float x2, y2;
             while (file>>x2>>y2){
-              //  x2 = round(x2*100)/100;
-                //y2 = round(y2*100)/100;
+                if (b2Vec2(x2, y2).Length()<.5){
+                    x2 = round(x2*100)/100;
+                    y2 = round(y2*100)/100;
+                }
+
                 Pointf  p2(x2,y2);
                 ci->data2fp.insert(p2);
             }

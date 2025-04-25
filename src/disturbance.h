@@ -218,7 +218,7 @@ friend struct StateMatcher;
 }
 
 public:
-    BodyFeatures bf=BodyFeatures(b2Transform(b2Vec2(2*BOX2DRANGE, 2*BOX2DRANGE), b2Rot(M_PI)));
+    BodyFeatures bf=BodyFeatures(b2Transform(b2Vec2(10000, 10000), b2Rot(M_PI)));
 
     Disturbance(){};
     Disturbance(AffordanceIndex i){
