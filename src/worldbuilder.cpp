@@ -137,7 +137,6 @@ std::vector <BodyFeatures> WorldBuilder::cluster_data( const CoordinateContainer
     }
     for (int c=0; c<clusters.size(); c++){
         if (std::pair<bool,BodyFeatures>feature=wb_bridger.bounding_rotated_box(clusters[c]); feature.first){
-            //feature.second.pose.q.Set(start.q.GetAngle());
             result.push_back(feature.second);
         }
     }
@@ -231,12 +230,15 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
     if (current.empty()){
         return features;
     }
+    printf("get features, current size =%i\n", current.size());
     if (clustering==BOX){
         features =processData(current, start);
     }
     else{
+        printf("cluster");
         features=cluster_data(current, start,clustering);
     }
+    printf("got features\n");
     return features;
 }
 

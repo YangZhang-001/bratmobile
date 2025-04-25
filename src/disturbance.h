@@ -36,6 +36,9 @@ std::vector <C> arrayToVec(C* c, int ct){
 
 class ControlInterface;
 
+/**
+* Contains features of disturbances
+*/
 class BodyFeatures{
     public:
     b2Transform pose {b2Transform(b2Vec2(0,0), b2Rot(0))} ;
@@ -194,7 +197,7 @@ class Threshold{
         Bundle Di_weights, Dn_weights;
 };
 
-struct Disturbance{ //this generates error
+struct Disturbance{ 
 
 private:
 friend class ControlInterface;

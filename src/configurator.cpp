@@ -51,7 +51,7 @@ bool Configurator::Spawner(){
 	b2Vec2 gravity = {0.0, 0.0};
 	b2World world= b2World(gravity);
 	char name[256];
-	worldBuilder.world_objects=worldBuilder.getFeatures(data2fp, b2Transform_zero);
+	worldBuilder.world_objects=worldBuilder.getFeatures(data2fp, b2Transform_zero, WorldBuilder::PARTITION);
 	explore_plan(world);
 	auto endTime =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>d= now- endTime; //in seconds
@@ -173,7 +173,9 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				sk.second.it_observed=iteration;
 				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction);
 				StateDifference sd;
+				printf("before match\n");
 				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.direction, StateMatcher::MATCH_TYPE::ABSTRACT, &sd);		//, closest_match	
+				printf("after match\n");
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
 				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
 					g[v0].options.erase(g[v0].options.begin());
@@ -256,7 +258,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 		g[best_in_edges[0]].it_observed=iteration;
 	}
 }while(g[bestNext].options.size()>0 && !er.ended);
-//printf("finished exploring, plan =%i\n", plan_prov.size());
+printf("finished exploring, plan =%i\n", plan_prov.size());
 return plan_prov;
 }
 
@@ -524,13 +526,16 @@ void Configurator::run(Configurator * c){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
+			printf("track");
 			c->track_task_execution();
+			printf("est");
 			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
 			if (c->goal_changer!=NULL){
 				if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
 					c->goal_changer->change_goal(&c->controlGoal);
 				}					
 			}
+			printf("ch");
 			c->change_task();		
 			}
 
