@@ -1108,6 +1108,7 @@ void Configurator::follow_plan(){
 		return;
 	}
 	int i=to_task_end();
+	currentTask = task_to_execute(plan, transitionSystem, i);	
 	try{ //make sure current vertices is not empty!
 		if (i==0){
 			throw (i);
@@ -1118,7 +1119,6 @@ void Configurator::follow_plan(){
 	}
 	current_vertices=std::vector(plan.begin(), plan.begin()+i);
 	printPlan(&plan);
-	currentTask = task_to_execute(plan, transitionSystem, i);	
 	plan.erase(plan.begin(), plan.begin()+i);
 
 }
