@@ -43,9 +43,6 @@ b2PolygonShape WorldBuilder::object_filtering_box(float halfWindowWidth, float b
         boxLength=halfWindowWidth*2;
     }
     else{
-        // b2Vec2 shift(boxLength/2, 0);
- //       shift=b2Mul(start.q, shift);
-   //     center+=shift
         centroid.x=boxLength/2;
     }
     box.SetAsBox(boxLength/2, halfWindowWidth, centroid, 0); //this  allows to filter out objects irrelevant to this task (i.e. collision unlikely assumint they're static)
