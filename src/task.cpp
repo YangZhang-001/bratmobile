@@ -341,13 +341,13 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 			result=true;
 		}
 	}
-	else if (dist_obs->getAffIndex()==PURSUE && direction==DEFAULT){
+	else if (dist_obs->getAffIndex()==PURSUE){ // && direction==DEFAULT
 		b2Transform fromDi=from_Di(&b2Transform_zero);
 		Angle a(fromDi.q.GetAngle());
 		Distance d(fromDi.p.Length());
 		result=endCriteria_met(a, d);
 	}
-	else if (dist_obs->getAffIndex()==AVOID || action.getOmega()!=0){
+	else if (dist_obs->getAffIndex()==AVOID ){ //|| action.getOmega()!=0
 		if (box.m_radius==0 || action.getOmega()!=0){ //means that there is no goal 
 			b2Transform fromDi_start=from_Di(&b2Transform_zero, dist_obs); //transform at start of task
 			b2Transform fromDi_now=from_Di(&b2Transform_zero); 
