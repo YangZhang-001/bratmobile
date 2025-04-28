@@ -228,7 +228,7 @@ add_test(NAME cle_pursue_ob_fail COMMAND closed_loop_ended 0  0   0    2    2)
 set_property(TEST cle_pursue_ob_fail PROPERTY WILL_FAIL true)
 add_test(NAME cle_pursue_ob COMMAND closed_loop_ended      0.41 0   0    2    2)
 add_test(NAME cle_pursue_ob_edge COMMAND closed_loop_ended  0.4 0   0    2    2)
-add_test(NAME cle_avoid_L COMMAND closed_loop_ended         0 0   90    0    1)#fails
+add_test(NAME cle_avoid_L COMMAND closed_loop_ended         0 0   90    0    1)
 add_test(NAME cle_avoid_L_fail COMMAND closed_loop_ended    0 0   25    0    1)#fails
 set_property(TEST cle_avoid_L_fail PROPERTY WILL_FAIL true)
 add_test(NAME cle_avoid_R COMMAND closed_loop_ended         0 0   -90    1    1)#fails
