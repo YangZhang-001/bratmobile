@@ -40,8 +40,7 @@ int main(int argc, char** argv){
     conf.getTask()->action.L=0.5;
     conf.getTask()->action.R=0.5;
     for (int i=0;i<di.iteration*2; i++){
-        di.newScanAvail();          
-        conf.data2fp = ci.data2fp;
+
         conf.track_task_execution();
         conf.estimate_current_vertex(conf.transitionSystem, *conf.getTask());
         conf.getTask()->motorStep--;
@@ -50,7 +49,8 @@ int main(int argc, char** argv){
         if (ch){
             conf.getTask()->motorStep=100; //simulate new step setting because we are in open loop
         }
-    }
+        di.newScanAvail();          
+        conf.data2fp = ci.data2fp;}
     // if (argc>4){
     //     di.iteration=steps;
     //     conf.addIteration(steps-conf.getIteration()+1);
