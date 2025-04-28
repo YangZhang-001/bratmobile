@@ -378,7 +378,6 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         if ((t.action.L==0 && t.action.R==0)){
             throw std::invalid_argument("not moving!");    
         }
-        throw std::invalid_argument("whoops");
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     auto new_d_it =find_disturbance(objects, t.disturbance.bf, t.action.getTransform(LIDAR_SAMPLING_RATE));
