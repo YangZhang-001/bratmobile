@@ -2,6 +2,7 @@
 #define WORLDBUILDER_H
 #include "sensor.h"
 
+
 class WorldBuilder{
     public:
     int bodies=0;
@@ -124,18 +125,19 @@ class WorldBuilder{
 
     class Bridger{
         Disturbance tracked_disturbance; //reference of disturbance to be tracked, kept in memory when task is changed
+
         public:
         Threshold threshold=Threshold();
 
         //returns a rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
         cv::Rect2f real_world_focus(const Task * );
 
-        //calculates 2d affine transformation of input task's disturbance from t-1 to t
-        /*
-        @param t input task
-        @param pts point cloud
-        @param observed_disturbance body features of the observed disturbance
-        @param objects world objects as extracted in worldbuilder
+        /**
+        * calculates 2d affine transformation of input task's disturbance from t-1 to t
+        * @param t input task
+        * @param pts point cloud
+        * @param observed_disturbance body features of the observed disturbance
+        * @param objects world objects as extracted in worldbuilder
         */
         b2Transform get_transform(const Task &, const CoordinateContainer &, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
 
@@ -155,13 +157,16 @@ class WorldBuilder{
         }
 
         /**
-        *Finds the disturbance to be tracked among the worldbuilder objects
+        * the disturbance to be tracked among the worldbuilder objects
         * @param objects worldBuilder objects
         * @param dist disturbance to be tracked
         * @param t the estimated instantaneous 2d transform associated to the currently executed task
         */
         std::vector <BodyFeatures>::iterator find_disturbance(std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, float * _least_square=NULL);
 
+        Threshold * get_threshold(){
+            return &threshold;
+        }
         //private:
         //kalman filter?
 

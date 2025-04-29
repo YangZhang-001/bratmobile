@@ -37,12 +37,6 @@ Pointf getPointf(T v){
 	return Pointf(v.x, v.y);
 }
 
-// template <typename T>
-// cv::Point2f getPoint2f(T p){
-// 	cv::Point2f result(p.x, p.y);
-// 	return result;
-// }
-
 
 
 Pointf Polar2f(float radius, float angle){
@@ -59,36 +53,6 @@ std::vector<T> set2vec(std::set<T> s){
     }
     return vec;
 }
-
-// template <typename T>
-// std::vector<cv::Point2f> set2vec2f(std::set<T> s){
-//     std::vector <cv::Point2f> vec;
-//     for (T t:s){
-//         vec.emplace_back(cv::Point2f(t.x, t.y));
-//     }
-//     return vec;
-// }
-
-// template <typename T>
-// std::vector<cv::Point2f> set2vec_cv(std::set<T> s){
-//     std::vector <cv::Point2f> vec;
-//     for (T t:s){
-//         vec.emplace_back(getPoint2f(t));
-//     }
-//     return vec;
-// }
-
-// template <typename T>
-// std::set<T> vec2set(std::vector<T> vec){
-//     std::set <T> set;
-//     for (T t:vec){
-//         set.emplace_back(t);
-//     }
-//     return set;
-// }
-
-
-
 
 
 b2Transform PointCloudProc::affineTransEstimate(std::vector <Pointf> current, Task::Action a,float timeElapsed, float range){

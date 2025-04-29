@@ -119,26 +119,6 @@ void setVelocities(const float & l,const float &r){
         linearSpeed =s;
     }
 
-    // void setRecSpeed(const float &s){
-    //     recordedSpeed =s;
-    // }
-
-    // void setRecOmega(const float &w){
-    //     recordedOmega=w;
-    // }
-
-    // float getRecSpeed(){
-    //     return recordedSpeed;
-    // }
-
-    // float getRecOmega(){
-    //     return recordedOmega;
-    // }
-    // //friend class Configurator;
-    // void setRec(const float& _speed, const float & _omega){
-    //     recordedSpeed=_speed;
-    //     recordedOmega=_omega;
-    // }
 
 };
 
@@ -186,25 +166,6 @@ class Listener : public b2ContactListener {
 
         
 	};
-	
-    // class Query : public b2QueryCallback {
-	// 	Disturbance * d_ptr=NULL;
-    //     public:
-    //         Query(Disturbance * _d_ptr):d_ptr(_d_ptr){}
-    //         std::vector<b2Body*> d;
-            
-    //         bool ReportFixture(b2Fixture* fixture) {
-    //             if (fixture->GetBody()->GetUserData().pointer==DISTURBANCE_FLAG){
-    //                 if (d_ptr==NULL){
-    //                     return false;
-    //                 }
-    //                 d_ptr->invalidate();
-    //                 return true;//keep going to find all fixtures in the query area
-    //             }
-    //             return false;
-    //         }
-    // };
-
 
 // struct Correct{
     

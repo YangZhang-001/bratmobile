@@ -1,7 +1,6 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 #include "CloCK_math.h"
-#include <opencv2/tracking/kalman_filters.hpp>
 
 class ConfiguratorInterface;
 class Configurator;
@@ -104,9 +103,9 @@ std::set<T> vec2set(std::vector<T> vec){
     return set;
 }
 
-class Kalman_Unscented: public cv::detail::tracking::kalman_filters::UnscentedKalmanFilter{
+// class Kalman_Unscented: public cv::detail::tracking::kalman_filters::UnscentedKalmanFilter{
 
-};
+// };
 
 
 
@@ -178,5 +177,32 @@ class ImgProc{
     cv::Mat previous;
 };
 
+/**
+ * @brief wrapper for OpenCV Kalman Filter class, a state in Interacting Multiple Models (doi: 10.1109/7.640267)
+ * 
+ */
+// class Kalman_Filter{
+// 	int dim=10;
+// 	cv::KalmanFilter filter(dim, dim); //state and measurmenets are 10 dimensional
+// public:
+// 	Kalman_Filter(){
+//                                                // x  y  th w  l  dx dy dth dw dl
+//     filter.transitionMatrix=(cv::Mat_<float>(10,10)<< 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, //rw x (x(t-1)+ dx(t))
+//                                             	  0, 1, 0, 0, 0, 0, 1, 0, 0, 0,//rw y (y(t-1)+ dy(t))
+//                                                   0, 0, 1, 0, 0, 0, 0, 1, 0, 0,  //rw  theta(theta(t-1)+ dtheta(t))
+//                                                   0, 0, 0, 1, 0, 0, 0, 0, 1, 0,// rate of update x estimate
+//                                                   0, 0, 0, 0, 1, 0, 0, 0, 0, 1,// rate of update y estimate 
+//                                                   0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+// 											      0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+// 											      0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
+// 											      0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
+// 											      0, 0, 0, 0, 0, 0, 0, 0, 0, 1); // rate update theta estimate
+
+// 	filter.measurementMatrix=cv::Mat::eye(10, 10, CV_32F);
+// 	}
+// 	private:
+
+
+// };
 
 #endif

@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <opencv2/imgproc.hpp> //useful down the line! (graphTools)
 #include <opencv2/tracking.hpp>
+#include <opencv2/video/tracking.hpp> //kalman filter
+
 
 typedef unsigned int AffordanceIndex; //was thinking of this being a character but doesn't have to be maybe enum is fine
 
