@@ -138,8 +138,9 @@ class WorldBuilder{
         * @param pts point cloud
         * @param observed_disturbance body features of the observed disturbance
         * @param objects world objects as extracted in worldbuilder
+        * @param sensor the box2d sensor representing the real-world attention window
         */
-        b2Transform get_transform(const Task &, const CoordinateContainer &, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
+        b2Transform get_transform(const Task &, const CoordinateContainer &, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects, const  b2PolygonShape& sensor); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
 
         /*
         *given points, makes minimum bounding rotated box around them
@@ -161,15 +162,15 @@ class WorldBuilder{
         * @param objects worldBuilder objects
         * @param dist disturbance to be tracked
         * @param t the estimated instantaneous 2d transform associated to the currently executed task
+        * @param sensor the box2d sensor representing real-world attention window
         */
-        std::vector <BodyFeatures>::iterator find_disturbance(std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, float * _least_square=NULL);
+        std::vector <BodyFeatures>::iterator find_disturbance(std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, const b2PolygonShape &sensor, float * _least_square=NULL);
 
         Threshold * get_threshold(){
             return &threshold;
         }
-        //private:
-        //kalman filter?
 
+        
         
     }wb_bridger;
 

@@ -14,7 +14,7 @@ bool Bundle::operator<(const BodyFeatures & bf){
     return bf.pose.p.Length()<radius() && bf.pose.q.GetAngle()<angle && bf.halfWidth<width && bf.halfLength<length;
 }
 
-bool BodyFeatures::match(const BodyFeatures& bf, float * v, b2Transform t){
+bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t){
     float hypothenuse_square= pow(bf.pose.p.Length(), 2); //assumes robot-centric perspective
     float adj_side_square=pow(bf.pose.p.Length()*t.q.c, 2);
     float distance_adjust= sqrt(hypothenuse_square-adj_side_square);
@@ -26,8 +26,8 @@ bool BodyFeatures::match(const BodyFeatures& bf, float * v, b2Transform t){
     bool match_y=fabs(diff_y)<D_POSE_MARGIN+fabs(t.q.c*distance_adjust);
     bool match_w=fabs(diff_w)<D_DIMENSIONS_MARGIN;
     bool match_h=fabs(diff_l)<D_DIMENSIONS_MARGIN;
-    if (v!=NULL){
-        *v=pow(diff_x, 2) + pow(diff_y, 2) +pow(diff_w, 2) +pow(diff_l, 2);
+    if (bundle!=NULL){
+        *bundle=Bundle(diff_x, diff_y, 0, diff_w, diff_l);
     }
     return match_x && match_y && match_w && match_h;
 }

@@ -37,7 +37,7 @@ std::vector <C> arrayToVec(C* c, int ct){
 
 
 class ControlInterface;
-
+class Bundle;
 /**
 * Contains features of disturbances
 */
@@ -82,7 +82,7 @@ class BodyFeatures{
     * @param v pointer to float, scalar representing difference between features
     * @param t estimated 2d transform (matching against an expected disturbance)
     */
-    bool match(const BodyFeatures&, float * v=NULL, b2Transform t=b2Transform_zero);
+    bool match(const BodyFeatures&, Bundle * bundle=NULL, b2Transform t=b2Transform_zero);
 
     float width()const{
         return halfWidth*2;
@@ -148,6 +148,10 @@ class Bundle{
     float get_length(){
         return length;
     }
+
+    float sum_squares(){
+        return pow(x, 2) + pow(y, 2)+pow(angle, 2) +pow(width, 2) +pow(length, 2);
+    }
 };
 
 /**
@@ -175,20 +179,28 @@ class Threshold{
         return affordance;
     }
 
-    /** Returns a bundle of thresholds for the initial disturbance
+    /** 
+     * @brief Returns a bundle of thresholds for the initial disturbance
     */
     Bundle for_Di(){ 
         Bundle result(dPosition, dPosition, angle, D_dimensions, D_dimensions);
         return result*Di_weights;
     }
 
-    /** Returns a bundle of thresholds for the initial disturbance
+    /** 
+     * @brief Returns a bundle of thresholds for the initial disturbance
     */
     Bundle for_Dn(){ 
         Bundle result(dPosition, dPosition, angle, D_dimensions, D_dimensions);
         return result*Dn_weights;
     }
 
+    /**
+     * @brief Returns a bundle of parameters for disturbance matching
+     */
+    Bundle bundle_threshold(){
+        return Bundle(dPosition, dPosition, angle, D_dimensions, D_dimensions);
+    }
 
     private:
         float endPosition=0.05;// maximum radius from candidate state's end pose

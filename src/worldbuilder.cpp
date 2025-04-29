@@ -364,7 +364,7 @@ cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
 }
 
 
-b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects){
+b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects, const b2PolygonShape& sensor){
     if (observed_disturbance==NULL){
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
@@ -381,8 +381,8 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     BodyFeatures predicted_bf=t.disturbance.bf;
-    predicted_bf.pose+=t.action.getTransform(LIDAR_SAMPLING_RATE);
-    auto new_d_it =find_disturbance(objects, predicted_bf, t.action.getTransform(LIDAR_SAMPLING_RATE));
+    predicted_bf.pose+=t.action.getTransform(LIDAR_SAMPLING_RATE); //future to sub with MM Kalman
+    auto new_d_it =find_disturbance(objects, predicted_bf, t.action.getTransform(LIDAR_SAMPLING_RATE), sensor);
     printf("objects: %i\n", objects.size());
     if (new_d_it==objects.end()){
         throw std::invalid_argument("not found!");
@@ -413,14 +413,14 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     //what's the most likely angle??
 }
 
-std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, float * _least_square){
+std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, const b2PolygonShape & sensor, float * _least_square){
     float least_square=10000;
     std::vector <BodyFeatures>::iterator result =objects.end();
     for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
-        float sum_squares;
-        bool match =(*it).match(dist, &sum_squares, t);
-        if (sum_squares<least_square){
-            least_square=sum_squares;
+        Bundle distance;
+        bool match =(*it).match(dist, &distance, t);
+        if (float ss=distance.sum_squares()<least_square){
+            least_square=ss;
             if (match){ //thresholding
                 result = it;
                 if (fabs((*it).pose.q.GetAngle()-dist.pose.q.GetAngle())>(3*M_PI_4)){
@@ -431,6 +431,10 @@ std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( st
                         (*it).pose.q.Set((*it).pose.q.GetAngle()+M_PI);
                     }
                 }
+            }
+            else if(Disturbance d(dist); overlaps(sensor, &d)){
+                //adjust threshold
+
             }
         }
     }
