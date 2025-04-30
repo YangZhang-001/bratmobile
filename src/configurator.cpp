@@ -42,7 +42,7 @@ std::pair <edgeDescriptor, bool> Configurator::add_vertex_retro(vertexDescriptor
 bool Configurator::Spawner(){ 
 	//PREPARE VECTORS TO RECEIVE DATA
 	iteration++; //iteration set in getVelocity
-	worldBuilder.iteration++;
+	worldBuilder.add_iteration();
 
 	//BENCHMARK + FIND TRUE SAMPLING RATE
 	auto now =std::chrono::high_resolution_clock::now();
@@ -127,7 +127,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	}
 	float remaining=distance/controlGoal.action.getLinearSpeed();
 	Robot robot(&w);
-	worldBuilder.bodies++;
+	worldBuilder.add_body_count();
 	robot.body->SetTransform(t.start.p, t.start.q.GetAngle());
 	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body, &controlGoal.disturbance);
 	result =t.bumping_that(w, iteration, robot.body, remaining); //default start from 0

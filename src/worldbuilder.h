@@ -84,8 +84,16 @@ class WorldBuilder{
         return bodies;
     }
 
+    int add_body_count(){
+        bodies++;
+    }
+
     void resetBodies(){
         bodies =0;
+    }
+
+    void add_iteration(int i=1){
+        iteration+=1;
     }
 
  //   void world_cleanup(b2World &);
