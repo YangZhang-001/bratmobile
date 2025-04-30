@@ -1092,10 +1092,10 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 int Configurator::to_task_end(){
 	int i=0;
 	Direction d=transitionSystem[plan[i]].direction;
-	while(i<plan.size() &&transitionSystem[plan[i]].direction==d){
+	do{
 		i++;
-	}
-	return i-1;
+	}while(i<plan.size() && transitionSystem[plan[i]].direction==d);
+	return i;
 	
 }
 
@@ -1110,14 +1110,14 @@ void Configurator::follow_plan(){
 	}
 	int i=to_task_end();
 	currentTask = task_to_execute(plan, transitionSystem, i);	
-	try{ //make sure current vertices is not empty!
-		if (i==0){
-			throw (i);
-		}
-	}
-	catch (int index){
-		i++;
-	}
+	// try{ //make sure current vertices is not empty!
+	// 	if (i==0){
+	// 		throw (i);
+	// 	}
+	// }
+	// catch (int index){
+	// 	i++;
+	// }
 	current_vertices=std::vector(plan.begin(), plan.begin()+i);
 	printPlan(&plan);
 	plan.erase(plan.begin(), plan.begin()+i);
