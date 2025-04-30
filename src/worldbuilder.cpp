@@ -225,6 +225,7 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
    // std::pair<Pointf, Pointf> bt = bounds(d, start, boxLength, halfWindowWidth);
     //std::pair <CoordinateContainer, bool> salient = salientPoints(start,current, bt);
     if (current.empty()){
+        printf("empty!");
         return features;
     }
     if (clustering==BOX){

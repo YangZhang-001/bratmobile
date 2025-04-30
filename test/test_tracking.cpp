@@ -38,6 +38,7 @@ void Configurator::explore_plan(b2World&world){
 		fprintf(f,"%i\t%i\t%f\n", worldBuilder.getBodies(), transitionSystem.m_vertices.size(), duration);
 		fclose(f);
 	}
+	printf("bodies = %i\n", worldBuilder.getBodies());
 }
 
 

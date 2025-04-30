@@ -52,11 +52,12 @@ bool Configurator::Spawner(){
 	b2World world= b2World(gravity);
 	char name[256];
 	worldBuilder.world_objects=worldBuilder.getFeatures(data2fp, b2Transform_zero, WorldBuilder::PARTITION);
-	explore_plan(world);
+	printf("got features =%i\n", worldBuilder.world_objects.size());	
 	auto endTime =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>d= now- endTime; //in seconds
 	float duration=abs(float(d.count())/1000); //express in seconds
 	printf("built wolrd in %f\n", duration);
+	explore_plan(world);
 	worldBuilder.resetBodies();
 	return 1;
 }
