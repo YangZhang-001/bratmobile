@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <math.h>
+#include <cmath>
 #include<vector>
 #include <map>
 #include <mutex>
