@@ -227,15 +227,12 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
     if (current.empty()){
         return features;
     }
-    printf("get features, current size =%i\n", current.size());
     if (clustering==BOX){
         features =processData(current, start);
     }
     else{
-        printf("cluster");
         features=cluster_data(current, start,clustering);
     }
-    printf("got features\n");
     return features;
 }
 
