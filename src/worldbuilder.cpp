@@ -432,7 +432,7 @@ std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( st
             }
             else if(Disturbance d(dist); overlaps(sensor, &d)){
                 //adjust threshold
-
+                printf("but it's still there!");
             }
         }
     }
