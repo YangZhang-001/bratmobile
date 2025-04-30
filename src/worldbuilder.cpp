@@ -406,7 +406,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     result.p.y=result.q.s*distance;
     observed_disturbance->bf=new_d; //this modifies task t, do not move!
     printf("estimated angle =%f distance=%f\n", angle, distance);
-    return -result;
+    return result;
     //what's the most likely angle??
 }
 

@@ -1064,6 +1064,7 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	if (p.empty()){
 		return t;
 	}	
+	end_it--;
 	b2Transform start_to_end= g[p[0]].start - g[p[end_it]].endPose;
 	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
 		//Dn.bf.pose=g[p[0]].start_from_Dn(); //expected input!
