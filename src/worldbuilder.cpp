@@ -414,6 +414,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
 std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, const b2PolygonShape & sensor, float * _least_square){
     float least_square=10000;
     std::vector <BodyFeatures>::iterator result =objects.end();
+    //LAMBDA FOR SETTING REU
     for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
         Bundle distance;
         bool match =(*it).match(dist, &distance, t);
@@ -421,18 +422,23 @@ std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( st
             least_square=ss;
             if (match){ //thresholding
                 result = it;
-                if (fabs((*it).pose.q.GetAngle()-dist.pose.q.GetAngle())>(3*M_PI_4)){
-                    if (dist.pose.q.GetAngle()>0){
-                        (*it).pose.q.Set((*it).pose.q.GetAngle()-M_PI);
-                    }
-                    else if (dist.pose.q.GetAngle()<0){
-                        (*it).pose.q.Set((*it).pose.q.GetAngle()+M_PI);
-                    }
-                }
             }
             else if(Disturbance d(dist); overlaps(sensor, &d)){
                 //adjust threshold
+                Bundle error=threshold.for_Di()-distance;
                 printf("but it's still there!");
+                printf("DISTANCE! \n x=%f\ny%f\ntheta=%f\nw=%f\nl%f\n", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
+
+            }
+        }
+    }
+    if (result!=objects.end()){
+        if (fabs((*result).pose.q.GetAngle()-dist.pose.q.GetAngle())>(3*M_PI_4)){
+            if (dist.pose.q.GetAngle()>0){
+                (*result).pose.q.Set((*result).pose.q.GetAngle()-M_PI);
+            }
+            else if (dist.pose.q.GetAngle()<0){
+                (*result).pose.q.Set((*result).pose.q.GetAngle()+M_PI);
             }
         }
     }

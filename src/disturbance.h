@@ -125,32 +125,38 @@ class Bundle{
 
     bool operator<(const BodyFeatures & bf);
 
-    float radius(){
+    Bundle operator-(const Bundle & b);
+
+    float radius()const {
         return sqrt(pow(x,2)+pow(y,2));
     }
 
-    float get_x(){
+    float get_x()const {
         return x;
     }
 
-    float get_y(){
+    float get_y()const{
         return y;
     }
 
-    float get_angle(){
+    float get_angle()const{
         return angle;
     }
 
-    float get_width(){
+    float get_width()const{
         return width;
     }
 
-    float get_length(){
+    float get_length()const{
         return length;
     }
 
-    float sum_squares(){
+    float sum_squares()const{
         return pow(x, 2) + pow(y, 2)+pow(angle, 2) +pow(width, 2) +pow(length, 2);
+    }
+
+    std::vector <float> get_vector()const{
+        return std::vector<float> result={x, y, angle, width, length};
     }
 };
 
@@ -201,6 +207,8 @@ class Threshold{
     Bundle bundle_threshold(){
         return Bundle(dPosition, dPosition, angle, D_dimensions, D_dimensions);
     }
+
+    void adjust(const Bundle &);
 
     private:
         float endPosition=0.05;// maximum radius from candidate state's end pose

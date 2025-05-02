@@ -14,6 +14,16 @@ bool Bundle::operator<(const BodyFeatures & bf){
     return bf.pose.p.Length()<radius() && bf.pose.q.GetAngle()<angle && bf.halfWidth<width && bf.halfLength<length;
 }
 
+Bundle Bundle::operator-(const Bundle & b){
+    Bundle result=*this;
+    result.x-=b.get_x();
+    result.y-=b.get_y();
+    result.angle-=b.get_angle();
+    result.width=b.get_width();
+    result.length=b.get_length();
+    return result;
+}
+
 bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t){
     float hypothenuse_square= pow(bf.pose.p.Length(), 2); //assumes robot-centric perspective
     float adj_side_square=pow(bf.pose.p.Length()*t.q.c, 2);
