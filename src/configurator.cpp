@@ -147,7 +147,6 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 	Task t;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
 	EndedResult er;
-	debug::print_pose(controlGoal.disturbance.pose(), "Goal at:");
 	do{
 		v=bestNext;
 		closed.emplace(*priorityQueue.begin().base());
@@ -1077,8 +1076,8 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	else{
 		t=Task(g[p[0]].Di, g[p[0]].direction, b2Transform_zero, true);
 		//t.disturbance.bf.pose=g[p[0]].start_from_Di();
-		b2Transform end_from_Di=g[p[0]].end_from_Di();
-		t.endCriteria.angle.set(atan2(end_from_Di.p.y, end_from_Di.p.x));
+		// b2Transform end_from_Di=g[p[0]].end_from_Di();
+		// t.endCriteria.angle.set(atan2(end_from_Di.p.y, end_from_Di.p.x));
 
 	}
 	debug::print_pose(t.disturbance.pose(), "new task disturbance is at: ");
