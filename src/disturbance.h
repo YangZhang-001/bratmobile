@@ -228,7 +228,7 @@ class Threshold{
     void Di_tune(const Bundle & error);
 
     void log(){
-        f= fopen("/tmp/threshold.txt", "a+");
+        FILE *f= fopen("/tmp/threshold.txt", "a+");
         fprintf(f, "%f\t%f\t%f\t%f\t%f\t\t%f\t%f\t%f\t%f\t%f\n", Di_weights.get_x(), 
                                                                 Di_weights.get_y(), 
                                                                 Di_weights.get_angle(),
@@ -242,6 +242,12 @@ class Threshold{
                                                                 );
         fclose(f);
     }
+
+    void make_log(){
+        FILE *f= fopen("/tmp/threshold.txt", "w+");
+        fclose(f);
+
+    }
     private:
         float endPosition=0.05;// maximum radius from candidate state's end pose
         float angle= M_PI/6; // maximum angle difference
@@ -250,7 +256,6 @@ class Threshold{
         float D_dimensions=D_DIMENSIONS_MARGIN; //maximum differences in disturbance dimensions
         Bundle Di_weights, Dn_weights;
         float mu=0.01; //learning rate
-        FILE * f;
 };
 
 struct Disturbance{ 

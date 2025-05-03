@@ -72,6 +72,7 @@ int main(int argc, char** argv) {
 	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
+	configurator.worldBuilder.wb_bridger.threshold.make_log();
 	MotorCallback cb(&controlInterface);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);
