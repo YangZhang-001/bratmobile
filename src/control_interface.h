@@ -67,14 +67,14 @@ class Motor_Out:public IOInterface {
 	*/
 	void adjust_gain(b2Rot e, b2Rot rot){ //delta rule ()
 		integral+=e.GetAngle();
-		float increment=alpha_p*e.GetAngle() + alpha_i*integral +alpha_d*prev_error-e.GetAngle();
+		float increment=alpha_p*e.GetAngle() ;//+ alpha_i*integral +alpha_d*prev_error-e.GetAngle();
 		if (e.GetAngle()<0.01){
 			L_gain+=increment;
 		}
 		else if (e.GetAngle()>0.01){
-			R_gain+=increment;
+			R_gain-=increment;
 		}
-		prev_error=e.GetAngle()
+		prev_error=e.GetAngle();
 	}
 
 };	
