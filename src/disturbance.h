@@ -156,7 +156,7 @@ class Bundle{
     }
 
     std::vector <float> get_vector()const{
-        return std::vector<float> result={x, y, angle, width, length};
+        return {x, y, angle, width, length};
     }
 };
 

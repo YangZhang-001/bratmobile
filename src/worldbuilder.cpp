@@ -414,7 +414,6 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
 std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, const b2PolygonShape & sensor, float * _least_square){
     float least_square=10000;
     std::vector <BodyFeatures>::iterator result =objects.end();
-    //LAMBDA FOR SETTING REU
     for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
         Bundle distance;
         bool match =(*it).match(dist, &distance, t);
