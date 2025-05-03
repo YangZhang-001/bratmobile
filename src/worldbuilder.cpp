@@ -423,8 +423,10 @@ std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( st
                 result = it;
             }
             else if(Disturbance d(dist); overlaps(sensor, &d)){
+                result=it;
                 //adjust threshold
                 Bundle error=threshold.for_Di()-distance;
+                threshold.Di_tune(error);
                 printf("but it's still there!");
                 printf("DISTANCE! \n x=%f\ny%f\ntheta=%f\nw=%f\nl%f\n", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
 

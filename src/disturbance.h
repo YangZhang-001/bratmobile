@@ -121,9 +121,21 @@ class Bundle{
 
     Bundle(float _x, float _y, float _a, float _w, float _l): x(_x), y(_y), angle(_a), width(_w), length(_l){}
     
+    /**
+      * @brief Dot product between two bundles
+      * 
+      * @param b the other bundle
+      */
     Bundle operator*(const Bundle & b);
 
+    /**
+     * @brief Multiply bundle for a scalar      
+    */
+    Bundle operator*(float);
+
     bool operator<(const BodyFeatures & bf);
+
+    Bundle operator+(const Bundle & b);
 
     Bundle operator-(const Bundle & b);
 
@@ -208,7 +220,12 @@ class Threshold{
         return Bundle(dPosition, dPosition, angle, D_dimensions, D_dimensions);
     }
 
-    void adjust(const Bundle &);
+    /**
+     * @brief Tune weights for Di
+     * 
+     * @param error the error
+     */
+    void Di_tune(const Bundle & error);
 
     private:
         float endPosition=0.05;// maximum radius from candidate state's end pose
@@ -217,6 +234,7 @@ class Threshold{
         float affordance =0; //maximum difference between affordances
         float D_dimensions=D_DIMENSIONS_MARGIN; //maximum differences in disturbance dimensions
         Bundle Di_weights, Dn_weights;
+        float mu=0.01; //learning rate
 };
 
 struct Disturbance{ 
