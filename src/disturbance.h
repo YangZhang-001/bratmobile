@@ -255,7 +255,7 @@ class Threshold{
         float affordance =0; //maximum difference between affordances
         float D_dimensions=D_DIMENSIONS_MARGIN; //maximum differences in disturbance dimensions
         Bundle Di_weights, Dn_weights;
-        float mu=0.01; //learning rate
+        float mu=0.001; //learning rate
 };
 
 struct Disturbance{ 
