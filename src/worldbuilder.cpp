@@ -427,8 +427,9 @@ std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( st
                 //adjust threshold
                 Bundle error=threshold.for_Di()-distance;
                 threshold.Di_tune(error);
+                threshold.log();
                 printf("but it's still there!");
-                printf("DISTANCE! \n x=%f\ny%f\ntheta=%f\nw=%f\nl%f\n", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
+                printf("DISTANCE! x=%f \ty%f\ttheta=%f\tw=%f\tl%f\t", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
 
             }
         }
