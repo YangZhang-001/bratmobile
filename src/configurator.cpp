@@ -1094,7 +1094,7 @@ int Configurator::to_task_end(){
 	Direction d=transitionSystem[plan[i]].direction;
 	do{
 		i++;
-	}while(i<plan.size() && transitionSystem[plan[i]].direction==d);
+	}while(i<plan.size() && transitionSystem[plan[i]].direction==d && transitionSystem[plan[0]].Di==transitionSystem[plan[i]].Di);
 	return i;
 	
 }
