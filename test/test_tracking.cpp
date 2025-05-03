@@ -2,6 +2,7 @@
 
 
 void Configurator::explore_plan(b2World&world){
+	debug::print_pose(controlGoal.disturbance.pose(), "Goal at:");
 	if (iteration>1){
 		return;
 	}
@@ -9,7 +10,6 @@ void Configurator::explore_plan(b2World&world){
     pre_explore(transitionSystem, plan, currentTask.change);
     vertexDescriptor src=get_explore_start(transitionSystem);
     resetPhi(transitionSystem);
-	debug::print_pose(controlGoal.disturbance.pose(), "Goal at:");
     plan=explorer(src, transitionSystem, world);
     if (DEBUG){
         std::vector<vertexDescriptor> _plan=(plan);
