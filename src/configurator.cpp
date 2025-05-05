@@ -1009,7 +1009,7 @@ void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
 
 void Configurator::track_task_execution(){
 	bool ended=false;
-	printf("task L=%f, R=%f\n", currentTask.action.L, currentTask.action.R);
+	printf("task L=%f, R=%f\n", currentTask.action.getLWheelSpeed(), currentTask.action.getRWheelSpeed());
 	b2Transform deltaPose=b2Transform_zero;
 	if (iteration>1){
 		deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance, worldBuilder.world_objects, task_sensor); //track using obstacle OR dead reckoning
