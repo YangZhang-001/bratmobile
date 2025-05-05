@@ -1,6 +1,9 @@
 name: ci
 
-on: push
+on: 
+  push:
+    branches:
+      - partition_beginning_2
 
 jobs:
   docker:
