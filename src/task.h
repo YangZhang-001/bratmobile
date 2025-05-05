@@ -2,17 +2,18 @@
 #define TASK_H
 #include "measurement.h"
 
+//if body has sensor, return the corresponding fixture
 b2Fixture * GetSensor(b2Body * body);
 
+//from the bodies in the world, get the disturbance Di for a Task
 b2Body * GetDisturbance(b2World *);
 
-//bool overlaps(b2Body *, b2Body *);
-
+//returns true 
 bool overlaps(b2Body *, Disturbance *);
 
 bool overlaps(const b2PolygonShape&, Disturbance *, const b2Transform& robot_pose=b2Transform_zero);
 
-	//deletes all bodies in the box2d worldcd 
+//deletes all bodies in the box2d world
 void world_cleanup(b2World & _world);
 
 class Task{
@@ -33,13 +34,13 @@ public:
 struct Action{
 private:
     float linearSpeed=WHEEL_SPEED_DEFAULT*2; //used to calculate instantaneous velocity using omega
-  //  float recordedSpeed=linearSpeed;
     float omega=0; //initial angular velocity is 0
-   // float recordedOmega = omega;
     bool valid=0;
-public:
     float R=WHEEL_SPEED_DEFAULT;
     float L=WHEEL_SPEED_DEFAULT;
+    
+    public:
+
 
     Action()=default;
 
@@ -93,6 +94,13 @@ void setVelocities(const float & l,const float &r){
     return L;
     }
 
+    void setRWheelSpeed(float f){
+        R=f;
+    }
+
+    void setLWheelSpeed(float f){
+        L=f;
+    }
 
     bool isValid(){
         return valid;
@@ -127,10 +135,10 @@ void setVelocities(const float & l,const float &r){
 class Listener : public b2ContactListener {
  // int iteration=1;
     Disturbance * d_ptr;
+    std::vector <b2Body*> collisions;
     public:
     Listener(){}
     Listener(Disturbance * _d): d_ptr(_d){}
-    std::vector <b2Body*> collisions;
         void BeginContact(b2Contact * contact) {
         b2Fixture * fixtureA= contact->GetFixtureA();
         b2Fixture * fixtureB= contact->GetFixtureB();
@@ -164,7 +172,9 @@ class Listener : public b2ContactListener {
             }       
         }
 
-        
+        std::vector <b2Body*> get_collisions(){
+            return collisions;
+        }
 	};
 
 // struct Correct{

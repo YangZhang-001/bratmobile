@@ -100,18 +100,15 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 			}
 			_world.Step(1.0f/HZ, 3, 8); //time step 100 ms which also is alphabot callback time, possibly put it higher in the future if fast
 			theta += action.getOmega()/HZ; //= omega *t
-			if (listener.collisions.size()>0){ //
-				int index = int(listener.collisions.size()/2);
-				Disturbance collision = Disturbance(listener.collisions[index]);
+			if (listener.get_collisions().size()>0){ //
+				int index = int(listener.get_collisions().size()/2);
+				Disturbance collision = Disturbance(listener.get_collisions()[index]);
 				result = simResult(simResult::resultType::crashed, collision);
 				break;
 			}
 		}
 		result.endPose = robot->GetTransform();
 		result.step=stepb2d;
-		// for (b2Body * b = _world.GetBodyList(); b!=NULL;b = b->GetNext()){ // 
-        // 	_world.DestroyBody(b);
-		// }
 		world_cleanup(_world);
 		if (DEBUG){
 			fclose(robotPath);
@@ -344,7 +341,7 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 	else if (dist_obs->getAffIndex()==PURSUE){ // && direction==DEFAULT
 		b2Transform fromDi=from_Di(&b2Transform_zero);
 		Angle a(fromDi.q.GetAngle());
-		Distance d(fromDi.p.Length());
+		Distance d(fromDi.p.x);
 		result=endCriteria_met(a, d);
 	}
 	else if (dist_obs->getAffIndex()==AVOID ){ //|| action.getOmega()!=0
