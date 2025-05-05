@@ -47,8 +47,8 @@ class Motor_Out:public IOInterface {
 
 	void getData(const Task::Action &a){
 		setReady(0);
-		L=a.L;
-		R=a.R;
+		L=a.getLWheelSpeed();
+		R=a.getRWheelSpeed();
 		setReady(1);
 	}
 

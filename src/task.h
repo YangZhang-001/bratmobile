@@ -86,11 +86,11 @@ void setVelocities(const float & l,const float &r){
     return b2Transform(getLinearVelocity(dt), b2Rot(getOmega(dt)));
 }
 
-    float getRWheelSpeed(){
+    float getRWheelSpeed()const{
         return R;
     }
 
-    float getLWheelSpeed(){
+    float getLWheelSpeed()const{
     return L;
     }
 

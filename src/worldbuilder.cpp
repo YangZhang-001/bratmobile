@@ -366,7 +366,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     if (observed_disturbance==NULL){
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
-    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.is_point()|| (t.action.L==0 && t.action.R==0)){
+    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.is_point()|| (t.action.getLWheelSpeed()==0 && t.action.getRWheelSpeed()==0)){
         if (t.disturbance.getAffIndex()==NONE){
             throw std::invalid_argument("no disturbance!");    
         }
