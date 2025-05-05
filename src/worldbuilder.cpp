@@ -373,7 +373,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         if (t.disturbance.bf.is_point()){
             printf("petite disturbance!");    
         }
-        if ((t.action.L==0 && t.action.R==0)){
+        if ((t.action.getLWheelSpeed()==0 && t.action.getRWheelSpeed()==0)){
             throw std::invalid_argument("not moving!");    
         }
         return t.action.getTransform(LIDAR_SAMPLING_RATE);

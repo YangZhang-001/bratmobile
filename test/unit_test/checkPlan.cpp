@@ -37,8 +37,8 @@ int main(int argc, char** argv){
     State state_tmp;
     int steps= atoi(argv[4]);
     int ogstep=conf.transitionSystem[conf.currentEdge].step;
-    conf.getTask()->action.L=0.5;
-    conf.getTask()->action.R=0.5;
+    conf.getTask()->action.setLWheelSpeed(0.5);
+    conf.getTask()->action.setRWheelSpeed(0.5);
     int it=di.iteration;
     for (int i=0;i<it; i++){
         di.newScanAvail();          
