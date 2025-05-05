@@ -1,56 +1,5 @@
 #include "disturbance.h"
 
-Bundle Bundle::operator*(const Bundle & b){
-    Bundle result=*this;
-    result.x*=b.x;
-    result.y*=b.y;
-    result.angle*=b.angle;
-    result.width*=b.width;
-    result.length*=b.length;
-    return result;
-}
-
-Bundle Bundle::operator*(float f){
-    Bundle result=*this;
-    result.x*=f;
-    result.y*=f;
-    result.angle*=f;
-    result.width*=f;
-    result.length*=f;
-    return result;
-}
-
-
-bool Bundle::operator<(const BodyFeatures & bf){
-    return bf.pose.p.Length()<radius() && bf.pose.q.GetAngle()<angle && bf.halfWidth<width && bf.halfLength<length;
-}
-
-Bundle Bundle::operator+(const Bundle & b){
-    Bundle result=*this;
-    result.x+=b.get_x();
-    result.y+=b.get_y();
-    result.angle+=b.get_angle();
-    result.width+=b.get_width();
-    result.length+=b.get_length();
-    return result;
-}
-
-Bundle Bundle::operator-(const Bundle & b){
-    Bundle result=*this;
-    result.x-=b.get_x();
-    result.y-=b.get_y();
-    result.angle-=b.get_angle();
-    result.width-=b.get_width();
-    result.length-=b.get_length();
-    return result;
-}
-
-
-
-void Threshold::Di_tune(const Bundle & error){
-    Di_weights=Di_weights*mu*error;
-}
-
 bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t){
     float hypothenuse_square= pow(bf.pose.p.Length(), 2); //assumes robot-centric perspective
     float adj_side_square=pow(bf.pose.p.Length()*t.q.c, 2);
