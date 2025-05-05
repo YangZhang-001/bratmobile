@@ -1103,8 +1103,8 @@ void Configurator::follow_plan(){
 	if (plan.empty()){
 		//printf("I DON'T KNOW WHAT TO DO NOW\n");
 		currentTask=Task(controlGoal.disturbance, UNDEFINED);
-		currentTask.action.L=0;
-		currentTask.action.R=0;
+		currentTask.action.setLWheelSpeed(0);
+		currentTask.action.setRWheelSpeed(0);
 		currentTask.change=1;
 		return;
 	}
