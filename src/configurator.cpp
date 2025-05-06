@@ -16,7 +16,7 @@ void Configurator::dummy_vertex(vertexDescriptor src){
 	currentTask=Task(controlGoal.disturbance, Direction::STOP, b2Transform_zero, true);
 	movingEdge = boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
 	currentEdge = boost::add_edge(src, currentVertex, transitionSystem).first;
-	printf("dummy, current edge = %i, %i\n", src, currentVertex);
+	// printf("dummy, current edge = %i, %i\n", src, currentVertex);
 	transitionSystem[movingVertex].direction=STOP;
 	transitionSystem[currentVertex].direction=STOP;
 }
@@ -52,11 +52,11 @@ bool Configurator::Spawner(){
 	b2World world= b2World(gravity);
 	char name[256];
 	worldBuilder.world_objects=worldBuilder.getFeatures(data2fp, b2Transform_zero, WorldBuilder::PARTITION);
-	printf("got features =%i\n", worldBuilder.world_objects.size());	
+	// printf("got features =%i\n", worldBuilder.world_objects.size());	
 	auto endTime =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>d= now- endTime; //in seconds
 	float duration=abs(float(d.count())/1000); //express in seconds
-	printf("built wolrd in %f\n", duration);
+	// printf("built wolrd in %f\n", duration);
 	explore_plan(world);
 	worldBuilder.resetBodies();
 	return 1;
@@ -256,7 +256,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 		g[best_in_edges[0]].it_observed=iteration;
 	}
 }while(g[bestNext].options.size()>0 && !er.ended);
-printf("finished exploring, plan =%i\n", plan_prov.size());
+// printf("finished exploring, plan =%i\n", plan_prov.size());
 return plan_prov;
 }
 
@@ -524,16 +524,14 @@ void Configurator::run(Configurator * c){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
-			printf("track");
 			c->track_task_execution();
-			printf("est");
 			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
+			printf("current v=%i\n", c->currentVertex);
 			if (c->goal_changer!=NULL){
 				if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
 					c->goal_changer->change_goal(&c->controlGoal);
 				}					
 			}
-			printf("ch");
 			c->change_task();		
 			}
 
@@ -640,9 +638,9 @@ void Configurator::applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0
 	}
 	else if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
 		auto e=boost::edge(src, v0, g);
-		if (!e.second){
-			printf("no edge wtf, %i -> %i\n", src, v0);
-		}
+		// if (!e.second){
+		// 	printf("no edge wtf, %i -> %i\n", src, v0);
+		// }
 		gt::to_task_end(e.first, g, full_plan, it);
 		if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
 			g[v0].options={g[e.first.m_target].direction};
