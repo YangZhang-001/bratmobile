@@ -425,7 +425,7 @@ std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( st
             if (match){ //thresholding
                 result = it;
             }
-            else if(Disturbance d(dist); overlaps(sensor, &d)){
+            else if(Disturbance d(*it); overlaps(sensor, &d)){
                 result=it;
                 //adjust threshold
                 Bundle error=threshold.for_Di()-distance;
