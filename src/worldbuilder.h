@@ -182,6 +182,12 @@ class WorldBuilder{
         void register_learner(ThresholdLearner * l){
             learner=l;
         }
+
+        void make_log(){
+            if (learner){
+                learner->make_log();
+            }
+        }
         
     }wb_bridger;
 

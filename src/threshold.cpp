@@ -1,6 +1,6 @@
 #include "threshold.h"
 
-Bundle Bundle::operator*(const Bundle & b){
+Bundle Bundle::operator*(const Bundle & b)const{
     Bundle result=*this;
     result.x*=b.x;
     result.y*=b.y;
@@ -10,7 +10,7 @@ Bundle Bundle::operator*(const Bundle & b){
     return result;
 }
 
-Bundle Bundle::operator*(float f){
+Bundle Bundle::operator*(float f)const{
     Bundle result=*this;
     result.x*=f;
     result.y*=f;
@@ -45,6 +45,15 @@ Bundle Bundle::operator-(const Bundle & b){
     return result;
 }
 
+Bundle linear_rectify(const Bundle & b){
+    float x=linear_rectify(b.get_x());
+    float y=linear_rectify(b.get_y());
+    float angle=linear_rectify(b.get_angle());
+    float w=linear_rectify(b.get_width());
+    float l=linear_rectify(b.get_length());
+    return Bundle(x, y, angle, w, l);
+    
+}
 
 
 

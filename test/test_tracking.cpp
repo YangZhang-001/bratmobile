@@ -58,9 +58,9 @@ void Configurator::next_task(){
 	follow_plan();
 }
 
-class HebbianLearner:public ThresholdLearner{
-	void Di_tune(const Bundle & error)override{
-    Di_weights=Di_weights+mu*error;
+class HebbianLearner:protected ThresholdLearner{
+	void Di_tune(const Bundle & error, const Bundle & x){
+    Di_weights=Di_weights+x*mu*error;
 	log();
 	}
 };
@@ -72,8 +72,9 @@ int main(int argc, char** argv) {
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
-	HebbianLearner 
+	HebbianLearner learner;
     Configurator configurator(controlGoal);
+	configurator.worldBuilder.wb_bridger.register_learner(&learner);
 	dump_benchmarks( "rt-update", "/tmp");
 	if (argc>1){
 		configuratorInterface.debugOn=atoi(argv[1]);
@@ -81,7 +82,7 @@ int main(int argc, char** argv) {
 	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
-	configurator.worldBuilder.wb_bridger.threshold.make_log();
+	configurator.worldBuilder.wb_bridger.make_log();
 	MotorCallback cb(&controlInterface);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);

@@ -24,12 +24,12 @@ class Bundle{
       * 
       * @param b the other bundle
       */
-    Bundle operator*(const Bundle & b);
+    Bundle operator*(const Bundle & b)const;
 
     /**
      * @brief Multiply bundle for a scalar      
     */
-    Bundle operator*(float);
+    Bundle operator*(float)const;
 
     bool operator<(const Bundle & bf);
 
@@ -61,6 +61,7 @@ class Bundle{
         return length;
     }
 
+
     float sum_squares()const{
         return pow(x, 2) + pow(y, 2)+pow(angle, 2) +pow(width, 2) +pow(length, 2);
     }
@@ -69,6 +70,18 @@ class Bundle{
         return {x, y, angle, width, length};
     }
 };
+
+template <typename T>
+T linear_rectify(T value){
+    if (value<0){
+        value=0;
+    }
+    return value;
+}
+
+
+Bundle linear_rectify(const Bundle &);
+
 
 /**
 *Error threshold used to match states or components of states
@@ -134,6 +147,7 @@ class Threshold{
 };
 
 class ThresholdLearner{
+    protected:
     Bundle Di_weights, Dn_weights;
     float mu=0.001; //learning rate
     public:
@@ -141,6 +155,14 @@ class ThresholdLearner{
 
     void set_learning_rate(float f){
         mu=f;
+    }
+
+    Bundle get_Di_weights(){
+        return Di_weights;
+    }
+
+    Bundle get_Dn_weights(){
+        return Dn_weights;
     }
 
     void log(){
@@ -169,7 +191,7 @@ class ThresholdLearner{
      * 
      * @param error the error
      */
-    virtual void Di_tune(const Bundle & error);
+    virtual void Di_tune(const Bundle & error, const Bundle & x);
 
     Threshold get_weighted(const Threshold & t){
         Threshold result;
