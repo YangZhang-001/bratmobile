@@ -58,7 +58,7 @@ void Configurator::next_task(){
 	follow_plan();
 }
 
-class HebbianLearner:protected ThresholdLearner{
+class HebbianLearner:public ThresholdLearner{
 	void Di_tune(const Bundle & error, const Bundle & x){
     Di_weights=Di_weights+x*mu*error;
 	log();
