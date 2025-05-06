@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - closing_loop
-  workflow_dispatch
+  workflow_dispatch:
 
 jobs:
   docker:
