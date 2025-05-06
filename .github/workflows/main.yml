@@ -3,7 +3,7 @@ name: ci
 on: 
   push:
     branches:
-      - partition_beginning_2
+      - closing_loop
 
 jobs:
   docker:
