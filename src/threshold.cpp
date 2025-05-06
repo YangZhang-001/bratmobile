@@ -25,7 +25,7 @@ bool Bundle::operator<(const Bundle & bf){
     return bf.radius()<radius() && bf.get_angle()<angle && bf.get_width()<width && bf.get_length()<length;
 }
 
-Bundle Bundle::operator+(const Bundle & b){
+Bundle Bundle::operator+(const Bundle & b)const{
     Bundle result=*this;
     result.x+=b.get_x();
     result.y+=b.get_y();
@@ -35,7 +35,7 @@ Bundle Bundle::operator+(const Bundle & b){
     return result;
 }
 
-Bundle Bundle::operator-(const Bundle & b){
+Bundle Bundle::operator-(const Bundle & b)const{
     Bundle result=*this;
     result.x-=b.get_x();
     result.y-=b.get_y();
@@ -45,7 +45,7 @@ Bundle Bundle::operator-(const Bundle & b){
     return result;
 }
 
-Bundle linear_rectify(const Bundle & b)const{
+Bundle linear_rectify(const Bundle & b){
     float x=linear_rectify(b.get_x());
     float y=linear_rectify(b.get_y());
     float angle=linear_rectify(b.get_angle());

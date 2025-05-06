@@ -33,9 +33,9 @@ class Bundle{
 
     bool operator<(const Bundle & bf);
 
-    Bundle operator+(const Bundle & b);
+    Bundle operator+(const Bundle & b)const;
 
-    Bundle operator-(const Bundle & b);
+    Bundle operator-(const Bundle & b)const;
 
     float radius()const {
         return sqrt(pow(x,2)+pow(y,2));
@@ -80,7 +80,7 @@ T linear_rectify(T value){
 }
 
 
-Bundle linear_rectify(const Bundle &)const;
+Bundle linear_rectify(const Bundle &);
 
 
 /**
