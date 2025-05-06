@@ -18,8 +18,8 @@ void math::applyAffineTrans(const b2Transform& deltaPose, State& state){
 }
 
 void math::applyAffineTrans(const b2Transform& deltaPose, Task* task){
-	math::applyAffineTrans(deltaPose, task->start);
-	applyAffineTrans(deltaPose, task->disturbance);
+	math::applyAffineTrans(-deltaPose, task->start);
+	applyAffineTrans(-deltaPose, task->disturbance);
 }
 
 
