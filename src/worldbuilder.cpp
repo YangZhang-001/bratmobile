@@ -400,7 +400,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     float angle=0;
     if (fabs(cos_angle)<=1){
         angle=acos(cos_angle);
-        if ((t.disturbance.bf.pose.p-new_d.pose.y)<0){
+        if ((t.disturbance.bf.pose.p.y-new_d.pose.p.y)<0){
             angle=-angle;
         }
     }
