@@ -70,7 +70,7 @@ class LearningNothing:public ThresholdLearner{
 	}
 
 	Bundle update_bundle(const Bundle & error, const Bundle & x){
-		return x+error;
+		return x-linear_rectify(error);
 	}
 };
 
