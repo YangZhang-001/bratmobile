@@ -98,19 +98,24 @@ class Threshold{
     /** 
      * @brief Returns a bundle of thresholds for the initial disturbance
     */
-    Bundle for_Di(){ 
-        Bundle result(dPosition, dPosition, angle, D_dimensions, D_dimensions);
-        return result*Di_weights;
+    Bundle for_Di()const{ 
+        return Di;
     }
 
     /** 
      * @brief Returns a bundle of thresholds for the initial disturbance
     */
-    Bundle for_Dn(){ 
-        Bundle result(dPosition, dPosition, angle, D_dimensions, D_dimensions);
-        return result*Dn_weights;
+    Bundle for_Dn()const{ 
+        return Dn;
     }
 
+    void set_Dn(const Bundle & b){
+        Dn=b;
+    }
+
+    void set_Di(const Bundle & b){
+        Di=b;
+    }
     /**
      * @brief Returns a bundle of parameters for disturbance matching
      */
@@ -118,12 +123,25 @@ class Threshold{
         return Bundle(dPosition, dPosition, angle, D_dimensions, D_dimensions);
     }
 
-    /**
-     * @brief Tune weights for Di
-     * 
-     * @param error the error
-     */
-    void Di_tune(const Bundle & error);
+
+    private:
+        float endPosition=0.05;// maximum radius from candidate state's end pose
+        float angle= M_PI/6; // maximum angle difference
+        float dPosition= 0.065;// maximum difference between disturbance positions
+        float affordance =0; //maximum difference between affordances
+        float D_dimensions=0.03; //maximum differences in disturbance dimensions
+        Bundle Di=Bundle(dPosition, dPosition, angle, D_dimensions, D_dimensions), Dn=Di;
+};
+
+class ThresholdLearner{
+    Bundle Di_weights, Dn_weights;
+    float mu=0.001; //learning rate
+    public:
+    ThresholdLearner()=default;
+
+    void set_learning_rate(float f){
+        mu=f;
+    }
 
     void log(){
         FILE *f= fopen("/tmp/threshold.txt", "a");
@@ -146,16 +164,19 @@ class Threshold{
         fclose(f);
     }
 
-    void set_learning_rate(float f){
-        mu=f;
+    /**
+     * @brief Tune weights for Di
+     * 
+     * @param error the error
+     */
+    virtual void Di_tune(const Bundle & error);
+
+    Threshold get_weighted(const Threshold & t){
+        Threshold result;
+        result.set_Di(t.for_Di()*Di_weights);
+        result.set_Dn(t.for_Dn()*Dn_weights);
+        return result;
     }
 
-    private:
-        float endPosition=0.05;// maximum radius from candidate state's end pose
-        float angle= M_PI/6; // maximum angle difference
-        float dPosition= 0.065;// maximum difference between disturbance positions
-        float affordance =0; //maximum difference between affordances
-        float D_dimensions=0.03; //maximum differences in disturbance dimensions
-        Bundle Di_weights, Dn_weights;
-        float mu=0.001; //learning rate
+
 };

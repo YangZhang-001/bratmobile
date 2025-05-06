@@ -58,6 +58,13 @@ void Configurator::next_task(){
 	follow_plan();
 }
 
+class HebbianLearner:public ThresholdLearner{
+	void Di_tune(const Bundle & error)override{
+    Di_weights=Di_weights+mu*error;
+	log();
+	}
+};
+
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
@@ -65,6 +72,7 @@ int main(int argc, char** argv) {
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
+	HebbianLearner 
     Configurator configurator(controlGoal);
 	dump_benchmarks( "rt-update", "/tmp");
 	if (argc>1){

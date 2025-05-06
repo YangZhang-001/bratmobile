@@ -47,6 +47,4 @@ Bundle Bundle::operator-(const Bundle & b){
 
 
 
-void Threshold::Di_tune(const Bundle & error){
-    Di_weights=Di_weights*mu*error;
-}
+

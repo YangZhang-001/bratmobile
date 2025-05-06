@@ -134,7 +134,7 @@ class WorldBuilder{
 
     class Bridger{
         Disturbance tracked_disturbance; //reference of disturbance to be tracked, kept in memory when task is changed
-
+        ThresholdLearner *learner;
         public:
         Threshold threshold=Threshold();
 
@@ -179,7 +179,9 @@ class WorldBuilder{
             return &threshold;
         }
 
-
+        void register_learner(ThresholdLearner * l){
+            learner=l;
+        }
         
     }wb_bridger;
 
