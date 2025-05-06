@@ -45,7 +45,7 @@ Bundle Bundle::operator-(const Bundle & b){
     return result;
 }
 
-Bundle linear_rectify(const Bundle & b){
+Bundle linear_rectify(const Bundle & b)const{
     float x=linear_rectify(b.get_x());
     float y=linear_rectify(b.get_y());
     float angle=linear_rectify(b.get_angle());

@@ -80,7 +80,7 @@ T linear_rectify(T value){
 }
 
 
-Bundle linear_rectify(const Bundle &);
+Bundle linear_rectify(const Bundle &)const;
 
 
 /**
