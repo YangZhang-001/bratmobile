@@ -400,7 +400,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     float angle=0;
     if (fabs(cos_angle)<=1){
         angle=acos(cos_angle);
-        if ((t.disturbance.bf.pose.p.y-new_d.pose.p.y)<0){
+        if ((t.disturbance.bf.pose.p.y-new_d.pose.p.y)>0){
             angle=-angle;
         }
     }
@@ -409,7 +409,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     result.p.x=result.q.c*distance;
     result.p.y=result.q.s*distance;
     observed_disturbance->bf=new_d; //this modifies task t, do not move!
-    // printf("estimated angle =%f distance=%f\n", angle, distance);
+    printf("estimated angle =%f distance=%f\n", angle, distance);
     return -result;
     //what's the most likely angle??
 }
