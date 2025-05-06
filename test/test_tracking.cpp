@@ -58,10 +58,19 @@ void Configurator::next_task(){
 	follow_plan();
 }
 
-class HebbianLearner:public ThresholdLearner{
+
+/**
+ * @brief This learner does not learn anything but only updates the threshold by expanding to accommodate error
+ * 
+ */
+class LearningNothing:public ThresholdLearner{
 	void Di_tune(const Bundle & error, const Bundle & x){
-    Di_weights=Di_weights+x*mu*error;
-	log();
+    // Di_weights=Di_weights+x*mu*error;
+	// log();
+	}
+
+	Bundle update_bundle(const Bundle & error, const Bundle & x){
+		return x+error;
 	}
 };
 
@@ -72,7 +81,7 @@ int main(int argc, char** argv) {
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
-	HebbianLearner learner;
+	LearningNothing learner;
     Configurator configurator(controlGoal);
 	configurator.worldBuilder.wb_bridger.register_learner(&learner);
 	dump_benchmarks( "rt-update", "/tmp");

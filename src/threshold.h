@@ -191,8 +191,17 @@ class ThresholdLearner{
      * 
      * @param error the error
      */
-    virtual void Di_tune(const Bundle & error, const Bundle & x);
+    virtual void Di_tune(const Bundle & error, const Bundle & x)=0;
 
+    /**
+     * @brief Updates a threshold according to a custom learning rule
+     * 
+     * @param error 
+     * @param x the input
+     * @return Bundle 
+     */
+    virtual Bundle update_bundle(const Bundle & error, const Bundle & x)=0;
+    
     Threshold get_weighted(const Threshold & t){
         Threshold result;
         result.set_Di(t.for_Di()*Di_weights);
