@@ -348,7 +348,7 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		if (box.m_radius==0 || action.getOmega()!=0){ //means that there is no goal 
 			b2Transform fromDi_start=from_Di(&b2Transform_zero, dist_obs); //transform at start of task
 			b2Transform fromDi_now=from_Di(&b2Transform_zero); 
-			b2Transform inst_transform=b2MulT(fromDi_now, fromDi_start);
+			b2Transform inst_transform=b2MulT(fromDi_now, fromDi_start); //check how far Di has moved since start
 			Angle a(fabs(inst_transform.q.GetAngle())+fabs(action.getTransform(LIDAR_SAMPLING_RATE/2).q.GetAngle())); //avoid turning too much!
 			float _distance=std::max(inst_transform.p.Length(), start.p.Length());
 			Distance d(fabs(_distance));

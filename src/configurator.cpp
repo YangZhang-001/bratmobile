@@ -1037,6 +1037,7 @@ void Configurator::change_task(){
 	next_task();
 	task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
 	worldBuilder.wb_bridger.set_tracked_disturbance(currentTask.disturbance);
+	control->reset_error();
 	control->getData(currentTask.action);
 	return;
 }
