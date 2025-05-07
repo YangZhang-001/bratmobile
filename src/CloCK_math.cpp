@@ -2,7 +2,7 @@
 
 
 void math::applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose){
-	pose =b2Mul(deltaPose, pose);
+	pose =b2Mul(pose, deltaPose);
 }
 
 void math::applyAffineTrans(const b2Transform& deltaPose, State& state){
