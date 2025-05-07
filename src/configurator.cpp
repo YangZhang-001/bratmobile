@@ -190,7 +190,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 							//shift here?
 							Task controlGoal_adjusted= controlGoal;
 							shift_start= b2MulT(b2MulT(sk.first.start, controlGoal.start), g[task_start].start);
-							math::applyAffineTrans(shift_start, &controlGoal_adjusted); //as start
+							math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
 							boost::remove_edge(edge.first, g);
 							edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
 							auto plan_tmp=planner(g, v, TransitionSystem::null_vertex(), been, &controlGoal_adjusted, &finished); //not v but task start
@@ -1043,7 +1043,7 @@ void Configurator::change_task(){
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
 	math::applyAffineTrans(deltaPose, g);
-	math::applyAffineTrans(-deltaPose, controlGoal);
+	math::applyAffineTrans(deltaPose, controlGoal);
 	// debug::print_pose(controlGoal->disturbance.bf.pose, "goal pose");
 }
 
