@@ -383,7 +383,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     auto new_d_it =find_disturbance(objects, predicted_bf, t.action.getTransform(LIDAR_SAMPLING_RATE), sensor);
     printf("objects: %i\n", objects.size());
     if (new_d_it==objects.end()){
-        throw std::invalid_argument("not found!");
+        printf("not found!");
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     if ((*new_d_it).is_point()){

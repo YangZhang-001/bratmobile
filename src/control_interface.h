@@ -80,6 +80,10 @@ class Motor_Out:public IOInterface {
 	void reset(){
 		L_gain=1.0f;
 		R_gain=1.0f;
+		reset_error();
+	}
+
+	void reset_error(){
 		integral=0;
 		prev_error=0;
 	}

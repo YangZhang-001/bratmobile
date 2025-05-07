@@ -17,18 +17,17 @@ bool overlaps(const b2PolygonShape&, Disturbance *, const b2Transform& robot_pos
 void world_cleanup(b2World & _world);
 
 class Task{
+    char planFile[250]; //for debug
+    bool debug_k=false; //delete this it's for debugging on the bhenchod pi
 
 
 public:
     friend class Configurator;
-    char planFile[250]; //for debug
-    bool debug_k=false; //delete this it's for debugging on the bhenchod pi
     b2Transform start=b2Transform_zero;
     bool change =0;
     EndCriteria endCriteria; //end criteria other than task encounters a disturbance
     Direction direction= DEFAULT;
     int motorStep=0;
-   // int stepError=0;
     AffordanceIndex affordance=NONE;
 
 struct Action{
@@ -314,6 +313,13 @@ bool endCriteria_met(Angle &, Distance &);
 
 b2Transform from_Di( const b2Transform * custom_start=NULL, Disturbance * d_obs=NULL); //d_obs disturbance observed rather than D with which task was init
 
+void set_change(bool b){
+    change=b;
+}
+
+bool get_change(){
+    return change;
+}
 };
 
 #endif
