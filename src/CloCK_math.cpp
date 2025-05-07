@@ -6,10 +6,10 @@ void math::applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose){
 }
 
 void math::applyAffineTrans(const b2Transform& deltaPose, State& state){
-	applyAffineTrans(deltaPose, state.endPose);
-	applyAffineTrans(deltaPose, state.start);
-	applyAffineTrans(-deltaPose, state.Dn);
-	applyAffineTrans(-deltaPose, state.Di);
+	math::applyAffineTrans(deltaPose, state.endPose);
+	math::applyAffineTrans(deltaPose, state.start);
+	math::applyAffineTrans(deltaPose, state.Dn);
+	math::applyAffineTrans(deltaPose, state.Di);
 
 }
 
