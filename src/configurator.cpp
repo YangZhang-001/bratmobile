@@ -1073,9 +1073,9 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	}
 	else{
 		t=Task(g[p[0]].Di, g[p[0]].direction, b2Transform_zero, true);
-		if (t.affordance==AVOID){
-			t.disturbance.bf.pose=g[p[0]].start_from_Di();
-		}
+		// if (t.affordance==AVOID){
+		// 	t.disturbance.bf.pose=g[p[0]].start_from_Di();
+		// }
 		// b2Transform end_from_Di=g[p[0]].end_from_Di();
 		// t.endCriteria.angle.set(atan2(end_from_Di.p.y, end_from_Di.p.x));
 
