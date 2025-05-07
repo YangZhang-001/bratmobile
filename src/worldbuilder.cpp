@@ -406,7 +406,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
             angle=-angle;
         }
     }
-    float distance=t.disturbance.pose().p.Length()-new_d.pose.p.Length();
+    float distance=new_d.pose.p.Length()-t.disturbance.pose().p.Length();
     result.q.Set(angle);
     result.p.x=result.q.c*distance;
     result.p.y=result.q.s*distance;
