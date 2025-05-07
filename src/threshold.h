@@ -201,7 +201,18 @@ class ThresholdLearner{
      * @return Bundle 
      */
     virtual Bundle update_bundle(const Bundle & error, const Bundle & x)=0;
-    
+
+    //TO DO:
+
+    /**
+     * @brief Gets delta weight based on the ICO learning rule
+     * 
+     * @param x 
+     * @param dx 
+     * @return float 
+     */
+    float ICO_dw(float x, float dx){}    
+
     Threshold get_weighted(const Threshold & t){
         Threshold result;
         result.set_Di(t.for_Di()*Di_weights);
