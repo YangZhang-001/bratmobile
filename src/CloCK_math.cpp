@@ -8,12 +8,8 @@ void math::applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose){
 void math::applyAffineTrans(const b2Transform& deltaPose, State& state){
 	applyAffineTrans(deltaPose, state.endPose);
 	applyAffineTrans(deltaPose, state.start);
-	if (state.Dn.getAffIndex()!=NONE){
-		applyAffineTrans(deltaPose, state.Dn.bf.pose);
-	}
-	if (state.Di.getAffIndex()!=NONE){
-		applyAffineTrans(deltaPose, state.Di.bf.pose);
-	}
+	applyAffineTrans(-deltaPose, state.Dn);
+	applyAffineTrans(-deltaPose, state.Di);
 
 }
 

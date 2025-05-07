@@ -1044,7 +1044,6 @@ void Configurator::change_task(){
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
 	math::applyAffineTrans(deltaPose, g);
 	math::applyAffineTrans(deltaPose, controlGoal);
-	// debug::print_pose(controlGoal->disturbance.bf.pose, "goal pose");
 }
 
 int Configurator::motor_step(Task::Action a, float distance){
