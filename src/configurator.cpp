@@ -1013,7 +1013,6 @@ void Configurator::track_task_execution(){
 		//find transl/rotation and if task has a real Di (not imagined, e.g. a goal), update the disturbance's location
 		deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance, worldBuilder.world_objects, task_sensor); //track using obstacle OR dead reckoning
 	}
-	printf("end criteria: a=%f, d=%f\n", currentTask.endCriteria.angle.get_signed(), currentTask.endCriteria.distance.get_signed());
 	//update the map by rotating its component by the found translation/rotation
 	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
 	//check if this task has ended
@@ -1044,7 +1043,7 @@ void Configurator::change_task(){
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
 	math::applyAffineTrans(deltaPose, g);
-	math::applyAffineTrans(-deltaPose, controlGoal);
+	math::applyAffineTrans(deltaPose, controlGoal);
 	// debug::print_pose(controlGoal->disturbance.bf.pose, "goal pose");
 }
 
