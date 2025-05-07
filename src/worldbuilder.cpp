@@ -403,7 +403,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
         angle=acosf(cos_angle); //[0, pi]
 
         if (angle> M_PI_2){
-            angle-=M_PI;
+            angle+=M_PI;
         }
     }
     float distance=t.disturbance.pose().p.Length()-new_d.pose.p.Length();
@@ -413,7 +413,6 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     observed_disturbance->bf=new_d; //this modifies task t, do not move!
     printf("estimated angle =%f distance=%f\n", -angle, -distance);
     return -result;
-    //what's the most likely angle??
 }
 
 std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, const b2PolygonShape & sensor, float * _least_square){
