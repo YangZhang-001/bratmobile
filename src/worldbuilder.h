@@ -193,11 +193,11 @@ class WorldBuilder{
 
         void log_thresholds(){
             FILE *f= fopen("/tmp/thresholds.txt", "a+");
-            fprintf(f, "%f\t%f\t%f\t%f\t%f\n", threshold.get_x(),
-                                               threshold.get_y(),
-                                               threshold.get_angle(),
-                                               threshold.get_width(),
-                                               threshold.get_length());
+            fprintf(f, "%f\t%f\t%f\t%f\t%f\n", threshold.for_Di().get_x(),
+                                               threshold.for_Di().get_y(),
+                                               threshold.for_Di().get_angle(),
+                                               threshold.for_Di().get_width(),
+                                               threshold.for_Di().get_length());
             fclose(f);
         }
         
