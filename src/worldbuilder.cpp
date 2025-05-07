@@ -384,13 +384,14 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     printf("objects: %i\n", objects.size());
     if (new_d_it==objects.end()){
         printf("not found!");
+        observed_disturbance->set_affordance(NONE); //this will tell the task that D is null, so it can end!
         return t.action.getTransform(LIDAR_SAMPLING_RATE);
     }
     if ((*new_d_it).is_point()){
         throw std::invalid_argument("for some reason it's tiny!");    
     }
     BodyFeatures new_d=*new_d_it;
-    b2Transform result=b2Transform_zero; //mulT= t.disturbance.pose()- new_d.pose,
+    b2Transform result=b2Transform_zero;
     // printf("t dist x=%f, y=%f, angle=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle());
     //  printf("NEW dist x=%f, y=%f, angle=%f\n", new_d.pose.p.x, new_d.pose.p.y, new_d.pose.q.GetAngle());
     // printf("mult x=%f, y=%f, angle=%f\n", mulT.p.x, mulT.p.y, mulT.q.GetAngle());
