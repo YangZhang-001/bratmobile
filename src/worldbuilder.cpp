@@ -408,6 +408,12 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     }
     float distance=t.disturbance.pose().p.Length()-new_d.pose.p.Length();
     result.q.Set(angle);
+    if (t.direction==LEFT && angle>0){
+        throw std::invalid_argument("thinks it's going right");
+    }
+    if (t.direction==RIGHT && angle<0){
+        throw std::invalid_argument("thinks it's going left");
+    }
     result.p.x=result.q.c*distance;
     result.p.y=result.q.s*distance;
     observed_disturbance->bf=new_d; //this modifies task t, do not move!
