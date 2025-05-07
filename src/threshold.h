@@ -166,7 +166,7 @@ class ThresholdLearner{
     }
 
     void log(){
-        FILE *f= fopen("/tmp/threshold.txt", "a");
+        FILE *f= fopen("/tmp/threshold_weights.txt", "a+");
         fprintf(f, "%f\t%f\t%f\t%f\t%f\t\t%f\t%f\t%f\t%f\t%f\n", Di_weights.get_x(), 
                                                                 Di_weights.get_y(), 
                                                                 Di_weights.get_angle(),
@@ -182,7 +182,7 @@ class ThresholdLearner{
     }
 
     void make_log(){
-        FILE *f= fopen("/tmp/threshold.txt", "w");
+        FILE *f= fopen("/tmp/threshold_weights", "w+");
         fclose(f);
     }
 

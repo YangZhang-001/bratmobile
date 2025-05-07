@@ -187,6 +187,18 @@ class WorldBuilder{
             if (learner){
                 learner->make_log();
             }
+            FILE * f=fopen("/tmp/thresholds.txt", "w+");
+            fclose(f);
+        }
+
+        void log_thresholds(){
+            FILE *f= fopen("/tmp/thresholds.txt", "a+");
+            fprintf(f, "%f\t%f\t%f\t%f\t%f\n", threshold.get_x(),
+                                               threshold.get_y(),
+                                               threshold.get_angle(),
+                                               threshold.get_width(),
+                                               threshold.get_length());
+            fclose(f);
         }
         
     }wb_bridger;
