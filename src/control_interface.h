@@ -69,10 +69,10 @@ class Motor_Out:public IOInterface {
 		integral+=e.GetAngle();
 		float increment=alpha_p*e.GetAngle() + alpha_i*integral +alpha_d*prev_error-e.GetAngle();
 		// if (e.GetAngle()<0.01){
-			L_gain+=increment;
+			L_gain-=increment;
 //		}
 //		else if (e.GetAngle()>0.01){
-			R_gain-=increment;
+			R_gain+=increment;
 //		}
 		prev_error=e.GetAngle();
 	}
