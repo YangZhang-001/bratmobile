@@ -1010,12 +1010,17 @@ void Configurator::track_task_execution(){
 	printf("task L=%f, R=%f\n", currentTask.action.getLWheelSpeed(), currentTask.action.getRWheelSpeed());
 	b2Transform deltaPose=b2Transform_zero;
 	if (iteration>1){
+		//find transl/rotation and if task has a real Di (not imagined, e.g. a goal), update the disturbance's location
 		deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance, worldBuilder.world_objects, task_sensor); //track using obstacle OR dead reckoning
 	}
 	printf("end criteria: a=%f, d=%f\n", currentTask.endCriteria.angle.get_signed(), currentTask.endCriteria.distance.get_signed());
+	//update the map by rotating its component by the found translation/rotation
 	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
+	//check if this task has ended
 	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
+	//get angle error for correcting motor output
 	b2Rot angle_error(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle()-deltaPose.q.GetAngle());
+	//correct motor
 	if (currentTask.direction==DEFAULT){
 		control->adjust_gain(angle_error, deltaPose.q);
 	}
