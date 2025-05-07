@@ -400,10 +400,9 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     float cos_angle= dot/denom;
     float angle=0;
     if (fabs(cos_angle)<=1){
-        angle=acos(cos_angle);
-        if ((t.disturbance.bf.pose.p.y>new_d.pose.p.y)){
-            printf("negating angle\n");
-            angle=-angle;
+        angle=acosf(cos_angle); //[0, pi]
+        if (angle> M_PI_2){
+            angle-=M_PI;
         }
     }
     float distance=new_d.pose.p.Length()-t.disturbance.pose().p.Length();
