@@ -3,6 +3,7 @@
 
 void Configurator::explore_plan(b2World&world){
 	debug::print_pose(controlGoal.disturbance.pose(), "Goal at:");
+	printf("distance from goal=%f\n", controlGoal.disturbance.pose().p.Length());
 	if (iteration>1){
 		return;
 	}
