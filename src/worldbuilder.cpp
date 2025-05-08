@@ -9,7 +9,7 @@ void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev)
         angle=acosf(cos_angle); //[0, pi]
 
         if (angle> M_PI_2){
-            angle+=M_PI;
+            angle-=M_PI;
         }
     }
     float distance=t_prev.p.Length()-t_new.p.Length();
