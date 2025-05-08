@@ -8,6 +8,7 @@ int main(int argc, char** argv){
     t_new.p.x+=x_inc;
     t_new.p.y+=y_inc;
     calc_transform(result, t_new, t_prev);
+    result=-result;
     if (x_inc>0 && result.p.x>0){
         return 1;
     }
