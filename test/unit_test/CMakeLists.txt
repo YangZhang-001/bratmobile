@@ -49,7 +49,7 @@ add_executable(wb_get_transform_sim ../test_essentials.h wb_get_transform_sim.cp
 add_executable(kalman ../test_essentials.h kalman.cpp)
 add_executable(filter_box ../test_essentials.h filter_box.cpp)
 add_executable(estimate_vertex ../test_essentials.h estimate_vertex.cpp)
-add_executable(calc_transform ../test_essentials.h test_get_direction.cpp)
+add_executable(calc_transform ../test_essentials.h calc_transform.cpp)
 
 target_link_libraries(calc_transform CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
