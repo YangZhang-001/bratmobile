@@ -325,7 +325,7 @@ add_test(NAME estimate_vertex_empty COMMAND estimate_vertex 0 0 0 0)
 
 add_test(NAME calc_transform_fw COMMAND calc_transform -0.3 0 ) #robot moves fw
 add_test(NAME calc_transform_back COMMAND calc_transform 0.3 0 ) #robot moves fw
-add_test(NAME calc_transform_l COMMAND calc_transform 0 -.3 ) #robot moves fw
+add_test(NAME calc_transform_l COMMAND calc_transform 0 -0.3 ) #robot moves fw
 add_test(NAME calc_transform_r COMMAND calc_transform 0 0.3 ) #robot moves fw
 
 
