@@ -12,7 +12,7 @@ void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev)
             angle-=M_PI;
         }
     }
-    float distance=t_prev.p.Length()-t_new.p.Length();
+    float distance=t_new.p.Length()-t_prev.p.Length();
     result.q.Set(angle);
     printf("D has moved angle =%f distance=%f\n", angle, distance);
     result.p.x=result.q.c*distance;
