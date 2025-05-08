@@ -1,4 +1,4 @@
-#include "test_essentials.h"
+#include "../test_essentials.h"
 
 
 int main(int argc, char** argv){
@@ -21,7 +21,7 @@ int main(int argc, char** argv){
         return 1;
     }
     Disturbance goal(PURSUE, b2Vec2(1, 0));
-    Task t(goal);
+    Task t(goal, DEFAULT);
     if (y_inc!=0){
         math::applyAffineTrans(-result, &t);
     }

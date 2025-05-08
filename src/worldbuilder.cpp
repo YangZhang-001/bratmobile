@@ -14,6 +14,7 @@ void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev)
     }
     float distance=t_prev.p.Length()-t_new.p.Length();
     result.q.Set(angle);
+    printf("estimated angle =%f distance=%f\n", -angle, -distance);
     result.p.x=result.q.c*distance;
     result.p.y=result.q.s*distance;
 
@@ -431,9 +432,8 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     // if (t.direction==RIGHT && angle<0){
     //     throw std::invalid_argument("thinks it's going left");
     // }
-    calc_transform(result, new_d.pose, t.disturbance.pose);
+    calc_transform(result, new_d.pose, t.disturbance.pose());
     observed_disturbance->bf=new_d; //this modifies task t, do not move!
-    printf("estimated angle =%f distance=%f\n", -angle, -distance);
     return -result;
 }
 
