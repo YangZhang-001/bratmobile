@@ -1,5 +1,25 @@
 #include "worldbuilder.h"
 
+void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev){
+    float dot=b2Dot(t_new.p, t_prev.p);
+    float denom=(t_new.p.Length() * t_prev.p.Length());
+    float cos_angle= dot/denom;
+    float angle=0;
+    if (fabs(cos_angle)<=1){
+        angle=acosf(cos_angle); //[0, pi]
+
+        if (angle> M_PI_2){
+            angle+=M_PI;
+        }
+    }
+    float distance=t_prev.p.Length()-t_new.p.Length();
+    result.q.Set(angle);
+    result.p.x=result.q.c*distance;
+    result.p.y=result.q.s*distance;
+
+}
+
+
 std::pair<Pointf, Pointf> WorldBuilder::bounds(Direction d, b2Transform start, float boxLength, float halfWindowWidth, std::vector <Pointf> *_bounds){
     //float halfWindowWidth=0.15; //wa .1
     std::pair <Pointf, Pointf>result;
@@ -392,30 +412,26 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     }
     BodyFeatures new_d=*new_d_it;
     b2Transform result=b2Transform_zero;
-    // printf("t dist x=%f, y=%f, angle=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle());
-    //  printf("NEW dist x=%f, y=%f, angle=%f\n", new_d.pose.p.x, new_d.pose.p.y, new_d.pose.q.GetAngle());
-    // printf("mult x=%f, y=%f, angle=%f\n", mulT.p.x, mulT.p.y, mulT.q.GetAngle());
-    float dot=b2Dot(new_d.pose.p, t.disturbance.bf.pose.p);
-    float denom=(new_d.pose.p.Length() * t.disturbance.bf.pose.p.Length());
-    float cos_angle= dot/denom;
-    float angle=0;
-    if (fabs(cos_angle)<=1){
-        angle=acosf(cos_angle); //[0, pi]
+    // float dot=b2Dot(new_d.pose.p, t.disturbance.bf.pose.p);
+    // float denom=(new_d.pose.p.Length() * t.disturbance.bf.pose.p.Length());
+    // float cos_angle= dot/denom;
+    // float angle=0;
+    // if (fabs(cos_angle)<=1){
+    //     angle=acosf(cos_angle); //[0, pi]
 
-        if (angle> M_PI_2){
-            angle+=M_PI;
-        }
-    }
-    float distance=t.disturbance.pose().p.Length()-new_d.pose.p.Length();
-    result.q.Set(angle);
-    if (t.direction==LEFT && angle>0){
-        throw std::invalid_argument("thinks it's going right");
-    }
-    if (t.direction==RIGHT && angle<0){
-        throw std::invalid_argument("thinks it's going left");
-    }
-    result.p.x=result.q.c*distance;
-    result.p.y=result.q.s*distance;
+    //     if (angle> M_PI_2){
+    //         angle+=M_PI;
+    //     }
+    // }
+    // float distance=t.disturbance.pose().p.Length()-new_d.pose.p.Length();
+    // result.q.Set(angle);
+    // if (t.direction==LEFT && angle>0){
+    //     throw std::invalid_argument("thinks it's going right");
+    // }
+    // if (t.direction==RIGHT && angle<0){
+    //     throw std::invalid_argument("thinks it's going left");
+    // }
+    calc_transform(result, new_d.pose, t.disturbance.pose);
     observed_disturbance->bf=new_d; //this modifies task t, do not move!
     printf("estimated angle =%f distance=%f\n", -angle, -distance);
     return -result;
@@ -459,3 +475,4 @@ std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( st
     }
     return result;
 }
+

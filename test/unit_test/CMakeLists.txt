@@ -49,7 +49,9 @@ add_executable(wb_get_transform_sim ../test_essentials.h wb_get_transform_sim.cp
 add_executable(kalman ../test_essentials.h kalman.cpp)
 add_executable(filter_box ../test_essentials.h filter_box.cpp)
 add_executable(estimate_vertex ../test_essentials.h estimate_vertex.cpp)
+add_executable(calc_transform ../test_essentials.h test_get_direction.cpp)
 
+target_link_libraries(calc_transform CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(filter_box CloCK ${OpenCV_LIBS} box2d)
 target_link_libraries(kalman CloCK ${OpenCV_LIBS} box2d)
@@ -320,6 +322,11 @@ add_test(NAME estimate_vertex_split_large_yshift COMMAND estimate_vertex 1 1 0) 
 add_test(NAME estimate_vertex_split_large_out COMMAND estimate_vertex 2.5 1 0) #halfway between 1 and 2
 set_property(TEST estimate_vertex_split_large_yshift PROPERTY WILL_FAIL true)
 add_test(NAME estimate_vertex_empty COMMAND estimate_vertex 0 0 0 0)
+
+add_test(NAME calc_transform_fw COMMAND calc_transform -0.3 0 ) #robot moves fw
+add_test(NAME calc_transform_back COMMAND calc_transform 0.3 0 ) #robot moves fw
+add_test(NAME calc_transform_l COMMAND calc_transform 0 -.3 ) #robot moves fw
+add_test(NAME calc_transform_r COMMAND calc_transform 0 0.3 ) #robot moves fw
 
 
 set(CMAKE_BUILD_TYPE Debug)
