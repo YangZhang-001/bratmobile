@@ -295,7 +295,7 @@ add_test(NAME rwf_none_D COMMAND rwf .45 .21 53 0 2)
 add_test(NAME rwf_none_l COMMAND rwf .45 .21 53 0 0)
 add_test(NAME rwf_none_r COMMAND rwf .45 .21 53 0 1)
 
-add_test(NAME wb_gt COMMAND wb_get_transform_sim ../target_68cm)
+add_test(NAME wb_gt COMMAND wb_get_transform_sim ../target_68cm/)
 
 #add_test(NAME filter_box_DEF1 COMMAND filter_box 0 0 0 2) #straight ahead, default direction
 add_test(NAME filter_box_LEFT1 COMMAND filter_box 0 0 0 0) #straight ahead, left direction
