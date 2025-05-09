@@ -1015,7 +1015,7 @@ void Configurator::track_task_execution(){
 	}
 	//update the map by rotating its component by the found translation/rotation
 	debug::print_pose(deltaPose, "delta pose");
-	update_graph(transitionSystem, -deltaPose, &currentTask, &controlGoal);
+	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
 	//check if this task has ended
 	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
 	//get angle error for correcting motor output

@@ -323,10 +323,10 @@ add_test(NAME estimate_vertex_split_large_out COMMAND estimate_vertex 2.5 1 0) #
 set_property(TEST estimate_vertex_split_large_yshift PROPERTY WILL_FAIL true)
 add_test(NAME estimate_vertex_empty COMMAND estimate_vertex 0 0 0 0)
 
-add_test(NAME calc_transform_fw COMMAND calc_transform -0.3 0 ) #robot moves fw
-add_test(NAME calc_transform_back COMMAND calc_transform 0.3 0 ) #robot moves fw
-add_test(NAME calc_transform_l COMMAND calc_transform 0 -0.3 ) #robot moves fw
-add_test(NAME calc_transform_r COMMAND calc_transform 0 0.3 ) #robot moves fw
+add_test(NAME calc_transform_fw COMMAND calc_transform -0.3 0 ) #robot moves fw,
+add_test(NAME calc_transform_back COMMAND calc_transform 0.3 0 ) #robot moves back
+add_test(NAME calc_transform_l COMMAND calc_transform 0 -0.3 ) #robot moves l
+add_test(NAME calc_transform_r COMMAND calc_transform 0 0.3 ) #robot moves r
 
 
 set(CMAKE_BUILD_TYPE Debug)

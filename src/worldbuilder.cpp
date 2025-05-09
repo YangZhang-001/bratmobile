@@ -9,7 +9,7 @@ void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev)
         angle=acosf(cos_angle); //[0, pi]
         b2Transform pov_prev=b2MulT(t_prev, t_new); //position of new d from prev perspective
         if (pov_prev.p.y<0){
-            angle-=angle;
+            angle=-angle;
         }
     }
     float distance=t_new.p.Length()-t_prev.p.Length();
