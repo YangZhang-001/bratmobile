@@ -244,6 +244,8 @@ void follow_plan();
 
 void react();
 
+void adjust_goal_expectation();
+
 private:
 b2PolygonShape task_sensor; //to track task execution
 

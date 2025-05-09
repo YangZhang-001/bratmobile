@@ -534,6 +534,7 @@ void Configurator::run(Configurator * c){
 			}
 			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
 			printf("current v=%i\n", c->currentVertex);
+			task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
 
 	}
 
@@ -1039,14 +1040,6 @@ void Configurator::change_task(){
 	control->reset_error();
 	control->getData(currentTask.action);
 	//this is to adjust goal expectation (i.e. the goal sits a certain transfomr away from Di)
-	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()){
-		b2Transform Di_to_end=b2MulT(currentTask.disturbance.pose(), transitionSystem[plan[plan.size()-1]].Di.pose()); //assumes that the last step in the plan reaches the goal
-		b2Transform sum_transform=currentTask.from_Di()+Di_to_end; //where goal should be
-		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
-		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
-	}
-	debug::print_pose(controlGoal.disturbance.pose(), "new gaol pose:");
-	task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
 	return;
 }
 
@@ -1147,5 +1140,17 @@ void Configurator::react(){
 	}
 	currentTask.motorStep = motor_step(currentTask.getAction());
 	printf("changed to %f\n", currentTask.action.getOmega());
+
+}
+
+void Configurator::adjust_goal_expectation(){
+	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()){
+		vertexDescriptor plan_end=plan[plan.size()-1];
+		b2Transform Di_to_end=b2MulT(currentTask.from_Di(), transitionSystem[plan_end].Di.pose()); //assumes that the last step in the plan reaches the goal
+		b2Transform sum_transform=currentTask.from_Di()+Di_to_end; //where goal should be
+		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
+		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
+	}
+	debug::print_pose(controlGoal.disturbance.pose(), "new gaol pose:");
 
 }
