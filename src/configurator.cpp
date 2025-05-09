@@ -1041,7 +1041,7 @@ void Configurator::change_task(){
 	//this is to adjust goal expectation (i.e. the goal sits a certain transfomr away from Di)
 	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()){
 		b2Transform Di_to_end=b2MulT(currentTask.disturbance.pose(), transitionSystem[plan[plan.size()-1]].Di.pose()); //assumes that the last step in the plan reaches the goal
-		b2Transform sum_transform=currentTask.disturbance.pose()+Di_to_end; //where goal should be
+		b2Transform sum_transform=currentTask.disturbance.from_Di()+Di_to_end; //where goal should be
 		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
 		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
 	}
