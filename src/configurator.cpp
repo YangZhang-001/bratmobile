@@ -525,8 +525,6 @@ void Configurator::run(Configurator * c){
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
 			c->track_task_execution();
-			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
-			printf("current v=%i\n", c->currentVertex);
 			if (c->goal_changer!=NULL){
 				if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
 					c->goal_changer->change_goal(&c->controlGoal);
@@ -534,6 +532,8 @@ void Configurator::run(Configurator * c){
 			}
 			c->change_task();		
 			}
+			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
+			printf("current v=%i\n", c->currentVertex);
 
 	}
 
@@ -1045,7 +1045,7 @@ void Configurator::change_task(){
 		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
 		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
 	}
-	debug::print_pose(controlGoal.disturbance.pose, "new gaol pose:");
+	debug::print_pose(controlGoal.disturbance.pose(), "new gaol pose:");
 	task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
 	return;
 }
