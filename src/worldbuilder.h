@@ -2,6 +2,8 @@
 #define WORLDBUILDER_H
 #include "sensor.h"
 
+void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev);
+
 
 class WorldBuilder{
     int iteration=0;
@@ -200,6 +202,14 @@ class WorldBuilder{
                                                threshold.for_Di().get_length());
             fclose(f);
         }
+
+        /**
+         * @brief Calculates transform between disturbance poses
+         * 
+         * @param result 
+         * @param t_new transform of the new disturbance
+         * @param t_tracked transform of tracked disturbance
+         */
         
     }wb_bridger;
 

@@ -1014,6 +1014,7 @@ void Configurator::track_task_execution(){
 		deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance, worldBuilder.world_objects, task_sensor); //track using obstacle OR dead reckoning
 	}
 	//update the map by rotating its component by the found translation/rotation
+	debug::print_pose(deltaPose, "delta pose");
 	update_graph(transitionSystem, -deltaPose, &currentTask, &controlGoal);
 	//check if this task has ended
 	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
@@ -1041,9 +1042,10 @@ void Configurator::change_task(){
 	return;
 }
 
-void Configurator::update_graph(TransitionSystem&g, const b2Transform & deltaPose, Task* t, Task * controlGoal){
-	math::applyAffineTrans(deltaPose, g);
-	math::applyAffineTrans(deltaPose, controlGoal);
+void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPose, Task* t, Task * controlGoal){
+	debug::print_pose(_deltaPose, "negative delta pose");
+	math::applyAffineTrans(_deltaPose, g);
+	math::applyAffineTrans(_deltaPose, controlGoal);
 }
 
 int Configurator::motor_step(Task::Action a, float distance){
