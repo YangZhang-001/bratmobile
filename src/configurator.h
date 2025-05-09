@@ -225,15 +225,13 @@ int motor_step(Task::Action a, float distance=0.27);
 */
 void update_graph(TransitionSystem&, const b2Transform & _deltaPose, Task* t, Task * goal);
 
-// merge vertices into a single task
+// merge vertices into a single task and generates a hybrid control instruction in the form of a task (i.e. what action to perform, in response to what and when to end it)
 /**
 	@param p the plan
 	@param g the cognitive map
 	@param end_it integer representing iterator pointing to the last vertex in the task beginning at p.begin()
 */
 Task task_to_execute(const std::vector<vertexDescriptor>& p, const TransitionSystem& g, int end_it);
-
-//void makeRobotSensor(TransitionSystem&, const vertexDescriptor&, const Task& t); //sensor but not linked to a body
 
 //returns last vertex of the task starting at plan[0]
 int to_task_end();
