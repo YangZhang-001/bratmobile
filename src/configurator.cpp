@@ -1033,7 +1033,7 @@ void Configurator::change_task(){
 	printf("change!\n");
 	next_task();
 	worldBuilder.wb_bridger.set_tracked_disturbance(currentTask.disturbance);
-	control->reset();
+	control->reset_error();
 	control->getData(currentTask.action);
 	return;
 }
