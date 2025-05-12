@@ -527,8 +527,9 @@ void Configurator::run(Configurator * c){
 				}					
 			}
 			c->change_task();		
+			c->adjust_goal_expectation();
 			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
-			//printf("current v=%i\n", c->currentVertex);
+			printf("current v=%i\n", c->currentVertex);
 			c->set_sensor(c->worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(c->controlGoal.disturbance)));
 			}
 
@@ -1004,7 +1005,6 @@ void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
 
 void Configurator::track_task_execution(){
 	bool ended=false;
-	printf("task L=%f, R=%f\n", currentTask.action.getLWheelSpeed(), currentTask.action.getRWheelSpeed());
 	b2Transform deltaPose=b2Transform_zero;
 	if (iteration>1){
 		//find transl/rotation and if task has a real Di (not imagined, e.g. a goal), update the disturbance's location
@@ -1091,7 +1091,6 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	}
 	debug::print_pose(t.disturbance.pose(), "new task disturbance is at: ");
 	t.motorStep=motor_step(t.getAction(), start_to_end.p.Length());
-	printf("new disturbance x=%f \t y=%f \t %theta=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle() );
 	return t;
 
 }
@@ -1152,10 +1151,9 @@ void Configurator::adjust_goal_expectation(){
 		b2Transform Di_to_end=b2MulT(currentTask.from_Di(), transitionSystem[plan_end].Di.pose()); //assumes that the last step in the plan reaches the goal
 		debug::print_pose(Di_to_end, "current Di transform from goal:");
 		b2Transform sum_transform=currentTask.from_Di()+Di_to_end; //where goal should be
-		controlGoal.disturbance.bf.pose=sum_transform;
 		b2Transform difference=sum_transform-controlGoal.disturbance.pose(); //difference in pose
 		debug::print_pose(difference, "difference between pose and likely goal pose:");
-		//math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
+		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
 	}
 	debug::print_pose(controlGoal.disturbance.pose(), "new gaol pose:");
 
