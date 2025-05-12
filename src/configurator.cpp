@@ -1075,6 +1075,7 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 	else{
 		Disturbance Di;
 		if (g[p[0]].Di==g[currentVertex].Di){
+			printf("tracking same D\n");
 			Di=currentTask.disturbance;
 		}
 		else{
