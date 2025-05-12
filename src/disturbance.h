@@ -141,10 +141,9 @@ public:
     Disturbance(AffordanceIndex i){
         affordanceIndex = i;
     }
+    
     Disturbance(AffordanceIndex i, b2Vec2 p){
-
-            affordanceIndex = i;
-        
+        affordanceIndex = i;
 		bf.pose.Set(p, 0);
         valid =1;
     }    
@@ -156,7 +155,6 @@ public:
     }   
 
     Disturbance(BodyFeatures _bf): bf(_bf){
-       // valid=1;
         affordanceIndex=AVOID;
     } 
 

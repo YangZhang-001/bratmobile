@@ -3,10 +3,6 @@
 
 
 
-// bool LIDAR_In::isReady(){
-// 	return ready;
-// }
-
 void Configurator::dummy_vertex(vertexDescriptor src){
 	vertexDescriptor prev_current=currentVertex;
 	currentVertex=boost::add_vertex(transitionSystem);

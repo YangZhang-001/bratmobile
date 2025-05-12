@@ -108,6 +108,15 @@ void resetPhi(TransitionSystem&g);
 
 void printPlan(std::vector <vertexDescriptor>* p=NULL);
 
+/**
+ * @brief Add state to the cognitive map and set next state Task direction and options
+ * 
+ * @param src source state
+ * @param v1 new state
+ * @param g cognitive map
+ * @param edge connecting edge between src->v1
+ * @param topDown flag determining whether state v1 has been simulated already or not
+ */
 std::pair<edgeDescriptor, bool> addVertex(vertexDescriptor & src, vertexDescriptor &v1, TransitionSystem &g, Edge edge=Edge(), bool topDown=0){ //returns edge added
 	std::pair<edgeDescriptor, bool> result;
 	result.second=false;
@@ -124,9 +133,17 @@ std::pair<edgeDescriptor, bool> addVertex(vertexDescriptor & src, vertexDescript
 	}
 	return result;
 }
-
-//adds vertex after discovering it in exploration
-std::pair <edgeDescriptor, bool> add_vertex_now(vertexDescriptor &, vertexDescriptor &, TransitionSystem &, Disturbance,Edge edge=Edge(), bool topDown=0);
+/**
+ * @brief Adds state after discovering it in exploration
+ * 
+ * @param src source state
+ * @param v1 new state
+ * @param g cognitive map
+ * @param obs the initial disturbance of v1
+ * @param edge connecting edge between src->v1
+ * @param topDown flag determining whether state v1 has been simulated already or not
+ */
+std::pair <edgeDescriptor, bool> add_vertex_now(vertexDescriptor & src, vertexDescriptor & v1, TransitionSystem & g, Disturbance obs,Edge edge=Edge(), bool topDown=0);
 
 //adds vertex retroactively (e.g. if in split task)
 std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &, vertexDescriptor &, TransitionSystem &, Disturbance,Edge edge=Edge(), bool topDown=0);
