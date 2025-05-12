@@ -527,10 +527,10 @@ void Configurator::run(Configurator * c){
 				}					
 			}
 			c->change_task();		
-			}
 			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
-			printf("current v=%i\n", c->currentVertex);
+			//printf("current v=%i\n", c->currentVertex);
 			c->set_sensor(c->worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(c->controlGoal.disturbance)));
+			}
 
 	}
 
@@ -968,10 +968,10 @@ std::vector <State> Configurator::output_plan(const std::vector <vertexDescripto
 }
 
 void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
-	printf("current vertices size=%i\n", current_vertices.size());
+	//printf("current vertices size=%i\n", current_vertices.size());
 	if(current_vertices.empty()){
 		currentVertex=movingVertex;
-		printf(" current vertex=0\n");
+	//	printf(" current vertex=0\n");
 		return;
 	}
 	if (current_vertices.size()==1){
