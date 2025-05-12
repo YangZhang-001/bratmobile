@@ -1073,7 +1073,14 @@ Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const 
 		t.setEndCriteria(Distance(distance)); //set task to get within a certain distance from an object (as planned) and then terminate
 	}
 	else{
-		t=Task(g[p[0]].Di, g[p[0]].direction, b2Transform_zero, true);
+		Disturbance Di;
+		if (g[p[0]].Di==g[currentVertex].Di){
+			Di=currentTask.disturbance;
+		}
+		else{
+			Di=g[p[0]].Di;
+		}
+		t=Task(Di, g[p[0]].direction, b2Transform_zero, true);
 	//	if (t.affordance==AVOID){
 			t.disturbance.bf.pose=g[p[0]].start_from_Di();
 	//	}
