@@ -534,7 +534,7 @@ void Configurator::run(Configurator * c){
 			}
 			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
 			printf("current v=%i\n", c->currentVertex);
-			task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
+			c->set_sensor(c->worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(c->controlGoal.disturbance)));
 
 	}
 

@@ -236,6 +236,7 @@ Task task_to_execute(const std::vector<vertexDescriptor>& p, const TransitionSys
 //returns last vertex of the task starting at plan[0]
 int to_task_end();
 
+//TO DO: MAKE EXPLORER INTO SEPARATE CLASS
 //customisable: how is the next task to execute chosen?
 void next_task();
 
@@ -245,6 +246,10 @@ void follow_plan();
 void react();
 
 void adjust_goal_expectation();
+
+void set_sensor(const b2PolygonShape & s){
+	task_sensor=s;
+}
 
 private:
 b2PolygonShape task_sensor; //to track task execution
