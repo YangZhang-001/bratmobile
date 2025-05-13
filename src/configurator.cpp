@@ -531,8 +531,9 @@ void Configurator::run(Configurator * c){
 				}					
 			}
 			c->change_task();		
+			c->adjust_goal_expectation();
 			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
-			//printf("current v=%i\n", c->currentVertex);
+			printf("current v=%i\n", c->currentVertex);
 			c->set_sensor(c->worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(c->controlGoal.disturbance)));
 			}
 
@@ -1008,7 +1009,6 @@ void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
 
 void Configurator::track_task_execution(){
 	bool ended=false;
-	printf("task L=%f, R=%f\n", currentTask.action.getLWheelSpeed(), currentTask.action.getRWheelSpeed());
 	b2Transform deltaPose=b2Transform_zero;
 	if (iteration>1){
 		//find transl/rotation and if task has a real Di (not imagined, e.g. a goal), update the disturbance's location
@@ -1038,7 +1038,7 @@ void Configurator::change_task(){
 	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
 	printPlan(&plan);
 	worldBuilder.wb_bridger.set_tracked_disturbance(currentTask.disturbance);
-	control->reset();
+	control->reset_error();
 	control->getData(currentTask.action);
 	return;
 }
@@ -1114,6 +1114,9 @@ void Configurator::adjust_goal_expectation(){
 		b2Transform difference=sum_transform-controlGoal.disturbance.pose(); //difference in pose
 		debug::print_pose(difference, "difference between pose and likely goal pose:");
 		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
+		// b2Transform difference=sum_transform-controlGoal.disturbance.pose(); //difference in pose
+		// debug::print_pose(difference, "difference between pose and likely goal pose:");
+		// math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
 	}
 	debug::print_pose(controlGoal.disturbance.pose(), "new gaol pose:");
 
