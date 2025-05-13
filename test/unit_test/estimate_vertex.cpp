@@ -27,7 +27,9 @@ int main(int argc, char** argv){
     for (int i=0; i<c.current_vertices.size();i++){
         boost::add_edge(c.current_vertices[i], c.current_vertices[i+1], g);
     }
-    Task t =c.task_to_execute(c.current_vertices, g, 1);
+    Wise_Controller wc;
+    c.register_controller(&wc);
+    Task t =wc.task_to_execute(c.current_vertices, g, 1, c.controlGoal, *c.getTask(), c.current_vertices);
     float x=0,y=0, theta=0;
     double decimal=0, ratio=0, integer=0;
     if (argc>1){

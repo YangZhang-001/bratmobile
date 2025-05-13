@@ -50,7 +50,9 @@ add_executable(kalman ../test_essentials.h kalman.cpp)
 add_executable(filter_box ../test_essentials.h filter_box.cpp)
 add_executable(estimate_vertex ../test_essentials.h estimate_vertex.cpp)
 add_executable(calc_transform ../test_essentials.h calc_transform.cpp)
+add_executable(adjust_goal_expectation ../test_essentials.h adjust_goal_expectation.cpp)
 
+target_link_libraries(adjust_goal_expectation CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(calc_transform CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(filter_box CloCK ${OpenCV_LIBS} box2d)
@@ -295,7 +297,7 @@ add_test(NAME rwf_none_D COMMAND rwf .45 .21 53 0 2)
 add_test(NAME rwf_none_l COMMAND rwf .45 .21 53 0 0)
 add_test(NAME rwf_none_r COMMAND rwf .45 .21 53 0 1)
 
-add_test(NAME wb_gt COMMAND wb_get_transform_sim ../target_68cm)
+add_test(NAME wb_gt COMMAND wb_get_transform_sim ../target_68cm/)
 
 #add_test(NAME filter_box_DEF1 COMMAND filter_box 0 0 0 2) #straight ahead, default direction
 add_test(NAME filter_box_LEFT1 COMMAND filter_box 0 0 0 0) #straight ahead, left direction
@@ -323,10 +325,20 @@ add_test(NAME estimate_vertex_split_large_out COMMAND estimate_vertex 2.5 1 0) #
 set_property(TEST estimate_vertex_split_large_yshift PROPERTY WILL_FAIL true)
 add_test(NAME estimate_vertex_empty COMMAND estimate_vertex 0 0 0 0)
 
-add_test(NAME calc_transform_fw COMMAND calc_transform -0.3 0 ) #robot moves fw
-add_test(NAME calc_transform_back COMMAND calc_transform 0.3 0 ) #robot moves fw
-add_test(NAME calc_transform_l COMMAND calc_transform 0 -0.3 ) #robot moves fw
-add_test(NAME calc_transform_r COMMAND calc_transform 0 0.3 ) #robot moves fw
+add_test(NAME calc_transform_fw COMMAND calc_transform -0.3 0 ) #robot moves fw,
+add_test(NAME calc_transform_back COMMAND calc_transform 0.3 0 ) #robot moves back
+add_test(NAME calc_transform_l COMMAND calc_transform 0 -0.3 ) #robot moves l
+add_test(NAME calc_transform_r COMMAND calc_transform 0 0.3 ) #robot moves r
+
+add_test(NAME adjust_goal_no COMMAND adjust_goal_expectation 0 0 0 ) #robot hasn't moved but disturbance has shifted
+add_test(NAME adjust_goal_api COMMAND adjust_goal_expectation 0 0 1.5714 ) #robot moved by pi/2
+add_test(NAME adjust_goal_a COMMAND adjust_goal_expectation 0 0 -0.23 ) #robot moved not by a multiple/divisor of pi
+add_test(NAME adjust_goal_x COMMAND adjust_goal_expectation 0.4 0 0 ) #robot moves on x axis
+add_test(NAME adjust_goal_y COMMAND adjust_goal_expectation 0 0.3 0 ) #robot moves on y axis
+add_test(NAME adjust_goal_xy COMMAND adjust_goal_expectation -.4 0.3 0 ) #robot moves on xy axex
+add_test(NAME adjust_goal_xa COMMAND adjust_goal_expectation -.4 0 0.12 ) #robot moves on x axis + rotates
+add_test(NAME adjust_goal_ya COMMAND adjust_goal_expectation 0 -.3 0.12 ) #robot moves on y axix + rotates
+add_test(NAME adjust_goal_xya COMMAND adjust_goal_expectation 0.8 -.05 -0.45 ) #robot shifts and rotates
 
 
 set(CMAKE_BUILD_TYPE Debug)

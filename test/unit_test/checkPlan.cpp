@@ -17,6 +17,8 @@ int main(int argc, char** argv){
     }
     Task goal(target1,DEFAULT);
     Configurator conf(goal);
+    Wise_Controller wc;
+    conf.register_controller(&wc);
     conf.simulationStep=0.27;
     LIDAR_In ci;
     Motor_Out m;

@@ -189,12 +189,12 @@ class WorldBuilder{
             if (learner){
                 learner->make_log();
             }
-            FILE * f=fopen("/tmp/thresholds.txt", "w+");
+            FILE * f=fopen("/tmp/thresholds.txt", "w");
             fclose(f);
         }
 
         void log_thresholds(){
-            FILE *f= fopen("/tmp/thresholds.txt", "a+");
+            FILE *f= fopen("/tmp/thresholds.txt", "a");
             fprintf(f, "%f\t%f\t%f\t%f\t%f\n", threshold.for_Di().get_x(),
                                                threshold.for_Di().get_y(),
                                                threshold.for_Di().get_angle(),

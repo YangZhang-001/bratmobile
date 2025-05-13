@@ -5,12 +5,14 @@ int main(int argc, char ** argv){
     Disturbance goal(PURSUE, b2Vec2(1.0, 0), 0);
     Disturbance obstacle(AVOID, b2Vec2(0.50, 0), 0);
     Task controlGoal=Task(goal, UNDEFINED);
-    Configurator c;
     TransitionSystem g(1);
     g[0].endPose.p.x=0.35;
+    Configurator c;
     //set goal/Di
     switch (AffordanceIndex(atoi(argv[3]))){
         case PURSUE:
+        c.controlGoal=controlGoal;
+        *c.getTask()=controlGoal;
         g[0].Di=goal;
         break;
         case AVOID:
@@ -26,7 +28,9 @@ int main(int argc, char ** argv){
     g[0].direction=Direction(atoi(argv[2]));
     //function to test
     c.plan={0};
-    Task tte= c.task_to_execute(c.plan, g, 0);
+    Wise_Controller wc;
+    c.register_controller(&wc);
+    Task tte= wc.task_to_execute(c.plan, g,0, c.controlGoal, *c.getTask(), c.current_vertices);
     //check that task is correct
     bool pos=tte.disturbance.pose()==g[0].Di.pose();
     bool affordance=tte.disturbance.getAffIndex()==g[0].Di.getAffIndex();

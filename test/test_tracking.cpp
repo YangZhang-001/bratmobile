@@ -1,4 +1,4 @@
-#include "custom.h"
+#include "custom_robot.h"
 
 
 void Configurator::explore_plan(b2World&world){
@@ -55,10 +55,6 @@ Disturbance set_target(int& run, b2Transform start){
 	return result;
 }
 
-void Configurator::next_task(){
-	follow_plan();
-}
-
 
 /**
  * @brief This learner does not learn anything but only updates the threshold by expanding to accommodate error
@@ -71,7 +67,7 @@ class LearningNothing:public ThresholdLearner{
 	}
 
 	Bundle update_bundle(const Bundle & error, const Bundle & x){
-		return x-linear_rectify(error);
+		return x+linear_rectify(error);
 	}
 };
 
