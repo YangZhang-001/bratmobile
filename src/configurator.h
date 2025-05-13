@@ -11,12 +11,14 @@
 #include "debug.h"
 #include "planner.h"
 #include "control_interface.h"
+#include "task_controller.h"
 //char bodyFile[100];
 
 class Configurator{
 protected:
 	int iteration=0; //represents that hasn't started yet, robot isn't moving and there are no map data
 	Task currentTask; //need to make thread safe?
+	Controller * task_controller;
 public:
 	LIDAR_In * ci=NULL;
 	Motor_Out * control=NULL;
@@ -223,15 +225,15 @@ void estimate_current_vertex(TransitionSystem&, Task& t);
 //uses LIDAR data to calculate an affine transform of disturbance Di if present
 void track_task_execution();
 
-//changes task to be executed
+/**
+ * @brief changes tasks to execute on
+ */
 void change_task();
 
-//return motor instruction (in step callbacks for a task - deprecated)
-/**
-*@param a the action of the task
-*@param distance the distance travelled in a task, default is robot length
-*/
-int motor_step(Task::Action a, float distance=0.27);
+// //return motor instruction (in step callbacks for a task - deprecated)
+// /**
+// */
+// int motor_step(Task::Action a, float distance=0.27);
 
 //updates environment representation with time
 /**
@@ -242,30 +244,32 @@ int motor_step(Task::Action a, float distance=0.27);
 */
 void update_graph(TransitionSystem&, const b2Transform & _deltaPose, Task* t, Task * goal);
 
-// merge vertices into a single task and generates a hybrid control instruction in the form of a task (i.e. what action to perform, in response to what and when to end it)
-/**
-	@param p the plan
-	@param g the cognitive map
-	@param end_it integer representing iterator pointing to the last vertex in the task beginning at p.begin()
-*/
-Task task_to_execute(const std::vector<vertexDescriptor>& p, const TransitionSystem& g, int end_it);
+// // merge vertices into a single task and generates a hybrid control instruction in the form of a task (i.e. what action to perform, in response to what and when to end it)
+// /**
+// 	@param p the plan
+// 	@param g the cognitive map
+// 	@param end_it integer representing iterator pointing to the last vertex in the task beginning at p.begin()
+// */
+// Task task_to_execute(const std::vector<vertexDescriptor>& p, const TransitionSystem& g, int end_it);
 
-//returns last vertex of the task starting at plan[0]
-int to_task_end();
 
 //TO DO: MAKE EXPLORER INTO SEPARATE CLASS
-//customisable: how is the next task to execute chosen?
-void next_task();
+// //customisable: how is the next task to execute chosen?
+// void next_task();
 
 //updates plan by snipping out vertices corresponding to the current task
-void follow_plan();
+//void follow_plan();
 
-void react();
+//void react();
 
 void adjust_goal_expectation();
 
 void set_sensor(const b2PolygonShape & s){
 	task_sensor=s;
+}
+
+void register_controller(Controller * controller){
+	task_controller=controller;
 }
 
 private:

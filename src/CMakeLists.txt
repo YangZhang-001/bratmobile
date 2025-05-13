@@ -2,9 +2,11 @@ include(GNUInstallDirs)
 
 set (CMAKE_CXX_STANDARD 17)
 
-set(SRC disturbance.cpp threshold.cpp configurator.cpp task.cpp graphTools.cpp measurement.cpp worldbuilder.cpp sensor.cpp debug.cpp CloCK_math.cpp planner.cpp control_interface.cpp)
+#set(SRC disturbance.cpp threshold.cpp configurator.cpp task.cpp graphTools.cpp measurement.cpp worldbuilder.cpp sensor.cpp debug.cpp CloCK_math.cpp planner.cpp control_interface.cpp)
+file(GLOB SRC "*.cpp")
 
-set(HEAD disturbance.h threshold.h configurator.h robot.h task.h graphTools.h const.h measurement.h worldbuilder.h sensor.h debug.h CloCK_math.h planner.h control_interface.h)
+#set(HEAD disturbance.h threshold.h configurator.h robot.h task.h graphTools.h const.h measurement.h worldbuilder.h sensor.h debug.h CloCK_math.h planner.h control_interface.h)
+file(GLOB HEAD "*.h")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -18,7 +20,7 @@ add_library(CloCK ${SRC} ${HEAD})
 
 if(box2d_FOUND)
         target_link_libraries(CloCK box2d ${OpenCV_LIBS} pthread)
-        message("box2d installed ${BOX2D_LIBS}")
+       message("box2d installed ${BOX2D_LIBS}")
 else()
       set(BOX2D_BIN_DIR ${"/usr/local/lib/aarch64-linux-gnu"})
        target_link_libraries(HICS ${BOX2D_BIN_DIR}/libbox2d.a ${OpenCV_LIBS} pthread)

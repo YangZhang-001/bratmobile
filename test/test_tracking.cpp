@@ -1,4 +1,4 @@
-#include "custom.h"
+#include "custom_robot.h"
 
 
 void Configurator::explore_plan(b2World&world){
@@ -53,10 +53,6 @@ Disturbance set_target(int& run, b2Transform start){
 		result= Disturbance(PURSUE, b2Vec2(-1.0f, 0.0f), M_PI);
 	}
 	return result;
-}
-
-void Configurator::next_task(){
-	follow_plan();
 }
 
 

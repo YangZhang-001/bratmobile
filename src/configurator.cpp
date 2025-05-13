@@ -516,6 +516,10 @@ void Configurator::run(Configurator * c){
 			c->running=0;
 			return;
 		}
+		if (c->task_controller==NULL){
+			c->running=0;
+			throw std::invalid_argument("no task controller, please set!");
+		}
 		if (c->ci->isReady()){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
@@ -1031,7 +1035,8 @@ void Configurator::change_task(){
 		return;
 	}
 	printf("change!\n");
-	next_task();
+	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
+	printPlan(&plan);
 	worldBuilder.wb_bridger.set_tracked_disturbance(currentTask.disturbance);
 	control->reset();
 	control->getData(currentTask.action);
@@ -1043,112 +1048,66 @@ void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPo
 	math::applyAffineTrans(_deltaPose, controlGoal);
 }
 
-int Configurator::motor_step(Task::Action a, float distance){
-	int result=0;
-        if (a.getOmega()>0){ //LEFT
-            result = (SAFE_ANGLE)/(MOTOR_CALLBACK * a.getOmega());
-        }
-		else if (a.getOmega()<0){ //RIGHT
-            result = (SAFE_ANGLE)/(MOTOR_CALLBACK * a.getOmega());
-		}
-		else if (a.getLinearSpeed()>0){
-			result = (distance)/(MOTOR_CALLBACK*a.getLinearSpeed());
-		}
-	    return abs(result);
-    }
 
 
-Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const TransitionSystem& g,  int end_it){
-	Task t=controlGoal;
-	if (p.empty()){
-		return t;
-	}	
-	end_it--;
-	b2Transform start_to_end= g[p[0]].start - g[p[end_it]].endPose;
-	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
-		//Dn.bf.pose=g[p[0]].start_from_Dn(); //expected input!
-		Dn.set_affordance(PURSUE);
-		t=Task(Dn, g[p[0]].direction, b2Transform_zero, true);
-		float distance = g[p[end_it]].end_from_Dn().p.Length();
-		t.setEndCriteria(Distance(distance)); //set task to get within a certain distance from an object (as planned) and then terminate
-	}
-	else{
-		Disturbance Di;
-		if (g[p[0]].Di==g[currentVertex].Di){
-			Di=currentTask.disturbance;
-		}
-		else{
-			Di=g[p[0]].Di;
-		}
-		t=Task(Di, g[p[0]].direction, b2Transform_zero, true);
-	//	if (t.affordance==AVOID){
-			t.disturbance.bf.pose=g[p[0]].start_from_Di();
-	//	}
-		// b2Transform end_from_Di=g[p[0]].end_from_Di();
-		// t.endCriteria.angle.set(atan2(end_from_Di.p.y, end_from_Di.p.x));
+// Task Configurator::task_to_execute(const std::vector<vertexDescriptor>&p, const TransitionSystem& g,  int end_it){
+// 	Task t=controlGoal;
+// 	if (p.empty()){
+// 		return t;
+// 	}	
+// 	end_it--;
+// 	b2Transform start_to_end= g[p[0]].start - g[p[end_it]].endPose;
+// 	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
+// 		//Dn.bf.pose=g[p[0]].start_from_Dn(); //expected input!
+// 		Dn.set_affordance(PURSUE);
+// 		t=Task(Dn, g[p[0]].direction, b2Transform_zero, true);
+// 		float distance = g[p[end_it]].end_from_Dn().p.Length();
+// 		t.setEndCriteria(Distance(distance)); //set task to get within a certain distance from an object (as planned) and then terminate
+// 	}
+// 	else{
+// 		Disturbance Di;
+// 		if (g[p[0]].Di==g[currentVertex].Di){
+// 			Di=currentTask.disturbance;
+// 		}
+// 		else{
+// 			Di=g[p[0]].Di;
+// 		}
+// 		t=Task(Di, g[p[0]].direction, b2Transform_zero, true);
+// 	//	if (t.affordance==AVOID){
+// 			t.disturbance.bf.pose=g[p[0]].start_from_Di();
+// 	//	}
+// 		// b2Transform end_from_Di=g[p[0]].end_from_Di();
+// 		// t.endCriteria.angle.set(atan2(end_from_Di.p.y, end_from_Di.p.x));
 
-	}
-	debug::print_pose(t.disturbance.pose(), "new task disturbance is at: ");
-	t.motorStep=motor_step(t.getAction(), start_to_end.p.Length());
-	printf("new disturbance x=%f \t y=%f \t %theta=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle() );
-	return t;
+// 	}
+// 	debug::print_pose(t.disturbance.pose(), "new task disturbance is at: ");
+// 	t.motorStep=motor_step(t.getAction(), start_to_end.p.Length());
+// 	printf("new disturbance x=%f \t y=%f \t %theta=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle() );
+// 	return t;
 
-}
+// }
 
 
 
-int Configurator::to_task_end(){
-	int i=0;
-	Direction d=transitionSystem[plan[i]].direction;
-	do{
-		i++;
-	}while(i<plan.size() && transitionSystem[plan[i]].direction==d && transitionSystem[plan[0]].Di==transitionSystem[plan[i]].Di);
-	return i;
-	
-}
 
-void Configurator::follow_plan(){
-	if (plan.empty()){
-		//printf("I DON'T KNOW WHAT TO DO NOW\n");
-		currentTask=Task(controlGoal.disturbance, UNDEFINED);
-		currentTask.action.setLWheelSpeed(0);
-		currentTask.action.setRWheelSpeed(0);
-		currentTask.change=1;
-		return;
-	}
-	int i=to_task_end();
-	currentTask = task_to_execute(plan, transitionSystem, i);	
-	// try{ //make sure current vertices is not empty!
-	// 	if (i==0){
-	// 		throw (i);
-	// 	}
-	// }
-	// catch (int index){
-	// 	i++;
-	// }
-	current_vertices=std::vector(plan.begin(), plan.begin()+i);
-	printPlan(&plan);
-	plan.erase(plan.begin(), plan.begin()+i);
 
-}
+// void Configurator::react(){
+// 	if (transitionSystem[currentVertex].Dn.isValid()){
+// 		printf("avoid!");
+// 		currentTask= Task(transitionSystem[currentVertex].Dn, DEFAULT); //reactive
+// 	}
+// 	else{
+// 		currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
+// 	}
+// 	currentTask.motorStep = motor_step(currentTask.getAction());
+// 	printf("changed to %f\n", currentTask.action.getOmega());
 
-void Configurator::react(){
-	if (transitionSystem[currentVertex].Dn.isValid()){
-		printf("avoid!");
-		currentTask= Task(transitionSystem[currentVertex].Dn, DEFAULT); //reactive
-	}
-	else{
-		currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
-	}
-	currentTask.motorStep = motor_step(currentTask.getAction());
-	printf("changed to %f\n", currentTask.action.getOmega());
-
-}
+// }
 
 void Configurator::adjust_goal_expectation(){
 	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()){
 		vertexDescriptor plan_end=plan[plan.size()-1];
-		b2Transform Di_to_end=b2MulT(currentTask.from_Di(), transitionSystem[plan_end].Di.pose()); //assumes that the last step in the plan reaches the goal
+		b2Transform Di_to_end=b2MulT(task_controller->get_disturbance().pose() , transitionSystem[plan_end].Di.pose()); //assumes that the last step in the plan reaches the goal
 		debug::print_pose(Di_to_end, "current Di transform from goal:");
 		b2Transform from_Di=currentTask.from_Di();
 		b2Transform sum_transform=from_Di+Di_to_end; //where goal should be

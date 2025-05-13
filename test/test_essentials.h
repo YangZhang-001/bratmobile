@@ -11,13 +11,13 @@
 #include <ctime>
 #include <dirent.h>
 #include <filesystem>
+#include "../custom_decision.h"
 #define _USE_MATH_DEFINES
 
-std::mutex ctr_mutex;
 
-void Configurator::next_task(){
-    follow_plan();
-}
+// void Configurator::next_task(){
+//     follow_plan();
+// }
 
 bool debug_draw(b2Vec2 * sensor_v, std::vector <b2Vec2> d ){
     char name_v[256], name_s[256], name_d[256];

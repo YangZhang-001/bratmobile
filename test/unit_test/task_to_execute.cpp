@@ -28,7 +28,9 @@ int main(int argc, char ** argv){
     g[0].direction=Direction(atoi(argv[2]));
     //function to test
     c.plan={0};
-    Task tte= c.task_to_execute(c.plan, g, 0);
+    Wise_Controller wc;
+    c.register_controller(&wc);
+    Task tte= wc.task_to_execute(c.plan, g,0, c.controlGoal, *c.getTask(), c.current_vertices);
     //check that task is correct
     bool pos=tte.disturbance.pose()==g[0].Di.pose();
     bool affordance=tte.disturbance.getAffIndex()==g[0].Di.getAffIndex();
