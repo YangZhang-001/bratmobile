@@ -330,6 +330,16 @@ add_test(NAME calc_transform_back COMMAND calc_transform 0.3 0 ) #robot moves ba
 add_test(NAME calc_transform_l COMMAND calc_transform 0 -0.3 ) #robot moves l
 add_test(NAME calc_transform_r COMMAND calc_transform 0 0.3 ) #robot moves r
 
+add_test(NAME adjust_goal_no COMMAND adjust_goal_expectation 0 0 0 ) #robot hasn't moved but disturbance has shifted
+add_test(NAME adjust_goal_api COMMAND adjust_goal_expectation 0 0 1.5714 ) #robot moved by pi/2
+add_test(NAME adjust_goal_a COMMAND adjust_goal_expectation 0 0 -0.23 ) #robot moved not by a multiple/divisor of pi
+add_test(NAME adjust_goal_x COMMAND adjust_goal_expectation 0.4 0 0 ) #robot moves on x axis
+add_test(NAME adjust_goal_y COMMAND adjust_goal_expectation 0 0.3 0 ) #robot moves on y axis
+add_test(NAME adjust_goal_xy COMMAND adjust_goal_expectation -.4 0.3 0 ) #robot moves on xy axex
+add_test(NAME adjust_goal_xa COMMAND adjust_goal_expectation -.4 0 0.12 ) #robot moves on x axis + rotates
+add_test(NAME adjust_goal_ya COMMAND adjust_goal_expectation 0 -.3 0.12 ) #robot moves on y axix + rotates
+add_test(NAME adjust_goal_xya COMMAND adjust_goal_expectation 0.8 -.05 -0.45 ) #robot shifts and rotates
+
 
 set(CMAKE_BUILD_TYPE Debug)
 

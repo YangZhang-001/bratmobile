@@ -54,6 +54,10 @@ class Controller{
         return disturbance_q;
     }
 
+    void set_disturbance(const Disturbance & d){
+        disturbance_q=d;
+    }
+
 };
 
 /**

@@ -1034,6 +1034,9 @@ void Configurator::change_task(){
 	if (!currentTask.change){
 		return;
 	}
+	if (task_controller==NULL){
+		throw std::invalid_argument("no controller, please add!");
+	}
 	printf("change!\n");
 	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
 	printPlan(&plan);
@@ -1111,12 +1114,9 @@ void Configurator::adjust_goal_expectation(){
 		debug::print_pose(Di_to_end, "current Di transform from goal:");
 		b2Transform from_Di=currentTask.from_Di();
 		b2Transform sum_transform=from_Di+Di_to_end; //where goal should be
-		b2Transform difference=sum_transform-controlGoal.disturbance.pose(); //difference in pose
+		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
 		debug::print_pose(difference, "difference between pose and likely goal pose:");
 		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
-		// b2Transform difference=sum_transform-controlGoal.disturbance.pose(); //difference in pose
-		// debug::print_pose(difference, "difference between pose and likely goal pose:");
-		// math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
 	}
 	debug::print_pose(controlGoal.disturbance.pose(), "new gaol pose:");
 
