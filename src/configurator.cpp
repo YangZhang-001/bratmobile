@@ -1108,7 +1108,7 @@ void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPo
 // }
 
 void Configurator::adjust_goal_expectation(){
-	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()){
+	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()&&task_controller->get_disturbance().getAffIndex()!=NONE){
 		vertexDescriptor plan_end=plan[plan.size()-1];
 		b2Transform Di_to_end=b2MulT(task_controller->get_disturbance().pose() , transitionSystem[plan_end].Di.pose()); //assumes that the last step in the plan reaches the goal
 		debug::print_pose(Di_to_end, "current Di transform from goal:");
