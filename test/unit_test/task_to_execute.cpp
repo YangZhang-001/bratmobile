@@ -5,12 +5,14 @@ int main(int argc, char ** argv){
     Disturbance goal(PURSUE, b2Vec2(1.0, 0), 0);
     Disturbance obstacle(AVOID, b2Vec2(0.50, 0), 0);
     Task controlGoal=Task(goal, UNDEFINED);
-    Configurator c;
     TransitionSystem g(1);
     g[0].endPose.p.x=0.35;
+    Configurator c;
     //set goal/Di
     switch (AffordanceIndex(atoi(argv[3]))){
         case PURSUE:
+        c.controlGoal=controlGoal;
+        *c.getTask()=controlGoal;
         g[0].Di=goal;
         break;
         case AVOID:
