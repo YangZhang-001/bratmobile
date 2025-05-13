@@ -1150,7 +1150,8 @@ void Configurator::adjust_goal_expectation(){
 		vertexDescriptor plan_end=plan[plan.size()-1];
 		b2Transform Di_to_end=b2MulT(currentTask.from_Di(), transitionSystem[plan_end].Di.pose()); //assumes that the last step in the plan reaches the goal
 		debug::print_pose(Di_to_end, "current Di transform from goal:");
-		b2Transform sum_transform=currentTask.from_Di()+Di_to_end; //where goal should be
+		b2Transform from_Di=currentTask.from_Di();
+		b2Transform sum_transform=from_Di+Di_to_end; //where goal should be
 		b2Transform difference=sum_transform-controlGoal.disturbance.pose(); //difference in pose
 		debug::print_pose(difference, "difference between pose and likely goal pose:");
 		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
