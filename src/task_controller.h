@@ -102,19 +102,7 @@ class Reactive_Controller : public Controller{
 
 	Reactive_Controller()=default;
 
-    void next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
-        vertexDescriptor currentVertex=current_vertices[0];
-        if (g[currentVertex].Dn.isValid()){
-            printf("avoid!");
-            currentTask= Task(g[currentVertex].Dn, DEFAULT); //reactive
-        }
-        else{
-            currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
-        }
-        currentTask.motorStep = motor_step(currentTask.getAction());
-        printf("changed to %f\n", currentTask.action.getOmega());
-
-    }
+    void next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan);
 
 
 };

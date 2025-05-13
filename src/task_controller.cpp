@@ -55,10 +55,7 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
 	}
 	else{
 		Disturbance Di;
-		vertexDescriptor currentVertex=0;
-		if (!current_vertices.empty()){
-			currentVertex=current_vertices[0];
-		}
+		vertexDescriptor currentVertex=get_current_vertex(current_vertices);
 		if (g[p[0]].Di==g[currentVertex].Di){
 			Di=currentTask.disturbance;
 		}
@@ -73,5 +70,20 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
 	t.motorStep=motor_step(t.getAction(), start_to_end.p.Length());
 	printf("new disturbance x=%f \t y=%f \t %theta=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle() );
 	return t;
+
+}
+
+
+void Reactive_Controller::next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
+	vertexDescriptor currentVertex=get_current_vertex(current_vertices);
+	if (g[currentVertex].Dn.isValid()){
+		printf("avoid!");
+		currentTask= Task(g[currentVertex].Dn, DEFAULT); //reactive
+	}
+	else{
+		currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
+	}
+	currentTask.motorStep = motor_step(currentTask.getAction());
+	printf("changed to %f\n", currentTask.action.getOmega());
 
 }
