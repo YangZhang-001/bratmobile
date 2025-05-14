@@ -80,6 +80,8 @@ int main(int argc, char** argv) {
 	Motor_Out controlInterface;
 	LearningNothing learner;
     Configurator configurator(controlGoal);
+	Wise_Controller wc;
+	configurator.register_controller(&wc);
 	configurator.worldBuilder.wb_bridger.register_learner(&learner);
 	dump_benchmarks( "rt-update", "/tmp");
 	if (argc>1){

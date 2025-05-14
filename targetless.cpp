@@ -1,11 +1,6 @@
 
 #include "custom_robot.h"
 
-
-void Configurator::next_task(){
-	follow_plan();
-}
-
 Disturbance set_target(int& run, b2Transform start){
 	Disturbance result;
 	if (run%2==0){
@@ -41,6 +36,8 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
     Configurator configurator(controlGoal);
+	Wise_Controller wc;
+	configurator.register_controller(&wc);
 	char name[60];
 	dump_benchmarks( "rt-update-targetless", "/tmp");
 	if (argc>1){

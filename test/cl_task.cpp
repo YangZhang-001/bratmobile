@@ -50,18 +50,6 @@ void Configurator::explore_plan(b2World &world){
 	}
 }
 
-void Configurator::next_task(){
-	if (iteration>1){
-		currentTask.action.L=0;
-		currentTask.action.R=0;
-		return;		
-	}
-	react();
-	//currentTask= Task(transitionSystem[currentVertex].Dn, ts.d, b2Transform_zero, ts.topDown); //reactive
-	if (currentTask.getAffIndex()==PURSUE){
-		currentTask.endCriteria.distance.set(0.05);
-	}
-}
 
 Disturbance set_target(int& run, b2Transform start){
 	Disturbance result;
@@ -80,6 +68,8 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
     Configurator configurator(controlGoal);
+	Reactive_Controller rc;
+	configurator.register_controller(&rc);
 	if (argc>2){
 		configuratorInterface.debugOn=atoi(argv[2]);
 	}
