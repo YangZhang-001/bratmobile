@@ -40,7 +40,7 @@ public:
 * Output from Configurator to Motors
 */
 class Motor_Out:public IOInterface { 
-	float L=0, R=0, L_gain=1.0f, R_gain=1.0f, alpha_p=0.02, alpha_i=0.003, alpha_d=0.005;
+	float L=0, R=0, L_gain=1.0f, R_gain=1.0f, alpha_p=0.05, alpha_i=0.003, alpha_d=0.005;
 	float prev_error=0;
 	float integral=0;
     public:
