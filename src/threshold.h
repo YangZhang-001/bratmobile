@@ -3,11 +3,13 @@
 #include <cstdio>
 
 class BodyFeatures;
+class ThresholdLearner;
 
 /**
 *Struct for conveniently grouping weights/threshold associated to BodyFeatures (defined in disturbance.h)
 */
 class Bundle{
+    friend ThresholdLearner;
     float x=1;
     float y=1;
     float angle=1;
@@ -59,6 +61,26 @@ class Bundle{
 
     float get_length()const{
         return length;
+    }
+
+    void add_dx(float f) {
+        x+=f;
+    }
+
+    void add_dy(float f) {
+        y+=f;
+    }
+
+    void add_dangle(float f) {
+        angle+=f;
+    }
+
+    void add_dwidth(float f) {
+        width+=f;
+    }
+
+    void add_dlength(float f){
+        length+=f;
     }
 
 
@@ -187,20 +209,13 @@ class ThresholdLearner{
     }
 
     /**
-     * @brief Tune weights for Di
-     * 
-     * @param error the error
-     */
-    virtual void Di_tune(const Bundle & error, const Bundle & x)=0;
-
-    /**
      * @brief Updates a threshold according to a custom learning rule
      * 
      * @param error 
      * @param x the input
-     * @return Bundle 
+     * @param w weights
      */
-    virtual Bundle update_bundle(const Bundle & error, const Bundle & x)=0;
+    virtual void update_bundle(const Bundle & error, const Bundle & x, Bundle * w=NULL)=0;
 
     //TO DO:
 
@@ -209,9 +224,9 @@ class ThresholdLearner{
      * 
      * @param x 
      * @param dx 
-     * @return float 
+     * @return weight derivative 
      */
-    float ICO_dw(float x, float dx){}    
+    virtual float learning_rule(float x, float dx);
 
     Threshold get_weighted(const Threshold & t){
         Threshold result;
