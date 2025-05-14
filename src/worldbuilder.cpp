@@ -245,7 +245,6 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
    // std::pair<Pointf, Pointf> bt = bounds(d, start, boxLength, halfWindowWidth);
     //std::pair <CoordinateContainer, bool> salient = salientPoints(start,current, bt);
     if (current.empty()){
-        printf("empty!");
         return features;
     }
     if (clustering==BOX){
@@ -401,7 +400,7 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
     BodyFeatures predicted_bf=t.disturbance.bf;
     predicted_bf.pose+=t.action.getTransform(LIDAR_SAMPLING_RATE); //future to sub with MM Kalman
     auto new_d_it =find_disturbance(objects, predicted_bf, t.action.getTransform(LIDAR_SAMPLING_RATE), sensor);
-    printf("objects: %i\n", objects.size());
+  //  printf("objects: %i\n", objects.size());
     if (new_d_it==objects.end()){
         printf("not found!");
         observed_disturbance->set_affordance(NONE); //this will tell the task that D is null, so it can end!
