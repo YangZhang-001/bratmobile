@@ -1056,12 +1056,15 @@ void Configurator::adjust_goal_expectation(){
 	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()&&task_controller->get_disturbance().getAffIndex()!=NONE){
 		debug::print_pose(task_controller->to_goal(), "current Di transform from goal:");
 		printf("distance=%f\n", task_controller->to_goal().p.Length());
-		b2Transform from_Di=currentTask.from_Di();
+		b2Transform from_Di=b2Transform_zero;
+		//if (task_controller->get_disturbance().getAffIndex()==AVOID){
+			from_Di=currentTask.from_Di();
+		//}
 		b2Transform sum_transform=from_Di+task_controller->to_goal(); //where goal should be
 		controlGoal.disturbance.bf.pose.p=sum_transform.p;
-		// b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
-		//debug::print_pose(difference, "difference between pose and likely goal pose:");
-		//math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
+		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
+//		debug::print_pose(difference, "difference between pose and likely goal pose:");
+		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
 	}
 	debug::print_pose(controlGoal.disturbance.pose(), "new gaol pose:");
 
