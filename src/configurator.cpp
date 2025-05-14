@@ -1041,7 +1041,7 @@ void Configurator::change_task(){
 	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
 	printPlan(&plan);
 	worldBuilder.wb_bridger.set_tracked_disturbance(currentTask.disturbance);
-	control->reset_error();
+	control->reset();
 	control->getData(currentTask.action);
 	return;
 }
