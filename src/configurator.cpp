@@ -1057,9 +1057,9 @@ void Configurator::adjust_goal_expectation(){
 		debug::print_pose(task_controller->to_goal(), "current Di transform from goal:");
 		printf("distance=%f\n", task_controller->to_goal().p.Length());
 		b2Transform from_Di=b2Transform_zero;
-		//if (task_controller->get_disturbance().getAffIndex()==AVOID){
+		if (task_controller->get_disturbance().getAffIndex()==AVOID){
 			from_Di=currentTask.from_Di();
-		//}
+		}
 		b2Transform sum_transform=from_Di+task_controller->to_goal(); //where goal should be
 		controlGoal.disturbance.bf.pose.p=sum_transform.p;
 // 		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
