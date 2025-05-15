@@ -112,6 +112,12 @@ void setVelocities(const float & l,const float &r){
     float getOmega(const float &dt=1)const{
     return omega*dt;
     }
+    
+    /**
+     * @brief Uses kinematic model to calculate angle
+     * @param l left wheel speed (normalised)
+     * @param r right wheen speed (normalised)     * 
+     */
 
     float getOmega(const float l, const float r, float dt=1)const{
         float result = (MAX_SPEED*(r-l)/BETWEEN_WHEELS)*TURN_FRICTION*dt;

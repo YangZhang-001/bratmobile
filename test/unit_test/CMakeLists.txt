@@ -51,7 +51,9 @@ add_executable(filter_box ../test_essentials.h filter_box.cpp)
 add_executable(estimate_vertex ../test_essentials.h estimate_vertex.cpp)
 add_executable(calc_transform ../test_essentials.h calc_transform.cpp)
 add_executable(adjust_goal_expectation ../test_essentials.h adjust_goal_expectation.cpp)
+add_executable(PID_inst PID.cpp)
 
+target_link_libraries(PID_inst CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(adjust_goal_expectation CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(calc_transform CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
@@ -339,6 +341,8 @@ add_test(NAME adjust_goal_xy COMMAND adjust_goal_expectation -.4 0.3 0 ) #robot 
 add_test(NAME adjust_goal_xa COMMAND adjust_goal_expectation -.4 0 0.12 ) #robot moves on x axis + rotates
 add_test(NAME adjust_goal_ya COMMAND adjust_goal_expectation 0 -.3 0.12 ) #robot moves on y axix + rotates
 add_test(NAME adjust_goal_xya COMMAND adjust_goal_expectation 0.8 -.05 -0.45 ) #robot shifts and rotates
+
+add_test(NAME PID_inst COMMAND PID_inst) #robot shifts and rotates
 
 
 set(CMAKE_BUILD_TYPE Debug)

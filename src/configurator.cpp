@@ -1023,7 +1023,7 @@ void Configurator::track_task_execution(){
 	b2Rot angle_error(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle()-deltaPose.q.GetAngle());
 	//correct motor
 	if (currentTask.direction==DEFAULT){
-		control->adjust_gain(angle_error, deltaPose.q);
+		control->adjust_gain(angle_error.GetAngle(), deltaPose);
 	}
 	if(currentTask.motorStep==0 || ended){
 		currentTask.change=1;
