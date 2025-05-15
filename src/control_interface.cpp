@@ -3,10 +3,7 @@
 void Motor_Out::adjust_gain( float angle_D, b2Transform observed, float * y_D){
     float angle_error=angle_D-observed.q.GetAngle();
     float y_error=0;
-    if (y_D){
-        if (!y_D){
-            throw std::invalid_argument("null pointer!");
-        }
+    if (y_D!=NULL){
         if(fabs(observed.p.y)<(*y_D)){
             //y only
             y_error=(*y_D)-observed.p.y;

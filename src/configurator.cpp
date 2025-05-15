@@ -1026,6 +1026,9 @@ void Configurator::track_task_execution(){
 		float *distance_ptr=NULL;
 		if (task_controller->get_disturbance().getAffIndex()==AVOID){
 			*distance_ptr=task_controller->get_disturbance().pose().p.y;
+			if (!distance_ptr){
+				throw std::invalid_argument("null pointer, conf!");
+				}		
 		}
 		control->adjust_gain(angle_error.GetAngle(), deltaPose, distance_ptr);
 	}
