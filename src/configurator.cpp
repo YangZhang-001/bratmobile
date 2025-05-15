@@ -1020,17 +1020,17 @@ void Configurator::track_task_execution(){
 	//check if this task has ended
 	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
 	//get angle error for correcting motor output
-	b2Rot angle_error(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle()-deltaPose.q.GetAngle());
+	//b2Rot angle_error(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle()-deltaPose.q.GetAngle());
 	//correct motor
 	if (currentTask.direction==DEFAULT){
 		float *distance_ptr=NULL;
 		if (task_controller->get_disturbance().getAffIndex()==AVOID){
-			*distance_ptr=task_controller->get_disturbance().pose().p.y;
-			if (!distance_ptr){
-				throw std::invalid_argument("null pointer, conf!");
-				}		
+			//*distance_ptr=task_controller->get_disturbance().pose().p.y;
+			// if (!distance_ptr){
+			// 	throw std::invalid_argument("null pointer, conf!");
+			// 	}		
 		}
-		control->adjust_gain(angle_error.GetAngle(), deltaPose, distance_ptr);
+		control->adjust_gain(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle(), deltaPose); //, distance_ptr
 	}
 	if(currentTask.motorStep==0 || ended){
 		currentTask.change=1;
