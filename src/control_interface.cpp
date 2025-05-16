@@ -24,5 +24,5 @@ void Motor_Out::PID(float e){
 }
 
 float Motor_Out::outer_loop(float e){ 
-    return 0.1*e;
+    return 0.1*e; //0.1 is Kp for outer loop but don't know why it doesnt let me set it inside Motor_Out
 }
