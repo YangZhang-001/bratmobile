@@ -1023,8 +1023,15 @@ void Configurator::track_task_execution(){
 	b2Rot angle_error(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle()-deltaPose.q.GetAngle());
 	//correct motor
 	if (currentTask.direction==DEFAULT){
-		float float_angle=angle_error.GetAngle();
-		printf("angle error =%f, angle =%f\n", angle_error.GetAngle(), float_angle);
+		float float_angle=angle_error.GetAngle(), new_angle=0;
+		if(task_controller->get_disturbance().getAffIndex()){
+			float desired_distance=task_controller->get_disturbance().pose().p.y;
+			float observed_distance=currentTask.disturbance.pose().p.y;
+			float distance_error=desired_distance-observed_distance;
+			new_angle=control->outer_loop(distance_error);
+
+		}
+		printf("angle error =%f, angle =%f, new_angle=%f\n", angle_error.GetAngle(), float_angle, new_angle);
 		control->PID(float_angle);
 	}
 	if(currentTask.motorStep==0 || ended){
