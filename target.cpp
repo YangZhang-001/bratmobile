@@ -49,10 +49,6 @@ Disturbance set_target(int& run, b2Transform start){
 	return result;
 }
 
-void Configurator::next_task(){
-	follow_plan();
-}
-
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
@@ -61,6 +57,8 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
     Configurator configurator(controlGoal);
+	Wise_Controller wc;
+	configurator.register_controller(&wc);
 	dump_benchmarks( "rt-update", "/tmp");
 	if (argc>1){
 		#define DEBUG atoi(argv[1])

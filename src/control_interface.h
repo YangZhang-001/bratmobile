@@ -40,10 +40,15 @@ public:
 * Output from Configurator to Motors
 */
 class Motor_Out:public IOInterface { 
-	float L=0, R=0, L_gain=1.0f, R_gain=1.0f, alpha_p=0.01, alpha_i=0.03, alpha_d=0.000;
+	protected:
+	float L=0, R=0, L_gain=1.0f, R_gain=1.0f, Kp=0.45, Ki=0.25, Kd=0.2;
 	float prev_error=0;
 	float integral=0;
     public:
+
+	Motor_Out()=default;
+
+	Motor_Out(float kp, float ki, float kd):Kp(kp), Ki(ki), Kd(kd){}
 
 	void getData(const Task::Action &a){
 		setReady(0);
@@ -63,15 +68,34 @@ class Motor_Out:public IOInterface {
 	}
 
 	/**
-	*Adjusts gain to R/L wheel
-	*/
-	void adjust_gain(b2Rot e, b2Rot rot){ //delta rule ()
-		integral+=e.GetAngle();
-		float increment=alpha_p*e.GetAngle() + alpha_i*integral +alpha_d*prev_error-e.GetAngle();
-		L_gain+=increment/2;
-		R_gain-=increment/2;
-		prev_error=e.GetAngle();
-	}
+	 * @brief Adjusts L/R wheel gain, implements a PID controller with option to turn it into cascaded controller
+	 * 
+	 * @param angle_D desired angle from disturbance
+	 * @param observed observed transform
+	 * @param y_D desired distance from disturbance on the y axis (pointer so optional) 
+	 */
+	void adjust_gain( float angle_D, b2Transform observed, float * y_D=NULL);
+
+	/**
+	 * @brief Implements a PID controller
+	 * 
+	 * @param e 
+	 */
+	void PID(float e);
+
+	/**
+	 * @brief Implements a P controller in the outer loop of the cascade controller
+	 * 
+	 * max dl/dt and dr/dt = 2.0 (going from -1->1 and viceversa)
+	 * max_corrective angle= ((max_dl-max_dr)/speed)*LIDAR_SAMPLING_RATE=(((-2-2)/0.2)*.15)*0.2= fabs(0.6)rad=34deg
+	 * but this is not a typical case scenario. Usually the error is around 0.01-0.05rad for going straight.
+	 * Since the angle is small, we want to keep Kp_outer around a plausible angle value. Distances will usually be +- 0.1m
+	 * so the angle change will be in the range of 0.025-0.001 rad/s
+	 * @param e distance error
+	 * @returns desired angle
+	 */
+	float outer_loop(float e);
+
 
 	void reset(){
 		L_gain=1.0f;
@@ -85,6 +109,9 @@ class Motor_Out:public IOInterface {
 	}
 
 };	
+
+
+
 
 /**
 * Customizable class, for changing goals.

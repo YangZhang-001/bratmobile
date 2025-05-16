@@ -65,10 +65,13 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
 		}
 		t=Task(Di, g[p[0]].direction, b2Transform_zero, true);
 		// t.endCriteria.angle.set(atan2(end_from_Di.p.y, end_from_Di.p.x));
-        disturbance_q=g[p[0]].Di;	
+        disturbance_q=g[p[0]].Di; 	
     }
+	vertexDescriptor plan_end=p[p.size()-1];
+	_to_goal=b2MulT(disturbance_q.pose() , g[plan_end].Di.pose()); //assumes that the last step in the plan reaches the goal
 	t.motorStep=motor_step(t.getAction(), start_to_end.p.Length());
 	printf("new disturbance x=%f \t y=%f \t %theta=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle() );
+	printf("goal x=%f \t y=%f \t %theta=%f\n", g[plan_end].Di.pose().p.x, g[plan_end].Di.pose().p.y, g[plan_end].Di.pose().q.GetAngle() );
 	return t;
 
 }
