@@ -1023,15 +1023,9 @@ void Configurator::track_task_execution(){
 	b2Rot angle_error(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle()-deltaPose.q.GetAngle());
 	//correct motor
 	if (currentTask.direction==DEFAULT){
-		float *distance_ptr=NULL;
-		if (task_controller->get_disturbance().getAffIndex()==AVOID){
-			//*distance_ptr=task_controller->get_disturbance().pose().p.y;
-			// if (!distance_ptr){
-			// 	throw std::invalid_argument("null pointer, conf!");
-			// 	}		
-		}
-		//control->adjust_gain(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle(), deltaPose); //, distance_ptr
-		control->PID(angle_error.GetAngle());
+		float float_angle=angle_error.GetAngle();
+		printf("angle error =%f, angle =%f\n", angle_error.GetAngle(), float_angle);
+		control->PID(float_angle);
 	}
 	if(currentTask.motorStep==0 || ended){
 		currentTask.change=1;
@@ -1065,15 +1059,15 @@ void Configurator::adjust_goal_expectation(){
 		debug::print_pose(task_controller->to_goal(), "current Di transform from goal:");
 		printf("distance=%f\n", task_controller->to_goal().p.Length());
 		b2Transform from_Di=b2Transform_zero;
-		if (task_controller->get_disturbance().getAffIndex()==AVOID){
+		//if (task_controller->get_disturbance().getAffIndex()==AVOID){
 			from_Di=currentTask.from_Di();
-		}
+		//}
 		b2Transform sum_transform=from_Di+task_controller->to_goal(); //where goal should be
 		controlGoal.disturbance.bf.pose.p=sum_transform.p;
 // 		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
 // //		debug::print_pose(difference, "difference between pose and likely goal pose:");
 // 		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
+		debug::print_pose(controlGoal.disturbance.pose(), "new gaol pose:");
 	}
-	debug::print_pose(controlGoal.disturbance.pose(), "new gaol pose:");
 
 }

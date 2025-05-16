@@ -41,7 +41,7 @@ public:
 */
 class Motor_Out:public IOInterface { 
 	protected:
-	float L=0, R=0, L_gain=1.0f, R_gain=1.0f, Kp=0.015, Ki=0.003, Kd=0.005, Kp_outer=0.1;
+	float L=0, R=0, L_gain=1.0f, R_gain=1.0f, Kp=0.1, Ki=0.5, Kd=0.005;
 	float prev_error=0;
 	float integral=0;
     public:
@@ -91,7 +91,8 @@ class Motor_Out:public IOInterface {
 	 * but this is not a typical case scenario. Usually the error is around 0.01-0.05rad for going straight.
 	 * Since the angle is small, we want to keep Kp_outer around a plausible angle value. Distances will usually be +- 0.1m
 	 * so the angle change will be in the range of 0.025-0.001 rad/s
-	 * @param e 
+	 * @param e distance error
+	 * @returns desired angle
 	 */
 	float outer_loop(float e);
 

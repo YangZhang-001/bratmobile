@@ -24,5 +24,5 @@ void Motor_Out::PID(float e){
 }
 
 float Motor_Out::outer_loop(float e){ 
-    return Kp_outer*e;
+    return 0.1*e;
 }
