@@ -41,7 +41,7 @@ public:
 */
 class Motor_Out:public IOInterface { 
 	protected:
-	float L=0, R=0, L_gain=1.0f, R_gain=1.0f, Kp=0.45, Ki=0.25, Kd=0.2;
+	float L=0, R=0, L_gain=1.0f, R_gain=1.0f, Kp=0.45, Ki=0.25, Kd=0.2; //from empirical, Kp should be 1.2
 	float prev_error=0;
 	float integral=0;
     public:
