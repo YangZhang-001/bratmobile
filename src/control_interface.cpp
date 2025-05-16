@@ -18,8 +18,8 @@ void Motor_Out::adjust_gain( float angle_D, b2Transform observed, float * y_D){
 void Motor_Out::PID(float e){ 
     integral+=e;
     float increment=Kp*e + Ki*integral +Kd*(prev_error-e);
-    L_gain+=increment/2;
-    R_gain-=increment/2;
+    L_gain-=increment/2;
+    R_gain+=increment/2;
     prev_error=e;
 }
 
