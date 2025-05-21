@@ -169,7 +169,7 @@ void stop();
 
 void registerInterface(LIDAR_In *, Motor_Out *);
 
-static void run(Configurator *);
+void run();
 
 //only keeps unexplored transitions out of vertex v
 void unexplored_transitions(TransitionSystem&, const vertexDescriptor& v);

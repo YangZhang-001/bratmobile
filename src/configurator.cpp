@@ -476,7 +476,7 @@ void Configurator::start(){
 	if (LIDAR_thread!=NULL){ //already running
 		return;
 	}
-	LIDAR_thread= new std::thread(Configurator::run, this);
+	LIDAR_thread= new std::thread(&run, this);
 }
 
 void Configurator::stop(){
@@ -494,47 +494,43 @@ void Configurator::registerInterface(LIDAR_In * _ci, Motor_Out * _control){
 	control=_control;
 }
 
-void Configurator::run(Configurator * c){
-	while (c->running){
-		if (c->ci->stop){
-			c->ci=NULL;
-			c->control=NULL;
+void Configurator::run(){
+	while (running){
+		if (ci->stop){
+			ci=NULL;
+			control=NULL;
 			printf("ci not started\n");
 		}
-		if (c->ci == NULL){
+		if (ci == NULL){
 			printf("null pointer to lidar input\n");
-			c->running=0;
+			running=0;
 			return;
 		}
-		if (c->control == NULL){
+		if (control == NULL){
 			printf("null pointer to motor output\n");
-			c->running=0;
+			running=0;
 			return;
 		}
-		if (c == NULL){
-			printf("null pointer to configurator\n");
-			c->running=0;
-			return;
-		}
-		if (c->task_controller==NULL){
-			c->running=0;
+
+		if (task_controller==NULL){
+			running=0;
 			throw std::invalid_argument("no task controller, please set!");
 		}
-		if (c->ci->isReady()){
-			c->ci->setReady(false);
-			c->data2fp= CoordinateContainer(c->ci->data2fp);
-			c->Spawner();
-			c->track_task_execution();
-			if (c->goal_changer!=NULL){
-				if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
-					c->goal_changer->change_goal(&c->controlGoal);
+		if (ci->isReady()){
+			ci->setReady(false);
+			data2fp= CoordinateContainer(ci->data2fp);
+			Spawner();
+			track_task_execution();
+			if (goal_changer!=NULL){
+				if (( getTask()->change & transitionSystem[currentVertex].direction!=STOP && plan.empty() && getIteration()>1)){
+					goal_changer->change_goal(&controlGoal);
 				}					
 			}
-			c->change_task();		
-			c->adjust_goal_expectation();
-			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
-			printf("current v=%i\n", c->currentVertex);
-			c->set_sensor(c->worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(c->controlGoal.disturbance)));
+			change_task();		
+			adjust_goal_expectation();
+			estimate_current_vertex(transitionSystem, currentTask);
+			printf("current v=%i\n", currentVertex);
+			set_sensor(worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance)));
 			}
 
 	}
