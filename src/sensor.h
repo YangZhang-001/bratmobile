@@ -103,106 +103,40 @@ std::set<T> vec2set(std::vector<T> vec){
     return set;
 }
 
-// class Kalman_Unscented: public cv::detail::tracking::kalman_filters::UnscentedKalmanFilter{
-
-// };
-
-
-
-class PointCloudProc{
-	friend ConfiguratorInterface;
-	friend Configurator;
-    std::vector <Pointf> previous;
-	const float NEIGHBOURHOOD=0.075;
-    public:
-    PointCloudProc(){};
-
-    b2Transform affineTransEstimate(std::vector <Pointf>, Task::Action, float timeElapsed=0.2, float range=1.0);
-
-	std::vector<Pointf> neighbours(b2Vec2,float radius, std::vector <Pointf> data= std::vector <Pointf>()); //finds if there are bodies close to a point. Used for 
-
-	std::pair <bool, b2Vec2>  findOrientation(std::vector<Pointf> ); //finds  average slope of line passign through two points in a radius of 2.5 cm. Assumes low clutter 
-
-	std::pair <bool, cv::Vec4f> findOrientationCV(std::vector<Pointf>);
-	
-	std::vector<Pointf> setDisturbanceOrientation(Disturbance&, CoordinateContainer data=CoordinateContainer());
-
-	void updatePrevious(CoordinateContainer c){
-		previous=set2vec(c);
-	}
-};
-
-class ImgProc{
-	std::vector <cv::Point2f> previousCorners;
-    public:
-	
-    ImgProc(){}
-
-    cv::Mat cropLeft(cv::Mat);
-
-    cv::Mat cropRight(cv::Mat);
-
-    cv::Vec2d  opticFlow(const cv::Mat&);
-
-	cv::Vec2d avgOpticFlow(const cv::Mat&);
-
-	std::vector <cv::Point2f> get_corners();
-
-	cv::Mat get_previous();
-
-	void setPrevious(cv::Mat m){
-		previous=m;
-	}
-
-	void setCorners(std::vector <cv::Point2f> c){
-		corners=c;
-	}
-
-	void reset(){
-		previous= cv::Mat();
-		corners.clear();
-	}
-
-
-    private:
-	int it=0;
-	struct GoodFeaturesParameters{
-		const int MAX_CORNERS=30;
-    	const float QUALITY_LEVEL=0.7;
-   		const int MIN_DISTANCE=7;
-    	const int BLOCK_SIZE=7;
-	}gfp;
-
-    std::vector <cv::Point2f> corners; //must be single-precision float
-    cv::Mat previous;
-};
-
 /**
- * @brief wrapper for OpenCV Kalman Filter class, a state in Interacting Multiple Models (doi: 10.1109/7.640267)
+ * @brief Given points, makes rotated bounding box
  * 
+ * @param nb points
+ * @return std::pair <bool, BodyFeatures> : <are features valid?, features>
  */
-// class Kalman_Filter{
-// 	int dim=10;
-// 	cv::KalmanFilter filter(dim, dim); //state and measurmenets are 10 dimensional
-// public:
-// 	Kalman_Filter(){
-//                                                // x  y  th w  l  dx dy dth dw dl
-//     filter.transitionMatrix=(cv::Mat_<float>(10,10)<< 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, //rw x (x(t-1)+ dx(t))
-//                                             	  0, 1, 0, 0, 0, 0, 1, 0, 0, 0,//rw y (y(t-1)+ dy(t))
-//                                                   0, 0, 1, 0, 0, 0, 0, 1, 0, 0,  //rw  theta(theta(t-1)+ dtheta(t))
-//                                                   0, 0, 0, 1, 0, 0, 0, 0, 1, 0,// rate of update x estimate
-//                                                   0, 0, 0, 0, 1, 0, 0, 0, 0, 1,// rate of update y estimate 
-//                                                   0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
-// 											      0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
-// 											      0, 0, 0, 0, 0, 0, 0, 1, 0, 0,
-// 											      0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
-// 											      0, 0, 0, 0, 0, 0, 0, 0, 0, 1); // rate update theta estimate
+std::pair <bool, BodyFeatures> bounding_rotated_box(std::vector <cv::Point2f>nb);
 
-// 	filter.measurementMatrix=cv::Mat::eye(10, 10, CV_32F);
-// 	}
-// 	private:
+template <typename Pt>
+static b2PolygonShape sensor_box(const std::vector <Pt> &all_points_pt, b2Transform robot_pose, const Disturbance * dist){
+	b2PolygonShape shape;
+	b2Vec2 centroid(2.0, 2.0), center=centroid, center_local=b2Vec2_zero;
+	float halfHeight=0, halfWidth=0;
+	if (dist->isValid()){
+	std::vector <b2Vec2>  d_vertices=dist->vertices(); 
+	std::vector <cv::Point2f> all_points=cast_Point2f(all_points_pt);
+	for (b2Vec2 p: d_vertices){
+		p=b2MulT(robot_pose, p); //get local point
+		all_points.push_back(cv::Point2f(p.x, p.y));
+	}
+	float minx=(std::min_element(all_points.begin(),all_points.end(), CompareX())).base()->x;
+	float miny=(std::min_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
+	float maxx=(std::max_element(all_points.begin(), all_points.end(), CompareX())).base()->x;
+	float maxy=(std::max_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
+	halfHeight=(fabs(maxy-miny))/2; //
+	halfWidth=(fabs(maxx-minx))/2;
+	center.x=maxx-halfWidth;
+	center.y=maxy-halfHeight;
+	centroid=center-center_local;  
+	}
+	shape.SetAsBox(halfWidth, halfHeight,centroid, 0);
+	return shape;
 
+}
 
-// };
 
 #endif

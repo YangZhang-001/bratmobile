@@ -2,9 +2,6 @@
 #define WORLDBUILDER_H
 #include "sensor.h"
 
-void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev);
-
-
 class WorldBuilder{
     int iteration=0;
     char bodyFile[100];
@@ -106,112 +103,7 @@ class WorldBuilder{
 
     b2AABB  makeRobotSensor(b2Body*, Disturbance *goal); //returns bounding box in world coord
     
-    template <typename Pt>
-    static b2PolygonShape sensor_box(const std::vector <Pt> &all_points_pt, b2Transform robot_pose, const Disturbance * dist){
-        b2PolygonShape shape;
-        b2Vec2 centroid(2.0, 2.0), center=centroid, center_local=b2Vec2_zero;
-        float halfHeight=0, halfWidth=0;
-        if (dist->isValid()){
-        std::vector <b2Vec2>  d_vertices=dist->vertices(); 
-        std::vector <cv::Point2f> all_points=cast_Point2f(all_points_pt);
-        for (b2Vec2 p: d_vertices){
-            p=b2MulT(robot_pose, p); //get local point
-            all_points.push_back(cv::Point2f(p.x, p.y));
-        }
-        float minx=(std::min_element(all_points.begin(),all_points.end(), CompareX())).base()->x;
-        float miny=(std::min_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
-        float maxx=(std::max_element(all_points.begin(), all_points.end(), CompareX())).base()->x;
-        float maxy=(std::max_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
-        halfHeight=(fabs(maxy-miny))/2; //
-        halfWidth=(fabs(maxx-minx))/2;
-        center.x=maxx-halfWidth;
-        center.y=maxy-halfHeight;
-        centroid=center-center_local;  
-        }
-        shape.SetAsBox(halfWidth, halfHeight,centroid, 0);
-        return shape;
 
-    }
-
-
-    class Bridger{
-        Disturbance tracked_disturbance; //reference of disturbance to be tracked, kept in memory when task is changed
-        ThresholdLearner *learner;
-        public:
-        Threshold threshold=Threshold();
-
-        //returns a rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
-        cv::Rect2f real_world_focus(const Task * );
-
-        /**
-        * calculates 2d affine transformation of input task's disturbance from t-1 to t
-        * @param t input task
-        * @param pts point cloud
-        * @param observed_disturbance body features of the observed disturbance
-        * @param objects world objects as extracted in worldbuilder
-        * @param sensor the box2d sensor representing the real-world attention window
-        */
-        b2Transform get_transform(const Task &, const CoordinateContainer &, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects, const  b2PolygonShape& sensor); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
-
-        /*
-        *given points, makes minimum bounding rotated box around them
-        */
-        std::pair <bool, BodyFeatures> bounding_rotated_box(std::vector <cv::Point2f>nb);
-
-        //void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);                
-
-        Disturbance * get_tracked_disturbance(){
-            return &tracked_disturbance;
-        }
-
-        void set_tracked_disturbance(const Disturbance & d){
-            tracked_disturbance=d;
-        }
-
-        /**
-        * the disturbance to be tracked among the worldbuilder objects
-        * @param objects worldBuilder objects
-        * @param dist disturbance to be tracked
-        * @param t the estimated instantaneous 2d transform associated to the currently executed task
-        * @param sensor the box2d sensor representing real-world attention window
-        */
-        std::vector <BodyFeatures>::iterator find_disturbance(std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, const b2PolygonShape &sensor, float * _least_square=NULL);
-
-        Threshold * get_threshold(){
-            return &threshold;
-        }
-
-        void register_learner(ThresholdLearner * l){
-            learner=l;
-        }
-
-        void make_log(){
-            if (learner){
-                learner->make_log();
-            }
-            FILE * f=fopen("/tmp/thresholds.txt", "w");
-            fclose(f);
-        }
-
-        void log_thresholds(){
-            FILE *f= fopen("/tmp/thresholds.txt", "a");
-            fprintf(f, "%f\t%f\t%f\t%f\t%f\n", threshold.for_Di().get_x(),
-                                               threshold.for_Di().get_y(),
-                                               threshold.for_Di().get_angle(),
-                                               threshold.for_Di().get_width(),
-                                               threshold.for_Di().get_length());
-            fclose(f);
-        }
-
-        /**
-         * @brief Calculates transform between disturbance poses
-         * 
-         * @param result 
-         * @param t_new transform of the new disturbance
-         * @param t_tracked transform of tracked disturbance
-         */
-        
-    }wb_bridger;
 
 };
 #endif

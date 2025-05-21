@@ -476,7 +476,7 @@ void Configurator::start(){
 	if (LIDAR_thread!=NULL){ //already running
 		return;
 	}
-	LIDAR_thread= new std::thread(&run, this);
+	LIDAR_thread= new std::thread(Configurator::run, this);
 }
 
 void Configurator::stop(){
@@ -494,43 +494,49 @@ void Configurator::registerInterface(LIDAR_In * _ci, Motor_Out * _control){
 	control=_control;
 }
 
-void Configurator::run(){
-	while (running){
-		if (ci->stop){
-			ci=NULL;
-			control=NULL;
+void Configurator::run(Configurator * c){
+	while (c->running){
+		if (c->ci->stop){
+			c->ci=NULL;
+			c->control=NULL;
 			printf("ci not started\n");
 		}
-		if (ci == NULL){
+		if (c->ci == NULL){
 			printf("null pointer to lidar input\n");
-			running=0;
+			c->running=0;
 			return;
 		}
-		if (control == NULL){
+		if (c->control == NULL){
 			printf("null pointer to motor output\n");
-			running=0;
+			c->running=0;
 			return;
 		}
-
-		if (task_controller==NULL){
-			running=0;
+		if (c == NULL){
+			printf("null pointer to configurator\n");
+			c->running=0;
+			return;
+		}
+		if (c->task_controller==NULL){
+			c->running=0;
 			throw std::invalid_argument("no task controller, please set!");
 		}
-		if (ci->isReady()){
-			ci->setReady(false);
-			data2fp= CoordinateContainer(ci->data2fp);
-			Spawner();
-			track_task_execution();
-			if (goal_changer!=NULL){
-				if (( getTask()->change & transitionSystem[currentVertex].direction!=STOP && plan.empty() && getIteration()>1)){
-					goal_changer->change_goal(&controlGoal);
+		if (c->ci->isReady()){
+			c->ci->setReady(false);
+			c->data2fp= CoordinateContainer(c->ci->data2fp);
+			c->Spawner();
+			//c->track_task_execution();
+			b2Transform deltaPose= c->tracker->track(*(c->getTask()),c->ci->data2fp, c->worldBuilder.world_objects);
+			c->update_graph(c->transitionSystem, deltaPose);
+			if (c->goal_changer!=NULL){
+				if (( c->getTask()->change& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
+					c->goal_changer->change_goal(&c->controlGoal);
 				}					
 			}
-			change_task();		
-			adjust_goal_expectation();
-			estimate_current_vertex(transitionSystem, currentTask);
-			printf("current v=%i\n", currentVertex);
-			set_sensor(worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance)));
+			c->change_task();		
+			c->adjust_goal_expectation();
+			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
+			printf("current v=%i\n", c->currentVertex);
+			// c->set_sensor(c->worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(c->controlGoal.disturbance)));
 			}
 
 	}
@@ -821,15 +827,11 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 	for (auto vi=vs.first; vi!= vs.second; vi++){
 		vertexDescriptor v=*vi;
 		bool Tmatch=dir==Direction::UNDEFINED ||g[v].direction==dir;
-		//std::vector <edgeDescriptor> ie=gt::inEdges(g, v, dir);
-		//Tmatch=!ie.empty()||dir==Direction::UNDEFINED;
 		//make state representing a whole task, this is inefficient and when i have time should be susbtituted with subgraph
 		State q= g[v];
-//		if (wholeTask){
 			if (auto vertices=gt::task_vertices(v, g, iteration, currentVertex); vertices.size()>1){
 				q.start=g[vertices[0]].start;
 			}			
-//		}
 		if (v==currentVertex && !currentTask.change){
 			q.start=b2Transform_zero;
 		}
@@ -837,13 +839,13 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 		bool condition=0;
 		StateMatcher::MATCH_TYPE m=StateMatcher::_FALSE;
 		float sum_tmp=fabs(sd.get_sum(match_type));
-		//if (!relax){
-		m=matcher.isMatch(sd, worldBuilder.wb_bridger.threshold, s.endPose.p.Length());
+		try{
+			m=matcher.isMatch(sd, tracker->threshold, s.endPose.p.Length());
+		}
+		catch(std::exception &e){
+			std::cerr<< "check tracker is set up ok! "<<e.what()<<std::endl;
+		}
 		condition=matcher.match_equal(m, match_type);
-		//}
-		//else{
-			//condition= sum_tmp<sum;
-		//}
 		
 		if (v!=movingVertex && boost::in_degree(v, g)>0 &&Tmatch ){ 
 			if (condition){
@@ -858,10 +860,6 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 					*_sd=sd;
 				}
 			}
-			// }
-			// else{
-			// 	result.first=match_type;
-			// }
 		}	
 
 	}
@@ -1003,37 +1001,37 @@ void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
 
 }
 
-void Configurator::track_task_execution(){
-	bool ended=false;
-	b2Transform deltaPose=b2Transform_zero;
-	if (iteration>1){
-		//find transl/rotation and if task has a real Di (not imagined, e.g. a goal), update the disturbance's location
-		deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance, worldBuilder.world_objects, task_sensor); //track using obstacle OR dead reckoning
-	}
-	//update the map by rotating its component by the found translation/rotation
-	debug::print_pose(deltaPose, "delta pose");
-	update_graph(transitionSystem, deltaPose, &currentTask, &controlGoal);
-	//check if this task has ended
-	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
-	//get angle error for correcting motor output
-	b2Rot angle_error(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle()-deltaPose.q.GetAngle());
-	//correct motor
-	if (currentTask.direction==DEFAULT){
-		float float_angle=angle_error.GetAngle(), new_angle=0;
-		if(task_controller->get_disturbance().getAffIndex()){
-			float desired_distance=task_controller->get_disturbance().pose().p.y;
-			float observed_distance=currentTask.disturbance.pose().p.y;
-			float distance_error=desired_distance-observed_distance;
-			new_angle=control->outer_loop(distance_error);
+// void Configurator::track_task_execution(){
+// 	bool ended=false;
+// 	b2Transform deltaPose=b2Transform_zero;
+// 	if (iteration>1){
+// 		//find transl/rotation and if task has a real Di (not imagined, e.g. a goal), update the disturbance's location
+// 		deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance, worldBuilder.world_objects, task_sensor); //track using obstacle OR dead reckoning
+// 	}
+// 	//update the map by rotating its component by the found translation/rotation
+// 	debug::print_pose(deltaPose, "delta pose");
+// 	update_graph(transitionSystem, deltaPose);
+// 	//check if this task has ended
+// 	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
+// 	//get angle error for correcting motor output
+// 	b2Rot angle_error(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle()-deltaPose.q.GetAngle());
+// 	//correct motor
+// 	if (currentTask.direction==DEFAULT){
+// 		float float_angle=angle_error.GetAngle(), new_angle=0;
+// 		if(task_controller->get_disturbance().getAffIndex()){
+// 			float desired_distance=task_controller->get_disturbance().pose().p.y;
+// 			float observed_distance=currentTask.disturbance.pose().p.y;
+// 			float distance_error=desired_distance-observed_distance;
+// 			new_angle=control->outer_loop(distance_error);
 
-		}
-		printf("angle error =%f, angle =%f, new_angle=%f\n", angle_error.GetAngle(), float_angle, new_angle);
-		control->PID(float_angle);
-	}
-	if(currentTask.motorStep==0 || ended){
-		currentTask.change=1;
-	}
-}
+// 		}
+// 		printf("angle error =%f, angle =%f, new_angle=%f\n", angle_error.GetAngle(), float_angle, new_angle);
+// 		control->PID(float_angle);
+// 	}
+// 	if(currentTask.motorStep==0 || ended){
+// 		currentTask.change=1;
+// 	}
+// }
 
 void Configurator::change_task(){
 	if (!currentTask.change){
@@ -1045,15 +1043,16 @@ void Configurator::change_task(){
 	printf("change!\n");
 	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
 	printPlan(&plan);
-	worldBuilder.wb_bridger.set_tracked_disturbance(currentTask.disturbance);
+	// worldBuilder.wb_bridger.set_tracked_disturbance(currentTask.disturbance);
+	tracker->on_new_task(&currentTask);
 	control->reset();
 	control->getData(currentTask.action);
 	return;
 }
 
-void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPose, Task* t, Task * controlGoal){
+void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPose){
 	math::applyAffineTrans(_deltaPose, g);
-	math::applyAffineTrans(_deltaPose, controlGoal);
+	math::applyAffineTrans(_deltaPose, &controlGoal);
 }
 
 
