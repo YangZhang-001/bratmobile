@@ -169,7 +169,7 @@ void stop();
 
 void registerInterface(LIDAR_In *, Motor_Out *);
 
-static void run(Configurator *);
+void run(Configurator *);
 
 //only keeps unexplored transitions out of vertex v
 void unexplored_transitions(TransitionSystem&, const vertexDescriptor& v);
@@ -230,10 +230,6 @@ void track_task_execution();
  */
 void change_task();
 
-// //return motor instruction (in step callbacks for a task - deprecated)
-// /**
-// */
-// int motor_step(Task::Action a, float distance=0.27);
 
 //updates environment representation with time
 /**

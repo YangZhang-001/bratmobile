@@ -10,11 +10,11 @@ class ThresholdLearner;
 */
 class Bundle{
     friend ThresholdLearner;
-    float x=1;
-    float y=1;
-    float angle=1;
-    float width=1;
-    float length=1;
+    float x=0;
+    float y=0;
+    float angle=0;
+    float width=0;
+    float length=0;
 
     public:
     Bundle()=default;
@@ -184,6 +184,14 @@ class ThresholdLearner{
     }
 
     Bundle get_Dn_weights(){
+        return Dn_weights;
+    }
+
+    Bundle & ref_Di_weights(){
+        return Di_weights;
+    }
+
+    Bundle & ref_Dn_weights(){
         return Dn_weights;
     }
 

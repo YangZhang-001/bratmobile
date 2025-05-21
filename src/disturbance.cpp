@@ -1,6 +1,6 @@
 #include "disturbance.h"
 
-bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t){
+bool BodyFeatures::match(const BodyFeatures& bf, const Bundle& ref, Bundle * diff, b2Transform t){
     float hypothenuse_square= pow(bf.pose.p.Length(), 2); //assumes robot-centric perspective
     float adj_side_square=pow(bf.pose.p.Length()*t.q.c, 2);
     float distance_adjust= sqrt(hypothenuse_square-adj_side_square);
@@ -8,14 +8,14 @@ bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t)
     float diff_y=pose.p.y-bf.pose.p.y; //+t.q.c*distance_adjust
     float diff_w=halfWidth-bf.halfWidth;
     float diff_l=halfLength-bf.halfLength;
-    bool match_x=fabs(diff_x)<D_POSE_MARGIN+ fabs(t.q.s*distance_adjust);
-    bool match_y=fabs(diff_y)<D_POSE_MARGIN+fabs(t.q.c*distance_adjust);
-    bool match_w=fabs(diff_w)<D_DIMENSIONS_MARGIN;
-    bool match_h=fabs(diff_l)<D_DIMENSIONS_MARGIN;
-    if (bundle!=NULL){
-        *bundle=Bundle(diff_x, diff_y, 0, diff_w, diff_l);
+    bool match_x=fabs(diff_x)<ref.get_x()+ fabs(t.q.s*distance_adjust);
+    bool match_y=fabs(diff_y)<ref.get_y()+fabs(t.q.c*distance_adjust);
+    bool match_w=fabs(diff_w)<ref.get_width();
+    bool match_l=fabs(diff_l)<ref.get_length();
+    if (diff!=NULL){
+        *diff=Bundle(diff_x, diff_y, 0, diff_w, diff_l);
     }
-    return match_x && match_y && match_w && match_h;
+    return match_x && match_y && match_w && match_l;
 }
 
 std::vector <b2Vec2> BodyFeatures::vertices()const{

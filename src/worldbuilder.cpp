@@ -419,9 +419,14 @@ b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const Coordinat
 std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, const b2PolygonShape & sensor, float * _least_square){
     float least_square=10000;
     std::vector <BodyFeatures>::iterator result =objects.end();
+    Threshold threshold_sum=threshold;
+    //TO DO: generate threshold as function of D to match (reflex)
+    if (learner){
+       // threshold_sum+=learner->get_weighted(); //this is the ico summation node
+    }
     for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
         Bundle distance;
-        bool match =(*it).match(dist, &distance, t);
+        bool match =(*it).match(dist,  &distance, t);
         if (float ss=distance.sum_squares()<least_square){
             least_square=ss;
             if (match){ //thresholding
@@ -433,8 +438,8 @@ std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( st
                 Bundle error=threshold.for_Di()-distance;
                 if (learner){
                     printf("but it's still there!");
-                    learner->Di_tune(error, threshold.for_Di());
-                    threshold.set_Di(learner->update_bundle(error, threshold.for_Di()));    
+                    learner->update_bundle(error, threshold.for_Di(), &learner->ref_Di_weights());
+                    (learner->update_bundle(error, threshold.for_Di()));    
                 }
                 printf("DISTANCE! x=%f \ty%f\ttheta=%f\tw=%f\tl%f\t", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
             }

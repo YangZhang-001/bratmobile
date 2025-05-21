@@ -80,10 +80,11 @@ class BodyFeatures{
     /**
     * Returns true if it matches the input body features
     * @param bf input body features
-    * @param v pointer to float, scalar representing difference between features
+    * @param ref bundle of reference thresholds to determine if it's a match
+    * @param diff pointer to a bundle representing the difference between bf and ref
     * @param t estimated 2d transform (matching against an expected disturbance)
     */
-    bool match(const BodyFeatures&, Bundle * bundle=NULL, b2Transform t=b2Transform_zero);
+    bool match(const BodyFeatures& bf, const Bundle& ref, Bundle * diff=NULL, b2Transform t=b2Transform_zero);
 
     float width()const{
         return halfWidth*2;
