@@ -40,7 +40,7 @@ public:
 	std::vector<vertexDescriptor>plan, current_vertices;
 	GoalChanger * goal_changer=NULL;	
 
-Configurator()=default;
+Configurator(){};
 
 Configurator(Task _task): controlGoal(_task), currentTask(_task){
 	previousTimeScan = std::chrono::high_resolution_clock::now();
@@ -255,15 +255,12 @@ void register_controller(Controller * controller){
 }
 
 void register_tracker(Tracker * _tracker){
-	tracker=_tracker
+	tracker=_tracker;
 }
 
 Tracker * get_tracker()const {
 	return tracker;
 }
-
-// private:
-// b2PolygonShape task_sensor; //to track task execution
 
 };
 

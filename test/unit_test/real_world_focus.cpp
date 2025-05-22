@@ -10,7 +10,7 @@ int main(int argc, char** argv){
     bf.halfLength=0.05;
     Disturbance dist(bf);
     dist.set_affordance(AffordanceIndex(atoi(argv[4])));
-    WorldBuilder::Bridger bridge;
+    ClosedLoop_Tracker bridge;
     Task task(dist, Direction(atoi(argv[5])), b2Transform_zero, true);
     cv::Rect2f focus=bridge.real_world_focus(&task);
     if (dist.getAffIndex()!=NONE){

@@ -1,7 +1,7 @@
 #include "sensor.h"
 
 /**
- * @brief Bridge between the real world and the simulation. Is used for tracking execution of tasks
+ * @brief Tracking interface: Bridge between the real world and the simulation. Is used for tracking execution of tasks
  * and using lived experience to modify the state-matching threshold
  * 
  */
@@ -102,6 +102,8 @@ class ClosedLoop_Tracker:public Tracker{
     b2PolygonShape attention_window; //a box drawn at the beginning of task which bounds the robot and the goal
     public:
 
+    ClosedLoop_Tracker(){}
+
     ClosedLoop_Tracker(Task * goal){
 	    attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
     }
@@ -143,6 +145,10 @@ class ClosedLoop_Tracker:public Tracker{
      * @param goal the goal
      */
     void on_new_reading(Task * goal=NULL);
+
+    void set_attention(b2PolygonShape ps){
+        attention_window=ps;
+    }
 
 
 };

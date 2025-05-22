@@ -13,7 +13,7 @@ int main(int argc, char ** argv){
     AffordanceIndex aff=AffordanceIndex(atoi(argv[5]));
     math::applyAffineTrans(transform, obstacle);
     b2Transform sensor_transform=b2Transform_zero;
-    b2PolygonShape sensor= wb.sensor_box(Robot::get_vertices(), sensor_transform, &goal);
+    b2PolygonShape sensor= sensor_box(Robot::get_vertices(), sensor_transform, &goal);
     b2AABB aabb;
     sensor.ComputeAABB(&aabb, sensor_transform, 0);
     b2Vec2 center=aabb.GetCenter(); //for debug

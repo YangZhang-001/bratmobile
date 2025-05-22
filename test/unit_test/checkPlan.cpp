@@ -18,7 +18,9 @@ int main(int argc, char** argv){
     Task goal(target1,DEFAULT);
     Configurator conf(goal);
     Wise_Controller wc;
+    ClosedLoop_Tracker tracker(&conf.controlGoal);
     conf.register_controller(&wc);
+    conf.register_tracker(&tracker);
     conf.simulationStep=0.27;
     LIDAR_In ci;
     Motor_Out m;
@@ -45,7 +47,7 @@ int main(int argc, char** argv){
     for (int i=0;i<it; i++){
         di.newScanAvail();          
         conf.data2fp = ci.data2fp;
-        b2Transform deltaPose=conf.get_tracker()->track();
+        b2Transform deltaPose=conf.get_tracker()->track(*conf.getTask(), conf.data2fp, conf.worldBuilder.world_objects);
         conf.update_graph(conf.transitionSystem, deltaPose);
         conf.estimate_current_vertex(conf.transitionSystem, *conf.getTask());
         conf.getTask()->motorStep--;
