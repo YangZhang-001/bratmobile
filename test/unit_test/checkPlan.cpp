@@ -45,7 +45,8 @@ int main(int argc, char** argv){
     for (int i=0;i<it; i++){
         di.newScanAvail();          
         conf.data2fp = ci.data2fp;
-        conf.track_task_execution();
+        b2Transform deltaPose=conf.get_tracker()->track();
+        conf.update_graph(conf.transitionSystem, deltaPose);
         conf.estimate_current_vertex(conf.transitionSystem, *conf.getTask());
         conf.getTask()->motorStep--;
         bool ch=conf.getTask()->change;

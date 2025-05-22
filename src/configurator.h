@@ -254,6 +254,14 @@ void register_controller(Controller * controller){
 	task_controller=controller;
 }
 
+void register_tracker(Tracker * _tracker){
+	tracker=_tracker
+}
+
+Tracker * get_tracker()const {
+	return tracker;
+}
+
 // private:
 // b2PolygonShape task_sensor; //to track task execution
 

@@ -5,6 +5,10 @@
 class ConfiguratorInterface;
 class Configurator;
 
+/**
+ * @brief Wrapper around cv::Point2f for customisation purposes
+ * 
+ */
 class Pointf: public cv::Point2f{
 	public: 
 
@@ -33,6 +37,9 @@ class Pointf: public cv::Point2f{
 
 };
 
+/**
+ * **************** HELPER FUNCTIONS FOR SENSOR INPUT PROCESSING
+ */
 
 template<>
 struct cv::traits::Depth<Pointf> {enum {value = Depth<cv::Point2f>::value};};
@@ -48,21 +55,46 @@ bool operator <(Pointf const &, Pointf const&);
 
 bool operator >(const Pointf&,  const Pointf&);
 
-typedef std::set<Pointf> CoordinateContainer;
-
-
+/**
+ * @brief container for LIDAR coordinates
+ * 
+ */
+typedef std::set<Pointf> CoordinateContainer; 
+/**
+ * @brief Gets an opencv point in b2VEc2 format
+ * 
+ * @return b2Vec2 
+ */
 b2Vec2 getb2Vec2(cv::Point2f );
 
+/**
+ * @brief Get the Pointf object from a 2d point/vector
+ * 
+ * @tparam T 
+ * @param v 
+ * @return Pointf 
+ */
 template <typename T>
 Pointf getPointf(T v){
 	return Pointf(v.x, v.y);
 }
 
-// template <typename T>
-// cv::Point2f getPoint2f(T);
+/**
+ * @brief Gets Pointf from polar coordinates
+ * 
+ * @param radius 
+ * @param angle 
+ * @return Pointf 
+ */
+Pointf Polar2f(float radius, float angle);
 
-Pointf Polar2f(float, float);
-
+/**
+ * @brief Casts a set to vector
+ * 
+ * @tparam T 
+ * @param s set
+ * @return std::vector<T> 
+ */
 template <typename T>
 std::vector<T> set2vec(std::set<T> s){
     std::vector <T> vec;
@@ -72,6 +104,13 @@ std::vector<T> set2vec(std::set<T> s){
     return vec;
 }
 
+/**
+ * @brief Casts a set of 2d points/vectors to a vector of cv::Point2f
+ * 
+ * @tparam T 
+ * @param s set of points.vectors
+ * @return std::vector<cv::Point2f> 
+ */
 template <typename T>
 std::vector<cv::Point2f> set2vec2f(std::set<T> s){
     std::vector <cv::Point2f> vec;
@@ -81,6 +120,13 @@ std::vector<cv::Point2f> set2vec2f(std::set<T> s){
     return vec;
 }
 
+/**
+ * @brief Casts a vector of 2d points to a vector of box2d b2Vec2
+ * 
+ * @tparam T 2d point/2d vector
+ * @param v 2d point or vector
+ * @return std::vector<b2Vec2> 
+ */
 template <typename T> inline
 std::vector<b2Vec2> cast_b2Vec2(const std::vector<T>& v){
 	std::vector<b2Vec2> result;
@@ -90,6 +136,13 @@ std::vector<b2Vec2> cast_b2Vec2(const std::vector<T>& v){
 	return result;
 }
 
+/**
+ * @brief Casts a vector of 2d points to a vector of cv::Point2f
+ * 
+ * @tparam T 2d point/2d vector
+ * @param v 2d point or vector
+ * @return std::vector<b2Vec2> 
+ */
 template <typename T> inline
 std::vector<cv::Point2f> cast_Point2f(const std::vector<T>& v){
 	std::vector<cv::Point2f> result;
@@ -99,9 +152,14 @@ std::vector<cv::Point2f> cast_Point2f(const std::vector<T>& v){
 	return result;
 
 }
-// template <typename T>
-// std::vector<cv::Point2f> set2vec_cv(std::set<T>);
 
+/**
+ * @brief Casts a vector to set
+ * 
+ * @tparam T 
+ * @param vec 
+ * @return std::set<T> 
+ */
 template <typename T>
 std::set<T> vec2set(std::vector<T> vec){
 	std::set <T> set;
