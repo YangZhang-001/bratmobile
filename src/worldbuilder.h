@@ -35,46 +35,45 @@ class WorldBuilder{
 
     std::vector <BodyFeatures> getFeatures(const CoordinateContainer &, b2Transform, CLUSTERING clustering=PARTITION);
 
+    /**
+     * @brief Creates bodies (objects) in the box2d world
+     * 
+     * @param disturbance 
+     * @param halfWindowWidth 
+     * @param clustering 
+     * @param task 
+     */
     void buildWorld(b2World&,b2Transform, Direction,  Disturbance disturbance=Disturbance(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task * task=NULL);
 
     //returns top and bottom of rotated rectangle (not side-specific)
     std::pair <Pointf, Pointf> bounds(Direction, b2Transform t, float boxLength, float halfWindowWidth,std::vector <Pointf> *_bounds=NULL); //returns bottom and top of bounding box
 
+    /**
+     * @brief Makes a box 
+     * 
+     * @param halfWindowWidth 
+     * @param boxLength 
+     * @param start 
+     * @param d 
+     * @return b2PolygonShape 
+     */
     b2PolygonShape object_filtering_box(float halfWindowWidth, float boxLength, b2Transform start, Direction d);
 
-    template <class Pt>
-    std::pair<bool,BodyFeatures> bounding_box( std::vector <Pt >&nb){//gets bounding box of points
-        float  l=(0.0005*2), w=(0.0005*2) ;
-        float x_glob=0.0f, y_glob=0.0f;
-        std::pair <bool, BodyFeatures> result(0, BodyFeatures());
-        if (nb.empty()){
-            return result;
-        }
-        CompareX compareX;
-        CompareY compareY;
-        typename std::vector<Pt>::iterator maxx=std::max_element(nb.begin(), nb.end(), compareX);
-        typename std::vector<Pt>::iterator miny=std::min_element(nb.begin(), nb.end(), compareY);
-        typename std::vector<Pt>::iterator minx=std::min_element(nb.begin(), nb.end(), compareX);
-        typename std::vector<Pt>::iterator maxy=std::max_element(nb.begin(), nb.end(), compareY);
-        if (minx->x!=maxx->x){
-            w= fabs((*maxx).x-(*minx).x);
-        }
-        if (miny->y!=maxy->y){
-            l=fabs((*maxy).y-(*miny).y);
-        }
-        x_glob= ((*maxx).x+(*minx).x)/2;
-        y_glob= ((*maxy).y+(*miny).y)/2;
-        result.second.halfLength=l/2;
-        result.second.halfWidth=w/2;
-        result.second.pose.p=b2Vec2(x_glob, y_glob);
-        result.first=true;
-        return result;
-    }
 
     std::pair <bool, BodyFeatures> bounding_approx_poly(std::vector <cv::Point2f>nb);
 
+    /**
+     * @brief Clusters points using k-means algorithm
+     * 
+     * @return std::vector <std::vector<cv::Point2f>> 
+     */
     std::vector <std::vector<cv::Point2f>> kmeans_clusters( std::vector <cv::Point2f>, std::vector <cv::Point2f>&);
 
+    /**
+     * @brief Clusters points using the partition algorithm
+     * 
+     * @return std::vector <std::vector<cv::Point2f>> 
+     */
     std::vector <std::vector<cv::Point2f>> partition_clusters( std::vector <cv::Point2f>);
 
     b2Vec2 averagePoint(const CoordinateContainer &, Disturbance &, float rad = 0.025); //finds centroid of a poitn cluster, return position vec difference
@@ -94,8 +93,6 @@ class WorldBuilder{
     void add_iteration(int i=1){
         iteration+=1;
     }
-
- //   void world_cleanup(b2World &);
 
     b2Body * get_robot(b2World *);
 
