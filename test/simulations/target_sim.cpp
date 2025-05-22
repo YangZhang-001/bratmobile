@@ -45,6 +45,10 @@ int main(int argc, char** argv) {
     Configurator configurator(controlGoal);
     LIDAR_In ci;
     Motor_Out m;
+    ClosedLoop_Tracker tracker(&goal);
+    Wise_Controller wc;
+    configurator.register_tracker(&tracker);
+    configurator.register_controller(&wc);
     configurator.registerInterface(&ci, &m);
     DataInterface dataInterface(&ci); 
     if (argc>1 && argv[1]){
@@ -69,7 +73,7 @@ int main(int argc, char** argv) {
 			configurator.ci->setReady(false);
 			configurator.data2fp= CoordinateContainer(configurator.ci->data2fp);
 			configurator.Spawner();
-			configurator.track_task_execution();
+			configurator.get_tracker()->track();
 		}
 		if (( configurator.getTask()->change& configurator.transitionSystem[configurator.currentVertex].direction!=STOP && configurator.plan.empty() && configurator.getIteration()>1)){
 			configurator.goal_changer->change_goal(&configurator.controlGoal);
