@@ -32,12 +32,6 @@ b2Vec2 getb2Vec2(cv::Point2f p){
 
 }
 
-template <typename T>
-Pointf getPointf(T v){
-	return Pointf(v.x, v.y);
-}
-
-
 
 Pointf Polar2f(float radius, float angle){
 	float x = radius *cos(angle);

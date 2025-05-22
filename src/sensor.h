@@ -54,7 +54,9 @@ typedef std::set<Pointf> CoordinateContainer;
 b2Vec2 getb2Vec2(cv::Point2f );
 
 template <typename T>
-Pointf getPointf(T);
+Pointf getPointf(T v){
+	return Pointf(v.x, v.y);
+}
 
 // template <typename T>
 // cv::Point2f getPoint2f(T);
