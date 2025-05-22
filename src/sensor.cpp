@@ -45,14 +45,6 @@ Pointf Polar2f(float radius, float angle){
 	return Pointf(x,y);
 }
 
-template <typename T>
-std::vector<T> set2vec(std::set<T> s){
-    std::vector <T> vec;
-    for (T t:s){
-        vec.emplace_back(t);
-    }
-    return vec;
-}
 
 
 // b2Transform PointCloudProc::affineTransEstimate(std::vector <Pointf> current, Task::Action a,float timeElapsed, float range){

@@ -62,7 +62,13 @@ Pointf getPointf(T);
 Pointf Polar2f(float, float);
 
 template <typename T>
-std::vector<T> set2vec(std::set<T>);
+std::vector<T> set2vec(std::set<T> s){
+    std::vector <T> vec;
+    for (T t:s){
+        vec.emplace_back(t);
+    }
+    return vec;
+}
 
 template <typename T>
 std::vector<cv::Point2f> set2vec2f(std::set<T> s){
@@ -136,6 +142,42 @@ static b2PolygonShape sensor_box(const std::vector <Pt> &all_points_pt, b2Transf
 	shape.SetAsBox(halfWidth, halfHeight,centroid, 0);
 	return shape;
 
+}
+
+/**
+ * @brief Makes an upright bounding box around points
+ * 
+ * @tparam Pt template for point (Box2D, OpenCV or similar)
+ * @param nb points
+ * @return std::pair<bool,BodyFeatures> (is the object valid, object)
+ */
+template <class Pt>
+std::pair<bool,BodyFeatures> bounding_box( std::vector <Pt >&nb){//gets bounding box of points
+	float  l=(0.0005*2), w=(0.0005*2) ;
+	float x_glob=0.0f, y_glob=0.0f;
+	std::pair <bool, BodyFeatures> result(0, BodyFeatures());
+	if (nb.empty()){
+		return result;
+	}
+	CompareX compareX;
+	CompareY compareY;
+	typename std::vector<Pt>::iterator maxx=std::max_element(nb.begin(), nb.end(), compareX);
+	typename std::vector<Pt>::iterator miny=std::min_element(nb.begin(), nb.end(), compareY);
+	typename std::vector<Pt>::iterator minx=std::min_element(nb.begin(), nb.end(), compareX);
+	typename std::vector<Pt>::iterator maxy=std::max_element(nb.begin(), nb.end(), compareY);
+	if (minx->x!=maxx->x){
+		w= fabs((*maxx).x-(*minx).x);
+	}
+	if (miny->y!=maxy->y){
+		l=fabs((*maxy).y-(*miny).y);
+	}
+	x_glob= ((*maxx).x+(*minx).x)/2;
+	y_glob= ((*maxy).y+(*miny).y)/2;
+	result.second.halfLength=l/2;
+	result.second.halfWidth=w/2;
+	result.second.pose.p=b2Vec2(x_glob, y_glob);
+	result.first=true;
+	return result;
 }
 
 
