@@ -53,6 +53,12 @@ Configurator(Task _task){
  */
 void init(Task _task);
 
+/**
+ * @brief Calls functions to explore the state space and extract a plan
+ * 
+ * @return true 
+ * @return false 
+ */
 bool Spawner(); 
 
 int getIteration(){
@@ -143,7 +149,7 @@ std::pair<edgeDescriptor, bool> addVertex(vertexDescriptor & src, vertexDescript
  * @param src source state
  * @param v1 new state
  * @param g cognitive map
- * @param obs the initial disturbance of v1
+ * @param Di the initial disturbance of v1
  * @param edge connecting edge between src->v1
  * @param topDown flag determining whether state v1 has been simulated already or not
  */

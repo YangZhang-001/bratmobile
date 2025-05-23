@@ -17,6 +17,8 @@ int main(int argc, char** argv){
     conf.simulationStep=simulationStep;
     LIDAR_In ci;
     conf.registerInterface(&ci, NULL);
+    ClosedLoop_Tracker tracker;
+    conf.register_tracker(&tracker);
     DataInterface di(&ci);
     if (argc>1){
         di.folder=argv[1];
