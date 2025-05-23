@@ -1,4 +1,3 @@
-# PROJECT(test)
  
 #cmake_minimum_required(VERSION 3.1.0)
 
@@ -10,7 +9,25 @@ find_package(PkgConfig)
 
 find_package(Threads)
 
+find_package(GTest CONFIG REQUIRED)
+
 include(CTest)
+
+# include(FetchContent)
+# FetchContent_Declare(
+#   googletest
+#   URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+# )
+
+include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
+
+add_executable(unit_test g_configurator.cpp)
+target_link_libraries(unit_test gtest gtest_main)
+target_link_libraries(unit_test CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+include(GoogleTest)
+
+gtest_discover_tests(unit_test)
+
 
 INCLUDE_DIRECTORIES("/usr/local/include/")
 enable_testing()

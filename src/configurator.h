@@ -40,17 +40,18 @@ public:
 	std::vector<vertexDescriptor>plan, current_vertices;
 	GoalChanger * goal_changer=NULL;	
 
-Configurator(){};
+Configurator()=default;
 
-Configurator(Task _task): controlGoal(_task), currentTask(_task){
-	previousTimeScan = std::chrono::high_resolution_clock::now();
-	movingVertex=boost::add_vertex(transitionSystem);
-	transitionSystem[movingVertex].Di=controlGoal.disturbance;
-	currentVertex=movingVertex;
-	currentTask.action.setVelocities(0,0);
-	gt::fill(simResult(), &transitionSystem[movingVertex]);
+Configurator(Task _task){
+	init(_task);
 }
 
+/**
+ * @brief Initialises configurator
+ * 
+ * @param _task the new overarching goal
+ */
+void init(Task _task);
 
 bool Spawner(); 
 
@@ -256,6 +257,7 @@ void register_controller(Controller * controller){
 
 void register_tracker(Tracker * _tracker){
 	tracker=_tracker;
+	tracker->init(&controlGoal);
 }
 
 Tracker * get_tracker()const {

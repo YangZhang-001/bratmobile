@@ -11,6 +11,7 @@ class Tracker{
     public:
     Threshold threshold=Threshold();
 
+    Tracker(){}
 
     Threshold * get_threshold(){
         return &threshold;
@@ -52,6 +53,8 @@ class Tracker{
      * @param task 
      */
     virtual void on_new_reading(Task * task=NULL)=0;
+
+    virtual void init(Task * goal)=0;
 protected:
     void make_log(){
         if (learner){
@@ -79,6 +82,8 @@ protected:
  * 
  */
 class DeadReckoner: public Tracker{
+
+    DeadReckoner(){}
 
     b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects){
         return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
@@ -148,6 +153,11 @@ class ClosedLoop_Tracker:public Tracker{
 
     void set_attention(b2PolygonShape ps){
         attention_window=ps;
+    }
+
+    void init(Task * goal){
+        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
+
     }
 
 

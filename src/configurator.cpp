@@ -1,7 +1,17 @@
 #include "configurator.h"
 #include <chrono>
 
+void Configurator::init(Task _task){
+	controlGoal=_task;
+	currentTask=_task;
+	//previousTimeScan = std::chrono::high_resolution_clock::now();
+	movingVertex=boost::add_vertex(transitionSystem);
+	transitionSystem[movingVertex].Di=controlGoal.disturbance;
+	currentVertex=movingVertex;
+	currentTask.action.setVelocities(0,0);
+	gt::fill(simResult(), &transitionSystem[movingVertex]);
 
+}
 
 void Configurator::dummy_vertex(vertexDescriptor src){
 	vertexDescriptor prev_current=currentVertex;
