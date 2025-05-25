@@ -117,7 +117,9 @@ class ClosedLoop_Tracker:public Tracker{
     
     b2Transform track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects);
 
-    //returns a rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
+    /**
+    * @brief returns an upright rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
+    */
     cv::Rect2f real_world_focus(const Task * );
 
     Disturbance * get_tracked_disturbance(){

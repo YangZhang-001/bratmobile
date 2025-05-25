@@ -70,6 +70,14 @@ b2Transform ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateCo
     return -result;
 }
 
+void Tracker::make_log(){
+    if (learner){
+        learner->make_log();
+    }
+    FILE * f=fopen("/tmp/thresholds.txt", "w");
+    fclose(f);
+}
+
 std::vector <BodyFeatures>::iterator ClosedLoop_Tracker::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, float * _least_square){
     float least_square=10000;
     std::vector <BodyFeatures>::iterator result =objects.end();
@@ -119,10 +127,4 @@ void ClosedLoop_Tracker::on_new_reading(Task * goal){
 	attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
 }
 
-void ClosedLoop_Tracker::make_log(){
-    if (learner){
-        learner->make_log();
-    }
-    FILE * f=fopen("/tmp/thresholds.txt", "w");
-    fclose(f);
-}
+
