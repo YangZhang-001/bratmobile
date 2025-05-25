@@ -9,7 +9,7 @@
  * @brief Test fixture for testing high-level processes such as planning and state-space exploration
  * 
  */
-class HighLevelTest: public ::testing::Test, ::testing::Test{
+class HighLevelTest: public ::testing::Test{
     protected:
     Configurator configurator;
     Wise_Controller wc;

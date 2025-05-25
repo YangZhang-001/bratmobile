@@ -14,6 +14,8 @@ int main(int argc, char** argv){
     b2Transform pos2, pos3, t1= b2Transform(b2Vec2(0,0),b2Rot(M_PI_2)), t2=b2Transform(b2Vec2(0,0),b2Rot(-M_PI_2));
     Task goal=Task();
     Configurator conf(goal);
+    ClosedLoop_Tracker tracker;
+    conf.register_tracker(&tracker);
     math::applyAffineTrans(t1, pos2);
     math::applyAffineTrans(t2, pos3);
     conf.simulationStep=std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH)*2;
