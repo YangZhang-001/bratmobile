@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
 	Motor_Out controlInterface;
     Configurator configurator(controlGoal);
 	ClosedLoop_Tracker tracker;
-	Configurator.set_target(&tracker);
+	configurator.register_tracker(&tracker);
 	Wise_Controller wc;
 	configurator.register_controller(&wc);
 	dump_benchmarks( "rt-update", "/tmp");

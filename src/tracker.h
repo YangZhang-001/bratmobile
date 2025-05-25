@@ -55,14 +55,14 @@ class Tracker{
     virtual void on_new_reading(Task * task=NULL)=0;
 
     virtual void init(Task * goal)=0;
-protected:
-    void make_log(){
-        if (learner){
-            learner->make_log();
-        }
-        FILE * f=fopen("/tmp/thresholds.txt", "w");
-        fclose(f);
-    }
+
+    /**
+    * @brief opens file where all the data is dumped
+    */
+    void make_log();
+    
+    protected:
+
 
     void log_thresholds(){
         FILE *f= fopen("/tmp/thresholds.txt", "a");

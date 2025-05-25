@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
 	Motor_Out controlInterface;
     Configurator configurator(controlGoal);
 	ClosedLoop_Tracker tracker;
-	Configurator.set_target(&tracker);
+	configurator.register_tracker(&tracker);
 	Reactive_Controller rc;
 	configurator.register_controller(&rc);
 	if (argc>2){

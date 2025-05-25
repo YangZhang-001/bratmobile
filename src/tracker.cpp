@@ -20,8 +20,6 @@ b2Transform ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, s
 }
 
 
-
-
 cv::Rect2f ClosedLoop_Tracker::real_world_focus(const Task * t){
     std::vector <cv::Point2f> vertices;
     if (t->disturbance.getAffIndex()==NONE){
@@ -119,4 +117,12 @@ void ClosedLoop_Tracker::on_new_task(Task *task){
 
 void ClosedLoop_Tracker::on_new_reading(Task * goal){
 	attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
+}
+
+void ClosedLoop_Tracker::make_log(){
+    if (learner){
+        learner->make_log();
+    }
+    FILE * f=fopen("/tmp/thresholds.txt", "w");
+    fclose(f);
 }

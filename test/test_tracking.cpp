@@ -81,10 +81,10 @@ int main(int argc, char** argv) {
 	LearningNothing learner;
     Configurator configurator(controlGoal);
 	ClosedLoop_Tracker tracker;
-	Configurator.set_target(&tracker);
+	configurator.register_tracker(&tracker);
 	Wise_Controller wc;
 	configurator.register_controller(&wc);
-	configurator.worldBuilder.wb_bridger.register_learner(&learner);
+	tracker.register_learner(&learner);
 	dump_benchmarks( "rt-update", "/tmp");
 	if (argc>1){
 		configuratorInterface.debugOn=atoi(argv[1]);
@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
 	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
-	configurator.worldBuilder.wb_bridger.make_log();
+	tracker.make_log();
 	MotorCallback cb(&controlInterface);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);
