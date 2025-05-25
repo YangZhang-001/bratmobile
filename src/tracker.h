@@ -113,6 +113,14 @@ class ClosedLoop_Tracker:public Tracker{
 	    attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
     }
 
+    /**
+    * @brief returns 2d transformation matrix between one scan and the next based on the displacement of disturbance Di for a task
+    *
+    * @param t the current task
+    * @param pts lidar reading
+    * @param observed_disturbance disturbance Di for task t
+    * @param objects objects in the world (stored in worldbuilder)
+    */
     b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects);    
     
     b2Transform track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects);
