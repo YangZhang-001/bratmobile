@@ -80,6 +80,8 @@ int main(int argc, char** argv) {
 	Motor_Out controlInterface;
 	LearningNothing learner;
     Configurator configurator(controlGoal);
+	ClosedLoop_Tracker tracker;
+	Configurator.set_target(&tracker);
 	Wise_Controller wc;
 	configurator.register_controller(&wc);
 	configurator.worldBuilder.wb_bridger.register_learner(&learner);

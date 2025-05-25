@@ -13,12 +13,6 @@ find_package(GTest CONFIG REQUIRED)
 
 include(CTest)
 
-# include(FetchContent)
-# FetchContent_Declare(
-#   googletest
-#   URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-# )
-
 include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
 
 add_executable(unit_test g_configurator.cpp)
