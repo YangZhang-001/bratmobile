@@ -102,10 +102,11 @@ std::vector <BodyFeatures>::iterator ClosedLoop_Tracker::find_disturbance( std::
                 printf("DISTANCE! x=%f \ty%f\ttheta=%f\tw=%f\tl%f\t", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
             }
         }
+
+        }
         if (objects.empty()){
             throw (0);
-        }
-        }
+        }    
     }    
     catch (int area){
         std::cerr<<"no objects!"<<std::endl;
