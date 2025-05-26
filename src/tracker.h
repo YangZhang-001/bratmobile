@@ -170,5 +170,12 @@ class ClosedLoop_Tracker:public Tracker{
 
     }
 
+    private:
+
+    /**
+    * @brief gets the area of the attention window (for debugging)
+    */
+    float window_area();
+
 
 };

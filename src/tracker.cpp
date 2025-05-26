@@ -81,7 +81,8 @@ void Tracker::make_log(){
 std::vector <BodyFeatures>::iterator ClosedLoop_Tracker::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, float * _least_square){
     float least_square=10000;
     std::vector <BodyFeatures>::iterator result =objects.end();
-    for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
+    try{
+        for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
         Bundle distance;
         bool match =(*it).match(dist, &distance, t);
         if (float ss=distance.sum_squares()<least_square){
@@ -101,7 +102,15 @@ std::vector <BodyFeatures>::iterator ClosedLoop_Tracker::find_disturbance( std::
                 printf("DISTANCE! x=%f \ty%f\ttheta=%f\tw=%f\tl%f\t", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
             }
         }
+        if (objects.empty()){
+            throw (0);
+        }
+        }
+    }    
+    catch (int area){
+        std::cerr<<"no objects!"<<std::endl;
     }
+
     if (result!=objects.end()){
         if (fabs((*result).pose.q.GetAngle()-dist.pose.q.GetAngle())>(3*M_PI_4)){
             if (dist.pose.q.GetAngle()>0){
@@ -124,7 +133,28 @@ void ClosedLoop_Tracker::on_new_task(Task *task){
 }
 
 void ClosedLoop_Tracker::on_new_reading(Task * goal){
-	attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
+    printf("new reading!\n");
+    float area=0;
+    if(!goal){
+        return;
+    }
+    try{
+        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
+        
+        if (area=window_area(); area<1){
+            throw area;
+        }
+    }
+    catch (int the_area){
+        std::cerr<< "no attention! area: "<<the_area<<std::endl;
+    }
 }
 
+float ClosedLoop_Tracker::window_area(){
+    b2AABB aabb;
+    attention_window.ComputeAABB(&aabb, b2Transform_zero, 0);
+    float base= fabs(aabb.upperBound.x-aabb.lowerBound.x);
+    float height =fabs(aabb.upperBound.y-aabb.lowerBound.y);
+    return base*height;
+}
 

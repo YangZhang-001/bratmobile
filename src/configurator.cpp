@@ -549,7 +549,7 @@ void Configurator::run(Configurator * c){
 			c->adjust_goal_expectation();
 			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
 			printf("current v=%i\n", c->currentVertex);
-			// c->set_sensor(c->worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(c->controlGoal.disturbance)));
+			c->tracker->on_new_reading(&controlGoal);
 			}
 
 	}
@@ -1064,27 +1064,19 @@ void Configurator::change_task(){
 }
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPose){
-	debug::print_pose(_deltaPose, "delta Pose:");
 	math::applyAffineTrans(_deltaPose, g);
-	debug::print_pose(controlGoal.disturbance.pose(), "goal before tracking");
-	printf("distance before tracking %f\n", controlGoal.disturbance.pose().p.Length());
 	math::applyAffineTrans(_deltaPose, &controlGoal);
-	debug::print_pose(controlGoal.disturbance.pose(), "goal after tracking");
-	printf("distance after tracking %f\n", controlGoal.disturbance.pose().p.Length());
-
 }
 
 
 void Configurator::adjust_goal_expectation(){
 	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()&&task_controller->get_disturbance().getAffIndex()!=NONE){
-		// debug::print_pose(currentTask.disturbance.pose(), "Current DI");
-		// debug::print_pose(task_controller->to_goal(), "current Di transform from goal:");
 		b2Transform from_Di=b2Transform_zero;
 		//if (task_controller->get_disturbance().getAffIndex()==AVOID){
 		from_Di=currentTask.from_Di();
 		//}
 		//b2Transform sum_transform=from_Di+task_controller->to_goal(); //where goal should be
-		b2Transform goal_robotPOV= b2Mul(from_Di,task_controller->to_goal()); 
+		b2Transform goal_robotPOV= b2Mul(from_Di,task_controller->to_goal()); //position of goal from the robot based on where it should be from Di
 		controlGoal.disturbance.bf.pose=goal_robotPOV;
 		// debug::print_pose(b2MulT(from_Di, sum_transform), "from Di to sum transform:");
 		// debug::print_pose(b2Mul(from_Di,task_controller->to_goal()), "from Di mulT to goal:");
