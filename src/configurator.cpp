@@ -1071,8 +1071,9 @@ void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPo
 
 void Configurator::adjust_goal_expectation(){
 	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()&&task_controller->get_disturbance().getAffIndex()!=NONE){
+		debug::print_pose(currentTask.disturbance.pose(), "Current DI");
 		debug::print_pose(task_controller->to_goal(), "current Di transform from goal:");
-		printf("distance=%f\n", task_controller->to_goal().p.Length());
+		//printf("distance=%f\n", task_controller->to_goal().p.Length());
 		b2Transform from_Di=b2Transform_zero;
 		//if (task_controller->get_disturbance().getAffIndex()==AVOID){
 			from_Di=currentTask.from_Di();

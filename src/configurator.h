@@ -91,8 +91,6 @@ std::vector <vertexDescriptor> splitTask(vertexDescriptor v, TransitionSystem&, 
 //if same task, it will terminate in the same disturbance
 void propagateD(vertexDescriptor, vertexDescriptor, TransitionSystem&, std::vector<vertexDescriptor>*propagated=NULL, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE);
 
-//void pruneEdges(std::vector<std::pair<vertexDescriptor, vertexDescriptor>>, TransitionSystem&, vertexDescriptor&, vertexDescriptor&,std::vector <vertexDescriptor>&, std::vector<std::pair<vertexDescriptor, vertexDescriptor>>&); //clears edges out of redundant vertices, removes the vertices from PQ, returns vertices to remove at the end
-
 //if in plan the vertex gets priority
 void planPriority(TransitionSystem&, vertexDescriptor); 
 
