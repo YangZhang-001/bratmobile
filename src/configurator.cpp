@@ -1064,26 +1064,33 @@ void Configurator::change_task(){
 }
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPose){
+	debug::print_pose(_deltaPose, "delta Pose:");
 	math::applyAffineTrans(_deltaPose, g);
+	debug::print_pose(controlGoal.disturbance.pose(), "goal before tracking");
+	printf("distance before tracking %f\n", controlGoal.disturbance.pose().p.Length());
 	math::applyAffineTrans(_deltaPose, &controlGoal);
+	debug::print_pose(controlGoal.disturbance.pose(), "goal after tracking");
+	printf("distance after tracking %f\n", controlGoal.disturbance.pose().p.Length());
+
 }
 
 
 void Configurator::adjust_goal_expectation(){
 	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()&&task_controller->get_disturbance().getAffIndex()!=NONE){
-		debug::print_pose(currentTask.disturbance.pose(), "Current DI");
-		debug::print_pose(task_controller->to_goal(), "current Di transform from goal:");
-		//printf("distance=%f\n", task_controller->to_goal().p.Length());
+		// debug::print_pose(currentTask.disturbance.pose(), "Current DI");
+		// debug::print_pose(task_controller->to_goal(), "current Di transform from goal:");
 		b2Transform from_Di=b2Transform_zero;
 		//if (task_controller->get_disturbance().getAffIndex()==AVOID){
 			from_Di=currentTask.from_Di();
 		//}
 		b2Transform sum_transform=from_Di+task_controller->to_goal(); //where goal should be
-		controlGoal.disturbance.bf.pose.p=sum_transform.p;
+		controlGoal.disturbance.bf.pose=sum_transform;
+		debug::print_pose(b2MulT(from_Di, sum_transform), "from Di to sum transform:");
 // 		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
 // //		debug::print_pose(difference, "difference between pose and likely goal pose:");
 // 		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
-		debug::print_pose(controlGoal.disturbance.pose(), "new gaol pose:");
+		debug::print_pose(controlGoal.disturbance.pose(), "goal after adjusting");
+		printf("distance after adjusting %f\n", controlGoal.disturbance.pose().p.Length());
 	}
 
 }
