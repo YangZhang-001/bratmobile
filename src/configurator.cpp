@@ -1081,11 +1081,12 @@ void Configurator::adjust_goal_expectation(){
 		// debug::print_pose(task_controller->to_goal(), "current Di transform from goal:");
 		b2Transform from_Di=b2Transform_zero;
 		//if (task_controller->get_disturbance().getAffIndex()==AVOID){
-			from_Di=currentTask.from_Di();
+		from_Di=currentTask.from_Di();
 		//}
 		b2Transform sum_transform=from_Di+task_controller->to_goal(); //where goal should be
 		controlGoal.disturbance.bf.pose=sum_transform;
 		debug::print_pose(b2MulT(from_Di, sum_transform), "from Di to sum transform:");
+		debug::print_pose(b2Mul(from_Di,task_controller->to_goal()), "from Di mulT to goal:");
 // 		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
 // //		debug::print_pose(difference, "difference between pose and likely goal pose:");
 // 		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
