@@ -236,12 +236,19 @@ class ThresholdLearner{
      */
     virtual float learning_rule(float x, float dx);
 
-    Threshold get_weighted(const Threshold & t){
-        Threshold result;
-        result.set_Di(t.for_Di()*Di_weights);
-        result.set_Dn(t.for_Dn()*Dn_weights);
-        return result;
-    }
+    Threshold get_weighted(const Threshold & t);
 
+};
 
+/**
+ * @brief Plain feedforward: error in one dimension only correlated with the input in that dimension
+ * 
+ */
+class FF_Learner: public ThresholdLearner{
+
+    float learning_rule(float x, float dx){
+        return mu*x*dx;
+    }    
+
+    void update_bundle(const Bundle & error, const Bundle & x, Bundle * w);
 };
