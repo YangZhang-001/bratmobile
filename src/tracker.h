@@ -9,12 +9,17 @@ class Tracker{
     protected:
     ThresholdLearner *learner;
     public:
-    Threshold threshold=Threshold();
 
     Tracker(){}
 
-    Threshold * get_threshold(){
-        return &threshold;
+    /**
+     * @brief Returns a reflex if no learner is initialised, output of the learner otherwise
+     */
+    const Threshold & get_threshold(){
+        if (!learner){
+            return Threshold();
+        }
+        return learner->get_threshold();
     }
 
     void register_learner(ThresholdLearner * l){

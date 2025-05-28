@@ -118,14 +118,23 @@ class Threshold{
     Threshold(float e, float a, float d, float aff, float d_dim): 
     endPosition(e), angle(a), dPosition(d), affordance(aff), D_dimensions(d_dim){}
 
+    /**
+     * @brief Returns matching threshold for robot position
+     */
     float for_robot_position(){
         return endPosition;
     }
 
+    /**
+     * @brief Returns matching threshold for robot/disturbance angle
+     */
     float for_robot_angle(){
         return angle;
     }
 
+    /**
+     * @brief Returns matching threshold for affordance position
+     */
     float for_affordance(){
         return affordance;
     }
@@ -158,6 +167,7 @@ class Threshold{
         return Bundle(dPosition, dPosition, angle, D_dimensions, D_dimensions);
     }
 
+    Threshold operator+(const Threshold & b)const;
 
     private:
         float endPosition=0.05;// maximum radius from candidate state's end pose
@@ -170,13 +180,23 @@ class Threshold{
 
 class ThresholdLearner{
     protected:
+    Threshold reflex; //default behaviour
     Bundle Di_weights, Dn_weights;
     float mu=0.001; //learning rate
     public:
+    
+    /**
+     * @brief notify learner what bundle to learn
+     */
+    enum BUNDLE_FLAG{DI_FLAG, DN_FLAG};
     ThresholdLearner()=default;
 
     void set_learning_rate(float f){
         mu=f;
+    }
+
+    void set_reflex(const Threshold& t){
+        reflex=t;
     }
 
     Bundle get_Di_weights(){
@@ -217,15 +237,15 @@ class ThresholdLearner{
     }
 
     /**
-     * @brief Updates a threshold according to a custom learning rule
+     * @brief Updates a bundle making up a threshold according to a custom learning rule
+     * This determines the connections within the neural network and is used to calculate 
+     * correlations between connected inputs
      * 
      * @param error 
      * @param x the input
-     * @param w weights
+     * @param f flag: is it Di or Dn
      */
-    virtual void update_bundle(const Bundle & error, const Bundle & x, Bundle * w=NULL)=0;
-
-    //TO DO:
+    virtual void update_bundle(const Bundle & error, const Bundle & x, BUNDLE_FLAG f)=0;
 
     /**
      * @brief Gets delta weight based on the ICO learning rule
@@ -244,6 +264,13 @@ class ThresholdLearner{
      */
     Threshold get_weighted(const Threshold & t);
 
+    /**
+     * @brief summation node in the learner, it returns the learner's output
+     * 
+     * @return Threshold 
+     */
+    Threshold get_threshold();
+
 };
 
 /**
@@ -251,8 +278,10 @@ class ThresholdLearner{
  * 
  */
 class FF_Learner: public ThresholdLearner{
+    public:
 
     float learning_rule(float x, float dx);
 
-    void update_bundle(const Bundle & error, const Bundle & x, Bundle * w);
+    void update_bundle(const Bundle & error, const Bundle & x, BUNDLE_FLAG f);
+
 };

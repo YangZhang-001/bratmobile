@@ -77,7 +77,7 @@ std::vector <BodyFeatures>::iterator ClosedLoop_Tracker::find_disturbance( std::
     std::vector <BodyFeatures>::iterator result =objects.end();
     for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
         Bundle distance;
-        bool match =(*it).match(dist, &distance, t);
+        bool match =(*it).match(dist, get_threshold().for_Di(), &distance, t);
         if (float ss=distance.sum_squares()<least_square){
             least_square=ss;
             if (match){ //thresholding
@@ -86,11 +86,11 @@ std::vector <BodyFeatures>::iterator ClosedLoop_Tracker::find_disturbance( std::
             else if(Disturbance d(*it); overlaps(attention_window, &d)){
                 result=it;
                 //adjust threshold
-                Bundle error=threshold.for_Di()-distance;
+                Bundle error=get_threshold().for_Di()-distance;
                 if (learner){
                     printf("but it's still there!");
-                    learner->Di_tune(error, threshold.for_Di());
-                    threshold.set_Di(learner->update_bundle(error, threshold.for_Di()));    
+                    learner->update_bundle(error, get_threshold().for_Di(), ThresholdLearner::DI_FLAG);
+                   // threshold.set_Di(learner->update_bundle(error, threshold.for_Di()));    
                 }
                 printf("DISTANCE! x=%f \ty%f\ttheta=%f\tw=%f\tl%f\t", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
             }

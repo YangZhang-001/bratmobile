@@ -55,6 +55,20 @@ Bundle linear_rectify(const Bundle & b){
     
 }
 
+Threshold Threshold::operator+(const Threshold & t)const{
+    Threshold result=*this;
+    result.set_Di(result.Di+t.for_Di());
+    result.set_Dn(result.Di+t.for_Di());
+    return result;
+}
+
+
+Threshold ThresholdLearner::get_threshold(){
+    return reflex+get_weighted(reflex);
+}
+
+
+
 Threshold ThresholdLearner::get_weighted(const Threshold & t){
     Threshold result;
     result.set_Di(t.for_Di()*Di_weights);
@@ -66,8 +80,15 @@ float FF_Learner::learning_rule(float x, float dx){
     return mu*x*dx;
 }    
 
-void FF_Learner::update_bundle(const Bundle & error, const Bundle & x, Bundle * w){
-    if (w==NULL){
+void FF_Learner::update_bundle(const Bundle & error, const Bundle & x, BUNDLE_FLAG f){
+    Bundle *w=NULL;
+    if (f==DI_FLAG){
+        w=&Di_weights;
+    }
+    else if (f==DN_FLAG){
+        w=&Dn_weights;
+    }
+    else{
         return;
     }
     w->add_dx(learning_rule(x.get_x(), error.get_x()));
