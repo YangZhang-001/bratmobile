@@ -18,6 +18,8 @@ int main(int argc, char** argv){
     Task goal(target1,DEFAULT);
     Configurator conf(goal);
     conf.simulationStep=0.27;
+    ClosedLoop_Tracker tracker;
+    conf.register_tracker(&tracker);
     LIDAR_In ci;
     conf.registerInterface(&ci, NULL);
     DataInterface di(&ci);

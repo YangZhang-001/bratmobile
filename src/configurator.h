@@ -12,13 +12,15 @@
 #include "planner.h"
 #include "control_interface.h"
 #include "task_controller.h"
+#include "tracker.h"
 //char bodyFile[100];
 
 class Configurator{
 protected:
 	int iteration=0; //represents that hasn't started yet, robot isn't moving and there are no map data
 	Task currentTask; //need to make thread safe?
-	Controller * task_controller;
+	Controller * task_controller=NULL;
+	Tracker * tracker=NULL;
 public:
 	LIDAR_In * ci=NULL;
 	Motor_Out * control=NULL;
@@ -40,17 +42,23 @@ public:
 
 Configurator()=default;
 
-Configurator(Task _task): controlGoal(_task), currentTask(_task){
-	previousTimeScan = std::chrono::high_resolution_clock::now();
-	movingVertex=boost::add_vertex(transitionSystem);
-	transitionSystem[movingVertex].Di=controlGoal.disturbance;
-	currentVertex=movingVertex;
-	currentTask.action.setVelocities(0,0);
-	gt::fill(simResult(), &transitionSystem[movingVertex]);
-	task_sensor=worldBuilder.sensor_box(Robot::get_vertices(),b2Transform_zero, &(controlGoal.disturbance));
+Configurator(Task _task){
+	init(_task);
 }
 
+/**
+ * @brief Initialises configurator
+ * 
+ * @param _task the new overarching goal
+ */
+void init(Task _task);
 
+/**
+ * @brief Calls functions to explore the state space and extract a plan
+ * 
+ * @return true 
+ * @return false 
+ */
 bool Spawner(); 
 
 int getIteration(){
@@ -141,7 +149,7 @@ std::pair<edgeDescriptor, bool> addVertex(vertexDescriptor & src, vertexDescript
  * @param src source state
  * @param v1 new state
  * @param g cognitive map
- * @param obs the initial disturbance of v1
+ * @param Di the initial disturbance of v1
  * @param edge connecting edge between src->v1
  * @param topDown flag determining whether state v1 has been simulated already or not
  */
@@ -169,6 +177,12 @@ void stop();
 
 void registerInterface(LIDAR_In *, Motor_Out *);
 
+/**
+ * @brief Spawns tasks, creates plans, tracks task and controls real-world task switching
+ * option to run in thread. Thread can be used if planning time might exceed 200ms (LIDAR sampling rate)
+ * but doesn't have to be
+ * 
+ */
 static void run(Configurator *);
 
 //only keeps unexplored transitions out of vertex v
@@ -222,54 +236,39 @@ std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const Tra
 */
 void estimate_current_vertex(TransitionSystem&, Task& t);
 
-//uses LIDAR data to calculate an affine transform of disturbance Di if present
-void track_task_execution();
+// //uses LIDAR data to calculate an affine transform of disturbance Di if present
+// void track_task_execution();
 
 /**
  * @brief changes tasks to execute on
  */
 void change_task();
 
-
-//updates environment representation with time
 /**
-*@param g the cognitive map
-*@param _deltaPose the transform to apply
-*@param t pointer to current task
-*@param goal pointer to goal task
+ * @brief updates environment representation with time
+ * @param g the cognitive map
+ * @param _deltaPose the transform to apply
 */
-void update_graph(TransitionSystem&, const b2Transform & _deltaPose, Task* t, Task * goal);
+void update_graph(TransitionSystem& g, const b2Transform & _deltaPose);
 
-// // merge vertices into a single task and generates a hybrid control instruction in the form of a task (i.e. what action to perform, in response to what and when to end it)
-// /**
-// 	@param p the plan
-// 	@param g the cognitive map
-// 	@param end_it integer representing iterator pointing to the last vertex in the task beginning at p.begin()
-// */
-// Task task_to_execute(const std::vector<vertexDescriptor>& p, const TransitionSystem& g, int end_it);
-
-
-//TO DO: MAKE EXPLORER INTO SEPARATE CLASS
-// //customisable: how is the next task to execute chosen?
-// void next_task();
-
-//updates plan by snipping out vertices corresponding to the current task
-//void follow_plan();
 
 //void react();
 
 void adjust_goal_expectation();
 
-void set_sensor(const b2PolygonShape & s){
-	task_sensor=s;
-}
 
 void register_controller(Controller * controller){
 	task_controller=controller;
 }
 
-private:
-b2PolygonShape task_sensor; //to track task execution
+void register_tracker(Tracker * _tracker){
+	tracker=_tracker;
+	tracker->init(&controlGoal);
+}
+
+Tracker * get_tracker()const {
+	return tracker;
+}
 
 };
 

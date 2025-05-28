@@ -2,9 +2,6 @@
 #define WORLDBUILDER_H
 #include "sensor.h"
 
-void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev);
-
-
 class WorldBuilder{
     int iteration=0;
     char bodyFile[100];
@@ -38,46 +35,45 @@ class WorldBuilder{
 
     std::vector <BodyFeatures> getFeatures(const CoordinateContainer &, b2Transform, CLUSTERING clustering=PARTITION);
 
+    /**
+     * @brief Creates bodies (objects) in the box2d world
+     * 
+     * @param disturbance 
+     * @param halfWindowWidth 
+     * @param clustering 
+     * @param task 
+     */
     void buildWorld(b2World&,b2Transform, Direction,  Disturbance disturbance=Disturbance(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task * task=NULL);
 
     //returns top and bottom of rotated rectangle (not side-specific)
     std::pair <Pointf, Pointf> bounds(Direction, b2Transform t, float boxLength, float halfWindowWidth,std::vector <Pointf> *_bounds=NULL); //returns bottom and top of bounding box
 
+    /**
+     * @brief Makes a box 
+     * 
+     * @param halfWindowWidth 
+     * @param boxLength 
+     * @param start 
+     * @param d 
+     * @return b2PolygonShape 
+     */
     b2PolygonShape object_filtering_box(float halfWindowWidth, float boxLength, b2Transform start, Direction d);
 
-    template <class Pt>
-    std::pair<bool,BodyFeatures> bounding_box( std::vector <Pt >&nb){//gets bounding box of points
-        float  l=(0.0005*2), w=(0.0005*2) ;
-        float x_glob=0.0f, y_glob=0.0f;
-        std::pair <bool, BodyFeatures> result(0, BodyFeatures());
-        if (nb.empty()){
-            return result;
-        }
-        CompareX compareX;
-        CompareY compareY;
-        typename std::vector<Pt>::iterator maxx=std::max_element(nb.begin(), nb.end(), compareX);
-        typename std::vector<Pt>::iterator miny=std::min_element(nb.begin(), nb.end(), compareY);
-        typename std::vector<Pt>::iterator minx=std::min_element(nb.begin(), nb.end(), compareX);
-        typename std::vector<Pt>::iterator maxy=std::max_element(nb.begin(), nb.end(), compareY);
-        if (minx->x!=maxx->x){
-            w= fabs((*maxx).x-(*minx).x);
-        }
-        if (miny->y!=maxy->y){
-            l=fabs((*maxy).y-(*miny).y);
-        }
-        x_glob= ((*maxx).x+(*minx).x)/2;
-        y_glob= ((*maxy).y+(*miny).y)/2;
-        result.second.halfLength=l/2;
-        result.second.halfWidth=w/2;
-        result.second.pose.p=b2Vec2(x_glob, y_glob);
-        result.first=true;
-        return result;
-    }
 
     std::pair <bool, BodyFeatures> bounding_approx_poly(std::vector <cv::Point2f>nb);
 
+    /**
+     * @brief Clusters points using k-means algorithm
+     * 
+     * @return std::vector <std::vector<cv::Point2f>> 
+     */
     std::vector <std::vector<cv::Point2f>> kmeans_clusters( std::vector <cv::Point2f>, std::vector <cv::Point2f>&);
 
+    /**
+     * @brief Clusters points using the partition algorithm
+     * 
+     * @return std::vector <std::vector<cv::Point2f>> 
+     */
     std::vector <std::vector<cv::Point2f>> partition_clusters( std::vector <cv::Point2f>);
 
     b2Vec2 averagePoint(const CoordinateContainer &, Disturbance &, float rad = 0.025); //finds centroid of a poitn cluster, return position vec difference
@@ -98,120 +94,13 @@ class WorldBuilder{
         iteration+=1;
     }
 
- //   void world_cleanup(b2World &);
-
     b2Body * get_robot(b2World *);
 
     b2Fixture * get_chassis(b2Body *);
 
     b2AABB  makeRobotSensor(b2Body*, Disturbance *goal); //returns bounding box in world coord
     
-    template <typename Pt>
-    static b2PolygonShape sensor_box(const std::vector <Pt> &all_points_pt, b2Transform robot_pose, const Disturbance * dist){
-        b2PolygonShape shape;
-        b2Vec2 centroid(2.0, 2.0), center=centroid, center_local=b2Vec2_zero;
-        float halfHeight=0, halfWidth=0;
-        if (dist->isValid()){
-        std::vector <b2Vec2>  d_vertices=dist->vertices(); 
-        std::vector <cv::Point2f> all_points=cast_Point2f(all_points_pt);
-        for (b2Vec2 p: d_vertices){
-            p=b2MulT(robot_pose, p); //get local point
-            all_points.push_back(cv::Point2f(p.x, p.y));
-        }
-        float minx=(std::min_element(all_points.begin(),all_points.end(), CompareX())).base()->x;
-        float miny=(std::min_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
-        float maxx=(std::max_element(all_points.begin(), all_points.end(), CompareX())).base()->x;
-        float maxy=(std::max_element(all_points.begin(), all_points.end(), CompareY())).base()->y;
-        halfHeight=(fabs(maxy-miny))/2; //
-        halfWidth=(fabs(maxx-minx))/2;
-        center.x=maxx-halfWidth;
-        center.y=maxy-halfHeight;
-        centroid=center-center_local;  
-        }
-        shape.SetAsBox(halfWidth, halfHeight,centroid, 0);
-        return shape;
 
-    }
-
-
-    class Bridger{
-        Disturbance tracked_disturbance; //reference of disturbance to be tracked, kept in memory when task is changed
-        ThresholdLearner *learner;
-        public:
-        Threshold threshold=Threshold();
-
-        //returns a rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
-        cv::Rect2f real_world_focus(const Task * );
-
-        /**
-        * calculates 2d affine transformation of input task's disturbance from t-1 to t
-        * @param t input task
-        * @param pts point cloud
-        * @param observed_disturbance body features of the observed disturbance
-        * @param objects world objects as extracted in worldbuilder
-        * @param sensor the box2d sensor representing the real-world attention window
-        */
-        b2Transform get_transform(const Task &, const CoordinateContainer &, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects, const  b2PolygonShape& sensor); //returns transform between frames; option to enter a point to bodyfeatures to track Dist
-
-        /*
-        *given points, makes minimum bounding rotated box around them
-        */
-        std::pair <bool, BodyFeatures> bounding_rotated_box(std::vector <cv::Point2f>nb);
-
-        //void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);                
-
-        Disturbance * get_tracked_disturbance(){
-            return &tracked_disturbance;
-        }
-
-        void set_tracked_disturbance(const Disturbance & d){
-            tracked_disturbance=d;
-        }
-
-        /**
-        * the disturbance to be tracked among the worldbuilder objects
-        * @param objects worldBuilder objects
-        * @param dist disturbance to be tracked
-        * @param t the estimated instantaneous 2d transform associated to the currently executed task
-        * @param sensor the box2d sensor representing real-world attention window
-        */
-        std::vector <BodyFeatures>::iterator find_disturbance(std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, const b2PolygonShape &sensor, float * _least_square=NULL);
-
-        Threshold * get_threshold(){
-            return &threshold;
-        }
-
-        void register_learner(ThresholdLearner * l){
-            learner=l;
-        }
-
-        void make_log(){
-            if (learner){
-                learner->make_log();
-            }
-            FILE * f=fopen("/tmp/thresholds.txt", "w");
-            fclose(f);
-        }
-
-        void log_thresholds(){
-            FILE *f= fopen("/tmp/thresholds.txt", "a");
-            fprintf(f, "%f\t%f\t%f\t%f\t%f\n", threshold.for_Di().get_x(),
-                                               threshold.for_Di().get_y(),
-                                               threshold.for_Di().get_angle(),
-                                               threshold.for_Di().get_width(),
-                                               threshold.for_Di().get_length());
-            fclose(f);
-        }
-
-        /**
-         * @brief Calculates transform between disturbance poses
-         * 
-         * @param result 
-         * @param t_new transform of the new disturbance
-         * @param t_tracked transform of tracked disturbance
-         */
-        
-    }wb_bridger;
 
 };
 #endif

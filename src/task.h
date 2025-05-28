@@ -266,7 +266,7 @@ Action action;
 
 Disturbance disturbance;
 
-Task::Action getAction(){
+Task::Action getAction()const{
     return action;
 }
 
@@ -325,6 +325,15 @@ void set_change(bool b){
 
 bool get_change(){
     return change;
+}
+
+/**
+ * @brief Get a pointer to the disturbance
+ * 
+ * @return Disturbance* 
+ */
+Disturbance * get_disturbance(){
+    return &disturbance;
 }
 };
 

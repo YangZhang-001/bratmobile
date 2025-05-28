@@ -236,6 +236,12 @@ class ThresholdLearner{
      */
     virtual float learning_rule(float x, float dx);
 
+    /**
+     * @brief Returns weighted threshold input
+     * 
+     * @param t threshold
+     * @return Threshold 
+     */
     Threshold get_weighted(const Threshold & t);
 
 };
@@ -246,9 +252,7 @@ class ThresholdLearner{
  */
 class FF_Learner: public ThresholdLearner{
 
-    float learning_rule(float x, float dx){
-        return mu*x*dx;
-    }    
+    float learning_rule(float x, float dx);
 
     void update_bundle(const Bundle & error, const Bundle & x, Bundle * w);
 };

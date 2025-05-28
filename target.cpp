@@ -57,6 +57,8 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
     Configurator configurator(controlGoal);
+	ClosedLoop_Tracker tracker;
+	Configurator.set_target(&tracker);
 	Wise_Controller wc;
 	configurator.register_controller(&wc);
 	dump_benchmarks( "rt-update", "/tmp");

@@ -85,3 +85,21 @@ b2Transform math::solveAxB(const b2Transform& x, const b2Transform & B){ //
 	
 	return b2Mul(B, x_inv);
 }
+
+void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev){
+    float dot=b2Dot(t_new.p, t_prev.p);
+    float denom=(t_new.p.Length() * t_prev.p.Length());
+    float cos_angle= dot/denom;
+    float angle=0;
+    if (fabs(cos_angle)<=1){
+        angle=acosf(cos_angle); //[0, pi]
+        b2Transform pov_prev=b2MulT(t_prev, t_new); //position of new d from prev perspective
+        if (pov_prev.p.y<0){
+            angle=-angle;
+        }
+    }
+    float distance=t_new.p.Length()-t_prev.p.Length();
+    result.q.Set(angle);
+    result.p.x=result.q.c*distance;
+    result.p.y=result.q.s*distance;
+}

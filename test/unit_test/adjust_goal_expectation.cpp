@@ -14,7 +14,7 @@ int main(int argc, char** argv){
     configurator.getTask()->disturbance=obstacle;
     configurator.plan={v1};
     b2Transform deltaPose(b2Vec2(x,y), b2Rot(a));
-    configurator.update_graph(configurator.transitionSystem, deltaPose, configurator.getTask(), &configurator.controlGoal);
+    configurator.update_graph(configurator.transitionSystem, deltaPose);
     configurator.getTask()->disturbance.bf.pose.p.x+=0.02;
     configurator.getTask()->disturbance.bf.pose.p.y+=0.03;
     configurator.adjust_goal_expectation();

@@ -27,10 +27,8 @@ int main(int argc, char** argv){
         x+=min_d;
         y=-0.05;     
     }
-
-    WorldBuilder wb;
-    std::pair<bool,BodyFeatures> feature_bb= wb.bounding_box(pts);
-    std::pair<bool,BodyFeatures> feature_rot= wb.wb_bridger.bounding_rotated_box(pts);
+    std::pair<bool,BodyFeatures> feature_bb= bounding_box(pts);
+    std::pair<bool,BodyFeatures> feature_rot= bounding_rotated_box(pts);
     feature_rot.second.halfLength=round(feature_rot.second.halfLength*10000)/10000;
     feature_rot.second.halfWidth=round(feature_rot.second.halfWidth*10000)/10000;
     if (fabs(feature_rot.second.halfLength*2-min_d*n_dimensions*10)>0.001){

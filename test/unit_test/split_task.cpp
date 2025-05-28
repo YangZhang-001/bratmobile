@@ -17,6 +17,8 @@ int main(int argc, char** argv){
     conf.simulationStep=std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH)*2;
     LIDAR_In ci;
     conf.registerInterface(&ci, NULL);
+    ClosedLoop_Tracker tracker;
+    conf.register_tracker(&tracker);
     b2Transform start=conf.transitionSystem[conf.movingVertex].endPose;
     if (argc>=7){
         start.p.x=atof(argv[4]);

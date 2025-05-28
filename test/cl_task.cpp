@@ -68,6 +68,8 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
     Configurator configurator(controlGoal);
+	ClosedLoop_Tracker tracker;
+	Configurator.set_target(&tracker);
 	Reactive_Controller rc;
 	configurator.register_controller(&rc);
 	if (argc>2){

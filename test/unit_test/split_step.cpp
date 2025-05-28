@@ -3,6 +3,8 @@
 int main(int argc, char** argv){
     Task goal=Task();
     Configurator conf(goal);
+    ClosedLoop_Tracker tracker;
+    conf.register_tracker(&tracker);
     conf.simulationStep=std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH)*2;
     LIDAR_In ci;
     conf.registerInterface(&ci, NULL);

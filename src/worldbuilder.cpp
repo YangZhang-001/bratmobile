@@ -1,26 +1,5 @@
 #include "worldbuilder.h"
 
-void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev){
-    float dot=b2Dot(t_new.p, t_prev.p);
-    float denom=(t_new.p.Length() * t_prev.p.Length());
-    float cos_angle= dot/denom;
-    float angle=0;
-    if (fabs(cos_angle)<=1){
-        angle=acosf(cos_angle); //[0, pi]
-        b2Transform pov_prev=b2MulT(t_prev, t_new); //position of new d from prev perspective
-        if (pov_prev.p.y<0){
-            angle=-angle;
-        }
-    }
-    float distance=t_new.p.Length()-t_prev.p.Length();
-    result.q.Set(angle);
-   // printf("D has moved angle =%f distance=%f\n", angle, distance);
-    result.p.x=result.q.c*distance;
-    result.p.y=result.q.s*distance;
-
-}
-
-
 std::pair<Pointf, Pointf> WorldBuilder::bounds(Direction d, b2Transform start, float boxLength, float halfWindowWidth, std::vector <Pointf> *_bounds){
     std::pair <Pointf, Pointf>result;
     std::vector <Pointf> bds;
@@ -70,38 +49,6 @@ b2PolygonShape WorldBuilder::object_filtering_box(float halfWindowWidth, float b
 }
 
 
-
-std::pair <bool, BodyFeatures> WorldBuilder::Bridger::bounding_rotated_box(std::vector <cv::Point2f>nb){
-    for (cv::Point2f & p: nb){
-        p.x= round(p.x*100)/100;
-        p.y=round(p.y*100)/100;
-    }
-    std::pair <bool, BodyFeatures> result(0, BodyFeatures());
-    if (nb.empty()){
-        return result;
-    }
-    cv::RotatedRect rotated_rect = cv::minAreaRect(nb);
-    if (rotated_rect.size.width>rotated_rect.size.height){
-        result.second.setHalfLength(rotated_rect.size.width/2); //NVM THIS ///THEY ARE SWAPPED IN OPENCV DO NOT TOUCH
-        result.second.setHalfWidth(rotated_rect.size.height/2);
-        if (rotated_rect.angle>90){
-            rotated_rect.angle-=90;
-        }
-        else{
-            rotated_rect.angle+=90;
-        }
-    }
-    else{
-        result.second.setHalfLength(rotated_rect.size.height/2); //NVM THIS ///THEY ARE SWAPPED IN OPENCV DO NOT TOUCH
-        result.second.setHalfWidth(rotated_rect.size.width/2);
-    }
-    result.second.pose.p=b2Vec2(rotated_rect.center.x, rotated_rect.center.y);
-    float angle_rad=rotated_rect.angle*DEG_TO_RAD_K;
-    result.second.pose.q.Set(angle_rad);
-    result.second.pose.q.Set(atan(result.second.pose.q.s/result.second.pose.q.c));
-    result.first=true;
-    return result;
-}
 
 
 std::vector <std::vector<cv::Point2f>> WorldBuilder::kmeans_clusters( std::vector <cv::Point2f> points,std::vector <cv::Point2f> &centers){
@@ -153,7 +100,7 @@ std::vector <BodyFeatures> WorldBuilder::cluster_data( const CoordinateContainer
         clusters=partition_clusters(points);
     }
     for (int c=0; c<clusters.size(); c++){
-        if (std::pair<bool,BodyFeatures>feature=wb_bridger.bounding_rotated_box(clusters[c]); feature.first){
+        if (std::pair<bool,BodyFeatures>feature=bounding_rotated_box(clusters[c]); feature.first){
             result.push_back(feature.second);
         }
     }
@@ -365,97 +312,4 @@ b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, Disturbance * goal){
 }
 
 
-
-cv::Rect2f WorldBuilder::Bridger::real_world_focus(const Task * t){
-    std::vector <cv::Point2f> vertices;
-    if (t->disturbance.getAffIndex()==NONE){
-        return cv::Rect2f(0, 0, 0, 0);
-    }
-    cv::Point2f bl; //bottom left (documentation CV says top left but not true)
-    float max_dimension=std::max(t->disturbance.bf.width(), t->disturbance.bf.length());
-    max_dimension+=0.02;    
-    bl.x=t->disturbance.pose().p.x-(max_dimension/2);
-    bl.y=t->disturbance.pose().p.y-(max_dimension/2);
-    cv::Rect2f focus(bl.x, bl.y, max_dimension, max_dimension);
-    return focus; //upright bounding rectangle: increases area represented
-}
-
-
-b2Transform WorldBuilder::Bridger::get_transform(const Task & t, const CoordinateContainer & pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects, const b2PolygonShape& sensor){
-    if (observed_disturbance==NULL){
-        throw std::invalid_argument("disturbance pointer cannot be null!");
-    }
-    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.is_point()|| (t.action.getLWheelSpeed()==0 && t.action.getRWheelSpeed()==0)){
-        if (t.disturbance.getAffIndex()==NONE){
-            throw std::invalid_argument("no disturbance!");    
-        }
-        if (t.disturbance.bf.is_point()){
-            printf("petite disturbance!");    
-        }
-        if ((t.action.getLWheelSpeed()==0 && t.action.getRWheelSpeed()==0)){
-            throw std::invalid_argument("not moving!");    
-        }
-        return t.action.getTransform(LIDAR_SAMPLING_RATE);
-    }
-    BodyFeatures predicted_bf=t.disturbance.bf;
-    predicted_bf.pose+=t.action.getTransform(LIDAR_SAMPLING_RATE); //future to sub with MM Kalman
-    auto new_d_it =find_disturbance(objects, predicted_bf, t.action.getTransform(LIDAR_SAMPLING_RATE), sensor);
-  //  printf("objects: %i\n", objects.size());
-    if (new_d_it==objects.end()){
-        printf("not found!");
-        observed_disturbance->set_affordance(NONE); //this will tell the task that D is null, so it can end!
-        return t.action.getTransform(LIDAR_SAMPLING_RATE);
-    }
-    if ((*new_d_it).is_point()){
-        throw std::invalid_argument("for some reason it's tiny!");    
-    }
-    BodyFeatures new_d=*new_d_it;
-    b2Transform result=b2Transform_zero;
-    calc_transform(result, new_d.pose, t.disturbance.pose());
-    observed_disturbance->bf=new_d; //this modifies task t, do not move!
-    return -result;
-}
-
-std::vector <BodyFeatures>::iterator WorldBuilder::Bridger::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, const b2PolygonShape & sensor, float * _least_square){
-    float least_square=10000;
-    std::vector <BodyFeatures>::iterator result =objects.end();
-    Threshold threshold_sum=threshold;
-    //TO DO: generate threshold as function of D to match (reflex)
-    if (learner){
-       // threshold_sum+=learner->get_weighted(); //this is the ico summation node
-    }
-    for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
-        Bundle distance;
-        bool match =(*it).match(dist,  &distance, t);
-        if (float ss=distance.sum_squares()<least_square){
-            least_square=ss;
-            if (match){ //thresholding
-                result = it;
-            }
-            else if(Disturbance d(*it); overlaps(sensor, &d)){
-                result=it;
-                //adjust threshold
-                Bundle error=threshold.for_Di()-distance;
-                if (learner){
-                    printf("but it's still there!");
-                    learner->update_bundle(error, threshold.for_Di(), &learner->ref_Di_weights());
-                    (learner->update_bundle(error, threshold.for_Di()));    
-                }
-                printf("DISTANCE! x=%f \ty%f\ttheta=%f\tw=%f\tl%f\t", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
-            }
-        }
-    }
-    if (result!=objects.end()){
-        if (fabs((*result).pose.q.GetAngle()-dist.pose.q.GetAngle())>(3*M_PI_4)){
-            if (dist.pose.q.GetAngle()>0){
-                (*result).pose.q.Set((*result).pose.q.GetAngle()-M_PI);
-            }
-            else if (dist.pose.q.GetAngle()<0){
-                (*result).pose.q.Set((*result).pose.q.GetAngle()+M_PI);
-            }
-        }
-    }
-    log_thresholds();
-    return result;
-}
 
