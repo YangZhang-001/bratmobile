@@ -34,15 +34,13 @@ public:
 	TransitionSystem transitionSystem;
 	StateMatcher matcher;
 	WorldBuilder worldBuilder;
-	vertexDescriptor movingVertex=boost::add_vertex(transitionSystem);;
+	vertexDescriptor movingVertex=boost::add_vertex(transitionSystem);
 	vertexDescriptor currentVertex=movingVertex;
 	edgeDescriptor movingEdge, currentEdge;
 	std::vector<vertexDescriptor>plan, current_vertices;
 	GoalChanger * goal_changer=NULL;	
 
-Configurator(){
-//	movingVertex=boost::add_vertex(transitionSystem);
-}
+Configurator(){}
 
 Configurator(Task _task){
 	init(_task);
