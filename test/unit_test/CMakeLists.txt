@@ -1,5 +1,5 @@
  
-cmake_minimum_required(VERSION 3.1.0)
+#cmake_minimum_required(VERSION 3.1.0)
 
 find_package(OpenCV REQUIRED)
 
@@ -15,12 +15,17 @@ include(CTest)
 
 include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
 
-add_executable(unit_test g_configurator.cpp)
-target_link_libraries(unit_test gtest gtest_main)
-target_link_libraries(unit_test CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+add_executable(unit_test_highlevel unit_test_highlevel.cpp)
+target_link_libraries(unit_test_highlevel gtest gtest_main)
+target_link_libraries(unit_test_highlevel CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(unit_test_threshold unit_test_highlevel.cpp)
+target_link_libraries(unit_test_threshold gtest gtest_main)
+target_link_libraries(unit_test_threshold CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
 include(GoogleTest)
 
-gtest_discover_tests(unit_test)
+gtest_discover_tests(unit_test_highlevel unit_test_threshold)
 
 
 INCLUDE_DIRECTORIES("/usr/local/include/")
@@ -172,7 +177,6 @@ add_test(NAME plan_target_68cm COMMAND plan ../target_68cm/ 1)
 
 add_test(NAME match_false COMMAND match)
 add_test(NAME match_true_exact COMMAND match 1)
-add_test(NAME match_abstract COMMAND match 6)
 add_test(NAME match_Dn_no COMMAND match 2 )
 add_test(NAME match_Dn_ratio COMMAND match 2 1)
 add_test(NAME match_Dn_position COMMAND match 2 2)

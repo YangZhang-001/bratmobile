@@ -113,7 +113,7 @@ Essentially uses distance calculations and (adaptive) thresholding
 class Threshold{
     public:
 
-    Threshold()=default;
+    Threshold(){}
 
     Threshold(float e, float a, float d, float aff, float d_dim): 
     endPosition(e), angle(a), dPosition(d), affordance(aff), D_dimensions(d_dim){}

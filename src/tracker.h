@@ -2,12 +2,13 @@
 
 /**
  * @brief Tracking interface: Bridge between the real world and the simulation. Is used for tracking execution of tasks
- * and using lived experience to modify the state-matching threshold
+ * and using lived experience to modify the state-matching threshold. Some useful trackers are defined below but this is a virtual
+ * class so you can make your own custom tracker
  * 
  */
 class Tracker{
     protected:
-    ThresholdLearner *learner;
+    ThresholdLearner *learner=NULL;
     public:
 
     Tracker(){}
