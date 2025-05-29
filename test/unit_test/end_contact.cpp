@@ -18,6 +18,7 @@ int main(int argc, char** argv){
     int expected=100;
     Task task;
     bool goal_d=atoi(argv[1]), goal_conf=atoi(argv[2]);
+    
     conf.worldBuilder.world_objects=conf.worldBuilder.getFeatures(conf.data2fp, b2Transform_zero);
     if (!goal_d){
         task=Task(obstacle, DEFAULT, start,true);
@@ -28,6 +29,7 @@ int main(int argc, char** argv){
         conf.controlGoal=goal_t;
         if (!goal_d){
             start.q.Set(M_PI_2);
+
             task.disturbance.bf.pose.p.x=-d_pose.p.y;
             task.disturbance.bf.pose.p.y=d_pose.p.x;
             expected=19;
