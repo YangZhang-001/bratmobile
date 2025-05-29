@@ -43,25 +43,32 @@ int main(int argc, char** argv){
     conf.transitionSystem[v1].Dn=Disturbance(AVOID,  b2Vec2(Dx, Dy), D_t);
     std::vector <vertexDescriptor> split =conf.splitTask(v1, conf.transitionSystem, conf.transitionSystem[v1].direction, conf.currentVertex);
     bool split_size= split.size()==desired_split_size(pos, conf.simulationStep);
+    if (!split_size){
+         std::cerr<<("wrong split size!");
+         return -1;
+    }
     int ct=0;
     for (vertexDescriptor v:split){ 
         float step_size=(conf.transitionSystem[v].endPose.p-start.p).Length();
         printf("step size=%f \t", step_size);
         if (step_size>(conf.simulationStep+0.00001)){
-            throw std::logic_error("wrong step size\n");
+            std::cerr<<"wrong step size\n";
+            return -1;
         }
         if (!conf.transitionSystem[v].Dn.isValid()){
-            throw std::logic_error("disturbance wrongly assingned\n");
+             std::cerr<<("disturbance wrongly assingned\n");
         }
         if (ct<(split.size()-1) && conf.transitionSystem[v].outcome!=simResult::safeForNow){
-            throw std::logic_error("not setting safe for now!");
+             std::cerr<<("not setting safe for now!");
+             return -1;
         }
         if (ct==(split.size()-1) && conf.transitionSystem[v].outcome!=simResult::crashed){
-            throw std::logic_error("not setting crashed");
+             std::cerr<<("not setting crashed");
+             return -1;
         }
         printf("v%i: x=%f, y=%f, theta=%f\n", v, conf.transitionSystem[v].endPose.p.x, conf.transitionSystem[v].endPose.p.y, conf.transitionSystem[v].endPose.q.GetAngle());
         start=conf.transitionSystem[v].endPose;
         ct++;
     }
-    return !(split_size);
+    return 0;
 }

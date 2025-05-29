@@ -17,7 +17,8 @@ int main(int argc, char** argv){
     obstacle.validate();
     int expected=100;
     Task task;
-    bool goal_d=atoi(argv[1]), goal_conf=atoi(argv[2]);
+    bool goal_d=atoi(argv[1]); //is Di a target for the current Task? 
+    bool goal_conf=atoi(argv[2]); // is the configurator trying to reach a target?
     conf.worldBuilder.world_objects=conf.worldBuilder.getFeatures(conf.data2fp, b2Transform_zero);
     if (!goal_d){
         task=Task(obstacle, DEFAULT, start,true);
@@ -25,11 +26,12 @@ int main(int argc, char** argv){
     }
     if (goal_conf){
         Task goal_t=Task(goal, UNDEFINED);
-        conf.controlGoal=goal_t;
+        conf.init(goal_t);
         if (!goal_d){
             start.q.Set(M_PI_2);
             task.disturbance.bf.pose.p.x=-d_pose.p.y;
             task.disturbance.bf.pose.p.y=d_pose.p.x;
+            conf.data2fp.emplace(getPointf(task.disturbance.bf.pose.p));       
             expected=19;
             conf.worldBuilder.buildWorld(world, task.start, task.direction, task.disturbance,0.15, WorldBuilder::PARTITION);
         }

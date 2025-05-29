@@ -4,10 +4,9 @@
 void Configurator::init(Task _task){
 	controlGoal=_task;
 	currentTask=_task;
-	//previousTimeScan = std::chrono::high_resolution_clock::now();
-	movingVertex=boost::add_vertex(transitionSystem);
+	//	movingVertex=boost::add_vertex(transitionSystem);
 	transitionSystem[movingVertex].Di=controlGoal.disturbance;
-	currentVertex=movingVertex;
+	// currentVertex=movingVertex;
 	currentTask.action.setVelocities(0,0);
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
 
@@ -850,7 +849,7 @@ std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, Transi
 		StateMatcher::MATCH_TYPE m=StateMatcher::_FALSE;
 		float sum_tmp=fabs(sd.get_sum(match_type));
 		try{
-			m=matcher.isMatch(sd, tracker->threshold, s.endPose.p.Length());
+			m=matcher.isMatch(sd, tracker->get_threshold(), s.endPose.p.Length());
 		}
 		catch(std::exception &e){
 			std::cerr<< "check tracker is set up ok! "<<e.what()<<std::endl;

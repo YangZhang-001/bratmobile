@@ -189,7 +189,8 @@ class ThresholdLearner{
      * @brief notify learner what bundle to learn
      */
     enum BUNDLE_FLAG{DI_FLAG, DN_FLAG};
-    ThresholdLearner()=default;
+
+   // ThresholdLearner(){};
 
     void set_learning_rate(float f){
         mu=f;
@@ -207,13 +208,13 @@ class ThresholdLearner{
         return Dn_weights;
     }
 
-    Bundle & ref_Di_weights(){
-        return Di_weights;
-    }
+    // Bundle & ref_Di_weights(){
+    //     return Di_weights;
+    // }
 
-    Bundle & ref_Dn_weights(){
-        return Dn_weights;
-    }
+    // Bundle & ref_Dn_weights(){
+    //     return Dn_weights;
+    // }
 
     void log(){
         FILE *f= fopen("/tmp/threshold_weights.txt", "a+");
@@ -254,7 +255,7 @@ class ThresholdLearner{
      * @param dx 
      * @return weight derivative 
      */
-    virtual float learning_rule(float x, float dx);
+    virtual float learning_rule(float x, float dx)=0;
 
     /**
      * @brief Returns weighted threshold input

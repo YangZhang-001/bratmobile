@@ -15,7 +15,7 @@ class Tracker{
     /**
      * @brief Returns a reflex if no learner is initialised, output of the learner otherwise
      */
-    const Threshold & get_threshold(){
+    Threshold get_threshold(){
         if (!learner){
             return Threshold();
         }
@@ -71,11 +71,11 @@ protected:
 
     void log_thresholds(){
         FILE *f= fopen("/tmp/thresholds.txt", "a");
-        fprintf(f, "%f\t%f\t%f\t%f\t%f\n", threshold.for_Di().get_x(),
-                                            threshold.for_Di().get_y(),
-                                            threshold.for_Di().get_angle(),
-                                            threshold.for_Di().get_width(),
-                                            threshold.for_Di().get_length());
+        fprintf(f, "%f\t%f\t%f\t%f\t%f\n", get_threshold().for_Di().get_x(),
+                                            get_threshold().for_Di().get_y(),
+                                            get_threshold().for_Di().get_angle(),
+                                            get_threshold().for_Di().get_width(),
+                                            get_threshold().for_Di().get_length());
         fclose(f);
     }
 

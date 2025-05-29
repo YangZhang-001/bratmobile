@@ -20,7 +20,7 @@ class HighLevelTest: public ::testing::Test{
     void SetUp()override{
         configurator.transitionSystem.m_edges.clear();
         configurator.transitionSystem.m_vertices.clear();
-        boost::clear_vertex(configurator.movingVertex, configurator.transitionSystem);
+        // boost::clear_vertex(configurator.movingVertex, configurator.transitionSystem);
 
     }
 

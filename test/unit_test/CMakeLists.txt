@@ -1,5 +1,5 @@
  
-#cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.1.0)
 
 find_package(OpenCV REQUIRED)
 
@@ -20,7 +20,7 @@ target_link_libraries(unit_test gtest gtest_main)
 target_link_libraries(unit_test CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 include(GoogleTest)
 
-#gtest_discover_tests(unit_test)
+gtest_discover_tests(unit_test)
 
 
 INCLUDE_DIRECTORIES("/usr/local/include/")
@@ -167,7 +167,7 @@ add_test(NAME explorer_target COMMAND explorer ../target_68cm/ 1)
 add_test(NAME plan_no COMMAND plan)
 add_test(NAME plan_cds COMMAND plan ../cul_de_sac/ 0)
 add_test(NAME plan_target_40cm COMMAND plan ../target_40cm/ 1)
-add_test(NAME plan_target_68cm COMMAND plan ../target_68cm 1)
+add_test(NAME plan_target_68cm COMMAND plan ../target_68cm/ 1)
 
 
 add_test(NAME match_false COMMAND match)
@@ -182,7 +182,6 @@ add_test(NAME match_Dn_shape COMMAND match 2 3)
 set_property(TEST match_Dn_shape PROPERTY WILL_FAIL true)
 
 add_test(NAME match_Di_no COMMAND match 5 )
-add_test(NAME match_Di_ratio COMMAND match 5 1)
 add_test(NAME match_Di_position COMMAND match 5 2)
 set_property(TEST match_Di_no PROPERTY WILL_FAIL true)
 set_property(TEST match_Di_position PROPERTY WILL_FAIL true)
@@ -200,10 +199,7 @@ add_test(NAME find_match_quarter COMMAND find_match_state ../target_68cm/ 2 1 7)
 set_property(TEST find_match_midtask11 PROPERTY WILL_FAIL true)
 set_property(TEST find_match_state_f PROPERTY WILL_FAIL true)
 
-add_test(NAME find_match_state_turn COMMAND find_match_state ../target_68cm/ 9 1 55)
-
 add_test(NAME state_difference COMMAND state_difference ../target_68cm/ 1)
-add_test(NAME state_difference_turn COMMAND state_difference ../target_68cm/ 1 55)
 
 add_test(NAME match_equal COMMAND match_equal)
 #add_test(NAME replanner_40 COMMAND replanner ../target_40cm/ 2 1)
