@@ -141,7 +141,7 @@ void ClosedLoop_Tracker::on_new_reading(Task * goal){
     }
     try{
         attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
-        if (area=window_area(); area<0.05){
+        if (area=window_area(); area<(ROBOT_HALFLENGTH*2)*(ROBOT_HALFWIDTH*2)){
             throw area;
         }
     }
