@@ -242,11 +242,11 @@ class ThresholdLearner{
      * This determines the connections within the neural network and is used to calculate 
      * correlations between connected inputs
      * 
-     * @param error 
-     * @param x the input
+     * @param y second term of correlation
+     * @param x first term of correlation
      * @param f flag: is it Di or Dn
      */
-    virtual void update_bundle(const Bundle & error, const Bundle & x, BUNDLE_FLAG f)=0;
+    virtual void update_bundle(const Bundle & y, const Bundle & x, BUNDLE_FLAG f)=0;
 
     /**
      * @brief Gets delta weight based on the ICO learning rule
@@ -278,11 +278,18 @@ class ThresholdLearner{
  * @brief Plain feedforward: error in one dimension only correlated with the input in that dimension
  * 
  */
-class FF_Learner: public ThresholdLearner{
+class ICO_Learner: public ThresholdLearner{
     public:
 
+    /**
+     * @brief ICO learning rule
+     * 
+     * @param x input error
+     * @param dx input error derivative
+     * @return float 
+     */
     float learning_rule(float x, float dx);
 
-    void update_bundle(const Bundle & error, const Bundle & x, BUNDLE_FLAG f);
+    void update_bundle(const Bundle & dx, const Bundle & x, BUNDLE_FLAG f);
 
 };

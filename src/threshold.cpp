@@ -76,11 +76,11 @@ Threshold ThresholdLearner::get_weighted(const Threshold & t){
     return result;
 }
 
-float FF_Learner::learning_rule(float x, float dx){
+float ICO_Learner::learning_rule(float x, float dx){
     return mu*x*dx;
 }    
 
-void FF_Learner::update_bundle(const Bundle & error, const Bundle & x, BUNDLE_FLAG f){
+void ICO_Learner::update_bundle(const Bundle & dx, const Bundle & x, BUNDLE_FLAG f){
     Bundle *w=NULL;
     if (f==DI_FLAG){
         w=&Di_weights;
@@ -91,11 +91,11 @@ void FF_Learner::update_bundle(const Bundle & error, const Bundle & x, BUNDLE_FL
     else{
         return;
     }
-    w->add_dx(learning_rule(x.get_x(), error.get_x()));
-    w->add_dy(learning_rule(x.get_y(), error.get_y()));
-    w->add_dangle(learning_rule(x.get_angle(), error.get_angle()));
-    w->add_dwidth(learning_rule(x.get_width(), error.get_width()));
-    w->add_dlength(learning_rule(x.get_length(), error.get_length()));
+    w->add_dx(learning_rule(x.get_x(), dx.get_x()));
+    w->add_dy(learning_rule(x.get_y(), dx.get_y()));
+    w->add_dangle(learning_rule(x.get_angle(), dx.get_angle()));
+    w->add_dwidth(learning_rule(x.get_width(), dx.get_width()));
+    w->add_dlength(learning_rule(x.get_length(), dx.get_length()));
 }
 
 
