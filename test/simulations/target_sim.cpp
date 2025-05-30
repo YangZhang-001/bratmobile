@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
     Configurator configurator(controlGoal);
     LIDAR_In ci;
     Motor_Out m;
-    ClosedLoop_Tracker tracker(&controlGoal);
+    ClosedLoop_Tracker tracker;
     Wise_Controller wc;
     configurator.register_tracker(&tracker);
     configurator.register_controller(&wc);
