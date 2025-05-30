@@ -2,6 +2,9 @@
 
 
 void Configurator::explore_plan(b2World&world){
+	if (iteration>1){
+		return;
+	}
 	auto startTime =std::chrono::high_resolution_clock::now();
     pre_explore(transitionSystem, plan, currentTask.change);
     vertexDescriptor src=get_explore_start(transitionSystem);
