@@ -5,7 +5,6 @@
 #include <filesystem>
 #include <ncurses.h>
 #include <fstream>
-//#include "worldbuilder.h"
 #include <algorithm>
 #include <sys/stat.h>
 #include "debug.h"
@@ -13,7 +12,6 @@
 #include "control_interface.h"
 #include "task_controller.h"
 #include "tracker.h"
-//char bodyFile[100];
 
 class Configurator{
 protected:
