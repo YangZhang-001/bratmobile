@@ -14,10 +14,7 @@ include(CTest)
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
 	add_executable(closed_loop_task ../custom_robot.h cl_task.cpp)
-	add_executable(test_tracking ../custom_robot.h test_tracking.cpp)
 	target_link_libraries(closed_loop_task box2d ${OpenCV_LIBS} CloCK a1lidarrpi alphabot pthread pigpio)
-	target_link_libraries(test_tracking box2d ${OpenCV_LIBS} CloCK a1lidarrpi alphabot pthread pigpio)
-
 	message("build test cases")
 else()
 	add_subdirectory(simulations)

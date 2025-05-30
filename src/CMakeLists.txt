@@ -18,6 +18,8 @@ find_package(box2d REQUIRED)
 
 add_library(CloCK ${SRC} ${HEAD})
 
+add_subdirectory(fastdds)
+
 if(box2d_FOUND)
         target_link_libraries(CloCK box2d ${OpenCV_LIBS} pthread)
        message("box2d installed ${BOX2D_LIBS}")
