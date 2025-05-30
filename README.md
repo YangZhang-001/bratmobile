@@ -46,7 +46,8 @@ sh build.sh
 * `sudo ./targetless` : this program demonstrates planning over a 1m distance horizon for a control goal that is not a target location but rather an objective to drive straight for the longest time with the least amount of disturbances
 * `sudo ./target`: this program (under construction) demonstrates target seeking behaviour, where the target is imaginary and located at x=1.0m, y=0m.
 Run with options `0 [custom-stepDistance]`: for turning debug options off. In debug mode, LIDAR coordinates, Box2D objects and robot trajectories are dumped into the `/tmp` folder. The stepDistance is the maximum distance covered by a single task, 1.0m by default.
-* `sudo ./test/test_tracking` : generates plan and executes it without checking - to test and demonstrate closed-loop task execution on the robot
+
+Only planning and execution (tracking using dead reckoning) demonstrated
 
 ### Simulation (x86 architecture)
 * `test/simulations/target_sim [folder_with_scans/] [bool: is_real_time]` : runs a simulation of a planning and plan recycling scenario (not fully debugged). Args:
