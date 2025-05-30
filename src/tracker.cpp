@@ -89,7 +89,8 @@ std::vector <BodyFeatures>::iterator ClosedLoop_Tracker::find_disturbance( std::
                 Bundle error=get_threshold().for_Di()-distance;
                 if (learner){
                     printf("but it's still there!");
-                    learner->update_bundle(error, get_threshold().for_Di(), ThresholdLearner::DI_FLAG);
+                    //input corr: innsert get_threshold.for_Di()
+                    learner->update_bundle(error, Bundle::ones(), ThresholdLearner::DI_FLAG);
                    // threshold.set_Di(learner->update_bundle(error, threshold.for_Di()));    
                 }
                 printf("DISTANCE! x=%f \ty%f\ttheta=%f\tw=%f\tl%f\t", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
