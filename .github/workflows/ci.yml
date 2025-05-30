@@ -1,0 +1,14 @@
+name: ci
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name : Build
+        shell: bash
+        run : cmake
+      - name : Test
+        run: ctest
