@@ -82,7 +82,7 @@ class Tracker{
  * 
  */
 class DeadReckoner: public Tracker{
-
+    public:
     DeadReckoner(){}
 
     b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects){
