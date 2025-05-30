@@ -18,7 +18,7 @@ int main(int argc, char** argv){
     Task goal(target1,DEFAULT);
     Configurator conf(goal);
     Wise_Controller wc;
-    ClosedLoop_Tracker tracker(&conf.controlGoal);
+    ClosedLoop_Tracker tracker;
     conf.register_controller(&wc);
     conf.register_tracker(&tracker);
     conf.simulationStep=0.27;
