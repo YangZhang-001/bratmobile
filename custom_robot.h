@@ -12,6 +12,13 @@
 #include <sys/types.h>
 #define _USE_MATH_DEFINES
 
+/**
+ * * * * DEFINITION OF DATA INTERFACES FOR ROBOT SENSORS/MOTORS 
+ * 				+ SOME DEBUGGING HELPER FUNCTIONS
+ * 
+ */
+
+
 char statFile[100];
 
 void get_Foldername(char* custom, char name[60]){
