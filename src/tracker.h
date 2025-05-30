@@ -95,6 +95,8 @@ class DeadReckoner: public Tracker{
 
     void on_new_reading(Task * task=NULL){};
 
+    void init(Task * goal){}
+
 
 };
 
@@ -109,9 +111,9 @@ class ClosedLoop_Tracker:public Tracker{
 
     ClosedLoop_Tracker(){}
 
-    ClosedLoop_Tracker(Task * goal){
-	    attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
-    }
+    // ClosedLoop_Tracker(Task * goal){
+	//     attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
+    // }
 
     b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects);    
     
