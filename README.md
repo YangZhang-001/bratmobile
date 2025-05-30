@@ -50,8 +50,8 @@ Run with options `0 [custom-stepDistance]`: for turning debug options off. In de
 
 ### Simulation (x86 architecture)
 * `test/simulations/target_sim [folder_with_scans/] [bool: is_real_time]` : runs a simulation of a planning and plan recycling scenario (not fully debugged). Args:
-** `folder_with_scans` : a folder containing 2D LIDAR scans
-** `is_real_time` : a boolean flag used to determine whether to use a timer to ensure that LIDAR callbacks are called every 200ms and motor callbacks every 100 (default=1)
+    -  `folder_with_scans` : a folder containing 2D LIDAR scans
+    - `is_real_time` : a boolean flag used to determine whether to use a timer to ensure that LIDAR callbacks are called every 200ms and motor callbacks every 100 (default=1)
 
 ### Unit tests (x86 architecture)
 run `make test`
