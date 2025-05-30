@@ -91,6 +91,8 @@ class Bundle{
     std::vector <float> get_vector()const{
         return {x, y, angle, width, length};
     }
+
+    static Bundle ones();
 };
 
 template <typename T>

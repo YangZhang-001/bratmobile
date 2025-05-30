@@ -55,6 +55,11 @@ Bundle linear_rectify(const Bundle & b){
     
 }
 
+Bundle Bundle::ones(){
+    return Bundle(1, 1, 1, 1, 1);
+}
+
+
 Threshold Threshold::operator+(const Threshold & t)const{
     Threshold result=*this;
     result.set_Di(result.Di+t.for_Di());
