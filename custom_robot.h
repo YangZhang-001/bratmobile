@@ -12,7 +12,13 @@
 #include <sys/types.h>
 #define _USE_MATH_DEFINES
 
-std::mutex ctr_mutex;
+/**
+ * * * * DEFINITION OF DATA INTERFACES FOR ROBOT SENSORS/MOTORS 
+ * 				+ SOME DEBUGGING HELPER FUNCTIONS
+ * 
+ */
+
+
 char statFile[100];
 
 void get_Foldername(char* custom, char name[60]){
@@ -99,7 +105,7 @@ MotorCallback(Motor_Out *_mio): mio(_mio){
 }
 void step( AlphaBot &motors){
 	if (mio==NULL){
-		printf("mio null\n");
+		throw ("mio null\n");
 	}
     motors.setRightWheelSpeed(mio->get_R()); //temporary fix because motors on despacito are the wrong way around
     motors.setLeftWheelSpeed(mio->get_L());

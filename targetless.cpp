@@ -10,6 +10,9 @@ Disturbance set_target(int& run, b2Transform start){
 	return result;
 }
 void Configurator::explore_plan(b2World&world){
+	if (iteration>1){
+		return;
+	}
     pre_explore(transitionSystem, plan, currentTask.change);
     vertexDescriptor src=get_explore_start(transitionSystem);
     resetPhi(transitionSystem);
