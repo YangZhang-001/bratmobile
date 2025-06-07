@@ -10,16 +10,16 @@ set (CMAKE_CXX_STANDARD 17)
 # Create a library for the message / topic
 add_custom_target(
     objects
-    COMMAND fastddsgen Object.idl
+    COMMAND fastddsgen ObjectPackage.idl
 )
-add_library(Object STATIC Object.cxx ObjectPubSubTypes.cxx)
-add_dependencies(Object objects)
+add_library(ObjectPackage STATIC ObjectPackage.cxx ObjectPackagePubSubTypes.cxx)
+add_dependencies(ObjectPackage objects)
 
 # Publisher
-add_executable(publisher publisher.cpp)
-target_link_libraries(publisher fastcdr fastrtps Object)
+# add_executable(publisher publisher.cpp)
+# target_link_libraries(publisher fastcdr fastrtps ObjectPackage)
 
 
 # Subscriber
 add_executable(subscriber subscriber.cpp)
-target_link_libraries(subscriber fastcdr fastrtps Object)
+target_link_libraries(subscriber fastcdr fastrtps ObjectPackage)
