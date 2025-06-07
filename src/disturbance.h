@@ -3,6 +3,7 @@
 #include "threshold.h"
 #include <algorithm>
 #include <stdexcept>
+#include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp> //useful down the line! (graphTools)
 #include <opencv2/tracking.hpp>
 #include <opencv2/video/tracking.hpp> //kalman filter

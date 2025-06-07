@@ -48,54 +48,8 @@ private:
 
     TypeSupport type_;
 
-    class SubListener : public DataReaderListener
-    {
+    DataReaderListener *listener_;
 
-    public:
-
-        SubListener() {}
-
-        ~SubListener() override {}
-
-        void on_subscription_matched(
-                DataReader*,
-                const SubscriptionMatchedStatus& info) override
-        {
-            if (info.current_count_change == 1)
-            {
-                std::cout << "Subscriber matched." << std::endl;
-            }
-            else if (info.current_count_change == -1)
-            {
-                std::cout << "Subscriber unmatched." << std::endl;
-            }
-            else
-            {
-                std::cout << info.current_count_change
-                        << " is not a valid value for SubscriptionMatchedStatus current count change" << std::endl;
-            }
-        }
-
-	// callback
-        void on_data_available(DataReader* reader) override
-        {
-            SampleInfo info;
-	    ObjectPackage object;
-            if (reader->take_next_sample(&object, &info) == ReturnCode_t::RETCODE_OK)
-            {
-                if (info.valid_data)
-                {   
-                    std::cout<<"Robot ";
-                    print_bounds(object.robot_low_x(), object.robot_low_y(), object.robot_high_x(), object.robot_high_y());
-                    std::cout<<"Disturbance ";
-                    print_bounds(object.Di_low_x(), object.Di_low_y(), object.Di_high_x(), object.Di_high_y());
-                    std::cout<<"Goal ";
-                    print_bounds(object.goal_low_x(), object.goal_low_y(), object.goal_high_x(), object.goal_high_y());
-                }
-            }
-        }
-
-    } listener_;
 
 public:
 
@@ -151,7 +105,7 @@ public:
         }
 
         // Create the DataReader
-        reader_ = subscriber_->create_datareader(topic_, DATAREADER_QOS_DEFAULT, &listener_);
+        reader_ = subscriber_->create_datareader(topic_, DATAREADER_QOS_DEFAULT, listener_);
 
         if (reader_ == nullptr)
         {
@@ -161,7 +115,60 @@ public:
         return true;
     }
 
+    void registerListener(DataReaderListener * dl){
+        listener_=dl;
+    }
+
 };
+
+    class SubListener : public DataReaderListener
+    {
+
+    public:
+
+        SubListener() {}
+
+        ~SubListener() override {}
+
+        virtual void on_subscription_matched(
+                DataReader*,
+                const SubscriptionMatchedStatus& info)        {
+            if (info.current_count_change == 1)
+            {
+                std::cout << "Subscriber matched." << std::endl;
+            }
+            else if (info.current_count_change == -1)
+            {
+                std::cout << "Subscriber unmatched." << std::endl;
+            }
+            else
+            {
+                std::cout << info.current_count_change
+                        << " is not a valid value for SubscriptionMatchedStatus current count change" << std::endl;
+            }
+        }
+
+	// callback
+        void on_data_available(DataReader* reader) override
+        {
+            SampleInfo info;
+	    ObjectPackage object;
+            if (reader->take_next_sample(&object, &info) == ReturnCode_t::RETCODE_OK)
+            {
+                if (info.valid_data)
+                {   
+                    std::cout<<"Robot ";
+                    print_bounds(object.robot_low_x(), object.robot_low_y(), object.robot_high_x(), object.robot_high_y());
+                    std::cout<<"Disturbance ";
+                    print_bounds(object.Di_low_x(), object.Di_low_y(), object.Di_high_x(), object.Di_high_y());
+                    std::cout<<"Goal ";
+                    print_bounds(object.goal_low_x(), object.goal_low_y(), object.goal_high_x(), object.goal_high_y());
+                }
+            }
+        }
+
+    };
+
 
 int main(
         int,
@@ -170,6 +177,8 @@ int main(
     std::cout << "Starting subscriber. Press any key to stop it." << std::endl;
 
     ObjectPackageSubscriber mysub;
+    SubListener listener;
+    mysub.registerListener(&listener);
     if(!mysub.init())
     {
 	std::cerr << "Could not init the subscriber." << std::endl;

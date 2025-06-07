@@ -4,6 +4,7 @@ project(DDSDraw)
 
 find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Gui)
 
 set (CMAKE_CXX_STANDARD 17)
 
@@ -18,6 +19,10 @@ add_dependencies(ObjectPackage objects)
 # Publisher
 add_executable(publisher publisher.cpp)
 target_link_libraries(publisher fastcdr fastrtps ObjectPackage)
+
+##Qt Window
+# add_executable(visualise visualise.cpp)
+# target_link_libraries(visualise PRIVATE Qt5::Gui)
 
 
 # Subscriber
