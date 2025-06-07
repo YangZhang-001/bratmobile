@@ -1,13 +1,14 @@
+#pragma once
 #ifndef PRINT_HELPERS_H
 #define PRINT_HELPERS_H
 
 #include <iostream>
 
-void print_xy(auto & x, auto & y){
+inline void print_xy(float & x, float & y){
     std::cout << "x: " << x << "y: " <<y;
 }
 
-void print_bounds(auto &x_low, auto & y_low, auto& x_high, auto& y_high){
+inline void print_bounds(float &x_low, float & y_low, float& x_high, float& y_high){
     std::cout << "lower bound: ";
     print_xy(x_low, y_low);
     std::cout <<"  upper bound: ";

@@ -35,6 +35,9 @@
 
 using namespace eprosima::fastdds::dds;
 
+#ifndef PUBLISHER_CPP
+#define PUBLISHER_CPP
+
 class ObjectPackagePublisher
 {
 private:
@@ -214,6 +217,7 @@ public:
     }
 
 };
+#endif
 
 int main(
     int,
