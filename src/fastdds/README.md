@@ -20,7 +20,7 @@ Fast DDS tools
 
 ## Generating fastDDS files
 
-`fastddsgen Object.idl`
+`fastddsgen ObjectPackage.idl`
 
 ## Build
 
