@@ -16,8 +16,8 @@ add_library(ObjectPackage STATIC ObjectPackage.cxx ObjectPackagePubSubTypes.cxx)
 add_dependencies(ObjectPackage objects)
 
 # Publisher
-# add_executable(publisher publisher.cpp)
-# target_link_libraries(publisher fastcdr fastrtps ObjectPackage)
+add_executable(publisher publisher.cpp)
+target_link_libraries(publisher fastcdr fastrtps ObjectPackage)
 
 
 # Subscriber
