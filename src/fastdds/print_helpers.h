@@ -1,7 +1,7 @@
 #ifndef PRINT_HELPERS_H
 #define PRINT_HELPERS_H
 
-#include <cstdlib>
+#include <iostream>
 
 void print_xy(auto & x, auto & y){
     std::cout << "x: " << x << "y: " <<y;
