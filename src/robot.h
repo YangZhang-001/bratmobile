@@ -41,6 +41,13 @@ public:
 		return result;
 	}
 
+	static b2Vec2 bl(){
+		return b2Vec2(-ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, -ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y);	
+	}
+
+	static b2Vec2 tr(){
+		return b2Vec2(ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y);	
+	}
 
 };
 
