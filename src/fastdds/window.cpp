@@ -1,6 +1,6 @@
 #include "window.h"
 
-void DDSQtListener::on_data_available(DataReader* reader){
+void Window::on_data_available(DataReader* reader){
         SampleInfo info;
         if (reader->take_next_sample(&object, &info) == ReturnCode_t::RETCODE_OK)
         {
@@ -16,14 +16,17 @@ Window::Window(){
     hLayout=new QHBoxLayout;
     plot = new QwtPlot;
     painter=new QPainter;
+    subscriber.registerListener(this);
 }
 
 Window::~Window(){
     delete vLayout;
     delete hLayout;
+    delete plot;
+    delete painter;
 }
 
-void DDSQtListener::on_subscription_matched(
+void Window::on_subscription_matched(
     DataReader*,
     const SubscriptionMatchedStatus& info)        {
 if (info.current_count_change == 1)
@@ -41,3 +44,9 @@ else
 }
 }
 
+void Window::start(){
+    if(!subscriber.init())
+    {
+	std::cerr << "Could not init the subscriber." << std::endl;
+    }
+}

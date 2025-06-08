@@ -7,31 +7,29 @@
 
 #include <QBoxLayout>
 //#include <QPushButton>
-
-class DDSQtListener:public DataReaderListener{
-    ObjectPackage object;
-    public:
-    virtual void on_subscription_matched( DataReader*, const SubscriptionMatchedStatus& info);
-    void on_data_available(DataReader* reader);
-
-};
-
-class Window : public QWidget, public ObjectPackageSubscriber{
+class Window : public QWidget, public DataReaderListener{
     Q_OBJECT
     ObjectPackage object;
     QVBoxLayout  *vLayout=nullptr;  // vertical layout
     QHBoxLayout  *hLayout=nullptr;  // horizontal layout
     QwtPlot * plot=nullptr;
     QPainter * painter=nullptr;
-
+    ObjectPackageSubscriber subscriber;
     public:
     Window(); // default constructor - called when a Window is declared without arguments
     ~Window();
 
+    virtual void on_subscription_matched( DataReader*, const SubscriptionMatchedStatus& info);
+    void on_data_available(DataReader* reader);
+
+    void start();
 
 //useful==drawrect!
 
    // void timerEvent(QTimerEvent *);
 };
+
+
+
 
 #endif
