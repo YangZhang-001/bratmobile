@@ -10,5 +10,7 @@ int main(int argc, char *argv[])
 	// create the window as a callback for the subscriber
 	window.show();
 
+	window.start();
+
 	return app.exec();
 }
