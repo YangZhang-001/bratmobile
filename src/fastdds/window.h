@@ -19,7 +19,7 @@ class RenderArea: public QWidget{
     //explicit RenderArea(QWidget *parent = nullptr);
     protected:
 
-    //void paintEvent(QPaintEvent * event) override;
+    void paintEvent(QPaintEvent * event) override;
 };
 
 
