@@ -8,9 +8,6 @@ void DDSQtListener::on_data_available(DataReader* reader){
             {   
                 std::cout <<"invalid data!"<<std::endl;
             }
-            else{
-                plot->replot();
-            }
         }
     }
     
