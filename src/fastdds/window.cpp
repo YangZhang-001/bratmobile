@@ -1,6 +1,6 @@
 #include "window.h"
 
-void Window::on_data_available(DataReader* reader){
+void DDSQtListener::on_data_available(DataReader* reader){
         SampleInfo info;
         if (reader->take_next_sample(&object, &info) == ReturnCode_t::RETCODE_OK)
         {
@@ -26,7 +26,7 @@ Window::~Window(){
     delete hLayout;
 }
 
-void Window::on_subscription_matched(
+void DDSQtListener::on_subscription_matched(
     DataReader*,
     const SubscriptionMatchedStatus& info)        {
 if (info.current_count_change == 1)

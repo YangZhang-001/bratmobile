@@ -225,6 +225,7 @@ int main(
 {
     EventEmitter ee;
     ee.start();
-    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+    getchar();
+    //std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     ee.stop();
 }
