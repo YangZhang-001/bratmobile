@@ -11,7 +11,7 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
-find_package(Qt5 COMPONENTS Widgets REQUIRED )
+find_package(Qt5 COMPONENTS Widgets Core REQUIRED )
 # Create a library for the message / topic
 add_custom_target(
     objects
@@ -33,6 +33,6 @@ target_link_libraries(subscriber fastcdr fastrtps ObjectPackage)
 add_library(window window.h window.cpp)
 target_link_libraries(window Qt5::Widgets fastcdr fastrtps ObjectPackage)
 add_executable(qt_window qt_main.cpp window.h window.cpp )
-target_link_libraries(qt_window  PRIVATE Qt5::Widgets fastcdr fastrtps ObjectPackage)
+target_link_libraries(qt_window  PRIVATE Qt5::Widgets Qt5::Core fastcdr fastrtps ObjectPackage)
 target_link_libraries(qt_window PRIVATE qwt-qt5)
 

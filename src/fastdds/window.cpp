@@ -1,29 +1,35 @@
 #include "window.h"
 
+
 void Window::on_data_available(DataReader* reader){
         SampleInfo info;
         if (reader->take_next_sample(&object, &info) == ReturnCode_t::RETCODE_OK)
         {
-            if (!info.valid_data)
+            if (info.valid_data)
             {   
-                std::cout <<"invalid data!"<<std::endl;
+                //plot->replot();
+                //paintEvent(NULL);
             }
         }
     }
     
+
+void Window::paintEvent(QPaintEvent *){
+    painter->drawRect(robot);
+}
+
 Window::Window(){
-    vLayout=new QVBoxLayout;
-    hLayout=new QHBoxLayout;
-    plot = new QwtPlot;
-    painter=new QPainter;
+    // vLayout=new QVBoxLayout;
+    // hLayout=new QHBoxLayout;
+    // plot = new QwtPlot;
+    //painter->begin(this);
     subscriber.registerListener(this);
 }
 
 Window::~Window(){
-    delete vLayout;
-    delete hLayout;
-    delete plot;
-    delete painter;
+    // delete vLayout;
+    // delete hLayout;
+    // delete plot;
 }
 
 void Window::on_subscription_matched(
@@ -49,4 +55,5 @@ void Window::start(){
     {
 	std::cerr << "Could not init the subscriber." << std::endl;
     }
+    // painter->begin(this);
 }
