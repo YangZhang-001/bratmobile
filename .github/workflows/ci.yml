@@ -10,5 +10,6 @@ jobs:
       - name : Build
         shell: bash
         run : cmake
+        run : make
       - name : Test
         run: ctest
