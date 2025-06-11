@@ -125,6 +125,10 @@ class Motor_Out:public IOInterface {
 		return motorStep<1;
 	}
 
+	int get_motorStep(){
+		return motorStep;
+	}
+
 };	
 
 

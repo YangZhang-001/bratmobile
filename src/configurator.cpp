@@ -550,6 +550,7 @@ void Configurator::run(Configurator * c){
 			printf("current v=%i\n", c->currentVertex);
 			c->tracker->on_new_reading(&c->controlGoal);
 			}
+		c->currentTask.getAction().set_motorStep(c->control->get_motorStep());
 
 	}
 
