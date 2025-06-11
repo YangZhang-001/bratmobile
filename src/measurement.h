@@ -2,7 +2,10 @@
 #define MEASUREMENT_H
 #include "graphTools.h" 
 
-
+/**
+ * @brief Wrapper class for measurements in end criteria: need to establish if they're valid
+ * 
+ */
 class Measurement{
 protected:
     bool valid =0;

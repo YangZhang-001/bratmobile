@@ -27,17 +27,16 @@ public:
     bool change =0;
     EndCriteria endCriteria; //end criteria other than task encounters a disturbance
     Direction direction= DEFAULT;
-    int motorStep=0;
     AffordanceIndex affordance=NONE;
 
-struct Action{
-private:
+class Action{
     float linearSpeed=WHEEL_SPEED_DEFAULT*2; //used to calculate instantaneous velocity using omega
     float omega=0; //initial angular velocity is 0
     bool valid=0;
     float R=WHEEL_SPEED_DEFAULT;
     float L=WHEEL_SPEED_DEFAULT;
-    
+    int motorStep=0;
+
     public:
 
 

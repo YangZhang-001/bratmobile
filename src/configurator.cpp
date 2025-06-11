@@ -535,7 +535,6 @@ void Configurator::run(Configurator * c){
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
 			b2Transform deltaPose=b2Transform_zero;
-			//c->track_task_execution();
 			if (c->getIteration()>1){
 				deltaPose= c->tracker->track(*(c->getTask()),c->ci->data2fp, c->worldBuilder.world_objects);
 			}
