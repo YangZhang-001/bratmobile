@@ -966,7 +966,7 @@ void Configurator::pre_explore(TransitionSystem & g, const std::vector<vertexDes
 			ep=boost::edge(currentVertex, p[0], g);
 			//transitionSystem[curre].direction=transitionSystem[ep.first].direction;
 		}
-		transitionSystem[movingEdge].step=currentTask.motorStep;
+		transitionSystem[movingEdge].step=currentTask.getAction().motorStep();
 	}
 }
 

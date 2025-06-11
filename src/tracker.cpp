@@ -3,8 +3,8 @@
 b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects){
     b2Transform result=get_transform(t, pts, t.get_disturbance(), objects);
     math::applyAffineTrans(-result, t.disturbance);
-    t.motorStep--;
-    if (t.motorStep<1){
+  //  t.getAction().decrease_motorStep();
+    if (t.getAction().motorStep()<1){
         t.change=true;
     }
     return result;
@@ -13,7 +13,7 @@ b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, std::ve
 b2Transform ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects){
     b2Transform result=get_transform(t, pts, t.get_disturbance(), objects);
 	bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
-	if(t.motorStep==0 || ended){
+	if(t.getAction().motorStep()==0 || ended){
 		t.change=1;
 	}    
     return result;
@@ -39,26 +39,26 @@ b2Transform ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateCo
     if (observed_disturbance==NULL){
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
-    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.is_point()|| (t.action.getLWheelSpeed()==0 && t.action.getRWheelSpeed()==0)){
+    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.is_point()|| (t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
         if (t.disturbance.getAffIndex()==NONE){
             throw std::invalid_argument("no disturbance!");    
         }
         if (t.disturbance.bf.is_point()){
             printf("petite disturbance!");    
         }
-        if ((t.action.getLWheelSpeed()==0 && t.action.getRWheelSpeed()==0)){
+        if ((t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
             throw std::invalid_argument("not moving!");    
         }
-        return t.action.getTransform(LIDAR_SAMPLING_RATE);
+        return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
     }
     BodyFeatures predicted_bf=t.disturbance.bf;
-    predicted_bf.pose+=t.action.getTransform(LIDAR_SAMPLING_RATE); //future to sub with MM Kalman
-    auto new_d_it =find_disturbance(objects, predicted_bf, t.action.getTransform(LIDAR_SAMPLING_RATE));
+    predicted_bf.pose+=t.getAction().getTransform(LIDAR_SAMPLING_RATE); //future to sub with MM Kalman
+    auto new_d_it =find_disturbance(objects, predicted_bf, t.getAction().getTransform(LIDAR_SAMPLING_RATE));
   //  printf("objects: %i\n", objects.size());
     if (new_d_it==objects.end()){
         printf("not found!");
         observed_disturbance->set_affordance(NONE); //this will tell the task that D is null, so it can end!
-        return t.action.getTransform(LIDAR_SAMPLING_RATE);
+        return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
     }
     if ((*new_d_it).is_point()){
         throw std::invalid_argument("for some reason it's tiny!");    

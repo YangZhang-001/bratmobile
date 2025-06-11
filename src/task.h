@@ -20,7 +20,6 @@ class Task{
     char planFile[250]; //for debug
     bool debug_k=false; //delete this it's for debugging on the bhenchod pi
 
-
 public:
     friend class Configurator;
     b2Transform start=b2Transform_zero;
@@ -35,7 +34,7 @@ class Action{
     bool valid=0;
     float R=WHEEL_SPEED_DEFAULT;
     float L=WHEEL_SPEED_DEFAULT;
-    int motorStep=0;
+    int m_motorStep=0;
 
     public:
 
@@ -67,9 +66,7 @@ class Action{
 
 void setVelocities(const float & l,const float &r){
     omega = (MAX_SPEED*(r-l)/BETWEEN_WHEELS); //instant velocity, determines angle increment in willcollide
-   // recordedOmega = omega;
     linearSpeed = MAX_SPEED*(l+r)/2;
-    //recordedSpeed=linearSpeed;
     valid=1;
 }
 
@@ -131,6 +128,14 @@ void setVelocities(const float & l,const float &r){
         linearSpeed =s;
     }
 
+    void set_motorStep(int f){
+        m_motorStep=f;
+    }
+
+    int motorStep()const{
+        return m_motorStep;
+    }
+
 
 };
 
@@ -181,87 +186,9 @@ class Listener : public b2ContactListener {
         }
 	};
 
-// struct Correct{
-    
-//     Correct(){}
-
-//     void operator()( Action&, int);
-
-//     float errorCalc(Action , double);
-
-//     float getError(){
-//         return p();
-//     }
-
-//     float Ki(){
-//         return ki;
-//     }
-
-//     float Kp(){
-//         return kp;
-//     }
-//     float Kd(){
-//         return kd;
-//     }
-
-//     float get_i(){
-//         return i;
-//     }
-
-//     float get_d(){
-//         return d;
-//     }
-
-//     float update(float);
-
-//     void reset(){
-//         p_buffer=std::vector <float>(bufferSize,0);
-//         i=0;
-//         d=0;
-//         mf.buffer=std::vector<float>(mf.kernelSize,0);
-//     }
-
-//     float kp=0.075;    
-//     float kd=0, ki=0;
-//     private:
-
-
-//     float p(){
-//         float sum=0;
-//         for (int j=0;j<p_buffer.size(); j++){
-//             sum+=p_buffer[j];
-//         }
-//         return sum;
-//     }
-//     int correction_rate=2; //Hz
-//     int bufferSize= correction_rate*(FPS/MOTOR_CALLBACK);
-//     std::vector <float>p_buffer=std::vector <float>(bufferSize,0);
-//     float i=0, d=0;
-//     float tolerance_upper=0.01, tolerance_lower=-0.01;
-
-//     struct MedianFilter{
-//         int kernelSize=3;
-//         std::vector<float>buffer=std::vector<float>(kernelSize,0);
-
-//         float get_median(){
-//             std::vector <float> tmp=buffer;
-//             std::sort(tmp.begin(), tmp.end());
-//             return tmp[int(kernelSize/2)];
-//         }
-//     }mf;
-    
-
-// }correct;
-
 public:
-// friend Task::Correct;    
 
-class ControlLearner{ //to learn wheel speed controls
-    private:
-    float weight=1.0;
-};
 
-Action action;
 
 Disturbance disturbance;
 
@@ -309,8 +236,16 @@ Task(Disturbance ob, Direction d, b2Transform _start=b2Transform(b2Vec2(0.0, 0.0
     setEndCriteria();
 }
 
-
-simResult bumping_that(b2World &, int, b2Body *, float remaining = SIM_DURATION);
+/**
+ * @brief Simulates task and returns simulation results 
+ * 
+ * @param _world box2d world
+ * @param iteration configurator iteration (for printing to file)
+ * @param robot robot box2d body
+ * @param remaining simulation time remaining in seconds
+ * @return simResult 
+ */
+simResult bumping_that(b2World &_world, int iteration, b2Body * robot, float remaining = SIM_DURATION);
 
 EndCriteria getEndCriteria(const Disturbance&);
 
@@ -334,6 +269,10 @@ bool get_change(){
 Disturbance * get_disturbance(){
     return &disturbance;
 }
+
+private:
+
+Action action;
 };
 
 #endif

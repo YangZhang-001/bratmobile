@@ -52,6 +52,24 @@ Disturbance set_target(int& run, b2Transform start){
 	return result;
 }
 
+/**
+ * @brief Motor callback implemented if we're tracking execution via dead reckoning
+ * 
+ */
+class DR_Callback:public MotorCallback{
+	DR_Callback(Motor_Out *_mio): mio(_mio){
+	}
+	void step( AlphaBot &motors){
+		if (mio==NULL){
+			throw ("mio null\n");
+		}
+		motors.setRightWheelSpeed(mio->get_R()); //temporary fix because motors on despacito are the wrong way around
+		motors.setLeftWheelSpeed(mio->get_L());
+		mio->decrease_motorStep();
+		printf(",R=%f\tL=%f\n",mio->get_R(), mio->get_L());
+	}
+	}
+
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
