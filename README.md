@@ -2,7 +2,9 @@
 The purpose of this library is to showcase a framework for multi-step ahead plannig using pure input control. The navigation problem is broken down into several unique closed-loop input controllers, called Tasks. Each tasks produces a unique control behaviour (go straight, turn left/right 90 degrees) in response to a disturbance object. A supervising module, called the Configurator, can simulate sequences of Tasks  in game engine [Box2D](https://github.com/glafratta/box2d), extracts plans in the discrete and continuous domain, and queue them for execution.
 
 ## Features:
-* Flexible task duration achieved through a novel attention mechanism based on the construction of simulated distal sensors
+* Flexible task duration achieved through a novel attention mechanism (attention window) based on the construction of simulated distal sensors
+
+* Debug and navigation visualisation interface which transmits goal, obstacle and attention window coordinates to Qt using fastDDS
 
 * Work in progress: purely closed-loop Task execution in the real world using said attention mechanism
 
@@ -24,6 +26,7 @@ The indoor robot is equipped with
 * Boost
 * XOrg
 * LibGLU1
+* Qt5 (if you'd like to add debug mode for real-time control, see `src/fastdds`)
 
 `sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev`
 
