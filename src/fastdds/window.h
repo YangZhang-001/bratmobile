@@ -9,49 +9,68 @@
 #include <QBoxLayout>
 #include <QRectF>
 #include <QPainter>
-const qreal tl_x=0.09;
-const qreal tl_y=0.09;
-const qreal br_x=-0.18;
-const qreal br_y=-0.09;
 
-class RenderArea: public QWidget{
-    Q_OBJECT
-    //explicit RenderArea(QWidget *parent = nullptr);
-    protected:
-
-    void paintEvent(QPaintEvent * event) override;
-};
-
-
-//#include <QPushButton>
 class Window : public QWidget, public DataReaderListener{
     Q_OBJECT
-    ObjectPackage object;
-    // QVBoxLayout  *vLayout=nullptr;  // vertical layout
-    // QHBoxLayout  *hLayout=nullptr;  // horizontal layout
-    // QwtPlot * plot=nullptr;
-    QPainter * painter=new QPainter(this);
+    
+    QRect m_geometry=QRect(-300, -300, 600, 600); //size of Qtwindow in pixel (bl.x, bl.y, w, l)
+    QRect logical_rect=QRect(-102, -102, 204, 204); //world coordinate window
     ObjectPackageSubscriber subscriber;
-    QRectF robot=QRectF(0.09, 0.09, 0.0135*2, 0.09*2);
+    const int scale=100;
+    QPoint point=QPoint(0, 0);
+    QRectF robot=QRectF(-0.18*scale, -0.09*scale, 0.135*2*scale, 0.09*2*scale);
 
-    //QPointF tl(tl_x, tl_y), br(br_x, br_y);
+    protected:
+    void paintEvent(QPaintEvent *)override;
+
+    /**
+     * @brief Unpacks object composed of fundamental data types and groups the data into Qt objects for painting
+     * 
+     */
+    class UnpackedObject{
+        QPoint m_goal;
+        QRect m_attentionWindow;
+
+        public:
+
+        void set_goal(float x, float y){
+            m_goal.setX(x);
+            m_goal.setY(y);
+        }
+
+        QPoint goal(){
+            return m_goal;
+        }
+
+        /**
+         * @brief Sets attention window, assumed to always be an upright box
+         * 
+         */
+        void set_attention_window(float hx, float hy, float lx, float ly){
+            m_attentionWindow=QRect(QPoint(lx, hy), QPoint(hx, ly));
+        }
+
+        QRect attentionWindow(){
+            return m_attentionWindow;
+        }
+    }unpacked;
+
     public:
     Window(); // default constructor - called when a Window is declared without arguments
-    ~Window();
+    ~Window(){}
 
     virtual void on_subscription_matched( DataReader*, const SubscriptionMatchedStatus& info);
     void on_data_available(DataReader* reader);
 
-    void paintEvent(QPaintEvent *)override;
     /**
      * @brief starts subscriber acquisition from publisher
      * 
      */
     void start();
 
-//useful==drawrect!
 
-   // void timerEvent(QTimerEvent *);
+
+
 };
 
 

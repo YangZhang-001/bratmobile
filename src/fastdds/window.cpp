@@ -3,10 +3,14 @@
 
 void Window::on_data_available(DataReader* reader){
         SampleInfo info;
+        ObjectPackage object;
         if (reader->take_next_sample(&object, &info) == ReturnCode_t::RETCODE_OK)
         {
             if (info.valid_data)
             {   
+                unpacked.set_goal(object.goal_low_x()*scale, object.goal_low_y()*scale);
+                unpacked.set_attention_window(object.robot_high_x()*scale, object.robot_high_y()*scale, object.robot_low_x()*scale, object.robot_low_y()*scale);
+                update();
                 //plot->replot();
                 //paintEvent(NULL);
             }
@@ -15,22 +19,25 @@ void Window::on_data_available(DataReader* reader){
     
 
 void Window::paintEvent(QPaintEvent *){
-    painter->drawRect(robot);
+    std::cout<<"painting event!"<<std::endl;
+    QPainter painter(this);
+    painter.setWindow(logical_rect);
+    painter.setPen(QPen());
+    painter.drawPoint(point);
+    painter.setPen(QColor("red"));
+    painter.drawPoint(unpacked.goal());
+    painter.setPen(QColor("green"));
+    painter.drawRect(unpacked.attentionWindow());
+    painter.setPen(QColor("cyan"));
+    painter.drawRect(robot);
 }
 
 Window::Window(){
-    // vLayout=new QVBoxLayout;
-    // hLayout=new QHBoxLayout;
-    // plot = new QwtPlot;
-    //painter->begin(this);
+    update();
     subscriber.registerListener(this);
+    setGeometry(m_geometry);
 }
 
-Window::~Window(){
-    // delete vLayout;
-    // delete hLayout;
-    // delete plot;
-}
 
 void Window::on_subscription_matched(
     DataReader*,

@@ -176,7 +176,7 @@ public:
     void timerEvent() {
 	ObjectPackage object;
     //robot init
-	object.robot_high_x(0.135-0.045);
+	object.robot_high_x(1);
     object.robot_high_y(0.09);
     object.robot_low_x(-0.135-0.045);
     object.robot_low_y(-0.09);
