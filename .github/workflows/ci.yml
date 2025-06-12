@@ -33,4 +33,4 @@ jobs:
         shell: bash
         run : sh build.sh
       - name : Test
-        run: make test
+        run: ctest
