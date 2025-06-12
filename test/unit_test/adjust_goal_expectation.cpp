@@ -23,6 +23,7 @@ int main(int argc, char** argv){
     b2Transform observed =b2MulT(configurator.getTask()->disturbance.pose(), configurator.controlGoal.disturbance.pose());
     b2Transform difference=expected-observed;
     if (difference.p.Length()>0.001 && difference.q.GetAngle()>0.001){ //accounting for rounding error
+        std::cout<<"difference: "<<difference.p.Length();
         return 1;
     }
     return 0;

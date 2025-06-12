@@ -17,6 +17,7 @@ jobs:
           git clone https://github.com/glafratta/box2d.git
           cd box2d
           sh build.sh
+          sudo make install
       - name : Build
         shell: bash
         run : sh build.sh
