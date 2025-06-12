@@ -13,9 +13,9 @@ jobs:
           sudo apt-get install -y g++ cmake libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev
       - name : Install Box2D v2.4.1
         run : |
+          cd ..
           git clone https://github.com/glafratta/box2d.git
           cd box2d
-          cmake .
           sh build.sh
       - name : Build
         shell: bash
