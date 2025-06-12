@@ -5,9 +5,9 @@ void Configurator::init(Task _task){
 	controlGoal=_task;
 	currentTask=_task;
 	//previousTimeScan = std::chrono::high_resolution_clock::now();
-	movingVertex=boost::add_vertex(transitionSystem);
+	//movingVertex=boost::add_vertex(transitionSystem);
 	transitionSystem[movingVertex].Di=controlGoal.disturbance;
-	currentVertex=movingVertex;
+	//currentVertex=movingVertex;
 	currentTask.action.setVelocities(0,0);
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
 
