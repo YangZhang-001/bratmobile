@@ -20,6 +20,15 @@ jobs:
           cmake .
           sudo make install
           cd ../bratmobile
+      - name : Install CppTimer
+        shell: bash
+        run : |
+          cd ..
+          git clone https://github.com/berndporr/cppTimer.git
+          cd cppTimer
+          cmake . && make
+          sudo make install
+          cd ../bratmobile
       - name : Build
         shell: bash
         run : sh build.sh
