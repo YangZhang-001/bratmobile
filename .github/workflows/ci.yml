@@ -10,7 +10,7 @@ jobs:
       - name: Install dependencies
         run : |
           sudo apt-get update
-          sudo apt-get install -y g++ cmake libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev
+          sudo apt-get install -y g++ cmake libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-deb
       - name : Install Box2D v2.4.1
         shell: bash
         run : |
@@ -24,4 +24,4 @@ jobs:
         shell: bash
         run : sh build.sh
       - name : Test
-        run: ctest
+        run: make test
