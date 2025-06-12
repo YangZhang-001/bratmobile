@@ -20,7 +20,7 @@ target_link_libraries(unit_test gtest gtest_main)
 target_link_libraries(unit_test CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 include(GoogleTest)
 
-#gtest_discover_tests(unit_test)
+gtest_discover_tests(unit_test)
 
 
 INCLUDE_DIRECTORIES("/usr/local/include/")

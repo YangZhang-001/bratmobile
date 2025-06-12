@@ -14,8 +14,8 @@ int main(int argc, char** argv){
     configurator.getTask()->disturbance=obstacle;
     configurator.plan={v1};
     b2Transform deltaPose(b2Vec2(x,y), b2Rot(a));
-    configurator.update_graph(configurator.transitionSystem, deltaPose);
-    configurator.getTask()->disturbance.bf.pose.p.x+=0.02;
+    configurator.update_graph(configurator.transitionSystem, deltaPose); //this will not update the currentTask.disturbance
+    configurator.getTask()->disturbance.bf.pose.p.x+=0.02; //add some random noise
     configurator.getTask()->disturbance.bf.pose.p.y+=0.03;
     configurator.adjust_goal_expectation();
     vertexDescriptor plan_end=configurator.plan[configurator.plan.size()-1];
@@ -23,7 +23,7 @@ int main(int argc, char** argv){
     b2Transform expected =b2MulT(wc.get_disturbance().pose(), configurator.transitionSystem[plan_end].Di.pose()); //position of goal wrt current disturbance
     b2Transform observed =b2MulT(configurator.getTask()->disturbance.pose(), configurator.controlGoal.disturbance.pose());
     b2Transform difference=expected-observed;
-    if (difference.p.Length()>0.001 && fabs(difference.q.GetAngle())>0.001){ //accounting for rounding error
+    if (difference.p.Length()>0.001 || fabs(difference.q.GetAngle())>0.001){ //accounting for rounding error
         std::cout<<"difference: "<<difference.p.Length();
         return 1;
     }
