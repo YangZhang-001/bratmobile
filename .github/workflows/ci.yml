@@ -33,4 +33,5 @@ jobs:
         shell: bash
         run : sh build.sh
       - name : Test
-        run: ctest
+        run: ctest --output-on-failure --verbose
+

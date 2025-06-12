@@ -1,6 +1,10 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
 
+/**
+ * @brief Tests whether the tracked disturbance presents an unexpected shitf, the robot is able to track the goal assuming constant relationships between obstacle and goal
+ * 
+ */
 TEST_P(ConfiguratorTest2DT, adjustGoal){
     /**
      * @brief Setup: robot drives towards an obstacle and has a target position behind it
