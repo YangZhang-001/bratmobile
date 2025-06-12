@@ -24,8 +24,9 @@ The indoor robot is equipped with
 * Boost
 * XOrg
 * LibGLU1
+* Gtest
 
-`sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev`
+`sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev`
 
 ### Compile from source
 

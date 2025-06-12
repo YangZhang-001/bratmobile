@@ -5,9 +5,9 @@ void Configurator::init(Task _task){
 	controlGoal=_task;
 	currentTask=_task;
 	//previousTimeScan = std::chrono::high_resolution_clock::now();
-	movingVertex=boost::add_vertex(transitionSystem);
+	//movingVertex=boost::add_vertex(transitionSystem);
 	transitionSystem[movingVertex].Di=controlGoal.disturbance;
-	currentVertex=movingVertex;
+	//currentVertex=movingVertex;
 	currentTask.action.setVelocities(0,0);
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
 
@@ -1076,7 +1076,7 @@ void Configurator::adjust_goal_expectation(){
 		from_Di=currentTask.from_Di();
 		//}
 		//b2Transform sum_transform=from_Di+task_controller->to_goal(); //where goal should be
-		b2Transform goal_robotPOV= b2Mul(from_Di,task_controller->to_goal()); //position of goal from the robot based on where it should be from Di
+		b2Transform goal_robotPOV= b2Mul(from_Di,task_controller->disturbance_to_goal()); //position of goal from the robot based on where it should be from Di
 		controlGoal.disturbance.bf.pose=goal_robotPOV;
 		// debug::print_pose(b2MulT(from_Di, sum_transform), "from Di to sum transform:");
 		// debug::print_pose(b2Mul(from_Di,task_controller->to_goal()), "from Di mulT to goal:");

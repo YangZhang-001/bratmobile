@@ -11,7 +11,7 @@
 class Controller{
     protected:
     Disturbance disturbance_q; //disturbance being counteracted as in the cognitive map
-    b2Transform _to_goal=b2Transform_zero;    
+    b2Transform _D_to_goal=b2Transform_zero;    
     /**
      * @brief Get the current vertex 
      * 
@@ -58,9 +58,16 @@ class Controller{
         disturbance_q=d;
     }
 
-    b2Transform to_goal(){
-        return _to_goal;
+    /**
+     * @brief returns the distance between the disturbance_q and the goal
+     * this is used to maintain constant ratios during tracking
+     * 
+     * @return b2Transform 
+     */
+    b2Transform disturbance_to_goal(){
+        return _D_to_goal;
     }
+
 };
 
 /**

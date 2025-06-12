@@ -2,8 +2,8 @@
 
 int main(int argc, char** argv){
     Task goal(Disturbance(PURSUE, b2Vec2(1.0, 0)), DEFAULT);
-    float x=atof(argv[1]), y=atof(argv[2]), a=atof(argv[3]);
-    Disturbance obstacle(PURSUE, b2Vec2(0.5, 0), 0);
+    float x=atof(argv[1]), y=atof(argv[2]), a=atof(argv[3]); //to go in delta pose
+    Disturbance obstacle(PURSUE, b2Vec2(0.5, 0), 0); //robot is driving towards an obstacle before it avoids it
     Configurator configurator(goal);
     Wise_Controller wc;
     wc.set_disturbance(obstacle);
@@ -14,15 +14,17 @@ int main(int argc, char** argv){
     configurator.getTask()->disturbance=obstacle;
     configurator.plan={v1};
     b2Transform deltaPose(b2Vec2(x,y), b2Rot(a));
-    configurator.update_graph(configurator.transitionSystem, deltaPose);
-    configurator.getTask()->disturbance.bf.pose.p.x+=0.02;
+    configurator.update_graph(configurator.transitionSystem, deltaPose); //this will not update the currentTask.disturbance
+    configurator.getTask()->disturbance.bf.pose.p.x+=0.02; //add some random noise
     configurator.getTask()->disturbance.bf.pose.p.y+=0.03;
     configurator.adjust_goal_expectation();
     vertexDescriptor plan_end=configurator.plan[configurator.plan.size()-1];
+    //difference between og task di and goal
     b2Transform expected =b2MulT(wc.get_disturbance().pose(), configurator.transitionSystem[plan_end].Di.pose()); //position of goal wrt current disturbance
     b2Transform observed =b2MulT(configurator.getTask()->disturbance.pose(), configurator.controlGoal.disturbance.pose());
     b2Transform difference=expected-observed;
-    if (difference.p.Length()>0.001 && difference.q.GetAngle()>0.001){ //accounting for rounding error
+    if (difference.p.Length()>0.001 || fabs(difference.q.GetAngle())>0.001){ //accounting for rounding error
+        std::cout<<"difference: "<<difference.p.Length();
         return 1;
     }
     return 0;

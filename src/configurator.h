@@ -29,11 +29,11 @@ public:
 	std::chrono::high_resolution_clock::time_point previousTimeScan;
 	CoordinateContainer data2fp;
 	int bodies=0;
-	TransitionSystem transitionSystem;
+	TransitionSystem transitionSystem=TransitionSystem(1);
 	StateMatcher matcher;
 	WorldBuilder worldBuilder;
-	vertexDescriptor movingVertex;
-	vertexDescriptor currentVertex;
+	vertexDescriptor movingVertex=0;
+	vertexDescriptor currentVertex=movingVertex;
 	edgeDescriptor movingEdge, currentEdge;
 	std::vector<vertexDescriptor>plan, current_vertices;
 	GoalChanger * goal_changer=NULL;	
@@ -265,6 +265,8 @@ void register_tracker(Tracker * _tracker){
 Tracker * get_tracker()const {
 	return tracker;
 }
+
+
 
 };
 
