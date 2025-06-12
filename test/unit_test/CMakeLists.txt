@@ -15,12 +15,17 @@ include(CTest)
 
 include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
 
-add_executable(unit_test g_configurator.cpp)
-target_link_libraries(unit_test gtest gtest_main)
-target_link_libraries(unit_test CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+add_executable(GTest_HighLevel GTest_HighLevel.cpp)
+target_link_libraries(GTest_HighLevel  gtest gtest_main)
+target_link_libraries(GTest_HighLevel  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 include(GoogleTest)
+add_executable(GTest_AdjustGoal GTest_AdjustGoal.cpp)
+target_link_libraries(GTest_AdjustGoal  gtest gtest_main)
+target_link_libraries(GTest_AdjustGoal  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
-gtest_discover_tests(unit_test)
+
+gtest_discover_tests(GTest_HighLevel)
+gtest_discover_tests(GTest_AdjustGoal)
 
 
 INCLUDE_DIRECTORIES("/usr/local/include/")
@@ -61,11 +66,9 @@ add_executable(kalman ../test_essentials.h kalman.cpp)
 add_executable(filter_box ../test_essentials.h filter_box.cpp)
 add_executable(estimate_vertex ../test_essentials.h estimate_vertex.cpp)
 add_executable(calc_transform ../test_essentials.h calc_transform.cpp)
-add_executable(adjust_goal_expectation ../test_essentials.h adjust_goal_expectation.cpp)
 add_executable(PID_inst PID.cpp)
 
 target_link_libraries(PID_inst CloCK ${OpenCV_LIBS} box2d rt)
-target_link_libraries(adjust_goal_expectation CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(calc_transform CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
 target_link_libraries(filter_box CloCK ${OpenCV_LIBS} box2d)
@@ -337,16 +340,6 @@ add_test(NAME calc_transform_fw COMMAND calc_transform -0.3 0 ) #robot moves fw,
 add_test(NAME calc_transform_back COMMAND calc_transform 0.3 0 ) #robot moves back
 add_test(NAME calc_transform_l COMMAND calc_transform 0 -0.3 ) #robot moves l
 add_test(NAME calc_transform_r COMMAND calc_transform 0 0.3 ) #robot moves r
-
-add_test(NAME adjust_goal_no COMMAND adjust_goal_expectation 0 0 0 ) #robot hasn't moved but disturbance has shifted
-add_test(NAME adjust_goal_api COMMAND adjust_goal_expectation 0 0 1.5714 ) #robot moved by pi/2
-add_test(NAME adjust_goal_a COMMAND adjust_goal_expectation 0 0 -0.23 ) #robot moved not by a multiple/divisor of pi
-add_test(NAME adjust_goal_x COMMAND adjust_goal_expectation 0.4 0 0 ) #robot moves on x axis
-add_test(NAME adjust_goal_y COMMAND adjust_goal_expectation 0 0.3 0 ) #robot moves on y axis
-add_test(NAME adjust_goal_xy COMMAND adjust_goal_expectation -.4 0.3 0 ) #robot moves on xy axex
-add_test(NAME adjust_goal_xa COMMAND adjust_goal_expectation -.4 0 0.12 ) #robot moves on x axis + rotates
-add_test(NAME adjust_goal_ya COMMAND adjust_goal_expectation 0 -.3 0.12 ) #robot moves on y axix + rotates
-add_test(NAME adjust_goal_xya COMMAND adjust_goal_expectation 0.8 -.05 -0.45 ) #robot shifts and rotates
 
 add_test(NAME PID_inst COMMAND PID_inst) #robot shifts and rotates
 

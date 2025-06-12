@@ -1,6 +1,8 @@
 #ifndef BOX2D_HELPERS_H
 #define BOX2D_HELPERS_H
 #include "box2d/box2d.h"
+#include <ostream>
+#include <vector>
 
 /**
  * @brief Searches vector or a certain item
@@ -30,6 +32,8 @@ void operator+=(Transform &, Transform const&);
 Transform operator+( Transform const &, Transform const &);
 Transform operator-( Transform const &, Transform const &);
 Transform operator-(Transform const &);
+
+
 
 
 #endif

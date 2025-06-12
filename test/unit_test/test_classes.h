@@ -4,6 +4,22 @@
 #include <gtest/gtest.h>
 #include "../callbacks.h"
 
+/**
+ * @brief Setting up ostream operator for use with GTest
+ * 
+ * @param os 
+ * @param t 
+ * @return std::ostream& 
+ */
+std::ostream& operator<<(std::ostream& os, const b2Transform& t){
+    os << "b2Transform(pos=("
+       << t.p.x << ", " << t.p.y << "), rot=("
+       << t.q.c << ", " << t.q.s << "))";
+    return os;
+}
+
+
+
 //using ::testing::Test;  // GTest test fixture
  /**
  * @brief Test fixture for testing high-level processes such as planning and state-space exploration
@@ -126,13 +142,6 @@ public:
 
 };
 
-/**
- * @brief Configurator fixture parametrised for floats
- * 
- */
-class ConfiguratorTestFloat:public ConfiguratorTest, public testing::WithParamInterface<float>{
-
-};
 
 /**
  * @brief Configurator fixture parametrised for b2Transforms
