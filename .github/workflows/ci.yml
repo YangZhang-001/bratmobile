@@ -19,6 +19,6 @@ jobs:
           sh build.sh
       - name : Build
         shell: bash
-        run : cmake . && make
+        run : sh build.sh
       - name : Test
         run: ctest
