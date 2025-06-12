@@ -14,6 +14,7 @@
 #include <boost/graph/copy.hpp>
 #include <utility>
 #include "disturbance.h"
+#include "box2d_helpers.h"
 
 // namespace math{
 // //	void applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose);
@@ -21,22 +22,11 @@
 
 // };
 
-template <class I>
-auto check_vector_for(std::vector <I>& vector, const I& item){
-	for (int i=0; i<vector.size(); i++){
-		if (vector[i]==item){
-			return vector.begin()+i;
-		}
-	}
-	return vector.end();
-}
 
 const float NAIVE_PHI=10.0;
 
 class Task;
 enum VERTEX_LABEL {UNLABELED, MOVING, ESCAPE, ESCAPE2};
-
-float angle_subtract(float a1, float a2);
 
 struct ComparePair{
 	ComparePair()=default;
@@ -153,14 +143,14 @@ struct StateDifference{
 };
 
 
-typedef b2Transform Transform;
-bool operator!=(Transform const &, Transform const &);
-bool operator==(Transform const &, Transform const &);
-void operator-=(Transform &, Transform const&);
-void operator+=(Transform &, Transform const&);
-Transform operator+( Transform const &, Transform const &);
-Transform operator-( Transform const &, Transform const &);
-Transform operator-(Transform const &);
+// typedef b2Transform Transform;
+// bool operator!=(Transform const &, Transform const &);
+// bool operator==(Transform const &, Transform const &);
+// void operator-=(Transform &, Transform const&);
+// void operator+=(Transform &, Transform const&);
+// Transform operator+( Transform const &, Transform const &);
+// Transform operator-( Transform const &, Transform const &);
+// Transform operator-(Transform const &);
 
 
 // typedef std::pair<bool, float> orientation;
