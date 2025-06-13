@@ -19,6 +19,23 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
     return os;
 }
 
+class DebugConfigurator:public Configurator{
+    friend class HighLevelTest;
+    public:
+    int n_edges(){return transitionSystem.m_edges.size();}
+
+    int n_vertices(){return transitionSystem.m_vertices.size();}
+
+    const std::vector <vertexDescriptor>& get_plan(){ return plan;}
+
+    bool plan_reaches_horizon();
+
+    bool plan_reaches_goal();
+
+    vertexDescriptor plan_end(){return plan[plan.size()-1];}
+
+    b2Vec2 plan_end_b2Vec2(){return transitionSystem[plan_end()].endPose.p;}
+};
 
 
  /**
@@ -29,51 +46,40 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
  */
 class HighLevelTest: public testing::Test, public testing::WithParamInterface<std::pair<bool, std::string>>{
     protected:
-    Configurator configurator;
+
+
+    DebugConfigurator * configurator=NULL;
     Wise_Controller wc;
     ClosedLoop_Tracker tracker;
     LIDAR_In ci;
     Motor_Out m;
 
     void SetUp()override{
+        configurator=new DebugConfigurator();
         init();
     }
 
-     void TearDown()override{
-        configurator.transitionSystem.clear();
-        configurator.transitionSystem=TransitionSystem(1);
-     }
+    void TearDown()override{
+        try{
+            delete configurator;
+        }
+        catch(...){
+            std::cout <<"caught!"<<std::endl;
+        }
+    }
     /**
      * @brief Initialises Fixture
      * 
      * @param goal overarching goal
      */
-    void init( const Task& goal=Task()){
-        configurator.init(goal);
-        configurator.register_controller(&wc);
-        configurator.register_tracker(&tracker);
-        configurator.registerInterface(&ci, &m);
-        configurator.setSimulationStep(ROBOT_HALFWIDTH*2);
-    }
+    void init( const Task& goal=Task());
     /**
      * @brief Tests planning
      * 
      * @param folder a folder containing LIDAR scans names "map%04i.dat"
      * 
      */
-    std::vector<vertexDescriptor> get_plan(std::string folder){
-        DataInterface di(&ci);
-        di.set_folder(folder);
-        di.newScanAvail();
-        configurator.data2fp= ci.data2fp;
-        try{
-            configurator.Spawner();
-        }
-        catch(std::exception &e){
-            std::cerr<<e.what()<<std::endl;
-        }
-        return configurator.get_plan();
-    }
+    std::vector<vertexDescriptor> get_plan(std::string folder);
 
 
     
@@ -83,7 +89,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
 /**
  * @brief Fixture class for testing Configurator functions
  */
-class ConfiguratorTest: public Configurator, public testing::Test{ //, testing::TestWithParam<float>
+class ConfiguratorTest: public DebugConfigurator, public testing::Test{ //, testing::TestWithParam<float>
 protected:
     /**
      * @brief Allows to set parameters manually from the Configurator
@@ -152,6 +158,30 @@ class ConfiguratorTest2DT:public ConfiguratorTest, public testing::WithParamInte
 
 };
 
+bool DebugConfigurator::plan_reaches_horizon(){
+    return fabs(plan_end_b2Vec2().Length()-BOX2DRANGE)<0.02;
+}
+
+bool DebugConfigurator::plan_reaches_goal(){
+    return (plan_end_b2Vec2()-controlGoal.disturbance.pose().p).Length()<0.02;
+}
+
+void HighLevelTest::init( const Task& goal){
+    configurator->init(goal);
+    configurator->currentTask.set_change(true);
+    configurator->register_controller(&wc);
+    configurator->register_tracker(&tracker);
+    configurator->registerInterface(&ci, &m);
+    configurator->setSimulationStep(ROBOT_HALFWIDTH*2);
+}
 
 
+std::vector<vertexDescriptor> HighLevelTest::get_plan(std::string folder){
+    DataInterface di(&ci);
+    di.set_folder(folder);
+    di.newScanAvail();
+    configurator->data2fp= ci.data2fp;
+    configurator->Spawner();
+    return configurator->get_plan();
+}
 #endif

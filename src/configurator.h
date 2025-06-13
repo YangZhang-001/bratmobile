@@ -28,8 +28,6 @@ protected:
 	GoalChanger * goal_changer=NULL;	
 	std::vector<vertexDescriptor>plan, current_vertices;
 	int bodies=0;
-
-	public:
 	Task controlGoal;
 	CoordinateContainer data2fp;
 	TransitionSystem transitionSystem=TransitionSystem(1);
@@ -39,7 +37,9 @@ protected:
 	vertexDescriptor currentVertex=movingVertex;
 	edgeDescriptor movingEdge, currentEdge;
 
-Configurator()=default;
+	public:
+
+Configurator(){};
 
 Configurator(Task _task){
 	init(_task);
@@ -279,9 +279,6 @@ LIDAR_In * get_lidar_interface(){
 	return ci;
 }
 
-const std::vector <vertexDescriptor>& get_plan(){
-	return plan;
-}
 
 
 

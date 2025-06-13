@@ -1,7 +1,6 @@
 #include "../callbacks.h"
 
 int main(int argc, char** argv){
-    printf("lin 4\n");
     bool debug=1;
     Disturbance target1;
     vertexDescriptor solution=TransitionSystem::null_vertex();
@@ -23,24 +22,24 @@ int main(int argc, char** argv){
     ClosedLoop_Tracker tracker;
     conf.register_tracker(&tracker);
     conf.register_controller(&wc);
-    conf.simulationStep=0.27;
+    conf.setSimulationStep(0.27);
     LIDAR_In ci;
     Motor_Out m;
     conf.registerInterface(&ci, &m);
     DataInterface di(&ci);
     if (argc>1){
-        di.folder=argv[1];
+        di.set_folder(argv[1]);
         di.newScanAvail();          
     }
     conf.data2fp = ci.data2fp;
     conf.Spawner();
-    auto og_plan=conf.plan;
+    auto og_plan=conf.get_plan();
     int n_v=conf.transitionSystem.m_vertices.size();
     conf.addIteration();
     int og_step=0;
-    if (!conf.plan.empty()){
-        conf.currentVertex=*(conf.plan.end()-1);
-        vertexDescriptor prev=*(conf.plan.end()-2);
+    if (!conf.get_plan().empty()){
+        conf.currentVertex=*(conf.get_plan().end()-1);
+        vertexDescriptor prev=*(conf.get_plan().end()-2);
     }
     conf.change_task();
     if (argv[1]=="empty"){
