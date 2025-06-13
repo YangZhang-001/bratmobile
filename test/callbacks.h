@@ -119,10 +119,11 @@ public:
         ci->setReady(1);
         ci->iteration++;
         return true;
-		
-
-
 	}
+
+    void set_folder(std::string str){
+        folder=str;
+    }
 };
 
 class StepCallback{

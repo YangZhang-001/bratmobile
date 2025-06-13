@@ -5,7 +5,7 @@ TEST_P(HighLevelTest, Plan){
     Task goal(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
     init(goal);
     DataInterface di(&ci);
-    di.folder=GetParam().c_str();
+    di.set_folder(GetParam());
     di.newScanAvail();
     configurator.data2fp= ci.data2fp;
     configurator.Spawner();
