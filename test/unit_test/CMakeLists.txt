@@ -15,6 +15,9 @@ find_package(GTest CONFIG REQUIRED)
 
 include(CTest)
 
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
+
 include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
 include(GoogleTest)
 add_executable(GTest_HighLevel GTest_HighLevel.cpp)
@@ -25,7 +28,7 @@ add_executable(GTest_AdjustGoal GTest_AdjustGoal.cpp)
 target_link_libraries(GTest_AdjustGoal gtest gtest_main)
 target_link_libraries(GTest_AdjustGoal  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
-add_executable(GTest_Configurator GTest_Configurator)
+add_executable(GTest_Configurator GTest_Configurator.cpp)
 target_link_libraries(GTest_Configurator gtest gtest_main)
 target_link_libraries(GTest_Configurator  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
