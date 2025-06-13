@@ -39,7 +39,10 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
         init();
     }
 
-     void TearDown()override{}
+     void TearDown()override{
+        configurator.transitionSystem.clear();
+        configurator.transitionSystem=TransitionSystem(1);
+     }
     /**
      * @brief Initialises Fixture
      * 
