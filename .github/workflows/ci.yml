@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
@@ -33,4 +33,5 @@ jobs:
         shell: bash
         run : sh build.sh
       - name : Test
-        run: ctest
+        run: ctest --output-on-failure --verbose
+

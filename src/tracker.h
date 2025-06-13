@@ -7,7 +7,7 @@
  */
 class Tracker{
     protected:
-    ThresholdLearner *learner;
+    ThresholdLearner *learner=NULL;
     public:
     Threshold threshold=Threshold();
 
