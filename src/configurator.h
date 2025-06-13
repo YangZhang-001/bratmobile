@@ -19,24 +19,25 @@ protected:
 	Task currentTask; //need to make thread safe?
 	Controller * task_controller=NULL;
 	Tracker * tracker=NULL;
-public:
 	LIDAR_In * ci=NULL;
 	Motor_Out * control=NULL;
 	bool running =0;
 	std::thread * LIDAR_thread=NULL;
 	float simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);
-	Task controlGoal;
 	std::chrono::high_resolution_clock::time_point previousTimeScan;
-	CoordinateContainer data2fp;
+	GoalChanger * goal_changer=NULL;	
+	std::vector<vertexDescriptor>plan, current_vertices;
 	int bodies=0;
+
+	public:
+	Task controlGoal;
+	CoordinateContainer data2fp;
 	TransitionSystem transitionSystem=TransitionSystem(1);
 	StateMatcher matcher;
 	WorldBuilder worldBuilder;
 	vertexDescriptor movingVertex=0;
 	vertexDescriptor currentVertex=movingVertex;
 	edgeDescriptor movingEdge, currentEdge;
-	std::vector<vertexDescriptor>plan, current_vertices;
-	GoalChanger * goal_changer=NULL;	
 
 Configurator()=default;
 
@@ -257,6 +258,10 @@ void register_controller(Controller * controller){
 	task_controller=controller;
 }
 
+Controller* get_controller(){
+	return task_controller;
+}
+
 void register_tracker(Tracker * _tracker){
 	tracker=_tracker;
 	tracker->init(&controlGoal);
@@ -264,6 +269,18 @@ void register_tracker(Tracker * _tracker){
 
 Tracker * get_tracker()const {
 	return tracker;
+}
+
+Motor_Out * get_motor_interface(){
+	return control;
+}
+
+LIDAR_In * get_lidar_interface(){
+	return ci;
+}
+
+const std::vector <vertexDescriptor>& get_plan(){
+	return plan;
 }
 
 

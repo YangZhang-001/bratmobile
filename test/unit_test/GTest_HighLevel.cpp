@@ -1,6 +1,14 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
 
+TEST_F(HighLevelTest, Init){
+    EXPECT_TRUE(configurator.get_motor_interface()!=(NULL));
+    EXPECT_TRUE(configurator.get_lidar_interface()!= NULL);
+    EXPECT_TRUE(configurator.get_tracker()!=NULL);
+    EXPECT_TRUE(configurator.get_controller()!=NULL);
+
+}
+
 TEST_P(HighLevelTest, Plan){
     Task goal;
     if (GetParam().first){
@@ -9,7 +17,7 @@ TEST_P(HighLevelTest, Plan){
     }
     init(goal);
     get_plan(GetParam().second);
-    vertexDescriptor planEnd=configurator.plan[configurator.plan.size()-1];
+    vertexDescriptor planEnd=configurator.get_plan()[configurator.get_plan().size()-1];
     float difference;
     if (!GetParam().first){
         difference=BOX2DRANGE-configurator.transitionSystem[planEnd].endPose.p.Length();
@@ -17,15 +25,15 @@ TEST_P(HighLevelTest, Plan){
     else{
         difference=(configurator.transitionSystem[planEnd].endPose.p-goal.disturbance.pose().p).Length();
     }
-    EXPECT_TRUE(configurator.plan.size()!=0);
+    EXPECT_TRUE(configurator.get_plan().size()!=0);
     EXPECT_LT(fabs(difference), 0.03);
 }
 
-INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(std::pair<0, std::string("")>,
-                                                                   std::pair<0, std::string("../cul_de_sac/")>,
-                                                                   std::pair <1, std::string("../target_40cm/")>,
-                                                                   std::pair <1, std::string("../target_68cm/")>,
-                                                                   std::pair <1, std::string("../cul_de_sac/")>);
+INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(std::pair(false, std::string()),
+                                                                   std::pair(false, std::string("../cul_de_sac/")),
+                                                                   std::pair (true, std::string("../target_40cm/")),
+                                                                   std::pair (true, std::string("../target_68cm/")),
+                                                                   std::pair (true, std::string("../cul_de_sac/"))));
 
 /**
  * @brief Tests split steps

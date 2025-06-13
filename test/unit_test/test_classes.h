@@ -21,7 +21,6 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
 
 
 
-//using ::testing::Test;  // GTest test fixture
  /**
  * @brief Test fixture for testing high-level processes such as planning and state-space exploration
  * 
@@ -36,14 +35,14 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     LIDAR_In ci;
     Motor_Out m;
 
-    // void SetUp()override{
-    //     //configurator.transitionSystem.m_edges.clear();
-    //     // configurator.transitionSystem.m_vertices.clear();
-    //     // boost::clear_vertex(configurator.movingVertex, configurator.transitionSystem);
+    void SetUp()override{
+        //configurator.transitionSystem.m_edges.clear();
+        // configurator.transitionSystem.m_vertices.clear();
+        // boost::clear_vertex(configurator.movingVertex, configurator.transitionSystem);
 
-    // }
+    }
 
-    // void TearDown()override{}
+     void TearDown()override{}
     /**
      * @brief Initialises Fixture
      * 
@@ -54,7 +53,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
         configurator.register_controller(&wc);
         configurator.register_tracker(&tracker);
         configurator.registerInterface(&ci, &m);
-        configurator.simulationStep=ROBOT_HALFWIDTH*2;
+        configurator.setSimulationStep(ROBOT_HALFWIDTH*2);
     }
     /**
      * @brief Tests planning
@@ -73,7 +72,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
         catch(std::exception &e){
             std::cerr<<e.what()<<std::endl;
         }
-        return configurator.plan;
+        return configurator.get_plan();
     }
 
 
