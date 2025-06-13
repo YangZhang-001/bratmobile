@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 TEST_F(HighLevelTest, Init){
+    init(Task());
     EXPECT_TRUE(configurator.get_motor_interface()!=(NULL));
     EXPECT_TRUE(configurator.get_lidar_interface()!= NULL);
     EXPECT_TRUE(configurator.get_tracker()!=NULL);

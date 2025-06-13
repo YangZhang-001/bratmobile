@@ -36,10 +36,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     Motor_Out m;
 
     void SetUp()override{
-        //configurator.transitionSystem.m_edges.clear();
-        // configurator.transitionSystem.m_vertices.clear();
-        // boost::clear_vertex(configurator.movingVertex, configurator.transitionSystem);
-
+        init();
     }
 
      void TearDown()override{}
@@ -48,7 +45,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
      * 
      * @param goal overarching goal
      */
-    void init( Task& goal){
+    void init( const Task& goal=Task()){
         configurator.init(goal);
         configurator.register_controller(&wc);
         configurator.register_tracker(&tracker);
