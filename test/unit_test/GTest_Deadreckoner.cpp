@@ -9,9 +9,6 @@ class MotorTimer: public CppTimer{
 
     void timerEvent(){
         mo->decrease_motorStep();
-        if (mo->get_motorStep()==0){
-            stop();
-        }
     }
 };
 
@@ -23,6 +20,7 @@ TEST(DeadReckoning, test){
     motor.getData(action);
     MotorTimer timer(&motor);
     timer.startms(100);
+    while(motor.get_motorStep()!=0){}
     timer.stop();
 
 }
