@@ -1,6 +1,16 @@
 #include "../callbacks.h"
 
 //argv: 1. directory to open 2. timeoff (0=timeron) 3. planning on 4. debug on
+class ConfiguratorAccessible:public Configurator{
+    public:
+    ConfiguratorAccessible(const Task& t){
+        init(t);
+    }
+
+    void set_running(bool b){
+        running=b;
+    }
+};
 
 Disturbance set_target(int& run, b2Transform start){
 
@@ -42,7 +52,7 @@ int main(int argc, char** argv) {
     bool RT=atoi(argv[2]);
 	Disturbance target(PURSUE, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal;
-    Configurator configurator(controlGoal);
+    ConfiguratorAccessible configurator(controlGoal);
     LIDAR_In ci;
     Motor_Out m;
     if (argc>3){
@@ -50,7 +60,7 @@ int main(int argc, char** argv) {
     }
     configurator.registerInterface(&ci, &m);
     DataInterface dataInterface(&ci); 
-    dataInterface.folder = argv[1];
+    dataInterface.set_folder(argv[1]);
     StepCallback cb(&m);
 
     if (RT){
@@ -66,10 +76,10 @@ int main(int argc, char** argv) {
     }
     else if (!RT){
         while  (dataInterface.newScanAvail()){
-            configurator.running=1;           
+            configurator.set_running(true);           
             configurator.run(&configurator);
         }
-        configurator.running=0;
+        configurator.set_running(false);
     }
 
 
