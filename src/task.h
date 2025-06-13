@@ -18,7 +18,7 @@ void world_cleanup(b2World & _world);
 
 class Task{
     char planFile[250]; //for debug
-    bool debug_k=false; //delete this it's for debugging on the bhenchod pi
+   // bool debug_k=false; //delete this it's for debugging on the bhenchod pi
 
 public:
     friend class Configurator;
@@ -29,6 +29,7 @@ public:
     AffordanceIndex affordance=NONE;
 
 class Action{
+    protected:
     float linearSpeed=WHEEL_SPEED_DEFAULT*2; //used to calculate instantaneous velocity using omega
     float omega=0; //initial angular velocity is 0
     bool valid=0;
