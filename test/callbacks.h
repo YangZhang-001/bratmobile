@@ -3,6 +3,7 @@
 #include "CppTimer.h"
 #include <thread>
 #include "test_essentials.h"
+#include <string>
 
 void printGraph(TransitionSystem& g){ //for calling in GDB
     boost::print_graph(g);
@@ -71,11 +72,12 @@ void getVisited(TransitionSystem& g, vertexDescriptor cv){
 }
 
 class DataInterface {
-public:
 int iteration = 0;
-LIDAR_In * ci;
+LIDAR_In * ci=NULL;
 
-char * folder;
+std::string folder;
+public:
+
     DataInterface(LIDAR_In * _ci): ci(_ci){}
 
 	bool newScanAvail(){ //uncomment sections to write x and y to files		
@@ -84,7 +86,7 @@ char * folder;
 		ci->data2fp.clear();
 		char filePath[256];
         char folderName[256];
-        sprintf(folderName,"%s", folder);
+        sprintf(folderName,"%s", folder.c_str());
         if (folderName != NULL){
             sprintf(filePath, "%smap%04d.dat", folderName, iteration);
             printf("%s\n", filePath);

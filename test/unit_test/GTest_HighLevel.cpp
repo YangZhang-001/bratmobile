@@ -1,15 +1,21 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
 
-TEST_F(HighLevelTest, planToTarget1){
+TEST_P(HighLevelTest, Plan){
     Task goal(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
     init(goal);
-    std::vector<vertexDescriptor> plan=get_plan("../target_68cm/");
+    DataInterface di(&ci);
+    di.folder=GetParam().c_str();
+    di.newScanAvail();
+    configurator.data2fp= ci.data2fp;
+    configurator.Spawner();
     vertexDescriptor planEnd=configurator.plan[configurator.plan.size()-1];
     b2Vec2 difference=configurator.transitionSystem[planEnd].endPose.p-goal.disturbance.pose().p;
-    EXPECT_TRUE(plan.size()!=0);
-    //EXPECT_LT(difference.Length(), 0.03);
+    EXPECT_TRUE(configurator.plan.size()!=0);
+    EXPECT_LT(difference.Length(), 0.03);
 }
+
+INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(std::string("../target_68cm/"), std::string("../target_40cm/")));
 
 /**
  * @brief Tests split steps

@@ -3,6 +3,7 @@
 
 #include <gtest/gtest.h>
 #include "../callbacks.h"
+#include <string>
 
 /**
  * @brief Setting up ostream operator for use with GTest
@@ -25,7 +26,7 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
  * @brief Test fixture for testing high-level processes such as planning and state-space exploration
  * 
  */
-class HighLevelTest: public ::testing::Test{
+class HighLevelTest: public testing::Test, public testing::WithParamInterface<std::string>{
     protected:
     Configurator configurator;
     Wise_Controller wc;
@@ -33,14 +34,14 @@ class HighLevelTest: public ::testing::Test{
     LIDAR_In ci;
     Motor_Out m;
 
-    void SetUp()override{
-        //configurator.transitionSystem.m_edges.clear();
-        // configurator.transitionSystem.m_vertices.clear();
-        // boost::clear_vertex(configurator.movingVertex, configurator.transitionSystem);
+    // void SetUp()override{
+    //     //configurator.transitionSystem.m_edges.clear();
+    //     // configurator.transitionSystem.m_vertices.clear();
+    //     // boost::clear_vertex(configurator.movingVertex, configurator.transitionSystem);
 
-    }
+    // }
 
-    void TearDown()override{}
+    // void TearDown()override{}
     /**
      * @brief Initialises Fixture
      * 
@@ -59,20 +60,20 @@ class HighLevelTest: public ::testing::Test{
      * @param folder a folder containing LIDAR scans names "map%04i.dat"
      * 
      */
-    std::vector<vertexDescriptor> get_plan(char * folder){
-        DataInterface di(&ci);
-        di.folder=folder;
-        di.newScanAvail();
-        configurator.data2fp= ci.data2fp;
-        try{
-            bool edges=configurator.transitionSystem.m_edges.empty();
-            configurator.Spawner();
-        }
-        catch(std::exception &e){
-            std::cerr<<e.what()<<std::endl;
-        }
-        return configurator.plan;
-    }
+    // std::vector<vertexDescriptor> get_plan(char * folder){
+    //     DataInterface di(&ci);
+    //     di.folder=folder;
+    //     di.newScanAvail();
+    //     configurator.data2fp= ci.data2fp;
+    //     try{
+    //         bool edges=configurator.transitionSystem.m_edges.empty();
+    //         configurator.Spawner();
+    //     }
+    //     catch(std::exception &e){
+    //         std::cerr<<e.what()<<std::endl;
+    //     }
+    //     return configurator.plan;
+    // }
 
 
     
