@@ -12,7 +12,10 @@ class MotorTimer: public CppTimer{
     }
 };
 
-
+/**
+ * @brief Tests that deadreckoning functions properly
+ * 
+ */
 TEST(DeadReckoning, test){
     Task::Action action;
     action.set_motorStep(20);
@@ -23,4 +26,10 @@ TEST(DeadReckoning, test){
     while(motor.get_motorStep()!=0){}
     timer.stop();
 
+}
+
+int main(int argc, char** argv){
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+    return 0;
 }
