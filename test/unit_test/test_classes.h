@@ -25,8 +25,10 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
  /**
  * @brief Test fixture for testing high-level processes such as planning and state-space exploration
  * 
+ * @param bool does plan have a target location
+ * @param string the folder with the LIDAR scans
  */
-class HighLevelTest: public testing::Test, public testing::WithParamInterface<std::string>{
+class HighLevelTest: public testing::Test, public testing::WithParamInterface<std::pair<bool, std::string>>{
     protected:
     Configurator configurator;
     Wise_Controller wc;
@@ -60,20 +62,19 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
      * @param folder a folder containing LIDAR scans names "map%04i.dat"
      * 
      */
-    // std::vector<vertexDescriptor> get_plan(char * folder){
-    //     DataInterface di(&ci);
-    //     di.folder=folder;
-    //     di.newScanAvail();
-    //     configurator.data2fp= ci.data2fp;
-    //     try{
-    //         bool edges=configurator.transitionSystem.m_edges.empty();
-    //         configurator.Spawner();
-    //     }
-    //     catch(std::exception &e){
-    //         std::cerr<<e.what()<<std::endl;
-    //     }
-    //     return configurator.plan;
-    // }
+    std::vector<vertexDescriptor> get_plan(std::string folder){
+        DataInterface di(&ci);
+        di.set_folder(folder);
+        di.newScanAvail();
+        configurator.data2fp= ci.data2fp;
+        try{
+            configurator.Spawner();
+        }
+        catch(std::exception &e){
+            std::cerr<<e.what()<<std::endl;
+        }
+        return configurator.plan;
+    }
 
 
     

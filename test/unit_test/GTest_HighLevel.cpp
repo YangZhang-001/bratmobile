@@ -2,20 +2,30 @@
 #include <gtest/gtest.h>
 
 TEST_P(HighLevelTest, Plan){
-    Task goal(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
+    Task goal;
+    if (GetParam().first){
+        goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
+
+    }
     init(goal);
-    DataInterface di(&ci);
-    di.set_folder(GetParam());
-    di.newScanAvail();
-    configurator.data2fp= ci.data2fp;
-    configurator.Spawner();
+    get_plan(GetParam().second);
     vertexDescriptor planEnd=configurator.plan[configurator.plan.size()-1];
-    b2Vec2 difference=configurator.transitionSystem[planEnd].endPose.p-goal.disturbance.pose().p;
+    float difference;
+    if (!GetParam().first){
+        difference=BOX2DRANGE-configurator.transitionSystem[planEnd].endPose.p.Length();
+    }
+    else{
+        difference=(configurator.transitionSystem[planEnd].endPose.p-goal.disturbance.pose().p).Length();
+    }
     EXPECT_TRUE(configurator.plan.size()!=0);
-    EXPECT_LT(difference.Length(), 0.03);
+    EXPECT_LT(fabs(difference), 0.03);
 }
 
-INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(std::string("../target_68cm/"), std::string("../target_40cm/")));
+INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(std::pair<0, "">,
+                                                                   std::pair<0, "../cul_de_sac/"),
+                                                                   std::pair <1, "../target_40cm/">,
+                                                                   std::pair <1, "../target_68cm/">,
+                                                                   std::pair <1, "../cul_de_sac/">);
 
 /**
  * @brief Tests split steps
@@ -33,8 +43,8 @@ INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(std::string("
 //     b2Vec2 pos(GetParam(), GetParam());
 //     float max_step=0;
 //     std::vector <vertexDescriptor> split=test_split(pos.x, pos.y, GetParam(), GetParam(), GetParam(), GetParam());
-//     for (vertexDescriptor v:split){
-//         if (float length=(transitionSystem[v].endPose.p-start.p).Length(); length>max_step){
+    //     for (vertexDescriptor v:split){
+    //         if (float length=(transitionSystem[v].endPose.p-start.p).Length(); length>max_step){
 //             max_step=length;
 //         }
 //     }
