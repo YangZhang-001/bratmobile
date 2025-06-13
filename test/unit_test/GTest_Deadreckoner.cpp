@@ -25,6 +25,7 @@ TEST(DeadReckoning, test){
     timer.startms(100);
     while(motor.get_motorStep()!=0){}
     timer.stop();
+    EXPECT_EQ(motor.get_motorStep(),0);
 
 }
 
