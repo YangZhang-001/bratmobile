@@ -21,11 +21,11 @@ TEST_P(HighLevelTest, Plan){
     EXPECT_LT(fabs(difference), 0.03);
 }
 
-INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(std::pair<0, "">,
-                                                                   std::pair<0, "../cul_de_sac/"),
-                                                                   std::pair <1, "../target_40cm/">,
-                                                                   std::pair <1, "../target_68cm/">,
-                                                                   std::pair <1, "../cul_de_sac/">);
+INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(std::pair<0, std::string("")>,
+                                                                   std::pair<0, std::string("../cul_de_sac/")>,
+                                                                   std::pair <1, std::string("../target_40cm/")>,
+                                                                   std::pair <1, std::string("../target_68cm/")>,
+                                                                   std::pair <1, std::string("../cul_de_sac/")>);
 
 /**
  * @brief Tests split steps
