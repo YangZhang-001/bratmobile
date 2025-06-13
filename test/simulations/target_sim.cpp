@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
     configurator.registerInterface(&ci, &m);
     DataInterface dataInterface(&ci); 
     if (argc>1 && argv[1]){
-        dataInterface.folder = argv[1];
+        dataInterface.set_folder(argv[1]);
     }
     StepCallback cb(&m);
     if (RT){
@@ -69,19 +69,9 @@ int main(int argc, char** argv) {
     }
     else if (!RT){
         while  (dataInterface.newScanAvail()){
-		// if (configurator.ci->isReady()){
-		// 	configurator.ci->setReady(false);
-		// 	configurator.data2fp= CoordinateContainer(configurator.ci->data2fp);
-		// 	configurator.Spawner();
-		// 	configurator.get_tracker()->track();
-		// }
-		// if (( configurator.getTask()->change& configurator.transitionSystem[configurator.currentVertex].direction!=STOP && configurator.plan.empty() && configurator.getIteration()>1)){
-		// 	configurator.goal_changer->change_goal(&configurator.controlGoal);
-		// }		
-		// configurator.change_task();
         Configurator::run(&configurator);
         }
-        configurator.running=0;
+        configurator.stop();
     }
 
 

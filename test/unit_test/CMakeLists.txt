@@ -15,9 +15,6 @@ find_package(GTest CONFIG REQUIRED)
 
 include(CTest)
 
-add_compile_options(-fsanitize=address)
-add_link_options(-fsanitize=address)
-
 include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
 include(GoogleTest)
 add_executable(GTest_HighLevel GTest_HighLevel.cpp)
