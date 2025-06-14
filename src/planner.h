@@ -33,7 +33,10 @@ class Planner{
 
         void been(bool b){m_been=b;}
 
-        void goalVertex(vertexDescriptor gv){m_overarchingGoal=gv;}
+        void goalVertex(vertexDescriptor gv){m_goalVertex=gv;}
+        
+        void overarchingGoal(const Task & og){m_overarchingGoal=og;}
+
         public:
         ExecutionInfo(){}
 

@@ -275,6 +275,13 @@ void register_planner(Planner * _p){
 	planner=_p;
 }
 
+/**
+ * @brief Package task/goal execution details into an Execution Info instance
+ * 
+ * @param gv goal vertex
+ * @param been has goal been visited
+ * @return Planner::ExecutionInfo 
+ */
 Planner::ExecutionInfo package_info(vertexDescriptor gv=TransitionSystem::null_vertex(), bool been=false){
 	return Planner::ExecutionInfo(currentVertex, gv, currentTask, controlGoal, been, plan);
 }
