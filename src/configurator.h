@@ -122,7 +122,7 @@ void printPlan(std::vector <vertexDescriptor>* p=NULL);
  * @param edge connecting edge between src->v1
  * @param topDown flag determining whether state v1 has been simulated already or not
  */
-std::pair<edgeDescriptor, bool> addVertex(vertexDescriptor & src, vertexDescriptor &v1, TransitionSystem &g, Edge edge=Edge(), bool topDown=0){ //returns edge added
+std::pair<edgeDescriptor, bool> addVertex(const vertexDescriptor & src, vertexDescriptor &v1, TransitionSystem &g, Edge edge=Edge(), bool topDown=0){ //returns edge added
 	std::pair<edgeDescriptor, bool> result;
 	result.second=false;
 	if (g[src].options.size()>0 || topDown){
@@ -148,7 +148,7 @@ std::pair<edgeDescriptor, bool> addVertex(vertexDescriptor & src, vertexDescript
  * @param edge connecting edge between src->v1
  * @param topDown flag determining whether state v1 has been simulated already or not
  */
-std::pair <edgeDescriptor, bool> add_vertex_now(vertexDescriptor & src, vertexDescriptor & v1, TransitionSystem & g, Disturbance obs,Edge edge=Edge(), bool topDown=0);
+std::pair <edgeDescriptor, bool> add_vertex_now(const vertexDescriptor & src, vertexDescriptor & v1, TransitionSystem & g, Disturbance obs,Edge edge=Edge(), bool topDown=0);
 
 //adds vertex retroactively (e.g. if in split task)
 std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &, vertexDescriptor &, TransitionSystem &, Disturbance,Edge edge=Edge(), bool topDown=0);

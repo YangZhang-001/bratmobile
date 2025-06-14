@@ -77,7 +77,7 @@ class Planner{
      * @param finished will return true if the planning process reaches the goal
      * @return std::vector<vertexDescriptor> 
      */
-    virtual std::vector<vertexDescriptor> plan(TransitionSystem& g, vertexDescriptor src, ExecutionInfo & info, bool *finished);
+    virtual std::vector<vertexDescriptor> plan(TransitionSystem& g, vertexDescriptor src, ExecutionInfo & info, bool *finished)=0;
 
     /**
      * @brief calculates cumulative cost phi, add discount factor if in plan

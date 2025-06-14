@@ -27,7 +27,7 @@ void Configurator::dummy_vertex(vertexDescriptor src){
 	transitionSystem[currentVertex].direction=STOP;
 }
 
-std::pair <edgeDescriptor, bool> Configurator::add_vertex_now(vertexDescriptor & src, vertexDescriptor &v1, TransitionSystem &g, Disturbance Di,Edge edge, bool topDown){
+std::pair <edgeDescriptor, bool> Configurator::add_vertex_now(const vertexDescriptor & src, vertexDescriptor &v1, TransitionSystem &g, Disturbance Di,Edge edge, bool topDown){
 	std::pair<edgeDescriptor, bool> result=addVertex(src, v1, g, edge, topDown);
 	if (!g[v1].filled){
 		g[v1].Di= Di;
