@@ -66,7 +66,7 @@ class Planner{
 
     public:
 
-
+    Planner()=default;
 
     /**
      * @brief Implements custom algorithm to search transition system for a plan
