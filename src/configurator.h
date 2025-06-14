@@ -191,6 +191,11 @@ void register_planner(Planner * _p){
 	planner=_p;
 }
 
+void setSimulationStep(float f){
+	simulationStep=f;
+}
+
+
 
 
 };
@@ -305,10 +310,6 @@ void applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0, Direction d,
  */
 void addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, TransitionSystem &g, const std::set <vertexDescriptor>& closed);
 
-
-void setSimulationStep(float f){
-	simulationStep=f;
-}
 
 //removes singleton vertices and self-edges
 void ts_cleanup(TransitionSystem &, std::vector <vertexDescriptor>&);
