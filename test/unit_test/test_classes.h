@@ -53,6 +53,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     ClosedLoop_Tracker tracker;
     LIDAR_In ci;
     Motor_Out m;
+    HorizonStarPlanner planner;
 
     void SetUp()override{
         configurator=new DebugConfigurator();
@@ -173,6 +174,7 @@ void HighLevelTest::init( const Task& goal){
     configurator->register_tracker(&tracker);
     configurator->registerInterface(&ci, &m);
     configurator->setSimulationStep(ROBOT_HALFWIDTH*2);
+    configurator->register_planner(&planner);
 }
 
 

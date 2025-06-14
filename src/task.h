@@ -17,14 +17,15 @@ bool overlaps(const b2PolygonShape&, Disturbance *, const b2Transform& robot_pos
 void world_cleanup(b2World & _world);
 
 class Task{
+    protected:
     char planFile[250]; //for debug
     bool debug_k=false; //delete this it's for debugging on the bhenchod pi
+    bool change =0;
 
 
 public:
     friend class Configurator;
     b2Transform start=b2Transform_zero;
-    bool change =0;
     EndCriteria endCriteria; //end criteria other than task encounters a disturbance
     Direction direction= DEFAULT;
     int motorStep=0;
@@ -284,11 +285,11 @@ void setEndCriteria(const Distance& distance);
 
 void setErrorWeights();
 
-EndedResult checkEnded(b2Transform robotTransform = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)), Direction dir=UNDEFINED, bool relax=0, b2Body* robot=NULL, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0))));
+EndedResult checkEnded(b2Transform robotTransform= b2Transform_zero, Direction dir=UNDEFINED, bool relax=0, b2Body* robot=NULL, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform_zero));
 
-EndedResult checkEnded(const State&, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)))); //usually used to check against control goal
+EndedResult checkEnded(const State&, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform_zero)); //usually used to check against control goal
 
-bool checkEnded( const b2PolygonShape &, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL );
+bool checkEnded( const b2PolygonShape &, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL )const;
 
 Task(){
     start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));

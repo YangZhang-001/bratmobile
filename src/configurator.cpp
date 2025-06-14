@@ -177,7 +177,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
 				gt::fill(sim, &sk.first, &sk.second); //find simulation result
 				sk.second.it_observed=iteration;
-				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction);
+				er  = Planner::estimateCost(sk.first, g[v0].endPose, controlGoal);
 				StateDifference sd;
 				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.direction, StateMatcher::MATCH_TYPE::ABSTRACT, &sd);		//, closest_match	
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
@@ -240,7 +240,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 					gt::adjustProbability(g, edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
 				}
 				applyTransitionMatrix(g, v1, t.direction, er.ended, v0, plan_prov);
-				g[v1].phi=evaluationFunction(er, v1, plan_prov);
+				g[v1].phi=Planner::evaluationFunction(er, v1, plan_prov);
 				propagateD(v1, v0, g,&propagated, &closed); //og v1 v0
 				v0_exp=v0;
 				options=g[v0_exp].options;
@@ -347,8 +347,8 @@ void Configurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::
 			else{
 				src=split[i-1];
 			}
-			EndedResult local_er=estimateCost(g[split_v],g[split_v].start, direction);
-			g[split_v].phi=evaluationFunction(local_er, split_v, plan_prov);
+			EndedResult local_er=Planner::estimateCost(g[split_v],g[split_v].start, controlGoal);
+			g[split_v].phi=Planner::evaluationFunction(local_er, split_v, plan_prov);
 			applyTransitionMatrix(g, split_v, direction, local_er.ended,src, plan_prov);
 			addToPriorityQueue(split_v, priority_q, g, closed);
 			src=split_v;
@@ -382,74 +382,55 @@ void Configurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,Transitio
 	return;
 }
 
-std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, vertexDescriptor src, vertexDescriptor goal, bool been, const Task* custom_ctrl_goal, bool *finished){
-	std::vector<std::vector<vertexDescriptor>> paths;
-	paths.push_back(std::vector<vertexDescriptor>()={src});
-	std::vector <Frontier> frontier_v;
-	bool _finished=false;
-	std::vector <Frontier> priorityQueue={Frontier(src, std::vector<vertexDescriptor>())};
-	Task overarching_goal;
-	if (NULL==custom_ctrl_goal){
-		overarching_goal=controlGoal;
-	}
-	else{
-		overarching_goal=*custom_ctrl_goal;
-	}
-	int no_out=0;
-	std::vector <vertexDescriptor> add;
-	std::vector<std::vector<vertexDescriptor>>::reverse_iterator path= paths.rbegin();
-	vertexDescriptor path_end=src;
-	auto start_time=std::chrono::high_resolution_clock::now();
-	do{
-		frontier_v=frontierVertices(src, g, DEFAULT, been); // get next default tasks (plus non-default connecting tasks)
-		priorityQueue.erase(priorityQueue.begin());
-		for (Frontier f: frontier_v){ //add to priority queue
-			//planPriority(g, f.first);
-			addToPriorityQueue(f, priorityQueue, g);
-		}
-		if (!priorityQueue.empty()){
-			src=priorityQueue.begin()->first; //lowest phi vertex
-			add=std::vector <vertexDescriptor>(priorityQueue.begin()->second.begin(), priorityQueue.begin()->second.end());//lowest phi frontier
-			add.push_back(src);
-			Planner::path2add2(path, add, paths, g); //find path to add frontier (add) to
-			for (vertexDescriptor c:add){
-				g[c].label=VERTEX_LABEL::UNLABELED;
-				path->push_back(c);	
-				path_end=c;			
-			}
-		}
-		_finished=overarching_goal.checkEnded(g[path_end].endPose, UNDEFINED, true).ended;
-		if (NULL!=finished){
-			*finished=_finished;
-		}
-		if (_finished){
-			goal=path_end;
-		}
-	}while(!priorityQueue.empty() && (path_end!=goal && !(_finished)));
-	return Planner::best_path(paths, goal, currentVertex, currentTask.change, g);
-}
+// std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, vertexDescriptor src, vertexDescriptor goal, bool been, const Task* custom_ctrl_goal, bool *finished){
+// 	std::vector<std::vector<vertexDescriptor>> paths;
+// 	paths.push_back(std::vector<vertexDescriptor>()={src});
+// 	std::vector <Frontier> frontier_v;
+// 	bool _finished=false;
+// 	std::vector <Frontier> priorityQueue={Frontier(src, std::vector<vertexDescriptor>())};
+// 	Task overarching_goal;
+// 	if (NULL==custom_ctrl_goal){
+// 		overarching_goal=controlGoal;
+// 	}
+// 	else{
+// 		overarching_goal=*custom_ctrl_goal;
+// 	}
+// 	int no_out=0;
+// 	std::vector <vertexDescriptor> add;
+// 	std::vector<std::vector<vertexDescriptor>>::reverse_iterator path= paths.rbegin();
+// 	vertexDescriptor path_end=src;
+// 	auto start_time=std::chrono::high_resolution_clock::now();
+// 	do{
+// 		frontier_v=frontierVertices(src, g, DEFAULT, been); // get next default tasks (plus non-default connecting tasks)
+// 		priorityQueue.erase(priorityQueue.begin());
+// 		for (Frontier f: frontier_v){ //add to priority queue
+// 			//planPriority(g, f.first);
+// 			addToPriorityQueue(f, priorityQueue, g);
+// 		}
+// 		if (!priorityQueue.empty()){
+// 			src=priorityQueue.begin()->first; //lowest phi vertex
+// 			add=std::vector <vertexDescriptor>(priorityQueue.begin()->second.begin(), priorityQueue.begin()->second.end());//lowest phi frontier
+// 			add.push_back(src);
+// 			Planner::path2add2(path, add, paths, g); //find path to add frontier (add) to
+// 			for (vertexDescriptor c:add){
+// 				g[c].label=VERTEX_LABEL::UNLABELED;
+// 				path->push_back(c);	
+// 				path_end=c;			
+// 			}
+// 		}
+// 		_finished=overarching_goal.checkEnded(g[path_end].endPose, UNDEFINED, true).ended;
+// 		if (NULL!=finished){
+// 			*finished=_finished;
+// 		}
+// 		if (_finished){
+// 			goal=path_end;
+// 		}
+// 	}while(!priorityQueue.empty() && (path_end!=goal && !(_finished)));
+// 	return Planner::best_path(paths, goal, currentVertex, currentTask.change, g);
+// }
 
 
 
-
-EndedResult Configurator::estimateCost(State &state, b2Transform start, Direction d){
-	EndedResult er = controlGoal.checkEnded(state);
-	Task t(state.Dn, d, start);
-	er.cost += t.checkEnded(state.endPose).estimatedCost;
-	if (state.outcome==simResult::crashed){
-		er.cost+=2;
-	}
-	return er;
-}
-
-
-float Configurator::evaluationFunction(EndedResult er,  const vertexDescriptor& v, std::vector<vertexDescriptor>& p){ 
-	float result=(abs(er.estimatedCost)+abs(er.cost))/2;
-	if (auto it=check_vector_for(p, v); it!=p.end()){
-		result-=0.1;
-	}
-	return result; //normalised to 1
-}
 
 
 
@@ -687,15 +668,15 @@ void Configurator::addToPriorityQueue(vertexDescriptor v, std::vector<vertexDesc
 }
 
 
-void Configurator::addToPriorityQueue(Frontier f, std::vector<Frontier>& queue, TransitionSystem &g, vertexDescriptor goal){
-	for (auto i =queue.begin(); i!=queue.end(); i++){
-		if (g[f.first].phi <abs(g[(*i).first].phi)){
-			queue.insert(i, f);
-			return;
-		}
-	}
-	queue.push_back(f);
-}
+// void Configurator::addToPriorityQueue(Frontier f, std::vector<Frontier>& queue, TransitionSystem &g, vertexDescriptor goal){
+// 	for (auto i =queue.begin(); i!=queue.end(); i++){
+// 		if (g[f.first].phi <abs(g[(*i).first].phi)){
+// 			queue.insert(i, f);
+// 			return;
+// 		}
+// 	}
+// 	queue.push_back(f);
+// }
 
 
 std::pair <edgeDescriptor, bool> Configurator::maxProbability(std::vector<edgeDescriptor> ev, TransitionSystem& g){
@@ -758,75 +739,6 @@ void Configurator::adjust_rw_task(const vertexDescriptor &v, TransitionSystem &g
 
 }
 
-std::vector <Frontier> Configurator::frontierVertices(vertexDescriptor v, TransitionSystem& g, Direction d, bool been){
-	std::vector <Frontier> result;
-	std::pair<edgeDescriptor, bool> ep=boost::edge(movingVertex, v, g); 
-	vertexDescriptor v0=v, v1=v, v0_exp;
-	//do{
-		if ((controlGoal.disturbance.getPosition()-g[v].endPose.p).Length() >= DISTANCE_ERROR_TOLERANCE){
-			auto es=boost::out_edges(v, g);
-			for (auto ei=es.first; ei!=es.second; ei++){
-			std::vector <vertexDescriptor>connecting;
-			auto ei2=ei, ei3=ei;
-			auto es2=boost::out_edges((*ei).m_target, g);
-			auto es3=es2;
-			std::vector <vertexDescriptor>connecting2;
-			NotSelfEdge not_self_edge(&g);
-			do {
-				if ((g[(*ei3).m_target].visited() || been)&& not_self_edge(*ei3)){ //(*ei3).m_source!=(*ei3).m_target
-					if (!g[(*ei3).m_target].visited()){
-						EndedResult er = estimateCost(g[(*ei3).m_target], g[(*ei3).m_source].endPose, g[(*ei3).m_target].direction);
-						g[(*ei3).m_target].phi=evaluationFunction(er, (*ei3).m_target, plan);
-					}
-					if (g[(*ei3).m_target].direction==d){
-						Frontier f;
-						f.first= (*ei3).m_target;
-						f.second=connecting2;
-						result.push_back(f);
-						if (ei3!=ei){
-							ei3++;
-						}
-						else{
-							connecting.clear();
-							break;
-						}
-					}
-					else if (ei3==ei){
-						connecting.push_back((*ei3).m_target);
-						connecting2=connecting;
-						es3=boost::out_edges((*ei3).m_target,g);
-						ei3=es3.first;
-						ei2=ei3;
-						es2=es3;
-					}
-					else if (ei2!=ei){
-						connecting2.push_back((*ei3).m_target);
-						es3=boost::out_edges((*ei3).m_target,g);
-						ei3=es3.first;
-						ei2++;
-					}
-				}
-				else if (ei3!=ei){
-					ei3++;
-				}
-				else { //not sure if this is right just added
-					break;
-				}
-				if(ei3==es3.second){
-					if (ei3!=ei2 && ei2!=ei){
-						if (ei2!=es2.second){
-							ei2++;
-							ei3=ei2;
-							es3=es2;						}
-					}					
-				}
-				//printf("is stuck, ei3=%i ->%i\n", (*ei).m_source, (*ei).m_target);
-			}while (ei3!=es3.second);
-	}
-	}
-
-	return result;
-}
 
 
 

@@ -115,7 +115,9 @@ void Configurator::explore_plan(b2World&world){
     if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
         printf("no plan, searchign from %i\n", src);
         bool finished=false;
-        plan_tmp= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
+
+        Planner::ExecutionInfo info=package_info();
+        plan_tmp= planner->plan(transitionSystem,info, &finished); //src
     }
     else{
         printf("recycled plan in explorer:\n");

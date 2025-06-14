@@ -193,7 +193,7 @@ public:
         bf.pose.p.Set(x, y);
     }
     
-    b2Vec2 getPosition(){
+    b2Vec2 getPosition()const{
         return bf.pose.p;
     }
 

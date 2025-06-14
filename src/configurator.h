@@ -13,6 +13,7 @@
 #include "task_controller.h"
 #include "tracker.h"
 
+
 class Configurator{
 protected:
 	int iteration=0; //represents that hasn't started yet, robot isn't moving and there are no map data
@@ -21,6 +22,7 @@ protected:
 	Tracker * tracker=NULL;
 	LIDAR_In * ci=NULL;
 	Motor_Out * control=NULL;
+	Planner *planner=NULL;
 	bool running =0;
 	std::thread * LIDAR_thread=NULL;
 	float simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);
@@ -33,7 +35,6 @@ protected:
 	TransitionSystem transitionSystem=TransitionSystem(1);
 	StateMatcher matcher;
 	WorldBuilder worldBuilder;
-	vertexDescriptor movingVertex=0;
 	vertexDescriptor currentVertex=movingVertex;
 	edgeDescriptor movingEdge, currentEdge;
 
@@ -98,9 +99,6 @@ void adjust_simulated_task(const vertexDescriptor&, TransitionSystem &, Task*);
 //adjust real-world task
 void adjust_rw_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);
 
-//finds frontier: closest states with DEFAULT tasks reachable from a vertex v
-std::vector <Frontier> frontierVertices(vertexDescriptor, TransitionSystem&, Direction , bool been=0); //returns the closest vertices to the start vertex which are reached by executing a task of the specified direction
-
 //void recall_plan_from(const vertexDescriptor&, TransitionSystem & , b2World &, std::vector <vertexDescriptor>&, bool&, Disturbance *dist);
 
 std::pair <edgeDescriptor, bool> maxProbability(std::vector<edgeDescriptor>, TransitionSystem&);
@@ -161,11 +159,6 @@ std::vector <vertexDescriptor> planner(TransitionSystem&, vertexDescriptor, vert
 
 //std::vector <vertexDescriptor> back_planner(TransitionSystem&, vertexDescriptor, vertexDescriptor root=0);
 
-EndedResult estimateCost(State&, b2Transform, Direction); //returns whether the controlGoal has ended and fills node with cost and error
-
-//calculates cumulative cost phi, add discount factor if in plan
-float evaluationFunction(EndedResult, const vertexDescriptor &v, std::vector<vertexDescriptor>& p);
-
 //starts thread
 void start(); 
 
@@ -196,8 +189,6 @@ void transitionMatrix(State& state, Direction d, vertexDescriptor src);
 void applyTransitionMatrix(TransitionSystem&, vertexDescriptor, Direction,bool, vertexDescriptor, std::vector<vertexDescriptor>&);
 
 void addToPriorityQueue(vertexDescriptor, std::vector <vertexDescriptor>&, TransitionSystem&, const std::set<vertexDescriptor>&);
-
-void addToPriorityQueue(Frontier, std::vector <Frontier>&, TransitionSystem&, vertexDescriptor goal=TransitionSystem::null_vertex());
 
 
 void setSimulationStep(float f){
@@ -280,7 +271,13 @@ LIDAR_In * get_lidar_interface(){
 }
 
 
+void register_planner(Planner * _p){
+	planner=_p;
+}
 
+Planner::ExecutionInfo package_info(vertexDescriptor gv=TransitionSystem::null_vertex(), bool been=false){
+	return Planner::ExecutionInfo(currentVertex, gv, currentTask, controlGoal, been, plan);
+}
 
 };
 
