@@ -289,7 +289,16 @@ EndedResult checkEnded(b2Transform robotTransform= b2Transform_zero, Direction d
 
 EndedResult checkEnded(const State&, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform_zero)); //usually used to check against control goal
 
-bool checkEnded( const b2PolygonShape &, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL )const;
+/**
+ * @brief Uses a virtual sensor (attention window) to determine whether the task has ended or not
+ * 
+ * @param box the sensor
+ * @param robot_pose 
+ * @param dist_obs pointer to the observed disturbance (the disturbance as it was at the beginning of the task, or as it was expected)
+ * @return true 
+ * @return false 
+ */
+bool checkEnded( const b2PolygonShape &box, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL );
 
 Task(){
     start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));
