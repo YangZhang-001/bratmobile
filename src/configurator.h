@@ -334,6 +334,14 @@ std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const Tra
 
 void explore_plan(b2World&)override;
 
+public:
+
+AttentiveConfigurator(){};
+
+AttentiveConfigurator(Task _task){
+	init(_task);
+}
+
 
 };
 
@@ -343,9 +351,15 @@ void explore_plan(b2World&)override;
  * 
  */
 class ReactiveConfigurator:public Configurator{
-	public:
+	protected:
 	void explore_plan(b2World&)override;
+	public:
 
+	ReactiveConfigurator(){};
+
+	ReactiveConfigurator(Task _task){
+		init(_task);
+}
 	
 
 };
