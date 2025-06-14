@@ -9,7 +9,7 @@ class WorldBuilder{
     int bodies=0;
     std::vector <BodyFeatures> world_objects;
     protected:
-    friend class Explorer;
+    friend class Configurator;
     void set_world_objects(const std::vector <BodyFeatures>& wo){
         world_objects=wo;
     }

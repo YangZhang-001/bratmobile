@@ -102,29 +102,7 @@ void print_matrix(const cv::Mat & m){
 	std::cout << "M = " << std::endl << " "  << m << std::endl << std::endl;
 }
 
-void Configurator::explore_plan(b2World&world){
-    pre_explore(transitionSystem, plan, currentTask.change);
-    vertexDescriptor src=get_explore_start(transitionSystem);
-    resetPhi(transitionSystem);
-    std::vector <vertexDescriptor> plan_tmp=explorer(src, transitionSystem, world);
-    if (DEBUG){
-        std::vector<vertexDescriptor> _plan=(plan);
-        debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
-    }		
-    ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
-    if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
-        printf("no plan, searchign from %i\n", src);
-        bool finished=false;
 
-        ExecutionInfo info=package_info();
-        plan_tmp= planner->plan(transitionSystem, currentVertex,info, &finished); //src
-    }
-    else{
-        printf("recycled plan in explorer:\n");
-    }
-    plan=plan_tmp;
-    printPlan(&plan);
-}
 
 //debug, to visualise 
 void flush_points(const std::vector<std::vector<cv::Point2f>> clusters, char * where){

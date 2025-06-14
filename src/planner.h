@@ -18,13 +18,11 @@
         std::vector <vertexDescriptor> m_plan;
         protected:
         friend class Configurator;
-        friend class Explorer;
 
         void been(bool b){m_been=b;}
 
         void goalVertex(vertexDescriptor gv){m_goalVertex=gv;}
         
-        void overarchingGoal(const Task & og){m_overarchingGoal=og;}
 
         public:
         ExecutionInfo(){}
@@ -37,6 +35,7 @@
             m_been=_been;
             m_plan=_plan;
         }
+        void overarchingGoal(const Task & og){m_overarchingGoal=og;}
 
 
         vertexDescriptor currentVertex()const{return m_currentVertex;}

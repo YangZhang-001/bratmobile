@@ -8,8 +8,8 @@
 /**
  * @brief Setting up ostream operator for use with GTest
  * 
- * @param os 
- * @param t 
+ * @param os ostream
+ * @param t box2d 2dtransform
  * @return std::ostream& 
  */
 std::ostream& operator<<(std::ostream& os, const b2Transform& t){
@@ -19,7 +19,7 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
     return os;
 }
 
-class DebugConfigurator:public Configurator{
+class DebugConfigurator:public AttentiveConfigurator{
     friend class HighLevelTest;
     public:
     int n_edges(){return transitionSystem.m_edges.size();}
