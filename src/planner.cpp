@@ -86,7 +86,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::best_path(const std::vector<s
     return plan;
 }
 
-std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, TransitionSystem& g, Planner::ExecutionInfo & info){
+std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, TransitionSystem& g, ExecutionInfo & info){
 	std::vector <Frontier> result;
 	std::pair<edgeDescriptor, bool> ep=boost::edge(movingVertex, v, g); 
 	vertexDescriptor v0=v, v1=v, v0_exp;
@@ -168,7 +168,7 @@ void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Front
 	queue.push_back(f);
 }
 
-std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, vertexDescriptor src, Planner::ExecutionInfo& info, bool *finished){
+std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, vertexDescriptor src, ExecutionInfo& info, bool *finished){
 	std::vector<std::vector<vertexDescriptor>> paths;
 	paths.push_back(std::vector<vertexDescriptor>()={src});
 	std::vector <Frontier> frontier_v;

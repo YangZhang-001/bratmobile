@@ -282,8 +282,8 @@ void register_planner(Planner * _p){
  * @param been has goal been visited
  * @return Planner::ExecutionInfo 
  */
-Planner::ExecutionInfo package_info(vertexDescriptor gv=TransitionSystem::null_vertex(), bool been=false){
-	return Planner::ExecutionInfo(currentVertex, gv, currentTask, controlGoal, been, plan);
+ExecutionInfo package_info(vertexDescriptor gv=TransitionSystem::null_vertex(), bool been=false){
+	return ExecutionInfo(currentVertex, gv, currentTask, controlGoal, been, plan);
 }
 
 };

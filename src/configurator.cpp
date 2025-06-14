@@ -199,7 +199,7 @@ std::vector<vertexDescriptor> Configurator::explorer(vertexDescriptor v, Transit
 							math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
 							boost::remove_edge(edge.first, g);
 							edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
-							Planner::ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
+							ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
 							info.overarchingGoal(controlGoal_adjusted); 
 							auto plan_tmp=planner->plan(g, v, info, &finished); //not v but task start
 							//printf("out of explore planner\n");

@@ -116,7 +116,7 @@ void Configurator::explore_plan(b2World&world){
         printf("no plan, searchign from %i\n", src);
         bool finished=false;
 
-        Planner::ExecutionInfo info=package_info();
+        ExecutionInfo info=package_info();
         plan_tmp= planner->plan(transitionSystem, currentVertex,info, &finished); //src
     }
     else{

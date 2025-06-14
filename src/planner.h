@@ -4,18 +4,7 @@
 #include "task.h"
 /** \file */
 
-/**
- * @brief vertex reprensenting instantaneous position of the robot relative to itself
- * Trivial: in the graph it's always located at the origin with an orientation of 0 degrees, and
- * should always be connected to the vertex representing the current state.
- * 
- */
-const vertexDescriptor movingVertex=0; 
 
-class Planner{
-    protected:
-
-    public:
     /**
      * @brief Information about what the configurator is doing (current Task, current vertex), what it wants to do (overarching goal), and whether it has done it before (been, goal vertex) 
      * 
@@ -63,6 +52,20 @@ class Planner{
         std::vector<vertexDescriptor> plan()const{return m_plan;}
 
     };
+
+/**
+ * @brief vertex reprensenting instantaneous position of the robot relative to itself
+ * Trivial: in the graph it's always located at the origin with an orientation of 0 degrees, and
+ * should always be connected to the vertex representing the current state.
+ * 
+ */
+const vertexDescriptor movingVertex=0; 
+
+class Planner{
+    protected:
+
+    public:
+
 
 
     /**
@@ -158,7 +161,7 @@ class HorizonStarPlanner:public Planner{
      * @param  info
      * @return std::vector <Frontier> 
      */
-    std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g, Planner::ExecutionInfo & info); //returns the closest vertices to the start vertex which are reached by executing a task of the specified direction
+    std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g, ExecutionInfo & info); //returns the closest vertices to the start vertex which are reached by executing a task of the specified direction
 
 
     /**
@@ -174,7 +177,7 @@ class HorizonStarPlanner:public Planner{
 
 public:
 
-    virtual std::vector<vertexDescriptor> plan(TransitionSystem& g, vertexDescriptor src, Planner::ExecutionInfo & info, bool * finished=NULL);
+    std::vector<vertexDescriptor> plan(TransitionSystem& g, vertexDescriptor src, ExecutionInfo & info, bool * finished=NULL)override;
 
 };
 
