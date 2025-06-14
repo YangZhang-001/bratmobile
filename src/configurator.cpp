@@ -384,52 +384,7 @@ void Configurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,Transitio
 	return;
 }
 
-// std::vector <vertexDescriptor> Configurator::planner( TransitionSystem& g, vertexDescriptor src, vertexDescriptor goal, bool been, const Task* custom_ctrl_goal, bool *finished){
-// 	std::vector<std::vector<vertexDescriptor>> paths;
-// 	paths.push_back(std::vector<vertexDescriptor>()={src});
-// 	std::vector <Frontier> frontier_v;
-// 	bool _finished=false;
-// 	std::vector <Frontier> priorityQueue={Frontier(src, std::vector<vertexDescriptor>())};
-// 	Task overarching_goal;
-// 	if (NULL==custom_ctrl_goal){
-// 		overarching_goal=controlGoal;
-// 	}
-// 	else{
-// 		overarching_goal=*custom_ctrl_goal;
-// 	}
-// 	int no_out=0;
-// 	std::vector <vertexDescriptor> add;
-// 	std::vector<std::vector<vertexDescriptor>>::reverse_iterator path= paths.rbegin();
-// 	vertexDescriptor path_end=src;
-// 	auto start_time=std::chrono::high_resolution_clock::now();
-// 	do{
-// 		frontier_v=frontierVertices(src, g, DEFAULT, been); // get next default tasks (plus non-default connecting tasks)
-// 		priorityQueue.erase(priorityQueue.begin());
-// 		for (Frontier f: frontier_v){ //add to priority queue
-// 			//planPriority(g, f.first);
-// 			addToPriorityQueue(f, priorityQueue, g);
-// 		}
-// 		if (!priorityQueue.empty()){
-// 			src=priorityQueue.begin()->first; //lowest phi vertex
-// 			add=std::vector <vertexDescriptor>(priorityQueue.begin()->second.begin(), priorityQueue.begin()->second.end());//lowest phi frontier
-// 			add.push_back(src);
-// 			Planner::path2add2(path, add, paths, g); //find path to add frontier (add) to
-// 			for (vertexDescriptor c:add){
-// 				g[c].label=VERTEX_LABEL::UNLABELED;
-// 				path->push_back(c);	
-// 				path_end=c;			
-// 			}
-// 		}
-// 		_finished=overarching_goal.checkEnded(g[path_end].endPose, UNDEFINED, true).ended;
-// 		if (NULL!=finished){
-// 			*finished=_finished;
-// 		}
-// 		if (_finished){
-// 			goal=path_end;
-// 		}
-// 	}while(!priorityQueue.empty() && (path_end!=goal && !(_finished)));
-// 	return Planner::best_path(paths, goal, currentVertex, currentTask.change, g);
-// }
+
 
 
 
@@ -928,37 +883,6 @@ void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
 
 }
 
-// void Configurator::track_task_execution(){
-// 	bool ended=false;
-// 	b2Transform deltaPose=b2Transform_zero;
-// 	if (iteration>1){
-// 		//find transl/rotation and if task has a real Di (not imagined, e.g. a goal), update the disturbance's location
-// 		deltaPose=worldBuilder.wb_bridger.get_transform(currentTask, data2fp, &currentTask.disturbance, worldBuilder.world_objects, task_sensor); //track using obstacle OR dead reckoning
-// 	}
-// 	//update the map by rotating its component by the found translation/rotation
-// 	debug::print_pose(deltaPose, "delta pose");
-// 	update_graph(transitionSystem, deltaPose);
-// 	//check if this task has ended
-// 	ended=currentTask.checkEnded(task_sensor, b2Transform_zero, worldBuilder.wb_bridger.get_tracked_disturbance()); //the sensor moves with the robot
-// 	//get angle error for correcting motor output
-// 	b2Rot angle_error(currentTask.action.getTransform(LIDAR_SAMPLING_RATE).q.GetAngle()-deltaPose.q.GetAngle());
-// 	//correct motor
-// 	if (currentTask.direction==DEFAULT){
-// 		float float_angle=angle_error.GetAngle(), new_angle=0;
-// 		if(task_controller->get_disturbance().getAffIndex()){
-// 			float desired_distance=task_controller->get_disturbance().pose().p.y;
-// 			float observed_distance=currentTask.disturbance.pose().p.y;
-// 			float distance_error=desired_distance-observed_distance;
-// 			new_angle=control->outer_loop(distance_error);
-
-// 		}
-// 		printf("angle error =%f, angle =%f, new_angle=%f\n", angle_error.GetAngle(), float_angle, new_angle);
-// 		control->PID(float_angle);
-// 	}
-// 	if(currentTask.motorStep==0 || ended){
-// 		currentTask.change=1;
-// 	}
-// }
 
 void Configurator::change_task(){
 	if (!currentTask.change){
