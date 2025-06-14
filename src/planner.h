@@ -181,4 +181,11 @@ public:
 
 };
 
+class NoPlanner:public Planner{
+
+    std::vector<vertexDescriptor> plan(TransitionSystem& g, vertexDescriptor src, ExecutionInfo & info, bool * finished=NULL)override{}
+
+
+};
+
 #endif

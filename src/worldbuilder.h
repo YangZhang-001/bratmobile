@@ -7,9 +7,13 @@ class WorldBuilder{
     char bodyFile[100];
     float simulationStep=BOX2DRANGE;
     int bodies=0;
-
-    public:
     std::vector <BodyFeatures> world_objects;
+    protected:
+    friend class Explorer;
+    void set_world_objects(const std::vector <BodyFeatures>& wo){
+        world_objects=wo;
+    }
+    public:
     enum CLUSTERING{BOX=0, KMEANS=1, PARTITION=2}; //BOX: bounding box around points
         struct CompareCluster{
         CompareCluster()=default;
@@ -101,6 +105,9 @@ class WorldBuilder{
     b2AABB  makeRobotSensor(b2Body*, Disturbance *goal); //returns bounding box in world coord
     
 
+    std::vector <BodyFeatures>& get_world_objects(){
+        return world_objects;
+    }
 
 };
 #endif
