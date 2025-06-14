@@ -117,7 +117,7 @@ void Configurator::explore_plan(b2World&world){
         bool finished=false;
 
         Planner::ExecutionInfo info=package_info();
-        plan_tmp= planner->plan(transitionSystem,info, &finished); //src
+        plan_tmp= planner->plan(transitionSystem, currentVertex,info, &finished); //src
     }
     else{
         printf("recycled plan in explorer:\n");
