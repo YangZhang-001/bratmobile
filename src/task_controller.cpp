@@ -20,7 +20,7 @@ if (plan.empty()){
 	currentTask=Task(controlGoal.disturbance, UNDEFINED);
 	currentTask.action.setLWheelSpeed(0);
 	currentTask.action.setRWheelSpeed(0);
-	currentTask.change=1;
+	currentTask.set_change(true);
 	return;
 }
 int i=to_task_end(g, plan);
