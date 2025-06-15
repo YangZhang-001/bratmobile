@@ -39,6 +39,8 @@ TEST_P(HighLevelTest, CheckPlan){
     init(goal);
     std::string folder=GetParam().second;
     get_plan(folder);
+    EXPECT_GT(ci.data2fp.size(),0);
+    EXPECT_GT(configurator->data_size(),0);
     int vertices_og=configurator->n_vertices();
     for (int i=0;i<iteration; i++){ //simulate execution
         b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
@@ -75,6 +77,9 @@ TEST_F(HighLevelTest, AcquireData){
     di.newScanAvail();
     EXPECT_TRUE(di.has_interface());
     EXPECT_GT(ci.data2fp.size(),0);
+    configurator->set_data2fp(ci.data2fp);
+    EXPECT_GT(configurator->data_size(),0);
+
 }
 
 int main(int argc, char** argv){

@@ -20,8 +20,8 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
 }
 
 class DebugConfigurator:public AttentiveConfigurator{
-    friend class HighLevelTest;
     public:
+    friend class HighLevelTest;
     int n_edges(){return transitionSystem.m_edges.size();}
 
     int n_vertices(){return transitionSystem.m_vertices.size();}
@@ -50,6 +50,14 @@ class DebugConfigurator:public AttentiveConfigurator{
 
     Task & getGoal(){
         return controlGoal;
+    }
+
+    void set_data2fp(const CoordinateContainer &data){
+        data2fp=data;
+    }
+
+    int data_size(){
+        return data2fp.size();
     }
 };
 
