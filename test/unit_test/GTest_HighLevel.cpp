@@ -25,7 +25,7 @@ TEST_P(HighLevelTest, FirstPlan){
         goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
 
     }
-    init(goal);
+    configurator->init(goal);
     std::string folder=GetParam().second;
     try{
         get_plan(folder);
@@ -49,7 +49,7 @@ TEST_P(HighLevelTest, CheckPlan){
     if (GetParam().first){
         goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
     }
-    init(goal);
+    configurator->init(goal);
     std::string folder=GetParam().second;
     get_plan(folder);
     int vertices_og=configurator->n_vertices();
