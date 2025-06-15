@@ -213,8 +213,8 @@ void HighLevelTest::init( const Task& goal){
     configurator->registerInterface(&ci, &m);
     configurator->setSimulationStep(ROBOT_HALFWIDTH*2);
     configurator->register_planner(&planner);
-    configurator->currentTask.set_change(true);
     configurator->init(goal);
+    configurator->currentTask.set_change(true);
 
 }
 

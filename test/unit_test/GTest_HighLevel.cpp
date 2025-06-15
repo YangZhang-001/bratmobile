@@ -9,7 +9,6 @@ TEST_F(HighLevelTest, Init){
 }
 
 TEST_F(HighLevelTest, AcquireData){
-    init();
     di.set_folder("../cul_de_sac/");
     di.newScanAvail();
     EXPECT_TRUE(di.has_interface());
@@ -19,9 +18,9 @@ TEST_F(HighLevelTest, AcquireData){
 
 }
 
-TEST_P(HighLevelTest, Plan){
+TEST_P(HighLevelTest, FirstPlan){
     Task goal;
-    bool hasGoal=GetParam().first;
+    bool hasGoal=GetParam().first, success=false;
     if (hasGoal){
         goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
 
@@ -34,7 +33,6 @@ TEST_P(HighLevelTest, Plan){
     catch(...){}
     EXPECT_GT(ci.data2fp.size(),0);
     EXPECT_GT(configurator->data_size(),0);
-    bool success=false;
     if (!hasGoal){
         success=configurator->plan_reaches_horizon();
     }
@@ -50,7 +48,6 @@ TEST_P(HighLevelTest, CheckPlan){
     Task goal;
     if (GetParam().first){
         goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
-
     }
     init(goal);
     std::string folder=GetParam().second;
@@ -71,7 +68,7 @@ TEST_P(HighLevelTest, CheckPlan){
 
 
 
-INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(
+INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
                                                                    std::pair(false, std::string("../cul_de_sac/")),
                                                                    std::pair (true, std::string("../target_40cm/")),
                                                                    std::pair (true, std::string("../target_68cm/")),
