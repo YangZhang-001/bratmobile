@@ -796,7 +796,6 @@ void AttentiveConfigurator::ts_cleanup(TransitionSystem & g, std::vector <vertex
 	ViableEdge ke(&transitionSystem);
 	FilteredTS fts(transitionSystem, ke, connected); //boost::keep_all()
 	TransitionSystem tmp;
-	if (fts.m_g.)
 	boost::copy_graph(fts, tmp);
 	//transitionSystem.clear();
 	transitionSystem.swap(tmp);		
