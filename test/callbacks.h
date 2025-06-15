@@ -133,6 +133,10 @@ public:
     void registerInterface(LIDAR_In *i){
         ci=i;
     }
+
+    bool has_interface(){
+        return ci!=NULL;
+    }
 };
 
 class StepCallback{

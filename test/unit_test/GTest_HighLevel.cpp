@@ -70,6 +70,7 @@ TEST(Initialisation, InitialMap){
 
 TEST_F(HighLevelTest, AcquireData){
     init();
+    EXPECT_TRUE(di.has_interface());
     di.set_iteration(iteration);
     di.newScanAvail();
     EXPECT_GT(ci.data2fp.size(),0);
