@@ -16,8 +16,10 @@ TEST_P(HighLevelTest, Plan){
 
     }
     init(goal);
-    EXPECT_GT(ci.data2fp.size(),0);
     get_plan(GetParam().second);
+    EXPECT_GT(ci.data2fp.size(),0);
+    EXPECT_GT(configurator->data_size(),0);
+
     bool success=false;
     if (!GetParam().first){
         success=configurator->plan_reaches_horizon();
@@ -39,8 +41,6 @@ TEST_P(HighLevelTest, CheckPlan){
     init(goal);
     std::string folder=GetParam().second;
     get_plan(folder);
-    EXPECT_GT(ci.data2fp.size(),0);
-    EXPECT_GT(configurator->data_size(),0);
     int vertices_og=configurator->n_vertices();
     for (int i=0;i<iteration; i++){ //simulate execution
         b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
