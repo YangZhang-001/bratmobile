@@ -25,7 +25,7 @@ TEST_P(HighLevelTest, Plan){
         success=configurator->plan_reaches_goal();
     }
     configurator->printPlan();
-    EXPECT_GT(configurator->get_plan().size(),0);
+    EXPECT_GT(configurator->get_plan().size(),1);
     EXPECT_TRUE(success);
 }
 
@@ -71,6 +71,7 @@ TEST(Initialisation, InitialMap){
 TEST_F(HighLevelTest, AcquireData){
     init();
     EXPECT_TRUE(di.has_interface());
+    di.set_folder("../cul_de_sac/");
     di.set_iteration(iteration);
     di.newScanAvail();
     EXPECT_GT(ci.data2fp.size(),0);
