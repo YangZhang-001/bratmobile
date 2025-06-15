@@ -87,13 +87,12 @@ public:
 		ci->data2fp.clear();
 		char filePath[256];
         char folderName[256];
-        sprintf(folderName,"%s", *folder.c_str());
+        sprintf(folderName,"%s", folder.c_str());
         if (folderName != NULL){
             sprintf(filePath, "%smap%04d.dat", folderName, iteration);
             printf("%s\n", filePath);
             FILE *f;
             if (!(f=fopen(filePath, "r"))){
-                throw "can't open!";
                 if (iteration>1){
                     iteration=1;
                 }

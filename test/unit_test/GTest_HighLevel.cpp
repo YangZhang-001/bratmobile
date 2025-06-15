@@ -71,7 +71,8 @@ TEST(Initialisation, InitialMap){
 
 TEST_F(HighLevelTest, AcquireData){
     init();
-    get_plan("../cul_de_sac/");
+    di.set_folder("../cul_de_sac/");
+    di.newScanAvail();
     EXPECT_TRUE(di.has_interface());
     EXPECT_GT(ci.data2fp.size(),0);
 }
