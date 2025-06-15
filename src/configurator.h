@@ -68,9 +68,6 @@ void addIteration(int i=1){
 	iteration+=i;
 }
 
-const Task & getTask(){ //returns Task being executed
-	return currentTask;
-}
 
 void dummy_vertex(vertexDescriptor src);
 

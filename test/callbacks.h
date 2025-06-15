@@ -78,6 +78,7 @@ LIDAR_In * ci=NULL;
 std::string folder;
 public:
 
+    DataInterface(){}
     DataInterface(LIDAR_In * _ci): ci(_ci){}
 
 	bool newScanAvail(){ //uncomment sections to write x and y to files		
@@ -123,6 +124,14 @@ public:
 
     void set_folder(std::string str){
         folder=str;
+    }
+
+    void set_iteration(int i){
+        iteration=i;
+    }
+
+    void registerInterface(LIDAR_In *i){
+        ci=i;
     }
 };
 

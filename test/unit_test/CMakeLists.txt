@@ -46,8 +46,6 @@ gtest_discover_tests(GTest_Backtrack)
 
 # set(CTEST_OUTPUT_ON_FAILURE 1)
 
-# add_executable(split_task ../test_essentials.h split_task.cpp)
-# add_executable(backtrack ../test_essentials.h backtrack.cpp)
 # #add_executable(explorer explorer.cpp ../test_essentials.h)
 # add_executable(transitionMatrix ../test_essentials.h transitionMatrix.cpp)
 # add_executable(disturbance_dimensions ../test_essentials.h disturbance_dimensions.cpp)
@@ -92,8 +90,6 @@ gtest_discover_tests(GTest_Backtrack)
 # target_link_libraries(axb CloCK ${OpenCV_LIBS} box2d)
 # target_link_libraries(closed_loop_ended CloCK ${OpenCV_LIBS} box2d rt)
 # target_link_libraries(task_to_execute CloCK ${OpenCV_LIBS} box2d rt)
-# target_link_libraries(split_task CloCK ${OpenCV_LIBS} box2d rt  )
-# target_link_libraries(backtrack CloCK ${OpenCV_LIBS} box2d rt  )
 # #target_link_libraries(explorer CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(transitionMatrix CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(disturbance_dimensions CloCK ${OpenCV_LIBS} box2d rt  )
@@ -115,19 +111,8 @@ gtest_discover_tests(GTest_Backtrack)
 # target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d )
 
 
-#end, start, D
-# add_test(NAME split_task COMMAND split_task 0.6 0 0)
-# add_test(NAME split_task_-01 COMMAND split_task 0.26 -0.01 -1.570796 0 0 -1.570796 0.265 -0.16 0)
-# add_test(NAME split_task_angle COMMAND split_task 0.0 .6 1.57079633)
-# add_test(NAME split_task_offset COMMAND split_task 0.75 0.27 0 0.2 0.27 0)
-# add_test(NAME split_task_offset_angle COMMAND split_task 0.27 0.75 1.57079633 0.27 0.2 1.57079633)
-# add_test(NAME split_task_1_node COMMAND split_task 0.27 0 0)
-# add_test(NAME split_task_0_nodes COMMAND split_task 0.18 0 0)
-
 # add_test(NAME split_step COMMAND split_step 0.68 0 )
 
-# add_test(NAME backtrack COMMAND backtrack 0.6 0 0)
-# add_test(NAME backtrack_-01 COMMAND backtrack 0.26 -0.01 -1.570796 0 0 -1.570796 0.265 -0.16 0)
 # add_test(NAME affine_transformation_ahead COMMAND affine_transformation 1 0 0)
 
 # add_test(NAME transition COMMAND transitionMatrix)

@@ -28,35 +28,37 @@ TEST_P(HighLevelTest, Plan){
     EXPECT_TRUE(success);
 }
 
+TEST_P(HighLevelTest, CheckPlan){
+    Task goal;
+    if (GetParam().first){
+        goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
+
+    }
+    init(goal);
+    std::string folder=GetParam().second;
+    get_plan(folder);
+    int vertices_og=configurator->n_vertices();
+    for (int i=0;i<iteration; i++){ //simulate execution
+        b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
+        configurator->update_graph(configurator->get_ts(), deltaPose);
+        configurator->estimate_current_vertex(configurator->get_ts(), configurator->getTask());    
+
+    }
+    get_plan(folder, iteration); //map 3
+    int vertices_now=configurator->n_vertices();
+    EXPECT_LE(vertices_now, vertices_og);
+    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+    EXPECT_TRUE(planned_to_goal);
+}
+
+
+
 INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(std::pair(false, std::string()),
                                                                    std::pair(false, std::string("../cul_de_sac/")),
                                                                    std::pair (true, std::string("../target_40cm/")),
                                                                    std::pair (true, std::string("../target_68cm/")),
                                                                    std::pair (true, std::string("../cul_de_sac/"))));
 
-/**
- * @brief Tests split steps
- * 
- */
-// TEST_P(ConfiguratorTest, split_size){
-//     b2Vec2 pos(GetParam(), GetParam());
-//     int desired=desired_split_size(pos, simulationStep);
-//     std::vector <vertexDescriptor> split=test_split(pos.x, pos.y, GetParam(), GetParam(), GetParam(), GetParam())
-//     EXPECT_EQ(split.size(), desired);
-// }
-
-
-// TEST_P(ConfiguratorTest, split_size){
-//     b2Vec2 pos(GetParam(), GetParam());
-//     float max_step=0;
-//     std::vector <vertexDescriptor> split=test_split(pos.x, pos.y, GetParam(), GetParam(), GetParam(), GetParam());
-    //     for (vertexDescriptor v:split){
-    //         if (float length=(transitionSystem[v].endPose.p-start.p).Length(); length>max_step){
-//             max_step=length;
-//         }
-//     }
-//     EXPECT_LT(max_step, conf.simulationStep+0.00001);
-// }
 
 
 TEST(Initialisation, InitialMap){

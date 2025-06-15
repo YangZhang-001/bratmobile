@@ -35,6 +35,22 @@ class DebugConfigurator:public AttentiveConfigurator{
     vertexDescriptor plan_end(){return plan[plan.size()-1];}
 
     b2Vec2 plan_end_b2Vec2(){return transitionSystem[plan_end()].endPose.p;}
+
+    Task & getTask(){ //returns Task being executed
+        return currentTask;
+    }
+
+    std::vector <BodyFeatures> & world_objects(){
+        return worldBuilder.get_world_objects();
+    }
+
+    TransitionSystem & get_ts(){
+        return transitionSystem;
+    }
+
+    Task & getGoal(){
+        return controlGoal;
+    }
 };
 
 
@@ -52,9 +68,10 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     Wise_Controller wc;
     ClosedLoop_Tracker tracker;
     LIDAR_In ci;
+    DataInterface di();
     Motor_Out m;
     HorizonStarPlanner planner;
-
+    int iteration=0;
     void SetUp()override{
         configurator=new DebugConfigurator();
         init();
@@ -78,10 +95,13 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
      * @brief Tests planning
      * 
      * @param folder a folder containing LIDAR scans names "map%04i.dat"
+     * @param it iteration of data interface (determines which map will be read) - 0 reads map 1
      * 
      */
-    std::vector<vertexDescriptor> get_plan(std::string folder);
+    std::vector<vertexDescriptor> get_plan(std::string folder, int it=0);
+    public:
 
+    HighLevelTest(){}
 
     
 
@@ -179,6 +199,7 @@ bool DebugConfigurator::plan_reaches_goal(){
 }
 
 void HighLevelTest::init( const Task& goal){
+    di.registerInterface(&ci);
     configurator->init(goal);
     configurator->currentTask.set_change(true);
     configurator->register_controller(&wc);
@@ -189,8 +210,8 @@ void HighLevelTest::init( const Task& goal){
 }
 
 
-std::vector<vertexDescriptor> HighLevelTest::get_plan(std::string folder){
-    DataInterface di(&ci);
+std::vector<vertexDescriptor> HighLevelTest::get_plan(std::string folder, int it){
+    di.set_iteration(it);
     di.set_folder(folder);
     di.newScanAvail();
     configurator->data2fp= ci.data2fp;
