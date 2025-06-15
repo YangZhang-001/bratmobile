@@ -91,19 +91,19 @@ public:
         if (folderName != NULL){
             sprintf(filePath, "%smap%04d.dat", folderName, iteration);
             printf("%s\n", filePath);
-            FILE *f;
-            if (!(f=fopen(filePath, "r"))){
-                if (iteration>1){
-                    iteration=1;
-                }
-                else{
-                    ci->stop=1;
-                    return false;
-                }
-            }
-            else {
-                fclose(f);
-            }
+            // FILE *f;
+            // if (!(f=fopen(filePath, "r"))){
+            //     if (iteration>1){
+            //         iteration=1;
+            //     }
+            //     else{
+            //         ci->stop=1;
+            //         return false;
+            //     }
+            // }
+            // else {
+            //     fclose(f);
+            // }
             std::ifstream file(filePath);
             float x2, y2;
             while (file>>x2>>y2){
