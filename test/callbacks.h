@@ -93,6 +93,7 @@ public:
             printf("%s\n", filePath);
             FILE *f;
             if (!(f=fopen(filePath, "r"))){
+                throw "can't open file!";
                 if (iteration>1){
                     iteration=1;
                 }
