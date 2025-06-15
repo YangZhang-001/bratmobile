@@ -168,12 +168,14 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				v1 =v0; //frontier
 				std::vector <vertexDescriptor> propagated;
 				do {
+					//task_to_sim_setup
 				start=g[v0].endPose +shift;
 				Disturbance Di=getDisturbance(g, v0, w, g[v0].options[0], start);
 				t = Task(Di, g[v0].options[0], start, true);//need to update end crit
 				std::pair <State, Edge> sk(State(start, Di, g[v0].options[0]), Edge());
 				adjust_simulated_task(v0, g, &t);
 				worldBuilder.buildWorld(w, t.start, t.direction, t.disturbance, 0.15, WorldBuilder::PARTITION); //was g[v].endPose
+				//end setup
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
 				gt::fill(sim, &sk.first, &sk.second); //find simulation result
 				sk.second.it_observed=iteration;

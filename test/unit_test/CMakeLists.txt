@@ -29,6 +29,11 @@ add_executable(GTest_SplitTask GTest_SplitTask.cpp)
 target_link_libraries(GTest_SplitTask gtest gtest_main)
 target_link_libraries(GTest_SplitTask  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
+add_executable(GTest_Backtrack GTest_Backtrack.cpp)
+target_link_libraries(GTest_Backtrack gtest gtest_main)
+target_link_libraries(GTest_Backtrack CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+
 
 gtest_discover_tests(GTest_HighLevel)
 gtest_discover_tests(GTest_AdjustGoal)
