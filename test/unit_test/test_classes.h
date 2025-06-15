@@ -71,7 +71,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     DataInterface di;
     Motor_Out m;
     HorizonStarPlanner planner;
-    int iteration=0;
+    int iteration=1;
     void SetUp()override{
         configurator=new DebugConfigurator();
         init();

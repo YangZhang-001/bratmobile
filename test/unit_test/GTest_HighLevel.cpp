@@ -24,7 +24,8 @@ TEST_P(HighLevelTest, Plan){
     else{
         success=configurator->plan_reaches_goal();
     }
-    EXPECT_TRUE(configurator->get_plan().size()!=0);
+    configurator->printPlan();
+    EXPECT_GT(configurator->get_plan().size(),0);
     EXPECT_TRUE(success);
 }
 
@@ -44,7 +45,7 @@ TEST_P(HighLevelTest, CheckPlan){
         configurator->estimate_current_vertex(configurator->get_ts(), configurator->getTask());    
 
     }
-    get_plan(folder, iteration); //map 3
+    get_plan(folder, iteration); //map 2
     int vertices_now=configurator->n_vertices();
     EXPECT_LE(vertices_now, vertices_og);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
@@ -65,6 +66,13 @@ TEST(Initialisation, InitialMap){
     DebugConfigurator configurator;
     EXPECT_EQ(configurator.n_vertices(),1);
     EXPECT_EQ(configurator.n_edges(), 0);
+}
+
+TEST_F(HighLevelTest, AcquireData){
+    init();
+    di.set_iteration(iteration);
+    di.newScanAvail();
+    EXPECT_GT(ci.data2fp.size(),0);
 }
 
 int main(int argc, char** argv){
