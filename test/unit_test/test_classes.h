@@ -72,7 +72,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     protected:
 
 
-    DebugConfigurator * configurator=NULL;
+    DebugConfigurator configurator;
     Wise_Controller wc;
     ClosedLoop_Tracker tracker;
     LIDAR_In ci;
@@ -81,17 +81,10 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     HorizonStarPlanner planner;
     int iteration=0;
     void SetUp()override{
-        configurator=new DebugConfigurator();
         init();
     }
 
     void TearDown()override{
-        try{
-            delete configurator;
-        }
-        catch(...){
-            std::cout <<"caught!"<<std::endl;
-        }
     }
     /**
      * @brief Initialises Fixture
@@ -208,13 +201,13 @@ bool DebugConfigurator::plan_reaches_goal(){
 
 void HighLevelTest::init( const Task& goal){
     di.registerInterface(&ci);
-    configurator->register_controller(&wc);
-    configurator->register_tracker(&tracker);
-    configurator->registerInterface(&ci, &m);
-    configurator->setSimulationStep(ROBOT_HALFWIDTH*2);
-    configurator->register_planner(&planner);
-    configurator->init(goal);
-    configurator->currentTask.set_change(true);
+    configurator.register_controller(&wc);
+    configurator.register_tracker(&tracker);
+    configurator.registerInterface(&ci, &m);
+    configurator.setSimulationStep(ROBOT_HALFWIDTH*2);
+    configurator.register_planner(&planner);
+    configurator.init(goal);
+    configurator.currentTask.set_change(true);
 
 }
 
@@ -223,9 +216,9 @@ std::vector<vertexDescriptor> HighLevelTest::get_plan(std::string folder, int it
     di.set_iteration(it);
     di.set_folder(folder);
     di.newScanAvail();
-    configurator->data2fp= ci.data2fp;
-    configurator->Spawner();
-    return configurator->get_plan();
+    configurator.data2fp= ci.data2fp;
+    configurator.Spawner();
+    return configurator.get_plan();
 }
 
 edgeDescriptor ConfiguratorTest32DT::make_successful(vertexDescriptor v0){
