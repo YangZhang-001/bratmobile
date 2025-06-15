@@ -8,6 +8,16 @@ TEST_F(HighLevelTest, Init){
     EXPECT_TRUE(configurator->get_controller()!=NULL);
 }
 
+TEST_F(HighLevelTest, AcquireData){
+    init();
+    di.set_folder("../cul_de_sac/");
+    di.newScanAvail();
+    EXPECT_TRUE(di.has_interface());
+    EXPECT_GT(ci.data2fp.size(),0);
+    configurator->set_data2fp(ci.data2fp);
+    EXPECT_GT(configurator->data_size(),0);
+
+}
 
 TEST_P(HighLevelTest, Plan){
     Task goal;
@@ -16,7 +26,8 @@ TEST_P(HighLevelTest, Plan){
 
     }
     init(goal);
-    get_plan(GetParam().second);
+    std::string folder=GetParam().second;
+    get_plan(folder);
     EXPECT_GT(ci.data2fp.size(),0);
     EXPECT_GT(configurator->data_size(),0);
     bool success=false;
@@ -70,16 +81,7 @@ TEST(Initialisation, InitialMap){
     EXPECT_EQ(configurator.n_edges(), 0);
 }
 
-TEST_F(HighLevelTest, AcquireData){
-    init();
-    di.set_folder("../cul_de_sac/");
-    di.newScanAvail();
-    EXPECT_TRUE(di.has_interface());
-    EXPECT_GT(ci.data2fp.size(),0);
-    configurator->set_data2fp(ci.data2fp);
-    EXPECT_GT(configurator->data_size(),0);
 
-}
 
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
