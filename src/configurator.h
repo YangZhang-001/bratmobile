@@ -34,7 +34,7 @@ protected:
 	CoordinateContainer data2fp;
 	TransitionSystem transitionSystem=TransitionSystem(1);
 	WorldBuilder worldBuilder;
-	vertexDescriptor currentVertex=movingVertex;
+	vertexDescriptor currentVertex;
 	edgeDescriptor movingEdge, currentEdge;
 
 	public:
@@ -50,7 +50,7 @@ Configurator(Task _task){
  * 
  * @param _task the new overarching goal
  */
-void init(Task _task);
+void init(Task _task=Task());
 
 /**
  * @brief Calls functions to explore the state space and extract a plan

@@ -7,7 +7,8 @@ void Configurator::init(Task _task){
 	//previousTimeScan = std::chrono::high_resolution_clock::now();
 	//movingVertex=boost::add_vertex(transitionSystem);
 	transitionSystem[movingVertex].Di=controlGoal.disturbance;
-	//currentVertex=movingVertex;
+	currentVertex=movingVertex;
+	boost::add_edge(movingVertex, currentVertex,transitionSystem);
 	currentTask.action.setVelocities(0,0);
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
 
@@ -791,13 +792,13 @@ float Configurator::approximate_angle(const float & angle, const Direction & d, 
 
 
 void AttentiveConfigurator::ts_cleanup(TransitionSystem & g, std::vector <vertexDescriptor>& p){
-	Connected connected(&g);
-	ViableEdge ke(&g);
-	FilteredTS fts(g, ke, connected); //boost::keep_all()
+	Connected connected(&transitionSystem);
+	ViableEdge ke(&transitionSystem);
+	FilteredTS fts(transitionSystem, ke, connected); //boost::keep_all()
 	TransitionSystem tmp;
 	boost::copy_graph(fts, tmp);
-	g.clear();
-	g.swap(tmp);		
+	transitionSystem.clear();
+	transitionSystem.swap(tmp);		
 }
  
 void AttentiveConfigurator::shift_states(TransitionSystem & g, const std::vector<vertexDescriptor>& p, const b2Transform & shift_start){
@@ -823,16 +824,15 @@ vertexDescriptor AttentiveConfigurator::get_explore_start(TransitionSystem & g){
 }
 
 void AttentiveConfigurator::pre_explore(){
-	if (!currentTask.get_change()){
-		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
-	}
-	else{
+
+	boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
+	if (currentTask.get_change()){
+
 	//	transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
 		transitionSystem[movingVertex].Di=currentTask.disturbance;
 
 		transitionSystem[movingVertex].outcome=simResult::successful;
 		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
-		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 		// std::pair<edgeDescriptor, bool> ep(edgeDescriptor(), false);
 		// if (!p.empty()){
 		// 	ep=boost::edge(currentVertex, p[0], g);
