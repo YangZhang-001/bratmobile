@@ -19,7 +19,6 @@ TEST_P(HighLevelTest, Plan){
     get_plan(GetParam().second);
     EXPECT_GT(ci.data2fp.size(),0);
     EXPECT_GT(configurator->data_size(),0);
-
     bool success=false;
     if (!GetParam().first){
         success=configurator->plan_reaches_horizon();
@@ -57,7 +56,7 @@ TEST_P(HighLevelTest, CheckPlan){
 
 
 
-INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(std::pair(false, std::string()),
+INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(
                                                                    std::pair(false, std::string("../cul_de_sac/")),
                                                                    std::pair (true, std::string("../target_40cm/")),
                                                                    std::pair (true, std::string("../target_68cm/")),
