@@ -68,7 +68,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     Wise_Controller wc;
     ClosedLoop_Tracker tracker;
     LIDAR_In ci;
-    DataInterface di();
+    DataInterface di;
     Motor_Out m;
     HorizonStarPlanner planner;
     int iteration=0;
