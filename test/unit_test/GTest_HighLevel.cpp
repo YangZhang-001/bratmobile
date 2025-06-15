@@ -59,6 +59,12 @@ INSTANTIATE_TEST_CASE_P(FormPlan, HighLevelTest, ::testing::Values(std::pair(fal
 // }
 
 
+TEST(Initialisation, InitialMap){
+    DebugConfigurator configurator;
+    EXPECT_EQ(configurator.n_vertices(),1);
+    EXPECT_EQ(configurator.n_edges(), 0);
+}
+
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
