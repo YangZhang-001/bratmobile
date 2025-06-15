@@ -25,14 +25,14 @@ add_executable(GTest_AdjustGoal GTest_AdjustGoal.cpp)
 target_link_libraries(GTest_AdjustGoal gtest gtest_main)
 target_link_libraries(GTest_AdjustGoal  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
-add_executable(GTest_Configurator GTest_Configurator.cpp)
-target_link_libraries(GTest_Configurator gtest gtest_main)
-target_link_libraries(GTest_Configurator  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+add_executable(GTest_SplitTask GTest_SplitTask.cpp)
+target_link_libraries(GTest_SplitTask gtest gtest_main)
+target_link_libraries(GTest_SplitTask  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 
 gtest_discover_tests(GTest_HighLevel)
 gtest_discover_tests(GTest_AdjustGoal)
-gtest_discover_tests(GTest_Configurator)
+gtest_discover_tests(GTest_SplitTask)
 
 
 # INCLUDE_DIRECTORIES("/usr/local/include/")
@@ -109,7 +109,7 @@ gtest_discover_tests(GTest_Configurator)
 # target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d )
 
 
-
+#end, start, D
 # add_test(NAME split_task COMMAND split_task 0.6 0 0)
 # add_test(NAME split_task_-01 COMMAND split_task 0.26 -0.01 -1.570796 0 0 -1.570796 0.265 -0.16 0)
 # add_test(NAME split_task_angle COMMAND split_task 0.0 .6 1.57079633)
