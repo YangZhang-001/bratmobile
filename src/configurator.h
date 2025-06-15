@@ -34,12 +34,14 @@ protected:
 	CoordinateContainer data2fp;
 	TransitionSystem transitionSystem=TransitionSystem(1);
 	WorldBuilder worldBuilder;
-	vertexDescriptor currentVertex;
-	edgeDescriptor movingEdge, currentEdge;
+	vertexDescriptor currentVertex=TransitionSystem::null_vertex();
+	edgeDescriptor movingEdge=edgeDescriptor(), currentEdge=edgeDescriptor();
 
 	public:
 
-Configurator(){};
+Configurator(){
+	init();
+}
 
 Configurator(Task _task){
 	init(_task);

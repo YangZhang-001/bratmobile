@@ -8,7 +8,7 @@ void Configurator::init(Task _task){
 	//movingVertex=boost::add_vertex(transitionSystem);
 	transitionSystem[movingVertex].Di=controlGoal.disturbance;
 	currentVertex=movingVertex;
-	boost::add_edge(movingVertex, currentVertex,transitionSystem);
+	//boost::add_edge(movingVertex, currentVertex,transitionSystem);
 	currentTask.action.setVelocities(0,0);
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
 
@@ -796,8 +796,9 @@ void AttentiveConfigurator::ts_cleanup(TransitionSystem & g, std::vector <vertex
 	ViableEdge ke(&transitionSystem);
 	FilteredTS fts(transitionSystem, ke, connected); //boost::keep_all()
 	TransitionSystem tmp;
+	if (fts.m_g.)
 	boost::copy_graph(fts, tmp);
-	transitionSystem.clear();
+	//transitionSystem.clear();
 	transitionSystem.swap(tmp);		
 }
  
@@ -824,8 +825,9 @@ vertexDescriptor AttentiveConfigurator::get_explore_start(TransitionSystem & g){
 }
 
 void AttentiveConfigurator::pre_explore(){
-
-	boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
+	if (movingVertex!=currentVertex){
+		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
+	}	
 	if (currentTask.get_change()){
 
 	//	transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
