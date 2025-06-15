@@ -16,6 +16,7 @@ TEST_P(HighLevelTest, Plan){
 
     }
     init(goal);
+    EXPECT_GT(ci.data2fp.size(),0);
     get_plan(GetParam().second);
     bool success=false;
     if (!GetParam().first){
@@ -70,10 +71,8 @@ TEST(Initialisation, InitialMap){
 
 TEST_F(HighLevelTest, AcquireData){
     init();
+    get_plan("../cul_de_sac/");
     EXPECT_TRUE(di.has_interface());
-    di.set_folder("../cul_de_sac/");
-    di.set_iteration(iteration);
-    di.newScanAvail();
     EXPECT_GT(ci.data2fp.size(),0);
 }
 
