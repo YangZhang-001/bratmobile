@@ -42,7 +42,7 @@ TEST_P(ConfiguratorTest32DT, splitTask){
     EXPECT_EQ(split.size(), expected_splitSize);
     int ct=0;
     for (vertexDescriptor v:split){
-        float step_size=(transitionSystem[v].endPose.p-start.p).Length();
+        float step_size=(transitionSystem[v].endPose.p-transitionSystem[v].start.p).Length();
         EXPECT_LT(step_size, simulationStep+0.00001);
         EXPECT_FALSE(transitionSystem[v].Di.isValid());
         if(ct<(split.size()-1)){
