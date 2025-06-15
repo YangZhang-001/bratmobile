@@ -6,18 +6,28 @@
  * 
  */
 class ConfiguratorTest32DT:public ConfiguratorTest, public testing::WithParamInterface<std::tuple<b2Transform, b2Transform,b2Transform>>{
-
+    protected:
+    /**
+     * @brief returns an edge connecting vertex 0 to a vertex pointing to a crashed state
+     * 
+     */
+    edgeDescriptor make_v1_crashed(b2Transform start, b2Transform endPose, b2Transform Dn){
+        auto v1=boost::add_vertex(transitionSystem);
+        auto e=boost::add_edge(movingVertex, v1, transitionSystem);
+        transitionSystem[v1].direction=DEFAULT;
+        transitionSystem[e.first].step=1;
+        transitionSystem[v1].outcome=simResult::crashed;
+        transitionSystem[v1].start=start; //start
+        transitionSystem[v1].endPose=endPose;//pose
+        transitionSystem[v1].Dn=Disturbance(AVOID, Dn.p,Dn.q.GetAngle());
+        return e.first;
+    }
 };
 
 
 TEST_P(ConfiguratorTest32DT, splitTask){
-    auto v1=boost::add_vertex(transitionSystem);
-    auto e=boost::add_edge(movingVertex, v1, transitionSystem);
-    transitionSystem[v1].outcome=simResult::crashed;
     b2Transform start=std::get<0>(GetParam());
-    transitionSystem[v1].start=start; //start
-    transitionSystem[v1].endPose=std::get<1>(GetParam());//pose
-    transitionSystem[v1].Dn=Disturbance(AVOID, (std::get<2>(GetParam())).p,(std::get<2>(GetParam()).q.GetAngle()));
+    vertexDescriptor v1=(make_v1_crashed(start, std::get<1>(GetParam()), std::get<2>(GetParam()))).m_target;
     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem, transitionSystem[v1].direction, currentVertex);
     b2Vec2 endPosition=std::get<1>(GetParam()).p;
     int expected_splitSize=int(endPosition.Length()/(simulationStep+0.00001))+1;
