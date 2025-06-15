@@ -208,13 +208,14 @@ bool DebugConfigurator::plan_reaches_goal(){
 
 void HighLevelTest::init( const Task& goal){
     di.registerInterface(&ci);
-    configurator->init(goal);
-    configurator->currentTask.set_change(true);
     configurator->register_controller(&wc);
     configurator->register_tracker(&tracker);
     configurator->registerInterface(&ci, &m);
     configurator->setSimulationStep(ROBOT_HALFWIDTH*2);
     configurator->register_planner(&planner);
+    configurator->currentTask.set_change(true);
+    configurator->init(goal);
+
 }
 
 

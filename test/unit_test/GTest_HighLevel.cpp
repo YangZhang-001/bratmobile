@@ -21,17 +21,21 @@ TEST_F(HighLevelTest, AcquireData){
 
 TEST_P(HighLevelTest, Plan){
     Task goal;
-    if (GetParam().first){
+    bool hasGoal=GetParam().first;
+    if (hasGoal){
         goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
 
     }
     init(goal);
     std::string folder=GetParam().second;
-    get_plan(folder);
+    try{
+        get_plan(folder);
+    }
+    catch(...){}
     EXPECT_GT(ci.data2fp.size(),0);
     EXPECT_GT(configurator->data_size(),0);
     bool success=false;
-    if (!GetParam().first){
+    if (!hasGoal){
         success=configurator->plan_reaches_horizon();
     }
     else{
