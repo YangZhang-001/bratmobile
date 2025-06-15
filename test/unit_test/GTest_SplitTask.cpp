@@ -34,8 +34,8 @@ class ConfiguratorTest32DT:public ConfiguratorTest, public testing::WithParamInt
 
 
 TEST_P(ConfiguratorTest32DT, splitTask){
-    b2Transform start=std::get<0>(GetParam());
-    vertexDescriptor v1=(make_v1_crashed(start, std::get<1>(GetParam()), std::get<2>(GetParam()))).m_target;
+    //b2Transform start=std::get<0>(GetParam());
+    vertexDescriptor v1=(make_v1_crashed(std::get<0>(GetParam()), std::get<1>(GetParam()), std::get<2>(GetParam()))).m_target;
     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem, transitionSystem[v1].direction, currentVertex);
     b2Vec2 endPosition=std::get<1>(GetParam()).p;
     int expected_splitSize=int(endPosition.Length()/(simulationStep+0.00001))+1;
@@ -51,7 +51,7 @@ TEST_P(ConfiguratorTest32DT, splitTask){
         if (ct==(split.size()-1)){
             EXPECT_EQ(transitionSystem[v].outcome, simResult::crashed);
         }
-
+        ct++;
     }
     
 }
