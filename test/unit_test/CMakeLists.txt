@@ -38,6 +38,7 @@ target_link_libraries(GTest_Backtrack CloCK ${OpenCV_LIBS} box2d rt GTest::gtest
 gtest_discover_tests(GTest_HighLevel)
 gtest_discover_tests(GTest_AdjustGoal)
 gtest_discover_tests(GTest_SplitTask)
+gtest_discover_tests(GTest_Backtrack)
 
 
 # INCLUDE_DIRECTORIES("/usr/local/include/")
