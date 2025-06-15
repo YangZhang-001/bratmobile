@@ -7,6 +7,14 @@
  */
 class ConfiguratorTest32DT:public ConfiguratorTest, public testing::WithParamInterface<std::tuple<b2Transform, b2Transform,b2Transform>>{
     protected:
+    ConfiguratorTest32DT(){
+        register_tracker(new ClosedLoop_Tracker);
+    }
+
+    ~ConfiguratorTest32DT(){
+        delete tracker;
+    }
+
     /**
      * @brief returns an edge connecting vertex 0 to a vertex pointing to a crashed state
      * 
