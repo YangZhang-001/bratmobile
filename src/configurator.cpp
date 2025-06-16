@@ -793,6 +793,9 @@ float Configurator::approximate_angle(const float & angle, const Direction & d, 
 
 
 void AttentiveConfigurator::ts_cleanup(TransitionSystem & g, std::vector <vertexDescriptor>& p){
+	if (g.m_vertices.size()<2){
+		return;
+	}
 	Connected connected(&transitionSystem);
 	ViableEdge ke(&transitionSystem);
 	FilteredTS fts(transitionSystem, ke, connected); //boost::keep_all()
@@ -944,7 +947,6 @@ void AttentiveConfigurator::explore_plan(b2World&world){
     if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.get_change())){ //currentv not visited means that it wasn't observed ()
         printf("no plan, searchign from %i\n", src);
         bool finished=false;
-
         ExecutionInfo info=package_info();
         plan_tmp= planner->plan(transitionSystem, currentVertex,info, &finished); //src
     }
