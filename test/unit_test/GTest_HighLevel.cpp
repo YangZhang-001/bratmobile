@@ -49,11 +49,13 @@ TEST_P(HighLevelTest, CheckPlan){
     std::string folder=GetParam().second;
     get_plan(folder);
     int vertices_og=configurator->n_vertices();
+    int iteration=2;
+    DeadReckoner deadReckoner;
     for (int i=0;i<iteration; i++){ //simulate execution
-        b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
+        b2Transform deltaPose= deadReckoner.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
         configurator->update_graph(configurator->get_ts(), deltaPose);
         configurator->estimate_current_vertex(configurator->get_ts(), configurator->getTask());    
-
+        configurator->change_task();
     }
     get_plan(folder, iteration); //map 2
     int vertices_now=configurator->n_vertices();
