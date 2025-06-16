@@ -95,10 +95,11 @@ class Planner{
      * 
      * @param state the current state
      * @param start where the task started from
+     * @param d task direction
      * @param _goal the overaraching goal
      * @return EndedResult 
      */
-    static EndedResult estimateCost(const State &state, b2Transform start, Task & _goal); //returns whether the controlGoal has ended and fills node with cost and error
+    static EndedResult estimateCost(const State &state, b2Transform start, Direction d, Task & _goal); //returns whether the controlGoal has ended and fills node with cost and error
 
 
 };

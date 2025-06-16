@@ -9,9 +9,9 @@ float Planner::evaluationFunction(EndedResult er,  const vertexDescriptor& v, st
 }
 
 
-EndedResult Planner::estimateCost(const State &state, b2Transform start, Task &_goal){
+EndedResult Planner::estimateCost(const State &state, b2Transform start, Direction d, Task &_goal){
 	EndedResult er = _goal.checkEnded(state);
-	Task t(state.Dn, state.direction, start);
+	Task t(state.Dn, d, start);
 	er.cost += t.checkEnded(state.endPose).estimatedCost;
 	if (state.outcome==simResult::crashed){
 		er.cost+=2;
@@ -103,7 +103,7 @@ std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, 
 			do {
 				if ((g[(*ei3).m_target].visited() || info.been())&& not_self_edge(*ei3)){ //(*ei3).m_source!=(*ei3).m_target
 					if (!g[(*ei3).m_target].visited()){
-						EndedResult er = estimateCost(g[(*ei3).m_target], g[(*ei3).m_source].endPose, info.overarchingGoal());
+						EndedResult er = estimateCost(g[(*ei3).m_target], g[(*ei3).m_source].endPose, g[(*ei3).m_target].direction,info.overarchingGoal());
 						std::vector<vertexDescriptor>_plan=info.plan();
 						g[(*ei3).m_target].phi=evaluationFunction(er, (*ei3).m_target, _plan);
 					}

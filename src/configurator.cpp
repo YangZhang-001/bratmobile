@@ -183,7 +183,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
 				gt::fill(sim, &sk.first, &sk.second); //find simulation result
 				sk.second.it_observed=iteration;
-				er  = Planner::estimateCost(sk.first, g[v0].endPose, controlGoal);
+				er  = Planner::estimateCost(sk.first, g[v0].endPose, sk.first.direction,controlGoal);
 				StateDifference sd;
 				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.direction, StateMatcher::MATCH_TYPE::ABSTRACT, &sd);		//, closest_match	
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
@@ -355,7 +355,7 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 			else{
 				src=split[i-1];
 			}
-			EndedResult local_er=Planner::estimateCost(g[split_v],g[split_v].start, controlGoal);
+			EndedResult local_er=Planner::estimateCost(g[split_v],g[split_v].start,direction, controlGoal);
 			g[split_v].phi=Planner::evaluationFunction(local_er, split_v, plan_prov);
 			applyTransitionMatrix(g, split_v, direction, local_er.ended,src, plan_prov);
 			addToPriorityQueue(split_v, priority_q, g, closed);
