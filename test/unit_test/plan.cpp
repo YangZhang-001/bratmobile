@@ -41,12 +41,12 @@ int main(int argc, char** argv){
     Configurator conf(goal);
     ClosedLoop_Tracker tracker;
     conf.register_tracker(&tracker);
-    conf.simulationStep=simStep;
+    conf.setSimulationStep(simStep);
     LIDAR_In ci;
     conf.registerInterface(&ci, NULL);
     DataInterface di(&ci);
     if (argc>1){
-        di.folder=argv[1];
+        di.set_folder(argv[1]);
         di.newScanAvail();          
     }
     conf.data2fp = ci.data2fp;

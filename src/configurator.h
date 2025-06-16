@@ -15,7 +15,10 @@
 
 class Configurator{
 protected:
-	int iteration=0; //represents that hasn't started yet, robot isn't moving and there are no map data
+
+
+	public:
+		int iteration=0; //represents that hasn't started yet, robot isn't moving and there are no map data
 	Task currentTask; //need to make thread safe?
 	Controller * task_controller=NULL;
 	Tracker * tracker=NULL;
@@ -36,8 +39,6 @@ protected:
 	vertexDescriptor movingVertex=0;
 	vertexDescriptor currentVertex=movingVertex;
 	edgeDescriptor movingEdge, currentEdge;
-
-	public:
 
 Configurator(){};
 
