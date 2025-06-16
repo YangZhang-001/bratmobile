@@ -795,14 +795,14 @@ float Configurator::approximate_angle(const float & angle, const Direction & d, 
 
 
 void AttentiveConfigurator::ts_cleanup(TransitionSystem & g, std::vector <vertexDescriptor>& p){
-	if (g.m_vertices.size()<2){
-		return;
-	}
 	Connected connected(&transitionSystem);
 	ViableEdge ke(&transitionSystem);
 	FilteredTS fts(transitionSystem, ke, connected); //boost::keep_all()
 	TransitionSystem tmp;
-	boost::copy_graph(fts, tmp);
+	//if (fts.m_g.m_vertices.size()<transitionSystem.m_vertices.size()){
+		boost::copy_graph(fts, tmp);		
+	//}
+
 	//transitionSystem.clear();
 	transitionSystem.swap(tmp);		
 }
@@ -945,7 +945,7 @@ void AttentiveConfigurator::explore_plan(b2World&world){
         std::vector<vertexDescriptor> _plan=(plan);
         debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
     }		
-    ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
+   // ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
     if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.get_change())){ //currentv not visited means that it wasn't observed ()
         printf("no plan, searchign from %i\n", src);
         bool finished=false;
