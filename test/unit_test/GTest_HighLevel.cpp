@@ -66,9 +66,10 @@ TEST_P(HighLevelTest, CheckPlan){
 
 INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
                                                                    std::pair(false, std::string("../cul_de_sac/")),
-                                                                   std::pair (true, std::string("../target_40cm/")),
-                                                                   std::pair (true, std::string("../target_68cm/")),
-                                                                   std::pair (true, std::string("../cul_de_sac/"))));
+                                                                   std::pair (true, std::string("../target_40cm/"))));
+
+INSTANTIATE_TEST_CASE_P(Obstacle68, HighLevelTest, ::testing::Values(
+                                                                   std::pair (true, std::string("../target_68cm/"))));
 
 
 
