@@ -73,9 +73,9 @@ INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
 
 
 TEST(Initialisation, InitialMap){
-    DebugConfigurator configurator;
-    EXPECT_EQ(configurator->n_vertices(),1);
-    EXPECT_EQ(configurator->n_edges(), 0);
+    DebugConfigurator configurator_tmp;
+    EXPECT_EQ(configurator_tmp.n_vertices(),1);
+    EXPECT_EQ(configurator_tmp.n_edges(), 0);
 }
 
 

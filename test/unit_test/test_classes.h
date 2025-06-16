@@ -59,6 +59,10 @@ class DebugConfigurator:public AttentiveConfigurator{
     int data_size(){
         return data2fp.size();
     }
+
+    void clear_plan(){
+        plan.clear();
+    }
 };
 
 
@@ -70,9 +74,7 @@ class DebugConfigurator:public AttentiveConfigurator{
  */
 class HighLevelTest: public testing::Test, public testing::WithParamInterface<std::pair<bool, std::string>>{
     protected:
-
-
-    DebugConfigurator *configurator=NULL;
+    DebugConfigurator * configurator=NULL;
     Wise_Controller wc;
     ClosedLoop_Tracker tracker;
     LIDAR_In ci;

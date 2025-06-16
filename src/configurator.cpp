@@ -4,6 +4,7 @@
 void Configurator::init(Task _task){
 	controlGoal=_task;
 	currentTask=_task;
+	register_tracker(tracker);
 	//previousTimeScan = std::chrono::high_resolution_clock::now();
 	//movingVertex=boost::add_vertex(transitionSystem);
 	transitionSystem[movingVertex].Di=controlGoal.disturbance;
@@ -11,6 +12,7 @@ void Configurator::init(Task _task){
 	//boost::add_edge(movingVertex, currentVertex,transitionSystem);
 	currentTask.action.setVelocities(0,0);
 	currentTask.set_change(1);
+	
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
 
 }
