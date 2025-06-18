@@ -63,6 +63,14 @@ class DebugConfigurator:public AttentiveConfigurator{
     void clear_plan(){
         plan.clear();
     }
+
+    int get_vertex_in_degree(vertexDescriptor v){
+        return boost::in_degree(v, transitionSystem);
+    }
+
+    int get_vertex_out_degree(vertexDescriptor v){
+        return boost::out_degree(v, transitionSystem);
+    }
 };
 
 

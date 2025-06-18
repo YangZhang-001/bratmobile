@@ -945,7 +945,7 @@ void AttentiveConfigurator::explore_plan(b2World&world){
         std::vector<vertexDescriptor> _plan=(plan);
         debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
     }		
-   // ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
+   ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
     if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.get_change())){ //currentv not visited means that it wasn't observed ()
         printf("no plan, searchign from %i\n", src);
         bool finished=false;

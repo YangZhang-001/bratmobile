@@ -174,7 +174,7 @@ struct is_not_v{
 	}	
 
 	private:
-	vertexDescriptor cv;
+	vertexDescriptor cv=0;
 };
 
 

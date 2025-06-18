@@ -81,6 +81,24 @@ TEST(Initialisation, InitialMap){
     EXPECT_EQ(configurator_tmp.n_edges(), 0);
 }
 
+TEST(Boost, RemoveNoEdgesIf){
+    TransitionSystem ts(3);
+    vertexDescriptor v=2;
+    boost::remove_out_edge_if(movingVertex, is_not_v(v), ts);
+    EXPECT_EQ(boost::out_degree(movingVertex, ts), 0);
+}
+
+TEST(Boost, RemoveoneEdgeIf){
+    TransitionSystem ts(3);
+    vertexDescriptor v=2;
+    boost::add_edge(movingVertex, 2, ts);
+    boost::add_edge(movingVertex,1, ts);
+    boost::remove_out_edge_if(movingVertex, is_not_v(v), ts);
+    EXPECT_EQ(boost::out_degree(movingVertex, ts), 1);
+    EXPECT_EQ(boost::in_degree(2, ts), 1);
+
+}
+
 
 
 int main(int argc, char** argv){
