@@ -20,5 +20,5 @@ TEST_P(ConfiguratorTest32DT, backtracksimple){
 }
 
 
-INSTANTIATE_TEST_CASE_P(Backtrack, ConfiguratorTest32DT, ::testing::Values(std::tuple(b2Transform_zero, b2Transform(b2Vec2(0.6, 0), b2Rot(0)), b2Transform_zero),
-                                                                   std::tuple(b2Transform(b2Vec2(0, 0), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.26, -0.01), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.265, -0.16), b2Rot(0)))));
+INSTANTIATE_TEST_CASE_P(Backtrack, ConfiguratorTest32DT, ::testing::Values(std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform_zero, b2Transform(b2Vec2(0.6, 0), b2Rot(0)), b2Transform_zero),
+                                                                   std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform(b2Vec2(0, 0), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.26, -0.01), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.265, -0.16), b2Rot(0)))));

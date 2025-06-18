@@ -18,6 +18,43 @@ TEST_F(HighLevelTest, AcquireData){
 
 }
 
+TEST(Initialisation, InitialMap){
+    DebugConfigurator configurator_tmp;
+    EXPECT_EQ(configurator_tmp.n_vertices(),1);
+    EXPECT_EQ(configurator_tmp.n_edges(), 0);
+}
+
+TEST(Boost, RemoveNoEdgesIf){
+    TransitionSystem ts(3);
+    vertexDescriptor v=2;
+    boost::remove_out_edge_if(movingVertex, is_not_v(v), ts);
+    EXPECT_EQ(boost::out_degree(movingVertex, ts), 0);
+}
+
+TEST(Boost, RemoveoneEdgeIf){
+    TransitionSystem ts(3);
+    vertexDescriptor v=2;
+    boost::add_edge(movingVertex, 2, ts);
+    boost::add_edge(movingVertex,1, ts);
+    boost::remove_out_edge_if(movingVertex, is_not_v(v), ts);
+    EXPECT_EQ(boost::out_degree(movingVertex, ts), 1);
+    EXPECT_EQ(boost::in_degree(2, ts), 1);
+}
+
+TEST_F(ConfiguratorTest, TSCleanup){
+    transitionSystem=TransitionSystem(5);
+    for (int i=1; i<4;i++){
+        boost::add_edge(movingVertex, i, transitionSystem);
+    }
+    boost::add_edge(1,1, transitionSystem); //trivial self-edge
+    boost::add_edge(2,2, transitionSystem); //nontrivial self-edge
+    EXPECT_EQ(transitionSystem.m_vertices.size(), 4);
+    EXPECT_EQ(boost::out_degree(1, transitionSystem), 0); //out edge deleted
+    EXPECT_EQ(boost::in_degree(1, transitionSystem), 1);
+    EXPECT_EQ(boost::out_degree(2, transitionSystem), 1); //edge is preserved
+    EXPECT_EQ(boost::out_degree(0, transitionSystem), 3);
+}
+
 TEST_P(HighLevelTest, FirstPlan){
     Task goal;
     bool hasGoal=GetParam().first, success=false;
@@ -67,37 +104,15 @@ TEST_P(HighLevelTest, CheckPlan){
 
 
 INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
-                                                                   std::pair(false, std::string("../cul_de_sac/")),
-                                                                   std::pair (true, std::string("../target_40cm/"))));
+                                                                   std::pair<bool, std::string>(false, std::string("../cul_de_sac/")),
+                                                                   std::pair<bool, std::string>(true, std::string("../target_40cm/"))));
 
 INSTANTIATE_TEST_CASE_P(Obstacle68, HighLevelTest, ::testing::Values(
-                                                                   std::pair (true, std::string("../target_68cm/"))));
+                                                                   std::pair<bool, std::string>(true, std::string("../target_68cm/"))));
 
 
 
-TEST(Initialisation, InitialMap){
-    DebugConfigurator configurator_tmp;
-    EXPECT_EQ(configurator_tmp.n_vertices(),1);
-    EXPECT_EQ(configurator_tmp.n_edges(), 0);
-}
 
-TEST(Boost, RemoveNoEdgesIf){
-    TransitionSystem ts(3);
-    vertexDescriptor v=2;
-    boost::remove_out_edge_if(movingVertex, is_not_v(v), ts);
-    EXPECT_EQ(boost::out_degree(movingVertex, ts), 0);
-}
-
-TEST(Boost, RemoveoneEdgeIf){
-    TransitionSystem ts(3);
-    vertexDescriptor v=2;
-    boost::add_edge(movingVertex, 2, ts);
-    boost::add_edge(movingVertex,1, ts);
-    boost::remove_out_edge_if(movingVertex, is_not_v(v), ts);
-    EXPECT_EQ(boost::out_degree(movingVertex, ts), 1);
-    EXPECT_EQ(boost::in_degree(2, ts), 1);
-
-}
 
 
 
