@@ -44,15 +44,37 @@ TEST(Boost, RemoveoneEdgeIf){
 TEST_F(ConfiguratorTest, TSCleanup){
     transitionSystem=TransitionSystem(5);
     for (int i=1; i<4;i++){
-        boost::add_edge(movingVertex, i, transitionSystem);
+        auto e=boost::add_edge(movingVertex, i, transitionSystem);
+        transitionSystem[e.first].step=1;
     }
     boost::add_edge(1,1, transitionSystem); //trivial self-edge
-    boost::add_edge(2,2, transitionSystem); //nontrivial self-edge
+    auto e2= boost::add_edge(2,2, transitionSystem); //nontrivial self-edge
+    transitionSystem[e2.first].step=1;
+    ts_cleanup(transitionSystem, plan);
     EXPECT_EQ(transitionSystem.m_vertices.size(), 4);
     EXPECT_EQ(boost::out_degree(1, transitionSystem), 0); //out edge deleted
     EXPECT_EQ(boost::in_degree(1, transitionSystem), 1);
     EXPECT_EQ(boost::out_degree(2, transitionSystem), 1); //edge is preserved
     EXPECT_EQ(boost::out_degree(0, transitionSystem), 3);
+}
+
+TEST(Boost, CopyGraph){
+    TransitionSystem g1(5), g2;
+    for (int i=1; i<4;i++){
+        boost::add_edge(0, i, g1);
+    }
+    boost::copy_graph(g1, g2);
+    //just checking if it segfaults
+}
+
+TEST(Boost, CopyFTS){
+    TransitionSystem g1(5), g2;
+    for (int i=1; i<4;i++){
+        boost::add_edge(0, i, g1);
+    }
+    FilteredTS fts(g1, ViableEdge(&g1), Connected(&g1));
+    boost::copy_graph(fts, g2);
+    EXPECT_EQ(g2.m_vertices.size(), 4);
 }
 
 TEST_P(HighLevelTest, FirstPlan){
