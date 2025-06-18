@@ -325,6 +325,19 @@ struct ViableEdge{
 	TransitionSystem * g=NULL;
 };
 
+struct InviableEdge{
+	InviableEdge()=default;
+	InviableEdge(TransitionSystem * _g): g(_g){}
+
+	bool operator()(const edgeDescriptor & e) const {
+		ViableEdge ve(g);
+		return !ve(e);
+	}
+
+private:
+TransitionSystem * g=NULL;
+};
+
 
 // struct KeepEdge{
 // 	KeepEdge()=default;

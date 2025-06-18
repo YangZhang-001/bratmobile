@@ -797,14 +797,22 @@ float Configurator::approximate_angle(const float & angle, const Direction & d, 
 void AttentiveConfigurator::ts_cleanup(TransitionSystem & g, std::vector <vertexDescriptor>& p){
 	Connected connected(&transitionSystem);
 	ViableEdge ke(&transitionSystem);
-	FilteredTS fts(transitionSystem, ke, connected); //boost::keep_all()
-	TransitionSystem tmp;
-	//if (fts.m_g.m_vertices.size()<transitionSystem.m_vertices.size()){
-		boost::copy_graph(fts, tmp);		
-	//}
-
-	//transitionSystem.clear();
-	transitionSystem.swap(tmp);		
+	boost::remove_edge_if(InviableEdge(&transitionSystem),transitionSystem);
+	auto vertices=boost::vertices(transitionSystem);
+	for (auto vi=vertices.first; vi!=vertices.second; vi++){
+		if (!connected(*vi)){
+			BOOST_CONCEPT_ASSERT((boost::Mutable_Container<TransitionSystem>));
+			boost::clear_vertex(*vi, transitionSystem);
+			boost::remove_vertex(*vi, transitionSystem);
+		}
+	}
+	// FilteredTS fts(transitionSystem, ke, connected); //boost::keep_all()
+	// TransitionSystem tmp;
+	// //if (fts.m_g.m_vertices.size()<transitionSystem.m_vertices.size()){
+	// 	boost::copy_graph(fts, tmp);		
+	// //}
+	// //transitionSystem.clear();
+	// transitionSystem.swap(tmp);		
 }
  
 void AttentiveConfigurator::shift_states(TransitionSystem & g, const std::vector<vertexDescriptor>& p, const b2Transform & shift_start){
