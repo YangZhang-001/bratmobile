@@ -1,10 +1,10 @@
-#include "../callbacks.h"
+#include "test_classes.h"
 
 
 int main(int argc, char** argv){
     Disturbance goal(PURSUE, b2Vec2(1.0, 0));
     Task goal_t(goal, UNDEFINED);
-    Configurator conf(goal_t);
+    DebugConfigurator conf(goal_t);
     b2World world(b2Vec2(0,0));
     //boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
     b2Transform start=b2Transform(b2Vec2(0,0), b2Rot(0)), d_pose=b2Transform(b2Vec2(0.55, 0), b2Rot(0));
@@ -19,7 +19,7 @@ int main(int argc, char** argv){
     if (argc>2){
         src_d=Direction(atoi(argv[2]));
     } 
-    conf.dummy_vertex(conf.movingVertex);
+    conf.dummy_vertex(0);
     //ASSUMING SRC ALREADY SIMULATED
     conf.transitionSystem[conf.currentVertex].direction=src_d;
     conf.transitionSystem[conf.currentVertex].Di=obstacle;

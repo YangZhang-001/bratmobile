@@ -57,7 +57,7 @@ bool Configurator::Spawner(){
 	b2Vec2 gravity = {0.0, 0.0};
 	b2World world= b2World(gravity);
 	char name[256];
-	worldBuilder.world_objects=worldBuilder.getFeatures(data2fp, b2Transform_zero, WorldBuilder::PARTITION);
+	worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero, WorldBuilder::PARTITION));
 	// printf("got features =%i\n", worldBuilder.world_objects.size());	
 	auto endTime =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>d= now- endTime; //in seconds
@@ -537,7 +537,7 @@ void Configurator::run(Configurator * c){
 			b2Transform deltaPose=b2Transform_zero;
 			//c->track_task_execution();
 			if (c->getIteration()>1){
-				deltaPose= c->tracker->track(*(c->getTask()),c->ci->data2fp, c->worldBuilder.world_objects);
+				deltaPose= c->tracker->track(*(c->getTask()),c->ci->data2fp, c->worldBuilder.get_world_objects());
 			}
 			c->update_graph(c->transitionSystem, deltaPose);
 			if (c->goal_changer!=NULL){
