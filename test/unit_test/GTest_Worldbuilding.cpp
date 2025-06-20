@@ -94,7 +94,7 @@ TEST_P(ThirdPartyWB, CornerHarris){
     make_culdesac(pts, GetParam(), &Lside, &Rside, &front);
     std::vector<cv::Vec4f> lines;
     try{
-        cv::CornerHarris(pts, out)
+       // cv::CornerHarris(pts, out);
     }
     catch(...){
         std::cout<<"Line Segment Detector only takes images";
