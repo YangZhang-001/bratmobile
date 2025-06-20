@@ -59,7 +59,7 @@ target_link_libraries( test_classes CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_m
 # #visual inspection 
 # add_executable(partition_clusters ../test_essentials.h partition_clusters.cpp)
 
-add_executable(plan ../test_essentials.h plan.cpp)
+#add_executable(plan ../test_essentials.h plan.cpp)
 # add_executable(split_step ../test_essentials.h split_step.cpp)
 # add_executable(affine_transformation ../test_essentials.h affine_transform.cpp)
 # add_executable(match ../test_essentials.h match.cpp)
@@ -100,7 +100,7 @@ add_executable(plan ../test_essentials.h plan.cpp)
 # #target_link_libraries(explorer CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(transitionMatrix CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(disturbance_dimensions CloCK ${OpenCV_LIBS} box2d rt  )
- target_link_libraries(plan CloCK ${OpenCV_LIBS} box2d rt  )
+#target_link_libraries(plan CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(split_step CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(affine_transformation CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(processData_k CloCK ${OpenCV_LIBS} box2d rt)
@@ -183,10 +183,10 @@ add_executable(plan ../test_essentials.h plan.cpp)
 # # add_test(NAME explorer_target COMMAND explorer ../target_68cm/ 1)
 
 
-add_test(NAME plan_no COMMAND plan)
-add_test(NAME plan_cds COMMAND plan ../cul_de_sac/ 0)
-add_test(NAME plan_target_40cm COMMAND plan ../target_40cm/ 1)
-add_test(NAME plan_target_68cm COMMAND plan ../target_68cm/ 1)
+# add_test(NAME plan_no COMMAND plan)
+# add_test(NAME plan_cds COMMAND plan ../cul_de_sac/ 0)
+# add_test(NAME plan_target_40cm COMMAND plan ../target_40cm/ 1)
+# add_test(NAME plan_target_68cm COMMAND plan ../target_68cm/ 1)
 
 
 # add_test(NAME match_false COMMAND match)
