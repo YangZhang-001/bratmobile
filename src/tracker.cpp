@@ -3,9 +3,9 @@
 b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects){
     b2Transform result=get_transform(t, pts, t.get_disturbance(), objects);
     math::applyAffineTrans(-result, t.disturbance);
-    t.motorStep--;
-    if (t.motorStep<1){
-        t.change=true;
+    t.setMotorStep(t.getMotorStep()-1);
+    if (t.getMotorStep()<1){
+        t.set_change(true);
     }
     return result;
 }
@@ -13,8 +13,8 @@ b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, std::ve
 b2Transform ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects){
     b2Transform result=get_transform(t, pts, t.get_disturbance(), objects);
 	bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
-	if(t.motorStep==0 || ended){
-		t.change=1;
+	if(t.getMotorStep()==0 || ended){
+		t.set_change(true);
 	}    
     return result;
 }

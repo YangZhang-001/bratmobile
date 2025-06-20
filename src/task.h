@@ -19,9 +19,6 @@ void world_cleanup(b2World & _world);
 class Task{
     char planFile[250]; //for debug
     bool debug_k=false; //delete this it's for debugging on the bhenchod pi
-
-
-public:
     friend class Configurator;
     b2Transform start=b2Transform_zero;
     bool change =0;
@@ -30,6 +27,9 @@ public:
     int motorStep=0;
     AffordanceIndex affordance=NONE;
 
+
+
+public:
 struct Action{
 private:
     float linearSpeed=WHEEL_SPEED_DEFAULT*2; //used to calculate instantaneous velocity using omega
@@ -334,6 +334,16 @@ bool get_change(){
  */
 Disturbance * get_disturbance(){
     return &disturbance;
+}
+
+void setMotorStep(int i){
+    motorStep=i;
+}
+
+int & getMotorStep(){return motorStep;}
+
+b2Transform& getStartRef(){
+    return start;
 }
 };
 

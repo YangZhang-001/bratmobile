@@ -71,7 +71,7 @@ target_link_libraries( test_classes CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_m
 # add_executable(make_sensor ../test_essentials.h make_sensor.cpp)
 # add_executable(end_contact ../test_essentials.h end_contact.cpp)
 # add_executable(get_disturbance ../test_essentials.h get_disturbance.cpp)
-# add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
+add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
 # add_executable(task_to_execute ../test_essentials.h task_to_execute.cpp)
 # add_executable(closed_loop_ended ../test_essentials.h closed_loop_ended.cpp)
 # add_executable(axb ../test_essentials.h axb.cpp)
@@ -115,7 +115,7 @@ target_link_libraries( test_classes CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_m
 # target_link_libraries(make_sensor CloCK ${OpenCV_LIBS} box2d)
 # target_link_libraries(end_contact CloCK ${OpenCV_LIBS} box2d)
 # target_link_libraries(get_disturbance CloCK ${OpenCV_LIBS} box2d)
-# target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d )
+target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d )
 
 
 
@@ -234,12 +234,12 @@ target_link_libraries( test_classes CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_m
 
 
 # #ARGUMENTS: vertex match, goal?, how many iterations have passed?
-# add_test(NAME checkPlan COMMAND checkPlan ../target_68cm/ 2 1 1)
-# add_test(NAME checkPlan_4 COMMAND checkPlan ../target_68cm/ 2 1 4)
-# add_test(NAME checkPlan_21 COMMAND checkPlan ../target_68cm/ 2 1 21)
-# #add_test(NAME checkPlan_40cm COMMAND checkPlan ../target_40cm/ 2 1 1)
-# #add_test(NAME checkPlan_40cm_4 COMMAND checkPlan ../target_40cm/ 2 1 4)
-# add_test(NAME checkPlan_40cm_21 COMMAND checkPlan ../target_40cm/ 2 1 21)
+add_test(NAME checkPlan COMMAND checkPlan ../target_68cm/ 2 1 1)
+add_test(NAME checkPlan_4 COMMAND checkPlan ../target_68cm/ 2 1 4)
+add_test(NAME checkPlan_21 COMMAND checkPlan ../target_68cm/ 2 1 21)
+#add_test(NAME checkPlan_40cm COMMAND checkPlan ../target_40cm/ 2 1 1)
+#add_test(NAME checkPlan_40cm_4 COMMAND checkPlan ../target_40cm/ 2 1 4)
+add_test(NAME checkPlan_40cm_21 COMMAND checkPlan ../target_40cm/ 2 1 21)
 
 # #ARGUMENTS: Dn affordance, new task direction, Di/goal affordance
 # add_test(NAME task_to_execute_default_to_ob COMMAND task_to_execute 1 2 2)
