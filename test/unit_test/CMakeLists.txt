@@ -30,6 +30,10 @@ target_link_libraries(GTest_Configurator gtest gtest_main)
 target_link_libraries(GTest_Configurator  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 
+add_executable(GTest_Worldbuilding GTest_Worldbuilding.cpp)
+target_link_libraries(GTest_Worldbuilding gtest gtest_main)
+target_link_libraries(GTest_Worldbuilding  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
 gtest_discover_tests(GTest_HighLevel)
 gtest_discover_tests(GTest_AdjustGoal)
 gtest_discover_tests(GTest_Configurator)

@@ -1,0 +1,74 @@
+#include "test_classes.h"
+#include <gtest/gtest.h>
+
+
+/**
+ * @brief Class to test world building tools (third party)
+ * 
+ */
+class ThirdPartyWB: public ::testing::Test, public testing::WithParamInterface<int>{
+    public:
+
+    // void SetUp(){}
+    // void TearDown(){}
+
+    /**
+     * @brief Makes custom size cul de sac
+     * 
+     * @param pts total points
+     * @param pts_per_side how many points per side
+     * @param sideL left side (y>0)
+     * @param sideR right side (y<0)
+     * @param front robot-facing side 
+     */
+    void make_culdesac(std::vector<cv::Point2f>& pts, int pts_per_side, std::vector<cv::Point2f>* sideL=NULL, std::vector<cv::Point2f>* sideR=NULL, std::vector<cv::Point2f>* front=NULL){
+        float y=0.05, x=0;
+        for (int i=0; i<pts_per_side; i++){
+            cv::Point2f pt_Lside(x, y), pt_Rside(x, -y);
+            pts.push_back(pt_Lside);
+            pts.push_back(pt_Rside);
+            if (sideL){
+                sideL->push_back(pt_Lside);
+            }
+            if (sideR){
+                sideR->push_back(pt_Rside);
+            }
+            x+=0.01;
+        }
+        for (int i=0; i<pts_per_side; i++){
+            cv::Point2f pt_front(x, y);
+            if (front){
+                front->push_back(pt_front);
+            }
+            pts.push_back(pt_front);
+            y-=0.01;
+
+        }
+
+    }
+};
+
+/**
+ * @brief Makes cul de sac and tests if concave
+ * 
+ */
+TEST_F(ThirdPartyWB, testConcave){
+    std::vector<cv::Point2f> pts; //total points + sides of cul de sac
+    make_culdesac(pts, 10);
+    FILE * f=fopen("/tmp/cds_convex.txt", "w");
+    for (cv::Point2f p:pts){ 
+        fprintf(f, "%.02f\t%.02f\n", p.x, p.y);
+    }
+    fclose(f);
+    EXPECT_FALSE(cv::isContourConvex(pts));
+}
+
+TEST_P(ThirdPartyWB, HoughLines){
+    std::vector<cv::Point2f> pts, Lside, Rside, front;
+    make_culdesac(pts, GetParam(), &Lside, &Rside, &front);
+    std::vector<cv::Vec2f> lines;
+    cv::HoughLines(pts, lines, 1, CV_PI/180, 150, 0, 0);
+    EXPECT_EQ(lines.size(), 3);
+}
+
+INSTANTIATE_TEST_CASE_P(cds_sizes, ThirdPartyWB, ::testing::Values(10, 50, 100));
