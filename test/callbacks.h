@@ -124,6 +124,10 @@ public:
     void set_folder(std::string str){
         folder=str;
     }
+
+    int get_iteration(){
+        return iteration;
+    }
 };
 
 class StepCallback{

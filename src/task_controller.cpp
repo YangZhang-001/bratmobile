@@ -20,7 +20,7 @@ if (plan.empty()){
 	currentTask=Task(controlGoal.disturbance, UNDEFINED);
 	currentTask.action.setLWheelSpeed(0);
 	currentTask.action.setRWheelSpeed(0);
-	currentTask.change=1;
+	currentTask.set_change(true);
 	return;
 }
 int i=to_task_end(g, plan);
@@ -69,7 +69,7 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
     }
 	vertexDescriptor plan_end=p[p.size()-1];
 	_D_to_goal=b2MulT(disturbance_q.pose() , g[plan_end].Di.pose()); //assumes that the last step in the plan reaches the goal
-	t.motorStep=motor_step(t.getAction(), start_to_end.p.Length());
+	t.setMotorStep(motor_step(t.getAction(), start_to_end.p.Length()));
 	printf("new disturbance x=%f \t y=%f \t %theta=%f\n", t.disturbance.pose().p.x, t.disturbance.pose().p.y, t.disturbance.pose().q.GetAngle() );
 	printf("goal x=%f \t y=%f \t %theta=%f\n", g[plan_end].Di.pose().p.x, g[plan_end].Di.pose().p.y, g[plan_end].Di.pose().q.GetAngle() );
 	return t;
@@ -86,7 +86,7 @@ void Reactive_Controller::next_task(Task & currentTask, const Task & controlGoal
 	else{
 		currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
 	}
-	currentTask.motorStep = motor_step(currentTask.getAction());
+	currentTask.setMotorStep(motor_step(currentTask.getAction()));
 	printf("changed to %f\n", currentTask.action.getOmega());
 
 }

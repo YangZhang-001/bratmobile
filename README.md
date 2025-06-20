@@ -50,6 +50,7 @@ Run with options `0 [custom-stepDistance]`: for turning debug options off. In de
 
 Only planning and execution (tracking using dead reckoning) demonstrated
 
+WARNING! Due to the point cloud clustering algorithm used (Partition), an obstacle such as a cul-de-sac will be detected as a solid box, so take into account that representation of concave objects may be inaccurate.
 ### Simulation (x86 architecture)
 * `test/simulations/target_sim [folder_with_scans/] [bool: is_real_time]` : runs a simulation of a planning and plan recycling scenario (not fully debugged). Args:
  - `folder_with_scans` : a folder containing 2D LIDAR scans
