@@ -11,7 +11,7 @@ temp=$(head -n 1 /sys/class/thermal/thermal_zone0/temp)
 	cd src/
 	sudo make install
 	cd ..
-	sudo make
+	make
 
 # else
 # 	echo "too hot! temp = $temp , not building"

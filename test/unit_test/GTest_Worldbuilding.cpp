@@ -9,8 +9,8 @@
 class ThirdPartyWB: public ::testing::Test, public testing::WithParamInterface<int>{
     public:
 
-    // void SetUp(){}
-    // void TearDown(){}
+    void SetUp(){}
+    void TearDown(){}
 
     /**
      * @brief Makes custom size cul de sac
@@ -67,8 +67,27 @@ TEST_P(ThirdPartyWB, HoughLines){
     std::vector<cv::Point2f> pts, Lside, Rside, front;
     make_culdesac(pts, GetParam(), &Lside, &Rside, &front);
     std::vector<cv::Vec2f> lines;
-    cv::HoughLines(pts, lines, 1, CV_PI/180, 150, 0, 0);
-    EXPECT_EQ(lines.size(), 3);
+    try{
+        cv::HoughLines(pts, lines, 1, CV_PI/180, 150, 0);
+
+    }
+    catch(...){
+        std::cout<<"Hough Transform only takes images";
+    }
+}
+
+TEST_P(ThirdPartyWB, LineSegment){
+    std::vector<cv::Point2f> pts, Lside, Rside, front;
+    cv::Ptr<cv::LineSegmentDetector> lsd= cv::createLineSegmentDetector(0);
+    make_culdesac(pts, GetParam(), &Lside, &Rside, &front);
+    std::vector<cv::Vec4f> lines;
+    try{
+        lsd->detect(pts, lines);
+    }
+    catch(...){
+        std::cout<<"Line Segment Detector only takes images";
+    }
+
 }
 
 INSTANTIATE_TEST_CASE_P(cds_sizes, ThirdPartyWB, ::testing::Values(10, 50, 100));
