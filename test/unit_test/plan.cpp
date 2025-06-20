@@ -61,7 +61,7 @@ int main(int argc, char** argv){
     // conf.ts_cleanup(conf.transitionSystem, conf.plan);
     // std::vector <vertexDescriptor> plan=conf.planner(conf.transitionSystem, conf.currentVertex);
     std::vector <Direction> plan_d=getPlan(conf.get_ts(), conf.get_plan(), conf.get_current_vertex());
-    conf.printPlan();
+    //conf.printPlan();
     if (plan_d!=solution && plan_d !=solution2 && plan_d!=solution3 && plan_d!=solution4){
         return 1;
     }

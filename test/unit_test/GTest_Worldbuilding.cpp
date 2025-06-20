@@ -87,7 +87,8 @@ TEST_P(ThirdPartyWB, LineSegment){
     catch(...){
         std::cout<<"Line Segment Detector only takes images";
     }
-
 }
+
+
 
 INSTANTIATE_TEST_CASE_P(cds_sizes, ThirdPartyWB, ::testing::Values(10, 50, 100));
