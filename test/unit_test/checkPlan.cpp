@@ -47,8 +47,6 @@ int main(int argc, char** argv){
     conf.change_task();
     int it=di.get_iteration();
     for (int i=0;i<it; i++){
-        di.newScanAvail();          
-        conf.set_data2fp(ci.data2fp);
         b2Transform deltaPose=conf.get_tracker()->track(conf.getTask(), ci.data2fp, conf.world_objects());
         conf.update_graph(conf.get_ts(), deltaPose);
         conf.estimate_current_vertex(conf.get_ts(), conf.getTask());
@@ -58,6 +56,9 @@ int main(int argc, char** argv){
         if (ch){
             conf.getTask().setMotorStep(100); //simulate new step setting because we are in open loop
         }
+        di.newScanAvail();          
+        conf.set_data2fp(ci.data2fp);
+
 
         }
     // if (argc>4){
