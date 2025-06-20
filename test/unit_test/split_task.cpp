@@ -13,8 +13,9 @@ int main(int argc, char** argv){
     b2Vec2 pos(atof(argv[1]), atof(argv[2]));
     b2Rot rot(atof(argv[3]));
     Task goal=Task();
-    Configurator conf(goal);
-    conf.simulationStep=std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH)*2;
+    DebugConfigurator conf;
+    conf.init(goal);
+    conf.set_simulationStep(std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH)*2);
     LIDAR_In ci;
     conf.registerInterface(&ci, NULL);
     ClosedLoop_Tracker tracker;

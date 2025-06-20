@@ -7,9 +7,9 @@ class WorldBuilder{
     char bodyFile[100];
     float simulationStep=BOX2DRANGE;
     int bodies=0;
+    std::vector <BodyFeatures> world_objects;
 
     public:
-    std::vector <BodyFeatures> world_objects;
     enum CLUSTERING{BOX=0, KMEANS=1, PARTITION=2}; //BOX: bounding box around points
         struct CompareCluster{
         CompareCluster()=default;
@@ -22,6 +22,14 @@ class WorldBuilder{
             return result;
         }
     };
+
+    std::vector <BodyFeatures> & get_world_objects(){
+        return world_objects;
+    }
+
+    void set_world_objects(const std::vector <BodyFeatures>&wo){
+        world_objects=wo;
+    }
 
     std::pair <CoordinateContainer, bool> salientPoints(b2Transform, const CoordinateContainer &, std::pair <Pointf, Pointf>); //gets points from the raw data that are relevant to the task based on bounding boxes
                                                                                                                                         //std::pair<points, obstaclestillthere>

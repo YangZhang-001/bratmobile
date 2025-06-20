@@ -35,6 +35,106 @@ class DebugConfigurator:public Configurator{
     vertexDescriptor plan_end(){return plan[plan.size()-1];}
 
     b2Vec2 plan_end_b2Vec2(){return transitionSystem[plan_end()].endPose.p;}
+
+   Task & getTask(){ //returns Task being executed
+        return currentTask;
+    }
+
+    std::vector <BodyFeatures> & world_objects(){
+        return worldBuilder.get_world_objects();
+    }
+
+    TransitionSystem & get_ts(){
+        return transitionSystem;
+    }
+
+    Task & getGoal(){
+        return controlGoal;
+    }
+
+    void set_data2fp(const CoordinateContainer &data){
+        data2fp=data;
+    }
+
+    int data_size(){
+        return data2fp.size();
+    }
+
+    void clear_plan(){
+        plan.clear();
+    }
+
+
+    void vertex_set_state(vertexDescriptor v, const State &s){
+        transitionSystem[v]=s;
+    }
+
+    void vertex_set_endPose(vertexDescriptor v, b2Transform t){
+        transitionSystem[v].endPose=t;
+    }
+
+    void vertex_set_start(vertexDescriptor v, b2Transform t){
+        transitionSystem[v].start=t;
+    }
+
+    void vertex_set_direction(vertexDescriptor v, Direction d){
+        transitionSystem[v].direction=d;
+    }
+
+    void vertex_set_outcome(vertexDescriptor v, simResult::resultType r){
+        transitionSystem[v].outcome=r;
+    }
+
+    void vertex_set_Di(vertexDescriptor v, const Disturbance & d){
+        transitionSystem[v].Di=d;
+    }
+
+    void vertex_set_Dn(vertexDescriptor v, const Disturbance & d){
+        transitionSystem[v].Dn=d;
+    }
+
+    void vertex_set_options(vertexDescriptor v, const std::vector <Direction> & d){
+        transitionSystem[v].options=d;
+    }
+
+    const State & vertex_get_state(vertexDescriptor v){
+        return transitionSystem[v];
+    }
+
+    b2Transform vertex_get_endPose(vertexDescriptor v){
+        return transitionSystem[v].endPose;
+    }
+
+    b2Transform vertex_get_start(vertexDescriptor v){
+        return transitionSystem[v].start;
+    }
+
+    Direction vertex_get_direction(vertexDescriptor v){
+        return transitionSystem[v].direction;
+    }
+
+    simResult::resultType vertex_get_outcome(vertexDescriptor v){
+        return transitionSystem[v].outcome;
+    }
+
+    const Disturbance & vertex_get_Di(vertexDescriptor v){
+        return transitionSystem[v].Di;
+    }
+
+    const Disturbance & vertex_get_Dn(vertexDescriptor v){
+        return transitionSystem[v].Dn;
+    }
+
+    const std::vector <Direction>& vertex_get_options(vertexDescriptor v){
+        transitionSystem[v].options;
+    }
+    
+
+    vertexDescriptor get_current_vertex(){
+        return currentVertex;
+    }
+    
+
 };
 
 

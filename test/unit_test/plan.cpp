@@ -1,4 +1,4 @@
-#include "../callbacks.h"
+#include "test_classes.h"
 
 std::vector <Direction> getPlan(const TransitionSystem & g, const std::vector <vertexDescriptor>& plan, vertexDescriptor pre){
     	std::vector <Direction>result;
@@ -38,28 +38,30 @@ int main(int argc, char** argv){
         }
     }
     Task goal(target1,DEFAULT);
-    Configurator conf(goal);
+    DebugConfigurator conf;
+    conf.init(goal);
     ClosedLoop_Tracker tracker;
     conf.register_tracker(&tracker);
-    conf.simulationStep=simStep;
+    conf.setSimulationStep(simStep);
     LIDAR_In ci;
     conf.registerInterface(&ci, NULL);
     DataInterface di(&ci);
     if (argc>1){
-        di.folder=argv[1];
+        di.set_folder(argv[1]);
         di.newScanAvail();          
     }
-    conf.data2fp = ci.data2fp;
-    conf.addIteration();
-    b2World world(b2Vec2(0,0));
-    boost::clear_vertex(conf.movingVertex, conf.transitionSystem);
-    conf.worldBuilder.world_objects=conf.worldBuilder.getFeatures(conf.data2fp, b2Transform_zero);
-    conf.dummy_vertex(conf.currentVertex);
-    conf.explorer(conf.currentVertex, conf.transitionSystem, world);
-    conf.ts_cleanup(conf.transitionSystem, conf.plan);
-    std::vector <vertexDescriptor> plan=conf.planner(conf.transitionSystem, conf.currentVertex);
-    std::vector <Direction> plan_d=getPlan(conf.transitionSystem, plan, conf.currentVertex);
-    conf.printPlan(&plan);
+    conf.set_data2fp(ci.data2fp);
+    conf.Spawner();
+    // conf.addIteration();
+    // b2World world(b2Vec2(0,0));
+    // boost::clear_vertex(0, conf.get_ts());
+    // conf.worldBuilder.set_world_objects(conf.worldBuilder.getFeatures(conf.data2fp, b2Transform_zero));
+    // conf.dummy_vertex(conf.currentVertex);
+    // conf.explorer(conf.currentVertex, conf.transitionSystem, world);
+    // conf.ts_cleanup(conf.transitionSystem, conf.plan);
+    // std::vector <vertexDescriptor> plan=conf.planner(conf.transitionSystem, conf.currentVertex);
+    std::vector <Direction> plan_d=getPlan(conf.get_ts(), conf.get_plan(), conf.get_current_vertex());
+    conf.printPlan();
     if (plan_d!=solution && plan_d !=solution2 && plan_d!=solution3 && plan_d!=solution4){
         return 1;
     }

@@ -37,14 +37,19 @@ target_link_libraries(GTest_Worldbuilding  CloCK ${OpenCV_LIBS} box2d rt GTest::
 gtest_discover_tests(GTest_HighLevel)
 gtest_discover_tests(GTest_AdjustGoal)
 gtest_discover_tests(GTest_Configurator)
+gtest_discover_tests(GTest_Worldbuilding)
 
+
+add_library(test_classes test_classes.h ../test_essentials.h ../callbacks.h)
+target_link_libraries(test_classes gtest gtest_main)
+target_link_libraries( test_classes CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 # INCLUDE_DIRECTORIES("/usr/local/include/")
 # enable_testing()
 
 # set(CTEST_OUTPUT_ON_FAILURE 1)
 
-# add_executable(split_task ../test_essentials.h split_task.cpp)
+# #add_executable(split_task ../test_essentials.h split_task.cpp)
 # add_executable(backtrack ../test_essentials.h backtrack.cpp)
 # #add_executable(explorer explorer.cpp ../test_essentials.h)
 # add_executable(transitionMatrix ../test_essentials.h transitionMatrix.cpp)
@@ -54,7 +59,7 @@ gtest_discover_tests(GTest_Configurator)
 # #visual inspection 
 # add_executable(partition_clusters ../test_essentials.h partition_clusters.cpp)
 
-# add_executable(plan ../test_essentials.h plan.cpp)
+add_executable(plan ../test_essentials.h plan.cpp)
 # add_executable(split_step ../test_essentials.h split_step.cpp)
 # add_executable(affine_transformation ../test_essentials.h affine_transform.cpp)
 # add_executable(match ../test_essentials.h match.cpp)
@@ -90,12 +95,12 @@ gtest_discover_tests(GTest_Configurator)
 # target_link_libraries(axb CloCK ${OpenCV_LIBS} box2d)
 # target_link_libraries(closed_loop_ended CloCK ${OpenCV_LIBS} box2d rt)
 # target_link_libraries(task_to_execute CloCK ${OpenCV_LIBS} box2d rt)
-# target_link_libraries(split_task CloCK ${OpenCV_LIBS} box2d rt  )
+# #target_link_libraries(split_task CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(backtrack CloCK ${OpenCV_LIBS} box2d rt  )
 # #target_link_libraries(explorer CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(transitionMatrix CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(disturbance_dimensions CloCK ${OpenCV_LIBS} box2d rt  )
-# target_link_libraries(plan CloCK ${OpenCV_LIBS} box2d rt  )
+ target_link_libraries(plan CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(split_step CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(affine_transformation CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(processData_k CloCK ${OpenCV_LIBS} box2d rt)
@@ -114,13 +119,13 @@ gtest_discover_tests(GTest_Configurator)
 
 
 
-# add_test(NAME split_task COMMAND split_task 0.6 0 0)
-# add_test(NAME split_task_-01 COMMAND split_task 0.26 -0.01 -1.570796 0 0 -1.570796 0.265 -0.16 0)
-# add_test(NAME split_task_angle COMMAND split_task 0.0 .6 1.57079633)
-# add_test(NAME split_task_offset COMMAND split_task 0.75 0.27 0 0.2 0.27 0)
-# add_test(NAME split_task_offset_angle COMMAND split_task 0.27 0.75 1.57079633 0.27 0.2 1.57079633)
-# add_test(NAME split_task_1_node COMMAND split_task 0.27 0 0)
-# add_test(NAME split_task_0_nodes COMMAND split_task 0.18 0 0)
+# # add_test(NAME split_task COMMAND split_task 0.6 0 0)
+# # add_test(NAME split_task_-01 COMMAND split_task 0.26 -0.01 -1.570796 0 0 -1.570796 0.265 -0.16 0)
+# # add_test(NAME split_task_angle COMMAND split_task 0.0 .6 1.57079633)
+# # add_test(NAME split_task_offset COMMAND split_task 0.75 0.27 0 0.2 0.27 0)
+# # add_test(NAME split_task_offset_angle COMMAND split_task 0.27 0.75 1.57079633 0.27 0.2 1.57079633)
+# # add_test(NAME split_task_1_node COMMAND split_task 0.27 0 0)
+# # add_test(NAME split_task_0_nodes COMMAND split_task 0.18 0 0)
 
 # add_test(NAME split_step COMMAND split_step 0.68 0 )
 
@@ -178,10 +183,10 @@ gtest_discover_tests(GTest_Configurator)
 # # add_test(NAME explorer_target COMMAND explorer ../target_68cm/ 1)
 
 
-# # add_test(NAME plan_no COMMAND plan)
-# # add_test(NAME plan_cds COMMAND plan ../cul_de_sac/ 0)
-# # add_test(NAME plan_target_40cm COMMAND plan ../target_40cm/ 1)
-# # add_test(NAME plan_target_68cm COMMAND plan ../target_68cm/ 1)
+add_test(NAME plan_no COMMAND plan)
+add_test(NAME plan_cds COMMAND plan ../cul_de_sac/ 0)
+add_test(NAME plan_target_40cm COMMAND plan ../target_40cm/ 1)
+add_test(NAME plan_target_68cm COMMAND plan ../target_68cm/ 1)
 
 
 # add_test(NAME match_false COMMAND match)

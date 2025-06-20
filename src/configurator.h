@@ -39,6 +39,7 @@ protected:
 
 	public:
 
+
 Configurator(){};
 
 Configurator(Task _task){
