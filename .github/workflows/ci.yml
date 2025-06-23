@@ -34,5 +34,5 @@ jobs:
         run : sh build.sh
       - name : Test
         run: |
-              cd test/unit_test & ctest --output-on-failure --VV
+              cd test/unit_test & ctest --output-on-failure --verbose
 
