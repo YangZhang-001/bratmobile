@@ -1,5 +1,5 @@
-name: ci
 
+name: ci
 on: [push]
 
 jobs:
@@ -33,5 +33,6 @@ jobs:
         shell: bash
         run : sh build.sh
       - name : Test
-        run: ctest --output-on-failure --verbose
+        run: |
+              cd test/unit_test & ctest --output-on-failure --VV
 

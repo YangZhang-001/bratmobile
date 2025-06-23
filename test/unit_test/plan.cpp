@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 #include "test_classes.h"
 
+=======
+#include "../callbacks.h"
+>>>>>>> 32-explorer-in-separate-class
 std::vector <Direction> getPlan(const TransitionSystem & g, const std::vector <vertexDescriptor>& plan, vertexDescriptor pre){
     	std::vector <Direction>result;
         for (vertexDescriptor v: plan){
@@ -14,6 +18,53 @@ std::vector <Direction> getPlan(const TransitionSystem & g, const std::vector <v
         return result;
 
 }
+
+class DebugConfigurator:public AttentiveConfigurator{
+    public:
+    friend class HighLevelTest;
+    int n_edges(){return transitionSystem.m_edges.size();}
+
+    int n_vertices(){return transitionSystem.m_vertices.size();}
+
+    const std::vector <vertexDescriptor>& get_plan(){ return plan;}
+
+    bool plan_reaches_horizon();
+
+    bool plan_reaches_goal();
+
+    vertexDescriptor plan_end(){return plan[plan.size()-1];}
+
+    b2Vec2 plan_end_b2Vec2(){return transitionSystem[plan_end()].endPose.p;}
+
+    Task & getTask(){ //returns Task being executed
+        return currentTask;
+    }
+
+    std::vector <BodyFeatures> & world_objects(){
+        return worldBuilder.get_world_objects();
+    }
+
+    TransitionSystem & get_ts(){
+        return transitionSystem;
+    }
+
+    Task & getGoal(){
+        return controlGoal;
+    }
+
+    void set_data2fp(const CoordinateContainer &data){
+        data2fp=data;
+    }
+
+    int data_size(){
+        return data2fp.size();
+    }
+
+    void clear_plan(){
+        plan.clear();
+    }
+};
+
 
 
 int main(int argc, char** argv){
@@ -38,11 +89,13 @@ int main(int argc, char** argv){
         }
     }
     Task goal(target1,DEFAULT);
+    HorizonStarPlanner planner;
     DebugConfigurator conf;
+    conf.register_planner(&planner);
     conf.init(goal);
     ClosedLoop_Tracker tracker;
     conf.register_tracker(&tracker);
-    conf.setSimulationStep(simStep);
+    //conf.setSimulationStep();
     LIDAR_In ci;
     conf.registerInterface(&ci, NULL);
     DataInterface di(&ci);

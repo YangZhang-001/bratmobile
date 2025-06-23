@@ -25,10 +25,17 @@ add_executable(GTest_AdjustGoal GTest_AdjustGoal.cpp)
 target_link_libraries(GTest_AdjustGoal gtest gtest_main)
 target_link_libraries(GTest_AdjustGoal  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
+add_executable(GTest_SplitTask GTest_SplitTask.cpp)
+target_link_libraries(GTest_SplitTask gtest gtest_main)
+target_link_libraries(GTest_SplitTask  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Backtrack GTest_Backtrack.cpp)
+target_link_libraries(GTest_Backtrack gtest gtest_main)
+target_link_libraries(GTest_Backtrack CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
 add_executable(GTest_Configurator GTest_Configurator.cpp)
 target_link_libraries(GTest_Configurator gtest gtest_main)
 target_link_libraries(GTest_Configurator  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
-
 
 add_executable(GTest_Worldbuilding GTest_Worldbuilding.cpp)
 target_link_libraries(GTest_Worldbuilding gtest gtest_main)
@@ -38,6 +45,8 @@ gtest_discover_tests(GTest_HighLevel)
 gtest_discover_tests(GTest_AdjustGoal)
 gtest_discover_tests(GTest_Configurator)
 gtest_discover_tests(GTest_Worldbuilding)
+gtest_discover_tests(GTest_SplitTask)
+gtest_discover_tests(GTest_Backtrack)
 
 
 add_library(test_classes test_classes.h ../test_essentials.h ../callbacks.h)
@@ -101,6 +110,10 @@ add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
 # target_link_libraries(transitionMatrix CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(disturbance_dimensions CloCK ${OpenCV_LIBS} box2d rt  )
 #target_link_libraries(plan CloCK ${OpenCV_LIBS} box2d rt  )
+# #target_link_libraries(explorer CloCK ${OpenCV_LIBS} box2d rt  )
+# target_link_libraries(transitionMatrix CloCK ${OpenCV_LIBS} box2d rt  )
+# target_link_libraries(disturbance_dimensions CloCK ${OpenCV_LIBS} box2d rt  )
+#target_link_libraries(plan CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(split_step CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(affine_transformation CloCK ${OpenCV_LIBS} box2d rt  )
 # target_link_libraries(processData_k CloCK ${OpenCV_LIBS} box2d rt)
@@ -115,7 +128,7 @@ add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
 # target_link_libraries(make_sensor CloCK ${OpenCV_LIBS} box2d)
 # target_link_libraries(end_contact CloCK ${OpenCV_LIBS} box2d)
 # target_link_libraries(get_disturbance CloCK ${OpenCV_LIBS} box2d)
-target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d )
+target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d test_classes)
 
 
 
@@ -129,8 +142,6 @@ target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d )
 
 # add_test(NAME split_step COMMAND split_step 0.68 0 )
 
-# add_test(NAME backtrack COMMAND backtrack 0.6 0 0)
-# add_test(NAME backtrack_-01 COMMAND backtrack 0.26 -0.01 -1.570796 0 0 -1.570796 0.265 -0.16 0)
 # add_test(NAME affine_transformation_ahead COMMAND affine_transformation 1 0 0)
 
 # add_test(NAME transition COMMAND transitionMatrix)

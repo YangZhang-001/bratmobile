@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
     bool RT=atoi(argv[2]);
 	Disturbance target(PURSUE, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
-    Configurator configurator(controlGoal);
+    AttentiveConfigurator configurator(controlGoal);
     LIDAR_In ci;
     Motor_Out m;
     ClosedLoop_Tracker tracker;

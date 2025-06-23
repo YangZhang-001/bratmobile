@@ -15,15 +15,15 @@ TEST_P(ConfiguratorTest2DT, adjustGoal){
     Task goal(Disturbance(PURSUE, b2Vec2(1.0, 0)), DEFAULT);
     Disturbance obstacle(PURSUE, b2Vec2(0.45, 0), 0); //robot is driving towards an obstacle before it avoids it
     init(goal);
-    currentTask.disturbance=obstacle;
+    currentTask=Task(obstacle, DEFAULT, b2Transform_zero,true);
     b2Transform deltaPose=GetParam();
     ConfiguratorTest::Manual_WiseController controller;
     register_controller(&controller);
     controller.set_disturbance(obstacle);
-    controller.set_Di_to_goal(*goal.get_disturbance());
+    controller.set_Di_to_goal(goal.get_disturbance());
     vertexDescriptor v1;
     graph_setOptions(0, std::vector<Direction>(DEFAULT));
-    add_vertex_now(movingVertex, v1, transitionSystem, goal.disturbance);
+    add_vertex_now(movingVertex, v1, transitionSystem, goal.get_disturbance());
     plan={v1};
     math::applyAffineTrans(deltaPose, deltaPose);
     update_graph(transitionSystem, deltaPose);
@@ -31,7 +31,7 @@ TEST_P(ConfiguratorTest2DT, adjustGoal){
     b2Transform expected =b2MulT(controller.get_disturbance().pose(), transitionSystem[plan_end].Di.pose()); //position of goal wrt current disturbance
     /**/
     adjust_goal_expectation(); //what we're actually testing
-    b2Transform observed =b2MulT(currentTask.disturbance.pose(), controlGoal.disturbance.pose());
+    b2Transform observed =b2MulT(currentTask.get_disturbance().pose(), controlGoal.get_disturbance().pose());
     b2Transform difference=expected-observed;
     EXPECT_LT(difference.p.Length(),0.001);
     EXPECT_LT(fabs(difference.q.GetAngle()),0.001);

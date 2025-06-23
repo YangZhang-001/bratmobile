@@ -1,10 +1,6 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
 
-TEST(Initialisation, ActualConstructor){
-    Configurator configurator;
-}
-
 TEST(Initialisation, DebugConstructor){
     DebugConfigurator configurator;
 }

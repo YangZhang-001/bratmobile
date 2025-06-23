@@ -248,10 +248,10 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
 bool WorldBuilder::checkDisturbance(Pointf p, bool& obStillThere, Task * curr, float range){
     bool result=0;
 	if (NULL!=curr){ //
-        if (!curr->disturbance.isValid()){
+        if (!curr->get_disturbance().isValid()){
             return result;
         }
-        cv::Rect2f rect(curr->disturbance.getPosition().x-range, curr->disturbance.getPosition().y+range, range*2, range*2);
+        cv::Rect2f rect(curr->get_disturbance().getPosition().x-range, curr->get_disturbance().getPosition().y+range, range*2, range*2);
 		if (p.inside(rect)){
 			obStillThere =1;
             result =1;

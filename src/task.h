@@ -17,16 +17,16 @@ bool overlaps(const b2PolygonShape&, Disturbance *, const b2Transform& robot_pos
 void world_cleanup(b2World & _world);
 
 class Task{
+    friend class Configurator;
+    protected:
     char planFile[250]; //for debug
     bool debug_k=false; //delete this it's for debugging on the bhenchod pi
-    friend class Configurator;
-    b2Transform start=b2Transform_zero;
     bool change =0;
+    b2Transform start=b2Transform_zero;
     EndCriteria endCriteria; //end criteria other than task encounters a disturbance
     Direction direction= DEFAULT;
     int motorStep=0;
     AffordanceIndex affordance=NONE;
-
 
 
 public:
@@ -254,17 +254,13 @@ class Listener : public b2ContactListener {
 
 // }correct;
 
-public:
 // friend Task::Correct;    
 
-class ControlLearner{ //to learn wheel speed controls
-    private:
-    float weight=1.0;
-};
+// class ControlLearner{ //to learn wheel speed controls
+//     private:
+//     float weight=1.0;
+// };
 
-Action action;
-
-Disturbance disturbance;
 
 Task::Action getAction()const{
     return action;
@@ -282,13 +278,27 @@ void setEndCriteria(const Angle& angle=SAFE_ANGLE, const Distance& distance=BOX2
 
 void setEndCriteria(const Distance& distance);
 
+void setEndCriteria(const EndCriteria & ec){
+    endCriteria=ec;
+}
+
+
 void setErrorWeights();
 
-EndedResult checkEnded(b2Transform robotTransform = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)), Direction dir=UNDEFINED, bool relax=0, b2Body* robot=NULL, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0))));
+EndedResult checkEnded(b2Transform robotTransform= b2Transform_zero, Direction dir=UNDEFINED, bool relax=0, b2Body* robot=NULL, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform_zero));
 
-EndedResult checkEnded(const State&, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)))); //usually used to check against control goal
+EndedResult checkEnded(const State&, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform_zero)); //usually used to check against control goal
 
-bool checkEnded( const b2PolygonShape &, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL );
+/**
+ * @brief Uses a virtual sensor (attention window) to determine whether the task has ended or not
+ * 
+ * @param box the sensor
+ * @param robot_pose 
+ * @param dist_obs pointer to the observed disturbance (the disturbance as it was at the beginning of the task, or as it was expected)
+ * @return true 
+ * @return false 
+ */
+bool checkEnded( const b2PolygonShape &box, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL );
 
 Task(){
     start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));
@@ -315,6 +325,10 @@ simResult bumping_that(b2World &, int, b2Body *, float remaining = SIM_DURATION)
 
 EndCriteria getEndCriteria(const Disturbance&);
 
+EndCriteria getEndCriteria(){
+    return endCriteria;
+}
+
 bool endCriteria_met(Angle &, Distance &);
 
 b2Transform from_Di( const b2Transform * custom_start=NULL, Disturbance * d_obs=NULL); //d_obs disturbance observed rather than D with which task was init
@@ -332,8 +346,12 @@ bool get_change(){
  * 
  * @return Disturbance* 
  */
-Disturbance * get_disturbance(){
+Disturbance * get_disturbance_ptr(){
     return &disturbance;
+}
+
+const Disturbance & get_disturbance()const{
+    return disturbance;
 }
 
 void setMotorStep(int i){
@@ -342,9 +360,27 @@ void setMotorStep(int i){
 
 int & getMotorStep(){return motorStep;}
 
+b2Transform getStart(){
+    return start;
+}
+
 b2Transform& getStartRef(){
     return start;
 }
+
+Direction get_direction(){
+    return direction;
+}
+
+void set_direction(Direction d){
+    direction=d;
+}
+
+protected:
+    Action action;
+    Disturbance disturbance;
+
+
 };
 
 #endif

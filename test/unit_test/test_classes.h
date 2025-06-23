@@ -8,8 +8,8 @@
 /**
  * @brief Setting up ostream operator for use with GTest
  * 
- * @param os 
- * @param t 
+ * @param os ostream
+ * @param t box2d 2dtransform
  * @return std::ostream& 
  */
 std::ostream& operator<<(std::ostream& os, const b2Transform& t){
@@ -19,9 +19,9 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
     return os;
 }
 
-class DebugConfigurator:public Configurator{
-    friend class HighLevelTest;
+class DebugConfigurator:public AttentiveConfigurator{
     public:
+    friend class HighLevelTest;
     int n_edges(){return transitionSystem.m_edges.size();}
 
     int n_vertices(){return transitionSystem.m_vertices.size();}
@@ -36,7 +36,7 @@ class DebugConfigurator:public Configurator{
 
     b2Vec2 plan_end_b2Vec2(){return transitionSystem[plan_end()].endPose.p;}
 
-   Task & getTask(){ //returns Task being executed
+    Task & getTask(){ //returns Task being executed
         return currentTask;
     }
 
@@ -135,6 +135,13 @@ class DebugConfigurator:public Configurator{
     }
     
 
+    int get_vertex_in_degree(vertexDescriptor v){
+        return boost::in_degree(v, transitionSystem);
+    }
+
+    int get_vertex_out_degree(vertexDescriptor v){
+        return boost::out_degree(v, transitionSystem);
+    }
 };
 
 
@@ -146,26 +153,23 @@ class DebugConfigurator:public Configurator{
  */
 class HighLevelTest: public testing::Test, public testing::WithParamInterface<std::pair<bool, std::string>>{
     protected:
-
-
     DebugConfigurator * configurator=NULL;
     Wise_Controller wc;
     ClosedLoop_Tracker tracker;
     LIDAR_In ci;
+    DataInterface di;
     Motor_Out m;
-
+    HorizonStarPlanner planner;
+    int iteration=0;
     void SetUp()override{
+        std::cout<<"setup"<<std::endl;
         configurator=new DebugConfigurator();
         init();
+        std::cout<<"teardown"<<std::endl;
     }
 
     void TearDown()override{
-        try{
-            delete configurator;
-        }
-        catch(...){
-            std::cout <<"caught!"<<std::endl;
-        }
+        delete configurator;
     }
     /**
      * @brief Initialises Fixture
@@ -177,10 +181,13 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
      * @brief Tests planning
      * 
      * @param folder a folder containing LIDAR scans names "map%04i.dat"
+     * @param it iteration of data interface (determines which map will be read) - 0 reads map 1
      * 
      */
-    std::vector<vertexDescriptor> get_plan(std::string folder);
+    std::vector<vertexDescriptor> get_plan(std::string folder, int it=0);
+    public:
 
+    HighLevelTest(){}
 
     
 
@@ -218,33 +225,6 @@ public:
     void graph_setOptions(vertexDescriptor v, const std::vector<Direction> & options){
         transitionSystem[v].options=options;
     }
-    // int desired_split_size(b2Vec2 pos, float simulationStep){
-    //     return int(pos.Length()/(simulationStep+0.00001))+1;
-    // }
-    // /**
-    //  * @brief Tests task split function
-    //  * 
-    //  * @param x coordinate of robot
-    //  * @param y coordinate of robot
-    //  * @param th coordinate of robot
-    //  * @param Dx coordinate of Dn
-    //  * @param Dy coordinate of Dn
-    //  * @param Dth coordinate of Dn
-    //  * @return std::vector <vertexDescriptor> 
-    //  */
-    // std::vector <vertexDescriptor> test_split(float x, float y, float th, float Dx, float Dy, float Dth){
-    //     b2Transform start=transitionSystem[movingVertex].endPose;
-    //     auto v1 = boost::add_vertex(transitionSystem);
-    //     auto e1 = boost::add_edge(currentVertex, v1, transitionSystem);
-    //     b2Vec2 pos(x,y);
-    //     b2Rot rot(th);
-    //     transitionSystem[v1].direction=DEFAULT;
-    //     transitionSystem[v1].start=start;
-    //     transitionSystem[v1].outcome=simResult::crashed;    
-    //     transitionSystem[v1].endPose=b2Transform(pos, rot);
-    //     transitionSystem[v1].Dn=Disturbance(AVOID,  b2Vec2(Dx, Dy), Dth);
-    //     return splitTask(v1, transitionSystem, transitionSystem[v1].direction, currentVertex);
-    // }
 
 
 };
@@ -258,30 +238,90 @@ class ConfiguratorTest2DT:public ConfiguratorTest, public testing::WithParamInte
 
 };
 
+/**
+ * @brief Configurator parameters are 2 2dtransforms
+ * 
+ */
+class ConfiguratorTest32DT:public ConfiguratorTest, public testing::WithParamInterface<std::tuple<b2Transform, b2Transform,b2Transform>>{
+    protected:
+    ConfiguratorTest32DT(){
+        register_tracker(new ClosedLoop_Tracker);
+    }
+
+    ~ConfiguratorTest32DT(){
+        delete tracker;
+    }
+    
+    /**
+     * @brief Creates a vertex whose state starts and end at the origin
+     * 
+     * @param v0 
+     * @return edgeDescriptor 
+     */
+    edgeDescriptor make_successful(vertexDescriptor v0=0);
+    /**
+     * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state
+     * 
+     */
+    edgeDescriptor make_v1_crashed( vertexDescriptor v0=0);
+
+    public:
+        void SetUp(){
+        transitionSystem=TransitionSystem(1);
+    }
+
+    void TearDown(){
+        transitionSystem.clear();
+    }
+};
+
+
 bool DebugConfigurator::plan_reaches_horizon(){
     return fabs(plan_end_b2Vec2().Length()-BOX2DRANGE)<0.02;
 }
 
 bool DebugConfigurator::plan_reaches_goal(){
-    return (plan_end_b2Vec2()-controlGoal.disturbance.pose().p).Length()<0.02;
+    return (plan_end_b2Vec2()-controlGoal.get_disturbance().pose().p).Length()<0.02;
 }
 
 void HighLevelTest::init( const Task& goal){
-    configurator->init(goal);
-    configurator->currentTask.set_change(true);
+    di.registerInterface(&ci);
     configurator->register_controller(&wc);
     configurator->register_tracker(&tracker);
     configurator->registerInterface(&ci, &m);
     configurator->setSimulationStep(ROBOT_HALFWIDTH*2);
+    configurator->register_planner(&planner);
+    configurator->init(goal);
+    configurator->currentTask.set_change(true);
+
 }
 
 
-std::vector<vertexDescriptor> HighLevelTest::get_plan(std::string folder){
-    DataInterface di(&ci);
+std::vector<vertexDescriptor> HighLevelTest::get_plan(std::string folder, int it){
+    di.set_iteration(it);
     di.set_folder(folder);
     di.newScanAvail();
     configurator->data2fp= ci.data2fp;
     configurator->Spawner();
     return configurator->get_plan();
+}
+
+edgeDescriptor ConfiguratorTest32DT::make_successful(vertexDescriptor v0){
+    auto v1=boost::add_vertex(transitionSystem);
+    auto e=boost::add_edge(v0, v1, transitionSystem);
+    transitionSystem[v1].direction=DEFAULT;
+    transitionSystem[e.first].step=1;
+    return e.first;
+}
+
+edgeDescriptor ConfiguratorTest32DT::make_v1_crashed( vertexDescriptor v0){
+    edgeDescriptor e=make_successful(v0);
+    vertexDescriptor v1=e.m_target;
+    b2Transform Dn=std::get<2>(GetParam());
+    transitionSystem[v1].outcome=simResult::crashed;
+    transitionSystem[v1].start=std::get<0>(GetParam()); //start
+    transitionSystem[v1].endPose=std::get<1>(GetParam());//pose
+    transitionSystem[v1].Dn=Disturbance(AVOID, Dn.p,Dn.q.GetAngle());
+    return e;
 }
 #endif

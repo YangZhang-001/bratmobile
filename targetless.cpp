@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     Task controlGoal;
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
-    Configurator configurator(controlGoal);
+    AttentiveConfigurator configurator(controlGoal);
 	DeadReckoner tracker;
 	configurator.register_tracker(&tracker);	
 	Wise_Controller wc;

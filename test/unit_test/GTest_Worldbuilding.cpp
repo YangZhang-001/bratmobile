@@ -1,6 +1,14 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
 
+TEST(Math, affineTransform){
+    Disturbance disturbance(AVOID, b2Vec2(0,0));
+    b2Transform transform(b2Vec2(0.5,0), b2Rot(M_PI_2));
+    Task task(disturbance, DEFAULT);
+    math::applyAffineTrans(transform, *task.get_disturbance_ptr());
+    EXPECT_FALSE(task.get_disturbance()==disturbance);
+    
+}
 
 /**
  * @brief Class to test world building tools (third party)

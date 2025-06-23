@@ -15,7 +15,7 @@ void math::applyAffineTrans(const b2Transform& deltaPose, State& state){
 
 void math::applyAffineTrans(const b2Transform& deltaPose, Task* task){
 	math::applyAffineTrans(deltaPose, task->getStartRef());
-	math::applyAffineTrans(deltaPose, task->disturbance);
+	math::applyAffineTrans(deltaPose, *task->get_disturbance_ptr());
 }
 
 

@@ -165,19 +165,31 @@ typedef boost::graph_traits<TransitionSystem>::edge_iterator edgeIterator;
 // typedef boost::subgraph<boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS>> CognitiveMap;
 
 
-
+/**
+ * @brief Used as a predicate, gives info on whether a vertex is the current vertex
+ * 
+ */
 struct is_not_v{
 	is_not_v(){}
+	/**
+	 * @brief Constructor assigns current vertex
+	 * 
+	 * @param _cv the current vertex
+	 */
 	is_not_v(vertexDescriptor _cv): cv(_cv){}
+
 	bool operator()(edgeDescriptor e){
 		return e.m_target!=cv;
 	}	
 
 	private:
-	vertexDescriptor cv;
+	vertexDescriptor cv=0;
 };
 
-
+/**
+ * @brief Predicate: gives info on whether a vertex has connections or is a singleton
+ * 
+ */
 struct Connected{
 	Connected(){}
 	Connected(TransitionSystem * ts): g(ts){}
@@ -188,7 +200,7 @@ struct Connected{
 	 	return (in || out) || v==0 ;
 	}
 private:
-TransitionSystem * g;
+TransitionSystem * g=NULL;
 };
 
 
@@ -203,7 +215,7 @@ struct Visited{ //for debug
 		return (*g)[v].visited();
 	}
 	private:
-	TransitionSystem *g;
+	TransitionSystem *g=NULL;
 };
 
 
@@ -291,10 +303,15 @@ struct NotSelfEdge{
 		return not_self;
 	}
 	private:
-	TransitionSystem * g;
+	TransitionSystem * g=NULL;
 };
 
-
+/**
+ * @brief Predicate: gives info on whether an edge is worth keeping. Namely,
+ * the edge is either not a self-edge (the vertex is not connected to itself)
+ * and if it is, the edge is not trivial (i.e. simulating this self-transition takes more than 0 simulation steps)
+ * 
+ */
 struct ViableEdge{
 	ViableEdge()=default;
 	ViableEdge(TransitionSystem * _g): g(_g){}
@@ -305,7 +322,20 @@ struct ViableEdge{
 		return not_self;
 	}
 	private:
-	TransitionSystem * g;
+	TransitionSystem * g=NULL;
+};
+
+struct InviableEdge{
+	InviableEdge()=default;
+	InviableEdge(TransitionSystem * _g): g(_g){}
+
+	bool operator()(const edgeDescriptor & e) const {
+		ViableEdge ve(g);
+		return !ve(e);
+	}
+
+private:
+TransitionSystem * g=NULL;
 };
 
 

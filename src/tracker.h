@@ -168,7 +168,7 @@ class ClosedLoop_Tracker:public Tracker{
     }
 
     void init(Task * goal){
-        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
+        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance_ptr());
 
     }
 

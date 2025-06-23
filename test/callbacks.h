@@ -78,6 +78,7 @@ LIDAR_In * ci=NULL;
 std::string folder;
 public:
 
+    DataInterface(){}
     DataInterface(LIDAR_In * _ci): ci(_ci){}
 
 	bool newScanAvail(){ //uncomment sections to write x and y to files		
@@ -92,6 +93,7 @@ public:
             printf("%s\n", filePath);
             FILE *f;
             if (!(f=fopen(filePath, "r"))){
+                throw "can't open file!";
                 if (iteration>1){
                     iteration=1;
                 }
@@ -126,7 +128,24 @@ public:
     }
 
     int get_iteration(){
-        return iteration;
+        return iteration;}
+        
+    void set_iteration(int i){
+        iteration=i;
+    }
+
+    void registerInterface(LIDAR_In *i){
+        ci=i;
+    }
+
+    bool has_interface(){
+        return ci!=NULL;
+    }
+
+    void reset(){
+        folder.clear();
+        ci=NULL;
+
     }
 };
 
