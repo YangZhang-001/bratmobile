@@ -17,3 +17,7 @@ TEST(Initialisation, InitialMap){
     EXPECT_EQ(configurator.n_vertices(),1);
     EXPECT_EQ(configurator.n_edges(), 0);
 }
+
+TEST_F(ConfiguratorTest, InitialVertex){
+    EXPECT_EQ(currentVertex, movingVertex);
+}

@@ -34,7 +34,7 @@ protected:
 	CoordinateContainer data2fp;
 	TransitionSystem transitionSystem=TransitionSystem(1);
 	WorldBuilder worldBuilder;
-	vertexDescriptor currentVertex=TransitionSystem::null_vertex();
+	vertexDescriptor currentVertex=movingVertex;
 	edgeDescriptor movingEdge=edgeDescriptor(), currentEdge=edgeDescriptor();
 
 	public:

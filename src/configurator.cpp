@@ -12,7 +12,6 @@ void Configurator::init(Task _task){
 	//boost::add_edge(movingVertex, currentVertex,transitionSystem);
 	currentTask.action.setVelocities(0,0);
 	currentTask.set_change(1);
-	
 	gt::fill(simResult(), &transitionSystem[movingVertex]);
 
 }
