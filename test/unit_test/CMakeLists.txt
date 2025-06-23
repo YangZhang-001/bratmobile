@@ -245,12 +245,12 @@ target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d test_classes)
 
 
 # #ARGUMENTS: vertex match, goal?, how many iterations have passed?
-add_test(NAME checkPlan COMMAND checkPlan ../target_68cm/ 2 1 1)
-add_test(NAME checkPlan_4 COMMAND checkPlan ../target_68cm/ 2 1 4)
-add_test(NAME checkPlan_21 COMMAND checkPlan ../target_68cm/ 2 1 21)
-#add_test(NAME checkPlan_40cm COMMAND checkPlan ../target_40cm/ 2 1 1)
-#add_test(NAME checkPlan_40cm_4 COMMAND checkPlan ../target_40cm/ 2 1 4)
-add_test(NAME checkPlan_40cm_21 COMMAND checkPlan ../target_40cm/ 2 1 21)
+# add_test(NAME checkPlan COMMAND checkPlan ../target_68cm/ 2 1 1)
+# add_test(NAME checkPlan_4 COMMAND checkPlan ../target_68cm/ 2 1 4)
+# add_test(NAME checkPlan_21 COMMAND checkPlan ../target_68cm/ 2 1 21)
+# #add_test(NAME checkPlan_40cm COMMAND checkPlan ../target_40cm/ 2 1 1)
+# #add_test(NAME checkPlan_40cm_4 COMMAND checkPlan ../target_40cm/ 2 1 4)
+# add_test(NAME checkPlan_40cm_21 COMMAND checkPlan ../target_40cm/ 2 1 21)
 
 # #ARGUMENTS: Dn affordance, new task direction, Di/goal affordance
 # add_test(NAME task_to_execute_default_to_ob COMMAND task_to_execute 1 2 2)

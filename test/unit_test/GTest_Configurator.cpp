@@ -21,3 +21,10 @@ TEST(Initialisation, InitialMap){
 TEST_F(ConfiguratorTest, InitialVertex){
     EXPECT_EQ(currentVertex, movingVertex);
 }
+
+TEST_F(ConfiguratorTest, DummyVertex){
+    init();
+    dummy_vertex(movingVertex);
+    EXPECT_EQ(boost::out_degree(movingVertex, transitionSystem), 1);
+    EXPECT_FALSE(boost::edge(movingVertex, movingVertex, transitionSystem).second);
+}

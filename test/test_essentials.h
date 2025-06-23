@@ -145,7 +145,9 @@ void get_coordinate_container(char * file_name, CoordinateContainer & points, co
     file.close();
 }
 
-
+void print_graph(const TransitionSystem & g){
+    boost::print_graph(g);
+}
 
 
 
