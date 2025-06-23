@@ -40,7 +40,9 @@ protected:
 	public:
 
 
-Configurator(){};
+Configurator(){
+	init();
+}
 
 Configurator(Task _task){
 	init(_task);

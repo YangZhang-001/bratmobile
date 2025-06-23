@@ -110,6 +110,7 @@ TEST_P(HighLevelTest, CheckPlan){
     int vertices_og=configurator->n_vertices();
     int iteration=2;
     DeadReckoner deadReckoner;
+    configurator->change_task();
     for (int i=0;i<iteration; i++){ //simulate execution
         b2Transform deltaPose= deadReckoner.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
         configurator->update_graph(configurator->get_ts(), deltaPose);
