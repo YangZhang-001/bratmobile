@@ -824,9 +824,9 @@ vertexDescriptor AttentiveConfigurator::get_explore_start(TransitionSystem & g){
 }
 
 void AttentiveConfigurator::pre_explore(){
-	if (movingVertex!=currentVertex){
+	//if (movingVertex!=currentVertex){
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
-	}	
+	//}	
 	if (currentTask.get_change()){
 
 	//	transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
