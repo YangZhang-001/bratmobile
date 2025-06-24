@@ -79,7 +79,7 @@ simResult simulate(Task, b2World &);
 *@param g the cognitive map
 *@param t the task which is currently being executed on the robot
 */
-void estimate_current_vertex(TransitionSystem& g, Task& t);
+void estimate_current_vertex();
 
 
 void printPlan(std::vector <vertexDescriptor>* p=NULL);

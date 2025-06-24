@@ -97,7 +97,7 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 			if (visited.first ||out.empty()){
-				if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[visited.second.m_target].direction!=dir){
+				if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[v].direction!=dir){
 					Task task(g[v].Di, DEFAULT, g[v].endPose, true);
 					Robot robot(&world);
 					robot.body->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
@@ -490,7 +490,7 @@ void Configurator::run(Configurator * c){
 			}
 			c->change_task();		
 			c->adjust_goal_expectation();
-			c->estimate_current_vertex(c->transitionSystem, c->currentTask);
+			c->estimate_current_vertex();
 			printf("current v=%i\n", c->currentVertex);
 			c->tracker->on_new_reading(&c->controlGoal);
 			}
@@ -851,11 +851,9 @@ std::vector <State> AttentiveConfigurator::output_plan(const std::vector <vertex
 	return rho;
 }
 
-void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
-	//printf("current vertices size=%i\n", current_vertices.size());
+void Configurator::estimate_current_vertex(){
 	if(current_vertices.empty()){
 		currentVertex=movingVertex;
-	//	printf(" current vertex=0\n");
 		return;
 	}
 	if (current_vertices.size()==1){
@@ -863,15 +861,15 @@ void Configurator::estimate_current_vertex(TransitionSystem& g, Task& t){
 		return;
 	}
 	vertexDescriptor task_start=current_vertices[0], cv=TransitionSystem::null_vertex();
-	b2Transform Di_distance=t.from_Di(), v_from_D=b2Transform_zero;
+	b2Transform Di_distance=currentTask.from_Di(), v_from_D=b2Transform_zero;
 	float sum=10000;
 	StateMatcher matcher;
 	for (vertexDescriptor & v:current_vertices){
-		if ((g[task_start].Dn.getAffIndex()==AVOID && t.disturbance.getAffIndex()==PURSUE)){
-			v_from_D=g[v].start_from_Dn();
+		if ((transitionSystem[task_start].Dn.getAffIndex()==AVOID && currentTask.disturbance.getAffIndex()==PURSUE)){
+			v_from_D=transitionSystem[v].start_from_Dn();
 		}
 		else{
-			v_from_D=g[v].start_from_Di();
+			v_from_D=transitionSystem[v].start_from_Di();
 		}
 		b2Transform transform_diff=Di_distance-v_from_D;
 		float sum_diff=fabs(transform_diff.p.x+transform_diff.p.y+transform_diff.q.GetAngle());

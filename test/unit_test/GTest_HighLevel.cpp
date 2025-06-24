@@ -111,11 +111,12 @@ TEST_P(HighLevelTest, CheckPlan){
     int iteration=2;
     //DeadReckoner deadReckoner;
     configurator->change_task();
+    configurator->estimate_current_vertex();
     configurator->vertex_set_Di(movingVertex, configurator->getTask().get_disturbance());
     for (int i=0;i<iteration; i++){ //simulate execution
         b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
         configurator->update_graph(configurator->get_ts(), deltaPose);
-        configurator->estimate_current_vertex(configurator->get_ts(), configurator->getTask());    
+        configurator->estimate_current_vertex();    
         configurator->change_task();
     }
     get_plan(folder, iteration); //map 2
