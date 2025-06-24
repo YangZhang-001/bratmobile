@@ -827,18 +827,11 @@ void AttentiveConfigurator::pre_explore(){
 	//if (movingVertex!=currentVertex){
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 	//}	
-	if (currentTask.get_change()){
-
-	//	transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
 		transitionSystem[movingVertex].Di=currentTask.get_disturbance();
 
 		transitionSystem[movingVertex].outcome=simResult::successful;
 		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
-		// std::pair<edgeDescriptor, bool> ep(edgeDescriptor(), false);
-		// if (!p.empty()){
-		// 	ep=boost::edge(currentVertex, p[0], g);
-		// 	//transitionSystem[curre].direction=transitionSystem[ep.first].direction;
-		// }
+	if (currentTask.get_change()){
 		transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	}
 }
@@ -858,6 +851,8 @@ void Configurator::estimate_current_vertex(){
 	}
 	if (current_vertices.size()==1){
 		currentVertex=current_vertices[0];
+		auto e=boost::add_edge(movingVertex, currentVertex, transitionSystem);
+		movingEdge=e.first;
 		return;
 	}
 	vertexDescriptor task_start=current_vertices[0], cv=TransitionSystem::null_vertex();
@@ -880,9 +875,8 @@ void Configurator::estimate_current_vertex(){
 	}
 	printf("current vertex cv=%i\n", cv);
 	currentVertex=cv;
-	auto e=boost::add_edge(movingVertex, currentVertex, transitionSystem);
-	movingEdge=e.first;
-	// return cv;
+	//auto e=boost::add_edge(movingVertex, currentVertex, transitionSystem);
+	//movingEdge=e.first;
 
 }
 
