@@ -105,3 +105,18 @@ TEST_F(ConfiguratorTest, GetDisturbanceObstacle2){
     Disturbance Di= getDisturbance(transitionSystem, currentVertex, world, LEFT, b2Transform_zero);
     EXPECT_TRUE(Di==solution);
 }
+
+TEST_F(ConfiguratorTest, GetDisturbanceObstacle3){
+    b2World world(b2Vec2(0,0));
+    BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
+    bf.attention=1;
+    data2fp.emplace(bf.pose.p); //make point corresponding to obstacle
+    transitionSystem[movingVertex].Dn=Disturbance(bf); //current task was avoiding
+    transitionSystem[movingVertex].Dn.validate();
+    Disturbance solution=transitionSystem[movingVertex].Dn;
+    transitionSystem[movingVertex].direction=DEFAULT;
+    transitionSystem[movingVertex].endPose.p.x=0.4;
+    vertex_options_push_back(movingVertex, LEFT);
+    Disturbance Di= getDisturbance(transitionSystem, currentVertex, world, LEFT, b2Transform_zero);
+    EXPECT_TRUE(Di==solution);
+}
