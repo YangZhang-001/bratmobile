@@ -25,7 +25,7 @@ int main(int argc, char** argv){
     conf.transitionSystem[conf.currentVertex].Di=obstacle;
     if (argc>1){
         int code =atoi(argv[1]);
-        if (code==0){
+        if (code==0){ 
             start.p.x=0.40;
             solution=obstacle;
             conf.transitionSystem[conf.currentVertex].Di=goal;

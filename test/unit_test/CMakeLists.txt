@@ -132,13 +132,6 @@ target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d test_classes)
 
 
 
-# # add_test(NAME split_task COMMAND split_task 0.6 0 0)
-# # add_test(NAME split_task_-01 COMMAND split_task 0.26 -0.01 -1.570796 0 0 -1.570796 0.265 -0.16 0)
-# # add_test(NAME split_task_angle COMMAND split_task 0.0 .6 1.57079633)
-# # add_test(NAME split_task_offset COMMAND split_task 0.75 0.27 0 0.2 0.27 0)
-# # add_test(NAME split_task_offset_angle COMMAND split_task 0.27 0.75 1.57079633 0.27 0.2 1.57079633)
-# # add_test(NAME split_task_1_node COMMAND split_task 0.27 0 0)
-# # add_test(NAME split_task_0_nodes COMMAND split_task 0.18 0 0)
 
 # add_test(NAME split_step COMMAND split_step 0.68 0 )
 
@@ -175,29 +168,12 @@ target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d test_classes)
 # add_test(NAME end_contact_obstacle_goal COMMAND end_contact 0 1)
 # add_test(NAME end_contact_goal COMMAND end_contact 1 1)
 
-# add_test(NAME get_disturbance_0dl COMMAND get_disturbance 0 2 0) #position 1, prev: DEF, curr: LEFT
-# add_test(NAME get_disturbance_1l COMMAND get_disturbance 1 0) #position 1, prev: LEFT, curr: DEF
-# add_test(NAME get_disturbance_2r COMMAND get_disturbance 2 1) #position 2, prev: RIGHT, curr:DEF
-# add_test(NAME get_disturbance_3 COMMAND get_disturbance 3) #obstacle behind (pos 3), prev: DEF, curr: DEF
-# add_test(NAME get_disturbance_3dr COMMAND get_disturbance 3 2 1) #pos 3, prev: DEF, curr: RIGHT
-# add_test(NAME get_disturbance_3l COMMAND get_disturbance 3 0)
-# add_test(NAME get_disturbance_3r COMMAND get_disturbance 3 1)
-# add_test(NAME get_disturbance_4r COMMAND get_disturbance 4)
-# add_test(NAME get_disturbance_4dr COMMAND get_disturbance 4 2 1)
+
 
 # add_test(NAME disturbance_dimensions_1d COMMAND disturbance_dimensions)
 # #add_test(NAME disturbance_dimensions_2d COMMAND disturbance_dimensions 2)
 
 
-# # add_test(NAME explorer_no COMMAND explorer)
-# # add_test(NAME explorer_cds COMMAND explorer ../cul_de_sac/ 0)
-# # add_test(NAME explorer_target COMMAND explorer ../target_68cm/ 1)
-
-
-# add_test(NAME plan_no COMMAND plan)
-# add_test(NAME plan_cds COMMAND plan ../cul_de_sac/ 0)
-# add_test(NAME plan_target_40cm COMMAND plan ../target_40cm/ 1)
-# add_test(NAME plan_target_68cm COMMAND plan ../target_68cm/ 1)
 
 
 # add_test(NAME match_false COMMAND match)

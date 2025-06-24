@@ -241,6 +241,7 @@ public:
         bf.pose.q.Set(q);
         bf.halfLength=hlength;
         bf.halfWidth=hwidth;
+        bf.attention=true;
         return bf;
     }
 
