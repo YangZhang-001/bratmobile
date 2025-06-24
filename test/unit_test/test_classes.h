@@ -97,6 +97,10 @@ class DebugConfigurator:public AttentiveConfigurator{
         transitionSystem[v].options=d;
     }
 
+    void vertex_options_push_back(vertexDescriptor v, Direction d){
+        transitionSystem[v].options.push_back(d);
+    }
+
     const State & vertex_get_state(vertexDescriptor v){
         return transitionSystem[v];
     }
@@ -216,15 +220,30 @@ protected:
 
 
 public:
+    // /**
+    //  * @brief Manually set options for a state transition
+    //  * 
+    //  * @param v the index of the state
+    //  * @param options desired options vector
+    //  */
+    // void graph_setOptions(vertexDescriptor v, const std::vector<Direction> & options){
+    //     transitionSystem[v].options=options;
+    // }
+
     /**
-     * @brief Manually set options for a state transition
+     * @brief makes bodyfeatures
      * 
-     * @param v the index of the state
-     * @param options desired options vector
      */
-    void graph_setOptions(vertexDescriptor v, const std::vector<Direction> & options){
-        transitionSystem[v].options=options;
+    BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth){
+        BodyFeatures bf;
+        bf.pose.p.x=x;
+        bf.pose.p.y=y;
+        bf.pose.q.Set(q);
+        bf.halfLength=hlength;
+        bf.halfWidth=hwidth;
+        return bf;
     }
+
 
 
 };
