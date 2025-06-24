@@ -188,4 +188,4 @@ TEST_P(ConfiguratorSimulationEnd, SimulationDuration){
     simResult result=simulate(task, world);
     EXPECT_EQ(result.step, 100);
 }
-INSTANTIATE_TEST_CASE_P(StartPositions, ConfiguratorSimulationEnd_SimulationDuration_Test, testing::Values(b2Transform_zero, b2Transform(b2Vec2(0.5,0), b2Rot(0))));
+INSTANTIATE_TEST_CASE_P(StartPositions, ConfiguratorSimulationEnd, testing::Values(b2Transform_zero, b2Transform(b2Vec2(0.5,0), b2Rot(0))));

@@ -146,6 +146,14 @@ class DebugConfigurator:public AttentiveConfigurator{
     int get_vertex_out_degree(vertexDescriptor v){
         return boost::out_degree(v, transitionSystem);
     }
+
+    /**
+     * @brief Wrapper
+     * 
+     */
+    void preExplore(){
+        pre_explore();
+    }
 };
 
 

@@ -110,14 +110,18 @@ TEST_P(HighLevelTest, CheckPlan){
     int vertices_og=configurator->n_vertices();
     int iteration=2;
     //DeadReckoner deadReckoner;
-    configurator->change_task();
-    configurator->estimate_current_vertex();
-    configurator->vertex_set_Di(movingVertex, configurator->getTask().get_disturbance());
+    // configurator->change_task();
+    // configurator->estimate_current_vertex();
+    // configurator->vertex_set_Di(movingVertex, configurator->getTask().get_disturbance());
     for (int i=0;i<iteration; i++){ //simulate execution
-        b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
-        configurator->update_graph(configurator->get_ts(), deltaPose);
-        configurator->estimate_current_vertex();    
+        if (configurator->getIteration()>1){
+            b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
+            configurator->update_graph(configurator->get_ts(), deltaPose);
+        }
         configurator->change_task();
+        configurator->estimate_current_vertex();    
+        configurator->preExplore();
+        EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
     }
     get_plan(folder, iteration); //map 2
     int vertices_now=configurator->n_vertices();

@@ -880,6 +880,8 @@ void Configurator::estimate_current_vertex(){
 	}
 	printf("current vertex cv=%i\n", cv);
 	currentVertex=cv;
+	auto e=boost::add_edge(movingVertex, currentVertex, transitionSystem);
+	movingEdge=e.first;
 	// return cv;
 
 }
