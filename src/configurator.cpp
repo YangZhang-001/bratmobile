@@ -397,19 +397,13 @@ void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 
 
 void Configurator::printPlan(std::vector <vertexDescriptor>* p){
-	std::vector <vertexDescriptor> plan= *p;
+	std::vector <vertexDescriptor> _plan= *p;
 	vertexDescriptor pre=currentVertex;
 	printf("PLAN:");
-	for (vertexDescriptor v: plan){
-		std::pair <edgeDescriptor, bool> edge=boost::edge(pre, v, transitionSystem);
-		if (!edge.second){
-			printf("no edge: %i-> %i", edge.first.m_source, edge.first.m_target);
-		}
-		else{
-			auto a=dirmap.find(transitionSystem[v].direction);
-			printf("%i, %s, (%i steps) ", edge.first.m_target, (*a).second, transitionSystem[edge.first].step);
-		}
-		pre=edge.first.m_target;
+	for (vertexDescriptor v: _plan){
+		auto a=dirmap.find(transitionSystem[v].direction);
+		printf("%i, %s; ", v, (*a).second); //, transitionSystem[edge.first].step
+		
 		}
 	printf("\n");
 }
