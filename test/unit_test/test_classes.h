@@ -220,15 +220,6 @@ protected:
 
 
 public:
-    // /**
-    //  * @brief Manually set options for a state transition
-    //  * 
-    //  * @param v the index of the state
-    //  * @param options desired options vector
-    //  */
-    // void graph_setOptions(vertexDescriptor v, const std::vector<Direction> & options){
-    //     transitionSystem[v].options=options;
-    // }
 
     /**
      * @brief makes bodyfeatures

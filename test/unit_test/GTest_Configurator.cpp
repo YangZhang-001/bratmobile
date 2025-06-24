@@ -23,9 +23,11 @@ TEST_F(ConfiguratorTest, InitialVertex){
     EXPECT_EQ(currentVertex, movingVertex);
 }
 
+
 TEST_F(ConfiguratorTest, DummyVertex){
     init();
     dummy_vertex(movingVertex);
+    EXPECT_TRUE(currentTask.get_change());
     EXPECT_EQ(boost::out_degree(movingVertex, transitionSystem), 1);
     EXPECT_FALSE(boost::edge(movingVertex, movingVertex, transitionSystem).second);
 }
@@ -156,4 +158,15 @@ TEST_F(ConfiguratorTestGetObstacle, GetDisturbanceObstacle3){
     EXPECT_EQ(Di.bf.pose.q.GetAngle(), solution.bf.pose.q.GetAngle());
     EXPECT_EQ(Di.bf.halfLength, solution.bf.halfLength);
     EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
+}
+
+TEST_F(ConfiguratorTest, PreExplore){
+    dummy_vertex(movingVertex);
+    b2Transform dPose;
+    dPose.p.x=0.5;
+    currentTask=Task(Disturbance(AVOID, dPose.p), DEFAULT);
+    pre_explore();
+    EXPECT_EQ(transitionSystem[movingVertex].Di.getAffIndex(), AVOID);
+    EXPECT_EQ(transitionSystem[movingVertex].Di.pose().p.x, 0.5);
+
 }

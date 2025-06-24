@@ -13,6 +13,10 @@
 #include "task_controller.h"
 #include "tracker.h"
 
+/**
+ * @file configurator.h
+ * 
+ */
 
 class Configurator{
 protected:

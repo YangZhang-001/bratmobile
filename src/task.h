@@ -338,7 +338,7 @@ void set_change(bool b){
 }
 
 bool get_change(){
-    return change;
+    return change || motorStep==0;
 }
 
 /**
