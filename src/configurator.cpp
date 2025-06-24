@@ -832,9 +832,9 @@ void AttentiveConfigurator::pre_explore(){
 
 		transitionSystem[movingVertex].outcome=simResult::successful;
 		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
-	if (currentTask.get_change()){
-		transitionSystem[movingEdge].step=currentTask.getMotorStep();
-	}
+	// if (currentTask.get_change()){
+	// 	transitionSystem[movingEdge].step=currentTask.getMotorStep();
+	// }
 }
 
 std::vector <State> AttentiveConfigurator::output_plan(const std::vector <vertexDescriptor>& p, const TransitionSystem &g){
@@ -891,6 +891,7 @@ void Configurator::change_task(){
 	}
 	printf("change!\n");
 	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
+	transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	printPlan(&plan);
 	tracker->on_new_task(&currentTask);
 	control->reset();
