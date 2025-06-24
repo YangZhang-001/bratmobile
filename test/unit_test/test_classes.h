@@ -154,6 +154,10 @@ class DebugConfigurator:public AttentiveConfigurator{
     void preExplore(){
         pre_explore();
     }
+
+    int get_movingEdge_step(){
+        return transitionSystem[movingEdge].step;
+    }
 };
 
 

@@ -827,7 +827,8 @@ void AttentiveConfigurator::pre_explore(){
 	//if (movingVertex!=currentVertex){
 		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
 	//}	
-		transitionSystem[movingVertex].Di=currentTask.get_disturbance();
+		//transitionSystem[movingVertex].Di=currentTask.get_disturbance();
+		transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
 
 		transitionSystem[movingVertex].outcome=simResult::successful;
 		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
