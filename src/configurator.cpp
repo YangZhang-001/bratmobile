@@ -91,7 +91,7 @@ std::pair <bool, Direction> AttentiveConfigurator::getOppositeDirection(Directio
 	}
 	return result;
 }
-Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g, const  vertexDescriptor& v, b2World & world, const Direction& dir, const b2Transform& start){
+Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
 	if (!g[v].Dn.isValid() ){
 		std::vector <edgeDescriptor> in=gt::inEdges(g, v, UNDEFINED);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
@@ -897,7 +897,6 @@ void Configurator::change_task(){
 	printf("change!\n");
 	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
 	printPlan(&plan);
-	// worldBuilder.wb_bridger.set_tracked_disturbance(currentTask.disturbance);
 	tracker->on_new_task(&currentTask);
 	control->reset();
 	control->getData(currentTask.action);

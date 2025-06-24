@@ -80,7 +80,7 @@ target_link_libraries( test_classes CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_m
 # add_executable(make_sensor ../test_essentials.h make_sensor.cpp)
 # add_executable(end_contact ../test_essentials.h end_contact.cpp)
 # add_executable(get_disturbance ../test_essentials.h get_disturbance.cpp)
-add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
+#add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
 # add_executable(task_to_execute ../test_essentials.h task_to_execute.cpp)
 # add_executable(closed_loop_ended ../test_essentials.h closed_loop_ended.cpp)
 # add_executable(axb ../test_essentials.h axb.cpp)
@@ -128,7 +128,7 @@ add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
 # target_link_libraries(make_sensor CloCK ${OpenCV_LIBS} box2d)
 # target_link_libraries(end_contact CloCK ${OpenCV_LIBS} box2d)
 # target_link_libraries(get_disturbance CloCK ${OpenCV_LIBS} box2d)
-target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d test_classes)
+#target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d test_classes)
 
 
 

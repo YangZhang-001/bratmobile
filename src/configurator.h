@@ -13,11 +13,6 @@
 #include "task_controller.h"
 #include "tracker.h"
 
-/**
- * @file configurator.h
- * 
- */
-
 class Configurator{
 protected:
 	int iteration=0; //represents that hasn't started yet, robot isn't moving and there are no map data
@@ -224,8 +219,20 @@ ExecutionInfo package_info(vertexDescriptor gv=TransitionSystem::null_vertex(), 
 	return ExecutionInfo(currentVertex, gv, currentTask, controlGoal, been, plan);
 }
 
-//inputs: g, src vertex, b2d world, direction of the task to be created
-Disturbance getDisturbance(TransitionSystem&, const vertexDescriptor&, b2World &, const Direction &, const b2Transform&);
+/**
+ * @brief Use attention window to find if any previously avoided obstacle is in the way of the goal, if present.
+ * In case of plan recycling, it shifts the disturbance to adapt to the current task ahead
+ * 
+ * @param g the transition system
+ * @param v source vertex
+ * @param world box2d world
+ * @param dir direction of the task to be simulated
+ * @param start task start
+ * @return previous Di if it's in the way of target, even though source task was successful
+ * 		   previous Dn if previous task is safe for now
+ * 		   goal Di otherwise 
+ */
+Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start);
 
 
 //add waypoints to proprity queue

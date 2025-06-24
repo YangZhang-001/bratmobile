@@ -111,6 +111,7 @@ TEST_P(HighLevelTest, CheckPlan){
     int iteration=2;
     //DeadReckoner deadReckoner;
     configurator->change_task();
+    configurator->vertex_set_Di(movingVertex, configurator->getTask().get_disturbance());
     for (int i=0;i<iteration; i++){ //simulate execution
         b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
         configurator->update_graph(configurator->get_ts(), deltaPose);
@@ -128,9 +129,7 @@ TEST_P(HighLevelTest, CheckPlan){
 
 INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
                                                                    std::pair<bool, std::string>(false, std::string("../cul_de_sac/")),
-                                                                   std::pair<bool, std::string>(true, std::string("../target_40cm/"))));
-
-INSTANTIATE_TEST_CASE_P(Obstacle68, HighLevelTest, ::testing::Values(
+                                                                   std::pair<bool, std::string>(true, std::string("../target_40cm/")),
                                                                    std::pair<bool, std::string>(true, std::string("../target_68cm/"))));
 
 

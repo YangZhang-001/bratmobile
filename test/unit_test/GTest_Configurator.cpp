@@ -26,7 +26,7 @@ TEST_F(ConfiguratorTest, InitialVertex){
 
 TEST_F(ConfiguratorTest, DummyVertex){
     init();
-    dummy_vertex(movingVertex);
+    dummy_vertex(movingVertex); 
     EXPECT_TRUE(currentTask.get_change());
     EXPECT_EQ(boost::out_degree(movingVertex, transitionSystem), 1);
     EXPECT_FALSE(boost::edge(movingVertex, movingVertex, transitionSystem).second);
@@ -93,8 +93,6 @@ INSTANTIATE_TEST_CASE_P(DisturbanceIsGoal, ConfiguratorTestGetGoal, ::testing::V
 class ConfiguratorTestGetObstacle: public ConfiguratorTestGetGoal{
     protected:
     void SetUp(){
-        Disturbance goal(PURSUE, b2Vec2(1.0, 0));
-        init(Task(goal, UNDEFINED));
         data2fp.emplace(Pointf(0.55, 0)); //make point corresponding to obstacle
         dummy_vertex(movingVertex);
     }
@@ -106,6 +104,8 @@ class ConfiguratorTestGetObstacle: public ConfiguratorTestGetGoal{
 };
 
 TEST_P(ConfiguratorTestGetObstacle, GetDisturbanceObstacle){
+    Disturbance goal(PURSUE, b2Vec2(1.0, 0));
+    init(Task(goal, UNDEFINED));
     EXPECT_EQ(transitionSystem.m_vertices.size(),2);
     b2World world(b2Vec2(0,0));
     BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
@@ -161,12 +161,25 @@ TEST_F(ConfiguratorTestGetObstacle, GetDisturbanceObstacle3){
 }
 
 TEST_F(ConfiguratorTest, PreExplore){
-    dummy_vertex(movingVertex);
+    init();
     b2Transform dPose;
     dPose.p.x=0.5;
     currentTask=Task(Disturbance(AVOID, dPose.p), DEFAULT);
     pre_explore();
     EXPECT_EQ(transitionSystem[movingVertex].Di.getAffIndex(), AVOID);
-    EXPECT_EQ(transitionSystem[movingVertex].Di.pose().p.x, 0.5);
-
+    EXPECT_EQ(transitionSystem[movingVertex].Di.pose().p.x, 0.5); 
 }
+
+class ConfiguratorSimulationEnd:public ConfiguratorTest, public testing::WithParamInterface<b2Transform>{};
+
+/**
+ * @brief Test 
+ * 
+ */
+TEST_P(ConfiguratorSimulationEnd, SimulationDuration){
+    Task task(Disturbance(), DEFAULT, GetParam(), true);
+    b2World world(b2Vec2(0,0));
+    simResult result=simulate(task, world);
+    EXPECT_EQ(result.step, 100);
+}
+INSTANTIATE_TEST_CASE_P(StartPositions, ConfiguratorSimulationEnd_SimulationDuration_Test, testing::Values(b2Transform_zero, b2Transform(b2Vec2(0.5,0), b2Rot(0))));
