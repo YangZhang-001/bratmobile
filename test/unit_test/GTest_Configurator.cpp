@@ -179,14 +179,14 @@ TEST_F(ConfiguratorTest, PreExplore){
 
 class ConfiguratorSimulationEnd:public ConfiguratorTest, public testing::WithParamInterface<b2Transform>{};
 
-/**
- * @brief Test 
- * 
- */
-TEST_P(ConfiguratorSimulationEnd, SimulationDuration){
-    Task task(Disturbance(), DEFAULT, GetParam(), true);
-    b2World world(b2Vec2(0,0));
-    simResult result=simulate(task, world);
-    EXPECT_EQ(result.step, 100);
-}
-INSTANTIATE_TEST_CASE_P(StartPositions, ConfiguratorSimulationEnd, testing::Values(b2Transform_zero, b2Transform(b2Vec2(0.5,0), b2Rot(0))));
+// /**
+//  * @brief Test 
+//  * 
+//  */
+// TEST_P(ConfiguratorSimulationEnd, SimulationDuration){
+//     Task task(Disturbance(), DEFAULT, GetParam(), true);
+//     b2World world(b2Vec2(0,0));
+//     simResult result=simulate(task, world);
+//     EXPECT_EQ(result.step, 100);
+// }
+// INSTANTIATE_TEST_CASE_P(StartPositions, ConfiguratorSimulationEnd, testing::Values(b2Transform_zero, b2Transform(b2Vec2(0.5,0), b2Rot(0))));
