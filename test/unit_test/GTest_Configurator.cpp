@@ -168,9 +168,10 @@ TEST_F(ConfiguratorTestGetObstacle, AvoidNoGoal){
 
 TEST_F(ConfiguratorTest, PreExplore){
     init();
+    dummy_vertex(movingVertex);
     b2Transform dPose;
     dPose.p.x=0.5;
-    currentTask=Task(Disturbance(AVOID, dPose.p), DEFAULT);
+    transitionSystem[currentVertex].Di=(Disturbance(AVOID, dPose.p), DEFAULT);
     pre_explore();
     EXPECT_EQ(transitionSystem[movingVertex].Di.getAffIndex(), AVOID);
     EXPECT_EQ(transitionSystem[movingVertex].Di.pose().p.x, 0.5); 
