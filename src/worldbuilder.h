@@ -31,6 +31,11 @@ class WorldBuilder{
                                                                                                                                         //std::pair<points, obstaclestillthere>
     b2Body* makeBody(b2World&, BodyFeatures);
 
+    /**
+     * @brief returns a bounding box encompassing all points provided
+     * 
+     * @return std::vector <BodyFeatures> 
+     */
     std::vector <BodyFeatures> processData(const CoordinateContainer&, const b2Transform&);
 
     std::vector <BodyFeatures> cluster_data(const CoordinateContainer &, const b2Transform&, CLUSTERING clustering=PARTITION);

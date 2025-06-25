@@ -63,12 +63,16 @@ bool Configurator::Spawner(){
 	worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero, WorldBuilder::PARTITION));
 	// printf("got features =%i\n", worldBuilder.world_objects.size());	
 	auto endTime =std::chrono::high_resolution_clock::now();
-	std::chrono::duration_getFeatures<float, std::milli>d= now- endTime; //in seconds
-	float duration=abs(float(d.count())/1000); //express in seconds
+	std::chrono::duration<float, std::milli>d_getFeatures= now- endTime; //in seconds
+	float duration_getFeatures=abs(float(d_getFeatures.count())/1000); //express in seconds
 	// printf("built wolrd in %f\n", duration);
 	explore_plan(world);
-	std::chrono::duration_withExplore<float, std::milli>d= now- endTime; //in seconds
-	
+	std::chrono::duration<float, std::milli>d_withExplore= now- endTime; //in seconds
+	float duration_withExplore=abs(float(d_withExplore.count())/1000); //express in seconds
+	//FORMAT: vertices	bodies	total_dur	just_worldbuilding
+	if (logger){
+		logger->log("%i\t%i\t%0.4f\t%0.4f\n", transitionSystem.m_vertices.size(), worldBuilder.bodies, duration_withExplore, duration_getFeatures);
+	}
 	worldBuilder.resetBodies();
 	return 1;
 }
@@ -891,7 +895,7 @@ void Configurator::change_task(){
 		throw std::invalid_argument("no controller, please add!");
 	}
 	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
-	transitionSystem[movingEdge].step=currentTask.getMotorStep();
+	//transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
 	tracker->on_new_task(&currentTask);
 	control->reset();

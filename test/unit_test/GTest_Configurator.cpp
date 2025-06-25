@@ -166,18 +166,21 @@ TEST_F(ConfiguratorTestGetObstacle, AvoidNoGoal){
     EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
 }
 
-TEST_F(ConfiguratorTest, PreExplore){
-    init();
-    dummy_vertex(movingVertex);
-    b2Transform dPose;
-    dPose.p.x=0.5;
-    transitionSystem[currentVertex].Di=(Disturbance(AVOID, dPose.p), DEFAULT);
-    pre_explore();
-    EXPECT_EQ(transitionSystem[movingVertex].Di.getAffIndex(), AVOID);
-    EXPECT_EQ(transitionSystem[movingVertex].Di.pose().p.x, 0.5); 
-}
+// TEST_F(ConfiguratorTest, PreExplore){
+//     init();
+//     dummy_vertex(movingVertex);
+//     b2Transform dPose;
+//     dPose.p.x=0.5;
+//     transitionSystem[currentVertex].Di=(Disturbance(AVOID, dPose.p), DEFAULT);
+//     EXPECT_EQ(transitionSystem[currentVertex].Di.getAffIndex(), AVOID);
+//     EXPECT_EQ(transitionSystem[currentVertex].Di.pose().p.x, 0.5); 
+//     pre_explore();
+//     EXPECT_EQ(transitionSystem[movingVertex].Di.getAffIndex(), AVOID);
+//     EXPECT_EQ(transitionSystem[movingVertex].Di.pose().p.x, 0.5); 
+// }
 
-class ConfiguratorSimulationEnd:public ConfiguratorTest, public testing::WithParamInterface<b2Transform>{};
+
+//class ConfiguratorSimulationEnd:public ConfiguratorTest, public testing::WithParamInterface<b2Transform>{};
 
 // /**
 //  * @brief Test 

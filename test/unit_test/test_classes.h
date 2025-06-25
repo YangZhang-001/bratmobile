@@ -158,6 +158,10 @@ class DebugConfigurator:public AttentiveConfigurator{
     int get_movingEdge_step(){
         return transitionSystem[movingEdge].step;
     }
+
+    Logger * get_logger(){
+        return logger;
+    }
 };
 
 

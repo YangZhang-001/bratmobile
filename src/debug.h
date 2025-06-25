@@ -12,13 +12,59 @@
 #include <dirent.h>
 
 
+class Logger{
+	protected:
+	char fileName[60];
+	FILE *f=NULL;
+
+	public:
+
+	Logger(){}
+
+	/**
+	 * @brief Construct a new Logger object
+	 * 
+	 * @param new_folder folder where files will be dumped
+	 * @param _dir directory containing new_folder
+	 */
+	Logger(char * new_folder, char * _dir=NULL, char * customName="/stats"){
+		init(new_folder, _dir, customName);
+	}
+
+	~Logger(){
+		if (NULL!=f){
+			fclose(f);
+		}
+		f=NULL;
+		
+	}
+
+	bool log(const char * format, ...);
+
+	char * get_fileName(){
+		return fileName;
+	}
+
+	protected:
+
+	/**
+	 * @brief Creates filename name in format customdmy_hm.txt
+	 * 
+	 * @param custom custom
+	 * @param name empty char array
+	 */
+	std::string file_dateTime(const char* custom, char name[60]);
+
+	void init(char * new_folder, char * _dir=NULL, char * customName="/stats");
+
+
+
+
+};
 
 
 
 namespace debug{
-	
-// template <class T>
-// void graph_file(const int &, const T&,const Disturbance &, std::vector <vertexDescriptor>,const vertexDescriptor&);
 
 template <class T>
 void print_graph(const T& g, const Disturbance & goal, std::vector <vertexDescriptor>plan, const vertexDescriptor& c){
