@@ -149,6 +149,9 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 
 
 std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v, TransitionSystem& g, b2World & w){
+	if (transitionSystem.m_vertices.size()==0){
+		throw "no dummy vertex!";
+	}
 	vertexDescriptor v1=v, v0=v, bestNext=v, v0_exp=v;
 	Direction direction=currentTask.get_direction();
 	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=plan;
@@ -475,7 +478,6 @@ void Configurator::run(Configurator * c){
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
 			b2Transform deltaPose=b2Transform_zero;
-			//c->track_task_execution();
 			if (c->getIteration()>1){
 				deltaPose= c->tracker->track((c->currentTask),c->ci->data2fp, c->worldBuilder.get_world_objects());
 			}
@@ -829,9 +831,9 @@ void AttentiveConfigurator::pre_explore(){
 
 		transitionSystem[movingVertex].outcome=simResult::successful;
 		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
-	// if (currentTask.get_change()){
-	// 	transitionSystem[movingEdge].step=currentTask.getMotorStep();
-	// }
+	//  if (currentTask.get_change()){
+	//  	transitionSystem[movingEdge].step=currentTask.getMotorStep();
+	//  }
 }
 
 std::vector <State> AttentiveConfigurator::output_plan(const std::vector <vertexDescriptor>& p, const TransitionSystem &g){
@@ -886,10 +888,9 @@ void Configurator::change_task(){
 	if (task_controller==NULL){
 		throw std::invalid_argument("no controller, please add!");
 	}
-	printf("change!\n");
 	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
 	transitionSystem[movingEdge].step=currentTask.getMotorStep();
-	//printPlan();
+	std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
 	tracker->on_new_task(&currentTask);
 	control->reset();
 	control->getData(currentTask.action);
