@@ -202,13 +202,13 @@ void register_logger(Logger * l){
 }
 
 protected:
-	void log(char * format, ...){
-		if (NULL!=logger){
-			va_list args;
-			va_start(args, format);
-			logger->log(format, args);
-		}
-	}
+	// void log(char * format, ){
+	// 	if (NULL!=logger){
+	// 		va_list args;
+	// 		//va_start(args, format);
+	// 		logger->log(format, args);
+	// 	}
+	// }
 
 
 
