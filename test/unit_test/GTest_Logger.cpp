@@ -56,14 +56,14 @@ TEST_F(LoggerTest, fprintf){
     log("%s\n", "why hello!");
 }
 
-// TEST_F(ConfiguratorTest, logger){
-//     LoggerTest loggerTest("", "/tmp", "TEST");
-//     register_logger(&loggerTest);
-//     EXPECT_FALSE(get_logger()==NULL);
-//     log("%s\n", "hello!");
-//     loggerTest.closef();
+TEST_F(ConfiguratorTest, logger){
+    LoggerTest loggerTest("", "/tmp", "TEST");
+    register_logger(&loggerTest);
+    EXPECT_FALSE(get_logger()==NULL);
+    loggerTest.log("%s\n", "hello!");
+    loggerTest.log("%s\n", "hallo!","hullo!");
 
-// }
+}
 
 // TEST(Ofstream, callbacks){
 //     std::thread out_thread(LoggerTest::cerr);
