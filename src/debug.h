@@ -70,7 +70,7 @@ class Logger{
 
 
 
-	private:
+	protected:
 
 	/**
 	 * @brief Creates filename name in format customdmy_hm.txt

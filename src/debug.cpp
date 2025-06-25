@@ -9,7 +9,7 @@ std::string Logger::file_dateTime(const char* custom, char name[60]){
 	d=ltm->tm_mday;
 	h= ltm->tm_hour;
 	min = ltm->tm_min;
-	sprintf(name, "%s_%02i%02i%02i_%02i%02i",custom, d,m,y,h,min);
+	sprintf(name, "%s_%02i%02i%02i_%02i%02i.txt",custom, d,m,y,h,min);
 	return std::string(name);
 }
 
