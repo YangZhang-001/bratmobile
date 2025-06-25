@@ -69,7 +69,8 @@ bool Configurator::Spawner(){
 	explore_plan(world);
 	std::chrono::duration<float, std::milli>d_withExplore= now- endTime; //in seconds
 	float duration_withExplore=abs(float(d_withExplore.count())/1000); //express in seconds
-
+	//FORMAT: vertices	bodies	total_dur	just_worldbuilding
+	log("%i\t%i\t%0.4f\t%0.4f\n", transitionSystem.m_vertices.size(), worldBuilder.bodies, duration_withExplore, duration_getFeatures);
 	worldBuilder.resetBodies();
 	return 1;
 }

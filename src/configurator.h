@@ -197,6 +197,10 @@ void setSimulationStep(float f){
 	simulationStep=f;
 }
 
+void register_logger(Logger * l){
+	logger=l;
+}
+
 protected:
 	void log(char * format, ...){
 		if (NULL!=logger){
