@@ -82,16 +82,6 @@ bool debug_draw(b2World & w, int file){
     fclose(f_d);
 }
 
-std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer& points, const b2Transform& start){
-    std::vector <BodyFeatures> result;
-    std::vector <Pointf> ptset= set2vec(points);
-    std::pair<bool,BodyFeatures> feature= bounding_box(ptset);
-    if (feature.first){
-        feature.second.pose.q.Set(start.q.GetAngle());
-        result.push_back(feature.second);
-    }
-    return result;
-}
 
 void round_mat(b2Transform & t){
     t.p.x=round(t.p.x*100)/100;
