@@ -206,7 +206,7 @@ protected:
 		if (NULL!=logger){
 			va_list args;
 			va_start(args, format);
-			logger->fprintf(format, args);
+			logger->log(format, args);
 		}
 	}
 

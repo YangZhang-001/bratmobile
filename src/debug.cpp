@@ -13,7 +13,7 @@ std::string Logger::file_dateTime(const char* custom, char name[60]){
 	return std::string(name);
 }
 
-bool Logger::fprintf(const char * format, ...){
+bool Logger::log(const char * format, ...){
 	va_list args;
 	va_start(args, format);
 	vfprintf(f, format, args);
@@ -21,6 +21,27 @@ bool Logger::fprintf(const char * format, ...){
 	fflush(f);
 }
 
+void Logger::init(char * new_folder, char * _dir, char * customName){
+		std::string dirName;
+		if (_dir==NULL){
+			//sprintf(dirName, "benchmark");
+			dirName="benchmark";
+		}
+		else{
+			dirName=_dir;
+		}
+		if (!opendir(dirName.c_str())){
+			mkdir(dirName.c_str(), 0777);
+		}
+
+		std::string new_path=dirName + "/"+new_folder;
+		if (!opendir(new_path.c_str())){
+			mkdir(new_path.c_str(), 0777); //""
+		}
+		std::string customfile=new_path +customName;
+		file_dateTime(customfile.c_str(), fileName);
+		f = fopen(fileName, "w");
+	}
 
 b2Vec2 GetWorldPoints(b2Body* b, b2Vec2 v){
 	b2Vec2 wp=b->GetWorldPoint(v);
