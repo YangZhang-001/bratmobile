@@ -3,6 +3,17 @@
 
 #include "worldbuilder.h"
 #include <fstream>
+#include <bits/stdc++.h>
+#include <fstream>
+#include <iostream>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <string>
+#include <dirent.h>
+
+
+
+
 
 namespace debug{
 	
