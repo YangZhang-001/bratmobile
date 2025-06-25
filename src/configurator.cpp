@@ -63,10 +63,12 @@ bool Configurator::Spawner(){
 	worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero, WorldBuilder::PARTITION));
 	// printf("got features =%i\n", worldBuilder.world_objects.size());	
 	auto endTime =std::chrono::high_resolution_clock::now();
-	std::chrono::duration<float, std::milli>d= now- endTime; //in seconds
+	std::chrono::duration_getFeatures<float, std::milli>d= now- endTime; //in seconds
 	float duration=abs(float(d.count())/1000); //express in seconds
 	// printf("built wolrd in %f\n", duration);
 	explore_plan(world);
+	std::chrono::duration_withExplore<float, std::milli>d= now- endTime; //in seconds
+	
 	worldBuilder.resetBodies();
 	return 1;
 }

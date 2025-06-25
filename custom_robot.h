@@ -7,9 +7,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <bits/stdc++.h>
+#include <fstream>
 #include <iostream>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <string>
 #define _USE_MATH_DEFINES
 
 /**
@@ -18,8 +20,6 @@
  * 
  */
 
-
-char statFile[100];
 
 void get_Foldername(char* custom, char name[60]){
     time_t now =time(0);
@@ -48,7 +48,7 @@ std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer& 
 
 
 class LidarInterface : public A1Lidar::DataInterface{
-LIDAR_In * ci;
+LIDAR_In * ci=NULL;
 public: 
     int mapCount =0;
 
@@ -56,7 +56,7 @@ public:
 
 	void newScanAvail(float, A1LidarData (&data)[A1Lidar::nDistance]){ //uncomment sections to write x and y to files
 		if (ci == NULL){
-			printf("null pointer to ci\n");
+			std::cerr<<"null pointer to ci"<<std::endl;
 			return;
 		}
 		//ci->data.clear();
@@ -113,23 +113,35 @@ void step( AlphaBot &motors){
 }
 };
 
+class Benchmark{
+	//char statFile[100];
+	std::string fileName;
+	std::ostream file;
 
-void dump_benchmarks(char * new_folder, char * _dir=NULL){
-		if (BENCHMARKING){
-		char dirName[50];
+
+	public:
+
+	Benchmark(){}
+
+	Benchmark(char * new_folder, char * _dir=NULL){
+		//char dirName[50];
+		std::string dirName;
 		if (_dir==NULL){
-			sprintf(dirName, "benchmark");
+			//sprintf(dirName, "benchmark");
+			dirName="benchmark";
 		}
 		else{
-			sprintf(dirName, _dir);
+			//sprintf(dirName, _dir);
+			dirName=_dir;
 		}
-		if (!opendir(dirName)){
-			mkdir(dirName, 0777);
+		if (!opendir(dirName.c_str())){
+			mkdir(dirName.c_str(), 0777);
 		}
-		char new_path[60];
-		sprintf(new_path, "%s/%s", dirName, new_folder);
-		if (!opendir(new_path)){
-			mkdir(new_path, 0777); //""
+		//char new_path[60];
+		//sprintf(new_path, "%s/%s", dirName, new_folder);
+		std::string new_path=dirName + "/"+new_folder;
+		if (!opendir(new_path.c_str())){
+			mkdir(new_path.c_str(), 0777); //""
 		}
 		//TODAYS DATE AND TIME
 		time_t now =time(0);
@@ -140,10 +152,43 @@ void dump_benchmarks(char * new_folder, char * _dir=NULL){
 		d=ltm->tm_mday;
 		h= ltm->tm_hour;
 		min = ltm->tm_min;
-		sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
-		FILE * f = fopen(statFile, "w");
+		fileName=new_path+"/stats"+d+m+y+ "_"+h+min+".txt";
+		//sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
+		FILE * f = fopen(fileName, "w");
 		fclose(f);
 	}
-}
+
+};
+// void dump_benchmarks(char * new_folder, char * _dir=NULL){
+// 		if (BENCHMARKING){
+// 		char dirName[50];
+// 		if (_dir==NULL){
+// 			sprintf(dirName, "benchmark");
+// 		}
+// 		else{
+// 			sprintf(dirName, _dir);
+// 		}
+// 		if (!opendir(dirName)){
+// 			mkdir(dirName, 0777);
+// 		}
+// 		char new_path[60];
+// 		sprintf(new_path, "%s/%s", dirName, new_folder);
+// 		if (!opendir(new_path)){
+// 			mkdir(new_path, 0777); //""
+// 		}
+// 		//TODAYS DATE AND TIME
+// 		time_t now =time(0);
+// 		tm *ltm = localtime(&now);
+// 		int y,m,d, h, min;
+// 		y=ltm->tm_year-100;
+// 		m = ltm->tm_mon +1;
+// 		d=ltm->tm_mday;
+// 		h= ltm->tm_hour;
+// 		min = ltm->tm_min;
+// 		sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
+// 		FILE * f = fopen(statFile, "w");
+// 		fclose(f);
+// 	}
+// }
 
 

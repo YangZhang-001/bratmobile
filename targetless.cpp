@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 	Motor_Out controlInterface;
 	HorizonStarPlanner planner;
     AttentiveConfigurator configurator(controlGoal);
-	DeadReckoner tracker;
+	ClosedLoop_Tracker tracker;
 	configurator.register_tracker(&tracker);	
 	configurator.register_planner(&planner);
 	Wise_Controller wc;
