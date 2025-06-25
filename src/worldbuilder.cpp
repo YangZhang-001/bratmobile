@@ -90,6 +90,17 @@ std::vector <std::vector<cv::Point2f>> WorldBuilder::partition_clusters( std::ve
     return result;
 }
 
+std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer& points, const b2Transform& start){
+    std::vector <BodyFeatures> result;
+    std::vector <Pointf> ptset= set2vec(points);
+    std::pair<bool,BodyFeatures> feature= bounding_box(ptset);
+    if (feature.first){
+        feature.second.pose.q.Set(start.q.GetAngle());
+        result.push_back(feature.second);
+    }
+    return result;
+}
+
 std::vector <BodyFeatures> WorldBuilder::cluster_data( const CoordinateContainer & pts, const b2Transform& start, CLUSTERING clustering){
     std::vector <BodyFeatures> result;
     std::vector <cv::Point2f> points, centers;

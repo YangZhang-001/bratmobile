@@ -12,55 +12,77 @@
 #include <dirent.h>
 
 
-// class Logger{
+class Logger{
 
-// 	//char statFile[100];
-// 	std::string fileName;
-// 	std::ostream file;
+	char fileName[60];
+	FILE *f=NULL;
+
+	public:
+
+	Logger(){}
+
+	/**
+	 * @brief Construct a new Logger object
+	 * 
+	 * @param new_folder folder where files will be dumped
+	 * @param _dir directory containing new_folder
+	 */
+	Logger(char * new_folder, char * _dir=NULL){
+		std::string dirName;
+		if (_dir==NULL){
+			//sprintf(dirName, "benchmark");
+			dirName="benchmark";
+		}
+		else{
+			//sprintf(dirName, _dir);
+			dirName=_dir;
+		}
+		if (!opendir(dirName.c_str())){
+			mkdir(dirName.c_str(), 0777);
+		}
+		//char new_path[60];
+		//sprintf(new_path, "%s/%s", dirName, new_folder);
+		std::string new_path=dirName + "/"+new_folder;
+		if (!opendir(new_path.c_str())){
+			mkdir(new_path.c_str(), 0777); //""
+		}
+		//TODAYS DATE AND TIME
+		// time_t now =time(0);
+		// tm *ltm = localtime(&now);
+		// int y,m,d, h, min;
+		// y=ltm->tm_year-100;
+		// m = ltm->tm_mon +1;
+		// d=ltm->tm_mday;
+		// h= ltm->tm_hour;
+		// min = ltm->tm_min;
+		//fileName=new_path+"/stats"+d+m+y+ "_"+h+min+".txt";
+		std::string customfile=new_path +"/stats";
+		file_dateTime(customfile.c_str(), fileName);
+		//sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
+		f = fopen(fileName, "w");
+	}
+
+	~Logger(){
+		fclose(f);
+	}
+
+	bool fprintf(const char * format, ...);
 
 
-// 	public:
 
-// 	Logger(){}
+	private:
 
-// 	Logger(char * new_folder, char * _dir=NULL){
-// 		//char dirName[50];
-// 		std::string dirName;
-// 		if (_dir==NULL){
-// 			//sprintf(dirName, "benchmark");
-// 			dirName="benchmark";
-// 		}
-// 		else{
-// 			//sprintf(dirName, _dir);
-// 			dirName=_dir;
-// 		}
-// 		if (!opendir(dirName.c_str())){
-// 			mkdir(dirName.c_str(), 0777);
-// 		}
-// 		//char new_path[60];
-// 		//sprintf(new_path, "%s/%s", dirName, new_folder);
-// 		std::string new_path=dirName + "/"+new_folder;
-// 		if (!opendir(new_path.c_str())){
-// 			mkdir(new_path.c_str(), 0777); //""
-// 		}
-// 		//TODAYS DATE AND TIME
-// 		time_t now =time(0);
-// 		tm *ltm = localtime(&now);
-// 		int y,m,d, h, min;
-// 		y=ltm->tm_year-100;
-// 		m = ltm->tm_mon +1;
-// 		d=ltm->tm_mday;
-// 		h= ltm->tm_hour;
-// 		min = ltm->tm_min;
-// 		fileName=new_path+"/stats"+d+m+y+ "_"+h+min+".txt";
-// 		//sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
-// 		FILE * f = fopen(fileName.c_str(), "w");
-// 		fclose(f);
-// 	}
+	/**
+	 * @brief Creates filename name in format customdmy_hm.txt
+	 * 
+	 * @param custom custom
+	 * @param name empty char array
+	 */
+	std::string file_dateTime(const char* custom, char name[60]);
 
 
 
-// };
+};
 
 
 
