@@ -6,32 +6,14 @@
 //#include "CppTimer.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <bits/stdc++.h>
-#include <fstream>
-#include <iostream>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <string>
 #define _USE_MATH_DEFINES
 
 /**
- * * * * DEFINITION OF DATA INTERFACES FOR ROBOT SENSORS/MOTORS 
+ * * * * DEFINITION OF DATA INTERFACES FOR ROBOT SENSORS/MOTORS
  * 				+ SOME DEBUGGING HELPER FUNCTIONS
- * 
+ *
  */
 
-
-void get_Foldername(char* custom, char name[60]){
-    time_t now =time(0);
-	tm *ltm = localtime(&now);
-	int y,m,d, h, min;
-	y=ltm->tm_year-100;
-	m = ltm->tm_mon +1;
-	d=ltm->tm_mday;
-	h= ltm->tm_hour;
-	min = ltm->tm_min;
-	sprintf(name, "%s_%02i%02i%02i_%02i%02i",custom, d,m,y,h,min);
-}
 
 
 
@@ -49,7 +31,7 @@ std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer& 
 
 class LidarInterface : public A1Lidar::DataInterface{
 LIDAR_In * ci=NULL;
-public: 
+public:
     int mapCount =0;
 
     LidarInterface(LIDAR_In * _ci): ci(_ci){}
@@ -113,35 +95,34 @@ void step( AlphaBot &motors){
 }
 };
 
-class Benchmark{
-	//char statFile[100];
-	std::string fileName;
-	std::ostream file;
+std::string get_Foldername(char* custom, char name[60]){
+	time_t now =time(0);
+	tm *ltm = localtime(&now);
+	int y,m,d, h, min;
+	y=ltm->tm_year-100;
+	m = ltm->tm_mon +1;
+	d=ltm->tm_mday;
+	h= ltm->tm_hour;
+	min = ltm->tm_min;
+	sprintf(name, "%s_%02i%02i%02i_%02i%02i",custom, d,m,y,h,min);
+}
 
-
-	public:
-
-	Benchmark(){}
-
-	Benchmark(char * new_folder, char * _dir=NULL){
-		//char dirName[50];
-		std::string dirName;
+void dump_benchmarks(char * new_folder, char * _dir=NULL){
+		if (BENCHMARKING){
+		char dirName[50];
 		if (_dir==NULL){
-			//sprintf(dirName, "benchmark");
-			dirName="benchmark";
+			sprintf(dirName, "benchmark");
 		}
 		else{
-			//sprintf(dirName, _dir);
-			dirName=_dir;
+			sprintf(dirName, _dir);
 		}
-		if (!opendir(dirName.c_str())){
-			mkdir(dirName.c_str(), 0777);
+		if (!opendir(dirName)){
+			mkdir(dirName, 0777);
 		}
-		//char new_path[60];
-		//sprintf(new_path, "%s/%s", dirName, new_folder);
-		std::string new_path=dirName + "/"+new_folder;
-		if (!opendir(new_path.c_str())){
-			mkdir(new_path.c_str(), 0777); //""
+		char new_path[60];
+		sprintf(new_path, "%s/%s", dirName, new_folder);
+		if (!opendir(new_path)){
+			mkdir(new_path, 0777); //""
 		}
 		//TODAYS DATE AND TIME
 		time_t now =time(0);
@@ -152,43 +133,10 @@ class Benchmark{
 		d=ltm->tm_mday;
 		h= ltm->tm_hour;
 		min = ltm->tm_min;
-		fileName=new_path+"/stats"+d+m+y+ "_"+h+min+".txt";
-		//sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
-		FILE * f = fopen(fileName, "w");
+		sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
+		FILE * f = fopen(statFile, "w");
 		fclose(f);
 	}
-
-};
-// void dump_benchmarks(char * new_folder, char * _dir=NULL){
-// 		if (BENCHMARKING){
-// 		char dirName[50];
-// 		if (_dir==NULL){
-// 			sprintf(dirName, "benchmark");
-// 		}
-// 		else{
-// 			sprintf(dirName, _dir);
-// 		}
-// 		if (!opendir(dirName)){
-// 			mkdir(dirName, 0777);
-// 		}
-// 		char new_path[60];
-// 		sprintf(new_path, "%s/%s", dirName, new_folder);
-// 		if (!opendir(new_path)){
-// 			mkdir(new_path, 0777); //""
-// 		}
-// 		//TODAYS DATE AND TIME
-// 		time_t now =time(0);
-// 		tm *ltm = localtime(&now);
-// 		int y,m,d, h, min;
-// 		y=ltm->tm_year-100;
-// 		m = ltm->tm_mon +1;
-// 		d=ltm->tm_mday;
-// 		h= ltm->tm_hour;
-// 		min = ltm->tm_min;
-// 		sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
-// 		FILE * f = fopen(statFile, "w");
-// 		fclose(f);
-// 	}
-// }
+}
 
 
