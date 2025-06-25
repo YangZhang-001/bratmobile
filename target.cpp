@@ -26,6 +26,7 @@ int main(int argc, char** argv) {
 	Wise_Controller wc;
 	configurator.register_controller(&wc);
 	Logger logger( "rt-update-targetless", "/tmp");
+	configurator.register_logger(&logger);
 	if (argc>1){
 		#define DEBUG atoi(argv[1])
 	}

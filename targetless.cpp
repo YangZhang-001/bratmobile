@@ -47,6 +47,7 @@ int main(int argc, char** argv) {
 	configurator.register_controller(&wc);
 	char name[60];
 	Logger logger( "rt-update-targetless", "/tmp");
+	configurator.register_logger(&logger);
 	if (argc>1){
 		#define DEBUG atoi(argv[1])
 		//configuratorInterface.debugOn = atoi(argv[1]);
