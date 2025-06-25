@@ -63,7 +63,9 @@ class Logger{
 	}
 
 	~Logger(){
-		fclose(f);
+		if (NULL!=f){
+			fclose(f);
+		}
 	}
 
 	bool fprintf(const char * format, ...);
@@ -87,9 +89,6 @@ class Logger{
 
 
 namespace debug{
-	
-// template <class T>
-// void graph_file(const int &, const T&,const Disturbance &, std::vector <vertexDescriptor>,const vertexDescriptor&);
 
 template <class T>
 void print_graph(const T& g, const Disturbance & goal, std::vector <vertexDescriptor>plan, const vertexDescriptor& c){
