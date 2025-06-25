@@ -893,7 +893,7 @@ void Configurator::change_task(){
 		throw std::invalid_argument("no controller, please add!");
 	}
 	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
-	transitionSystem[movingEdge].step=currentTask.getMotorStep();
+	//transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
 	tracker->on_new_task(&currentTask);
 	control->reset();

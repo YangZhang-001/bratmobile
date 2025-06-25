@@ -177,6 +177,12 @@ TEST_F(ConfiguratorTest, PreExplore){
     EXPECT_EQ(transitionSystem[movingVertex].Di.pose().p.x, 0.5); 
 }
 
+TEST_F(ConfiguratorTest, changeTask){
+    dummy_vertex(movingVertex);
+    EXPECT_TRUE(currentTask.get_change());
+    change_task();
+}
+
 class ConfiguratorSimulationEnd:public ConfiguratorTest, public testing::WithParamInterface<b2Transform>{};
 
 // /**
