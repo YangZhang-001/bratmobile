@@ -22,6 +22,7 @@ protected:
 	LIDAR_In * ci=NULL;
 	Motor_Out * control=NULL;
 	Planner *planner=NULL;
+	Logger * logger=NULL;
 	bool running =0;
 	std::thread * LIDAR_thread=NULL;
 	float simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);
@@ -83,6 +84,7 @@ void estimate_current_vertex();
 
 
 void printPlan(std::vector <vertexDescriptor>* p=NULL);
+
 
 
 /**
@@ -195,6 +197,14 @@ void setSimulationStep(float f){
 	simulationStep=f;
 }
 
+protected:
+	void log(char * format, ...){
+		if (NULL!=logger){
+			va_list args;
+			va_start(args, format);
+			logger->fprintf(format, args);
+		}
+	}
 
 
 
