@@ -106,7 +106,7 @@ TEST_P(HighLevelTest, CheckPlan){
     }
     configurator->init(goal);
     std::string folder=std::get<1>(GetParam());
-    get_plan(folder);
+    std::vector<vertexDescriptor> plan= get_plan(folder);
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam());
     for (int i=0;i<iteration-1; i++){ //simulate execution
@@ -123,7 +123,7 @@ TEST_P(HighLevelTest, CheckPlan){
         configurator->preExplore();
         EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
     }
-    get_plan(folder, iteration-1); //map 2
+    std::vector<vertexDescriptor> updated_plan=get_plan(folder, iteration-1); //map 2
     EXPECT_EQ(di.get_iteration(), iteration);
     int vertices_now=configurator->n_vertices();
     EXPECT_LE(vertices_now, vertices_og);
@@ -140,7 +140,13 @@ INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
                                                                    std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 11),
                                                                    std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 17),
                                                                    std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 36),
-                                                                   std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 6)
+                                                                   std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 6),
+                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 3),
+                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 4),
+                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 6) //,
+                                                                //    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 17),
+                                                                //    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 38),
+                                                                //    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 89)
                                                                    ));
 
 
