@@ -127,34 +127,6 @@ TEST_P(HighLevelTest, CheckPlan){
     EXPECT_TRUE(planned_to_goal);
 }
 
-// TEST_P(HighLevelTest, RePlan){
-//     Task goal;
-//     if (std::get<0>(GetParam())){
-//         goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
-//     }
-//     configurator->init(goal);
-//     std::string folder=std::get<1>(GetParam());
-//     get_plan(folder);
-//     int vertices_og=configurator->n_vertices();
-//     int iteration=std::get<2>(GetParam());
-//     for (int i=0;i<iteration; i++){ //simulate execution
-//         if (configurator->getIteration()>1){
-//             b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
-//             configurator->update_graph(configurator->get_ts(), deltaPose);
-//         }
-//         configurator->change_task();
-//         configurator->estimate_current_vertex();    
-//         configurator->preExplore();
-//         EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
-//     }
-//     get_plan(folder, iteration); //map 2
-//     int vertices_now=configurator->n_vertices();
-//     EXPECT_LE(vertices_now, vertices_og);
-//     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-//     EXPECT_TRUE(planned_to_goal);
-// }
-
-
 INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
                                                                    std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 2),
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 2),
