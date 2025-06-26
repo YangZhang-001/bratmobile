@@ -110,9 +110,11 @@ TEST_P(HighLevelTest, CheckPlan){
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam());
     for (int i=0;i<iteration; i++){ //simulate execution
+        configurator->addIteration();
         if (configurator->getIteration()>1){
             di.newScanAvail();
             b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
+            EXPECT_FALSE(deltaPose==b2Transform_zero);
             configurator->update_graph(configurator->get_ts(), deltaPose);
         }
         configurator->change_task();
