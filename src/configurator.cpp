@@ -601,16 +601,16 @@ void AttentiveConfigurator::applyTransitionMatrix(TransitionSystem&g, vertexDesc
 	if (v0==movingVertex || src==TransitionSystem::null_vertex()){
 		transitionMatrix(g[v0], DEFAULT, TransitionSystem::null_vertex());	
 	}
-	else if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
-		auto e=boost::edge(src, v0, g);
-		// if (!e.second){
-		// 	printf("no edge wtf, %i -> %i\n", src, v0);
-		// }
-		gt::to_task_end(e.first, g, full_plan, it);
-		if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
-			g[v0].options={g[e.first.m_target].direction};
-		}
-	}
+	// else if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
+	// 	auto e=boost::edge(src, v0, g);
+	// 	// if (!e.second){
+	// 	// 	printf("no edge wtf, %i -> %i\n", src, v0);
+	// 	// }
+	// 	gt::to_task_end(e.first, g, full_plan, it);
+	// 	if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
+	// 		g[v0].options={g[e.first.m_target].direction};
+	// 	}
+	// }
 	else{
 		transitionMatrix(g[v0], d, src);
 	}
