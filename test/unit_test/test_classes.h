@@ -171,7 +171,7 @@ class DebugConfigurator:public AttentiveConfigurator{
  * @param bool does plan have a target location
  * @param string the folder with the LIDAR scans
  */
-class HighLevelTest: public testing::Test, public testing::WithParamInterface<std::pair<bool, std::string>>{
+class HighLevelTest: public testing::Test, public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
     protected:
     DebugConfigurator * configurator=NULL;
     Wise_Controller wc;

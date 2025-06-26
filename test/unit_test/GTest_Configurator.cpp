@@ -166,6 +166,23 @@ TEST_F(ConfiguratorTestGetObstacle, AvoidNoGoal){
     EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
 }
 
+TEST_F(ConfiguratorTest, UpdateGraph){
+    Disturbance Di(PURSUE, b2Vec2(0.81, 0.23)), Dn(AVOID, b2Vec2(0.22, 0)), goal(PURSUE, b2Vec2(1.0, 0));
+    init(Task(goal, UNDEFINED));
+    b2Transform deltaPose(b2Vec2(.5, .27), b2Rot(M_PI_4));
+    dummy_vertex(movingVertex);
+    transitionSystem[1].Di=Di;
+    transitionSystem[1].Dn=Dn;
+    transitionSystem[1].direction=DEFAULT;
+    currentTask=Task(Dn, DEFAULT, b2Transform_zero, true);
+    update_graph(transitionSystem, deltaPose);
+    EXPECT_FALSE(transitionSystem[1].Di.pose()==Di.pose());
+    EXPECT_FALSE(transitionSystem[1].Dn.pose()==Dn.pose());
+    EXPECT_FALSE(controlGoal.get_disturbance().pose()==goal.pose());
+    EXPECT_TRUE(currentTask.get_disturbance().pose()==Dn.pose());
+
+}
+
 // TEST_F(ConfiguratorTest, PreExplore){
 //     init();
 //     dummy_vertex(movingVertex);
