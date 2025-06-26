@@ -41,13 +41,13 @@ b2Transform ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateCo
     }
     if (t.get_disturbance().getAffIndex()==NONE || t.get_disturbance().bf.is_point()|| (t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
         if (t.get_disturbance().getAffIndex()==NONE){
-            throw std::invalid_argument("no disturbance!");    
+            std::cerr<<"no disturbance!"<<std::endl;    
         }
         if (t.get_disturbance().bf.is_point()){
             printf("petite disturbance!");    
         }
         if ((t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
-            throw std::invalid_argument("not moving!");    
+            std::cerr<<("not moving!")<<std::endl;    
         }
         return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
     }

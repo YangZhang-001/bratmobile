@@ -162,6 +162,15 @@ class DebugConfigurator:public AttentiveConfigurator{
     Logger * get_logger(){
         return logger;
     }
+
+    WorldBuilder * get_worldbuilder(){
+        return &worldBuilder;
+    }
+
+    void getFeatures(const CoordinateContainer & cc){
+        worldBuilder.set_world_objects(worldBuilder.getFeatures(cc, b2Transform_zero, WorldBuilder::PARTITION));
+
+    }
 };
 
 

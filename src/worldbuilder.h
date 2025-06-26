@@ -10,9 +10,6 @@ class WorldBuilder{
     std::vector <BodyFeatures> world_objects;
     protected:
     friend class Configurator;
-    void set_world_objects(const std::vector <BodyFeatures>& wo){
-        world_objects=wo;
-    }
     public:
     enum CLUSTERING{BOX=0, KMEANS=1, PARTITION=2}; //BOX: bounding box around points
         struct CompareCluster{
@@ -112,6 +109,10 @@ class WorldBuilder{
 
     std::vector <BodyFeatures>& get_world_objects(){
         return world_objects;
+    }
+
+    void set_world_objects(const std::vector <BodyFeatures>& wo){
+        world_objects=wo;
     }
 
 };
