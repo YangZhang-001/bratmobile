@@ -198,7 +198,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
 					g[v0].options.erase(g[v0].options.begin());
 					v1=match.second; //frontier
-						edge= gt::add_edge(v0, v1, g, iteration, t.get_direction()); //assumes edge added
+					edge= gt::add_edge(v0, v1, g, iteration, t.get_direction()); //assumes edge added
 					if (edge.second){
 						g[edge.first]=sk.second; //doesn't update motorstep
 					}
@@ -206,31 +206,32 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 						std::vector <vertexDescriptor> task_vertices=gt::task_vertices(v1, g, iteration, currentVertex);
 						vertexDescriptor task_start= task_vertices[0];
 						if (plan_prov.empty()){
-							bool finished=false, been=matcher.match_equal(match.first, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
-							//shift here?
-							Task controlGoal_adjusted= controlGoal;
-							shift_start= b2MulT(b2MulT(sk.first.start, controlGoal.getStart()), g[task_start].start);
-							math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
-							boost::remove_edge(edge.first, g);
-							edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
-							ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
-							info.overarchingGoal(controlGoal_adjusted); 
-							auto plan_tmp=planner->plan(g, v, info, &finished); //not v but task start
-							//printf("out of explore planner\n");
-							bool filler=0;
-							if (finished){
-								plan_prov=plan_tmp;
-								if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
-									//printf("inserting current vertex\n");
-									plan_prov.insert(plan_prov.begin(), task_start);
-								}
-								if (t.get_direction()== g[task_start].direction){
-									g[v0].options.clear();
-								}
-								else{
-									g[v0].options={g[task_start].direction};
-								}
-							}
+							// bool finished=false, been=matcher.match_equal(match.first, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
+							// //shift here?
+							// Task controlGoal_adjusted= controlGoal;
+							// shift_start= b2MulT(b2MulT(sk.first.start, controlGoal.getStart()), g[task_start].start);
+							// math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
+							// boost::remove_edge(edge.first, g);
+							// edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
+							// ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
+							// info.overarchingGoal(controlGoal_adjusted); 
+							// auto plan_tmp=planner->plan(g, v, info, &finished); //not v but task start
+							// //printf("out of explore planner\n");
+							// bool filler=0;
+							// if (finished){
+							// 	plan_prov=plan_tmp;
+							// 	if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
+							// 		//printf("inserting current vertex\n");
+							// 		plan_prov.insert(plan_prov.begin(), task_start);
+							// 	}
+							// 	if (t.get_direction()== g[task_start].direction){
+							// 		g[v0].options.clear();
+							// 	}
+							// 	else{
+							// 		g[v0].options={g[task_start].direction};
+							// 	}
+							// }
+							recycle_plan(v, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
 						if (plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
 							shift_states(g, task_vertices, shift_start);
@@ -241,14 +242,6 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				else{
 					auto out_expected=gt::outEdges(g, v0, t.get_direction());
 					edge= add_vertex_now(v0, v1,g,sk.first.Di, sk.second); //addVertex
-					// //g[edge.first.m_target].label=sk.first.label; //new edge, valid
-					// if (!out_expected.empty()){
-					// 	vertexDescriptor exp=out_expected[0].m_target;
-					// 	StateDifference sd_exp(g[v1], g[exp]);
-					// 	printf("thought it'd be vertex %i , end pose:", exp );
-					// }
-					// printf("added vertex!");
-					// debug::print_state_difference(sd, match.second, v1);
 					shift=b2Transform_zero;
 				}
 				if(edge.second){
@@ -267,8 +260,6 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	}
 	backtrack(evaluationQueue, priorityQueue, closed, g, plan_prov);
 	bestNext=priorityQueue[0];
-	//printf("best=%i end", bestNext);
-	// debug::print_pose(g[bestNext].endPose);
 	std::vector <edgeDescriptor> best_in_edges= gt::inEdges(g,bestNext);
 	if (best_in_edges.empty()){
 		direction=currentTask.get_direction();
@@ -594,10 +585,10 @@ void AttentiveConfigurator::applyTransitionMatrix(TransitionSystem&g, vertexDesc
 			}			
 		}
 	}
-	std::vector <vertexDescriptor> full_plan=plan_prov;
-	if (!currentTask.get_change()){
-		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
-	}
+	// std::vector <vertexDescriptor> full_plan=plan_prov;
+	// if (!currentTask.get_change()){
+	// 	full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
+	// }
 	if (v0==movingVertex || src==TransitionSystem::null_vertex()){
 		transitionMatrix(g[v0], DEFAULT, TransitionSystem::null_vertex());	
 	}
@@ -955,6 +946,31 @@ void AttentiveConfigurator::explore_plan(b2World&world){
     printPlan(&plan);
 }
 
+std::vector<Direction>::iterator AttentiveConfigurator::get_next_option(vertexDescriptor v,vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov){
+	std::vector <vertexDescriptor> full_plan=plan_prov;
+	if (!currentTask.get_change()){
+		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
+	}
+	std::vector<vertexDescriptor>::iterator it=full_plan.end();
+	if (it =check_vector_for(full_plan, v); it!=full_plan.end() && it!=(full_plan.end()-1)){
+		auto e=boost::edge(src, v, transitionSystem);
+		std::vector<vertexDescriptor>::iterator it_next=it;
+		gt::to_task_end(e.first, transitionSystem, full_plan, it_next);
+		// if ((transitionSystem[e.first.m_target].visited()&& transitionSystem[e.first].it_observed<iteration)|| !transitionSystem[e.first.m_target].visited()){ // 
+		// 	transitionSystem[v].options={transitionSystem[e.first.m_target].direction};
+		// }
+		if (it_next==full_plan.end()){
+			return transitionSystem[*it].options.end();
+		}
+		//if the direction of the iterator is among the options
+		if(auto dir_it=check_vector_for(transitionSystem[*it].options, transitionSystem[*it_next].direction); dir_it!=transitionSystem[*it].options.end()){
+			return dir_it;
+		}
+	}
+	return (transitionSystem[*it].options.begin());
+}
+
+
 void ReactiveConfigurator::explore_plan(b2World &world){
 	if (transitionSystem.m_vertices.size()==1 && iteration<=1){
 		movingEdge = boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
@@ -975,5 +991,36 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 	currentTask.set_change(transitionSystem[currentVertex].outcome!=simResult::successful);
 	if (currentTask.get_change()){
 		printf("crashed\n");
+	}
+}
+
+
+bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE matchType, 
+											b2Transform & shift_start, b2Transform sk_first_start, std::pair<edgeDescriptor, bool>&edge, 
+											std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction){
+	bool finished=false, been=matcher.match_equal(matchType, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
+	//shift here?
+	Task controlGoal_adjusted= controlGoal;
+	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
+	math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
+	boost::remove_edge(edge.first, transitionSystem);
+	edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
+	ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
+	info.overarchingGoal(controlGoal_adjusted); 
+	auto plan_tmp=planner->plan(transitionSystem, v, info, &finished); //not v but task start
+	//printf("out of explore planner\n");
+	bool filler=0;
+	if (finished){
+		plan_prov=plan_tmp;
+		if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
+			//printf("inserting current vertex\n");
+			plan_prov.insert(plan_prov.begin(), task_start);
+		}
+		if (t_get_direction== transitionSystem[task_start].direction){
+			transitionSystem[v0].options.clear();
+		}
+		else{
+			transitionSystem[v0].options={transitionSystem[task_start].direction};
+		}
 	}
 }

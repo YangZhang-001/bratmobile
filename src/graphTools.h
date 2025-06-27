@@ -261,7 +261,18 @@ namespace gt{
 
 	std::vector <vertexDescriptor> task_vertices(vertexDescriptor, TransitionSystem&, const int &, const vertexDescriptor &, std::pair<bool, edgeDescriptor>* ep=NULL);
 
-	std::vector<vertexDescriptor>::iterator to_task_end(edgeDescriptor &, TransitionSystem &, const std::vector<vertexDescriptor> &, std::vector<vertexDescriptor>::iterator); //in a vector, finds vertices belonging to the same task and skips to the end fo the task
+	/**
+	 * @brief Travels in the graph to find the end of the task in e.m_target. In case the task
+	 * is only one vertex, e will be changed to the next edge not belonging to the task, and it is an iterator
+	 * in the plan vector to the next vertex in the plan
+	 * 
+	 * @param e edge whose target is the task we want to find the end of
+	 * @param g the graph
+	 * @param plan the plan
+	 * @param it iterator to the vertex e.m_target (in plan vector)
+	 * @return std::vector<vertexDescriptor>::iterator 
+	 */
+	std::vector<vertexDescriptor>::iterator to_task_end(edgeDescriptor &e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan, std::vector<vertexDescriptor>::iterator it); //in a vector, finds vertices belonging to the same task and skips to the end fo the task
 
 }
 

@@ -360,6 +360,37 @@ std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const Tra
 
 void explore_plan(b2World&)override;
 
+/**
+ * @brief Returns an iterator to the next option representing a discrete Task transition.
+ * If v is in the plan, returns the next task in the plan. If this next task is successful, 
+ * after that option has been simulated it returns iterator to vector end. If not, returns other options
+ * 
+ * @param v vertex being expanded
+ * @param src v's source vertex
+ * @param plan_prov a plan
+ * @return std::vector<Direction>::iterator 
+ */
+std::vector<Direction>::iterator  get_next_option(vertexDescriptor v, vertexDescriptor src, std::vector<vertexDescriptor> &plan_prov);
+
+/**
+ * @brief Assesses whether a previous plan can be recycled
+ * 
+ * @param v source vertex (start of module)
+ * @param v0 vertex currently expanded
+ * @param task_start vertex representing the start of the provisional plan
+ * @param matchType match type of matching operation
+ * @param shift_start vector to shift future start by
+ * @param sk_first_start start of the state just simulated (sk.first)
+ * @param edge edge between v0 and the new state (v1)
+ * @param plan_prov provisional plan
+ * @param t_get_direction direction of the task just simulated
+ * @return true 
+ * @return false 
+ */
+bool recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE matchType, 
+				b2Transform & shift_start, b2Transform sk_first_start, std::pair<edgeDescriptor, bool>&edge,
+				std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction);
+
 public:
 
 AttentiveConfigurator(){};

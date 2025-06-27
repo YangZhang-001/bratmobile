@@ -180,6 +180,43 @@ TEST_F(ConfiguratorTest, UpdateGraph){
     EXPECT_FALSE(transitionSystem[1].Dn.pose()==Dn.pose());
     EXPECT_FALSE(controlGoal.get_disturbance().pose()==goal.pose());
     EXPECT_TRUE(currentTask.get_disturbance().pose()==Dn.pose());
+}
+
+class ConfiguratorVertexVectorParam: public ConfiguratorTest, public testing::WithParamInterface<std::vector<vertexDescriptor>>{};
+
+TEST(GraphTools, ToTaskEnd){
+    TransitionSystem transitionSystem(4);
+    auto e0=boost::add_edge(0, 1, transitionSystem);
+    auto e1=boost::add_edge(1, 2, transitionSystem);
+    auto e2=boost::add_edge(0, 3, transitionSystem);
+    transitionSystem[0].direction=DEFAULT;
+    transitionSystem[1].direction=DEFAULT;
+    transitionSystem[2].direction=LEFT;
+    transitionSystem[3].direction=RIGHT;
+    std::vector <vertexDescriptor>plan={0, 1, 2};
+    std::vector <vertexDescriptor>::iterator it=plan.end();
+    edgeDescriptor e=e0.first;
+    gt::to_task_end(e, transitionSystem, plan, it);
+    EXPECT_EQ(e, e2);
+    EXPECT_EQ(*it, 2);
+    
+}
+
+TEST_F(ConfiguratorTest, GetOptionNew){
+    transitionSystem[movingVertex].options={LEFT, RIGHT, DEFAULT};
+    while(auto option=get_next_option(movingVertex, TransitionSystem::null_vertex(), plan); 
+                                        option!=transitionSystem[movingVertex].options.end()){
+        transitionSystem[movingVertex].options.erase(option);
+    }
+    EXPECT_EQ(transitionSystem[movingVertex].options.size(), 0);
+    EXPECT_TRUE(transitionSystem[movingVertex].options.empty());
+}
+
+TEST_F(ConfiguratorVertexVectorParam, GetOptionInPlan){
+    make_module();
+    edgeDescriptor e_new= make_successful(1);
+    plan=GetParam();
+
 
 }
 

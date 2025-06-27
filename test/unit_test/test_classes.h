@@ -243,7 +243,30 @@ protected:
         }
     };
 
+    /**
+     * @brief Creates a vertex whose state starts and end at the origin
+     * 
+     * @param v0 
+     * @return edgeDescriptor 
+     */
+    edgeDescriptor make_successful(vertexDescriptor v0=0);
+    /**
+     * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state
+     * 
+     */
+    edgeDescriptor make_v1_crashed( vertexDescriptor v0=0, b2Transform start=b2Transform_zero, b2Transform end=b2Transform_zero, b2Transform Dn=b2Transform_inf);
 
+    /**
+     * @brief Makes a basic expansion module, start/endPose and disturbances not set. Module looks like this
+     *               
+     *              v2(LEFT)---v3(DEFAULT)
+                   /   
+                 v0 --- q1(DEFAULT)
+                   \
+                    v4(RIGHT) --- v5(DEFAULT)
+     * 
+     */
+    void make_module(vertexDescriptor mv=0);
 public:
 
     /**
@@ -288,19 +311,6 @@ class ConfiguratorTest32DT:public ConfiguratorTest, public testing::WithParamInt
         delete tracker;
     }
     
-    /**
-     * @brief Creates a vertex whose state starts and end at the origin
-     * 
-     * @param v0 
-     * @return edgeDescriptor 
-     */
-    edgeDescriptor make_successful(vertexDescriptor v0=0);
-    /**
-     * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state
-     * 
-     */
-    edgeDescriptor make_v1_crashed( vertexDescriptor v0=0);
-
     public:
         void SetUp(){
         transitionSystem=TransitionSystem(1);
@@ -342,7 +352,7 @@ std::vector<vertexDescriptor> HighLevelTest::get_plan(std::string folder, int it
     return configurator->get_plan();
 }
 
-edgeDescriptor ConfiguratorTest32DT::make_successful(vertexDescriptor v0){
+edgeDescriptor ConfiguratorTest::make_successful(vertexDescriptor v0){
     auto v1=boost::add_vertex(transitionSystem);
     auto e=boost::add_edge(v0, v1, transitionSystem);
     transitionSystem[v1].direction=DEFAULT;
@@ -350,14 +360,31 @@ edgeDescriptor ConfiguratorTest32DT::make_successful(vertexDescriptor v0){
     return e.first;
 }
 
-edgeDescriptor ConfiguratorTest32DT::make_v1_crashed( vertexDescriptor v0){
+edgeDescriptor ConfiguratorTest::make_v1_crashed( vertexDescriptor v0, b2Transform start, b2Transform end, b2Transform Dn){
     edgeDescriptor e=make_successful(v0);
     vertexDescriptor v1=e.m_target;
-    b2Transform Dn=std::get<2>(GetParam());
     transitionSystem[v1].outcome=simResult::crashed;
-    transitionSystem[v1].start=std::get<0>(GetParam()); //start
-    transitionSystem[v1].endPose=std::get<1>(GetParam());//pose
+    transitionSystem[v1].start=start; //start
+    transitionSystem[v1].endPose=end;//pose
     transitionSystem[v1].Dn=Disturbance(AVOID, Dn.p,Dn.q.GetAngle());
     return e;
 }
+
+void ConfiguratorTest::make_module(vertexDescriptor mv){
+    for (int i=0; i<6; i++){
+        boost::add_vertex(transitionSystem);
+    }
+    transitionSystem[mv+1].direction=DEFAULT;
+    transitionSystem[mv+3].direction=DEFAULT;
+    transitionSystem[mv+5].direction=DEFAULT;
+    transitionSystem[mv+2].direction=LEFT;
+    transitionSystem[mv+4].direction=RIGHT;
+    boost::add_edge(mv,mv+1, transitionSystem);
+    boost::add_edge(mv,mv+2, transitionSystem);
+    boost::add_edge(mv,mv+4, transitionSystem);
+    boost::add_edge(mv+2,mv+3, transitionSystem);
+    boost::add_edge(mv+4,mv+5, transitionSystem);
+
+}
+
 #endif
