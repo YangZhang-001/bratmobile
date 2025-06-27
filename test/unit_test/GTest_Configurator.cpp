@@ -185,15 +185,17 @@ TEST_F(ConfiguratorTest, UpdateGraph){
 class ConfiguratorVertexVectorParam: public ConfiguratorTest, public testing::WithParamInterface<std::vector<vertexDescriptor>>{};
 
 TEST(GraphTools, ToTaskEnd){
-    TransitionSystem transitionSystem(4);
+    TransitionSystem transitionSystem(5);
     auto e0=boost::add_edge(0, 1, transitionSystem);
     auto e1=boost::add_edge(1, 2, transitionSystem);
     auto e2=boost::add_edge(0, 3, transitionSystem);
+    auto e3=boost::add_edge(2, 4, transitionSystem);
     transitionSystem[0].direction=DEFAULT;
     transitionSystem[1].direction=DEFAULT;
-    transitionSystem[2].direction=LEFT;
+    transitionSystem[2].direction=DEFAULT;
+    transitionSystem[4].direction=LEFT;
     transitionSystem[3].direction=RIGHT;
-    std::vector <vertexDescriptor>plan={0, 1, 2};
+    std::vector <vertexDescriptor>plan={0, 1, 2, 4};
     std::vector <vertexDescriptor>::iterator it=plan.end();
     edgeDescriptor e=e0.first;
     gt::to_task_end(e, transitionSystem, plan, it);
