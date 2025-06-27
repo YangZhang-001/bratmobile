@@ -196,11 +196,11 @@ TEST(GraphTools, ToTaskEnd){
     transitionSystem[4].direction=LEFT;
     transitionSystem[3].direction=RIGHT;
     std::vector <vertexDescriptor>plan={0, 1, 2, 4};
-    std::vector <vertexDescriptor>::iterator it=plan.end();
+    std::vector <vertexDescriptor>::iterator it=plan.begin(), result=plan.end();
     edgeDescriptor e=e0.first;
-    gt::to_task_end(e, transitionSystem, plan, it);
-    EXPECT_EQ(e, e2.first);
-    EXPECT_EQ(*it, 2);
+    result=gt::to_task_end(e, transitionSystem, plan, it);
+    EXPECT_EQ(e, e3.first);
+    EXPECT_EQ(*result, 2);
     EXPECT_TRUE(transitionSystem[e.m_target].direction==LEFT);
     
 }
