@@ -197,16 +197,18 @@ TEST(GraphTools, ToTaskEnd){
     std::vector <vertexDescriptor>::iterator it=plan.end();
     edgeDescriptor e=e0.first;
     gt::to_task_end(e, transitionSystem, plan, it);
-    EXPECT_EQ(e, e2);
+    EXPECT_EQ(e, e2.first);
     EXPECT_EQ(*it, 2);
+    EXPECT_TRUE(transitionSystem[e.m_target].direction==LEFT);
     
 }
 
 TEST_F(ConfiguratorTest, GetOptionNew){
     transitionSystem[movingVertex].options={LEFT, RIGHT, DEFAULT};
-    while(auto option=get_next_option(movingVertex, TransitionSystem::null_vertex(), plan); 
-                                        option!=transitionSystem[movingVertex].options.end()){
+    std::vector<Direction>::iterator option=get_next_option(movingVertex, TransitionSystem::null_vertex(),plan);
+    while(option!=transitionSystem[movingVertex].options.end()){
         transitionSystem[movingVertex].options.erase(option);
+        option=get_next_option(movingVertex, TransitionSystem::null_vertex(),plan);
     }
     EXPECT_EQ(transitionSystem[movingVertex].options.size(), 0);
     EXPECT_TRUE(transitionSystem[movingVertex].options.empty());
