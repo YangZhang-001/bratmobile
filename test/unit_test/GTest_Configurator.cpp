@@ -216,6 +216,7 @@ TEST_F(ConfiguratorTest, GetOptionNew){
     EXPECT_TRUE(transitionSystem[movingVertex].options.empty());
 }
 
+/***/
 TEST_F(ConfiguratorVertexVectorParam, GetOptionInPlan){
     make_module();
     /**
@@ -229,7 +230,7 @@ TEST_F(ConfiguratorVertexVectorParam, GetOptionInPlan){
      */
     edgeDescriptor e_new= make_successful(1);
     plan={2, 3};
-    transitionSystem[movingVertex].options={LEFT, RIGHT, DEFAULT};
+    transitionSystem[movingVertex].options={ RIGHT, LEFT, DEFAULT};
     std::vector<Direction>::iterator option=get_next_option(movingVertex, TransitionSystem::null_vertex(),plan);    
     while(option!=transitionSystem[movingVertex].options.end()){
         transitionSystem[movingVertex].options.erase(option);
@@ -237,9 +238,60 @@ TEST_F(ConfiguratorVertexVectorParam, GetOptionInPlan){
     }
     EXPECT_EQ(transitionSystem[movingVertex].options.size(), 2);
     EXPECT_FALSE(transitionSystem[movingVertex].options.empty());
-
-
 }
+
+TEST_F(ConfiguratorVertexVectorParam, GetOptionVisited){
+    make_module();
+    edgeDescriptor e_new= make_successful(1);
+        /**
+     *              v2(LEFT)---v3(DEFAULT)
+                   /   
+                 v0 --- q1(DEFAULT)---v6(DEFAULT)
+                   \
+                    v4(RIGHT) --- v5(DEFAULT)
+
+     * 
+     */
+    transitionSystem[e_new.m_target].phi=0; //visited
+    plan={2, 3};
+    transitionSystem[movingVertex].options={RIGHT, DEFAULT};
+    std::vector<Direction>::iterator option=get_next_option(movingVertex, TransitionSystem::null_vertex(),plan);    
+    int ct=0;
+    while(option!=transitionSystem[movingVertex].options.end()){
+        transitionSystem[movingVertex].options.erase(option);
+        option=get_next_option(movingVertex, TransitionSystem::null_vertex(),plan);
+        ct++;
+    }
+    EXPECT_EQ(ct, 0);
+    EXPECT_EQ(transitionSystem[movingVertex].options.size(), 2);
+    EXPECT_TRUE(option!=transitionSystem[movingVertex].options.end());
+}
+
+TEST_F(ConfiguratorVertexVectorParam, GetOptionFailed){
+    make_module();
+    /**
+     *              v2(LEFT)---v3(DEFAULT)
+                   /   
+                 v0 --- q1(DEFAULT)---v6(DEFAULT)
+                   \
+                    v4(RIGHT) --- v5(DEFAULT)
+
+     * 
+     */
+    edgeDescriptor e_new= make_v1_successful(1);
+    transitionSystem[2].phi=3; //visited
+    transitionSystem[2].outcome=simResult::crashed;
+    plan={2, 3};
+    transitionSystem[movingVertex].options={RIGHT, DEFAULT};
+    std::vector<Direction>::iterator option=get_next_option(movingVertex, TransitionSystem::null_vertex(),plan);    
+    while(option!=transitionSystem[movingVertex].options.end()){
+        transitionSystem[movingVertex].options.erase(option);
+        option=get_next_option(movingVertex, TransitionSystem::null_vertex(),plan);
+    }
+    EXPECT_EQ(transitionSystem[movingVertex].options.size(), 0);
+    EXPECT_TRUE(transitionSystem[movingVertex].options.empty());
+}
+
 
 // TEST_F(ConfiguratorTest, PreExplore){
 //     init();

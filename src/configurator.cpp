@@ -966,7 +966,7 @@ std::vector<Direction>::iterator AttentiveConfigurator::get_next_option(vertexDe
 		it_next=plan.begin();
 		}
 		//if the direction of the iterator is among the options
-		if (it_next!=full_plan.end()){
+		if (it_next!=full_plan.end() && it_next!=plan.end()){ //
 			if(auto dir_it=check_vector_for(transitionSystem[*it].options, transitionSystem[*it_next].direction); dir_it!=transitionSystem[*it].options.end()){
 				return dir_it;
 			}
