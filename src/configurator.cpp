@@ -946,41 +946,41 @@ void AttentiveConfigurator::explore_plan(b2World&world){
     printPlan(&plan);
 }
 
-std::vector<Direction>::iterator AttentiveConfigurator::get_next_option(vertexDescriptor v,vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov){
-	std::vector <vertexDescriptor> full_plan=plan_prov;
+std::vector<Direction>::iterator AttentiveConfigurator::get_next_option(vertexDescriptor v,vertexDescriptor src, std::vector <vertexDescriptor> full_plan){
 	if (!currentTask.get_change()){
 		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
 	}
 	std::vector<vertexDescriptor>::iterator it=full_plan.end();
-	// if (v==movingVertex || src==TransitionSystem::null_vertex()){
-	// 	// auto oe=gt::outEdges(transitionSystem, v, currentTask.get_direction());
-	// 	// auto ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
-	// 	// if (ve.first){
-	// 	// 	if (g[ve.second.m_target].outcome==simResult::successful){
-
-	// 	// 	}
-	// 	// }
-	// }
-	if (it =check_vector_for(full_plan, v); (it!=full_plan.end() && it!=(full_plan.end()-1))|| v==movingVertex){
-		std::vector<vertexDescriptor>::iterator it_next=it;
-		if(v!=movingVertex && src!=TransitionSystem::null_vertex()){
+	std::vector<vertexDescriptor>::iterator it_next=it;
+	if (it =check_vector_for(full_plan, v); (it!=full_plan.end() && it!=(full_plan.end()-1)) || v==movingVertex){
+		if(v!=movingVertex){
 			std::pair<edgeDescriptor, bool> e=boost::edge(src, v, transitionSystem);
-			gt::to_task_end(e.first, transitionSystem, full_plan, it_next);
+			it_next=gt::to_task_end(e.first, transitionSystem, full_plan, it);
 			if (it_next==full_plan.end()){
 				return transitionSystem[*it].options.end();
 			}			
 		}
-		else{
-			full_plan.insert(full_plan.begin(), movingVertex);
-			it=full_plan.begin(); //0
-			it_next=plan.begin();
+		else if(v==movingVertex){
+		full_plan.insert(full_plan.begin(), movingVertex);
+		it=full_plan.begin(); //0
+		it_next=plan.begin();
 		}
-
 		//if the direction of the iterator is among the options
-		if(auto dir_it=check_vector_for(transitionSystem[*it].options, transitionSystem[*it_next].direction); dir_it!=transitionSystem[*it].options.end()){
-			return dir_it;
+		if (it_next!=full_plan.end()){
+			if(auto dir_it=check_vector_for(transitionSystem[*it].options, transitionSystem[*it_next].direction); dir_it!=transitionSystem[*it].options.end()){
+				return dir_it;
+			}
+			//if there is no option (either it's not there or it's been explored)
+			else{
+				auto oe=gt::outEdges(transitionSystem, v, currentTask.get_direction());
+				auto ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
+				if(ve.first) {
+					if (transitionSystem[ve.second.m_target].outcome==simResult::successful){
+						return transitionSystem[*it].options.end();			
+					}
+			}
+			}
 		}
-		return transitionSystem[*it].options.end();	
 	}
 	return (transitionSystem[v].options.begin());
 }

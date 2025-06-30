@@ -367,10 +367,10 @@ void explore_plan(b2World&)override;
  * 
  * @param v vertex being expanded
  * @param src v's source vertex
- * @param plan_prov a plan
+ * @param full_plan a plan
  * @return std::vector<Direction>::iterator 
  */
-std::vector<Direction>::iterator  get_next_option(vertexDescriptor v, vertexDescriptor src, std::vector<vertexDescriptor> &plan_prov);
+std::vector<Direction>::iterator  get_next_option(vertexDescriptor v, vertexDescriptor src, std::vector<vertexDescriptor> full_plan);
 
 /**
  * @brief Assesses whether a previous plan can be recycled
