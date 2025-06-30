@@ -218,8 +218,25 @@ TEST_F(ConfiguratorTest, GetOptionNew){
 
 TEST_F(ConfiguratorVertexVectorParam, GetOptionInPlan){
     make_module();
+    /**
+     *              v2(LEFT)---v3(DEFAULT)
+                   /   
+                 v0 --- q1(DEFAULT)---v6(DEFAULT)
+                   \
+                    v4(RIGHT) --- v5(DEFAULT)
+
+     * 
+     */
     edgeDescriptor e_new= make_successful(1);
-    plan=GetParam();
+    plan={2, 3};
+    transitionSystem[movingVertex].options={LEFT, RIGHT, DEFAULT};
+    std::vector<Direction>::iterator option=get_next_option(movingVertex, TransitionSystem::null_vertex(),plan);    
+    while(option!=transitionSystem[movingVertex].options.end()){
+        transitionSystem[movingVertex].options.erase(option);
+        option=get_next_option(movingVertex, TransitionSystem::null_vertex(),plan);
+    }
+    EXPECT_EQ(transitionSystem[movingVertex].options.size(), 2);
+    EXPECT_FALSE(transitionSystem[movingVertex].options.empty());
 
 
 }

@@ -952,16 +952,33 @@ std::vector<Direction>::iterator AttentiveConfigurator::get_next_option(vertexDe
 		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
 	}
 	std::vector<vertexDescriptor>::iterator it=full_plan.end();
-	if (it =check_vector_for(full_plan, v); it!=full_plan.end() && it!=(full_plan.end()-1)){
-		auto e=boost::edge(src, v, transitionSystem);
+	// if (v==movingVertex || src==TransitionSystem::null_vertex()){
+	// 	// auto oe=gt::outEdges(transitionSystem, v, currentTask.get_direction());
+	// 	// auto ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
+	// 	// if (ve.first){
+	// 	// 	if (g[ve.second.m_target].outcome==simResult::successful){
+
+	// 	// 	}
+	// 	// }
+	// }
+	if (it =check_vector_for(full_plan, v); (it!=full_plan.end() && it!=(full_plan.end()-1))|| v==movingVertex){
 		std::vector<vertexDescriptor>::iterator it_next=it;
-		gt::to_task_end(e.first, transitionSystem, full_plan, it_next);
-		// if ((transitionSystem[e.first.m_target].visited()&& transitionSystem[e.first].it_observed<iteration)|| !transitionSystem[e.first.m_target].visited()){ // 
-		// 	transitionSystem[v].options={transitionSystem[e.first.m_target].direction};
-		// }
-		if (it_next==full_plan.end()){
-			return transitionSystem[*it].options.end();
+		if(v!=movingVertex && src!=TransitionSystem::null_vertex()){
+			std::pair<edgeDescriptor, bool> e=boost::edge(src, v, transitionSystem);
+			gt::to_task_end(e.first, transitionSystem, full_plan, it_next);
+			// if ((transitionSystem[e.first.m_target].visited()&& transitionSystem[e.first].it_observed<iteration)|| !transitionSystem[e.first.m_target].visited()){ // 
+			// 	transitionSystem[v].options={transitionSystem[e.first.m_target].direction};
+			// }
+			if (it_next==full_plan.end()){
+				return transitionSystem[*it].options.end();
+			}			
 		}
+		else{
+			full_plan.insert(full_plan.begin(), movingVertex);
+			it=full_plan.begin(); //0
+			it_next=plan.begin();
+		}
+
 		//if the direction of the iterator is among the options
 		if(auto dir_it=check_vector_for(transitionSystem[*it].options, transitionSystem[*it_next].direction); dir_it!=transitionSystem[*it].options.end()){
 			return dir_it;
