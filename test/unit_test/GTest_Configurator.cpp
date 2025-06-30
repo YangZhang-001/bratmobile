@@ -264,7 +264,7 @@ TEST_F(ConfiguratorVertexVectorParam, GetOptionVisited){
     }
     EXPECT_EQ(ct, 0);
     EXPECT_EQ(transitionSystem[movingVertex].options.size(), 2);
-    EXPECT_TRUE(option!=transitionSystem[movingVertex].options.end());
+    EXPECT_TRUE(option==transitionSystem[movingVertex].options.end());
 }
 
 TEST_F(ConfiguratorVertexVectorParam, GetOptionFailed){
@@ -278,9 +278,10 @@ TEST_F(ConfiguratorVertexVectorParam, GetOptionFailed){
 
      * 
      */
-    edgeDescriptor e_new= make_v1_successful(1);
+    edgeDescriptor e_new= make_successful(1);
     transitionSystem[2].phi=3; //visited
     transitionSystem[2].outcome=simResult::crashed;
+    currentTask.set_direction(LEFT);
     plan={2, 3};
     transitionSystem[movingVertex].options={RIGHT, DEFAULT};
     std::vector<Direction>::iterator option=get_next_option(movingVertex, TransitionSystem::null_vertex(),plan);    

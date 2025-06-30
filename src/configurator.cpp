@@ -960,7 +960,7 @@ std::vector<Direction>::iterator AttentiveConfigurator::get_next_option(vertexDe
 				return transitionSystem[*it].options.end();
 			}			
 		}
-		else if(v==movingVertex){
+		else{
 		full_plan.insert(full_plan.begin(), movingVertex);
 		it=full_plan.begin(); //0
 		it_next=plan.begin();
