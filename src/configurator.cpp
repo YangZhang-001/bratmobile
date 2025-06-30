@@ -626,17 +626,6 @@ void AttentiveConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<v
 }
 
 
-// void Configurator::addToPriorityQueue(Frontier f, std::vector<Frontier>& queue, TransitionSystem &g, vertexDescriptor goal){
-// 	for (auto i =queue.begin(); i!=queue.end(); i++){
-// 		if (g[f.first].phi <abs(g[(*i).first].phi)){
-// 			queue.insert(i, f);
-// 			return;
-// 		}
-// 	}
-// 	queue.push_back(f);
-// }
-
-
 std::pair <edgeDescriptor, bool> AttentiveConfigurator::maxProbability(std::vector<edgeDescriptor> ev, TransitionSystem& g){
 	std::pair <edgeDescriptor, bool> result;
 	if (ev.empty()){
