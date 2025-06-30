@@ -966,9 +966,6 @@ std::vector<Direction>::iterator AttentiveConfigurator::get_next_option(vertexDe
 		if(v!=movingVertex && src!=TransitionSystem::null_vertex()){
 			std::pair<edgeDescriptor, bool> e=boost::edge(src, v, transitionSystem);
 			gt::to_task_end(e.first, transitionSystem, full_plan, it_next);
-			// if ((transitionSystem[e.first.m_target].visited()&& transitionSystem[e.first].it_observed<iteration)|| !transitionSystem[e.first.m_target].visited()){ // 
-			// 	transitionSystem[v].options={transitionSystem[e.first.m_target].direction};
-			// }
 			if (it_next==full_plan.end()){
 				return transitionSystem[*it].options.end();
 			}			
@@ -983,6 +980,7 @@ std::vector<Direction>::iterator AttentiveConfigurator::get_next_option(vertexDe
 		if(auto dir_it=check_vector_for(transitionSystem[*it].options, transitionSystem[*it_next].direction); dir_it!=transitionSystem[*it].options.end()){
 			return dir_it;
 		}
+		return transitionSystem[*it].options.end();	
 	}
 	return (transitionSystem[v].options.begin());
 }
