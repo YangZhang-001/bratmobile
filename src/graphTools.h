@@ -87,12 +87,24 @@ struct State{
 		phi=NAIVE_PHI;
 	}
 
+	/**
+	 * @brief Return transformation from start to Di position
+	 */
 	b2Transform start_from_Di()const;
 
+	/**
+	 * @brief Return transformation from start to Dn position
+	 */
 	b2Transform start_from_Dn()const;
 
+	/**
+	 * @brief Return transformation from end to Di position
+	 */
 	b2Transform end_from_Dn()const;
 
+	/**
+	 * @brief Return transformation from end to Di position
+	 */
 	b2Transform end_from_Di()const;
 
 	float distance();
@@ -233,15 +245,51 @@ struct ComparePhi{
 
 namespace gt{
 
-	void fill(simResult, State* s=NULL, Edge* e=NULL);
+	/**
+	 * @brief Fills a state-edge usign the box2d simulation result
+	 * 
+	 * @param sr simulation result
+	 * @param s state pointer
+	 * @param e edge pointer
+	 */
+	void fill(simResult sr, State* s=NULL, Edge* e=NULL);
 
-	int simToMotorStep(int);
+	/**
+	 * @brief returns the number of motor steps corresponding to @param simStep simulation steps (uses macros in const.h)
+	 */
+	int simToMotorStep(int simstep);
 
-	int distanceToSimStep(const float&, const float&);
-	
-	void update(edgeDescriptor,  std::pair <State, Edge>, TransitionSystem&, bool, int); //returns disturbance rror based on expected vs observed D
+	/**
+	 * @brief Returns simulation steps necessary to cover a certain distance given a velocity
+	 * 
+	 * @param s distance
+	 * @param ds velocity
+	 * @return int 
+	 */
+	int distanceToSimStep(const float& s, const float& ds);
 
-	void set(edgeDescriptor,  std::pair <State, Edge>, TransitionSystem&, bool, int);
+	/**
+	 * @brief Updates the target of e=(src, target)
+	 * 
+	 * @param e the edge whose target will be updated
+	 * @param sk a state-edge observation
+	 * @param g the transitionsystem
+	 * @param current is this edge the current edge? (if yes the step is not updated)
+	 * @param it iteration
+	 */
+	void update(edgeDescriptor e,  std::pair <State, Edge> sk, TransitionSystem& g, bool current, int it); 
+
+	/**
+	 * @brief Resets the target of e=(src, target). The difference with update is that it resets the outcome and it doesn't update if the vertex is already filled
+	 * 
+	 * @param e the edge whose target will be updated
+	 * @param sk a state-edge observation
+	 * @param g the transitionsystem
+	 * @param current is this edge the current edge? (if yes the step is not updated)
+	 * @param it iteration
+	 */
+	void set(edgeDescriptor e,  std::pair <State, Edge>sk, TransitionSystem&, bool current, int it);
+
 
 	std::pair< bool, edgeDescriptor> getMostLikely(TransitionSystem&,std::vector<edgeDescriptor>, int);
 

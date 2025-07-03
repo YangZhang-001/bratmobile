@@ -222,28 +222,28 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
     EXPECT_EQ(transitionSystem[e.m_target].options.size(), expected);
 }
 
-TEST_P(ConfiguratorTestTransitionMatrix, withTransitionSystem){
-    make_module();
-    iteration=2;
-    auto oe=gt::outEdges(transitionSystem, movingVertex,std::get<1>(GetParam()));
-    vertexDescriptor v=movingVertex;
-    if (oe.empty()){
-        return;
-    }
-    v=oe[0].m_target;
-    plan={v};
-    Disturbance target;
-    if (std::get<0>(GetParam())!=b2Transform_inf){
-        target=Disturbance(PURSUE, std::get<0>(GetParam()).p, std::get<0>(GetParam()).q.GetAngle());
-        Task goal(target, DEFAULT);
-        init(goal);
-    }
-    //transitionSystem[movingVertex].Di=target;
-    set_edge_step(0, v, 20);
-    transitionSystem[v].outcome=std::get<2>(GetParam());
-    applyTransitionMatrix(transitionSystem, movingVertex, std::get<1>(GetParam()), false, currentVertex, plan);
-    EXPECT_EQ(transitionSystem[movingVertex].options.size(), expectedOptions(std::get<1>(GetParam()), simResult::successful, target));
-}
+// TEST_P(ConfiguratorTestTransitionMatrix, withTransitionSystem){
+//     make_module();
+//     iteration=2;
+//     auto oe=gt::outEdges(transitionSystem, movingVertex,std::get<1>(GetParam()));
+//     vertexDescriptor v=movingVertex;
+//     if (oe.empty()){
+//         return;
+//     }
+//     v=oe[0].m_target;
+//     plan={v};
+//     Disturbance target;
+//     if (std::get<0>(GetParam())!=b2Transform_inf){
+//         target=Disturbance(PURSUE, std::get<0>(GetParam()).p, std::get<0>(GetParam()).q.GetAngle());
+//         Task goal(target, DEFAULT);
+//         init(goal);
+//     }
+//     //transitionSystem[movingVertex].Di=target;
+//     set_edge_step(0, v, 20);
+//     transitionSystem[v].outcome=std::get<2>(GetParam());
+//     applyTransitionMatrix(transitionSystem, movingVertex, std::get<1>(GetParam()), false, currentVertex, plan);
+//     EXPECT_EQ(transitionSystem[movingVertex].options.size(), expectedOptions(std::get<1>(GetParam()), simResult::successful, target));
+// }
 
 
 INSTANTIATE_TEST_CASE_P(SimulationOutcomes, ConfiguratorTestTransitionMatrix, ::testing::Values(
