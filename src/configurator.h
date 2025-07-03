@@ -308,11 +308,11 @@ void unexplored_transitions(TransitionSystem&g, const vertexDescriptor& v);
 
 /**
 *Combines edges K and jump function: represents possible transitions out of a state
-*@param state the state to which transitions are being assigned
+*@param v the vertex to which transitions are being assigned
 *@param d state direction (redundant)
 *@param src source vertex of state
 */
-void transitionMatrix(State& state, Direction d, vertexDescriptor src); 
+void transitionMatrix(vertexDescriptor& v, Direction d, vertexDescriptor src); 
 
 /**
  * @brief Sets permitted transitions out of a state
