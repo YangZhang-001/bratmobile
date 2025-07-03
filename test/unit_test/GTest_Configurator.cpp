@@ -205,7 +205,7 @@ TEST(GraphTools, ToTaskEnd){
     
 }
 
-EST_P(ConfiguratorTestTransitionMatrix, naive){
+TEST_P(ConfiguratorTestTransitionMatrix, naive){
     Disturbance target;
     if (std::get<0>(GetParam())!=b2Transform_inf){
         target=Disturbance(PURSUE, std::get<0>(GetParam()).p, std::get<0>(GetParam()).q.GetAngle());
