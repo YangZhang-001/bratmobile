@@ -139,13 +139,9 @@ class DebugConfigurator:public AttentiveConfigurator{
     }
     
 
-    int get_vertex_in_degree(vertexDescriptor v){
-        return boost::in_degree(v, transitionSystem);
-    }
+    int get_vertex_in_degree(vertexDescriptor v);
 
-    int get_vertex_out_degree(vertexDescriptor v){
-        return boost::out_degree(v, transitionSystem);
-    }
+    int get_vertex_out_degree(vertexDescriptor v);
 
     /**
      * @brief Wrapper
@@ -171,6 +167,23 @@ class DebugConfigurator:public AttentiveConfigurator{
         worldBuilder.set_world_objects(worldBuilder.getFeatures(cc, b2Transform_zero, WorldBuilder::PARTITION));
 
     }
+
+    void set_edge_step(vertexDescriptor u, vertexDescriptor v, int step){
+        auto e=boost::edge(u, v, transitionSystem);
+        if (e.second){
+            transitionSystem[e.first].step=step;
+        }
+    }
+
+    void set_plan(std::vector<vertexDescriptor> _p){
+        plan=_p;
+    }
+
+    void set_running(bool b){
+        running=b;
+    }
+
+
 };
 
 
@@ -257,7 +270,7 @@ protected:
     edgeDescriptor make_v1_crashed( vertexDescriptor v0=0, b2Transform start=b2Transform_zero, b2Transform end=b2Transform_zero, b2Transform Dn=b2Transform_inf);
 
     /**
-     * @brief Makes a basic expansion module, start/endPose and disturbances not set. Module looks like this
+     * @brief Makes a basic expansion module,  disturbances not set. Module looks like this
      *               
      *              v2(LEFT)---v3(DEFAULT)
                    /   
@@ -273,16 +286,7 @@ public:
      * @brief makes bodyfeatures
      * 
      */
-    BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth){
-        BodyFeatures bf;
-        bf.pose.p.x=x;
-        bf.pose.p.y=y;
-        bf.pose.q.Set(q);
-        bf.halfLength=hlength;
-        bf.halfWidth=hwidth;
-        bf.attention=true;
-        return bf;
-    }
+    BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth);
 
 
 
@@ -320,6 +324,33 @@ class ConfiguratorTest32DT:public ConfiguratorTest, public testing::WithParamInt
         transitionSystem.clear();
     }
 };
+
+class ConfiguratorTestTransitionMatrix: public ConfiguratorTest, public testing::WithParamInterface<std::tuple<b2Transform, Direction, simResult::resultType>>{
+protected:
+    /**
+     * @brief number of expected options
+     * 
+     * @param dir direction of current vertex
+     * @param o outcome of current vertex task
+     * @param d goal disturbance
+     * @return int 
+     */
+    int expectedOptions(Direction dir, simResult::resultType o, Disturbance d);
+
+
+};
+
+
+////////////////////////////////////////////////////////////////////////
+
+int DebugConfigurator::get_vertex_in_degree(vertexDescriptor v){
+    return boost::in_degree(v, transitionSystem);
+}
+
+int DebugConfigurator::get_vertex_out_degree(vertexDescriptor v){
+    return boost::out_degree(v, transitionSystem);
+}
+
 
 
 bool DebugConfigurator::plan_reaches_horizon(){
@@ -379,6 +410,15 @@ void ConfiguratorTest::make_module(vertexDescriptor mv){
     transitionSystem[mv+5].direction=DEFAULT;
     transitionSystem[mv+2].direction=LEFT;
     transitionSystem[mv+4].direction=RIGHT;
+
+    transitionSystem[mv+2].endPose.q.Set(M_PI_2);
+    transitionSystem[mv+4].endPose.q.Set(-M_PI_2);
+    b2Transform distance=b2Transform(b2Vec2(0.5, 0), b2Rot(0));
+    transitionSystem[mv+3].start=transitionSystem[mv+2].endPose;
+    transitionSystem[mv+3].endPose=b2MulT(transitionSystem[mv+2].endPose, distance);
+    transitionSystem[mv+5].start=transitionSystem[mv+4].endPose;
+    transitionSystem[mv+5].endPose=b2MulT(transitionSystem[mv+4].endPose, distance);
+
     boost::add_edge(mv,mv+1, transitionSystem);
     boost::add_edge(mv,mv+2, transitionSystem);
     boost::add_edge(mv,mv+4, transitionSystem);
@@ -386,5 +426,48 @@ void ConfiguratorTest::make_module(vertexDescriptor mv){
     boost::add_edge(mv+4,mv+5, transitionSystem);
 
 }
+
+BodyFeatures ConfiguratorTest::bodyFeatures(float x, float y, float q, float hlength, float hwidth){
+    BodyFeatures bf;
+    bf.pose.p.x=x;
+    bf.pose.p.y=y;
+    bf.pose.q.Set(q);
+    bf.halfLength=hlength;
+    bf.halfWidth=hwidth;
+    bf.attention=true;
+    return bf;
+}
+
+int ConfiguratorTestTransitionMatrix::expectedOptions(Direction dir, simResult::resultType o, Disturbance d){
+    if (o==simResult::safeForNow){
+        if(dir==DEFAULT || dir==STOP){
+            return 2;
+        }
+    }
+    else if (o==simResult::successful){
+        if (dir==LEFT || dir==RIGHT){
+            if (d.getPosition().x<0){
+                return 2;
+            }
+            else{
+                return 1;
+            }
+        }
+        else{
+           if (d.isValid() && d.getPosition().y !=0 ){
+                return 3;
+            }
+            else{
+                return 1;
+            }
+        }
+
+    }
+    else if (o==simResult::crashed){
+        return 0;
+    }
+}
+
+
 
 #endif

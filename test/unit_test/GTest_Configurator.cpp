@@ -205,31 +205,60 @@ TEST(GraphTools, ToTaskEnd){
     
 }
 
+EST_P(ConfiguratorTestTransitionMatrix, naive){
+    Disturbance target;
+    if (std::get<0>(GetParam())!=b2Transform_inf){
+        target=Disturbance(PURSUE, std::get<0>(GetParam()).p, std::get<0>(GetParam()).q.GetAngle());
+        Task goal(target, DEFAULT);
+        init(goal);
+    }
+    dummy_vertex(movingVertex);
+    edgeDescriptor e= make_successful(1);
+    transitionSystem[e].step=1;
+    transitionSystem[e.m_target].direction=std::get<1>(GetParam());
+    transitionSystem[e.m_target].outcome=std::get<2>(GetParam());
+    applyTransitionMatrix(transitionSystem, e.m_target, std::get<1>(GetParam()), false, currentVertex, plan);
+    int expected=expectedOptions(std::get<1>(GetParam()), std::get<2>(GetParam()), target);
+    EXPECT_EQ(transitionSystem[e.m_target].options.size(), expected);
+}
 
-// TEST_F(ConfiguratorTest, PreExplore){
-//     init();
-//     dummy_vertex(movingVertex);
-//     b2Transform dPose;
-//     dPose.p.x=0.5;
-//     transitionSystem[currentVertex].Di=(Disturbance(AVOID, dPose.p), DEFAULT);
-//     EXPECT_EQ(transitionSystem[currentVertex].Di.getAffIndex(), AVOID);
-//     EXPECT_EQ(transitionSystem[currentVertex].Di.pose().p.x, 0.5); 
-//     pre_explore();
-//     EXPECT_EQ(transitionSystem[movingVertex].Di.getAffIndex(), AVOID);
-//     EXPECT_EQ(transitionSystem[movingVertex].Di.pose().p.x, 0.5); 
-// }
+TEST_P(ConfiguratorTestTransitionMatrix, withTransitionSystem){
+    make_module();
+    iteration=2;
+    auto oe=gt::outEdges(transitionSystem, movingVertex,std::get<1>(GetParam()));
+    vertexDescriptor v=movingVertex;
+    if (oe.empty()){
+        return;
+    }
+    v=oe[0].m_target;
+    plan={v};
+    Disturbance target;
+    if (std::get<0>(GetParam())!=b2Transform_inf){
+        target=Disturbance(PURSUE, std::get<0>(GetParam()).p, std::get<0>(GetParam()).q.GetAngle());
+        Task goal(target, DEFAULT);
+        init(goal);
+    }
+    //transitionSystem[movingVertex].Di=target;
+    set_edge_step(0, v, 20);
+    transitionSystem[v].outcome=std::get<2>(GetParam());
+    applyTransitionMatrix(transitionSystem, movingVertex, std::get<1>(GetParam()), false, currentVertex, plan);
+    EXPECT_EQ(transitionSystem[movingVertex].options.size(), expectedOptions(std::get<1>(GetParam()), simResult::successful, target));
+}
 
 
-//class ConfiguratorSimulationEnd:public ConfiguratorTest, public testing::WithParamInterface<b2Transform>{};
+INSTANTIATE_TEST_CASE_P(SimulationOutcomes, ConfiguratorTestTransitionMatrix, ::testing::Values(
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(1.0,0), b2Rot(0)), DEFAULT, simResult::successful),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(1.0,0), b2Rot(0)), LEFT, simResult::successful),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(1.0,0), b2Rot(0)), UNDEFINED, simResult::successful),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(1.0,0), b2Rot(0)), DEFAULT, simResult::crashed),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(1.0,0), b2Rot(0)), DEFAULT, simResult::successful),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(1.0,0), b2Rot(0)), DEFAULT, simResult::safeForNow),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(-1.0,0), b2Rot(-M_PI)), RIGHT, simResult::successful),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform_inf, DEFAULT, simResult::crashed),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform_inf, DEFAULT, simResult::successful),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform_inf, DEFAULT, simResult::safeForNow),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(1.0,0), b2Rot(0)), STOP, simResult::crashed),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(1.0,0), b2Rot(0)), STOP, simResult::successful),
+                                                                                std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(1.0,0), b2Rot(0)), STOP, simResult::safeForNow)
+));
 
-// /**
-//  * @brief Test 
-//  * 
-//  */
-// TEST_P(ConfiguratorSimulationEnd, SimulationDuration){
-//     Task task(Disturbance(), DEFAULT, GetParam(), true);
-//     b2World world(b2Vec2(0,0));
-//     simResult result=simulate(task, world);
-//     EXPECT_EQ(result.step, 100);
-// }
-// INSTANTIATE_TEST_CASE_P(StartPositions, ConfiguratorSimulationEnd, testing::Values(b2Transform_zero, b2Transform(b2Vec2(0.5,0), b2Rot(0))));
