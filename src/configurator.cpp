@@ -180,13 +180,14 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				v1 =v0; //frontier
 				std::vector <vertexDescriptor> propagated;
 				do {
-					//task_to_sim_setup
-				start=g[v0].endPose +shift;
-				Disturbance Di=getDisturbance(g, v0, w, g[v0].options[0], start);
-				t = Task(Di, g[v0].options[0], start, true);//need to update end crit
-				std::pair <State, Edge> sk(State(start, Di, g[v0].options[0]), Edge());
-				adjust_simulated_task(v0, g, &t);
-				worldBuilder.buildWorld(w, t.getStart(), t.get_direction(), t.get_disturbance(), 0.15, WorldBuilder::PARTITION); //was g[v].endPose
+				// 	//task_to_sim_setup
+				// start=g[v0].endPose +shift;
+				// Disturbance Di=getDisturbance(g, v0, w, g[v0].options[0], start);
+				// t = Task(Di, g[v0].options[0], start, true);//need to update end crit
+				// std::pair <State, Edge> sk(State(start, Di, g[v0].options[0]), Edge());
+				// adjust_simulated_task(v0, g, &t);
+				// worldBuilder.buildWorld(w, t.getStart(), t.get_direction(), t.get_disturbance(), 0.15, WorldBuilder::PARTITION); //was g[v].endPose
+				std::pair<State, Edge> sk=simulation_setup(w, t, v0, shift, start, g[v0].options);
 				//end setup
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
 				gt::fill(sim, &sk.first, &sk.second); //find simulation result
@@ -206,31 +207,6 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 						std::vector <vertexDescriptor> task_vertices=gt::task_vertices(v1, g, iteration, currentVertex);
 						vertexDescriptor task_start= task_vertices[0];
 						if (plan_prov.empty()){
-							// bool finished=false, been=matcher.match_equal(match.first, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
-							// //shift here?
-							// Task controlGoal_adjusted= controlGoal;
-							// shift_start= b2MulT(b2MulT(sk.first.start, controlGoal.getStart()), g[task_start].start);
-							// math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
-							// boost::remove_edge(edge.first, g);
-							// edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
-							// ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
-							// info.overarchingGoal(controlGoal_adjusted); 
-							// auto plan_tmp=planner->plan(g, v, info, &finished); //not v but task start
-							// //printf("out of explore planner\n");
-							// bool filler=0;
-							// if (finished){
-							// 	plan_prov=plan_tmp;
-							// 	if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
-							// 		//printf("inserting current vertex\n");
-							// 		plan_prov.insert(plan_prov.begin(), task_start);
-							// 	}
-							// 	if (t.get_direction()== g[task_start].direction){
-							// 		g[v0].options.clear();
-							// 	}
-							// 	else{
-							// 		g[v0].options={g[task_start].direction};
-							// 	}
-							// }
 							recycle_plan(v, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
 						if (plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
@@ -260,14 +236,15 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	}
 	backtrack(evaluationQueue, priorityQueue, closed, g, plan_prov);
 	bestNext=priorityQueue[0];
-	std::vector <edgeDescriptor> best_in_edges= gt::inEdges(g,bestNext);
-	if (best_in_edges.empty()){
-		direction=currentTask.get_direction();
-	}
-	else{
-		direction = g[bestNext].direction;
-		g[best_in_edges[0]].it_observed=iteration;
-	}
+	// std::vector <edgeDescriptor> best_in_edges= gt::inEdges(g,bestNext);
+	// if (best_in_edges.empty()){
+	// 	direction=currentTask.get_direction();
+	// }
+	// else{
+	// 	direction = g[bestNext].direction;
+	// 	g[best_in_edges[0]].it_observed=iteration;
+	// }
+	reassign_direction(bestNext, direction);
 }while(g[bestNext].options.size()>0 && !er.ended);
 // printf("finished exploring, plan =%i\n", plan_prov.size());
 return plan_prov;
@@ -1027,4 +1004,26 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &
 			transitionSystem[v0].options={transitionSystem[task_start].direction};
 		}
 	}
+}
+
+std::pair<State, Edge> AttentiveConfigurator::simulation_setup(b2World& w, Task & t, vertexDescriptor v0, b2Transform shift, b2Transform &start, std::vector<Direction>v0_options){
+	start=transitionSystem[v0].endPose +shift;
+	Disturbance Di=getDisturbance(transitionSystem, v0, w, v0_options[0], start);
+	t = Task(Di, v0_options[0], start, true);//need to update end crit
+	std::pair <State, Edge> sk(State(start, Di, v0_options[0]), Edge());
+	adjust_simulated_task(v0, transitionSystem, &t);
+	worldBuilder.buildWorld(w, t.getStart(), t.get_direction(), t.get_disturbance(), 0.15, WorldBuilder::PARTITION); //was g[v].endPose
+	return sk;
+}
+
+void AttentiveConfigurator::reassign_direction(vertexDescriptor bestNext, Direction& direction){
+	std::vector <edgeDescriptor> best_in_edges= gt::inEdges(transitionSystem,bestNext);
+	if (best_in_edges.empty()){
+		direction=currentTask.get_direction();
+	}
+	else{
+		direction = transitionSystem[bestNext].direction;
+		transitionSystem[best_in_edges[0]].it_observed=iteration;
+	}
+
 }

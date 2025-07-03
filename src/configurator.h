@@ -390,6 +390,24 @@ std::vector<Direction>::iterator  get_next_option(vertexDescriptor v, vertexDesc
 bool recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
 				b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
 				std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction);
+
+
+/**
+ * @brief Sets up for simulation
+ * 
+ * @param W box2d world
+ * @param t task (gets modified)
+ * @param v0 source vertex for the next state
+ * @param shift any shift to be applied (in case of plan recycling)
+ * @param start task start
+ * @param v0_options a subset of transitionSystem[0].options
+ * @return sk,  pair of state and edge
+
+ */
+std::pair<State, Edge> simulation_setup(b2World& w, Task & t, vertexDescriptor v0, b2Transform shift, b2Transform &start, std::vector<Direction>v0_options);
+
+void reassign_direction(vertexDescriptor bestNext, Direction& direction);
+
 public:
 
 AttentiveConfigurator(){};
