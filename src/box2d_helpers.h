@@ -32,6 +32,7 @@ void erase_from_vector(std::vector<I>& vec, const I& i){
 	}
 }
 
+
 float angle_subtract(float a1, float a2);
 
 

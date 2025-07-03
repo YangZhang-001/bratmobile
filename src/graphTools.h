@@ -129,52 +129,80 @@ struct StateDifference{
 		return sum_r()+sum_D(Di)+ sum_D(Dn);
 	}
 
+	/**
+	 * @brief Total difference in "global" robot pose 
+	 */
 	float sum_r(){
 		return fabs(pose.p.x)+fabs(pose.p.y)+fabs(pose.q.GetAngle());
 	}
 
+	/**
+	 * @brief Total difference in disturbance pose
+	 * 
+	 * @param bf body features of disturbance
+	 */
 	float sum_D_pos(const BodyFeatures& bf){
 		return fabs(bf.pose.p.x)+fabs(bf.pose.p.y)+bf.pose.q.GetAngle();
 	}
 
+	/**
+	 * @brief Total difference in disturbance shape
+	 * 
+	 * @param bf body features of disturbance
+	 */
 	float sum_D_shape(const BodyFeatures& bf){
 		return fabs(bf.width())+fabs(bf.length());
 	}
 
+	/**
+	 * @brief Total difference in disturbance pose and shape combined
+	 * 
+	 * @param bf body features of disturbance
+	 */
 	float sum_D(const BodyFeatures& bf){
 		return sum_D_pos(bf)+sum_D_shape(bf);
 	}
 	
-	float get_sum(int);
+	/**
+	 * @brief Returns difference in certain aspects we want to match between states
+	 * 
+	 * @param mt the match type
+	 */
+	float get_sum(int mt);
 
-	void init(const State& ,const State&);
+	/**
+	 * @brief Initialises the difference object using two states we want to compare
+	 * 
+	 * @param s1 
+	 * @param s2 
+	 */
+	void init(const State& s1,const State& s2);
 
+	/**
+	 * @brief Fills bf match with large values indicating no match
+	 * 
+	 */
 	void fill_invalid_bodyfeatures(BodyFeatures &);
 
-	void fill_valid_bodyfeatures(BodyFeatures &, const State&, const State&, WHAT_D_FLAG);
+/**
+ * @brief Fills the bodyfeatures match with differences between disturbances in the two states. Differences
+ * are calculated in the position local to the robot in that state, not globally
+ * 
+ * @param bf body features to fill
+ * @param s1 
+ * @param s2 
+ * @param flag whether it's a Di or Dn
+ */
+	void fill_valid_bodyfeatures(BodyFeatures & bf, const State& s1, const State& s2, WHAT_D_FLAG flag);
 };
 
 
-// typedef b2Transform Transform;
-// bool operator!=(Transform const &, Transform const &);
-// bool operator==(Transform const &, Transform const &);
-// void operator-=(Transform &, Transform const&);
-// void operator+=(Transform &, Transform const&);
-// Transform operator+( Transform const &, Transform const &);
-// Transform operator-( Transform const &, Transform const &);
-// Transform operator-(Transform const &);
-
-
-// typedef std::pair<bool, float> orientation;
-// orientation subtract(orientation, orientation);
 
 typedef boost::adjacency_list<boost::setS, boost::vecS, boost::bidirectionalS, State, Edge> TransitionSystem;
 typedef boost::graph_traits<TransitionSystem>::vertex_iterator vertexIterator; 
 typedef boost::graph_traits<TransitionSystem>::vertex_descriptor vertexDescriptor;
 typedef boost::graph_traits<TransitionSystem>::edge_descriptor edgeDescriptor;
 typedef boost::graph_traits<TransitionSystem>::edge_iterator edgeIterator;
-//typedef boost::adjacency_list_traits< boost::vecS, boost::vecS, boost::directedS > Traits;
-// typedef boost::subgraph<boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS>> CognitiveMap;
 
 
 /**
@@ -299,7 +327,15 @@ namespace gt{
 
 	Disturbance getExpectedDisturbance(TransitionSystem&, vertexDescriptor, Direction, int);
 
-	std::pair <bool,edgeDescriptor> visitedEdge(const std::vector <edgeDescriptor>&, TransitionSystem&, vertexDescriptor cv=TransitionSystem::null_vertex());
+	/**
+	 * @brief Returns a valid visited edge, if present
+	 * 
+	 * @param es vector of out-edges
+	 * @param g transitionSystem
+	 * @param cv current vertex 
+	 * @return std::pair <bool,edgeDescriptor> (is edge valid, visited edge). Returns true if cv is the source of any of the outedges
+	 */
+	std::pair <bool,edgeDescriptor> visitedEdge(const std::vector <edgeDescriptor>& es, TransitionSystem& g, vertexDescriptor cv=TransitionSystem::null_vertex());
 
 	void adjustProbability(TransitionSystem&, const edgeDescriptor &);
 
@@ -396,25 +432,6 @@ struct InviableEdge{
 private:
 TransitionSystem * g=NULL;
 };
-
-
-// struct KeepEdge{
-// 	KeepEdge()=default;
-// 	KeepEdge(TransitionSystem * _g,std::vector <vertexDescriptor>* _p): g(_g), plan(_p){
-// 		nse=NotSelfEdge(g);
-// 		ip=InPlan(plan);
-// 	}
-
-// 	bool operator()(const edgeDescriptor & e)const{
-// 		return nse(e) || (!nse(e) && ip(e));
-// 	}
-
-// 	private:
-// 	TransitionSystem* g;
-// 	std::vector <vertexDescriptor> * plan;
-// 	NotSelfEdge nse;
-// 	InPlan ip;
-// };
 
 
 

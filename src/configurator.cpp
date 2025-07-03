@@ -479,7 +479,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	srand(unsigned(time(NULL)));
 	if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
 		if (d ==DEFAULT ||d==STOP){
-				//in order, try the task which represents the reflex towards the goal
+				//prioritise reflex
 				if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
 					transitionSystem[v].options.push_back(temp.get_direction());
 					transitionSystem[v].options.push_back(getOppositeDirection(temp.get_direction()).second);
@@ -504,8 +504,16 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 		}
 		else {
 			if (src==TransitionSystem::null_vertex()){
-				if (!currentTask.get_change()){
-					transitionSystem[v].options={currentTask.get_direction()};
+				if (!currentTask.get_change() ){
+					auto oe=gt::outEdges(transitionSystem, v, currentTask.get_direction());
+					std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
+					if (!ve.first){
+						transitionSystem[v].options={currentTask.get_direction()};
+					}
+					else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
+						std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
+						erase_from_vector(result, currentTask.get_direction());
+					}
 				}
 				else{
 					transitionSystem[v].options={DEFAULT, LEFT, RIGHT};
@@ -555,12 +563,13 @@ void AttentiveConfigurator::applyTransitionMatrix(TransitionSystem&g, vertexDesc
 	}
 	else if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
 		auto e=boost::edge(src, v0, g);
-		// if (!e.second){
-		// 	printf("no edge wtf, %i -> %i\n", src, v0);
-		// }
 		gt::to_task_end(e.first, g, full_plan, it);
 		if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
 			g[v0].options={g[e.first.m_target].direction};
+		}
+		else if (transitionSystem[e.first.m_target].outcome==simResult::crashed){
+			transitionMatrix(v0, d, src);
+			erase_from_vector(g[v0].options, g[e.first.m_target].direction);
 		}
 	}
 	else{
