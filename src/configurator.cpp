@@ -206,32 +206,32 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 						std::vector <vertexDescriptor> task_vertices=gt::task_vertices(v1, g, iteration, currentVertex);
 						vertexDescriptor task_start= task_vertices[0];
 						if (plan_prov.empty()){
-							bool finished=false, been=matcher.match_equal(match.first, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
-							//shift here?
-							Task controlGoal_adjusted= controlGoal;
-							shift_start= b2MulT(b2MulT(sk.first.start, controlGoal.getStart()), g[task_start].start);
-							math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
-							boost::remove_edge(edge.first, g);
-							edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
-							ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
-							info.overarchingGoal(controlGoal_adjusted); 
-							auto plan_tmp=planner->plan(g, v, info, &finished); //not v but task start
-							//printf("out of explore planner\n");
-							bool filler=0;
-							if (finished){
-								plan_prov=plan_tmp;
-								if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
-									//printf("inserting current vertex\n");
-									plan_prov.insert(plan_prov.begin(), task_start);
-								}
-								if (t.get_direction()== g[task_start].direction){
-									g[v0].options.clear();
-								}
-								else{
-									g[v0].options={g[task_start].direction};
-								}
-							}
-							//recycle_plan(v, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
+							// bool finished=false, been=matcher.match_equal(match.first, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
+							// //shift here?
+							// Task controlGoal_adjusted= controlGoal;
+							// shift_start= b2MulT(b2MulT(sk.first.start, controlGoal.getStart()), g[task_start].start);
+							// math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
+							// boost::remove_edge(edge.first, g);
+							// edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
+							// ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
+							// info.overarchingGoal(controlGoal_adjusted); 
+							// auto plan_tmp=planner->plan(g, v, info, &finished); //not v but task start
+							// //printf("out of explore planner\n");
+							// bool filler=0;
+							// if (finished){
+							// 	plan_prov=plan_tmp;
+							// 	if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
+							// 		//printf("inserting current vertex\n");
+							// 		plan_prov.insert(plan_prov.begin(), task_start);
+							// 	}
+							// 	if (t.get_direction()== g[task_start].direction){
+							// 		g[v0].options.clear();
+							// 	}
+							// 	else{
+							// 		g[v0].options={g[task_start].direction};
+							// 	}
+							// }
+							recycle_plan(v, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
 						if (plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
 							shift_states(g, task_vertices, shift_start);
@@ -999,8 +999,8 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 }
 
 
-bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE matchType, 
-											b2Transform & shift_start, b2Transform sk_first_start, std::pair<edgeDescriptor, bool>&edge, 
+bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE& matchType, 
+											b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge, 
 											std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction){
 	bool finished=false, been=matcher.match_equal(matchType, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
 	//shift here?

@@ -387,10 +387,9 @@ std::vector<Direction>::iterator  get_next_option(vertexDescriptor v, vertexDesc
  * @return true 
  * @return false 
  */
-bool recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE matchType, 
-				b2Transform & shift_start, b2Transform sk_first_start, std::pair<edgeDescriptor, bool>&edge,
+bool recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
+				b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
 				std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction);
-
 public:
 
 AttentiveConfigurator(){};
