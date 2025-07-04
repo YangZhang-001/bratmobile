@@ -570,7 +570,7 @@ void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction
 		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
 	}
 	if (v0==movingVertex || src==TransitionSystem::null_vertex()){
-		transitionMatrix(v0, DEFAULT, TransitionSystem::null_vertex());	
+		transitionMatrix(v0, d, TransitionSystem::null_vertex());	
 	}
 	else if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
 		auto e=boost::edge(src, v0, transitionSystem);
