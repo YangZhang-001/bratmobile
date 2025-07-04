@@ -535,7 +535,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 }
 
 void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov){
-	if (!g[v0].options.empty()){
+	if (!transitionSystem[v0].options.empty()){
 		return;
 	}
 	if (controlGoal.getEndCriteria().hasEnd()){
@@ -543,13 +543,13 @@ void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction
 			return;
 		}
 	}
-	else if(round(g[v0].endPose.p.Length()*100)/100>=BOX2DRANGE){ // OR g[vd].totDs>4
+	else if(round(transitionSystem[v0].endPose.p.Length()*100)/100>=BOX2DRANGE){ // OR g[vd].totDs>4
 		return;
 	}
-	if (src!=movingVertex  && uint(src)<(g.m_vertices.size()-1)&& v0!=movingVertex){ //src< v size is to check that src isn't a garbage value (was giving throuble with tests)
+	if (src!=movingVertex  && uint(src)<(transitionSystem.m_vertices.size()-1)&& v0!=movingVertex){ //src< v size is to check that src isn't a garbage value (was giving throuble with tests)
 		auto e=boost::edge(src, v0, transitionSystem); //not adding options to vertices which don't cover a distance unless they're current v
 		if (e.second){
-			if (g[e.first].step==0){
+			if (transitionSystem[e.first].step==0){
 				return;
 			}			
 		}
