@@ -573,10 +573,11 @@ void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction
 	if (!currentTask.get_change()){
 		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
 	}
-	if (v0==movingVertex || src==TransitionSystem::null_vertex()){
-		transitionMatrix(v0, DEFAULT, TransitionSystem::null_vertex());	
-	}
-	else if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
+	// if (v0==movingVertex || src==TransitionSystem::null_vertex()){
+	// 	transitionMatrix(v0, DEFAULT, TransitionSystem::null_vertex());	
+	// }
+	// else 
+	if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
 		auto e=boost::edge(src, v0, transitionSystem);
 		gt::to_task_end(e.first, transitionSystem, full_plan, it);
 		if ((transitionSystem[e.first.m_target].visited()&& transitionSystem[e.first].it_observed<iteration)|| !transitionSystem[e.first.m_target].visited()){ // 
