@@ -222,7 +222,10 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
 }
 
 
-
+/**
+ * @brief Simulates finding option for task executing
+ * 
+ */
 TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     Direction direction=std::get<1>(GetParam());
     if (direction==UNDEFINED){
@@ -231,6 +234,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     dummy_vertex(movingVertex);
     make_module(currentVertex);
     currentTask.set_change(false);
+    currentTask.setMotorStep(20);
     iteration=2;
     applyTransitionMatrix(movingVertex, direction, false, movingVertex, plan);
     EXPECT_EQ(transitionSystem[movingVertex].options.size(), 1);
