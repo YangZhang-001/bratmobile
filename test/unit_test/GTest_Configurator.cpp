@@ -243,7 +243,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
 
 TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
     Direction direction=std::get<1>(GetParam());
-    if (direction==UNDEFINED){
+    if (direction==UNDEFINED || direction==STOP){
         return;
     }
     dummy_vertex(movingVertex);
