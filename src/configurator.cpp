@@ -480,10 +480,10 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	auto oe=gt::outEdges(transitionSystem, v, currentTask.get_direction());
 	if ( !currentTask.get_change() ||!oe.empty()){ //
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
-		if (!ve.first){
+		if (!ve.first && transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
 			transitionSystem[v].options={currentTask.get_direction()};
 		}
-		else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
+		else{// if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
 			std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
 			erase_from_vector(result, currentTask.get_direction());
 		}

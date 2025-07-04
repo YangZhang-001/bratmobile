@@ -267,6 +267,7 @@ public:
 
 struct simResult{
     enum resultType {successful =0, crashed =1, safeForNow=2}; //successful =0, crashed =1, safeForNow=2
+    resultType resultCode= resultType::successful;
     Disturbance collision;
     //bool valid = 0;
     b2Transform endPose = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));
