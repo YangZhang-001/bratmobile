@@ -233,6 +233,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     }
     dummy_vertex(movingVertex);
     make_module(currentVertex);
+    currentTask.set_direction(direction);
     currentTask.set_change(false);
     currentTask.setMotorStep(20);
     iteration=2;
