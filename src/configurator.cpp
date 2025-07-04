@@ -504,8 +504,8 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 		}
 		else {
 			if (src==TransitionSystem::null_vertex()){
-				if (!currentTask.get_change() ){
-					auto oe=gt::outEdges(transitionSystem, v, currentTask.get_direction());
+				auto oe=gt::outEdges(transitionSystem, v, currentTask.get_direction());
+				if ( !oe.empty()){ //!currentTask.get_change() ||
 					std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
 					if (!ve.first){
 						transitionSystem[v].options={currentTask.get_direction()};
@@ -516,8 +516,8 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 					}
 				}
 				else{
-					transitionSystem[v].options={DEFAULT, LEFT, RIGHT};
-				}
+				transitionSystem[v].options={DEFAULT, LEFT, RIGHT};
+				}	
 				
 			}
 			else if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
