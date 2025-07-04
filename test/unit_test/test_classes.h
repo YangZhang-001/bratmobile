@@ -388,6 +388,7 @@ edgeDescriptor ConfiguratorTest::make_successful(vertexDescriptor v0){
     auto e=boost::add_edge(v0, v1, transitionSystem);
     transitionSystem[v1].direction=DEFAULT;
     transitionSystem[e.first].step=1;
+    transitionSystem[e.first].it_observed=iteration;
     return e.first;
 }
 
@@ -398,6 +399,7 @@ edgeDescriptor ConfiguratorTest::make_v1_crashed( vertexDescriptor v0, b2Transfo
     transitionSystem[v1].start=start; //start
     transitionSystem[v1].endPose=end;//pose
     transitionSystem[v1].Dn=Disturbance(AVOID, Dn.p,Dn.q.GetAngle());
+    transitionSystem[e].it_observed=iteration;
     return e;
 }
 

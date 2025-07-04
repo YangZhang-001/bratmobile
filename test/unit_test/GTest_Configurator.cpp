@@ -182,7 +182,6 @@ TEST_F(ConfiguratorTest, UpdateGraph){
     EXPECT_TRUE(currentTask.get_disturbance().pose()==Dn.pose());
 }
 
-class ConfiguratorVertexVectorParam: public ConfiguratorTest, public testing::WithParamInterface<std::vector<vertexDescriptor>>{};
 
 TEST(GraphTools, ToTaskEnd){
     TransitionSystem transitionSystem(5);
@@ -217,33 +216,46 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
     transitionSystem[e].step=1;
     transitionSystem[e.m_target].direction=std::get<1>(GetParam());
     transitionSystem[e.m_target].outcome=std::get<2>(GetParam());
-    applyTransitionMatrix(transitionSystem, e.m_target, std::get<1>(GetParam()), false, currentVertex, plan);
+    applyTransitionMatrix(e.m_target, std::get<1>(GetParam()), false, currentVertex, plan);
     int expected=expectedOptions(std::get<1>(GetParam()), std::get<2>(GetParam()), target);
     EXPECT_EQ(transitionSystem[e.m_target].options.size(), expected);
 }
 
-// TEST_P(ConfiguratorTestTransitionMatrix, withTransitionSystem){
-//     make_module();
-//     iteration=2;
-//     auto oe=gt::outEdges(transitionSystem, movingVertex,std::get<1>(GetParam()));
-//     vertexDescriptor v=movingVertex;
-//     if (oe.empty()){
-//         return;
-//     }
-//     v=oe[0].m_target;
-//     plan={v};
-//     Disturbance target;
-//     if (std::get<0>(GetParam())!=b2Transform_inf){
-//         target=Disturbance(PURSUE, std::get<0>(GetParam()).p, std::get<0>(GetParam()).q.GetAngle());
-//         Task goal(target, DEFAULT);
-//         init(goal);
-//     }
-//     //transitionSystem[movingVertex].Di=target;
-//     set_edge_step(0, v, 20);
-//     transitionSystem[v].outcome=std::get<2>(GetParam());
-//     applyTransitionMatrix(transitionSystem, movingVertex, std::get<1>(GetParam()), false, currentVertex, plan);
-//     EXPECT_EQ(transitionSystem[movingVertex].options.size(), expectedOptions(std::get<1>(GetParam()), simResult::successful, target));
-// }
+
+
+TEST_F(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
+    dummy_vertex(movingVertex);
+    make_module(currentVertex);
+    iteration=2;
+    applyTransitionMatrix(movingVertex, transitionSystem[e.m_target].direction, false, movingVertex, plan);
+    EXPECT_EQ(transitionSystem[movingVertex].options.size(), 1);
+    EXPECT_EQ(transitionSystem[movingVertex].options[0], transitionSystem[e.m_target].direction);
+}
+
+TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
+    dummy_vertex(movingVertex);
+    make_module(currentVertex);
+    auto oe=gt::outEdges(transitionSystem, currentVertex, std::get<1>(GetParam()));
+    EXPECT_EQ(oe.size(), 1);
+    iteration=2;
+    edgeDescriptor e=edgeDescriptor();
+    std::vector<Direction> solution={DEFAULT, LEFT, RIGHT};
+    switch(std::get<2>(GetParam())){
+        case simResult::crashed:
+            e= make_v1_crashed(movingVertex);
+            erase_from_vector(solution, std::get<2>(GetParam()));
+            break;
+        default:
+            e=make_successful(movingVertex);
+            transitionSystem[e.m_target].outcome=std::get<2>(GetParam());
+            solution.clear();
+            break;
+    }
+    transitionSystem[e.m_target].direction=transitionSystem[plan[0]].direction;
+    applyTransitionMatrix(movingVertex, transitionSystem[e.m_target].direction, false, movingVertex, plan);
+    EXPECT_EQ(transitionSystem[movingVertex].options, solution);
+}
+
 
 
 INSTANTIATE_TEST_CASE_P(SimulationOutcomes, ConfiguratorTestTransitionMatrix, ::testing::Values(

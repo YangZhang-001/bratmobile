@@ -170,7 +170,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		closed.emplace(*priorityQueue.begin().base());
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
-		applyTransitionMatrix(g, v, direction, er.ended, v, plan_prov);
+		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
 		for (Direction d: g[v].options){ //add and evaluate all vertices
 			v0_exp=v;
 			std::vector <Direction> options=g[v0_exp].options;
@@ -216,7 +216,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					gt::set(edge.first, sk, g, v1==currentVertex, iteration);
 					gt::adjustProbability(g, edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
 				}
-				applyTransitionMatrix(g, v1, t.get_direction(), er.ended, v0, plan_prov);
+				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
 				g[v1].phi=Planner::evaluationFunction(er, v1, plan_prov);
 				propagateD(v1, v0, g,&propagated, &closed); //og v1 v0
 				v0_exp=v0;
@@ -317,7 +317,7 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 			}
 			EndedResult local_er=Planner::estimateCost(g[split_v],g[split_v].start,direction, controlGoal);
 			g[split_v].phi=Planner::evaluationFunction(local_er, split_v, plan_prov);
-			applyTransitionMatrix(g, split_v, direction, local_er.ended,src, plan_prov);
+			applyTransitionMatrix(split_v, direction, local_er.ended,src, plan_prov);
 			addToPriorityQueue(split_v, priority_q, g, closed);
 			src=split_v;
 		}
@@ -534,7 +534,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	}
 }
 
-void AttentiveConfigurator::applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov){
+void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov){
 	if (!g[v0].options.empty()){
 		return;
 	}
@@ -547,7 +547,7 @@ void AttentiveConfigurator::applyTransitionMatrix(TransitionSystem&g, vertexDesc
 		return;
 	}
 	if (src!=movingVertex  && uint(src)<(g.m_vertices.size()-1)&& v0!=movingVertex){ //src< v size is to check that src isn't a garbage value (was giving throuble with tests)
-		auto e=boost::edge(src, v0, g); //not adding options to vertices which don't cover a distance unless they're current v
+		auto e=boost::edge(src, v0, transitionSystem); //not adding options to vertices which don't cover a distance unless they're current v
 		if (e.second){
 			if (g[e.first].step==0){
 				return;
@@ -562,20 +562,20 @@ void AttentiveConfigurator::applyTransitionMatrix(TransitionSystem&g, vertexDesc
 		transitionMatrix(v0, DEFAULT, TransitionSystem::null_vertex());	
 	}
 	else if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
-		auto e=boost::edge(src, v0, g);
-		gt::to_task_end(e.first, g, full_plan, it);
-		if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
-			g[v0].options={g[e.first.m_target].direction};
+		auto e=boost::edge(src, v0, transitionSystem);
+		gt::to_task_end(e.first, transitionSystem, full_plan, it);
+		if ((transitionSystem[e.first.m_target].visited()&& transitionSystem[e.first].it_observed<iteration)|| !transitionSystem[e.first.m_target].visited()){ // 
+			transitionSystem[v0].options={transitionSystem[e.first.m_target].direction};
 		}
 		else if (transitionSystem[e.first.m_target].outcome==simResult::crashed){
 			transitionMatrix(v0, d, src);
-			erase_from_vector(g[v0].options, g[e.first.m_target].direction);
+			erase_from_vector(transitionSystem[v0].options, transitionSystem[e.first.m_target].direction);
 		}
 	}
 	else{
 		transitionMatrix(v0, d, src);
 	}
-	unexplored_transitions(g, v0);
+	unexplored_transitions(transitionSystem, v0);
 
 }
 

@@ -317,14 +317,13 @@ void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src);
 /**
  * @brief Sets permitted transitions out of a state
  * 
- * @param g transitionSystem
  * @param v0 vertex descriptor for source state
  * @param d direction of state (to be removed later)
  * @param ended whether the overarching goal has ended
  * @param src source vertex of v0
  * @param plan_prov the plan
  */
-void applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov);
+void applyTransitionMatrix(vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov);
 
 /**
  * @brief Adds vertexDescriptor  to priority queue according to a custom heuristic
