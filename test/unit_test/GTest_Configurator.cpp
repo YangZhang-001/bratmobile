@@ -249,10 +249,12 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
     make_module(currentVertex);
     auto oe=gt::outEdges(transitionSystem, currentVertex, std::get<1>(GetParam()));
     EXPECT_EQ(oe.size(), 1);
+    plan={oe[0].m_target};
     iteration=2;
     edgeDescriptor e=edgeDescriptor();
     std::vector<Direction> solution={DEFAULT, LEFT, RIGHT};
-    switch(std::get<2>(GetParam())){
+    simResult::resultType outcome=std::get<2>(GetParam());
+    switch(outcome){
         case simResult::crashed:
             e= make_v1_crashed(movingVertex);
             erase_from_vector(solution, std::get<1>(GetParam()));
