@@ -230,6 +230,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     }
     dummy_vertex(movingVertex);
     make_module(currentVertex);
+    currentTask.set_change(false);
     iteration=2;
     applyTransitionMatrix(movingVertex, direction, false, movingVertex, plan);
     EXPECT_EQ(transitionSystem[movingVertex].options.size(), 1);

@@ -207,6 +207,7 @@ typedef boost::graph_traits<TransitionSystem>::edge_descriptor edgeDescriptor;
 typedef boost::graph_traits<TransitionSystem>::edge_iterator edgeIterator;
 
 
+
 /**
  * @brief Used as a predicate, gives info on whether a vertex is the current vertex
  * 
