@@ -335,6 +335,7 @@ b2Transform from_Di( const b2Transform * custom_start=NULL, Disturbance * d_obs=
 
 void set_change(bool b){
     change=b;
+    motorStep=0;
 }
 
 bool get_change(){

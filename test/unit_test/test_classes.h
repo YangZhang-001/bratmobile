@@ -183,6 +183,10 @@ class DebugConfigurator:public AttentiveConfigurator{
         running=b;
     }
 
+    void set_current_v(vertexDescriptor v){
+        currentVertex=v;
+    }
+
 
 };
 
