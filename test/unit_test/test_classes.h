@@ -185,6 +185,11 @@ class DebugConfigurator:public AttentiveConfigurator{
 
     void set_current_v(vertexDescriptor v){
         currentVertex=v;
+        current_vertices={v};
+    }
+
+    std::vector<vertexDescriptor>& get_current_vertices(){
+        return current_vertices;
     }
 
 
