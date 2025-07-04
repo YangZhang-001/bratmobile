@@ -505,7 +505,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 		else {
 			if (src==TransitionSystem::null_vertex()){
 				auto oe=gt::outEdges(transitionSystem, v, currentTask.get_direction());
-				if ( !oe.empty()){ //!currentTask.get_change() ||
+				if ( !currentTask.get_change() ||!oe.empty()){ //
 					std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
 					if (!ve.first){
 						transitionSystem[v].options={currentTask.get_direction()};
