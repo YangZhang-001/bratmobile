@@ -477,8 +477,12 @@ void AttentiveConfigurator::unexplored_transitions(TransitionSystem& g, const ve
 void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src){
 	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
 	srand(unsigned(time(NULL)));
-	auto oe=gt::outEdges(transitionSystem, v, d);
-	if ( !currentTask.get_change() ||!oe.empty()){ //
+	Direction edgeDirection=d;
+	if (v==movingVertex){
+		edgeDirection=currentTask.get_direction();
+	}
+	auto oe=gt::outEdges(transitionSystem, v, edgeDirection);
+	if ( !currentTask.get_change() ||!oe.empty()){
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
 		if (!ve.first && transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
 			transitionSystem[v].options={currentTask.get_direction()};
@@ -570,7 +574,7 @@ void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction
 		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
 	}
 	if (v0==movingVertex || src==TransitionSystem::null_vertex()){
-		transitionMatrix(v0, d, TransitionSystem::null_vertex());	
+		transitionMatrix(v0, DEFAULT, TransitionSystem::null_vertex());	
 	}
 	else if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
 		auto e=boost::edge(src, v0, transitionSystem);
