@@ -224,13 +224,14 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
 
 
 TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
-    if (std::get<1>(GetParam())==UNDEFINED){
+    Direction direction=std::get<1>(GetParam());
+    if (direction==UNDEFINED){
         return;
     }
     dummy_vertex(movingVertex);
     make_module(currentVertex);
     iteration=2;
-    applyTransitionMatrix(movingVertex, std::get<1>(GetParam()), false, movingVertex, plan);
+    applyTransitionMatrix(movingVertex, direction, false, movingVertex, plan);
     EXPECT_EQ(transitionSystem[movingVertex].options.size(), 1);
     EXPECT_EQ(transitionSystem[movingVertex].options[0], std::get<1>(GetParam()));
 }

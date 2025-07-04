@@ -109,6 +109,8 @@ struct State{
 
 	float distance();
 
+	b2Transform travel_transform();
+
 };
 
 

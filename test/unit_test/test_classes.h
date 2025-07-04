@@ -288,7 +288,7 @@ public:
      */
     BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth);
 
-
+    void add_edge_withStep(vertexDescriptor u, vertexDescriptor v);
 
 };
 
@@ -421,11 +421,11 @@ void ConfiguratorTest::make_module(vertexDescriptor mv){
     transitionSystem[mv+5].start=transitionSystem[mv+4].endPose;
     transitionSystem[mv+5].endPose=b2MulT(transitionSystem[mv+4].endPose, distance);
 
-    boost::add_edge(mv,mv+1, transitionSystem);
-    boost::add_edge(mv,mv+2, transitionSystem);
-    boost::add_edge(mv,mv+4, transitionSystem);
-    boost::add_edge(mv+2,mv+3, transitionSystem);
-    boost::add_edge(mv+4,mv+5, transitionSystem);
+    add_edge_withStep(mv,mv+1);
+    add_edge_withStep(mv,mv+2);
+    add_edge_withStep(mv,mv+4);
+    add_edge_withStep(mv+2,mv+3);
+    add_edge_withStep(mv+4,mv+5);
 
 }
 
@@ -439,6 +439,14 @@ BodyFeatures ConfiguratorTest::bodyFeatures(float x, float y, float q, float hle
     bf.attention=true;
     return bf;
 }
+
+void ConfiguratorTest::add_edge_withStep(vertexDescriptor u, vertexDescriptor v){
+    auto e=boost::add_edge(u, v, transitionSystem);
+    Task::Action a;
+    a.init(transitionSystem[v].direction);
+    transitionSystem[e.first].step=Controller::motor_step(a, transitionSystem[v].distance());
+}
+
 
 int ConfiguratorTestTransitionMatrix::expectedOptions(Direction dir, simResult::resultType o, Disturbance d){
     if (o==simResult::safeForNow){

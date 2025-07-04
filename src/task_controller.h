@@ -45,7 +45,7 @@ class Controller{
      * @param distance the distance travelled in a task, default is robot length
      * @return int 
      */
-    int motor_step(Task::Action a, float distance=0.27);
+    static int motor_step(Task::Action a, float distance=0.27);
 
     /**
      * @brief Returns the disturbance being counteracted as in the cognitive map

@@ -48,6 +48,9 @@ float State::distance(){
 	return (start-endPose).p.Length();
 }
 
+b2Transform State::travel_transform(){
+	return start-endPose;
+}
 
 
 
