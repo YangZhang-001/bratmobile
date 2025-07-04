@@ -335,10 +335,6 @@ std::vector <vertexDescriptor> gt::task_vertices( vertexDescriptor v, Transition
 			 	g[ep2.second.m_target].Dn == g[_ep.second.m_target].Dn){ //same task!
 				result.push_back(ep2.second.m_target); //source
 			}
-			else if (g[ep2.second.m_target].direction==STOP && g[ep2.second.m_target].travel_transform()==b2Transform_zero){
-				result.push_back(ep2.second.m_target); //source
-			}
-
 
 		}
 		else{
@@ -385,6 +381,9 @@ return (it);
 
 bool StateMatcher::match_equal(const MATCH_TYPE& candidate, const MATCH_TYPE& desired){
 	bool result=false;
+	if (candidate==desired){
+		return true;
+	}
 	switch (desired){ //the desired match
 		case ANY:
 			if (candidate!=_FALSE){
