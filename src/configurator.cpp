@@ -477,13 +477,13 @@ void AttentiveConfigurator::unexplored_transitions(TransitionSystem& g, const ve
 void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src){
 	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
 	srand(unsigned(time(NULL)));
-	auto oe=gt::outEdges(transitionSystem, v, currentTask.get_direction());
+	auto oe=gt::outEdges(transitionSystem, v, d);
 	if ( !currentTask.get_change() ||!oe.empty()){ //
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
 		if (!ve.first && transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
 			transitionSystem[v].options={currentTask.get_direction()};
 		}
-		else{// if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
+		else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
 			std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
 			erase_from_vector(result, currentTask.get_direction());
 		}
