@@ -223,16 +223,22 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
 
 
 
-TEST_F(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
+TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
+    if (std::get<1>(GetParam())==UNDEFINED){
+        return;
+    }
     dummy_vertex(movingVertex);
     make_module(currentVertex);
     iteration=2;
-    applyTransitionMatrix(movingVertex, transitionSystem[e.m_target].direction, false, movingVertex, plan);
+    applyTransitionMatrix(movingVertex, std::get<1>(GetParam()), false, movingVertex, plan);
     EXPECT_EQ(transitionSystem[movingVertex].options.size(), 1);
-    EXPECT_EQ(transitionSystem[movingVertex].options[0], transitionSystem[e.m_target].direction);
+    EXPECT_EQ(transitionSystem[movingVertex].options[0], std::get<1>(GetParam()));
 }
 
 TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
+    if (std::get<1>(GetParam())==UNDEFINED){
+        return;
+    }
     dummy_vertex(movingVertex);
     make_module(currentVertex);
     auto oe=gt::outEdges(transitionSystem, currentVertex, std::get<1>(GetParam()));
@@ -243,7 +249,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
     switch(std::get<2>(GetParam())){
         case simResult::crashed:
             e= make_v1_crashed(movingVertex);
-            erase_from_vector(solution, std::get<2>(GetParam()));
+            erase_from_vector(solution, std::get<1>(GetParam()));
             break;
         default:
             e=make_successful(movingVertex);
