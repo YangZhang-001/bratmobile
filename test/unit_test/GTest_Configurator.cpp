@@ -242,12 +242,13 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
 }
 
 TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
-    if (std::get<1>(GetParam())==UNDEFINED){
+    Direction direction=std::get<1>(GetParam());
+    if (direction==UNDEFINED){
         return;
     }
     dummy_vertex(movingVertex);
     make_module(currentVertex);
-    auto oe=gt::outEdges(transitionSystem, currentVertex, std::get<1>(GetParam()));
+    auto oe=gt::outEdges(transitionSystem, currentVertex, direction);
     EXPECT_EQ(oe.size(), 1);
     plan={oe[0].m_target};
     iteration=2;
