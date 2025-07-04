@@ -140,7 +140,7 @@ TEST_P(HighLevelTest, Recycle){
     }
     configurator->init(goal);
     std::string folder=std::get<1>(GetParam());
-    std::vector<vertexDescriptor> plan= get_plan(folder);
+    std::vector<vertexDescriptor> plan= get_plan(folder), finished_plan;
     EXPECT_GT(configurator->get_plan().size(), 1);
     vertexDescriptor second_last_v=configurator->get_plan()[configurator->get_plan().size()-2];
     vertexDescriptor last_v=configurator->get_plan()[configurator->get_plan().size()-1];
@@ -151,9 +151,11 @@ TEST_P(HighLevelTest, Recycle){
     configurator->addIteration(100);
     configurator->set_current_v(last_v); //simulate plan finished
     configurator->getTask().set_change(true);
-    wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(), configurator->get_plan());
-    configurator->change_task();
     configurator->set_plan({});
+    wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(), finished_plan);
+    configurator->getTask().set_change(true);
+    EXPECT_EQ(configurator->getTask().get_direction(), configurator->vertex_get_direction(last_v));
+    EXPECT_TRUE(configurator->getTask().get_disturbance()==configurator->vertex_get_Di(last_v));
     EXPECT_EQ(configurator->get_current_vertex(), last_v);
     math::applyAffineTrans(shift, configurator->get_ts());
     std::vector<vertexDescriptor> updated_plan=get_plan(folder, 1); //map 2

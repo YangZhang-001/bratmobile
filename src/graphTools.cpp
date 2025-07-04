@@ -331,8 +331,11 @@ std::vector <vertexDescriptor> gt::task_vertices( vertexDescriptor v, Transition
 			}
 			}
 			else if (g[ep2.second.m_target].direction==d &&
-			 		g[ep2.second.m_target].Di == g[_ep.second.m_target].Di &&
-			 		g[ep2.second.m_target].Dn == g[_ep.second.m_target].Dn){ //same task!
+			 	g[ep2.second.m_target].Di == g[_ep.second.m_target].Di &&
+			 	g[ep2.second.m_target].Dn == g[_ep.second.m_target].Dn){ //same task!
+				result.push_back(ep2.second.m_target); //source
+			}
+			else if (g[ep2.second.m_target].direction==STOP && g[ep2.second.m_target].travel_transform()==b2Transform_zero){
 				result.push_back(ep2.second.m_target); //source
 			}
 
