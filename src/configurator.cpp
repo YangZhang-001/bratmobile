@@ -684,7 +684,7 @@ void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, Transition
 	std::set <std::pair <vertexDescriptor, float>, ComparePair>others_set(comparePair);
 	for (auto vi=vs.first; vi!= vs.second; vi++){
 		vertexDescriptor v=*vi;
-		bool Tmatch=dir==Direction::UNDEFINED ||g[v].direction==dir;
+		bool Tmatch=dir==Direction::UNDEFINED ||g[v].direction==dir ||(g[v].direction==STOP &&dir==DEFAULT &&iteration>1);
 		//make state representing a whole task, this is inefficient and when i have time should be susbtituted with subgraph
 		State q= g[v];
 			if (auto vertices=gt::task_vertices(v, g, iteration, currentVertex); vertices.size()>1){
@@ -705,7 +705,7 @@ void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, Transition
 		}
 		condition=matcher.match_equal(m, match_type);
 		
-		if (v!=movingVertex && boost::in_degree(v, g)>0 &&Tmatch ){ 
+		if (v!=movingVertex && (boost::in_degree(v, g)>0 && iteration==1)  &&Tmatch ){ 
 			if (condition){
 				result.first= m;
 				result.second=v;
