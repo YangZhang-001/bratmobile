@@ -413,7 +413,7 @@ bool StateMatcher::match_equal(const MATCH_TYPE& candidate, const MATCH_TYPE& de
 			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_INIT;
 			break;			
 		default:
-			result =(int(candidate)==int(desired));
+			result =(int(candidate)==int(desired)) ||candidate==_TRUE || candidate==ABSTRACT ;
 		break;
 	}
 	return result;

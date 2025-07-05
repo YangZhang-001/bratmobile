@@ -82,7 +82,7 @@ INSTANTIATE_TEST_CASE_P(MatchTypes, MatcherTest, testing::Combine(testing::Value
                                                                     testing::Values(StateMatcher::_FALSE, 
                                                                     StateMatcher::_TRUE,
                                                                     StateMatcher::ABSTRACT,
-                                                                    StateMatcher::POSE ,
+                                                                     StateMatcher::POSE ,
                                                                     StateMatcher::ANY,
                                                                     StateMatcher::D_NEW,
                                                                     StateMatcher::DN_POSE, 
