@@ -57,6 +57,7 @@ gtest_discover_tests(GTest_Worldbuilding)
 gtest_discover_tests(GTest_SplitTask)
 gtest_discover_tests(GTest_Backtrack)
 gtest_discover_tests(GTest_Logger)
+gtest_discover_tests(GTest_Matcher)
 
 
 add_library(test_classes test_classes.h ../test_essentials.h ../callbacks.h)
