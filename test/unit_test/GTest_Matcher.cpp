@@ -31,7 +31,7 @@ class MatcherTest:public StateMatcher, public testing::Test, public testing::Wit
             result={StateMatcher::_TRUE, ABSTRACT,D_INIT};
             break;
         case DN_POSE:
-            result={StateMatcher::_TRUE,ABSTRACT,D_NEW,DN_POSE};
+            result={StateMatcher::_TRUE,StateMatcher::ABSTRACT,D_NEW,DN_POSE};
             break;
         case DI_POSE:
             result={StateMatcher::_TRUE,ABSTRACT,D_INIT,DI_POSE};
@@ -46,7 +46,6 @@ class MatcherTest:public StateMatcher, public testing::Test, public testing::Wit
             result={StateMatcher::_TRUE};
             break;
         default:
-            throw "not found!";
             break;
         }
         return result;

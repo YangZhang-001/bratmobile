@@ -401,10 +401,10 @@ bool StateMatcher::match_equal(const MATCH_TYPE& candidate, const MATCH_TYPE& de
 			result=int(candidate)==int(desired);
 			break;
 		case DN_SHAPE:
-			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_NEW;
+			result =(int(candidate)==int(desired))|| int(candidate)==_TRUE || int(candidate)==ABSTRACT || candidate== D_NEW;
 			break;			
 		case DN_POSE:
-			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_NEW;
+			result =(int(candidate)==int(desired))|| candidate==_TRUE || int(candidate)==ABSTRACT || candidate== D_NEW;
 			break;			
 		case DI_SHAPE:
 			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_INIT;
