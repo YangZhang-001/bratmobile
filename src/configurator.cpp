@@ -988,8 +988,8 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE& matchType, 
 											b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge, 
 											std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction){
-	bool finished=false, been=matcher.match_equal(matchType, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
-	//shift here?
+	bool finished=false;
+	bool been=matcher.match_equal(matchType, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
 	Task controlGoal_adjusted= controlGoal;
 	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
 	math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start

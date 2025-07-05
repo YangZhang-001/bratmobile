@@ -381,27 +381,39 @@ return (it);
 
 bool StateMatcher::match_equal(const MATCH_TYPE& candidate, const MATCH_TYPE& desired){
 	bool result=false;
-	if (candidate==desired){
-		return true;
-	}
 	switch (desired){ //the desired match
 		case ANY:
-			if (candidate!=_FALSE){
+			if (int(candidate)!=int(_FALSE)){
 				result=true;
 			}
 			break;
 		case POSE:
-			if (candidate==_TRUE || candidate == POSE){
+			if (int(candidate)==int(_TRUE) || int(candidate) == int(POSE)){
 				result=true;
 			}
 			break;
 		case ABSTRACT:
-			if (candidate==_TRUE || candidate ==ABSTRACT){
+			if (int(candidate)==_TRUE || int(candidate) ==ABSTRACT){
 				result=true;
 			}
 			break;
+		case _FALSE:
+			result=int(candidate)==int(desired);
+			break;
+		case DN_SHAPE:
+			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_NEW;
+			break;			
+		case DN_POSE:
+			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_NEW;
+			break;			
+		case DI_SHAPE:
+			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_INIT;
+			break;			
+		case DI_POSE:
+			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_INIT;
+			break;			
 		default:
-			result =int(candidate)==int(desired);
+			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT;
 		break;
 	}
 	return result;

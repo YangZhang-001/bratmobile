@@ -445,7 +445,7 @@ typedef boost::filtered_graph<TransitionSystem, boost::keep_all, Visited> Visite
 class StateMatcher{
 	public:
 		//@brief {_FALSE=0, D_NEW=2, DN_POSE=3, _TRUE=1, ANY=4, D_INIT=5, ABSTRACT=6, DI_POSE=7, DN_SHAPE=8, DI_SHAPE=9, POSE=10};
-		enum MATCH_TYPE {_FALSE=0, D_NEW=2, DN_POSE=3, _TRUE=1, ANY=4, D_INIT=5, ABSTRACT=6, DI_POSE=7, DN_SHAPE=8, DI_SHAPE=9, POSE=10};
+		enum MATCH_TYPE {_FALSE, D_NEW, DN_POSE, _TRUE, ANY, D_INIT, ABSTRACT, DI_POSE, DN_SHAPE, DI_SHAPE, POSE};
 
 		float mu=0.001;
 	    StateMatcher()=default;
