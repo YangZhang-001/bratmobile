@@ -200,7 +200,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 			add.push_back(src);
 			path2add2(path, add, paths, g); //find path to add frontier (add) to
 			for (vertexDescriptor c:add){
-				//g[c].label=VERTEX_LABEL::UNLABELED;
+				g[c].label=VERTEX_LABEL::UNLABELED;
 				path->push_back(c);	
 				path_end=c;			
 			}

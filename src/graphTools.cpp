@@ -159,9 +159,9 @@ void gt::update(edgeDescriptor e, std::pair <State, Edge> sk, TransitionSystem& 
 		g[e].step = sk.second.step;
 	}
 	g[e.m_target].Dn = sk.first.Dn;
-	// if(sk.first.label==g[e.m_target].label){
-	// 	g[e.m_target].endPose = sk.first.endPose;
-	// }
+	if(sk.first.label==g[e.m_target].label){
+		g[e.m_target].endPose = sk.first.endPose;
+	}
 	g[e.m_target].options = sk.first.options;
 	g[e.m_target].nObs++;
 	if (e.m_source!=e.m_target){
