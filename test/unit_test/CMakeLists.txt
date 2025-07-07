@@ -49,7 +49,7 @@ add_executable(GTest_Matcher GTest_Matcher.cpp)
 target_link_libraries(GTest_Matcher gtest gtest_main)
 target_link_libraries(GTest_Matcher  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
-add_executable(GTest_Graph GTest_Graph)
+add_executable(GTest_Graph GTest_Graph.cpp)
 target_link_libraries(GTest_Graph gtest gtest_main)
 target_link_libraries(GTest_Graph  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
@@ -62,6 +62,7 @@ gtest_discover_tests(GTest_SplitTask)
 gtest_discover_tests(GTest_Backtrack)
 gtest_discover_tests(GTest_Logger)
 gtest_discover_tests(GTest_Matcher)
+gtest_discover_tests(GTest_Graph)
 
 
 add_library(test_classes test_classes.h ../test_essentials.h ../callbacks.h)

@@ -941,6 +941,7 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &
 	math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
 	boost::remove_edge(edge.first, transitionSystem);
 	edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
+	transitionSystem[edge.first].enableOverride();	
 	ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
 	info.overarchingGoal(controlGoal_adjusted); 
 	auto plan_tmp=planner->plan(transitionSystem, v, info, &finished); //not v but task start
@@ -1006,11 +1007,11 @@ std::pair<edgeDescriptor, bool> AttentiveConfigurator::setup_match_edge(VertexMa
 	if (edge.second && !changedMatch){
 		transitionSystem[edge.first]=k; //doesn't update motorstep
 	}
-	if (changedMatch){
-		Task::Action action;
-		action.init(direction);
-		transitionSystem[edge.first].step=Controller::motor_step(action, transitionSystem[v1].distance());
-		transitionSystem[edge.first].enableOverride();
-	}
+	// if (changedMatch){
+	// 	Task::Action action;
+	// 	action.init(direction);
+	// 	transitionSystem[edge.first].step=Controller::motor_step(action, transitionSystem[v1].distance());
+	// 	transitionSystem[edge.first].enableOverride();
+	// }
 	return edge;
 }
