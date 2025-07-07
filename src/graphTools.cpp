@@ -1,20 +1,5 @@
 #include "graphTools.h"
 
-// orientation subtract(orientation o1, orientation o2){
-// 	orientation result;
-// 	if (!o1.first){
-// 		o1.second=0;
-// 	}
-// 	if (!o2.first){
-// 		o2.second=0;
-// 	}
-// 	result.first= o1.first ||o2.first;
-// 	result.second=o1.second-o2.second;
-// 	return result;
-// }
-
-
-
 b2Transform State::start_from_Di()const{
 	if (Di.getAffIndex()==NONE){
 		return b2Transform_inf;
@@ -51,6 +36,15 @@ float State::distance(){
 b2Transform State::travel_transform(){
 	return start-endPose;
 }
+
+bool Edge::enableOverride(){
+	if (step==0){
+		overrideZeroSteps=true;
+		return true;
+	}
+	return false;
+}
+
 
 
 
@@ -165,9 +159,9 @@ void gt::update(edgeDescriptor e, std::pair <State, Edge> sk, TransitionSystem& 
 		g[e].step = sk.second.step;
 	}
 	g[e.m_target].Dn = sk.first.Dn;
-	if(sk.first.label==g[e.m_target].label){
-		g[e.m_target].endPose = sk.first.endPose;
-	}
+	// if(sk.first.label==g[e.m_target].label){
+	// 	g[e.m_target].endPose = sk.first.endPose;
+	// }
 	g[e.m_target].options = sk.first.options;
 	g[e.m_target].nObs++;
 	if (e.m_source!=e.m_target){
@@ -367,12 +361,9 @@ do{
 	if (g[e.m_target].direction==g[e_start.m_target].direction){
 		it++;
 	}
-	//it++; //includes the next vertex not belonging to this task
 }while(g[e.m_target].direction==g[e_start.m_target].direction &&
 		 it != plan.end() && it!=(plan.end()-1)               &&
-		// g[e.m_target].direction==DEFAULT                     &&
 		 (g[e.m_target].Di==g[e_start.m_source].Di)
-		 //&& ep.second
 		 );
 
 return (it);
@@ -469,49 +460,5 @@ float StateMatcher::get_coefficient(const float & endDistance){
 }
 
 
-// bool operator!=(Transform const &t1, Transform const& t2){
-// 	return t1.p.x != t2.p.x || t1.p.y != t2.p.y || t1.q.GetAngle() != t2.q.GetAngle();
-// }
 
-// bool operator==(Transform const &t1, Transform const& t2){
-// 	return (t1.p.x == t2.p.x) && (t1.p.y == t2.p.y) && (t1.q.GetAngle() == t2.q.GetAngle());
-// }
-
-// void operator-=(Transform & t1, Transform const&t2){
-// 	t1.p.x-=t2.p.x;
-// 	t1.p.y-=t2.p.y;
-// 	t1.q.Set(angle_subtract(t1.q.GetAngle(), t2.q.GetAngle()));
-// }
-
-// void operator+=(Transform & t1, Transform const&t2){
-// 	t1.p.x+=t2.p.x;
-// 	t1.p.y+=t2.p.y;
-// 	t1.q.Set(t1.q.GetAngle()+t2.q.GetAngle());
-// }
-
-// Transform operator+(Transform const & t1, Transform const&t2){
-// 	b2Transform result;
-// 	result.p.x=t1.p.x+t2.p.x;
-// 	result.p.y=t1.p.y+t2.p.y;
-// 	result.q.Set(t1.q.GetAngle()+t2.q.GetAngle());
-// 	return result;
-// }
-
-// Transform operator-(Transform const & t1, Transform const&t2){
-// 	b2Transform result;
-// 	result.p.x=t1.p.x-t2.p.x;
-// 	result.p.y=t1.p.y-t2.p.y;
-// 	result.q.Set(angle_subtract(t1.q.GetAngle(), t2.q.GetAngle()));
-// 	return result;
-
-// }
-
-// Transform operator-(Transform const & t){
-// 	b2Transform result;
-// 	result.p.x=-(t.p.x);
-// 	result.p.y=-(t.p.y);
-// 	result.q.Set(-t.q.GetAngle());
-// 	return result;
-
-// }
 

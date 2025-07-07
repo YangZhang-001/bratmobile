@@ -459,9 +459,23 @@ void reassign_direction(vertexDescriptor bestNext, Direction& direction);
  * 
  * @param match 
  * @param other_matches 
+ * @return true if changes match
  */
-void matchToSafe(VertexMatch &match, std::vector<VertexMatch> other_matches);
+bool matchToSafe(VertexMatch &match,const std::vector<VertexMatch> &other_matches=std::vector<VertexMatch>());
 
+/**
+ * @brief Given a valid match, sets up the edge with the previous vertex
+ * Creates new edge if it doesn't exist, changes the match to a safe state
+ * and allow the edge to be used in planning
+ * 
+ * @param match 
+ * @param v0 
+ * @param v1 
+ * @param k 
+ * @param direction 
+ * @return std::pair<edgeDescriptor, bool> 
+ */
+std::pair<edgeDescriptor, bool> setup_match_edge(VertexMatch &match, vertexDescriptor &v0, vertexDescriptor & v1,const Edge& k, Direction direction, bool changedMatch);
 
 public:
 

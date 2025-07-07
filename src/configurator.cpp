@@ -190,12 +190,8 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
 				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
 					g[v0].options.erase(g[v0].options.begin());
-					matchToSafe(match, other_matches);
-					v1=match.second; //frontier
-					edge= gt::add_edge(v0, v1, g, iteration, t.get_direction()); //assumes edge added
-					if (edge.second){
-						g[edge.first]=sk.second; //doesn't update motorstep
-					}
+					bool changedMatch=matchToSafe(match, other_matches);
+					edge=setup_match_edge(match, v0, v1, sk.second, t.get_direction(), changedMatch);
 					if (currentTask.get_change()){
 						std::vector <vertexDescriptor> task_vertices=gt::task_vertices(v1, g, iteration, currentVertex);
 						vertexDescriptor task_start= task_vertices[0];
@@ -973,7 +969,7 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 	Task t=currentTask;
 	t.H(t.get_disturbance(), t.get_direction(), true);
 	simResult result = simulate(t, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],
-	gt::fill(result, transitionSystem[currentVertex].ID, &transitionSystem[currentEdge]);
+	gt::fill(result, &transitionSystem[currentVertex], &transitionSystem[currentEdge]);
 	
 	//transitionSystem[currentVertex].Dn.set_affordance(as.affordance);
 	currentTask.set_change(transitionSystem[currentVertex].outcome!=simResult::successful);
@@ -1036,17 +1032,31 @@ void AttentiveConfigurator::reassign_direction(vertexDescriptor bestNext, Direct
 
 }
 
-void AttentiveConfigurator::matchToSafe(VertexMatch &match, std::vector<VertexMatch> other_matches){
+bool AttentiveConfigurator::matchToSafe(VertexMatch &match,const  std::vector<VertexMatch>& other_matches){
+	bool result=false;
 	if (match.first==StateMatcher::_FALSE){
-		return;
+		return result;
 	}
 	if (transitionSystem[match.second].outcome!=simResult::crashed){
-		return;
+		return result;
 	}
 	for (VertexMatch m: other_matches){
 		if (transitionSystem[m.second].outcome!=simResult::crashed){
 			match.second=m.second;
-			return;
+			return true;
 		}
 	}
+	return result;
+}
+
+std::pair<edgeDescriptor, bool> AttentiveConfigurator::setup_match_edge(VertexMatch &match, vertexDescriptor &v0, vertexDescriptor & v1,const Edge& k, Direction direction, bool changedMatch){
+	v1=match.second; //frontier
+	auto edge= gt::add_edge(v0, v1, transitionSystem, iteration, direction); //assumes edge added
+	if (edge.second){
+		transitionSystem[edge.first]=k; //doesn't update motorstep
+	}
+	if (changedMatch){
+		transitionSystem[edge.first].enableOverride();
+	}
+	return edge;
 }

@@ -37,6 +37,7 @@ struct Edge{
 	float probability=1.0;
 	int step=0;
 	int it_observed=-1; //last iteration where this edge was observed
+	bool overrideZeroSteps=false; //set to true if an edge with no steps should not be considered a self-edge
 
 	Edge()=default;
 
@@ -47,6 +48,14 @@ struct Edge{
 		}
 		return result;
 	}
+
+	/**
+	 * @brief If this edge has zero steps, it sets override to true
+	 * 
+	 * @return true if override was changed to true
+	 * @return false if no changes were made
+	 */
+	bool enableOverride();
 };
 
 
@@ -59,9 +68,9 @@ struct State{
 	//int nodesInSameSpot =0;
 	bool filled =0;
 	int nObs=0;
-	State* ID=this;
+//	State* ID=this;
 	float phi=NAIVE_PHI; //arbitrarily large phi
-	VERTEX_LABEL label=VERTEX_LABEL::UNLABELED;
+//	VERTEX_LABEL label=VERTEX_LABEL::UNLABELED;
 	Direction direction=DEFAULT;
 
 
@@ -238,22 +247,6 @@ struct Connected{
 private:
 TransitionSystem * g=NULL;
 };
-
-
-
-
-
-// struct Visited{ //for debug
-// 	Visited(){}
-// 	Visited(TransitionSystem * ts):g(ts){}
-
-// 	bool operator()(const vertexDescriptor&v)const{
-// 		return (*g)[v].visited();
-// 	}
-// 	private:
-// 	TransitionSystem *g=NULL;
-// };
-
 
 typedef std::pair<vertexDescriptor, std::vector<vertexDescriptor>> Frontier;
 
