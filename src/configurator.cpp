@@ -1036,7 +1036,7 @@ void AttentiveConfigurator::reassign_direction(vertexDescriptor bestNext, Direct
 
 }
 
-void AttentiveConfigurator::matchToSafe(VertexMatch match, std::vector<VertexMatch> other_matches){
+void AttentiveConfigurator::matchToSafe(VertexMatch &match, std::vector<VertexMatch> other_matches){
 	if (match.first==StateMatcher::_FALSE){
 		return;
 	}

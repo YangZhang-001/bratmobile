@@ -460,7 +460,7 @@ void reassign_direction(vertexDescriptor bestNext, Direction& direction);
  * @param match 
  * @param other_matches 
  */
-void match_to_safe(VertexMatch match, std::vector<VertexMatch> other_matches);
+void matchToSafe(VertexMatch &match, std::vector<VertexMatch> other_matches);
 
 
 public:
