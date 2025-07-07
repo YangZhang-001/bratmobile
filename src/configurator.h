@@ -202,14 +202,6 @@ void register_logger(Logger * l){
 }
 
 protected:
-	// void log(char * format, ){
-	// 	if (NULL!=logger){
-	// 		va_list args;
-	// 		//va_start(args, format);
-	// 		logger->log(format, args);
-	// 	}
-	// }
-
 
 
 };
@@ -248,15 +240,37 @@ ExecutionInfo package_info(vertexDescriptor gv=TransitionSystem::null_vertex(), 
  */
 Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start);
 
+/**
+ * @brief Iterates through vertices, if they result in crash, it splits the tasks and recalculates
+ * evaluation functions and adds to priority queue
+ * 
+ * @param evaluation_q evaluation queue: lists of vertices to be evaluated for splitting
+ * @param priority_q the priority queue to add vertices to
+ * @param closed closed set 
+ * @param plan_prov provisional plan
+ */
+void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, const std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov);
 
-//add waypoints to proprity queue
-void backtrack(std::vector <vertexDescriptor>&, std::vector <vertexDescriptor>&, const std::set<vertexDescriptor>&, TransitionSystem&, std::vector <vertexDescriptor>&);
+/**
+ * @brief Split tasks into sub-states of fixed length
+ * 
+ * @param v the vertex to split
+ * @param g the transition system
+ * @param d direction of the task to split
+ * @param src source vertex for v
+ * @return std::vector <vertexDescriptor> : the vertices making up substates in the original task
+ */
+std::vector <vertexDescriptor> splitTask(vertexDescriptor v, TransitionSystem& g, Direction d, vertexDescriptor src=TransitionSystem::null_vertex());
 
-//split this state into sub-state representing waypoints
-std::vector <vertexDescriptor> splitTask(vertexDescriptor v, TransitionSystem&, Direction, vertexDescriptor src=TransitionSystem::null_vertex());
-
-//if same task, it will terminate in the same disturbance
-void propagateD(vertexDescriptor, vertexDescriptor, TransitionSystem&, std::vector<vertexDescriptor>*propagated=NULL, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE);
+/**
+ * @brief Propagate a disturbance backwards to all states representing the same task
+ * 
+ * @param v1 final vertex linked to the final sub-state in the task
+ * @param v0 source of v1
+ * @param closed 
+ * @param match 
+ */
+void propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE);
 
 //if in plan the vertex gets priority
 void planPriority(TransitionSystem&, vertexDescriptor); 
@@ -266,17 +280,47 @@ void adjust_simulated_task(const vertexDescriptor&, TransitionSystem &, Task*);
 //adjust real-world task
 void adjust_rw_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);
 
-//void recall_plan_from(const vertexDescriptor&, TransitionSystem & , b2World &, std::vector <vertexDescriptor>&, bool&, Disturbance *dist);
+/**
+ * @brief Return edge with maximum probablitit in a vector
+ * 
+ * @param ev vector of edges
+ * @return std::pair <edgeDescriptor, bool> 
+ */
+std::pair <edgeDescriptor, bool> maxProbability(std::vector<edgeDescriptor> ev, TransitionSystem&);
 
-std::pair <edgeDescriptor, bool> maxProbability(std::vector<edgeDescriptor>, TransitionSystem&);
+/**
+ * @brief Searches transition System for a match to a state provided. Continuous states are
+ * matched, with the option to also match the discrete state (the direction)
+ * 
+ * @param s the state to find a match for
+ * @param dir simulated task direction (allowing to match continuous states only)
+ * @param match_type fuzzy operator indicating what parameters in the continuous state match
+ * @param _sd pointer to state difference, can be used for further calculatins
+ * @param other_matches pointer to a vector of other matches (all of the type defined by @param match_type)
+ * @return VertexMatch the best match found and its type
+ */
+VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL); //matches to most likely
 
-std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> findMatch(State, TransitionSystem&, State * src, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL); //matches to most likely
+/**
+ * @brief Constructs transition system using a Box2D simulation combined with an A* graph
+ * expansion algorithm
+ * 
+ * @param v starting vertex
+ * @param g the transition system
+ * @param w box2d world
+ * @return std::vector<vertexDescriptor> a plan, if recycled from previous knowledge
+ */
+std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w); //evaluates only after DEFAULT, internal one step lookahead
 
-std::vector<vertexDescriptor> explorer(vertexDescriptor, TransitionSystem&, b2World &); //evaluates only after DEFAULT, internal one step lookahead
-
+/**
+ * @return std::pair <bool, Direction>(opposite exists, opposite direction)
+ */
 std::pair <bool, Direction> getOppositeDirection(Direction);
 
-void resetPhi(TransitionSystem&g);
+/**
+ * @brief Resets all vertices evaluation function phi to a default unitialised value of 10
+ */
+void resetPhi();
 
 /**
  * @brief Adds state after discovering it in exploration
@@ -352,10 +396,8 @@ vertexDescriptor get_explore_start(TransitionSystem &);
  */
 void pre_explore();
 
-//reactive behaviour: simulate task to find disturbances and react to them
-//void reactive(b2World&);
 
-std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const TransitionSystem &);
+//std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const TransitionSystem &);
 
 void explore_plan(b2World&)override;
 
@@ -401,11 +443,25 @@ bool recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & 
  * @param start task start
  * @param v0_options a subset of transitionSystem[0].options
  * @return sk,  pair of state and edge
-
  */
 std::pair<State, Edge> simulation_setup(b2World& w, Task & t, vertexDescriptor v0, b2Transform shift, b2Transform &start, std::vector<Direction>v0_options);
 
+/**
+ * @brief Reassigns direction as the direction of the bext task to expand next in explorer
+ * 
+ * @param bestNext vertices representing task with lowest phi
+ * @param direction direction to reassign
+ */
 void reassign_direction(vertexDescriptor bestNext, Direction& direction);
+
+/**
+ * @brief  if the match is a crashed task
+ * 
+ * @param match 
+ * @param other_matches 
+ */
+void swap_match(VertexMatch match, std::vector<VertexMatch> other_matches);
+
 
 public:
 

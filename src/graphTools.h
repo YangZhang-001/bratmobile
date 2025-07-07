@@ -16,36 +16,29 @@
 #include "disturbance.h"
 #include "box2d_helpers.h"
 
-// namespace math{
-// //	void applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose);
-
-
-// };
-
-
 const float NAIVE_PHI=10.0;
 
 class Task;
 enum VERTEX_LABEL {UNLABELED, MOVING, ESCAPE, ESCAPE2};
 
-struct ComparePair{
-	ComparePair()=default;
-
-	template <class V>
-	bool operator()(const std::pair<V, float> & p1, const std::pair<V, float> &p2) const{
-		return p1.second<p2.second;
+/**
+ * @brief Compares the last float in a tuple
+ * 
+*/
+struct CompareValue{
+	CompareValue()=default;
+	template <class V, class M>
+	bool operator()(const std::tuple<V,M, float> & p1, const std::tuple<V, M, float> &p2) const{
+		return std::get<2>(p1)< std::get<2>(p2);
 	}
 };
 
 struct Edge{
-	//Direction direction=DEFAULT;
 	float probability=1.0;
 	int step=0;
 	int it_observed=-1; //last iteration where this edge was observed
 
 	Edge()=default;
-
-	//Edge(Direction d):direction(d){}
 
 	float weighted_probability(int it){
 		float result=0;
@@ -250,19 +243,20 @@ TransitionSystem * g=NULL;
 
 
 
-struct Visited{ //for debug
-	Visited(){}
-	Visited(TransitionSystem * ts):g(ts){}
+// struct Visited{ //for debug
+// 	Visited(){}
+// 	Visited(TransitionSystem * ts):g(ts){}
 
-	bool operator()(const vertexDescriptor&v)const{
-		return (*g)[v].visited();
-	}
-	private:
-	TransitionSystem *g=NULL;
-};
+// 	bool operator()(const vertexDescriptor&v)const{
+// 		return (*g)[v].visited();
+// 	}
+// 	private:
+// 	TransitionSystem *g=NULL;
+// };
 
 
 typedef std::pair<vertexDescriptor, std::vector<vertexDescriptor>> Frontier;
+
 
 struct ComparePhi{
 
@@ -439,7 +433,7 @@ TransitionSystem * g=NULL;
 
 
 typedef boost::filtered_graph<TransitionSystem, ViableEdge, Connected> FilteredTS;
-typedef boost::filtered_graph<TransitionSystem, boost::keep_all, Visited> VisitedTS;
+//typedef boost::filtered_graph<TransitionSystem, boost::keep_all, Visited> VisitedTS;
 
 
 class StateMatcher{
@@ -571,5 +565,6 @@ class StateMatcher{
 	const float COEFFICIENT_INCREASE_THRESHOLD=0.0;
 };
 
+typedef std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> VertexMatch;
 
 #endif

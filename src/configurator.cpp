@@ -77,11 +77,11 @@ bool Configurator::Spawner(){
 	return 1;
 }
 
-void AttentiveConfigurator::resetPhi(TransitionSystem&g){
-	auto vs=boost::vertices(g);
+void AttentiveConfigurator::resetPhi(){
+	auto vs=boost::vertices(transitionSystem);
 	for (auto vi=vs.first; vi!=vs.second; vi++){
-		g[*vi].resetVisited();
-		g[*vi].options.clear();
+		transitionSystem[*vi].resetVisited();
+		transitionSystem[*vi].options.clear();
 	}
 }
 
@@ -178,7 +178,6 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				options.erase(options.begin());
 				v0=v0_exp; //node being expanded
 				v1 =v0; //frontier
-				std::vector <vertexDescriptor> propagated;
 				do {
 				std::pair<State, Edge> sk=simulation_setup(w, t, v0, shift, start, g[v0].options);
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
@@ -186,10 +185,12 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				sk.second.it_observed=iteration;
 				er  = Planner::estimateCost(sk.first, g[v0].endPose, sk.first.direction,controlGoal);
 				StateDifference sd;
-				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.get_direction(), StateMatcher::MATCH_TYPE::ABSTRACT, &sd);		//, closest_match	
+				std::vector <VertexMatch> other_matches;
+				VertexMatch match=findMatch(sk.first, t.get_direction(), StateMatcher::MATCH_TYPE::ABSTRACT, &sd, &other_matches);		//, closest_match	
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
 				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
 					g[v0].options.erase(g[v0].options.begin());
+					//swap_match(match, other_matches);
 					v1=match.second; //frontier
 					edge= gt::add_edge(v0, v1, g, iteration, t.get_direction()); //assumes edge added
 					if (edge.second){
@@ -205,7 +206,6 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 							shift_states(g, task_vertices, shift_start);
 						}
 					}
-					
 				}
 				else{
 					auto out_expected=gt::outEdges(g, v0, t.get_direction());
@@ -218,7 +218,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				}
 				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
 				g[v1].phi=Planner::evaluationFunction(er, v1, plan_prov);
-				propagateD(v1, v0, g,&propagated, &closed); //og v1 v0
+				propagateD(v1, v0, &closed); //og v1 v0
 				v0_exp=v0;
 				options=g[v0_exp].options;
 				v0=v1;						
@@ -226,7 +226,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		evaluationQueue.push_back(v1);
 		}
 	}
-	backtrack(evaluationQueue, priorityQueue, closed, g, plan_prov);
+	backtrack(evaluationQueue, priorityQueue, closed, plan_prov);
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
 }while(g[bestNext].options.size()>0 && !er.ended);
@@ -258,7 +258,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 		if(nNodes >1){
 			b2Vec2 step_v(simulationStep*endPose.q.c, simulationStep*endPose.q.s);
 			s_tmp.endPose=g[v].start+b2Transform(step_v, b2Rot(0));
-			std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(s_tmp, g, NULL, d);
+			VertexMatch match=findMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE){
 				g[v].options = {d};
 				g[v].endPose=s_tmp.endPose;
@@ -279,7 +279,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 		}
 		if (nNodes<=1){
 			s_tmp.endPose=endPose;
-			std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(s_tmp, g, NULL, d);
+			VertexMatch match=findMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE || match.second==v){
 				g[v1].endPose = endPose;
 				g[first_edge.first].step= gt::distanceToSimStep(g[v1].distance(), a.getLinearSpeed());	
@@ -296,18 +296,18 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 }
 
 
-void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, const std::set<vertexDescriptor>& closed, TransitionSystem&g, std::vector <vertexDescriptor>& plan_prov){
+void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, const std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov){
 	for (vertexDescriptor v:evaluation_q){
 		std::pair<bool, edgeDescriptor> ep(false, edgeDescriptor());
-		std::vector <vertexDescriptor> split = gt::task_vertices(v, g, iteration, currentVertex, &ep); 
-		Direction direction= g[ep.second.m_target].direction;
+		std::vector <vertexDescriptor> split = gt::task_vertices(v, transitionSystem, iteration, currentVertex, &ep); 
+		Direction direction= transitionSystem[ep.second.m_target].direction;
 		if (split.size()<2){
-			split =splitTask(v, g, DEFAULT, ep.second.m_source);
+			split =splitTask(v, transitionSystem, DEFAULT, ep.second.m_source);
 		}
 		for (int i=0; i<split.size(); i++){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
 			if (i<1){
-				auto ep=gt::getMostLikely(g, gt::inEdges(g, split_v), iteration);
+				auto ep=gt::getMostLikely(transitionSystem, gt::inEdges(transitionSystem, split_v), iteration);
 				if (ep.first){
 					src=ep.second.m_source;
 				}
@@ -315,10 +315,10 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 			else{
 				src=split[i-1];
 			}
-			EndedResult local_er=Planner::estimateCost(g[split_v],g[split_v].start,direction, controlGoal);
-			g[split_v].phi=Planner::evaluationFunction(local_er, split_v, plan_prov);
+			EndedResult local_er=Planner::estimateCost(transitionSystem[split_v],transitionSystem[split_v].start,direction, controlGoal);
+			transitionSystem[split_v].phi=Planner::evaluationFunction(local_er, split_v, plan_prov);
 			applyTransitionMatrix(split_v, direction, local_er.ended,src, plan_prov);
-			addToPriorityQueue(split_v, priority_q, g, closed);
+			addToPriorityQueue(split_v, priority_q, transitionSystem, closed);
 			src=split_v;
 		}
 	}
@@ -326,26 +326,26 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 
 }
 
-void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,TransitionSystem&g, std::vector<vertexDescriptor>*propagated, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
-	if (g[v1].outcome == simResult::successful){
+void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
+	if (transitionSystem[v1].outcome == simResult::successful){
 		return;
 	}
 	vertexDescriptor p=TransitionSystem::null_vertex();
-	std::pair <edgeDescriptor, bool> ep= boost::edge(v0, v1, g);
-	Disturbance dist = g[v1].Dn;
+	std::pair <edgeDescriptor, bool> ep= boost::edge(v0, v1, transitionSystem);
+	Disturbance dist = transitionSystem[v1].Dn;
 	if (!ep.second){
 		return;
 	}
-	Direction dir= g[v1].direction;
-	bool same_Di=g[ep.first.m_source].Di==g[ep.first.m_target].Di;
-	ep.first= *(boost::in_edges(ep.first.m_source, g).first);
-	ep.second= boost::edge(ep.first.m_source, ep.first.m_target, g).second;
-	bool same_direction=gt::check_edge_direction(ep, g, dir) ||( (gt::check_edge_direction(ep, g, STOP))&& dir==DEFAULT) ;
-	if (same_direction&& same_Di && g[ep.first.m_target].Dn.getAffIndex()==NONE){
- 			g[ep.first.m_target].Dn = dist; //was target
+	Direction dir= transitionSystem[v1].direction;
+	bool same_Di=transitionSystem[ep.first.m_source].Di==transitionSystem[ep.first.m_target].Di;
+	ep.first= *(boost::in_edges(ep.first.m_source, transitionSystem).first);
+	ep.second= boost::edge(ep.first.m_source, ep.first.m_target, transitionSystem).second;
+	bool same_direction=gt::check_edge_direction(ep, transitionSystem, dir) ||( (gt::check_edge_direction(ep, transitionSystem, STOP))&& dir==DEFAULT) ;
+	if (same_direction&& same_Di && transitionSystem[ep.first.m_target].Dn.getAffIndex()==NONE){
+ 			transitionSystem[ep.first.m_target].Dn = dist; //was target
  	}
 	if (v1==currentVertex){
-		g[v0].outcome=simResult::safeForNow;
+		transitionSystem[v0].outcome=simResult::safeForNow;
 	}
 	return;
 }
@@ -675,20 +675,20 @@ void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, Transition
 
 
 
-	std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> AttentiveConfigurator::findMatch(State s, TransitionSystem& g, State * src, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd){
-	std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex()), backup=result;
-	auto vs= boost::vertices(g);
+VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
+	VertexMatch result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex()), backup=result;
+	auto vs= boost::vertices(transitionSystem);
 	float prob=0, sum=10000;
-	//need to find best match too
-	ComparePair comparePair;
-	std::set <std::pair <vertexDescriptor, float>, ComparePair>others_set(comparePair);
+	typedef std::tuple <vertexDescriptor, StateMatcher::MATCH_TYPE, float> VertexMatchTuple;
+	CompareValue compareValue;
+	std::set <VertexMatchTuple, CompareValue>others_set(compareValue);
 	for (auto vi=vs.first; vi!= vs.second; vi++){
 		vertexDescriptor v=*vi;
-		bool Tmatch=dir==Direction::UNDEFINED ||g[v].direction==dir ||(g[v].direction==STOP &&dir==DEFAULT &&iteration>1);
+		bool Tmatch=dir==Direction::UNDEFINED ||transitionSystem[v].direction==dir ||(transitionSystem[v].direction==STOP &&dir==DEFAULT &&iteration>1);
 		//make state representing a whole task, this is inefficient and when i have time should be susbtituted with subgraph
-		State q= g[v];
-			if (auto vertices=gt::task_vertices(v, g, iteration, currentVertex); vertices.size()>1){
-				q.start=g[vertices[0]].start;
+		State q= transitionSystem[v];
+			if (auto vertices=gt::task_vertices(v, transitionSystem, iteration, currentVertex); vertices.size()>1){
+				q.start=transitionSystem[vertices[0]].start;
 			}			
 		if (v==currentVertex && !currentTask.get_change()){
 			q.start=b2Transform_zero;
@@ -704,11 +704,13 @@ void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, Transition
 			std::cerr<< "check tracker is set up ok! "<<e.what()<<std::endl;
 		}
 		condition=matcher.match_equal(m, match_type);
-		
-		if (v!=movingVertex && (boost::in_degree(v, g)>0 || iteration>1)  &&Tmatch ){ 
+		if (v!=movingVertex && (boost::in_degree(v, transitionSystem)>0 || iteration>1)  &&Tmatch ){ 
 			if (condition){
 				result.first= m;
 				result.second=v;
+				VertexMatchTuple to_add(v, m, sum_tmp);
+				others_set.emplace(to_add);
+				
 			}
 			if (sum_tmp<sum){
 				sum=sum_tmp;
@@ -719,16 +721,12 @@ void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, Transition
 				}
 			}
 		}	
-
 	}
-
-	// if (others==NULL){
-	// 	return result;
-	// }
-	// printf("others not null\n");
-	// for (auto vp:others_set){
-	// 	others->push_back(vp.first);
-	// }
+	if (NULL!=other_matches){
+		for (VertexMatchTuple item:others_set){
+			other_matches->push_back(VertexMatch(std::get<1>(item), std::get<0>(item)));
+		}
+	}
 	return result;
 }
 
@@ -808,13 +806,13 @@ void AttentiveConfigurator::pre_explore(){
 	//  }
 }
 
-std::vector <State> AttentiveConfigurator::output_plan(const std::vector <vertexDescriptor>& p, const TransitionSystem &g){
-	std::vector <State> rho;
-	for (const vertexDescriptor &v: p){
-		rho.push_back(g[v]);
-	}
-	return rho;
-}
+// std::vector <State> AttentiveConfigurator::output_plan(const std::vector <vertexDescriptor>& p, const TransitionSystem &g){
+// 	std::vector <State> rho;
+// 	for (const vertexDescriptor &v: p){
+// 		rho.push_back(g[v]);
+// 	}
+// 	return rho;
+// }
 
 void Configurator::estimate_current_vertex(){
 	if(current_vertices.empty()){
@@ -898,7 +896,7 @@ void Configurator::adjust_goal_expectation(){
 void AttentiveConfigurator::explore_plan(b2World&world){
     pre_explore();
     vertexDescriptor src=get_explore_start(transitionSystem);
-    resetPhi(transitionSystem);
+    resetPhi();
     std::vector <vertexDescriptor> plan_tmp=explorer(src, transitionSystem, world);
     if (DEBUG){
         std::vector<vertexDescriptor> _plan=(plan);
@@ -1036,4 +1034,19 @@ void AttentiveConfigurator::reassign_direction(vertexDescriptor bestNext, Direct
 		transitionSystem[best_in_edges[0]].it_observed=iteration;
 	}
 
+}
+
+void AttentiveConfigurator::swap_match(VertexMatch match, std::vector<VertexMatch> other_matches){
+	if (match.first==StateMatcher::_FALSE){
+		return;
+	}
+	if (transitionSystem[match.second].outcome!=simResult::crashed){
+		return;
+	}
+	for (VertexMatch m: other_matches){
+		if (transitionSystem[m.second].outcome!=simResult::crashed){
+			match.second=m.second;
+			return;
+		}
+	}
 }
