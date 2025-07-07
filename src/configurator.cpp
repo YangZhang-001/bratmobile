@@ -705,7 +705,7 @@ void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, Transition
 		}
 		condition=matcher.match_equal(m, match_type);
 		
-		if (v!=movingVertex && (boost::in_degree(v, g)>0 && iteration==1)  &&Tmatch ){ 
+		if (v!=movingVertex && (boost::in_degree(v, g)>0 || iteration>1)  &&Tmatch ){ 
 			if (condition){
 				result.first= m;
 				result.second=v;
