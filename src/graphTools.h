@@ -381,10 +381,10 @@ struct NotSelfEdge{
 
 	bool operator()(const edgeDescriptor & e) const {
 		bool not_self= e.m_source!=e.m_target && (*g)[e].step!=0  ; 
-		if (e.m_source==e.m_target){
-			auto def_kin =(*default_kinematics.find((*g)[e.m_target].direction)).second;
+		// if (e.m_source==e.m_target){
+		// 	auto def_kin =(*default_kinematics.find((*g)[e.m_target].direction)).second;
 
-		}
+		// }
 		return not_self;
 	}
 	private:

@@ -1052,10 +1052,13 @@ bool AttentiveConfigurator::matchToSafe(VertexMatch &match,const  std::vector<Ve
 std::pair<edgeDescriptor, bool> AttentiveConfigurator::setup_match_edge(VertexMatch &match, vertexDescriptor &v0, vertexDescriptor & v1,const Edge& k, Direction direction, bool changedMatch){
 	v1=match.second; //frontier
 	auto edge= gt::add_edge(v0, v1, transitionSystem, iteration, direction); //assumes edge added
-	if (edge.second){
+	if (edge.second && !changedMatch){
 		transitionSystem[edge.first]=k; //doesn't update motorstep
 	}
 	if (changedMatch){
+		Task::Action action;
+		action.init(direction);
+		transitionSystem[edge.first].step=Controller::motor_step(action, transitionSystem[v1].distance());
 		transitionSystem[edge.first].enableOverride();
 	}
 	return edge;
