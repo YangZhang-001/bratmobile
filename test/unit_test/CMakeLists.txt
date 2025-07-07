@@ -49,6 +49,10 @@ add_executable(GTest_Matcher GTest_Matcher.cpp)
 target_link_libraries(GTest_Matcher gtest gtest_main)
 target_link_libraries(GTest_Matcher  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
+add_executable(GTest_Graph GTest_Graph)
+target_link_libraries(GTest_Graph gtest gtest_main)
+target_link_libraries(GTest_Graph  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
 
 gtest_discover_tests(GTest_HighLevel)
 gtest_discover_tests(GTest_AdjustGoal)
