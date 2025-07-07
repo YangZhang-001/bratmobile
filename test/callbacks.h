@@ -24,7 +24,6 @@ struct Remember{
 	TransitionSystem *g;
 }remember;
 
-Visited visited;
 
 template <typename Predicate> 
 void printEdges(TransitionSystem& g, Predicate p){
@@ -60,16 +59,16 @@ float print_belowP(TransitionSystem& g, float p){
     return ct/g.m_vertices.size();
 }
 
-void getVisited(TransitionSystem& g, vertexDescriptor cv){
-    auto es = boost::edges(g);
-    float ct=0;
-    for (auto ei=es.first; ei!=es.second;ei++){
-        if ((g[(*ei).m_source].visited()|| (*ei).m_source==0 || (*ei).m_source==cv)& g[(*ei).m_target].visited()){
-            ct++;
-            printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
-        }
-    }
-}
+// void getVisited(TransitionSystem& g, vertexDescriptor cv){
+//     auto es = boost::edges(g);
+//     float ct=0;
+//     for (auto ei=es.first; ei!=es.second;ei++){
+//         if ((g[(*ei).m_source].visited()|| (*ei).m_source==0 || (*ei).m_source==cv)& g[(*ei).m_target].visited()){
+//             ct++;
+//             printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
+//         }
+//     }
+// }
 
 class DataInterface {
 int iteration = 0;
