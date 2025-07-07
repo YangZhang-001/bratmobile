@@ -13,3 +13,5 @@ TEST_P(EdgeTest, override){
         EXPECT_FALSE(overrideZeroSteps);
     }
 }
+
+INSTANTIATE_TEST_CASE_P(Step, EdgeTest, ::testing::Values(0, 1, 200));
