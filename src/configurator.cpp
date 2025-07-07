@@ -190,7 +190,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
 				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
 					g[v0].options.erase(g[v0].options.begin());
-					match_to_safe(match, other_matches);
+					matchToSafe(match, other_matches);
 					v1=match.second; //frontier
 					edge= gt::add_edge(v0, v1, g, iteration, t.get_direction()); //assumes edge added
 					if (edge.second){
@@ -1036,7 +1036,7 @@ void AttentiveConfigurator::reassign_direction(vertexDescriptor bestNext, Direct
 
 }
 
-void AttentiveConfigurator::match_to_safe(VertexMatch match, std::vector<VertexMatch> other_matches){
+void AttentiveConfigurator::matchToSafe(VertexMatch match, std::vector<VertexMatch> other_matches){
 	if (match.first==StateMatcher::_FALSE){
 		return;
 	}
