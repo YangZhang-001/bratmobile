@@ -239,14 +239,30 @@ Disturbance gt::getExpectedDisturbance(TransitionSystem& g, vertexDescriptor v, 
 std::pair <bool,edgeDescriptor>  gt::visitedEdge(const std::vector <edgeDescriptor> &es, TransitionSystem& g, vertexDescriptor cv){
 	std::pair <bool,edgeDescriptor> result(false, edgeDescriptor());
 	for (edgeDescriptor e:es){
-		if ((g[e.m_source].visited() & g[e.m_target].visited()) || (e.m_source==cv & cv !=TransitionSystem::null_vertex()) ){ //|| e.m_source==0
-			result.first=true;
-			result.second=e;
-			return result;
+		if (e.m_source!=TransitionSystem::null_vertex()){
+			if (((g[e.m_source].visited()) & g[e.m_target].visited())){ // || (e.m_source==cv & cv !=TransitionSystem::null_vertex()) ){ //|| e.m_source==0
+				result.first=true;
+				result.second=e;
+				return result;
+			}
 		}
+
 	}
 	return result;
 }
+
+// std::pair <bool,edgeDescriptor>  gt::currentEdge(const std::vector <edgeDescriptor> &es, TransitionSystem& g, vertexDescriptor cv){
+// 	std::pair <bool,edgeDescriptor> result(false, edgeDescriptor());
+// 	for (edgeDescriptor e:es){
+// 		if ((g[e.m_source].visited() & g[e.m_target].visited()) ||(e.m_source==cv & cv !=TransitionSystem::null_vertex())|| e.m_source==0 ){ //
+// 			result.first=true;
+// 			result.second=e;
+// 			return result;
+// 		}
+// 	}
+// 	return result;
+// }
+
 
 
 void gt::adjustProbability(TransitionSystem &g, const edgeDescriptor &e){
@@ -299,52 +315,6 @@ bool gt::check_edge_direction(const std::pair<edgeDescriptor, bool> & ep, Transi
 	return result;
 }
 
-
-std::vector <vertexDescriptor> gt::task_vertices( vertexDescriptor v, TransitionSystem& g, const int & it, const vertexDescriptor & current_v, std::pair<bool, edgeDescriptor>* ep){
-	std::vector <vertexDescriptor> result= {v};
-	Direction d=UNDEFINED;
-	std::pair<bool, edgeDescriptor>ep2(false, edgeDescriptor()), _ep=ep2;
-	do {
-		std::vector <edgeDescriptor> ie=gt::inEdges(g, v);
-		ep2= visitedEdge(ie, g,v);
-		if (!ep2.first){
-			ep2=getMostLikely(g, ie, it);
-		}
-		if (ep2.first){
-			if (ep2.second.m_target==result[0]){ //size 1
-				_ep=ep2; //assign ep to define direction
-				d= g[_ep.second.m_target].direction;
-				if (ep!=NULL){
-					g[_ep.second].it_observed=it;
-				}
-				for (edgeDescriptor e: ie){
-					if (g[e.m_target].direction==d && e!=ep2.second && g[e.m_source].Di == g[_ep.second.m_source].Di &&g[e.m_source].Dn == g[_ep.second.m_target].Dn){
-						ep2.second=e;
-						break;
-					}
-			}
-			}
-			else if (g[ep2.second.m_target].direction==d &&
-			 	g[ep2.second.m_target].Di == g[_ep.second.m_target].Di &&
-			 	g[ep2.second.m_target].Dn == g[_ep.second.m_target].Dn){ //same task!
-				result.push_back(ep2.second.m_target); //source
-			}
-
-		}
-		else{
-			break;
-		}
-		v=ep2.second.m_source;
-		if (ep2.second.m_target==current_v){ //source
-			break;
-		}
-	}while(g[ep2.second.m_target].direction==d);
-	std::reverse(result.begin(), result.end());
-	if (NULL!=ep){
-		*ep=_ep;
-	}
-	return result;
-}
 
 
 std::vector<vertexDescriptor>::iterator gt::to_task_end(edgeDescriptor& e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan,  std::vector<vertexDescriptor>::iterator it){
