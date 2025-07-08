@@ -74,17 +74,5 @@ const std::map <Direction, std::pair<float, float>> default_kinematics={{DEFAULT
 
 const std::map<Direction, char*> dirmap={{DEFAULT, "DEFAULT"}, {LEFT, "LEFT"}, {RIGHT, "RIGHT"}, {STOP, "STOP"}, {UNDEFINED, "UNDEFINED"}, {BACK, "BACK"}};
 
-//SPECIAL VERTICES
-struct vertexDescriptor;
-
-const vertexDescriptor DUMMY=1;
-
-/**
- * @brief vertex reprensenting instantaneous position of the robot relative to itself
- * Trivial: in the graph it's always located at the origin with an orientation of 0 degrees, and
- * should always be connected to the vertex representing the current state.
- * 
- */
-const vertexDescriptor MOVING_VERTEX=0; 
 
 #endif
