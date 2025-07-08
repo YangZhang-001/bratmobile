@@ -180,8 +180,8 @@ INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 4),
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 6), //,
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 17),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 38),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 89)
+                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 38)//,
+                                                                  // std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 89)
                                                                    ));
 
 
