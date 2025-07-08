@@ -487,7 +487,6 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 			transitionSystem[v].options=result;
 		}
 		}
-		
 	}
 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
 		if (d ==DEFAULT ||d==STOP){
