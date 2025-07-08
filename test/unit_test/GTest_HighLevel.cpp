@@ -128,7 +128,8 @@ TEST_P(HighLevelTest, CheckPlan){
     int vertices_now=configurator->n_vertices();
     EXPECT_LE(vertices_now, vertices_og);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-    EXPECT_TRUE(planned_to_goal) || EXPECT_TRUE(configurator->getGoal()->checkEnded(configurator->vertex_get_endPose()).ended);
+    bool success=planned_to_goal || configurator->getGoal().checkEnded(configurator->vertex_get_endPose(configurator->get_current_vertex())).ended;
+    EXPECT_TRUE(success);
 }
 
 TEST_P(HighLevelTest, Recycle){
