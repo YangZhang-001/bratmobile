@@ -486,6 +486,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 		else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
 			std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
 			erase_from_vector(result, currentTask.get_direction());
+			transitionSystem[v].options=result;
 		}
 	}
 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now

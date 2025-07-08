@@ -162,8 +162,8 @@ TEST_P(HighLevelTest, Recycle){
     int vertices_now=configurator->n_vertices();
     EXPECT_LE(vertices_now, vertices_og);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-    //EXPECT_TRUE(planned_to_goal);
-    EXPECT_EQ(plan, updated_plan);
+    EXPECT_TRUE(planned_to_goal);
+    //EXPECT_EQ(plan, updated_plan);
 }
 
 INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
