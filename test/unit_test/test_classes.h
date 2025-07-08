@@ -413,6 +413,10 @@ edgeDescriptor ConfiguratorTest::make_v1_crashed( vertexDescriptor v0, b2Transfo
 }
 
 void ConfiguratorTest::make_module(vertexDescriptor mv){
+    if (n_vertices()==1){
+        dummy_vertex(mv);
+    }
+    mv=currentVertex;
     for (int i=0; i<6; i++){
         boost::add_vertex(transitionSystem);
     }
