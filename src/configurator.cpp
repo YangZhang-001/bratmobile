@@ -477,7 +477,8 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	if (( !currentTask.get_change() ||!oe.empty()) && iteration>1){
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
 		if (ve.first){
-			if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
+			if(!transitionSystem[ve.second.m_target].visited()){}
+			else if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
 				transitionSystem[v].options={currentTask.get_direction()};
 			}
 			else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
