@@ -473,21 +473,20 @@ void AttentiveConfigurator::unexplored_transitions(TransitionSystem& g, const ve
 void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src){
 	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
 	srand(unsigned(time(NULL)));
-	// Direction edgeDirection=d;
-	// if (v==MOVING_VERTEX){
-	// 	edgeDirection=currentTask.get_direction();
-	// }
 	auto oe=gt::outEdges(transitionSystem, v, d);
 	if (( !currentTask.get_change() ||!oe.empty()) && iteration>1){
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
-		if (!ve.first && transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
-			transitionSystem[v].options={currentTask.get_direction()};
-		}
-		else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
+		if (ve.first){
+			if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
+				transitionSystem[v].options={currentTask.get_direction()};
+			}
+			else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
 			std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
 			erase_from_vector(result, currentTask.get_direction());
 			transitionSystem[v].options=result;
 		}
+		}
+		
 	}
 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
 		if (d ==DEFAULT ||d==STOP){
@@ -516,21 +515,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 		}
 		else {
 			if (src==TransitionSystem::null_vertex()){
-				// auto oe=gt::outEdges(transitionSystem, v, currentTask.get_direction());
-				// if ( !currentTask.get_change() ||!oe.empty()){ //
-				// 	std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
-				// 	if (!ve.first){
-				// 		transitionSystem[v].options={currentTask.get_direction()};
-				// 	}
-				// 	else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
-				// 		std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
-				// 		erase_from_vector(result, currentTask.get_direction());
-				// 	}
-				// }
-				//else{
-				transitionSystem[v].options={DEFAULT, LEFT, RIGHT};
-				//}	
-				
+				transitionSystem[v].options={DEFAULT, LEFT, RIGHT};				
 			}
 			else if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
 				transitionSystem[v].options.push_back(temp.get_direction());
