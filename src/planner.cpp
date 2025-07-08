@@ -88,7 +88,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::best_path(const std::vector<s
 
 std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, TransitionSystem& g, ExecutionInfo & info){
 	std::vector <Frontier> result;
-	std::pair<edgeDescriptor, bool> ep=boost::edge(movingVertex, v, g); 
+	std::pair<edgeDescriptor, bool> ep=boost::edge(MOVING_VERTEX, v, g); 
 	vertexDescriptor v0=v, v1=v, v0_exp;
 	//do{
 		if ((info.overarchingGoal().get_disturbance().getPosition()-g[v].endPose.p).Length() >= DISTANCE_ERROR_TOLERANCE){

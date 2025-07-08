@@ -52,13 +52,6 @@
 
     };
 
-/**
- * @brief vertex reprensenting instantaneous position of the robot relative to itself
- * Trivial: in the graph it's always located at the origin with an orientation of 0 degrees, and
- * should always be connected to the vertex representing the current state.
- * 
- */
-const vertexDescriptor movingVertex=0; 
 
 class Planner{
     protected:

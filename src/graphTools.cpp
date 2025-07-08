@@ -239,7 +239,7 @@ Disturbance gt::getExpectedDisturbance(TransitionSystem& g, vertexDescriptor v, 
 std::pair <bool,edgeDescriptor>  gt::visitedEdge(const std::vector <edgeDescriptor> &es, TransitionSystem& g, vertexDescriptor cv){
 	std::pair <bool,edgeDescriptor> result(false, edgeDescriptor());
 	for (edgeDescriptor e:es){
-		if ((g[e.m_source].visited() & g[e.m_target].visited()) || (e.m_source==cv & cv !=TransitionSystem::null_vertex()) ){ //|| e.m_source==0
+		if ((g[e.m_source].visited() & g[e.m_target].visited()) || g[e.m_target]==DUMMY){ 
 			result.first=true;
 			result.second=e;
 			return result;
