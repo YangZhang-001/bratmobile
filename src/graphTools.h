@@ -208,7 +208,16 @@ typedef boost::graph_traits<TransitionSystem>::vertex_descriptor vertexDescripto
 typedef boost::graph_traits<TransitionSystem>::edge_descriptor edgeDescriptor;
 typedef boost::graph_traits<TransitionSystem>::edge_iterator edgeIterator;
 
+//SPECIAL VERTICES
+const vertexDescriptor DUMMY=1;
 
+/**
+ * @brief vertex reprensenting instantaneous position of the robot relative to itself
+ * Trivial: in the graph it's always located at the origin with an orientation of 0 degrees, and
+ * should always be connected to the vertex representing the current state.
+ * 
+ */
+const vertexDescriptor MOVING_VERTEX=0; 
 
 /**
  * @brief Used as a predicate, gives info on whether a vertex is the current vertex
