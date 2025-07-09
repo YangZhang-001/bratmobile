@@ -1044,11 +1044,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::task_vertices( vertexDescr
 		if (ep2.second.m_target==current_v){ //source
 			break;
 		}
-<<<<<<< HEAD
 	}while(transitionSystem[ep2.second.m_target].direction==d);
-=======
-	}while(g[ep2.second.m_target].direction==d);
->>>>>>> 3897140d5d50c0e4e4f737c708d0822dfbc4cdf2
 	std::reverse(result.begin(), result.end());
 	if (NULL!=ep){
 		*ep=_ep;
