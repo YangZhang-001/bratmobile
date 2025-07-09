@@ -266,14 +266,14 @@ protected:
     };
 
     /**
-     * @brief Creates a vertex whose state starts and end at the origin
+     * @brief Creates a vertex whose state starts and end at the origin. Not visited by default
      * 
      * @param v0 
      * @return edgeDescriptor 
      */
     edgeDescriptor make_successful(vertexDescriptor v0=0);
     /**
-     * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state
+     * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state. Not visited by default
      * 
      */
     edgeDescriptor make_v1_crashed( vertexDescriptor v0=0, b2Transform start=b2Transform_zero, b2Transform end=b2Transform_zero, b2Transform Dn=b2Transform_inf);
@@ -287,10 +287,22 @@ protected:
                    \
                     v4(RIGHT) --- v5(DEFAULT)
      * 
+     * Not visited by default
      */
     void make_module(vertexDescriptor mv=0);
 
+    /**
+     * @brief Assign phi to all vertices
+     * 
+     */
     void setAllVisited();
+
+    /**
+     * @brief Assign phi to state @param s
+     * 
+     * @param s 
+     */
+    void setPhi(State & s);
 public:
 
     /**
@@ -508,9 +520,14 @@ void ConfiguratorTestTransitionMatrix::planIsDirection(Direction direction){
 void ConfiguratorTest::setAllVisited(){
     auto vs=boost::vertices(transitionSystem);
     for (auto vi=vs.first; vi!=vs.second; vi++){
-        transitionSystem[*vi].phi=Planner::estimateCost(transitionSystem[*vi], transitionSystem[*vi].start, transitionSystem[*vi].direction, controlGoal).cost;
+        setPhi(transitionSystem[*vi]);
     }
 }
+
+void ConfiguratorTest::setPhi(State & s){
+    s.phi=Planner::estimateCost(s, s.start, s.direction, controlGoal).cost;   
+}
+
 
 
 #endif
