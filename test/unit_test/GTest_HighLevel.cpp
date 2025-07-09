@@ -118,6 +118,8 @@ TEST_P(HighLevelTest, CheckPlan){
         configurator->change_task();
         configurator->estimate_current_vertex();    
         configurator->addIteration();
+        EXPECT_GT(configurator->get_current_vertices().size(), 0);
+        EXPECT_NE(configurator->get_current_vertices()[0], 0);
         di.newScanAvail();
         configurator->getFeatures(ci.data2fp);
         configurator->preExplore();

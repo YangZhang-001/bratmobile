@@ -554,23 +554,23 @@ void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction
 		}
 	}
 	std::vector <vertexDescriptor> full_plan=plan_prov;
-	if (!currentTask.get_change() && ( v0==MOVING_VERTEX || v0==currentVertex)){
-		//full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
-		full_plan.insert(full_plan.begin(), v0);
+	if (!currentTask.get_change() ){
+		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
 	}
-	// if (v0==MOVING_VERTEX || src==TransitionSystem::null_vertex()){
-	// 	transitionMatrix(v0, DEFAULT, TransitionSystem::null_vertex());	
-	// }
-	// else 
 	if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
 		auto e=boost::edge(src, v0, transitionSystem);
 		gt::to_task_end(e.first, transitionSystem, full_plan, it);
-		if ((transitionSystem[e.first.m_target].visited()&& transitionSystem[e.first].it_observed<iteration)|| !transitionSystem[e.first.m_target].visited()){ // 
-			transitionSystem[v0].options={transitionSystem[e.first.m_target].direction};
+		if(transitionSystem[e.first.m_target].visited()){
+			if (transitionSystem[e.first.m_target].outcome==simResult::crashed){
+				transitionMatrix(v0, d, src);
+				erase_from_vector(transitionSystem[v0].options, transitionSystem[e.first.m_target].direction);
+			}
+			else if (transitionSystem[e.first].it_observed<iteration){ // 
+				transitionSystem[v0].options={transitionSystem[e.first.m_target].direction};
+			}
 		}
-		else if (transitionSystem[e.first.m_target].outcome==simResult::crashed){
-			transitionMatrix(v0, d, src);
-			erase_from_vector(transitionSystem[v0].options, transitionSystem[e.first.m_target].direction);
+		else{
+			transitionSystem[v0].options={transitionSystem[e.first.m_target].direction};
 		}
 	}
 	else{

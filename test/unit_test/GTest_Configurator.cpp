@@ -229,13 +229,15 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
 TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     currentTask.set_direction(std::get<1>(GetParam()));
     vertex_set_direction(currentVertex, std::get<1>(GetParam()));
-    if (currentTask.get_direction()==UNDEFINED){
+    if (std::get<1>(GetParam())==UNDEFINED || std::get<1>(GetParam())==STOP){
         return;
     }
-    dummy_vertex(MOVING_VERTEX);
+    //dummy_vertex(MOVING_VERTEX);
+    currentVertex = boost::add_vertex(transitionSystem);
     make_module(currentVertex);
     planIsDirection(std::get<1>(GetParam()));
     currentVertex=MOVING_VERTEX;
+    current_vertices={currentVertex};
     currentTask.set_change(false);
     currentTask.setMotorStep(20);
     iteration=2;
@@ -249,7 +251,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
     if (direction==UNDEFINED || direction==STOP){
         return;
     }
-    dummy_vertex(MOVING_VERTEX);
+    currentVertex = boost::add_vertex(transitionSystem);
     make_module(currentVertex);
     planIsDirection(direction);
     iteration=2;
