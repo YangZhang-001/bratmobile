@@ -194,13 +194,13 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					bool changedMatch=matchToSafe(match, other_matches);
 					edge=setup_match_edge(match, v0, v1, sk.second, t.get_direction(), changedMatch);
 					if (currentTask.is_over()){
-						std::vector <vertexDescriptor> task_vertices=task_vertices(v1, currentVertex);
-						vertexDescriptor task_start= task_vertices[0];
+						std::vector <vertexDescriptor> task_vs= task_vertices(v1, currentVertex);
+						vertexDescriptor task_start= task_vs[0];
 						if (plan_prov.empty()){
 							recycle_plan(v, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
 						if (plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
-							shift_states(g, task_vertices, shift_start);
+							shift_states(g, task_vs, shift_start);
 						}
 					}
 				}
