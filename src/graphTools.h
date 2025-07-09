@@ -344,14 +344,10 @@ namespace gt{
 	std::pair <edgeDescriptor, bool> add_edge(const vertexDescriptor&, const vertexDescriptor &, TransitionSystem&, const int &, Direction d=UNDEFINED); //wrapper around boost function, disallows edges to self
 
 	bool check_edge_direction(const std::pair<edgeDescriptor, bool> &, TransitionSystem&, Direction);
-
-	std::vector <vertexDescriptor> task_vertices(vertexDescriptor, TransitionSystem&, const int &, const vertexDescriptor &, std::pair<bool, edgeDescriptor>* ep=NULL);
-
 	/**
 	 * @brief Travels in the graph to find the end of the task in e.m_target. In case the task
 	 * is only one vertex, e will be changed to the next edge not belonging to the task, and it is an iterator
-	 * in the plan vector to the next vertex in the plan
-	 * 
+	 * in the plan vector to the next vertex in the plan 
 	 * @param e edge whose target is the task we want to find the end of
 	 * @param g the graph
 	 * @param plan the plan
@@ -359,6 +355,9 @@ namespace gt{
 	 * @return std::vector<vertexDescriptor>::iterator 
 	 */
 	std::vector<vertexDescriptor>::iterator to_task_end(edgeDescriptor &e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan, std::vector<vertexDescriptor>::iterator it); //in a vector, finds vertices belonging to the same task and skips to the end fo the task
+
+	std::vector <vertexDescriptor> task_vertices(vertexDescriptor, TransitionSystem&, const int &, const vertexDescriptor &, std::pair<bool, edgeDescriptor>* ep=NULL);
+
 
 }
 

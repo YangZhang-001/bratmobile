@@ -244,9 +244,23 @@ std::pair <bool,edgeDescriptor>  gt::visitedEdge(const std::vector <edgeDescript
 			result.second=e;
 			return result;
 		}
+
 	}
 	return result;
 }
+
+// std::pair <bool,edgeDescriptor>  gt::currentEdge(const std::vector <edgeDescriptor> &es, TransitionSystem& g, vertexDescriptor cv){
+// 	std::pair <bool,edgeDescriptor> result(false, edgeDescriptor());
+// 	for (edgeDescriptor e:es){
+// 		if ((g[e.m_source].visited() & g[e.m_target].visited()) ||(e.m_source==cv & cv !=TransitionSystem::null_vertex())|| e.m_source==0 ){ //
+// 			result.first=true;
+// 			result.second=e;
+// 			return result;
+// 		}
+// 	}
+// 	return result;
+// }
+
 
 
 void gt::adjustProbability(TransitionSystem &g, const edgeDescriptor &e){
@@ -300,15 +314,38 @@ bool gt::check_edge_direction(const std::pair<edgeDescriptor, bool> & ep, Transi
 }
 
 
+
+std::vector<vertexDescriptor>::iterator gt::to_task_end(edgeDescriptor& e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan,  std::vector<vertexDescriptor>::iterator it){
+edgeDescriptor e_start=e;
+std::pair<edgeDescriptor, bool> ep;
+do{
+	ep=boost::edge(*it, *(it+1), g);
+	if (!ep.second){
+		break;
+	}
+	else{
+		e=ep.first;
+	}
+	if (g[e.m_target].direction==g[e_start.m_target].direction){
+		it++;
+	}
+}while(g[e.m_target].direction==g[e_start.m_target].direction &&
+		 it != plan.end() && it!=(plan.end()-1)               &&
+		 (g[e.m_target].Di==g[e_start.m_source].Di)
+		 );
+
+return (it);
+}
+
 std::vector <vertexDescriptor> gt::task_vertices( vertexDescriptor v, TransitionSystem& g, const int & it, const vertexDescriptor & current_v, std::pair<bool, edgeDescriptor>* ep){
 	std::vector <vertexDescriptor> result= {v};
 	Direction d=UNDEFINED;
 	std::pair<bool, edgeDescriptor>ep2(false, edgeDescriptor()), _ep=ep2;
 	do {
 		std::vector <edgeDescriptor> ie=gt::inEdges(g, v);
-		ep2= visitedEdge(ie, g,v);
+		ep2= gt::visitedEdge(ie, g,v);
 		if (!ep2.first){
-			ep2=getMostLikely(g, ie, it);
+			ep2=gt::getMostLikely(g, ie, it);
 		}
 		if (ep2.first){
 			if (ep2.second.m_target==result[0]){ //size 1
@@ -346,28 +383,6 @@ std::vector <vertexDescriptor> gt::task_vertices( vertexDescriptor v, Transition
 	return result;
 }
 
-
-std::vector<vertexDescriptor>::iterator gt::to_task_end(edgeDescriptor& e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan,  std::vector<vertexDescriptor>::iterator it){
-edgeDescriptor e_start=e;
-std::pair<edgeDescriptor, bool> ep;
-do{
-	ep=boost::edge(*it, *(it+1), g);
-	if (!ep.second){
-		break;
-	}
-	else{
-		e=ep.first;
-	}
-	if (g[e.m_target].direction==g[e_start.m_target].direction){
-		it++;
-	}
-}while(g[e.m_target].direction==g[e_start.m_target].direction &&
-		 it != plan.end() && it!=(plan.end()-1)               &&
-		 (g[e.m_target].Di==g[e_start.m_source].Di)
-		 );
-
-return (it);
-}
 
 
 bool StateMatcher::match_equal(const MATCH_TYPE& candidate, const MATCH_TYPE& desired){
