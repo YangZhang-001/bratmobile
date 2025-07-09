@@ -270,8 +270,15 @@ AffordanceIndex getAffIndex(){
     return affordance;
 }
 
-
-Direction H(Disturbance, Direction, bool topDown=0); //topDown enables Configurator topdown control on reactive behaviour
+/**
+ * @brief Agent transfer function H which generates a motor output (Action) in response to a disturbance
+ * 
+ * @param ob the disturbance
+ * @param d top-down instruction on how to generate the Action. DEFAULT with no top down control generates a reflex
+ * @param topDown whether the input direction should be used as is (true) or to generate a reflex (false)
+ * @return Direction 
+ */
+Direction H(Disturbance ob, Direction d, bool topDown=0); //topDown enables Configurator topdown control on reactive behaviour
 
 
 void setEndCriteria(const Angle& angle=SAFE_ANGLE, const Distance& distance=BOX2DRANGE);
@@ -282,12 +289,28 @@ void setEndCriteria(const EndCriteria & ec){
     endCriteria=ec;
 }
 
-
-void setErrorWeights();
-
+/**
+ * @brief Check if this task has ended based on state information (default are info for the task which calls the method)
+ * 
+ * @param robotTransform the robot's pose to evaluate
+ * @param dir the direction of the task being carried out
+ * @param relax apply a larger threshold to check whehter a goal was reached
+ * @param robot robot box2d body
+ * @param use_start use a custom start for the task
+ * @return EndedResult 
+ */
 EndedResult checkEnded(b2Transform robotTransform= b2Transform_zero, Direction dir=UNDEFINED, bool relax=0, b2Body* robot=NULL, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform_zero));
 
-EndedResult checkEnded(const State&, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform_zero)); //usually used to check against control goal
+/**
+ * @brief Check if a state represents the end of this task
+ * 
+ * @param n the state
+ * @param dir the direction of the task being carried out
+ * @param relax apply a larger threshold to check whehter a goal was reached
+ * @param use_start use a custom start for the task
+ * @return EndedResult 
+ */
+EndedResult checkEnded(const State& n, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform_zero)); //usually used to check against control goal
 
 /**
  * @brief Uses a virtual sensor (attention window) to determine whether the task has ended or not
@@ -320,8 +343,15 @@ Task(Disturbance ob, Direction d, b2Transform _start=b2Transform(b2Vec2(0.0, 0.0
     setEndCriteria();
 }
 
-
-simResult bumping_that(b2World &, int, b2Body *, float remaining = SIM_DURATION);
+/**
+ * @brief Executes this task in a Box2D simulation
+ * 
+ * @param _world box2d world
+ * @param iteration configurator iteration (for logging)
+ * @param remaining (simulation duration in seconds)
+ * @return simResult 
+ */
+simResult bumping_that(b2World & _world, int iteration, b2Body *, float remaining = SIM_DURATION);
 
 EndCriteria getEndCriteria(const Disturbance&);
 
@@ -335,10 +365,19 @@ b2Transform from_Di( const b2Transform * custom_start=NULL, Disturbance * d_obs=
 
 void set_change(bool b){
     change=b;
-    motorStep=0;
 }
 
 bool get_change(){
+    return change;
+}
+
+/**
+ * @brief If task has finished executing
+ * 
+ * @return true if step==0 or if manually set to change
+ * @return false 
+ */
+bool is_over(){
     return change || motorStep==0;
 }
 

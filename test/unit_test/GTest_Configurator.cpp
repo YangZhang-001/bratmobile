@@ -20,16 +20,16 @@ TEST(Initialisation, InitialMap){
 }
 
 TEST_F(ConfiguratorTest, InitialVertex){
-    EXPECT_EQ(currentVertex, movingVertex);
+    EXPECT_EQ(currentVertex, MOVING_VERTEX);
 }
 
 
 TEST_F(ConfiguratorTest, DummyVertex){
     init();
-    dummy_vertex(movingVertex); 
-    EXPECT_TRUE(currentTask.get_change());
-    EXPECT_EQ(boost::out_degree(movingVertex, transitionSystem), 1);
-    EXPECT_FALSE(boost::edge(movingVertex, movingVertex, transitionSystem).second);
+    dummy_vertex(MOVING_VERTEX); 
+    EXPECT_TRUE(currentTask.is_over());
+    EXPECT_EQ(boost::out_degree(MOVING_VERTEX, transitionSystem), 1);
+    EXPECT_FALSE(boost::edge(MOVING_VERTEX, MOVING_VERTEX, transitionSystem).second);
 }
 
 /**
@@ -59,7 +59,7 @@ class ConfiguratorTestGetGoal:public ConfiguratorTest, public testing::WithParam
         Disturbance goal(PURSUE, b2Vec2(1.0, 0));
         init(Task(goal, UNDEFINED));
         data2fp.emplace(Pointf(0.55, 0)); //make point corresponding to obstacle
-        dummy_vertex(movingVertex);
+        dummy_vertex(MOVING_VERTEX);
     }
 
     void TearDown(){
@@ -96,7 +96,7 @@ class ConfiguratorTestGetObstacle: public ConfiguratorTestGetGoal{
         Disturbance goal(PURSUE, b2Vec2(1.0, 0));
         init(Task(goal, UNDEFINED));
         data2fp.emplace(Pointf(0.55, 0)); //make point corresponding to obstacle
-        dummy_vertex(movingVertex);
+        dummy_vertex(MOVING_VERTEX);
     }
 
     void TearDown(){
@@ -153,12 +153,12 @@ TEST_F(ConfiguratorTestGetObstacle, AvoidNoGoal){
     b2World world(b2Vec2(0,0));
     BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
     bf.attention=1;
-    transitionSystem[movingVertex].Di=Disturbance(bf); //current task was avoiding
-    transitionSystem[movingVertex].Di.validate();
-    Disturbance solution=transitionSystem[movingVertex].Di;
-    transitionSystem[movingVertex].direction=STOP;
-    vertex_options_push_back(movingVertex, LEFT);
-    Disturbance Di= getDisturbance(transitionSystem, movingVertex, world, LEFT, transitionSystem[movingVertex].endPose);
+    transitionSystem[MOVING_VERTEX].Di=Disturbance(bf); //current task was avoiding
+    transitionSystem[MOVING_VERTEX].Di.validate();
+    Disturbance solution=transitionSystem[MOVING_VERTEX].Di;
+    transitionSystem[MOVING_VERTEX].direction=STOP;
+    vertex_options_push_back(MOVING_VERTEX, LEFT);
+    Disturbance Di= getDisturbance(transitionSystem, MOVING_VERTEX, world, LEFT, transitionSystem[MOVING_VERTEX].endPose);
     EXPECT_EQ(Di.bf.pose.p.x, solution.bf.pose.p.x);
     EXPECT_EQ(Di.bf.pose.p.y, solution.bf.pose.p.y);
     EXPECT_EQ(Di.bf.pose.q.GetAngle(), solution.bf.pose.q.GetAngle());
@@ -170,7 +170,7 @@ TEST_F(ConfiguratorTest, UpdateGraph){
     Disturbance Di(PURSUE, b2Vec2(0.81, 0.23)), Dn(AVOID, b2Vec2(0.22, 0)), goal(PURSUE, b2Vec2(1.0, 0));
     init(Task(goal, UNDEFINED));
     b2Transform deltaPose(b2Vec2(.5, .27), b2Rot(M_PI_4));
-    dummy_vertex(movingVertex);
+    dummy_vertex(MOVING_VERTEX);
     transitionSystem[1].Di=Di;
     transitionSystem[1].Dn=Dn;
     transitionSystem[1].direction=DEFAULT;
@@ -211,7 +211,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
         Task goal(target, DEFAULT);
         init(goal);
     }
-    dummy_vertex(movingVertex);
+    dummy_vertex(MOVING_VERTEX);
     edgeDescriptor e= make_successful(1);
     transitionSystem[e].step=1;
     transitionSystem[e.m_target].direction=std::get<1>(GetParam());
@@ -228,47 +228,54 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
  */
 TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     currentTask.set_direction(std::get<1>(GetParam()));
-    if (currentTask.get_direction()==UNDEFINED){
+    vertex_set_direction(currentVertex, std::get<1>(GetParam()));
+    if (std::get<1>(GetParam())==UNDEFINED || std::get<1>(GetParam())==STOP){
         return;
     }
-    dummy_vertex(movingVertex);
+    //dummy_vertex(MOVING_VERTEX);
+    currentVertex = boost::add_vertex(transitionSystem);
     make_module(currentVertex);
+    planIsDirection(std::get<1>(GetParam()));
+    currentVertex=MOVING_VERTEX;
+    current_vertices={currentVertex};
     currentTask.set_change(false);
     currentTask.setMotorStep(20);
     iteration=2;
-    applyTransitionMatrix(movingVertex, currentTask.get_direction(), false, movingVertex, plan);
-    EXPECT_EQ(transitionSystem[movingVertex].options.size(), 1);
-    EXPECT_EQ(transitionSystem[movingVertex].options[0], currentTask.get_direction());
+    applyTransitionMatrix(MOVING_VERTEX, currentTask.get_direction(), false, MOVING_VERTEX, plan);
+    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
+    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options[0], currentTask.get_direction());
 }
 
 TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
     Direction direction=std::get<1>(GetParam());
+    currentTask.set_direction(direction);
     if (direction==UNDEFINED || direction==STOP){
         return;
     }
-    dummy_vertex(movingVertex);
+    setAllVisited(); //just movingvertex
+    currentVertex = boost::add_vertex(transitionSystem);
+    current_vertices={currentVertex};
     make_module(currentVertex);
-    auto oe=gt::outEdges(transitionSystem, currentVertex, direction);
-    EXPECT_EQ(oe.size(), 1);
-    plan={oe[0].m_target};
+    planIsDirection(direction);
     iteration=2;
     edgeDescriptor e=edgeDescriptor();
     std::vector<Direction> solution={DEFAULT, LEFT, RIGHT};
     simResult::resultType outcome=std::get<2>(GetParam());
     switch(outcome){
         case simResult::crashed:
-            e= make_v1_crashed(movingVertex);
+            e= make_v1_crashed(MOVING_VERTEX);
             erase_from_vector(solution, std::get<1>(GetParam()));
             break;
         default:
-            e=make_successful(movingVertex);
+            e=make_successful(MOVING_VERTEX);
             transitionSystem[e.m_target].outcome=std::get<2>(GetParam());
             solution.clear();
             break;
     }
     transitionSystem[e.m_target].direction=transitionSystem[plan[0]].direction;
-    applyTransitionMatrix(movingVertex, transitionSystem[e.m_target].direction, false, movingVertex, plan);
-    EXPECT_EQ(transitionSystem[movingVertex].options, solution);
+    setPhi(transitionSystem[e.m_target]);
+    applyTransitionMatrix(MOVING_VERTEX, transitionSystem[e.m_target].direction, false, MOVING_VERTEX, plan);
+    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options, solution);
 }
 
 

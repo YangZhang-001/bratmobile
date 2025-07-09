@@ -6,6 +6,7 @@ TEST_P(ConfiguratorTest32DT, backtracksimple){
         auto v1=make_v1_crashed().m_target;
         auto v2=make_successful().m_target;
         auto v3=make_successful().m_target;
+        setAllVisited();
         //make teh other two vertices rotations(just to give them a lower phi value)
         transitionSystem[v2].endPose.q.Set(M_PI_2);
         transitionSystem[v3].endPose.q.Set(-M_PI_2);

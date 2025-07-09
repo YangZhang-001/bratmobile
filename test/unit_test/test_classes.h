@@ -266,14 +266,14 @@ protected:
     };
 
     /**
-     * @brief Creates a vertex whose state starts and end at the origin
+     * @brief Creates a vertex whose state starts and end at the origin. Not visited by default
      * 
      * @param v0 
      * @return edgeDescriptor 
      */
     edgeDescriptor make_successful(vertexDescriptor v0=0);
     /**
-     * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state
+     * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state. Not visited by default
      * 
      */
     edgeDescriptor make_v1_crashed( vertexDescriptor v0=0, b2Transform start=b2Transform_zero, b2Transform end=b2Transform_zero, b2Transform Dn=b2Transform_inf);
@@ -287,8 +287,22 @@ protected:
                    \
                     v4(RIGHT) --- v5(DEFAULT)
      * 
+     * Not visited by default
      */
     void make_module(vertexDescriptor mv=0);
+
+    /**
+     * @brief Assign phi to all vertices
+     * 
+     */
+    void setAllVisited();
+
+    /**
+     * @brief Assign phi to state @param s
+     * 
+     * @param s 
+     */
+    void setPhi(State & s);
 public:
 
     /**
@@ -327,6 +341,7 @@ class ConfiguratorTest32DT:public ConfiguratorTest, public testing::WithParamInt
     public:
         void SetUp(){
         transitionSystem=TransitionSystem(1);
+        setAllVisited();
     }
 
     void TearDown(){
@@ -346,6 +361,11 @@ protected:
      */
     int expectedOptions(Direction dir, simResult::resultType o, Disturbance d);
 
+    /**
+     * @brief sets plan to the vertex that has a certain direction
+     * 
+     */
+    void planIsDirection(Direction direction);
 
 };
 
@@ -413,6 +433,7 @@ edgeDescriptor ConfiguratorTest::make_v1_crashed( vertexDescriptor v0, b2Transfo
 }
 
 void ConfiguratorTest::make_module(vertexDescriptor mv){
+    //mv=currentVertex;
     for (int i=0; i<6; i++){
         boost::add_vertex(transitionSystem);
     }
@@ -485,6 +506,26 @@ int ConfiguratorTestTransitionMatrix::expectedOptions(Direction dir, simResult::
     else if (o==simResult::crashed){
         return 0;
     }
+}
+
+void ConfiguratorTestTransitionMatrix::planIsDirection(Direction direction){
+    auto oe=gt::outEdges(transitionSystem, currentVertex, direction);
+    if (oe.empty()){
+        return;
+    }
+    plan={oe[0].m_target};
+
+}
+
+void ConfiguratorTest::setAllVisited(){
+    auto vs=boost::vertices(transitionSystem);
+    for (auto vi=vs.first; vi!=vs.second; vi++){
+        setPhi(transitionSystem[*vi]);
+    }
+}
+
+void ConfiguratorTest::setPhi(State & s){
+    s.phi=Planner::estimateCost(s, s.start, s.direction, controlGoal).cost;   
 }
 
 

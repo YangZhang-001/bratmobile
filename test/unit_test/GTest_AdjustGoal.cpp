@@ -23,7 +23,7 @@ TEST_P(ConfiguratorTest2DT, adjustGoal){
     controller.set_Di_to_goal(goal.get_disturbance());
     vertexDescriptor v1;
     vertex_set_options(0, std::vector<Direction>(DEFAULT));
-    add_vertex_now(movingVertex, v1, transitionSystem, goal.get_disturbance());
+    add_vertex_now(MOVING_VERTEX, v1, transitionSystem, goal.get_disturbance());
     plan={v1};
     math::applyAffineTrans(deltaPose, deltaPose);
     update_graph(transitionSystem, deltaPose);
