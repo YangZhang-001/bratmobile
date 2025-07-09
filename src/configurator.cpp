@@ -165,7 +165,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	Task t=currentTask;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
 	EndedResult er= Planner::estimateCost(g[v],b2Transform_zero, direction, controlGoal);
-	g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
+	//g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
 	do{
 		v=bestNext;
 		closed.emplace(*priorityQueue.begin().base());
