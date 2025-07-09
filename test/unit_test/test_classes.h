@@ -329,6 +329,7 @@ class ConfiguratorTest32DT:public ConfiguratorTest, public testing::WithParamInt
     public:
         void SetUp(){
         transitionSystem=TransitionSystem(1);
+        setAllVisited();
     }
 
     void TearDown(){
