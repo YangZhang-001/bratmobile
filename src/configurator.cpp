@@ -485,13 +485,12 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 				std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
 				erase_from_vector(result, currentTask.get_direction());
 				transitionSystem[v].options=result;
-				return;
 			}
 			
 		}
 		}
 	}
-	if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
+	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
 		if (d ==DEFAULT ||d==STOP){
 				//prioritise reflex
 				if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
