@@ -27,7 +27,7 @@ TEST_F(ConfiguratorTest, InitialVertex){
 TEST_F(ConfiguratorTest, DummyVertex){
     init();
     dummy_vertex(MOVING_VERTEX); 
-    EXPECT_TRUE(currentTask.get_change());
+    EXPECT_TRUE(currentTask.is_over());
     EXPECT_EQ(boost::out_degree(MOVING_VERTEX, transitionSystem), 1);
     EXPECT_FALSE(boost::edge(MOVING_VERTEX, MOVING_VERTEX, transitionSystem).second);
 }
