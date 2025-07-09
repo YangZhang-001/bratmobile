@@ -289,6 +289,8 @@ protected:
      * 
      */
     void make_module(vertexDescriptor mv=0);
+
+    void setAllVisited();
 public:
 
     /**
@@ -500,6 +502,13 @@ void ConfiguratorTestTransitionMatrix::planIsDirection(Direction direction){
     }
     plan={oe[0].m_target};
 
+}
+
+void ConfiguratorTest::setAllVisited(){
+    auto vs=boost::vertices(transitionSystem);
+    for (auto vi=vs.first; vi!=vs.second; vi++){
+        transitionSystem[*vi].phi=Planner::estimateCost(transitionSystem[*vi], transitionSystem[*vi].start, transitionSystem[*vi].direction, controlGoal).cost;
+    }
 }
 
 

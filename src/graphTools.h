@@ -81,6 +81,9 @@ struct State{
 
 	State(const b2Transform &_start, const Disturbance& di, const Direction & dir): start(_start), Di(di), direction(dir){}
 
+	/**
+	 * @brief Whether this state has been visited in exploration using evaluation function phi as proxy
+	 */
 	bool visited(){
 		return phi<NAIVE_PHI;
 	}

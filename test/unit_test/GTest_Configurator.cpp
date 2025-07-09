@@ -251,6 +251,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
     if (direction==UNDEFINED || direction==STOP){
         return;
     }
+    setAllVisited(); //just movingvertex
     currentVertex = boost::add_vertex(transitionSystem);
     make_module(currentVertex);
     planIsDirection(direction);
@@ -270,6 +271,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
             break;
     }
     transitionSystem[e.m_target].direction=transitionSystem[plan[0]].direction;
+    transitionSystem[e.m_target].phi= Planner::estimateCost(transitionSystem[e.m_target], transitionSystem[e.m_target].start, transitionSystem[e.m_target].direction, controlGoal).cost;
     applyTransitionMatrix(MOVING_VERTEX, transitionSystem[e.m_target].direction, false, MOVING_VERTEX, plan);
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options, solution);
 }
