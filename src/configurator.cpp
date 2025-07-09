@@ -554,8 +554,9 @@ void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction
 		}
 	}
 	std::vector <vertexDescriptor> full_plan=plan_prov;
-	if (!currentTask.get_change()){
-		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
+	if (!currentTask.get_change() && ( v0==MOVING_VERTEX || v0==currentVertex)){
+		//full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
+		full_plan.insert(full_plan.begin(), v0);
 	}
 	// if (v0==MOVING_VERTEX || src==TransitionSystem::null_vertex()){
 	// 	transitionMatrix(v0, DEFAULT, TransitionSystem::null_vertex());	

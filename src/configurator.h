@@ -346,8 +346,7 @@ std::pair <edgeDescriptor, bool> add_vertex_now(const vertexDescriptor & src, ve
 std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &src, vertexDescriptor &v1, TransitionSystem &g, Edge edge=Edge(), bool topDown=0);
 
 
-//only keeps unexplored transitions out of vertex 
-
+/** * only keeps unexplored transitions out of vertex @param v*/
 void unexplored_transitions(TransitionSystem&g, const vertexDescriptor& v);
 
 /**
