@@ -164,13 +164,13 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	std::set <vertexDescriptor> closed;
 	Task t=currentTask;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
-	EndedResult er= Planner::estimateCost(g[v],b2Transform_zero, direction, controlGoal);
-	g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
+	EndedResult er;
 	do{
 		v=bestNext;
 		closed.emplace(*priorityQueue.begin().base());
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
+		g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
 		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
 		for (Direction d: g[v].options){ //add and evaluate all vertices
 			v0_exp=v;
