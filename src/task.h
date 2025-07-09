@@ -365,10 +365,19 @@ b2Transform from_Di( const b2Transform * custom_start=NULL, Disturbance * d_obs=
 
 void set_change(bool b){
     change=b;
-    motorStep=0;
 }
 
 bool get_change(){
+    return change;
+}
+
+/**
+ * @brief If task has finished executing
+ * 
+ * @return true if step==0 or if manually set to change
+ * @return false 
+ */
+bool is_over(){
     return change || motorStep==0;
 }
 

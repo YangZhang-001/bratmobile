@@ -192,7 +192,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					g[v0].options.erase(g[v0].options.begin());
 					bool changedMatch=matchToSafe(match, other_matches);
 					edge=setup_match_edge(match, v0, v1, sk.second, t.get_direction(), changedMatch);
-					if (currentTask.get_change()){
+					if (currentTask.is_over()){
 						std::vector <vertexDescriptor> task_vertices=gt::task_vertices(v1, g, iteration, currentVertex);
 						vertexDescriptor task_start= task_vertices[0];
 						if (plan_prov.empty()){
@@ -437,7 +437,7 @@ void Configurator::run(Configurator * c){
 			}
 			c->update_graph(c->transitionSystem, deltaPose);
 			if (c->goal_changer!=NULL){
-				if (( c->currentTask.get_change()& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
+				if (( c->currentTask.is_over()& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
 					c->goal_changer->change_goal(&c->controlGoal);
 				}					
 			}
@@ -674,7 +674,7 @@ VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatche
 			if (auto vertices=gt::task_vertices(v, transitionSystem, iteration, currentVertex); vertices.size()>1){
 				q.start=transitionSystem[vertices[0]].start;
 			}			
-		if (v==currentVertex && !currentTask.get_change()){
+		if (v==currentVertex && !currentTask.is_over()){
 			q.start=b2Transform_zero;
 		}
 		StateDifference sd(s, q);
@@ -768,7 +768,7 @@ vertexDescriptor AttentiveConfigurator::get_explore_start(TransitionSystem & g){
 		dummy_vertex(currentVertex);
 		currentTask.set_change(true);
 	}
-	if (!plan.empty() || !currentTask.get_change()){ //
+	if (!plan.empty() || !currentTask.is_over()){ //
 		return MOVING_VERTEX;
 	}
 	else{
@@ -827,7 +827,7 @@ void Configurator::estimate_current_vertex(){
 
 
 void Configurator::change_task(){
-	if (!currentTask.get_change()){
+	if (!currentTask.is_over()){
 		return;
 	}
 	if (task_controller==NULL){
@@ -881,7 +881,7 @@ void AttentiveConfigurator::explore_plan(b2World&world){
 		ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
 	}
 	catch(...){}	
-    if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.get_change())){ //currentv not visited means that it wasn't observed ()
+    if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.is_over())){ //currentv not visited means that it wasn't observed ()
         printf("no plan, searchign from %i\n", src);
         bool finished=false;
         ExecutionInfo info=package_info();

@@ -234,8 +234,8 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     }
     dummy_vertex(MOVING_VERTEX);
     make_module(currentVertex);
-    currentVertex=MOVING_VERTEX;
     planIsDirection(std::get<1>(GetParam()));
+    currentVertex=MOVING_VERTEX;
     currentTask.set_change(false);
     currentTask.setMotorStep(20);
     iteration=2;
