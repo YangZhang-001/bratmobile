@@ -391,6 +391,9 @@ bool StateMatcher::match_equal(const MATCH_TYPE& candidate, const MATCH_TYPE& de
 		case _FALSE:
 			result=int(candidate)==int(desired);
 			break;
+		case _TRUE:
+			result=int(candidate)==int(desired);
+			break;
 		case DN_SHAPE:
 			result =(int(candidate)==int(desired))|| int(candidate)==_TRUE || int(candidate)==ABSTRACT || candidate== D_NEW;
 			break;			
