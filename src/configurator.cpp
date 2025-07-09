@@ -162,9 +162,10 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	Direction direction=currentTask.get_direction();
 	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=plan;
 	std::set <vertexDescriptor> closed;
-	Task t;
+	Task t=currentTask;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
-	EndedResult er;
+	EndedResult er= Planner::estimateCost(g[v],b2Transform_zero, direction, controlGoal);
+	g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
 	do{
 		v=bestNext;
 		closed.emplace(*priorityQueue.begin().base());
@@ -485,9 +486,8 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 				std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
 				erase_from_vector(result, currentTask.get_direction());
 				transitionSystem[v].options=result;
+				}
 			}
-			
-		}
 		}
 	}
 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
@@ -783,7 +783,6 @@ void AttentiveConfigurator::pre_explore(){
 	//}	
 		//transitionSystem[MOVING_VERTEX].Di=currentTask.get_disturbance();
 		transitionSystem[MOVING_VERTEX].Di=transitionSystem[currentVertex].Di;
-
 		transitionSystem[MOVING_VERTEX].outcome=simResult::successful;
 		movingEdge=boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
 	//  if (currentTask.get_change()){
