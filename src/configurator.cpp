@@ -477,18 +477,21 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	if (( !currentTask.get_change() ||!oe.empty()) && iteration>1){
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
 		if (ve.first){
-			if(!transitionSystem[ve.second.m_target].visited()){}
-			else if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
-				transitionSystem[v].options={currentTask.get_direction()};
+			if(transitionSystem[ve.second.m_target].visited()){
+				if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
+					transitionSystem[v].options={currentTask.get_direction()};
+				}
+				else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
+				std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
+				erase_from_vector(result, currentTask.get_direction());
+				transitionSystem[v].options=result;
+				return;
 			}
-			else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
-			std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
-			erase_from_vector(result, currentTask.get_direction());
-			transitionSystem[v].options=result;
+			
 		}
 		}
 	}
-	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
+	if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
 		if (d ==DEFAULT ||d==STOP){
 				//prioritise reflex
 				if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
