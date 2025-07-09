@@ -476,6 +476,8 @@ bool matchToSafe(VertexMatch &match,const std::vector<VertexMatch> &other_matche
  */
 std::pair<edgeDescriptor, bool> setup_match_edge(VertexMatch &match, vertexDescriptor &v0, vertexDescriptor & v1,const Edge& k, Direction direction, bool changedMatch);
 
+std::vector <vertexDescriptor> task_vertices(vertexDescriptor, const vertexDescriptor &, std::pair<bool, edgeDescriptor>* ep=NULL);
+
 /**
  * @brief Returns a visited edge if present, or if the current 
  * 

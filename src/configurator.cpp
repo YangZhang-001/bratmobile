@@ -194,7 +194,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					bool changedMatch=matchToSafe(match, other_matches);
 					edge=setup_match_edge(match, v0, v1, sk.second, t.get_direction(), changedMatch);
 					if (currentTask.is_over()){
-						std::vector <vertexDescriptor> task_vertices=gt::task_vertices(v1, g, iteration, currentVertex);
+						std::vector <vertexDescriptor> task_vertices=task_vertices(v1, currentVertex);
 						vertexDescriptor task_start= task_vertices[0];
 						if (plan_prov.empty()){
 							recycle_plan(v, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
@@ -296,7 +296,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, const std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov){
 	for (vertexDescriptor v:evaluation_q){
 		std::pair<bool, edgeDescriptor> ep(false, edgeDescriptor());
-		std::vector <vertexDescriptor> split = gt::task_vertices(v, transitionSystem, iteration, currentVertex, &ep); 
+		std::vector <vertexDescriptor> split = task_vertices(v, currentVertex, &ep); 
 		Direction direction= transitionSystem[ep.second.m_target].direction;
 		if (split.size()<2){
 			split =splitTask(v, transitionSystem, DEFAULT, ep.second.m_source);
@@ -672,7 +672,7 @@ VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatche
 		bool Tmatch=dir==Direction::UNDEFINED ||transitionSystem[v].direction==dir ||(transitionSystem[v].direction==STOP &&dir==DEFAULT &&iteration>1);
 		//make state representing a whole task, this is inefficient and when i have time should be susbtituted with subgraph
 		State q= transitionSystem[v];
-			if (auto vertices=gt::task_vertices(v, transitionSystem, iteration, currentVertex); vertices.size()>1){
+			if (auto vertices=task_vertices(v, currentVertex); vertices.size()>1){
 				q.start=transitionSystem[vertices[0]].start;
 			}			
 		if (v==currentVertex && !currentTask.is_over()){
@@ -1002,4 +1002,52 @@ std::pair<edgeDescriptor, bool> AttentiveConfigurator::setup_match_edge(VertexMa
 	// 	transitionSystem[edge.first].enableOverride();
 	// }
 	return edge;
+}
+
+std::vector <vertexDescriptor> AttentiveConfigurator::task_vertices( vertexDescriptor v, const vertexDescriptor & current_v, std::pair<bool, edgeDescriptor>* ep){
+	std::vector <vertexDescriptor> result= {v};
+	Direction d=UNDEFINED;
+	std::pair<bool, edgeDescriptor>ep2(false, edgeDescriptor()), _ep=ep2;
+	do {
+		std::vector <edgeDescriptor> ie=gt::inEdges(transitionSystem, v);
+		ep2= gt::visitedEdge(ie, transitionSystem,v);
+		if (!ep2.first){
+			ep2=gt::getMostLikely(transitionSystem, ie, iteration);
+		}
+		if (ep2.first){
+			if (ep2.second.m_target==result[0]){ //size 1
+				_ep=ep2; //assign ep to define direction
+				d= transitionSystem[_ep.second.m_target].direction;
+				if (ep!=NULL){
+					transitionSystem[_ep.second].it_observed=iteration;
+				}
+				for (edgeDescriptor e: ie){
+					if (transitionSystem[e.m_target].direction==d && e!=ep2.second && 
+						transitionSystem[e.m_source].Di == transitionSystem[_ep.second.m_source].Di &&
+						transitionSystem[e.m_source].Dn == transitionSystem[_ep.second.m_target].Dn){
+						ep2.second=e;
+						break;
+					}
+			}
+			}
+			else if (transitionSystem[ep2.second.m_target].direction==d &&
+			 	transitionSystem[ep2.second.m_target].Di == transitionSystem[_ep.second.m_target].Di &&
+			 	transitionSystem[ep2.second.m_target].Dn == transitionSystem[_ep.second.m_target].Dn){ //same task!
+				result.push_back(ep2.second.m_target); //source
+			}
+
+		}
+		else{
+			break;
+		}
+		v=ep2.second.m_source;
+		if (ep2.second.m_target==current_v){ //source
+			break;
+		}
+	}while(transitionSystem[ep2.second.m_target].direction==d);
+	std::reverse(result.begin(), result.end());
+	if (NULL!=ep){
+		*ep=_ep;
+	}
+	return result;
 }

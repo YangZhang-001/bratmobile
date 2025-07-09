@@ -356,7 +356,6 @@ namespace gt{
 	 */
 	std::vector<vertexDescriptor>::iterator to_task_end(edgeDescriptor &e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan, std::vector<vertexDescriptor>::iterator it); //in a vector, finds vertices belonging to the same task and skips to the end fo the task
 
-	std::vector <vertexDescriptor> task_vertices(vertexDescriptor, TransitionSystem&, const int &, const vertexDescriptor &, std::pair<bool, edgeDescriptor>* ep=NULL);
 
 
 }

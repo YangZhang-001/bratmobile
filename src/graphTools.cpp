@@ -337,51 +337,6 @@ do{
 return (it);
 }
 
-std::vector <vertexDescriptor> gt::task_vertices( vertexDescriptor v, TransitionSystem& g, const int & it, const vertexDescriptor & current_v, std::pair<bool, edgeDescriptor>* ep){
-	std::vector <vertexDescriptor> result= {v};
-	Direction d=UNDEFINED;
-	std::pair<bool, edgeDescriptor>ep2(false, edgeDescriptor()), _ep=ep2;
-	do {
-		std::vector <edgeDescriptor> ie=gt::inEdges(g, v);
-		ep2= gt::visitedEdge(ie, g,v);
-		if (!ep2.first){
-			ep2=gt::getMostLikely(g, ie, it);
-		}
-		if (ep2.first){
-			if (ep2.second.m_target==result[0]){ //size 1
-				_ep=ep2; //assign ep to define direction
-				d= g[_ep.second.m_target].direction;
-				if (ep!=NULL){
-					g[_ep.second].it_observed=it;
-				}
-				for (edgeDescriptor e: ie){
-					if (g[e.m_target].direction==d && e!=ep2.second && g[e.m_source].Di == g[_ep.second.m_source].Di &&g[e.m_source].Dn == g[_ep.second.m_target].Dn){
-						ep2.second=e;
-						break;
-					}
-			}
-			}
-			else if (g[ep2.second.m_target].direction==d &&
-			 	g[ep2.second.m_target].Di == g[_ep.second.m_target].Di &&
-			 	g[ep2.second.m_target].Dn == g[_ep.second.m_target].Dn){ //same task!
-				result.push_back(ep2.second.m_target); //source
-			}
-
-		}
-		else{
-			break;
-		}
-		v=ep2.second.m_source;
-		if (ep2.second.m_target==current_v){ //source
-			break;
-		}
-	}while(g[ep2.second.m_target].direction==d);
-	std::reverse(result.begin(), result.end());
-	if (NULL!=ep){
-		*ep=_ep;
-	}
-	return result;
-}
 
 
 
