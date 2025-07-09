@@ -228,11 +228,13 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
  */
 TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     currentTask.set_direction(std::get<1>(GetParam()));
+    vertex_set_direction(currentVertex, std::get<1>(GetParam()));
     if (currentTask.get_direction()==UNDEFINED){
         return;
     }
     dummy_vertex(MOVING_VERTEX);
     make_module(currentVertex);
+    currentVertex=MOVING_VERTEX;
     planIsDirection(std::get<1>(GetParam()));
     currentTask.set_change(false);
     currentTask.setMotorStep(20);
