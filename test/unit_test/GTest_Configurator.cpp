@@ -233,6 +233,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     }
     dummy_vertex(MOVING_VERTEX);
     make_module(currentVertex);
+    planIsDirection(std::get<1>(GetParam()));
     currentTask.set_change(false);
     currentTask.setMotorStep(20);
     iteration=2;
@@ -248,9 +249,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
     }
     dummy_vertex(MOVING_VERTEX);
     make_module(currentVertex);
-    auto oe=gt::outEdges(transitionSystem, currentVertex, direction);
-    EXPECT_EQ(oe.size(), 1);
-    plan={oe[0].m_target};
+    planIsDirection(direction);
     iteration=2;
     edgeDescriptor e=edgeDescriptor();
     std::vector<Direction> solution={DEFAULT, LEFT, RIGHT};

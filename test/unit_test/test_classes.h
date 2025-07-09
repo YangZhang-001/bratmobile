@@ -346,6 +346,11 @@ protected:
      */
     int expectedOptions(Direction dir, simResult::resultType o, Disturbance d);
 
+    /**
+     * @brief sets plan to the vertex that has a certain direction
+     * 
+     */
+    void planIsDirection(Direction direction);
 
 };
 
@@ -488,6 +493,14 @@ int ConfiguratorTestTransitionMatrix::expectedOptions(Direction dir, simResult::
     }
 }
 
+void ConfiguratorTestTransitionMatrix::planIsDirection(Direction direction){
+    auto oe=gt::outEdges(transitionSystem, currentVertex, direction);
+    if (oe.empty()){
+        return;
+    }
+    plan={oe[0].m_target};
+
+}
 
 
 #endif
