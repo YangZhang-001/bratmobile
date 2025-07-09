@@ -569,7 +569,7 @@ void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction
 			transitionSystem[v0].options={transitionSystem[e.first.m_target].direction};
 		}
 		else if (transitionSystem[e.first.m_target].outcome==simResult::crashed){
-			transitionMatrix(v0, d, src);
+			transitionMatrix(v0, transitionSystem[e.first.m_target].direction, src);
 			erase_from_vector(transitionSystem[v0].options, transitionSystem[e.first.m_target].direction);
 		}
 	}
