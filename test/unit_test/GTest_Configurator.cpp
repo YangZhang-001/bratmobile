@@ -251,7 +251,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
     if (direction==UNDEFINED || direction==STOP){
         return;
     }
-    setAllVisited(); //just movingvertex
+//    setAllVisited(); //just movingvertex
     currentVertex = boost::add_vertex(transitionSystem);
     make_module(currentVertex);
     planIsDirection(direction);
