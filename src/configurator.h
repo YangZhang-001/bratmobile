@@ -6,6 +6,7 @@
 #include <ncurses.h>
 #include <fstream>
 #include <algorithm>
+#include <random>
 #include <sys/stat.h>
 #include "debug.h"
 #include "planner.h"
