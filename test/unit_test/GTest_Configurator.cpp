@@ -326,7 +326,7 @@ INSTANTIATE_TEST_CASE_P(SimulationOutcomes, ConfiguratorTestTransitionMatrix, ::
         *                  
  * 
  */
-TEST_F(ConfiguratorTest, RecyclePlan){
+TEST_F(ConfiguratorTest, RecycleLongPlan){
     HorizonStarPlanner planner;
     register_planner(&planner);
     b2Transform shift, shift_start=b2Transform_zero;
@@ -357,8 +357,30 @@ TEST_F(ConfiguratorTest, RecyclePlan){
     bool recycled=recycle_plan(currentVertex, currentVertex, task_start, vm.first, shift_start, s.start, edge, plan, s.direction);
     EXPECT_TRUE(recycled);
     EXPECT_EQ(plan, desiredPlan);
+}
 
-
-    
-
+TEST_F(ConfiguratorTest, RecycleShortPlan){
+    HorizonStarPlanner planner;
+    register_planner(&planner);
+    b2Transform shift, shift_start=b2Transform_zero;
+    shift.p.x=1;
+    Disturbance obstacle(AVOID, b2Vec2(.6,0));
+    dummy_vertex(MOVING_VERTEX);
+    vertexDescriptor task_start=currentVertex; //1
+    make_module(currentVertex);
+    currentVertex=n_vertices()-1; //see sketch
+    std::vector<vertexDescriptor>  avoid={3, 5};
+    vertex_set_Dn(2, obstacle);
+    set_Di(avoid, obstacle);
+    State s=transitionSystem[2];
+    currentTask.setMotorStep(0);
+    currentTask.set_change(1);
+    math::applyAffineTrans(shift, transitionSystem);
+    iteration=100;
+    EXPECT_EQ(vertex_get_endPose(currentVertex), b2Transform_zero);
+    VertexMatch vm(StateMatcher::ABSTRACT, 2);
+    auto edge =boost::add_edge(currentVertex, 2, transitionSystem);
+    bool recycled=recycle_plan(currentVertex, currentVertex, task_start, vm.first, shift_start, s.start, edge, plan, s.direction);
+    EXPECT_TRUE(recycled);
+    EXPECT_EQ(plan, desiredPlan);
 }
