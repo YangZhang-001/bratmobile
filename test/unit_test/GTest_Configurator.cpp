@@ -327,6 +327,8 @@ INSTANTIATE_TEST_CASE_P(SimulationOutcomes, ConfiguratorTestTransitionMatrix, ::
  * 
  */
 TEST_F(ConfiguratorTest, RecyclePlan){
+    HorizonStarPlanner planner;
+    register_planner(&planner);
     b2Transform shift, shift_start=b2Transform_zero;
     shift.p.x=1;
     Disturbance obstacle(AVOID, b2Vec2(.6,0)), goal(PURSUE, shift.p);
@@ -352,7 +354,7 @@ TEST_F(ConfiguratorTest, RecyclePlan){
     EXPECT_EQ(vertex_get_endPose(currentVertex), b2Transform_zero);
     VertexMatch vm(StateMatcher::ABSTRACT, 2);
     auto edge =boost::add_edge(currentVertex, 2, transitionSystem);
-    bool recycled=recycle_plan(currentVertex, vm.second, task_start, vm.first, shift_start, s.start, edge, plan, s.direction);
+    bool recycled=recycle_plan(currentVertex, currentVertex, task_start, vm.first, shift_start, s.start, edge, plan, s.direction);
     EXPECT_TRUE(recycled);
     EXPECT_EQ(plan, desiredPlan);
 
