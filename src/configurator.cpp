@@ -473,7 +473,7 @@ void AttentiveConfigurator::unexplored_transitions(TransitionSystem& g, const ve
 
 void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src){
 	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
-	srand(unsigned(time(NULL)));
+	//srand(unsigned(time(NULL)));
 	auto oe=gt::outEdges(transitionSystem, v, d);
 	if (( !currentTask.get_change() ||!oe.empty()) && iteration>1){
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
@@ -492,19 +492,20 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	}
 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
 		if (d ==DEFAULT ||d==STOP){
-				//prioritise reflex
-				if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
 					transitionSystem[v].options.push_back(temp.get_direction());
 					transitionSystem[v].options.push_back(getOppositeDirection(temp.get_direction()).second);
-				}
-				else{
-					int random= rand();
-					if (random%2==0){
-						transitionSystem[v].options = {LEFT, RIGHT};
-					}
-					else{
-						transitionSystem[v].options = {RIGHT, LEFT};
-					}
+				//prioritise reflex
+				if (temp.getAction().getOmega()==0){ //if the task chosen is a turning task
+				// }
+				// else{
+					//int random= rand();
+					//if (random%2==0){
+						//transitionSystem[v].options = {LEFT, RIGHT};
+					// }
+					// else{
+					// 	transitionSystem[v].options = {RIGHT, LEFT};
+					// }
+					std::random_shuffle(transitionSystem[v].options.begin(), transitionSystem[v].options.end());
 				}
 			}
 	}
