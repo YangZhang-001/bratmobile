@@ -505,7 +505,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 					// else{
 					// 	transitionSystem[v].options = {RIGHT, LEFT};
 					// }
-					std::shuffle(std::begin(transitionSystem[v].options), std::end(transitionSystem[v].options));
+					std::shuffle(std::begin(transitionSystem[v].options), std::end(transitionSystem[v].options), std::mt19937());
 				}
 			}
 	}
