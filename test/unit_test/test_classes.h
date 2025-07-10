@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include "../callbacks.h"
 #include <string>
+#include <numeric>
 
 /**
  * @brief Setting up ostream operator for use with GTest
@@ -303,6 +304,11 @@ protected:
      * @param s 
      */
     void setPhi(State & s);
+
+    void set_Di(std::vector<vertexDescriptor> vec, const Disturbance& Di);
+
+    void set_Dn(std::vector<vertexDescriptor> vec, const Disturbance& Dn);
+
 public:
 
     /**
@@ -526,6 +532,18 @@ void ConfiguratorTest::setAllVisited(){
 
 void ConfiguratorTest::setPhi(State & s){
     s.phi=Planner::estimateCost(s, s.start, s.direction, controlGoal).cost;   
+}
+
+void ConfiguratorTest::set_Di(std::vector<vertexDescriptor> vec, const Disturbance& Di){
+    for (vertexDescriptor v:vec){
+        vertex_set_Di(v, Di);
+    }
+}
+
+void ConfiguratorTest::set_Dn(std::vector<vertexDescriptor> vec, const Disturbance& Dn){
+        for (vertexDescriptor v:vec){
+        vertex_set_Dn(v, Dn);
+    }
 }
 
 

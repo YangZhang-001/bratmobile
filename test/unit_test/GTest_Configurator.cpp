@@ -309,3 +309,54 @@ INSTANTIATE_TEST_CASE_P(SimulationOutcomes, ConfiguratorTestTransitionMatrix, ::
                                                                                 std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(.78,.2), b2Rot(0)), STOP, simResult::safeForNow)
 ));
 
+/**
+ * GRAPH looking like this
+ * 
+ *      *             
+                     v3(LEFT)---v4(DEFAULT)                      v13(LEFT)*---v14(DEFAULT)*
+                    /                                           /
+                   v1 --- v2(DEFAULT)       v8(LEFT)*---v9(DEFAULT)* --- v12(DEFAULT)
+                    \                       /                   \
+                    v5(RIGHT)* --- v6(DEFAULT)* --- v7(DEFAULT)    v15(RIGHT) --- v16(DEFAULT)  
+                                            \
+                                              v10(RIGHT) --- v11(DEFAULT)        
+                                                       
+                                                    
+
+        *                  
+ * 
+ */
+TEST_F(ConfiguratorTest, RecyclePlan){
+    b2Transform shift, shift_start=b2Transform_zero;
+    shift.p.x=1;
+    Disturbance obstacle(AVOID, b2Vec2(.6,0)), goal(PURSUE, shift.p);
+    init(Task(goal,DEFAULT));
+    dummy_vertex(MOVING_VERTEX);
+    vertexDescriptor task_start=currentVertex; //1
+    make_module(currentVertex);
+    make_module(n_vertices()-1);
+    make_module(n_vertices()-1);
+    currentVertex=14; //see sketch
+    std::vector<vertexDescriptor> all(n_vertices()-1), avoid={3, 4, 5, 6}, safe(n_vertices()-7), desiredPlan={1,5, 6, 8, 9, 13, 14};
+    std::iota(all.begin(), all.end(), 1);
+    std::iota(safe.begin(), safe.end(), 7);
+    vertex_set_Dn(2, obstacle);
+    set_Di(avoid, obstacle);
+    set_Di(safe, goal);
+    vertex_set_Di(2, goal);
+    State s=transitionSystem[2];
+    currentTask.setMotorStep(0);
+    currentTask.set_change(1);
+    math::applyAffineTrans(shift, transitionSystem);
+    iteration=100;
+    EXPECT_EQ(vertex_get_endPose(currentVertex), b2Transform_zero);
+    VertexMatch vm(StateMatcher::ABSTRACT, 2);
+    auto edge =boost::add_edge(currentVertex, 2, transitionSystem);
+    bool recycled=recycle_plan(currentVertex, vm.second, task_start, vm.first, shift_start, s.start, edge, plan, s.direction);
+    EXPECT_TRUE(recycled);
+    EXPECT_EQ(plan, desiredPlan);
+
+
+    
+
+}

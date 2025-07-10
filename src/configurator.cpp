@@ -919,7 +919,7 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE& matchType, 
 											b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge, 
 											std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction){
-	bool finished=false;
+	bool finished=false, result=false;
 	//bool been=matcher.match_equal(matchType, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
 	bool been = matchType==StateMatcher::ABSTRACT || matchType==StateMatcher::_TRUE;
 	Task controlGoal_adjusted= controlGoal;
@@ -935,6 +935,7 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &
 	bool filler=0;
 	if (finished){
 		plan_prov=plan_tmp;
+		result=true;
 		if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
 			//printf("inserting current vertex\n");
 			plan_prov.insert(plan_prov.begin(), task_start);
@@ -946,6 +947,7 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &
 			transitionSystem[v0].options={transitionSystem[task_start].direction};
 		}
 	}
+	return result;
 }
 
 std::pair<State, Edge> AttentiveConfigurator::simulation_setup(b2World& w, Task & t, vertexDescriptor v0, b2Transform shift, b2Transform &start, std::vector<Direction>v0_options){
