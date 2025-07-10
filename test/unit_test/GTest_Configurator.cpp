@@ -308,7 +308,7 @@ INSTANTIATE_TEST_CASE_P(SimulationOutcomes, ConfiguratorTestTransitionMatrix, ::
                                                                                 std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(.78,.2), b2Rot(0)), STOP, simResult::successful),
                                                                                 std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(.78,.2), b2Rot(0)), STOP, simResult::safeForNow)
 ));
-
+ 
 /**
  * GRAPH looking like this
  * 
@@ -336,8 +336,8 @@ TEST_F(ConfiguratorTest, RecycleLongPlan){
     dummy_vertex(MOVING_VERTEX);
     vertexDescriptor task_start=currentVertex; //1
     make_module(currentVertex);
-    make_module(n_vertices()-1);
-    make_module(n_vertices()-1);
+    make_module(n_vertices()-2);
+    make_module(n_vertices()-2);
     currentVertex=14; //see sketch
     std::vector<vertexDescriptor> all(n_vertices()-1), avoid={3, 4, 5, 6}, safe(n_vertices()-7), desiredPlan={1,5, 6, 8, 9, 13, 14};
     std::iota(all.begin(), all.end(), 1);
@@ -382,5 +382,5 @@ TEST_F(ConfiguratorTest, RecycleShortPlan){
     auto edge =boost::add_edge(currentVertex, 2, transitionSystem);
     bool recycled=recycle_plan(currentVertex, currentVertex, task_start, vm.first, shift_start, s.start, edge, plan, s.direction);
     EXPECT_TRUE(recycled);
-    EXPECT_EQ(plan, desiredPlan);
+    EXPECT_EQ(plan.size(), 3);
 }

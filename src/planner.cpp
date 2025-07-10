@@ -174,14 +174,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 	std::vector <Frontier> frontier_v;
 	bool _finished=false;
 	std::vector <Frontier> priorityQueue={Frontier(src, std::vector<vertexDescriptor>())};
-	//THIS SECTION WAS COMMENTED OUT TO MAKE PLANNER USABLE IN EXPLORER AND CONFIGURATOR. NO LONGER NEEDED NOW THAT CUSTOM INFO CAN BE ENTERED
-	// Task overarching_goal;
-	// if (NULL==custom_ctrl_goal){ //IN EXPLORER: pass in directly the goal you want!
-	// 	overarching_goal=controlGoal;
-	// }
-	// else{
-	// 	overarching_goal=*custom_ctrl_goal;
-	// }
+
 	int no_out=0;
 	std::vector <vertexDescriptor> add;
 	std::vector<std::vector<vertexDescriptor>>::reverse_iterator path= paths.rbegin();

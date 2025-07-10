@@ -440,7 +440,7 @@ edgeDescriptor ConfiguratorTest::make_v1_crashed( vertexDescriptor v0, b2Transfo
 
 void ConfiguratorTest::make_module(vertexDescriptor mv){
     //mv=currentVertex;
-    for (int i=0; i<6; i++){
+    for (int i=0; i<5; i++){
         boost::add_vertex(transitionSystem);
     }
     transitionSystem[mv+1].direction=DEFAULT;
