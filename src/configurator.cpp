@@ -496,18 +496,12 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 					transitionSystem[v].options.push_back(getOppositeDirection(temp.get_direction()).second);
 				//prioritise reflex
 				if (temp.getAction().getOmega()==0){ //if the task chosen is a turning task
-				// }
-				// else{
-					//int random= rand();
 					if (rand()%2==0){
-						std::iter_swap(transitionSystem[v].options.begin(), transitionSystem[v].options.end());
-						// transitionSystem[v].options = {LEFT, RIGHT};
+						 transitionSystem[v].options = {LEFT, RIGHT};
 					}
-					// else{
-					// 	transitionSystem[v].options = {RIGHT, LEFT};
-					// }
-					// auto randomEngine=std::default_random_engine{};
-					// std::shuffle(transitionSystem[v].options.begin(), transitionSystem[v].options.end(), randomEngine);
+					else{
+						transitionSystem[v].options = {RIGHT, LEFT};
+					} //no idea why it doesn't work using std shuffle/swap
 				}
 			}
 	}
