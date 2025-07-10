@@ -485,7 +485,7 @@ void ConfiguratorTest::add_edge_withPoses(vertexDescriptor u, vertexDescriptor v
         break;
         default: break;
     }
-    transitionSystem[v].endPose=b2MulT(transitionSystem[u].endPose, distance);
+    transitionSystem[v].endPose=b2MulT(distance, transitionSystem[u].endPose);
     auto e=boost::add_edge(u, v, transitionSystem);
     addStepToEdge(e.first);
     transitionSystem[e.first].it_observed=iteration;
@@ -493,7 +493,8 @@ void ConfiguratorTest::add_edge_withPoses(vertexDescriptor u, vertexDescriptor v
 
 void ConfiguratorTest::addStepToEdge(edgeDescriptor e){
     Task::Action a;
-    a.init(transitionSystem[e.m_target].direction);
+    Direction direction=transitionSystem[e.m_target].direction;
+    a.init(direction);
     transitionSystem[e].step=Controller::motor_step(a, transitionSystem[e.m_target].distance());
 
     

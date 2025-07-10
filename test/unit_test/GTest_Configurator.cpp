@@ -368,8 +368,9 @@ TEST_P(ConfiguratorTestPlanner, RecyclePlan){
     State s=transitionSystem[2];
     currentTask.setMotorStep(0);
     currentTask.set_change(1);
-    shift=b2MulT(transitionSystem[currentVertex].endPose, transitionSystem[DUMMY].endPose);
+    shift=b2Mul(transitionSystem[DUMMY].endPose, transitionSystem[currentVertex].endPose);
     math::applyAffineTrans(shift, transitionSystem);
+    EXPECT_EQ(transitionSystem[currentVertex].endPose, b2Transform_zero);
     iteration=100;
     resetPhi();
     VertexMatch vm(StateMatcher::ABSTRACT, 2);
