@@ -65,10 +65,8 @@ struct State{
 	b2Transform endPose = b2Transform_zero, start = b2Transform_zero; 
 	simResult::resultType outcome;
 	std::vector <Direction> options;
-	//int nodesInSameSpot =0;
 	bool filled =0;
 	int nObs=0;
-//	State* ID=this;
 	float phi=NAIVE_PHI; //arbitrarily large phi
 	VERTEX_LABEL label=VERTEX_LABEL::UNLABELED;
 	Direction direction=DEFAULT;

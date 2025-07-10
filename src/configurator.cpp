@@ -1,6 +1,11 @@
 #include "configurator.h"
 #include <chrono>
 
+void Configurator::applyAffineTrans(const b2Transform& deltaPose, Task& task){
+	math::applyAffineTrans(deltaPose, task.start);
+	math::applyAffineTrans(deltaPose, task.disturbance);
+}
+
 void Configurator::init(Task _task){
 	controlGoal=_task;
 	currentTask=_task;

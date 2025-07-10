@@ -6,7 +6,7 @@ namespace math {
 
 	void applyAffineTrans(const b2Transform&, State& );
 
-	void applyAffineTrans(const b2Transform& , Task* );
+	//void applyAffineTrans(const b2Transform& , Task* );
 
 	void applyAffineTrans(const b2Transform&, TransitionSystem&);
 

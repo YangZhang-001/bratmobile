@@ -317,7 +317,9 @@ public:
      */
     BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth);
 
-    void add_edge_withStep(vertexDescriptor u, vertexDescriptor v);
+    void add_edge_withPoses(vertexDescriptor u, vertexDescriptor v);
+
+    void addStepToEdge(edgeDescriptor e);
 
 };
 
@@ -449,19 +451,11 @@ void ConfiguratorTest::make_module(vertexDescriptor mv){
     transitionSystem[mv+2].direction=LEFT;
     transitionSystem[mv+4].direction=RIGHT;
 
-    transitionSystem[mv+2].endPose.q.Set(M_PI_2);
-    transitionSystem[mv+4].endPose.q.Set(-M_PI_2);
-    b2Transform distance=b2Transform(b2Vec2(0.5, 0), b2Rot(0));
-    transitionSystem[mv+3].start=transitionSystem[mv+2].endPose;
-    transitionSystem[mv+3].endPose=b2MulT(transitionSystem[mv+2].endPose, distance);
-    transitionSystem[mv+5].start=transitionSystem[mv+4].endPose;
-    transitionSystem[mv+5].endPose=b2MulT(transitionSystem[mv+4].endPose, distance);
-
-    add_edge_withStep(mv,mv+1);
-    add_edge_withStep(mv,mv+2);
-    add_edge_withStep(mv,mv+4);
-    add_edge_withStep(mv+2,mv+3);
-    add_edge_withStep(mv+4,mv+5);
+    add_edge_withPoses(mv,mv+1);
+    add_edge_withPoses(mv,mv+2);
+    add_edge_withPoses(mv,mv+4);
+    add_edge_withPoses(mv+2,mv+3);
+    add_edge_withPoses(mv+4,mv+5);
 
 }
 
@@ -476,11 +470,33 @@ BodyFeatures ConfiguratorTest::bodyFeatures(float x, float y, float q, float hle
     return bf;
 }
 
-void ConfiguratorTest::add_edge_withStep(vertexDescriptor u, vertexDescriptor v){
+void ConfiguratorTest::add_edge_withPoses(vertexDescriptor u, vertexDescriptor v){
+    transitionSystem[v].start=transitionSystem[u].endPose;
+    b2Transform distance=b2Transform_zero;
+    switch (transitionSystem[v].direction){
+        case DEFAULT:
+            distance.p.x=.5;
+        break;
+        case LEFT:
+            distance.q.Set(M_PI_2);
+        break;
+        case RIGHT:
+            distance.q.Set(-M_PI_2);
+        break;
+        default: break;
+    }
+    transitionSystem[v].endPose=b2MulT(transitionSystem[u].endPose, distance);
     auto e=boost::add_edge(u, v, transitionSystem);
+    addStepToEdge(e.first);
+    transitionSystem[e.first].it_observed=iteration;
+}
+
+void ConfiguratorTest::addStepToEdge(edgeDescriptor e){
     Task::Action a;
-    a.init(transitionSystem[v].direction);
-    transitionSystem[e.first].step=Controller::motor_step(a, transitionSystem[v].distance());
+    a.init(transitionSystem[e.m_target].direction);
+    transitionSystem[e].step=Controller::motor_step(a, transitionSystem[e.m_target].distance());
+
+    
 }
 
 

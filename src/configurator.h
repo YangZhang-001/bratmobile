@@ -202,6 +202,9 @@ void register_logger(Logger * l){
 	logger=l;
 }
 
+static void applyAffineTrans(const b2Transform& , Task &);
+
+
 protected:
 
 
