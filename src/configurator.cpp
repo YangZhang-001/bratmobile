@@ -847,7 +847,7 @@ void Configurator::change_task(){
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPose){
 	math::applyAffineTrans(_deltaPose, g);
-	math::applyAffineTrans(_deltaPose, &controlGoal);
+	Configurator::applyAffineTrans(_deltaPose, controlGoal);
 }
 
 
@@ -929,7 +929,7 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &
 	bool been = matchType==StateMatcher::ABSTRACT || matchType==StateMatcher::_TRUE;
 	Task controlGoal_adjusted= controlGoal;
 	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
-	math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
+	Configurator::applyAffineTrans(-shift_start, controlGoal_adjusted); //as start
 	boost::remove_edge(edge.first, transitionSystem);
 	edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
 	transitionSystem[edge.first].enableOverride();	

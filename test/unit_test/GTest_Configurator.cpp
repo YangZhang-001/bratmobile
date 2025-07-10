@@ -368,7 +368,7 @@ TEST_P(ConfiguratorTestPlanner, RecyclePlan){
     State s=transitionSystem[2];
     currentTask.setMotorStep(0);
     currentTask.set_change(1);
-    shift=transitionSystem[currentVertex].endPose;
+    shift=b2MulT(transitionSystem[currentVertex].endPose, transitionSystem[DUMMY].endPose);
     math::applyAffineTrans(shift, transitionSystem);
     iteration=100;
     resetPhi();
@@ -381,30 +381,20 @@ TEST_P(ConfiguratorTestPlanner, RecyclePlan){
 
 INSTANTIATE_TEST_CASE_P(GoalOrNot, ConfiguratorTestPlanner, testing::Bool());
 
-// TEST_F(ConfiguratorTest, RecycleShortPlan){
-//     addIteration();
-//     HorizonStarPlanner planner;
-//     register_planner(&planner);
-//     b2Transform shift, shift_start=b2Transform_zero;
-//     shift.p.x=1;
-//     Disturbance obstacle(AVOID, b2Vec2(.6,0));
-//     dummy_vertex(MOVING_VERTEX);
-//     vertexDescriptor task_start=currentVertex; //1
-//     make_module(currentVertex);
-//     currentVertex=n_vertices()-1; //see sketch
-//     std::vector<vertexDescriptor>  avoid={3, 5};
-//     vertex_set_Dn(2, obstacle);
-//     set_Di(avoid, obstacle);
-//     State s=transitionSystem[2];
-//     currentTask.setMotorStep(0);
-//     currentTask.set_change(1);
-//     shift=transitionSystem[currentVertex].endPose;
-//     math::applyAffineTrans(shift, transitionSystem);
-//     iteration=100;
-//     //EXPECT_EQ(vertex_get_endPose(currentVertex), b2Transform_zero);
-//     VertexMatch vm(StateMatcher::ABSTRACT, 2);
-//     auto edge =boost::add_edge(currentVertex, 2, transitionSystem);
-//     bool recycled=recycle_plan(currentVertex, currentVertex, task_start, vm.first, shift_start, s.start, edge, plan, s.direction);
-//     EXPECT_TRUE(recycled);
-//     EXPECT_EQ(plan.size(), 3);
-// }
+/**
+ * @brief Just checking it doens't return garbage
+ * 
+ */
+TEST_F(ConfiguratorTest, affineTransform){
+    b2Vec2 position(1.0,0);
+    b2Transform shift(position, b2Rot(0));
+    Disturbance d(PURSUE, position);
+    Task task(d, DEFAULT);
+    Configurator::applyAffineTrans(-shift, task);
+    EXPECT_EQ(task.get_disturbance().getPosition().x, 2);
+    EXPECT_EQ(task.get_disturbance().getPosition().y, 0);
+    EXPECT_EQ(task.get_disturbance().pose().q.GetAngle(), 0);
+    EXPECT_EQ(task.getStart(), shift);
+
+   // EXPECT_TRUE(task.get_disturbance().getPosition()==b2Vec2(2.0,0));
+}
