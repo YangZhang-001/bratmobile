@@ -505,7 +505,8 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 					// else{
 					// 	transitionSystem[v].options = {RIGHT, LEFT};
 					// }
-					std::shuffle(std::begin(transitionSystem[v].options), std::end(transitionSystem[v].options), std::mt19937());
+					auto randomEngine=std::default_random_engine{};
+					std::shuffle(transitionSystem[v].options.begin(), transitionSystem[v].options.end(), randomEngine);
 				}
 			}
 	}
@@ -517,10 +518,11 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 			}
 		}
 		else {
-			if (src==TransitionSystem::null_vertex()){
-				transitionSystem[v].options={DEFAULT, LEFT, RIGHT};				
-			}
-			else if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
+			// if (src==TransitionSystem::null_vertex()){
+			// 	transitionSystem[v].options={DEFAULT, LEFT, RIGHT};				
+			// }
+			// else 
+			if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
 				transitionSystem[v].options.push_back(temp.get_direction());
 				transitionSystem[v].options.push_back(getOppositeDirection(temp.get_direction()).second);
 				transitionSystem[v].options.push_back(DEFAULT);
