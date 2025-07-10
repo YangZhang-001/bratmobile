@@ -445,11 +445,12 @@ void ConfiguratorTest::make_module(vertexDescriptor mv){
     for (int i=0; i<5; i++){
         boost::add_vertex(transitionSystem);
     }
-    transitionSystem[mv+1].direction=DEFAULT;
-    transitionSystem[mv+3].direction=DEFAULT;
-    transitionSystem[mv+5].direction=DEFAULT;
-    transitionSystem[mv+2].direction=LEFT;
-    transitionSystem[mv+4].direction=RIGHT;
+    vertexDescriptor nv=n_vertices()-1;
+    transitionSystem[nv+1].direction=DEFAULT;
+    transitionSystem[nv+3].direction=DEFAULT;
+    transitionSystem[nv+5].direction=DEFAULT;
+    transitionSystem[nv+2].direction=LEFT;
+    transitionSystem[nv+4].direction=RIGHT;
 
     add_edge_withPoses(mv,mv+1);
     add_edge_withPoses(mv,mv+2);
