@@ -52,8 +52,6 @@ class ConfiguratorTestPlanner:public ConfiguratorTest, public testing::WithParam
     protected:
     void make_ts(std::vector <vertexDescriptor>& avoid, std::vector<vertexDescriptor>& desiredPlan){
     addIteration();
-    HorizonStarPlanner planner;
-    register_planner(&planner);
     b2Vec2 d_position(1,0);
     Disturbance obstacle(AVOID, b2Vec2(.6,0)), goal(PURSUE, d_position);
     if (GetParam()){
@@ -83,9 +81,15 @@ class ConfiguratorTestPlanner:public ConfiguratorTest, public testing::WithParam
     }
     vertex_set_Dn(2, obstacle);
     vertex_set_outcome(2,simResult::crashed);
-    State s=transitionSystem[2];
     currentTask.setMotorStep(0);
     currentTask.set_change(1);
+    }
+
+    void SetUp(){
+        register_planner(new HorizonStarPlanner);
+    }
+    void TearDown(){
+        delete planner;
     }
 };
  
@@ -110,6 +114,7 @@ TEST_P(ConfiguratorTestPlanner, RecyclePlan){
     std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4};
     vertexDescriptor task_start=DUMMY;
     make_ts(avoid, desiredPlan);    
+    State s=transitionSystem[2];
     b2Transform shift=b2Mul(transitionSystem[DUMMY].endPose, transitionSystem[currentVertex].endPose);
     b2Transform shift_start=b2Transform_zero;
     math::applyAffineTrans(shift, transitionSystem);
@@ -127,7 +132,13 @@ INSTANTIATE_TEST_CASE_P(GoalOrNot, ConfiguratorTestPlanner, testing::Bool());
 
 
 TEST_F(ConfiguratorTestPlanner,pathToAddTo){
-    dummy_vertex(MOVING_VERTEX);
+    std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4}, paths, add;
+    vertexDescriptor task_start=DUMMY;
+    make_ts(avoid, desiredPlan); 
+    std::vector<std::vector<vertexDescriptor>>::reverse_iterator path=paths.rend();
+    add={5, 6};
+    *path={14, 1, 3, 4};
+    planner->
     
 }
 

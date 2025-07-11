@@ -21,31 +21,31 @@ EndedResult Planner::estimateCost(const State &state, b2Transform start, Directi
 
 void HorizonStarPlanner::path2add2(std::vector<std::vector<vertexDescriptor>>::reverse_iterator & path, const std::vector <vertexDescriptor> & add, std::vector<std::vector<vertexDescriptor>> &paths, TransitionSystem &g){
     	std::pair<edgeDescriptor, bool> edge(edgeDescriptor(), false);
-		std::vector<vertexDescriptor>::reverse_iterator pend=(path->rbegin());
+		std::vector<vertexDescriptor>::reverse_iterator path_end_rit=(path->rbegin()); //reverse iterator to end of path
 		while (!edge.second){
-			vertexDescriptor end=*(pend.base()-1); //equivalent to path.end()
+			vertexDescriptor end=*(path_end_rit.base()-1); //equivalent to path.end()
 			edge= boost::edge(end,add[0], g);
-			if (!add.empty()&!edge.second & path!=paths.rend()){ //if this path does not have an edge and there are 
+			if (!add.empty()&&!edge.second && path!=paths.rend()){ //if this path does not have an edge and there are 
 													//other possible paths, go to previous paths
-				if (pend.base()-1!=(path->begin())){ //if the current vertex is not the root of the path
-					pend++; //go back a step
+				if (path_end_rit.base()-1!=(path->begin())){ //if the current vertex is not the root of the path
+					path_end_rit++; //go back a step
 				}
 				else{
 					path++; //go back a previously explored path
-					pend=(*path).rbegin(); 
+					path_end_rit=(*path).rbegin(); //reset the path end
 				}
 			}
-			else if (edge.second & pend.base()!=path->rbegin().base()){  //if there is an edge with the end of current path
+			else if (edge.second && path_end_rit.base()!=path->rbegin().base()){  //if there is an edge with the end of current path
 				bool found=0;
 				for (auto _p=paths.rbegin(); _p!=paths.rend(); _p++ ){ // see if theres a path with this beginning and end
-					if (std::vector <vertexDescriptor>(path->begin(), pend.base())==*_p){
+					if (std::vector <vertexDescriptor>(path->begin(), path_end_rit.base())==*_p){
 						path=_p; //switch to this path
 						found=1;
 					}
 				}
 				if (!found){
 					//create new empty path
-					paths.emplace_back(std::vector <vertexDescriptor>(path->begin(), pend.base()));
+					paths.emplace_back(std::vector <vertexDescriptor>(path->begin(), path_end_rit.base()));
 					path=paths.rbegin();				
 				}
 				break;
