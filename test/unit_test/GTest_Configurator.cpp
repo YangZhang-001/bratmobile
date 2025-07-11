@@ -205,6 +205,7 @@ TEST(GraphTools, ToTaskEnd){
 }
 
 TEST_P(ConfiguratorTestTransitionMatrix, naive){
+    EXPECT_EQ(n_vertices(), 1);
     Disturbance target;
     if (std::get<0>(GetParam())!=b2Transform_inf){
         target=Disturbance(PURSUE, std::get<0>(GetParam()).p, std::get<0>(GetParam()).q.GetAngle());
@@ -228,6 +229,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
  * 
  */
 TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
+    EXPECT_EQ(n_vertices(), 1); 
     currentTask.set_direction(std::get<1>(GetParam()));
     vertex_set_direction(currentVertex, std::get<1>(GetParam()));
     if (std::get<1>(GetParam())==UNDEFINED || std::get<1>(GetParam())==STOP){
@@ -236,6 +238,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     //dummy_vertex(MOVING_VERTEX);
     currentVertex = boost::add_vertex(transitionSystem);
     make_module(currentVertex);
+    EXPECT_EQ(n_vertices(), 7); 
     planIsDirection(std::get<1>(GetParam()));
     currentVertex=MOVING_VERTEX;
     current_vertices={currentVertex};
@@ -257,6 +260,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
     currentVertex = boost::add_vertex(transitionSystem);
     current_vertices={currentVertex};
     make_module(currentVertex);
+    EXPECT_EQ(n_vertices(), 7); 
     planIsDirection(direction);
     iteration=2;
     edgeDescriptor e=edgeDescriptor();

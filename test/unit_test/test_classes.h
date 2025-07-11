@@ -375,6 +375,15 @@ protected:
      */
     void planIsDirection(Direction direction);
 
+    void SetUp()override{
+        transitionSystem=TransitionSystem(1);
+        currentVertex=MOVING_VERTEX;
+    }
+
+    void TearDown()override{
+        transitionSystem.clear();
+    }
+
 };
 
 
@@ -442,21 +451,22 @@ edgeDescriptor ConfiguratorTest::make_v1_crashed( vertexDescriptor v0, b2Transfo
 
 void ConfiguratorTest::make_module(vertexDescriptor mv){
     //mv=currentVertex;
+    std::vector<vertexDescriptor>new_vertices;
     for (int i=0; i<5; i++){
-        boost::add_vertex(transitionSystem);
+        new_vertices.push_back(boost::add_vertex(transitionSystem));
     }
-    vertexDescriptor nv=n_vertices()-1;
-    transitionSystem[nv+1].direction=DEFAULT;
-    transitionSystem[nv+3].direction=DEFAULT;
-    transitionSystem[nv+5].direction=DEFAULT;
-    transitionSystem[nv+2].direction=LEFT;
-    transitionSystem[nv+4].direction=RIGHT;
+    // vertexDescriptor nv=n_vertices()-1;
+    transitionSystem[new_vertices[0]].direction=DEFAULT;
+    transitionSystem[new_vertices[2]].direction=DEFAULT;
+    transitionSystem[new_vertices[4]].direction=DEFAULT;
+    transitionSystem[new_vertices[1]].direction=LEFT;
+    transitionSystem[new_vertices[3]].direction=RIGHT;
 
-    add_edge_withPoses(mv,mv+1);
-    add_edge_withPoses(mv,mv+2);
-    add_edge_withPoses(mv,mv+4);
-    add_edge_withPoses(mv+2,mv+3);
-    add_edge_withPoses(mv+4,mv+5);
+    add_edge_withPoses(mv,new_vertices[0]);
+    add_edge_withPoses(mv,new_vertices[1]);
+    add_edge_withPoses(mv,new_vertices[3]);
+    add_edge_withPoses(new_vertices[1],new_vertices[2]);
+    add_edge_withPoses(new_vertices[3],new_vertices[4]);
 
 }
 
@@ -489,7 +499,7 @@ void ConfiguratorTest::add_edge_withPoses(vertexDescriptor u, vertexDescriptor v
     transitionSystem[v].endPose=b2MulT(distance, transitionSystem[u].endPose);
     auto e=boost::add_edge(u, v, transitionSystem);
     addStepToEdge(e.first);
-    transitionSystem[e.first].it_observed=iteration;
+    //transitionSystem[e.first].it_observed=iteration;
 }
 
 void ConfiguratorTest::addStepToEdge(edgeDescriptor e){
