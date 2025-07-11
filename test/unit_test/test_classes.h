@@ -496,10 +496,10 @@ void ConfiguratorTest::add_edge_withPoses(vertexDescriptor u, vertexDescriptor v
         break;
         default: break;
     }
-    transitionSystem[v].endPose=b2MulT(distance, transitionSystem[u].endPose);
+    transitionSystem[v].endPose=b2Mul(distance, transitionSystem[v].start);
     auto e=boost::add_edge(u, v, transitionSystem);
     addStepToEdge(e.first);
-    //transitionSystem[e.first].it_observed=iteration;
+    transitionSystem[e.first].it_observed=iteration;
 }
 
 void ConfiguratorTest::addStepToEdge(edgeDescriptor e){
