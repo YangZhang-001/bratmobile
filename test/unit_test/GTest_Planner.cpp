@@ -24,7 +24,7 @@ class ConfiguratorTestPlanner:public ConfiguratorTest, public testing::WithParam
  * @param desiredPlan 
  */
 
-    void make_ts(std::vector <vertexDescriptor>& avoid, std::vector<vertexDescriptor>& desiredPlan);
+    void make_ts(std::vector <vertexDescriptor>& avoid, std::vector<vertexDescriptor>& desiredPlan, bool haGoal);
 
     void SetUp()override{
         register_planner(new HorizonStarPlanner);
@@ -38,7 +38,7 @@ class ConfiguratorTestPlanner:public ConfiguratorTest, public testing::WithParam
 TEST_P(ConfiguratorTestPlanner, RecyclePlan){
     std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4};
     vertexDescriptor task_start=DUMMY;
-    make_ts(avoid, desiredPlan);    
+    make_ts(avoid, desiredPlan, GetParam());    
     State s=transitionSystem[2];
     b2Transform shift=b2Mul(transitionSystem[DUMMY].endPose, transitionSystem[currentVertex].endPose);
     b2Transform shift_start=b2Transform_zero;
@@ -48,7 +48,7 @@ TEST_P(ConfiguratorTestPlanner, RecyclePlan){
     resetPhi();
     VertexMatch vm(StateMatcher::ABSTRACT, 2);
     auto edge =boost::add_edge(currentVertex, 2, transitionSystem);
-    bool recycled=recycle_plan(currentVertex, currentVertex, task_start, vm.first, shift_start, s.start, edge, m_plan, s.direction);
+    bool recycled=recycle_plan(currentVertex, 2, task_start, vm.first, shift_start, s.start, edge, m_plan, s.direction);
     EXPECT_TRUE(recycled);
     EXPECT_EQ(m_plan, desiredPlan);
 }
@@ -76,16 +76,18 @@ class ConfiguratorPlannerHybrid: public ConfiguratorTestPlanner, public HorizonS
 TEST_F(ConfiguratorPlannerHybrid,pathToAddTo){
     HorizonStarPlanner horizonPlanner;
     std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4}, add;
-    std::vector<std::vector<vertexDescriptor>> paths(1);
+    std::vector<std::vector<vertexDescriptor>> paths;
+    paths.emplace_back(std::vector<vertexDescriptor>({14, 1, 3, 4}));
     vertexDescriptor task_start=DUMMY;
-    make_ts(avoid, desiredPlan); 
-    std::vector<std::vector<vertexDescriptor>>::reverse_iterator path=paths.rend();
+    make_ts(avoid, desiredPlan, true); 
+    std::vector<std::vector<vertexDescriptor>>::reverse_iterator path=paths.rbegin();
     add={5, 6};
-    *path={14, 1, 3, 4};
     path2add2(path, add, paths, transitionSystem);
     EXPECT_EQ(paths.size(), 2);
-    EXPECT_EQ(paths[1][paths[1].size()-1], 6);
-    EXPECT_EQ(paths[1][paths[1].size()-2], 5);
+    EXPECT_EQ(paths[1][paths[1].size()-1], 1);
+    EXPECT_EQ(paths[1][paths[1].size()-2], 14);
+    EXPECT_EQ(*path, paths[1]);
+    EXPECT_TRUE(boost::edge(*(path->rbegin()), add[0], transitionSystem).second);
     
 }
 
@@ -106,17 +108,17 @@ TEST_F(ConfiguratorPlannerHybrid,pathToAddTo){
 //                                                                 ::testing::Values(LEFT, RIGHT, DEFAULT), 
 //                                                                 ::testing::Values(simResult::crashed, simResult::successful, simResult::safeForNow)));
 
-void ConfiguratorTestPlanner::make_ts(std::vector <vertexDescriptor>& avoid, std::vector<vertexDescriptor>& desiredPlan){
+void ConfiguratorTestPlanner::make_ts(std::vector <vertexDescriptor>& avoid, std::vector<vertexDescriptor>& desiredPlan, bool hasGoal){
     addIteration();
     b2Vec2 d_position(1,0);
     Disturbance obstacle(AVOID, b2Vec2(.6,0)), goal(PURSUE, d_position);
-    if (GetParam()){
+    if (hasGoal){
         init(Task(goal,DEFAULT));
     }
     dummy_vertex(MOVING_VERTEX);
     make_module(currentVertex);
     currentVertex=n_vertices()-1; //6, if no goal
-    if (GetParam()){
+    if (hasGoal){
         make_module(6);
         make_module(9);
         std::vector<vertexDescriptor> all(n_vertices()-1), safe(n_vertices()-7);

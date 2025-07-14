@@ -161,6 +161,7 @@ TEST_P(HighLevelTest, Recycle){
     EXPECT_TRUE(configurator->getTask().get_disturbance()==configurator->vertex_get_Di(last_v));
     EXPECT_EQ(configurator->get_current_vertex(), last_v);
     math::applyAffineTrans(shift, configurator->get_ts());
+    EXPECT_EQ(configurator->vertex_get_endPose(end_plan()), b2Transform_zero);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder, 1); //map 2
     int vertices_now=configurator->n_vertices();
     EXPECT_LE(vertices_now, vertices_og);
@@ -184,7 +185,13 @@ INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 6), //,
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 17),
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 38),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 89)
+                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 89),
+                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 3),
+                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 4),
+                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 6), //,
+                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 17),
+                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 38),
+                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 89)
                                                                    ));
 
 
