@@ -1035,7 +1035,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::task_vertices( vertexDescr
 					}
 			}
 			}
-			else if (transitionSystem[ep2.second.m_target].direction==d &&
+			else if ((transitionSystem[ep2.second.m_target].direction==d || (transitionSystem[ep2.second.m_target].direction==STOP && d==DEFAULT  ))&&
 			 	transitionSystem[ep2.second.m_target].Di == transitionSystem[_ep.second.m_target].Di &&
 			 	transitionSystem[ep2.second.m_target].Dn == transitionSystem[_ep.second.m_target].Dn){ //same task!
 				result.push_back(ep2.second.m_target); //source
