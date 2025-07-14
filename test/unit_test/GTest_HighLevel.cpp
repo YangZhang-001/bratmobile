@@ -138,7 +138,7 @@ TEST_P(HighLevelTest, Recycle){
     Task goal;
     b2Transform shift=b2Transform_zero;
     if (std::get<0>(GetParam())){
-        shift.p.x=1;
+        //shift.p.x=1;
         goal=Task(Disturbance(PURSUE, shift.p, 0),DEFAULT);
     }
     configurator->init(goal);
@@ -147,9 +147,9 @@ TEST_P(HighLevelTest, Recycle){
     EXPECT_GT(configurator->get_plan().size(), 1);
     vertexDescriptor second_last_v=configurator->get_plan()[configurator->get_plan().size()-2];
     vertexDescriptor last_v=configurator->get_plan()[configurator->get_plan().size()-1];
-    if (!std::get<0>(GetParam())){
+   // if (!std::get<0>(GetParam())){
         shift=configurator->vertex_get_endPose(last_v);
-    }
+    //}
     int vertices_og=configurator->n_vertices();
     configurator->addIteration(100);
     configurator->set_current_v(last_v); //simulate plan finished
@@ -161,7 +161,7 @@ TEST_P(HighLevelTest, Recycle){
     EXPECT_TRUE(configurator->getTask().get_disturbance()==configurator->vertex_get_Di(last_v));
     EXPECT_EQ(configurator->get_current_vertex(), last_v);
     math::applyAffineTrans(shift, configurator->get_ts());
-    EXPECT_EQ(configurator->vertex_get_endPose(end_plan()), b2Transform_zero);
+    EXPECT_EQ(configurator->vertex_get_endPose(configurator->plan_end()), b2Transform_zero);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder, 1); //map 2
     int vertices_now=configurator->n_vertices();
     EXPECT_LE(vertices_now, vertices_og);

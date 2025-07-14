@@ -48,7 +48,7 @@ TEST_P(ConfiguratorTestPlanner, RecyclePlan){
     resetPhi();
     VertexMatch vm(StateMatcher::ABSTRACT, 2);
     auto edge =boost::add_edge(currentVertex, 2, transitionSystem);
-    bool recycled=recycle_plan(currentVertex, 2, task_start, vm.first, shift_start, s.start, edge, m_plan, s.direction);
+    bool recycled=recycle_plan(currentVertex, currentVertex, task_start, vm.first, shift_start, s.start, edge, m_plan, s.direction);
     EXPECT_TRUE(recycled);
     EXPECT_EQ(m_plan, desiredPlan);
 }
