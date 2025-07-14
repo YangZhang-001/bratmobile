@@ -193,21 +193,6 @@ std::vector <edgeDescriptor> gt::outEdges(TransitionSystem&g, vertexDescriptor v
 	return result;
 }
 
-std::vector <edgeDescriptor> gt::inEdges(TransitionSystem&g, const vertexDescriptor& v, const Direction &d){
-	std::vector <edgeDescriptor> result;
-	auto es = boost::in_edges(v, g);
-	if (v==TransitionSystem::null_vertex()){
-		return result;
-	}
-	for (auto ei = es.first; ei!=es.second; ++ei){
-		if (g[(*ei).m_target].direction == d || d==UNDEFINED){
-			if ((*ei).m_source!=v){
-				result.push_back(*ei);
-			}
-		}
-	}
-	return result;
-}
 
 std::pair< bool, edgeDescriptor> gt::getMostLikely(TransitionSystem& g, std::vector <edgeDescriptor> oe, int it){
 	std::pair< bool, edgeDescriptor> mostLikely(false, edgeDescriptor());

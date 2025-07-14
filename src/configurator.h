@@ -507,6 +507,10 @@ std::vector <vertexDescriptor> visitedOrVisitingEdge(const std::vector <edgeDesc
  * @return @param v if the task is successful, @param connectingEdge if it ends in crash
  */
 vertexDescriptor getRecyclingStart(vertexDescriptor v, std::pair<bool, edgeDescriptor> connectingEdge, vertexDescriptor v1);
+
+std::vector <edgeDescriptor> inEdges(vertexDescriptor, Direction d = UNDEFINED); //returns a vector containing all the in-edges of a vertex which have the specified direction
+
+
 public:
 
 AttentiveConfigurator(){};

@@ -104,7 +104,7 @@ std::pair <bool, Direction> AttentiveConfigurator::getOppositeDirection(Directio
 }
 Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
 	if (!g[v].Dn.isValid() ){
-		std::vector <edgeDescriptor> in=gt::inEdges(g, v, UNDEFINED);
+		std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 			if (visited.first ||out.empty()){
@@ -247,7 +247,8 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	if (g[v].outcome != simResult::crashed){
 		return split;
 	}
-	if (auto ie=gt::inEdges(g, src, DEFAULT), stop_edges=gt::inEdges(g, src, STOP); !ie.empty()|| !stop_edges.empty()){
+	//if (auto ie=inEdges(src, DEFAULT), stop_edges=inEdges(src, STOP); !ie.empty()|| !stop_edges.empty()){
+	if (transitionSystem[src].direction==DEFAULT || transitionSystem[src].direction==STOP){
 		split.insert(split.begin(), src);
 		g[src].outcome=simResult::safeForNow;
 	}
@@ -310,7 +311,7 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 		for (int i=0; i<split.size(); i++){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
 			if (i<1){
-				auto ep=gt::getMostLikely(transitionSystem, gt::inEdges(transitionSystem, split_v), iteration);
+				auto ep=gt::getMostLikely(transitionSystem, inEdges(split_v), iteration);
 				if (ep.first){
 					src=ep.second.m_source;
 				}
@@ -966,7 +967,7 @@ std::pair<State, Edge> AttentiveConfigurator::simulation_setup(b2World& w, Task 
 }
 
 void AttentiveConfigurator::reassign_direction(vertexDescriptor bestNext, Direction& direction){
-	std::vector <edgeDescriptor> best_in_edges= gt::inEdges(transitionSystem,bestNext);
+	std::vector <edgeDescriptor> best_in_edges= inEdges(bestNext);
 	if (best_in_edges.empty()){
 		direction=currentTask.get_direction();
 	}
@@ -1008,7 +1009,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::task_vertices( vertexDescr
 	Direction d=UNDEFINED;
 	std::pair<bool, edgeDescriptor>ep2(false, edgeDescriptor()), _ep=ep2;
 	do {
-		std::vector <edgeDescriptor> ie=gt::inEdges(transitionSystem, v);
+		std::vector <edgeDescriptor> ie=inEdges( v);
 		ep2= gt::visitedEdge(ie, transitionSystem,v);
 		if (!ep2.first){
 			ep2=gt::getMostLikely(transitionSystem, ie, iteration);
@@ -1051,9 +1052,34 @@ std::vector <vertexDescriptor> AttentiveConfigurator::task_vertices( vertexDescr
 	return result;
 }
 
+std::vector <edgeDescriptor> AttentiveConfigurator::inEdges(vertexDescriptor v, Direction d){
+	std::vector <edgeDescriptor> result;
+	auto es = boost::in_edges(v, transitionSystem);
+	if (v==TransitionSystem::null_vertex()){
+		return result;
+	}
+	if (transitionSystem[v].direction!=d && d!=UNDEFINED){
+		return result;
+	}
+	for (auto ei = es.first; ei!=es.second; ++ei){
+		//if (transitionSystem[(*ei).m_target].direction == d || d==UNDEFINED){
+			if ((*ei).m_source!=v){
+				result.push_back(*ei);
+			}
+		//}
+	}
+	return result;
+}
+
 vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, std::pair<bool, edgeDescriptor> connectingEdge, vertexDescriptor v1){
-	if (transitionSystem[v1].outcome==simResult::crashed && connectingEdge.first){
-		return connectingEdge.second.m_source;
+	auto ies=inEdges(v);
+	if (transitionSystem[v1].outcome==simResult::crashed){
+		for (auto ie: ies){
+			if (ie.m_source!=v &&
+			 transitionSystem[ie.m_source].direction==transitionSystem[ie.m_source].direction){
+				return ie.m_source;
+			}
+		}
 	}
 	return v;
 }
