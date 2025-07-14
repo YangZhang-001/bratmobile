@@ -221,8 +221,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
 				g[v1].phi=Planner::evaluationFunction(er, v1, plan_prov);
 				propagateD(v1, v0, &closed); //og v1 v0
-				v0_exp=v0;					std::vector <vertexDescriptor> task_vs= task_vertices(v1);
-						vertexDescriptor task_start= task_vs[0];
+				v0_exp=v0;					
 				options=g[v0_exp].options;
 				v0=v1;						
 			}while(t.get_direction() !=DEFAULT & int(g[v0].options.size())!=0);
