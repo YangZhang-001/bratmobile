@@ -24,11 +24,10 @@ TEST_P(ConfiguratorTest2DT, adjustGoal){
     vertexDescriptor v1;
     vertex_set_options(0, std::vector<Direction>(DEFAULT));
     add_vertex_now(MOVING_VERTEX, v1, transitionSystem, goal.get_disturbance());
-    plan={v1};
+    m_plan={v1};
     math::applyAffineTrans(deltaPose, deltaPose);
     update_graph(transitionSystem, deltaPose);
-    vertexDescriptor plan_end=plan[plan.size()-1];
-    b2Transform expected =b2MulT(controller.get_disturbance().pose(), transitionSystem[plan_end].Di.pose()); //position of goal wrt current disturbance
+    b2Transform expected =b2MulT(controller.get_disturbance().pose(), transitionSystem[plan_end()].Di.pose()); //position of goal wrt current disturbance
     /**/
     adjust_goal_expectation(); //what we're actually testing
     b2Transform observed =b2MulT(currentTask.get_disturbance().pose(), controlGoal.get_disturbance().pose());

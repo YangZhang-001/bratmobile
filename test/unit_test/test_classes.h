@@ -27,13 +27,13 @@ class DebugConfigurator:public AttentiveConfigurator{
 
     int n_vertices(){return transitionSystem.m_vertices.size();}
 
-    const std::vector <vertexDescriptor>& get_plan(){ return plan;}
+    const std::vector <vertexDescriptor>& get_plan(){ return m_plan;}
 
     bool plan_reaches_horizon();
 
     bool plan_reaches_goal();
 
-    vertexDescriptor plan_end(){return plan[plan.size()-1];}
+    vertexDescriptor plan_end(){return m_plan[m_plan.size()-1];}
 
     b2Vec2 plan_end_b2Vec2(){return transitionSystem[plan_end()].endPose.p;}
 
@@ -62,7 +62,7 @@ class DebugConfigurator:public AttentiveConfigurator{
     }
 
     void clear_plan(){
-        plan.clear();
+        m_plan.clear();
     }
 
 
@@ -177,7 +177,7 @@ class DebugConfigurator:public AttentiveConfigurator{
     }
 
     void set_plan(std::vector<vertexDescriptor> _p){
-        plan=_p;
+        m_plan=_p;
     }
 
     void set_running(bool b){
@@ -547,7 +547,7 @@ void ConfiguratorTestTransitionMatrix::planIsDirection(Direction direction){
     if (oe.empty()){
         return;
     }
-    plan={oe[0].m_target};
+    m_plan={oe[0].m_target};
 
 }
 

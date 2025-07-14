@@ -218,7 +218,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
     transitionSystem[e].step=1;
     transitionSystem[e.m_target].direction=std::get<1>(GetParam());
     transitionSystem[e.m_target].outcome=std::get<2>(GetParam());
-    applyTransitionMatrix(e.m_target, std::get<1>(GetParam()), false, currentVertex, plan);
+    applyTransitionMatrix(e.m_target, std::get<1>(GetParam()), false, currentVertex, m_plan);
     int expected=expectedOptions(std::get<1>(GetParam()), std::get<2>(GetParam()), target);
     EXPECT_EQ(transitionSystem[e.m_target].options.size(), expected);
 }
@@ -245,7 +245,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     currentTask.set_change(false);
     currentTask.setMotorStep(20);
     iteration=2;
-    applyTransitionMatrix(MOVING_VERTEX, currentTask.get_direction(), false, MOVING_VERTEX, plan);
+    applyTransitionMatrix(MOVING_VERTEX, currentTask.get_direction(), false, MOVING_VERTEX, m_plan);
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options[0], currentTask.get_direction());
 }
@@ -277,9 +277,9 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanVisited){
             solution.clear();
             break;
     }
-    transitionSystem[e.m_target].direction=transitionSystem[plan[0]].direction;
+    transitionSystem[e.m_target].direction=transitionSystem[m_plan[0]].direction;
     setPhi(transitionSystem[e.m_target]);
-    applyTransitionMatrix(MOVING_VERTEX, transitionSystem[e.m_target].direction, false, MOVING_VERTEX, plan);
+    applyTransitionMatrix(MOVING_VERTEX, transitionSystem[e.m_target].direction, false, MOVING_VERTEX, m_plan);
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options, solution);
 }
 

@@ -13,7 +13,7 @@ TEST_P(ConfiguratorTest32DT, backtracksimple){
         std::vector <vertexDescriptor> evaluationQ={v1, v2, v3}, all=evaluationQ, priorityQ;
         std::set <vertexDescriptor> closed;
         //backtrack
-        backtrack(evaluationQ, priorityQ, closed, plan);
+        backtrack(evaluationQ, priorityQ, closed, m_plan);
         for (vertexDescriptor v:all){
             EXPECT_TRUE(transitionSystem[v].visited()); //check vertex marked as visited
         }

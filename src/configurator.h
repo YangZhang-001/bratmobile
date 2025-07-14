@@ -29,7 +29,7 @@ protected:
 	float simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);
 	std::chrono::high_resolution_clock::time_point previousTimeScan;
 	GoalChanger * goal_changer=NULL;	
-	std::vector<vertexDescriptor>plan, current_vertices;
+	std::vector<vertexDescriptor>m_plan, current_vertices;
 	int bodies=0;
 	Task controlGoal;
 	CoordinateContainer data2fp;
@@ -226,7 +226,7 @@ class AttentiveConfigurator:public Configurator{
  * @return Planner::ExecutionInfo 
  */
 ExecutionInfo package_info(vertexDescriptor gv=TransitionSystem::null_vertex(), bool been=false){
-	return ExecutionInfo(currentVertex, gv, currentTask, controlGoal, been, plan);
+	return ExecutionInfo(currentVertex, gv, currentTask, controlGoal, been, m_plan);
 }
 
 /**

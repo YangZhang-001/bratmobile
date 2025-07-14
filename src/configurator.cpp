@@ -165,7 +165,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	}
 	vertexDescriptor v1=v, v0=v, bestNext=v, v0_exp=v;
 	Direction direction=currentTask.get_direction();
-	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=plan;
+	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=m_plan;
 	std::set <vertexDescriptor> closed;
 	Task t=currentTask;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
@@ -204,7 +204,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 						if (plan_prov.empty()){
 							recycle_plan(v, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
-						if (plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
+						if (m_plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
 							shift_states(g, task_vs, shift_start);
 						}
 					}
@@ -361,7 +361,7 @@ void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 
 void Configurator::printPlan(std::vector <vertexDescriptor>* p){
 
-	std::vector <vertexDescriptor> _plan= plan;
+	std::vector <vertexDescriptor> _plan= m_plan;
 	if (p){
 	_plan=*p;		
 	}
@@ -443,7 +443,7 @@ void Configurator::run(Configurator * c){
 			}
 			c->update_graph(c->transitionSystem, deltaPose);
 			if (c->goal_changer!=NULL){
-				if (( c->currentTask.is_over()& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
+				if (( c->currentTask.is_over()& c->transitionSystem[c->currentVertex].direction!=STOP && c->m_plan.empty() && c->getIteration()>1)){
 					c->goal_changer->change_goal(&c->controlGoal);
 				}					
 			}
@@ -721,7 +721,7 @@ VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatche
 
 
 void AttentiveConfigurator::planPriority(TransitionSystem&g, vertexDescriptor v){
-    for (vertexDescriptor p:plan){
+    for (vertexDescriptor p:m_plan){
 		if (p==v){
        		g[v].phi-=.1;
 			break;
@@ -772,7 +772,7 @@ vertexDescriptor AttentiveConfigurator::get_explore_start(TransitionSystem & g){
 		dummy_vertex(currentVertex);
 		currentTask.set_change(true);
 	}
-	if (!plan.empty() || !currentTask.is_over()){ //
+	if (!m_plan.empty() || !currentTask.is_over()){ //
 		return MOVING_VERTEX;
 	}
 	else{
@@ -836,7 +836,7 @@ void Configurator::change_task(){
 	if (task_controller==NULL){
 		throw std::invalid_argument("no controller, please add!");
 	}
-	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
+	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
 	//transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
 	tracker->on_new_task(&currentTask);
@@ -852,7 +852,7 @@ void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPo
 
 
 void Configurator::adjust_goal_expectation(){
-	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()&&task_controller->get_disturbance().getAffIndex()!=NONE){
+	if (controlGoal.getAffIndex()==PURSUE && !m_plan.empty()&&task_controller->get_disturbance().getAffIndex()!=NONE){
 		b2Transform from_Di=b2Transform_zero;
 		//if (task_controller->get_disturbance().getAffIndex()==AVOID){
 		from_Di=currentTask.from_Di();
@@ -877,11 +877,11 @@ void AttentiveConfigurator::explore_plan(b2World&world){
     resetPhi();
     std::vector <vertexDescriptor> plan_tmp=explorer(src, transitionSystem, world);
     if (DEBUG){
-        std::vector<vertexDescriptor> _plan=(plan);
+        std::vector<vertexDescriptor> _plan=(m_plan);
         debug::graph_file(iteration, transitionSystem, controlGoal.get_disturbance(), _plan, currentVertex);
     }	
 	try{
-		ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
+		ts_cleanup(transitionSystem, m_plan); //remove self-edge and singleton states
 	}
 	catch(...){}	
     if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.is_over())){ //currentv not visited means that it wasn't observed ()
@@ -893,8 +893,8 @@ void AttentiveConfigurator::explore_plan(b2World&world){
     else{
         printf("recycled plan in explorer:\n");
     }
-    plan=plan_tmp;
-    printPlan(&plan);
+    m_plan=plan_tmp;
+    printPlan(&m_plan);
 }
 
 void ReactiveConfigurator::explore_plan(b2World &world){
