@@ -508,7 +508,12 @@ std::vector <vertexDescriptor> visitedOrVisitingEdge(const std::vector <edgeDesc
  */
 vertexDescriptor getRecyclingStart(vertexDescriptor v, std::pair<bool, edgeDescriptor> connectingEdge, vertexDescriptor v1);
 
-std::vector <edgeDescriptor> inEdges(vertexDescriptor, Direction d = UNDEFINED); //returns a vector containing all the in-edges of a vertex which have the specified direction
+/**
+ * @brief Returns a vector of all the in-edges of vertex @param v. Option to enter 
+ * @param d to select a subset of edge. Does not return self-edges
+ * @return std::vector <edgeDescriptor>
+ */
+std::vector <edgeDescriptor> inEdges(vertexDescriptor v, Direction d = UNDEFINED); //returns a vector containing all the in-edges of a vertex which have the specified direction
 
 
 public:
