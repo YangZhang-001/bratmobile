@@ -431,7 +431,7 @@ std::vector<Direction>::iterator  get_next_option(vertexDescriptor v, vertexDesc
  * @return true 
  * @return false 
  */
-bool recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
+bool recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
 				b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
 				std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction);
 
@@ -457,14 +457,14 @@ std::pair<State, Edge> simulation_setup(b2World& w, Task & t, vertexDescriptor v
  */
 void reassign_direction(vertexDescriptor bestNext, Direction& direction);
 
-/**
- * @brief  if the match is a crashed task
- * 
- * @param match 
- * @param other_matches 
- * @return true if changes match
- */
-bool matchToSafe(VertexMatch &match,const std::vector<VertexMatch> &other_matches=std::vector<VertexMatch>());
+// /**
+//  * @brief  if the match is a crashed task
+//  * 
+//  * @param match 
+//  * @param other_matches 
+//  * @return true if changes match
+//  */
+// bool matchToSafe(VertexMatch &match,const std::vector<VertexMatch> &other_matches=std::vector<VertexMatch>());
 
 /**
  * @brief Given a valid match, sets up the edge with the previous vertex
@@ -480,7 +480,13 @@ bool matchToSafe(VertexMatch &match,const std::vector<VertexMatch> &other_matche
  */
 std::pair<edgeDescriptor, bool> setup_match_edge(VertexMatch &match, vertexDescriptor &v0, vertexDescriptor & v1,const Edge& k, Direction direction, bool changedMatch);
 
-std::vector <vertexDescriptor> task_vertices(vertexDescriptor, const vertexDescriptor &, std::pair<bool, edgeDescriptor>* ep=NULL);
+/**
+ * @brief Rerturns all the vertices making up a task
+ * 
+ * @param v a vertex representing a state
+ * @param ep connecting edge to the task
+ */
+std::vector <vertexDescriptor> task_vertices(vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep=NULL);
 
 /**
  * @brief Returns a visited edge if present, or if the current 
@@ -492,6 +498,15 @@ std::vector <vertexDescriptor> task_vertices(vertexDescriptor, const vertexDescr
  */
 std::vector <vertexDescriptor> visitedOrVisitingEdge(const std::vector <edgeDescriptor>& es, TransitionSystem& g, vertexDescriptor cv=TransitionSystem::null_vertex());
 
+/**
+ * @brief Returns the vertex from which to start recycling plan
+ * 
+ * @param v source vertex which is being expanded
+ * @param connectingEdge edge connecting the observed task to the previous one
+ * @param v1 last vertex in task, or the match
+ * @return @param v if the task is successful, @param connectingEdge if it ends in crash
+ */
+vertexDescriptor getRecyclingStart(vertexDescriptor v, std::pair<bool, edgeDescriptor> connectingEdge, vertexDescriptor v1);
 public:
 
 AttentiveConfigurator(){};
