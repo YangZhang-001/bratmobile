@@ -91,6 +91,22 @@ TEST_F(ConfiguratorPlannerHybrid,pathToAddTo){
     
 }
 
+
+TEST_P(ConfiguratorTestPlanner, startRecycle){
+    std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4}, add;
+    std::vector<std::vector<vertexDescriptor>> paths;
+    paths.emplace_back(std::vector<vertexDescriptor>({14, 1, 3, 4}));
+    vertexDescriptor solution=DUMMY;
+    make_ts(avoid, desiredPlan, true); 
+    currentVertex=*desiredPlan.rbegin();
+    if (!GetParam()){
+        transitionSystem[2].outcome=simResult::successful;
+        solution=currentVertex;
+    }
+    EXPECT_EQ(getRecyclingStart(currentVertex,2), solution);
+    
+}
+
 // TEST_P(ConfiguratorTestPlanner, frontierVertices){
 //     dummy_vertex(MOVING_VERTEX);
 //     make_module(currentVertex);

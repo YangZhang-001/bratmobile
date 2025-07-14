@@ -172,7 +172,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	EndedResult er;
 	do{
 		v=bestNext;
-		closed.emplace(*priorityQueue.begin().base());
+		closed.emplace(v);
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
 		g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
@@ -200,7 +200,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					if (currentTask.is_over()){
 						std::pair<bool, edgeDescriptor> connectingEdge(false, edgeDescriptor());
 						std::vector <vertexDescriptor> task_vs= task_vertices(v1, &connectingEdge);
-						vertexDescriptor task_start= task_vs[0], start_recycle=getRecyclingStart(v, connectingEdge, v1);
+						vertexDescriptor task_start= task_vs[0], start_recycle=getRecyclingStart(v, v1);
 						if (plan_prov.empty()){
 							recycle_plan(start_recycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
@@ -1071,15 +1071,17 @@ std::vector <edgeDescriptor> AttentiveConfigurator::inEdges(vertexDescriptor v, 
 	return result;
 }
 
-vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, std::pair<bool, edgeDescriptor> connectingEdge, vertexDescriptor v1){
-	auto ies=inEdges(v);
+vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, vertexDescriptor v1){
+	auto ies=inEdges(v1);
+	vertexDescriptor result=v;
 	if (transitionSystem[v1].outcome==simResult::crashed){
+		int last_iteration=-1;
 		for (auto ie: ies){
 			if (ie.m_source!=v &&
-			 transitionSystem[ie.m_source].direction==transitionSystem[ie.m_source].direction){
-				return ie.m_source;
+			 transitionSystem[ie].it_observed>last_iteration){
+				result=ie.m_source;
 			}
 		}
 	}
-	return v;
+	return result;
 }
