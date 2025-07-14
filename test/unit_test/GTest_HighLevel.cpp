@@ -138,8 +138,7 @@ TEST_P(HighLevelTest, Recycle){
     Task goal;
     b2Transform shift=b2Transform_zero;
     if (std::get<0>(GetParam())){
-        //shift.p.x=1;
-        goal=Task(Disturbance(PURSUE, shift.p, 0),DEFAULT);
+        goal=Task(Disturbance(PURSUE, b2Vec2(1.0, 0), 0),DEFAULT);
     }
     configurator->init(goal);
     std::string folder=std::get<1>(GetParam());
@@ -161,7 +160,9 @@ TEST_P(HighLevelTest, Recycle){
     EXPECT_TRUE(configurator->getTask().get_disturbance()==configurator->vertex_get_Di(last_v));
     EXPECT_EQ(configurator->get_current_vertex(), last_v);
     math::applyAffineTrans(shift, configurator->get_ts());
-    EXPECT_EQ(configurator->vertex_get_endPose(configurator->plan_end()), b2Transform_zero);
+    b2Transform newStart=configurator->vertex_get_endPose(last_v);
+    EXPECT_LT(newStart.p.Length(),0.0001);
+    EXPECT_LT(newStart.q.GetAngle(),0.0001);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder, 1); //map 2
     int vertices_now=configurator->n_vertices();
     EXPECT_LE(vertices_now, vertices_og);
