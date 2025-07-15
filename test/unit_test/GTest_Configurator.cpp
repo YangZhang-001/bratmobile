@@ -359,6 +359,7 @@ TEST_F(ConfiguratorTest, SkipClosedBT){
     std::set <vertexDescriptor> closed={v1};
     backtrack(evaluationQ, priorityQ, closed, m_plan);
     EXPECT_TRUE(priorityQ.empty());
+    EXPECT_TRUE(priorityQ.size()==0);
 }
 
 TEST_F(ConfiguratorTest, SkipClosedPQ){
@@ -370,6 +371,7 @@ TEST_F(ConfiguratorTest, SkipClosedPQ){
     std::set <vertexDescriptor> closed={v1};
     addToPriorityQueue(v1, priorityQ, transitionSystem, closed);
     EXPECT_TRUE(priorityQ.empty());
+    EXPECT_TRUE(priorityQ.size()==0);
 }
 
 

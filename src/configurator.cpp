@@ -172,8 +172,8 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	EndedResult er;
 	do{
 		v=bestNext;
-		closed.emplace(v);
-		priorityQueue.erase(priorityQueue.begin());
+		// closed.emplace(v);
+		// priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
 		g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
 		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
@@ -231,6 +231,9 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov);
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
+	closed.emplace(bestNext);
+	priorityQueue.erase(priorityQueue.begin());
+
 }while(g[bestNext].options.size()>0 && !er.ended);
 // printf("finished exploring, plan =%i\n", plan_prov.size());
 return plan_prov;
@@ -589,15 +592,17 @@ void AttentiveConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<v
 	if (g[v].outcome==simResult::crashed){
 		return;
 	}
-	for (auto i =queue.begin(); i!=queue.end(); i++){
-		bool expanded=0;
-		auto found=closed.find(v); 
-		if (g[v].phi <abs(g[*i].phi) && found==closed.end()){
-			queue.insert(i, v);
-			return;
+	auto found=closed.find(v); 
+	if(found==closed.end()){ //if not in closed
+		for (auto i =queue.begin(); i!=queue.end(); i++){
+			bool expanded=0;
+			if (g[v].phi <abs(g[*i].phi) ){
+				queue.insert(i, v);
+				return;
+			}
 		}
+		queue.push_back(v);		
 	}
-	queue.push_back(v);
 }
 
 
