@@ -350,7 +350,7 @@ TEST_P(ConfiguratorBacktrackTest, Backtrack){
         EXPECT_NE(priorityQ[0], v1); //check that v1 is not the vertex with highest priority
 }
 
-TEST_F(ConfiguratorBacktrackTest, SkipClosed){
+TEST_F(ConfiguratorTest, SkipClosedBT){
     dummy_vertex(MOVING_VERTEX);
     vertexDescriptor v1=boost::add_vertex(transitionSystem);
     boost::add_edge(currentVertex, v1, transitionSystem);
@@ -360,6 +360,19 @@ TEST_F(ConfiguratorBacktrackTest, SkipClosed){
     backtrack(evaluationQ, priorityQ, closed, m_plan);
     EXPECT_TRUE(priorityQ.empty());
 }
+
+TEST_F(ConfiguratorTest, SkipClosedPQ){
+    dummy_vertex(MOVING_VERTEX);
+    vertexDescriptor v1=boost::add_vertex(transitionSystem);
+    boost::add_edge(currentVertex, v1, transitionSystem);
+    transitionSystem[v1].outcome=simResult::successful;
+    std::vector <vertexDescriptor> evaluationQ={v1}, priorityQ;
+    std::set <vertexDescriptor> closed={v1};
+    addToPriorityQueue(v1, priorityQ, transitionSystem, closed);
+    EXPECT_TRUE(priorityQ.empty());
+}
+
+
 
 
 INSTANTIATE_TEST_CASE_P(Backtrack, ConfiguratorBacktrackTest, ::testing::Values(std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform_zero, b2Transform(b2Vec2(0.6, 0), b2Rot(0)), b2Transform_zero),
