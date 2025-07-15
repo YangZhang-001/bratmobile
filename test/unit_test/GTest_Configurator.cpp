@@ -406,6 +406,23 @@ TEST_F(ConfiguratorTest, SkipClosedPQ){
     EXPECT_TRUE(priorityQ.size()==0);
 }
 
+TEST_P(ConfiguratorTakeBool, AddToClosedSet){
+    bool fullEdges=GetParam();
+    iteration=1;
+    vertexDescriptor v1, v2, v3;
+    Disturbance disturbance;
+    add_vertex_now(currentVertex, v1, disturbance);
+    transitionSystem[v1].direction=DEFAULT;
+    if (fullEdges){
+        add_vertex_now(currentVertex, v2, disturbance);
+        transitionSystem[v2].direction=LEFT;
+        add_vertex_now(currentVertex, v3, disturbance);
+        transitionSystem[v3].direction=LEFT;
+    }
+    std::set<vertexDescriptor> closed;
+    EXPECT_EQ(closeVertex(currentVertex), fullEdges);
+    }
+
 
 
 

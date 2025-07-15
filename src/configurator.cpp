@@ -35,18 +35,18 @@ void Configurator::dummy_vertex(vertexDescriptor src){
 	transitionSystem[currentVertex].direction=STOP;
 }
 
-std::pair <edgeDescriptor, bool> AttentiveConfigurator::add_vertex_now(const vertexDescriptor & src, vertexDescriptor &v1, TransitionSystem &g, Disturbance Di,Edge edge, bool topDown){
-	std::pair<edgeDescriptor, bool> result=addVertex(src, v1, g, edge, topDown);
-	if (!g[v1].filled){
-		g[v1].Di= Di;
+std::pair <edgeDescriptor, bool> AttentiveConfigurator::add_vertex_now(const vertexDescriptor & src, vertexDescriptor &v1, Disturbance Di,Edge edge, bool topDown){
+	std::pair<edgeDescriptor, bool> result=addVertex(src, v1, edge, topDown);
+	if (!transitionSystem[v1].filled){
+		transitionSystem[v1].Di= Di;
 	}
 	return result;
 }
 
-std::pair <edgeDescriptor, bool> AttentiveConfigurator::add_vertex_retro(vertexDescriptor & src, vertexDescriptor &v1, TransitionSystem &g, Edge edge, bool topDown){
-	std::pair<edgeDescriptor, bool> result=addVertex(src, v1, g, edge, topDown);
-	g[v1].Di= g[src].Di;
-	g[v1].Dn=g[src].Dn;
+std::pair <edgeDescriptor, bool> AttentiveConfigurator::add_vertex_retro(vertexDescriptor & src, vertexDescriptor &v1,Edge edge, bool topDown){
+	std::pair<edgeDescriptor, bool> result=addVertex(src, v1, edge, topDown);
+	transitionSystem[v1].Di= transitionSystem[src].Di;
+	transitionSystem[v1].Dn=transitionSystem[src].Dn;
 	return result;
 }
 
@@ -211,7 +211,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				}
 				else{
 					auto out_expected=gt::outEdges(g, v0, t.get_direction());
-					edge= add_vertex_now(v0, v1,g,sk.first.Di, sk.second); //addVertex
+					edge= add_vertex_now(v0, v1,sk.first.Di, sk.second); //addVertex
 					shift=b2Transform_zero;
 				}
 				if(edge.second){
@@ -343,9 +343,22 @@ void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 	return;
 }
 
+std::pair<edgeDescriptor, bool> Configurator::addVertex(const vertexDescriptor & src, vertexDescriptor &v1, Edge edge=Edge(), bool topDown=0){ //returns edge added
+	std::pair<edgeDescriptor, bool> result;
+	result.second=false;
+	if (transitionSystem[src].options.size()>0 || topDown){
+		v1 = boost::add_vertex(transitionSystem);
+		result = add_edge(src, v1, transitionSystem);
+		transitionSystem[result.first] =edge;
+		transitionSystem[v1].direction=transitionSystem[src].options[0];
+		transitionSystem[result.first].it_observed=iteration;
+		if (!topDown){
+			transitionSystem[src].options.erase(transitionSystem[src].options.begin());
+		}
 
-
-
+	}
+	return result;
+}
 
 
 
@@ -1084,7 +1097,15 @@ vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, ve
 	return result;
 }
 
-void AttentiveConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
+bool AttentiveConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
+	int MAX_OUT=3;
+	if (transitionSystem[v].isTurning()){MAX_OUT=2;}
+	if (getExploredTransitions(v).size()>=MAX_OUT){
+		closed.emplace(v);
+		return true;
+	}
+	return false;
+
 
 }
 
@@ -1093,7 +1114,7 @@ std::pair<edgeDescriptor, bool> AttentiveConfigurator::addEdgeRetrospectively(ve
 	transitionSystem[v].endPose=s_tmp.endPose;
 	transitionSystem[v].Dn=s_tmp.Dn;
 	transitionSystem[first_edge.first].step= gt::distanceToSimStep(transitionSystem[v].distance(), linearSpeed);
-	first_edge=add_vertex_retro(v, v1,transitionSystem); 
+	first_edge=add_vertex_retro(v, v1); 
 	transitionSystem[v1].Di=transitionSystem[v].Di;
 	transitionSystem[v1].start=transitionSystem[v].endPose;
 	transitionSystem[v].phi=NAIVE_PHI;

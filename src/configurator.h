@@ -93,26 +93,10 @@ void printPlan(std::vector <vertexDescriptor>* p=NULL);
  * 
  * @param src source state
  * @param v1 new state
- * @param g cognitive map
  * @param edge connecting edge between src->v1
  * @param topDown flag determining whether state v1 has been simulated already or not
  */
-std::pair<edgeDescriptor, bool> addVertex(const vertexDescriptor & src, vertexDescriptor &v1, TransitionSystem &g, Edge edge=Edge(), bool topDown=0){ //returns edge added
-	std::pair<edgeDescriptor, bool> result;
-	result.second=false;
-	if (g[src].options.size()>0 || topDown){
-		v1 = boost::add_vertex(g);
-		result = add_edge(src, v1, g);
-		g[result.first] =edge;
-		g[v1].direction=g[src].options[0];
-		g[result.first].it_observed=iteration;
-		if (!topDown){
-			g[src].options.erase(g[src].options.begin());
-		}
-
-	}
-	return result;
-}
+std::pair<edgeDescriptor, bool> addVertex(const vertexDescriptor & src, vertexDescriptor &v1, Edge edge=Edge(), bool topDown=0);
 
 //search the TS for a plan
 //std::vector <vertexDescriptor> planner(TransitionSystem&, vertexDescriptor, vertexDescriptor goal=TransitionSystem::null_vertex(), bool been=0, const Task* custom_ctrl_goal=NULL, bool * finished =NULL) ;
@@ -330,23 +314,21 @@ void resetPhi();
  * 
  * @param src source state
  * @param v1 new state
- * @param g cognitive map
  * @param Di the initial disturbance of v1
  * @param edge connecting edge between src->v1
  * @param topDown flag determining whether state v1 has been simulated already or not
  */
-std::pair <edgeDescriptor, bool> add_vertex_now(const vertexDescriptor & src, vertexDescriptor & v1, TransitionSystem & g, Disturbance obs,Edge edge=Edge(), bool topDown=0);
+std::pair <edgeDescriptor, bool> add_vertex_now(const vertexDescriptor & src, vertexDescriptor & v1, Disturbance obs,Edge edge=Edge(), bool topDown=0);
 
 /**
  * @brief Adds vertices retroactively (e.g. after a state is split)
  * 
  * @param src source state
  * @param v1 new state
- * @param g cognitive map
  * @param edge connecting edge between src->v1
  * @param topDown flag determining whether state v1 has been simulated already or not
  */
-std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &src, vertexDescriptor &v1, TransitionSystem &g, Edge edge=Edge(), bool topDown=0);
+std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &src, vertexDescriptor &v1, Edge edge=Edge(), bool topDown=0);
 
 /** * returns explored transitions (at the present iteration) from vertex @param v */
 std::vector <Direction> getExploredTransitions(vertexDescriptor v);
@@ -515,7 +497,7 @@ vertexDescriptor getRecyclingStart(vertexDescriptor v, vertexDescriptor v1);
  */
 std::vector <edgeDescriptor> inEdges(vertexDescriptor v, Direction d = UNDEFINED); //returns a vector containing all the in-edges of a vertex which have the specified direction
 
-void closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v);
+bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v);
 
 /**
  * @brief Adds edge retrospectively (used in split task)

@@ -1,41 +1,8 @@
 #include "test_classes.h"
 
 
-class ConfiguratorTestPlanner:public ConfiguratorTest, public testing::WithParamInterface<bool>{
-    public:
-
-/**
- * @brief makes transition system looking like this
- * 
- *      *             
-                     v3(LEFT)---v4(DEFAULT)                      v13(LEFT)*---v14(DEFAULT)*
-                    /                                           /
-                   v1 --- v2(DEFAULT)       v8(LEFT)*---v9(DEFAULT)* --- v12(DEFAULT)
-                    \                       /                   \
-                    v5(RIGHT)* --- v6(DEFAULT)* --- v7(DEFAULT)    v15(RIGHT) --- v16(DEFAULT)  
-                                            \
-                                              v10(RIGHT) --- v11(DEFAULT)        
-                                                       
-                                                    
-
-        *                  
- * 
- * @param avoid vertices whose Di is an obstacle to avoid
- * @param desiredPlan 
- */
-
-    void make_ts(std::vector <vertexDescriptor>& avoid, std::vector<vertexDescriptor>& desiredPlan, bool haGoal);
-
-    void SetUp()override{
-        register_planner(new HorizonStarPlanner);
-    }
-    void TearDown()override{
-        delete planner;
-    }
-
-};
  
-TEST_P(ConfiguratorTestPlanner, RecyclePlan){
+TEST_P(ConfiguratorTakeBool, RecyclePlan){
     std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4};
     vertexDescriptor task_start=DUMMY;
     make_ts(avoid, desiredPlan, GetParam());    
@@ -53,25 +20,6 @@ TEST_P(ConfiguratorTestPlanner, RecyclePlan){
     EXPECT_EQ(m_plan, desiredPlan);
 }
 
-INSTANTIATE_TEST_CASE_P(GoalOrNot, ConfiguratorTestPlanner, testing::Bool());
-
-/**
- * @brief int is the number of vertices we want crashed
- * 
- */
-class ConfiguratorPlannerHybrid: public ConfiguratorTestPlanner, public HorizonStarPlanner, public ::testing::WithParamInterface<std::tuple<int, Direction, simResult::resultType>>{
-    protected:
-    std::vector<vertexDescriptor> withDirection(Direction d);
-
-    void assignOutcome();
-
-    int n_successful(std::vector<vertexDescriptor> vec);
-
-};
-
-
-
-//class HorizonStarPlannerTest: public HorizonStarPlanner, public ::testing::Test{};
 
 TEST_F(ConfiguratorPlannerHybrid,pathToAddTo){
     HorizonStarPlanner horizonPlanner;
@@ -92,7 +40,7 @@ TEST_F(ConfiguratorPlannerHybrid,pathToAddTo){
 }
 
 
-TEST_P(ConfiguratorTestPlanner, startRecycle){
+TEST_P(ConfiguratorTakeBool, startRecycle){
     std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4}, add;
     std::vector<std::vector<vertexDescriptor>> paths;
     paths.emplace_back(std::vector<vertexDescriptor>({14, 1, 3, 4}));
@@ -124,63 +72,8 @@ TEST_P(ConfiguratorTestPlanner, startRecycle){
 //                                                                 ::testing::Values(LEFT, RIGHT, DEFAULT), 
 //                                                                 ::testing::Values(simResult::crashed, simResult::successful, simResult::safeForNow)));
 
-void ConfiguratorTestPlanner::make_ts(std::vector <vertexDescriptor>& avoid, std::vector<vertexDescriptor>& desiredPlan, bool hasGoal){
-    addIteration();
-    b2Vec2 d_position(1,0);
-    Disturbance obstacle(AVOID, b2Vec2(.6,0)), goal(PURSUE, d_position);
-    if (hasGoal){
-        init(Task(goal,DEFAULT));
-    }
-    dummy_vertex(MOVING_VERTEX);
-    make_module(currentVertex);
-    currentVertex=n_vertices()-1; //6, if no goal
-    if (hasGoal){
-        make_module(6);
-        make_module(9);
-        std::vector<vertexDescriptor> all(n_vertices()-1), safe(n_vertices()-7);
-        std::iota(all.begin(), all.end(), 1);
-        std::iota(safe.begin(), safe.end(), 7);
-        avoid.push_back(4);
-        avoid.push_back(6);
-        set_Di(avoid, obstacle);
-        set_Di(safe, goal);
-        vertex_set_Di(2, goal);
-        desiredPlan={1,5, 6, 8, 9, 13, 14};
-        currentVertex=14;
-    }
-    else{
-        transitionSystem[4].endPose.p.y=1;
-        transitionSystem[6].endPose.p.y=-1;
-
-    }
-    vertex_set_Dn(2, obstacle);
-    vertex_set_outcome(2,simResult::crashed);
-    currentTask.setMotorStep(0);
-    currentTask.set_change(1);
-    }
 
 
-
-
-std::vector<vertexDescriptor> ConfiguratorPlannerHybrid::withDirection(Direction d){
-    std::vector<vertexDescriptor> result;
-    for (int i=1; i<n_vertices(); i++){
-        if (transitionSystem[vertexDescriptor(i)].direction==d){
-            result.push_back(i);
-        }
-   }
-   return result;
-}
-
-int ConfiguratorPlannerHybrid::n_successful(std::vector<vertexDescriptor> vec){
-    int count=0;
-    for (vertexDescriptor v:vec){
-        if (vertex_get_outcome(v)==simResult::successful){
-            count++;
-        }
-    }
-    return count;
-}
 
 
 // void ConfiguratorPlannerHybrid::assignOutcome(){
