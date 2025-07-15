@@ -239,43 +239,34 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 return plan_prov;
 }
 
-std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescriptor v, TransitionSystem& g, Direction d, vertexDescriptor src){
+std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescriptor v,  Direction d, vertexDescriptor src){
 	std::vector <vertexDescriptor> split={v};
-	auto first_edge=boost::edge(src, v, g); //assumes exists
+	auto first_edge=boost::edge(src, v, transitionSystem); //assumes exists
 
-	if (gt::check_edge_direction(first_edge, g, RIGHT)|| gt::check_edge_direction(first_edge, g, LEFT)){ //d
+	if (gt::check_edge_direction(first_edge, transitionSystem, RIGHT)|| gt::check_edge_direction(first_edge, transitionSystem, LEFT)){ //d
 		return split;
 	}
-	if (g[v].outcome != simResult::crashed){
+	if (transitionSystem[v].outcome != simResult::crashed){
 		return split;
 	}
 	//if (auto ie=inEdges(src, DEFAULT), stop_edges=inEdges(src, STOP); !ie.empty()|| !stop_edges.empty()){
-	if (transitionSystem[src].direction==DEFAULT || transitionSystem[src].direction==STOP){
+	if ((transitionSystem[src].direction==DEFAULT || transitionSystem[src].direction==STOP)&& boost::in_degree(src, transitionSystem)>0){
 		split.insert(split.begin(), src);
-		g[src].outcome=simResult::safeForNow;
+		transitionSystem[src].outcome=simResult::safeForNow;
 	}
 	vertexDescriptor v1=v;
-	float nNodes = g[v].distance()/simulationStep, og_phi=g[v].phi;
-	b2Transform endPose = g[v].endPose;
+	float nNodes = transitionSystem[v].distance()/simulationStep, og_phi=transitionSystem[v].phi;
+	b2Transform endPose = transitionSystem[v].endPose;
 	Task::Action a;
 	a.init(d);
 	while(nNodes>1){
-		State s_tmp=State(g[v]);
+		State s_tmp=State(transitionSystem[v]);
 		if(nNodes >1){
 			b2Vec2 step_v(simulationStep*endPose.q.c, simulationStep*endPose.q.s);
-			s_tmp.endPose=g[v].start+b2Transform(step_v, b2Rot(0));
+			s_tmp.endPose=transitionSystem[v].start+b2Transform(step_v, b2Rot(0));
 			VertexMatch match=findMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE){
-				g[v].options = {d};
-				g[v].endPose=s_tmp.endPose;
-				g[v].Dn=s_tmp.Dn;
-				g[first_edge.first].step= gt::distanceToSimStep(g[v].distance(), a.getLinearSpeed());
-				first_edge=add_vertex_retro(v, v1,g); 
-				g[v1].Di=g[v].Di;
-				g[v1].start=g[v].endPose;
-				g[v].phi=NAIVE_PHI;
-				g[v1].direction=d;
-				g[v].outcome=simResult::safeForNow;
+				first_edge=addEdgeRetrospectively(v, v1, s_tmp, first_edge, d);
 			}
 			else{
 				v1=match.second;
@@ -287,16 +278,13 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 			s_tmp.endPose=endPose;
 			VertexMatch match=findMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE || match.second==v){
-				g[v1].endPose = endPose;
-				g[first_edge.first].step= gt::distanceToSimStep(g[v1].distance(), a.getLinearSpeed());	
-				g[v1].outcome=simResult::crashed;	
-				g[v1].phi=og_phi;
+				transitionSystem[v1].endPose = endPose;
+				transitionSystem[first_edge.first].step= gt::distanceToSimStep(transitionSystem[v1].distance(), a.getLinearSpeed());	
+				transitionSystem[v1].outcome=simResult::crashed;	
+				transitionSystem[v1].phi=og_phi;
 			}
-
 		}
-
 		v=v1;
-
 	}
 	return split;
 }
@@ -308,7 +296,7 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 		std::vector <vertexDescriptor> split = task_vertices(v, &ep); 
 		Direction direction= transitionSystem[ep.second.m_target].direction;
 		if (split.size()<2){
-			split =splitTask(v, transitionSystem, DEFAULT, ep.second.m_source);
+			split =splitTask(v, DEFAULT, ep.second.m_source);
 		}
 		for (int i=0; i<split.size(); i++){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
@@ -1099,4 +1087,18 @@ vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, ve
 
 void AttentiveConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
 
+}
+
+std::pair<edgeDescriptor, bool> AttentiveConfigurator::addEdgeRetrospectively(vertexDescriptor v, vertexDescriptor v1, const State & s_tmp, std::pair<edgeDescriptor, bool> first_edge, Direction d){
+	transitionSystem[v].options = {d};
+	transitionSystem[v].endPose=s_tmp.endPose;
+	transitionSystem[v].Dn=s_tmp.Dn;
+	transitionSystem[first_edge.first].step= gt::distanceToSimStep(transitionSystem[v].distance(), a.getLinearSpeed());
+	first_edge=add_vertex_retro(v, v1,transitionSystem); 
+	transitionSystem[v1].Di=transitionSystem[v].Di;
+	transitionSystem[v1].start=transitionSystem[v].endPose;
+	transitionSystem[v].phi=NAIVE_PHI;
+	transitionSystem[v1].direction=d;
+	transitionSystem[v].outcome=simResult::safeForNow;
+	return first_edge;
 }

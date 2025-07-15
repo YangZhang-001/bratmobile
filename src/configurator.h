@@ -259,20 +259,19 @@ void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertex
  * @brief Split tasks into sub-states of fixed length
  * 
  * @param v the vertex to split
- * @param g the transition system
  * @param d direction of the task to split
  * @param src source vertex for v
  * @return std::vector <vertexDescriptor> : the vertices making up substates in the original task
  */
-std::vector <vertexDescriptor> splitTask(vertexDescriptor v, TransitionSystem& g, Direction d, vertexDescriptor src=TransitionSystem::null_vertex());
+std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex());
 
 /**
  * @brief Propagate a disturbance backwards to all states representing the same task
  * 
  * @param v1 final vertex linked to the final sub-state in the task
  * @param v0 source of v1
- * @param closed 
- * @param match 
+ * @param closed closed set
+ * @param match is v1 a match of any kind to a vertex in the graph
  */
 void propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE);
 
@@ -517,6 +516,18 @@ vertexDescriptor getRecyclingStart(vertexDescriptor v, vertexDescriptor v1);
 std::vector <edgeDescriptor> inEdges(vertexDescriptor v, Direction d = UNDEFINED); //returns a vector containing all the in-edges of a vertex which have the specified direction
 
 void closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v);
+
+/**
+ * @brief Adds edge retrospectively (used in split task)
+ * 
+ * @param v source 
+ * @param v1 target
+ * @param s_tmp_endPose endPose for the new sub-state
+ * @param first_edge original unsplit task edge
+ * @param Direction d
+ * @return std::pair<edgeDescriptor, bool> 
+ */
+std::pair<edgeDescriptor, bool> addEdgeRetrospectively(vertexDescriptor v, vertexDescriptor v1, const State & s_tmp,std::pair<edgeDescriptor, bool> first_edge, Direction d);
 
 public:
 
