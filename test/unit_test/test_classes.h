@@ -422,7 +422,13 @@ class ConfiguratorTakeBool:public ConfiguratorTest, public testing::WithParamInt
     }
     void TearDown()override{
         delete planner;
+        transitionSystem=TransitionSystem(1);
     }
+
+    /**
+     * @brief Expands vertex @param v with a maximum depth of 1
+     */
+    void shallowExpand(vertexDescriptor v);
 
 };
 
@@ -687,5 +693,17 @@ int ConfiguratorPlannerHybrid::n_successful(std::vector<vertexDescriptor> vec){
         }
     }
     return count;
+}
+
+void ConfiguratorTakeBool::shallowExpand(vertexDescriptor v){
+    vertexDescriptor v1, v2, v3;
+    Disturbance disturbance;
+    transitionSystem[v].options={DEFAULT, LEFT, RIGHT};
+    add_vertex_now(v, v1, disturbance);
+    if (GetParam()){
+        add_vertex_now(v, v2, disturbance);
+        add_vertex_now(v, v3, disturbance);
+    }
+
 }
 #endif

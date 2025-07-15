@@ -409,18 +409,22 @@ TEST_F(ConfiguratorTest, SkipClosedPQ){
 TEST_P(ConfiguratorTakeBool, AddToClosedSet){
     bool fullEdges=GetParam();
     iteration=1;
-    vertexDescriptor v1, v2, v3;
-    Disturbance disturbance;
-    transitionSystem[currentVertex].options={DEFAULT, LEFT, RIGHT};
-    add_vertex_now(currentVertex, v1, disturbance);
-    if (fullEdges){
-        add_vertex_now(currentVertex, v2, disturbance);
-        add_vertex_now(currentVertex, v3, disturbance);
-    }
+    shallowExpand(currentVertex);
     std::set<vertexDescriptor> closed;
     EXPECT_EQ(closeVertex(closed, currentVertex), fullEdges);
     EXPECT_EQ(closed.size(), fullEdges);
+}
+
+TEST_P(ConfiguratorTakeBool, GetExploredTransitions){
+    int solution=1;
+    if (GetParam()){
+        solution=3;
     }
+    iteration=1;
+    shallowExpand(currentVertex);
+    EXPECT_EQ(getExploredTransitions(currentVertex).size(), solution);
+
+}
 
 TEST_P(ConfiguratorTakeBool, startRecycle){
     std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4}, add;
