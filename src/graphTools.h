@@ -376,16 +376,6 @@ struct InPlan{
 	std::vector<vertexDescriptor> *plan;
 };
 
-//check if two states belong to the same task
-// IsTaskStep{
-// 	IsTaskStep()=default;
-// 	bool operator()(const TransitionSystem & g, )
-// };
-// bool is_task_step(const vertexDescriptor & v, const vertexDescriptor & v1, const TransitionSystem& g) {
-// 	return (g[v].Di==g[v1].Di && g[v].direction==g[v1].direction && g[v].Dn==g[v1].Dn);
-// }
-
-
 
 
 struct NotSelfEdge{
@@ -423,17 +413,29 @@ struct ViableEdge{
 	TransitionSystem * g=NULL;
 };
 
-struct InviableEdge{
-	InviableEdge()=default;
-	InviableEdge(TransitionSystem * _g): g(_g){}
+// struct InviableEdge{
+// 	InviableEdge()=default;
+// 	InviableEdge(TransitionSystem * _g): g(_g){}
+
+// 	bool operator()(const edgeDescriptor & e) const {
+// 		ViableEdge ve(g);
+// 		return !ve(e);
+// 	}
+
+// private:
+// TransitionSystem * g=NULL;
+// };
+
+struct SameIteration{
+	SameIteration()=default;
+	SameIteration(TransitionSystem & _g, int _i): g(_g), iteration(_i){}
 
 	bool operator()(const edgeDescriptor & e) const {
-		ViableEdge ve(g);
-		return !ve(e);
+		return g[e].it_observed==iteration;
 	}
-
-private:
-TransitionSystem * g=NULL;
+	private:
+	TransitionSystem & g;
+	int iteration=-1;
 };
 
 
