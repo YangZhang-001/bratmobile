@@ -357,6 +357,10 @@ class ConfiguratorTest32DT:public ConfiguratorTest, public testing::WithParamInt
     }
 };
 
+class ConfiguratorBacktrackTest: public ConfiguratorTest32DT{
+    protected:
+};
+
 class ConfiguratorTestTransitionMatrix: public ConfiguratorTest, public testing::WithParamInterface<std::tuple<b2Transform, Direction, simResult::resultType>>{
 protected:
     /**

@@ -253,7 +253,7 @@ Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & wor
  * @param closed closed set 
  * @param plan_prov provisional plan
  */
-void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, const std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov);
+void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov);
 
 /**
  * @brief Split tasks into sub-states of fixed length
