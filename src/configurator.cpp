@@ -331,9 +331,12 @@ void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 	}
 	Direction dir= transitionSystem[v1].direction;
 	bool same_Di=transitionSystem[ep.first.m_source].Di==transitionSystem[ep.first.m_target].Di;
+	
 	ep.first= *(boost::in_edges(ep.first.m_source, transitionSystem).first);
 	ep.second= boost::edge(ep.first.m_source, ep.first.m_target, transitionSystem).second;
-	bool same_direction=gt::check_edge_direction(ep, transitionSystem, dir) ||( (gt::check_edge_direction(ep, transitionSystem, STOP))&& dir==DEFAULT) ;
+	//bool shoudBeUpdated=gt::check_edge_direction(ep, transitionSystem, STOP);
+	bool shouldBeUpdated= transitionSystem[ep.first.m_source].direction==STOP;
+	bool same_direction=gt::check_edge_direction(ep, transitionSystem, dir) ||( shouldBeUpdated&& dir==DEFAULT) ;
 	if (same_direction&& same_Di && transitionSystem[ep.first.m_target].Dn.getAffIndex()==NONE){
  			transitionSystem[ep.first.m_target].Dn = dist; //was target
  	}
