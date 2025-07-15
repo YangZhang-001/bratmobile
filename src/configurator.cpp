@@ -477,7 +477,7 @@ std::vector <Direction>  AttentiveConfigurator::getExploredTransitions(vertexDes
 
 
 void AttentiveConfigurator::removeExploredTransitions( vertexDescriptor v){
-	for (Direction & d:getExploredTransitions(v)){
+	for (Direction d:getExploredTransitions(v)){
 		// auto it=std::find(transitionSystem[v].options.begin(), transitionSystem[v].options.end(), d);
 		// if (it !=transitionSystem[v].options.end()){
 		// 	transitionSystem[v].options.erase(it);
