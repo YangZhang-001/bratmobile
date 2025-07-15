@@ -21,9 +21,10 @@ TEST_P(ConfiguratorTakeBool, CheckVectorForPredicate){
     Edge e;
     bool solution=false; 
     if (GetParam()){
-        e.it_observed=2;
+        iteration=2;
         solution=true;
     }
+    transitionSystem[currentVertex].options={DEFAULT, LEFT, RIGHT};
     add_vertex_now(currentVertex, v1, controlGoal.get_disturbance(), e,true);
     SameIteration si(transitionSystem, 2);
     std::vector<edgeDescriptor> ie=inEdges(v1, UNDEFINED);
