@@ -242,7 +242,6 @@ return plan_prov;
 std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescriptor v,  Direction d, vertexDescriptor src){
 	std::vector <vertexDescriptor> split={v};
 	auto first_edge=boost::edge(src, v, transitionSystem); //assumes exists
-
 	if (gt::check_edge_direction(first_edge, transitionSystem, RIGHT)|| gt::check_edge_direction(first_edge, transitionSystem, LEFT)){ //d
 		return split;
 	}
@@ -266,7 +265,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 			s_tmp.endPose=transitionSystem[v].start+b2Transform(step_v, b2Rot(0));
 			VertexMatch match=findMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE){
-				first_edge=addEdgeRetrospectively(v, v1, s_tmp, first_edge, d);
+				first_edge=addEdgeRetrospectively(v, v1, s_tmp, first_edge, d, a.getLinearSpeed());
 			}
 			else{
 				v1=match.second;
@@ -1086,14 +1085,14 @@ vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, ve
 }
 
 void AttentiveConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
-
+	
 }
 
-std::pair<edgeDescriptor, bool> AttentiveConfigurator::addEdgeRetrospectively(vertexDescriptor v, vertexDescriptor v1, const State & s_tmp, std::pair<edgeDescriptor, bool> first_edge, Direction d){
+std::pair<edgeDescriptor, bool> AttentiveConfigurator::addEdgeRetrospectively(vertexDescriptor v, vertexDescriptor v1, const State & s_tmp, std::pair<edgeDescriptor, bool> first_edge, Direction d, float linearSpeed){
 	transitionSystem[v].options = {d};
 	transitionSystem[v].endPose=s_tmp.endPose;
 	transitionSystem[v].Dn=s_tmp.Dn;
-	transitionSystem[first_edge.first].step= gt::distanceToSimStep(transitionSystem[v].distance(), a.getLinearSpeed());
+	transitionSystem[first_edge.first].step= gt::distanceToSimStep(transitionSystem[v].distance(), linearSpeed);
 	first_edge=add_vertex_retro(v, v1,transitionSystem); 
 	transitionSystem[v1].Di=transitionSystem[v].Di;
 	transitionSystem[v1].start=transitionSystem[v].endPose;
