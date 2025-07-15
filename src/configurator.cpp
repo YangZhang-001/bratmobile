@@ -175,7 +175,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		bool wasClosed =closeVertex(closed, v);
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
-		g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
+		//g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
 		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
 		for (Direction d: g[v].options){ //add and evaluate all vertices
 			v0_exp=v;
@@ -798,6 +798,8 @@ void AttentiveConfigurator::pre_explore(){
 		transitionSystem[MOVING_VERTEX].Di=transitionSystem[currentVertex].Di;
 		transitionSystem[MOVING_VERTEX].outcome=simResult::successful;
 		movingEdge=boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
+		transitionSystem[MOVING_VERTEX].phi=Planner::evaluationFunction(EndedResult(), MOVING_VERTEX, m_plan);
+
 	//  if (currentTask.get_change()){
 	//  	transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	//  }
