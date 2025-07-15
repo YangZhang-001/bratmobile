@@ -422,6 +422,39 @@ TEST_P(ConfiguratorTakeBool, AddToClosedSet){
     EXPECT_EQ(closed.size(), fullEdges);
     }
 
+TEST_P(ConfiguratorTakeBool, startRecycle){
+    std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4}, add;
+    std::vector<std::vector<vertexDescriptor>> paths;
+    paths.emplace_back(std::vector<vertexDescriptor>({14, 1, 3, 4}));
+    vertexDescriptor solution=DUMMY;
+    make_ts(avoid, desiredPlan, true); 
+    currentVertex=*desiredPlan.rbegin();
+    if (!GetParam()){
+        transitionSystem[2].outcome=simResult::successful;
+        solution=currentVertex;
+    }
+    EXPECT_EQ(getRecyclingStart(currentVertex,2), solution);
+    
+}
+
+TEST_P(ConfiguratorTakeBool, RecyclePlan){
+    std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4};
+    vertexDescriptor task_start=DUMMY;
+    make_ts(avoid, desiredPlan, GetParam());    
+    State s=transitionSystem[2];
+    b2Transform shift=b2Mul(transitionSystem[DUMMY].endPose, transitionSystem[currentVertex].endPose);
+    b2Transform shift_start=b2Transform_zero;
+    math::applyAffineTrans(shift, transitionSystem);
+    EXPECT_EQ(transitionSystem[currentVertex].endPose, b2Transform_zero);
+    iteration=100;
+    resetPhi();
+    VertexMatch vm(StateMatcher::ABSTRACT, 2);
+    auto edge =boost::add_edge(currentVertex, 2, transitionSystem);
+    bool recycled=recycle_plan(currentVertex, currentVertex, task_start, vm.first, shift_start, s.start, edge, m_plan, s.direction);
+    EXPECT_TRUE(recycled);
+    EXPECT_EQ(m_plan, desiredPlan);
+}
+
 
 
 
