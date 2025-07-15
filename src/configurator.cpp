@@ -337,7 +337,7 @@ void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 	//bool shoudBeUpdated=gt::check_edge_direction(ep, transitionSystem, STOP);
 	bool shouldBeUpdated= transitionSystem[ep.first.m_source].direction==STOP;
 	bool same_direction=gt::check_edge_direction(ep, transitionSystem, dir) ||( shouldBeUpdated&& dir==DEFAULT) ;
-	if (same_direction&& same_Di && transitionSystem[ep.first.m_target].Dn.getAffIndex()==NONE){
+	if (shouldBeUpdated&& same_Di && transitionSystem[ep.first.m_target].Dn.getAffIndex()==NONE){
  			transitionSystem[ep.first.m_target].Dn = dist; //was target
  	}
 	if (v1==currentVertex){
