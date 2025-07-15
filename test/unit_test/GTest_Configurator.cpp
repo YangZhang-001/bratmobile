@@ -420,7 +420,8 @@ TEST_P(ConfiguratorTakeBool, AddToClosedSet){
         transitionSystem[v3].direction=LEFT;
     }
     std::set<vertexDescriptor> closed;
-    EXPECT_EQ(closeVertex(currentVertex), fullEdges);
+    EXPECT_EQ(closeVertex(closed, currentVertex), fullEdges);
+    EXPECT_EQ(closed.size(), fullEdges);
     }
 
 
