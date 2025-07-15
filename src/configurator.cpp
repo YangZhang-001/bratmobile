@@ -946,7 +946,8 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	transitionSystem[edge.first].enableOverride();	
 	ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
 	info.overarchingGoal(controlGoal_adjusted); 
-	auto plan_tmp=planner->plan(transitionSystem, v, info, &finished); //not v but task start
+	TransitionSystem ts_copy=transitionSystem;
+	auto plan_tmp=planner->plan(ts_copy, v, info, &finished); //not v but task start
 	//printf("out of explore planner\n");
 	bool filler=0;
 	if (finished){
