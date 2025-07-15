@@ -527,7 +527,7 @@ void closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v);
  * @param Direction d
  * @return std::pair<edgeDescriptor, bool> 
  */
-std::pair<edgeDescriptor, bool> addEdgeRetrospectively(vertexDescriptor v, vertexDescriptor v1, const State & s_tmp,std::pair<edgeDescriptor, bool> first_edge, Direction d, float linearSpeed);
+std::pair<edgeDescriptor, bool> addEdgeRetrospectively(vertexDescriptor v, vertexDescriptor &v1, const State & s_tmp,std::pair<edgeDescriptor, bool> first_edge, Direction d, float linearSpeed);
 
 public:
 

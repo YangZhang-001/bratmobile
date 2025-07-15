@@ -336,15 +336,15 @@ TEST_P(ConfiguratorTest32DT, splitTask){
     b2Vec2 endPosition=std::get<1>(GetParam()).p;
     int expected_splitSize=int(endPosition.Length()/(simulationStep+0.00001))+1;
     EXPECT_EQ(split.size(), expected_splitSize);
-    int ct=0;
+    int ct=1;
     for (vertexDescriptor v:split){
         float step_size=(transitionSystem[v].endPose.p-transitionSystem[v].start.p).Length();
         EXPECT_LT(step_size, simulationStep+0.00001);
         EXPECT_FALSE(transitionSystem[v].Di.isValid());
-        if(ct<(split.size()-1)){
+        if(ct<(split.size())){
             EXPECT_EQ(transitionSystem[v].outcome, simResult::safeForNow);
         }
-        if (ct==(split.size()-1)){
+        if (ct==(split.size())){
             EXPECT_EQ(transitionSystem[v].outcome, simResult::crashed);
         }
         ct++;

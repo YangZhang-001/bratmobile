@@ -1085,10 +1085,10 @@ vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, ve
 }
 
 void AttentiveConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
-	
+
 }
 
-std::pair<edgeDescriptor, bool> AttentiveConfigurator::addEdgeRetrospectively(vertexDescriptor v, vertexDescriptor v1, const State & s_tmp, std::pair<edgeDescriptor, bool> first_edge, Direction d, float linearSpeed){
+std::pair<edgeDescriptor, bool> AttentiveConfigurator::addEdgeRetrospectively(vertexDescriptor v, vertexDescriptor & v1, const State & s_tmp, std::pair<edgeDescriptor, bool> first_edge, Direction d, float linearSpeed){
 	transitionSystem[v].options = {d};
 	transitionSystem[v].endPose=s_tmp.endPose;
 	transitionSystem[v].Dn=s_tmp.Dn;
