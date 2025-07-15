@@ -343,7 +343,7 @@ void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 	return;
 }
 
-std::pair<edgeDescriptor, bool> Configurator::addVertex(const vertexDescriptor & src, vertexDescriptor &v1, Edge edge=Edge(), bool topDown=0){ //returns edge added
+std::pair<edgeDescriptor, bool> Configurator::addVertex(const vertexDescriptor & src, vertexDescriptor &v1, Edge edge, bool topDown){ //returns edge added
 	std::pair<edgeDescriptor, bool> result;
 	result.second=false;
 	if (transitionSystem[src].options.size()>0 || topDown){
