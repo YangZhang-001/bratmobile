@@ -349,9 +349,11 @@ std::pair <edgeDescriptor, bool> add_vertex_now(const vertexDescriptor & src, ve
  */
 std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &src, vertexDescriptor &v1, TransitionSystem &g, Edge edge=Edge(), bool topDown=0);
 
+/** * returns explored transitions (at the present iteration) from vertex @param v */
+std::vector <Direction> getExploredTransitions(vertexDescriptor v);
 
 /** * only keeps unexplored transitions out of vertex @param v*/
-void unexplored_transitions(TransitionSystem&g, const vertexDescriptor& v);
+void removeExploredTransitions(vertexDescriptor v);
 
 /**
 *Combines edges K and jump function: represents possible transitions out of a state
@@ -380,7 +382,7 @@ void applyTransitionMatrix(vertexDescriptor v0, Direction d, bool ended, vertexD
  * @param g the transition system
  * @param closed closed states: ones which have already been simulated and expanded
  */
-void addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, TransitionSystem &g, const std::set <vertexDescriptor>& closed);
+void addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, const std::set <vertexDescriptor>& closed);
 
 
 //removes singleton vertices and self-edges
@@ -514,6 +516,7 @@ vertexDescriptor getRecyclingStart(vertexDescriptor v, vertexDescriptor v1);
  */
 std::vector <edgeDescriptor> inEdges(vertexDescriptor v, Direction d = UNDEFINED); //returns a vector containing all the in-edges of a vertex which have the specified direction
 
+void closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v);
 
 public:
 

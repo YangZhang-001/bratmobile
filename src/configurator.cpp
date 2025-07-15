@@ -173,7 +173,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	do{
 		v=bestNext;
 		// closed.emplace(v);
-		// priorityQueue.erase(priorityQueue.begin());
+		//priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
 		g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
 		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
@@ -231,7 +231,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov);
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
-	closed.emplace(bestNext);
+	closed.emplace(v);
 	priorityQueue.erase(priorityQueue.begin());
 
 }while(g[bestNext].options.size()>0 && !er.ended);
@@ -324,7 +324,7 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 			EndedResult local_er=Planner::estimateCost(transitionSystem[split_v],transitionSystem[split_v].start,direction, controlGoal);
 			transitionSystem[split_v].phi=Planner::evaluationFunction(local_er, split_v, plan_prov);
 			applyTransitionMatrix(split_v, direction, local_er.ended,src, plan_prov);
-			addToPriorityQueue(split_v, priority_q, transitionSystem, closed);
+			addToPriorityQueue(split_v, priority_q, closed);
 			src=split_v;
 		}
 	}
@@ -462,21 +462,27 @@ void Configurator::run(Configurator * c){
 
 }
 
-
-void AttentiveConfigurator::unexplored_transitions(TransitionSystem& g, const vertexDescriptor& v){
-	std::vector <Direction> to_remove;
-	for (int i=0; i<g[v].options.size(); i++){
-		for (edgeDescriptor &e: gt::outEdges(g, v, g[v].options[i])){
-			if (g[e].it_observed==iteration){ //g[e.m_target].visited()
-				to_remove.push_back(g[e.m_target].direction);
+std::vector <Direction>  AttentiveConfigurator::getExploredTransitions(vertexDescriptor v){
+	std::vector <Direction> result;
+	for (int i=0; i<transitionSystem[v].options.size(); i++){
+		for (edgeDescriptor &e: gt::outEdges(transitionSystem, v, transitionSystem[v].options[i])){
+			if (transitionSystem[e].it_observed==iteration){ //g[e.m_target].visited()
+				result.push_back(transitionSystem[e.m_target].direction);
 			}
 		}
 	}
-	for (Direction & d:to_remove){
-		auto it=std::find(g[v].options.begin(), g[v].options.end(), d);
-		if (it !=g[v].options.end()){
-			g[v].options.erase(it);
-		}
+	return result;
+}
+
+
+
+void AttentiveConfigurator::removeExploredTransitions( vertexDescriptor v){
+	for (Direction & d:getExploredTransitions(v)){
+		// auto it=std::find(transitionSystem[v].options.begin(), transitionSystem[v].options.end(), d);
+		// if (it !=transitionSystem[v].options.end()){
+		// 	transitionSystem[v].options.erase(it);
+		// }
+		erase_from_vector(transitionSystem[v].options, d);
 	}
 }
 
@@ -583,20 +589,21 @@ void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction
 	else{
 		transitionMatrix(v0, d, src);
 	}
-	unexplored_transitions(transitionSystem, v0);
+	removeExploredTransitions(v0);
+
 
 }
 
 
-void AttentiveConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, TransitionSystem &g, const std::set <vertexDescriptor>& closed){
-	if (g[v].outcome==simResult::crashed){
+void AttentiveConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, const std::set <vertexDescriptor>& closed){
+	if (transitionSystem[v].outcome==simResult::crashed){
 		return;
 	}
 	auto found=closed.find(v); 
 	if(found==closed.end()){ //if not in closed
 		for (auto i =queue.begin(); i!=queue.end(); i++){
 			bool expanded=0;
-			if (g[v].phi <abs(g[*i].phi) ){
+			if (transitionSystem[v].phi <abs(transitionSystem[*i].phi) ){
 				queue.insert(i, v);
 				return;
 			}
@@ -1088,4 +1095,8 @@ vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, ve
 		}
 	}
 	return result;
+}
+
+void AttentiveConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
+
 }
