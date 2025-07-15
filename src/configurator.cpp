@@ -172,7 +172,8 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	EndedResult er;
 	do{
 		v=bestNext;
-		bool wasClosed =closeVertex(closed, v);
+		//bool wasClosed =closeVertex(closed, v);
+		closed.emplace(v);
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
 		g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
@@ -249,7 +250,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
 	if ((transitionSystem[src].direction==DEFAULT || transitionSystem[src].direction==STOP)&& 
-			!ie.empty() && sameIterationEdgeIt!=ie.end()){
+			!ie.empty()){ //&& sameIterationEdgeIt!=ie.end()
 		split.insert(split.begin(), src);
 		transitionSystem[src].outcome=simResult::safeForNow;
 	}
