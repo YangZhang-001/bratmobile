@@ -231,7 +231,6 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
 	closeVertex(closed, v);
-
 }while(g[bestNext].options.size()>0 && !er.ended);
 // printf("finished exploring, plan =%i\n", plan_prov.size());
 return plan_prov;
