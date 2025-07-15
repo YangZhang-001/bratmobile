@@ -172,6 +172,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	EndedResult er;
 	do{
 		v=bestNext;
+		bool wasClosed =closeVertex(closed, v);
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
 		g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
@@ -230,7 +231,6 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov);
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
-	closeVertex(closed, v);
 }while(g[bestNext].options.size()>0 && !er.ended);
 // printf("finished exploring, plan =%i\n", plan_prov.size());
 return plan_prov;
@@ -459,10 +459,10 @@ void Configurator::run(Configurator * c){
 
 }
 
-std::vector <Direction>  AttentiveConfigurator::getExploredTransitions(vertexDescriptor v){
+std::vector <Direction>  AttentiveConfigurator::getExploredDirections(vertexDescriptor v, const std::vector<Direction>& directions){
 	std::vector <Direction> result;
-	for (int i=0; i<transitionSystem[v].options.size(); i++){
-		for (edgeDescriptor &e: gt::outEdges(transitionSystem, v, transitionSystem[v].options[i])){
+	for (Direction direction: directions){
+		for (edgeDescriptor &e: gt::outEdges(transitionSystem, v, direction)){
 			if (transitionSystem[e].it_observed==iteration){ //g[e.m_target].visited()
 				result.push_back(transitionSystem[e.m_target].direction);
 			}
@@ -474,7 +474,8 @@ std::vector <Direction>  AttentiveConfigurator::getExploredTransitions(vertexDes
 
 
 void AttentiveConfigurator::removeExploredTransitions( vertexDescriptor v){
-	for (Direction d:getExploredTransitions(v)){
+	std::vector<Direction>options=getExploredDirections(v, transitionSystem[v].options);
+	for (Direction d:options){
 		erase_from_vector(transitionSystem[v].options, d);
 	}
 }
@@ -1093,7 +1094,8 @@ vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, ve
 bool AttentiveConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
 	int MAX_OUT=3;
 	if (transitionSystem[v].isTurning()){MAX_OUT=2;}
-	if (getExploredTransitions(v).size()>=MAX_OUT){
+	std::vector<Direction> directions={UNDEFINED};
+	if (getExploredDirections(v, directions).size()>=MAX_OUT){
 		closed.emplace(v);
 		return true;
 	}

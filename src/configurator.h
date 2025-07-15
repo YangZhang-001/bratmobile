@@ -330,8 +330,8 @@ std::pair <edgeDescriptor, bool> add_vertex_now(const vertexDescriptor & src, ve
  */
 std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &src, vertexDescriptor &v1, Edge edge=Edge(), bool topDown=0);
 
-/** * returns explored transitions (at the present iteration) from vertex @param v */
-std::vector <Direction> getExploredTransitions(vertexDescriptor v);
+/** * returns a vector of which directions in vector @param directions were explored (at the present iteration) from vertex @param v */
+std::vector <Direction> getExploredDirections(vertexDescriptor v, const std::vector<Direction>& directions);
 
 /** * only keeps unexplored transitions out of vertex @param v*/
 void removeExploredTransitions(vertexDescriptor v);

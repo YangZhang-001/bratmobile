@@ -422,7 +422,8 @@ TEST_P(ConfiguratorTakeBool, GetExploredTransitions){
     }
     iteration=1;
     shallowExpand(currentVertex);
-    EXPECT_EQ(getExploredTransitions(currentVertex).size(), solution);
+    std::vector <Direction> directions={DEFAULT,LEFT, RIGHT};
+    EXPECT_EQ(getExploredDirections(currentVertex).size(), solution);
 
 }
 

@@ -701,10 +701,10 @@ void ConfiguratorTakeBool::shallowExpand(vertexDescriptor v){
     transitionSystem[v].options={DEFAULT, LEFT, RIGHT};
     Edge e;
     e.it_observed=iteration;
-    add_vertex_now(v, v1, disturbance, e, true);
+    add_vertex_now(v, v1, disturbance, e, false);
     if (GetParam()){
-        add_vertex_now(v, v2, disturbance, e, true);
-        add_vertex_now(v, v3, disturbance, e, true);
+        add_vertex_now(v, v2, disturbance, e, false);
+        add_vertex_now(v, v3, disturbance, e, false);
     }
 
 }
