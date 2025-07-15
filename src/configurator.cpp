@@ -247,8 +247,9 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	}
 	//if (auto ie=inEdges(src, DEFAULT), stop_edges=inEdges(src, STOP); !ie.empty()|| !stop_edges.empty()){
 	auto ie=inEdges(src);
+	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
 	if ((transitionSystem[src].direction==DEFAULT || transitionSystem[src].direction==STOP)&& 
-			!ie.empty() && check_vector_for(ie, SameIteration(transitionSystem, iteration)!=ie.end())){
+			!ie.empty() && sameIterationEdgeIt!=ie.end()){
 		split.insert(split.begin(), src);
 		transitionSystem[src].outcome=simResult::safeForNow;
 	}
