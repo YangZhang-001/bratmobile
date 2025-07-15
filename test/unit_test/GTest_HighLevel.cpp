@@ -151,7 +151,8 @@ TEST_P(HighLevelTest, Recycle){
     //}
     int vertices_og=configurator->n_vertices();
     configurator->addIteration(100);
-    configurator->set_current_v(last_v); //simulate plan finished
+    //configurator->set_current_v(last_v); //simulate plan finished
+    configurator->set_current_v(MOVING_VERTEX);
     configurator->getTask().set_change(true);
     configurator->set_plan({});
     wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(), finished_plan);
