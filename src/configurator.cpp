@@ -172,8 +172,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	EndedResult er;
 	do{
 		v=bestNext;
-		//bool wasClosed =closeVertex(closed, v);
-		closed.emplace(v);
+		bool wasClosed =closeVertex(closed, v);
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
 		g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
