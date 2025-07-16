@@ -201,9 +201,9 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 						std::pair<bool, edgeDescriptor> connectingEdge(false, edgeDescriptor());
 						std::vector <vertexDescriptor> task_vs= task_vertices(v1, &connectingEdge);
 						vertexDescriptor task_start= task_vs[0];
-						v0=getRecyclingStart(v, v1);
+						vertexDescriptor startRecycle=getRecyclingStart(v, v1);
 						if (plan_prov.empty()){
-							recycle_plan(v, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
+							recycle_plan(startRecycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
 						if (m_plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
 							shift_states(g, task_vs, shift_start);
