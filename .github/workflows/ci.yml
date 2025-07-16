@@ -49,7 +49,7 @@ jobs:
            sudo apt-get install doxygen
             doxygen doxygen/Doxyfile 
       - name: Disable Jekyll
-        run: touch docs/html/.nojekyll
+        run: touch docs/.nojekyll
       # - name : Doxygen
       #   uses: peaceiris/actions-gh-pages@v3
       #   with:
