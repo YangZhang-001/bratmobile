@@ -45,7 +45,7 @@ jobs:
       - name : Install Doxygen
         run: |
            sudo apt-get install doxygen
-            cd ../../doxygen
+            cd doxygen
             doxygen Doxyfile 
       - name : Doxygen
         uses: peaceiris/actions-gh-pages@v3
