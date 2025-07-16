@@ -42,8 +42,6 @@ jobs:
   make-docs:
     runs-on: ubuntu-22.04
     steps:
-      - name: Remove Docs
-        run: rm -r doxygen/docs
       - name: Checkout code
         uses: actions/checkout@v3
       - name : Install Doxygen
