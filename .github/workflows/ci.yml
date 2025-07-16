@@ -5,6 +5,7 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-22.04
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
@@ -32,8 +33,24 @@ jobs:
       - name : Build
         shell: bash
         run : sh build.sh
+  test:
+    steps:
       - name : Test
         run: |
               cd test/unit_test & ctest --output-on-failure
+  make-docs:
+    steps:
+      - name : Install Doxygen
+        run: sudo apt-get install doxygen
+      - name : Doxygen
+        run: | 
+              cd ../../doxygen
+              doxygen Doxyfile 
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/html
+
+
 
 
