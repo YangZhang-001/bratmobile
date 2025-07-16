@@ -487,7 +487,6 @@ class ConfiguratorTestGetObstacle: public ConfiguratorTestGetGoal{
     }
 };
 
-INSTANTIATE_TEST_CASE_P(Bool, ConfiguratorTakeBool, testing::Bool());
 
 
 ////////////////////////////////////////////////////////////////////////

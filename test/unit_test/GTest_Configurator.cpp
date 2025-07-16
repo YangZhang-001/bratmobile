@@ -424,7 +424,7 @@ TEST_P(ConfiguratorTakeBool, PropagateDisturbance){
     EXPECT_EQ(vertex_get_Dn(e.m_target)==vertex_get_Dn(currentVertex), hasSameDn);
 }
 
-
+INSTANTIATE_TEST_CASE_P(Bool, ConfiguratorTakeBool, testing::Bool());
 
 INSTANTIATE_TEST_CASE_P(Backtrack, ConfiguratorBacktrackTest, ::testing::Values(std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform_zero, b2Transform(b2Vec2(0.6, 0), b2Rot(0)), b2Transform_zero),
                                                                    std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform(b2Vec2(0, 0), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.26, -0.01), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.265, -0.16), b2Rot(0)))));
