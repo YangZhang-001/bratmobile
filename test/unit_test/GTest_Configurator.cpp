@@ -32,41 +32,7 @@ TEST_F(ConfiguratorTest, DummyVertex){
     EXPECT_FALSE(boost::edge(MOVING_VERTEX, MOVING_VERTEX, transitionSystem).second);
 }
 
-/**
- * @brief Parameters: robot position, previous task direction, current task direction
- * 
- */
-class ConfiguratorTestGetGoal:public ConfiguratorTest, public testing::WithParamInterface<std::tuple<b2Transform, Direction,Direction>>{
-    protected:
-    /**
-     * @brief Sets up vertex for testing using the parameters
-     * 
-     * @param v 
-     */
-    void vertex_setup(vertexDescriptor v, const Disturbance & Di, const Disturbance &Dn=Disturbance()){
-        transitionSystem[v].direction=std::get<1>(GetParam());
-        transitionSystem[v].endPose=std::get<0>(GetParam());
-        vertex_options_push_back(v, std::get<2>(GetParam()));
-        transitionSystem[v].Di=Di; 
-        transitionSystem[v].Di.validate();
-        transitionSystem[v].Dn=Dn; 
-        if (Dn.getAffIndex()!=NONE){
-            transitionSystem[v].Dn.validate();  
-        }
-    }
 
-    void SetUp(){
-        Disturbance goal(PURSUE, b2Vec2(1.0, 0));
-        init(Task(goal, UNDEFINED));
-        data2fp.emplace(Pointf(0.55, 0)); //make point corresponding to obstacle
-        dummy_vertex(MOVING_VERTEX);
-    }
-
-    void TearDown(){
-        controlGoal=Task();
-        boost::remove_vertex(currentVertex, transitionSystem);
-    }
-};
 
 TEST_P(ConfiguratorTestGetGoal, GetDisturbanceGoal){
     Disturbance solution=controlGoal.get_disturbance();
@@ -90,20 +56,6 @@ INSTANTIATE_TEST_CASE_P(DisturbanceIsGoal, ConfiguratorTestGetGoal, ::testing::V
                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.80, 0.0), b2Rot(-M_PI_2)), DEFAULT, RIGHT),
                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.80, 0.0), b2Rot(-M_PI_2)), DEFAULT, LEFT)));
 
-class ConfiguratorTestGetObstacle: public ConfiguratorTestGetGoal{
-    protected:
-    void SetUp(){
-        Disturbance goal(PURSUE, b2Vec2(1.0, 0));
-        init(Task(goal, UNDEFINED));
-        data2fp.emplace(Pointf(0.55, 0)); //make point corresponding to obstacle
-        dummy_vertex(MOVING_VERTEX);
-    }
-
-    void TearDown(){
-        controlGoal=Task();
-        boost::remove_vertex(currentVertex, transitionSystem);
-    }
-};
 
 TEST_P(ConfiguratorTestGetObstacle, GetDisturbanceObstacle){
     EXPECT_EQ(transitionSystem.m_vertices.size(),2);
@@ -460,6 +412,16 @@ TEST_P(ConfiguratorTakeBool, RecyclePlan){
     EXPECT_EQ(m_plan, desiredPlan);
 }
 
+TEST_P(ConfiguratorTakeBool, PropagateDisturbance){
+    dummy_vertex(MOVING_VERTEX);
+    auto e=make_v1_crashed(currentVertex);
+    bool hasSameDn=true;
+    if (GetParam()){
+        vertex_set_direction(currentVertex, transitionSystem[e.m_target].direction);
+        hasSameDn=false;
+    }
+    EXPECT_EQ(vertex_get_Dn(e.m_target)==vertex_get_Dn(currentVertex), hasSameDn);
+}
 
 
 

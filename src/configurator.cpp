@@ -324,21 +324,21 @@ void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 		return;
 	}
 	vertexDescriptor p=TransitionSystem::null_vertex();
-	std::pair <edgeDescriptor, bool> ep= boost::edge(v0, v1, transitionSystem);
-	Disturbance dist = transitionSystem[v1].Dn;
-	if (!ep.second){
+	//std::pair <edgeDescriptor, bool> ep= boost::edge(v0, v1, transitionSystem);
+	//Disturbance dist = transitionSystem[v1].Dn;
+	if (!boost::edge(v0, v1, transitionSystem).second){
 		return;
 	}
-	Direction dir= transitionSystem[v1].direction;
-	bool same_Di=transitionSystem[ep.first.m_source].Di==transitionSystem[ep.first.m_target].Di;
+	//Direction dir= transitionSystem[v1].direction;
+	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
 	
-	ep.first= *(boost::in_edges(ep.first.m_source, transitionSystem).first);
-	ep.second= boost::edge(ep.first.m_source, ep.first.m_target, transitionSystem).second;
+	//ep.first= *(boost::in_edges(v0, transitionSystem).first);
+	//ep.second= boost::edge(ep.first.m_source, ep.first.m_target, transitionSystem).second;
 	//bool shoudBeUpdated=gt::check_edge_direction(ep, transitionSystem, STOP);
-	bool shouldBeUpdated= transitionSystem[ep.first.m_source].direction==STOP;
-	bool same_direction=gt::check_edge_direction(ep, transitionSystem, dir) ||( shouldBeUpdated&& dir==DEFAULT) ;
-	if (shouldBeUpdated&& same_Di && transitionSystem[ep.first.m_target].Dn.getAffIndex()==NONE){
- 			transitionSystem[ep.first.m_target].Dn = dist; //was target
+	bool shouldBeUpdated= transitionSystem[v0].direction==STOP;
+	//bool same_direction=gt::check_edge_direction(ep, transitionSystem, dir) ||( shouldBeUpdated&& dir==DEFAULT) ;
+	if (shouldBeUpdated&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE){
+ 			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
 	if (v1==currentVertex){
 		transitionSystem[v0].outcome=simResult::safeForNow;

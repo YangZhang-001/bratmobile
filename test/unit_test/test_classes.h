@@ -446,6 +446,47 @@ class ConfiguratorPlannerHybrid: public ConfiguratorTakeBool, public HorizonStar
 
 };
 
+/**
+ * @brief Parameters: robot position, previous task direction, current task direction
+ * 
+ */
+class ConfiguratorTestGetGoal:public ConfiguratorTest, public testing::WithParamInterface<std::tuple<b2Transform, Direction,Direction>>{
+    protected:
+    /**
+     * @brief Sets up vertex for testing using the parameters
+     * 
+     * @param v 
+     */
+    void vertex_setup(vertexDescriptor v, const Disturbance & Di, const Disturbance &Dn=Disturbance());
+
+    void SetUp(){
+        Disturbance goal(PURSUE, b2Vec2(1.0, 0));
+        init(Task(goal, UNDEFINED));
+        data2fp.emplace(Pointf(0.55, 0)); //make point corresponding to obstacle
+        dummy_vertex(MOVING_VERTEX);
+    }
+
+    void TearDown(){
+        controlGoal=Task();
+        boost::remove_vertex(currentVertex, transitionSystem);
+    }
+};
+
+class ConfiguratorTestGetObstacle: public ConfiguratorTestGetGoal{
+    protected:
+    void SetUp(){
+        Disturbance goal(PURSUE, b2Vec2(1.0, 0));
+        init(Task(goal, UNDEFINED));
+        data2fp.emplace(Pointf(0.55, 0)); //make point corresponding to obstacle
+        dummy_vertex(MOVING_VERTEX);
+    }
+
+    void TearDown(){
+        controlGoal=Task();
+        boost::remove_vertex(currentVertex, transitionSystem);
+    }
+};
+
 INSTANTIATE_TEST_CASE_P(Bool, ConfiguratorTakeBool, testing::Bool());
 
 
@@ -706,6 +747,17 @@ void ConfiguratorTakeBool::shallowExpand(vertexDescriptor v){
         add_vertex_now(v, v2, disturbance, e, false);
         add_vertex_now(v, v3, disturbance, e, false);
     }
+}
 
+void ConfiguratorTestGetGoal::vertex_setup(vertexDescriptor v, const Disturbance & Di, const Disturbance &Dn=Disturbance()){
+    transitionSystem[v].direction=std::get<1>(GetParam());
+    transitionSystem[v].endPose=std::get<0>(GetParam());
+    vertex_options_push_back(v, std::get<2>(GetParam()));
+    transitionSystem[v].Di=Di; 
+    transitionSystem[v].Di.validate();
+    transitionSystem[v].Dn=Dn; 
+    if (Dn.getAffIndex()!=NONE){
+        transitionSystem[v].Dn.validate();  
+    }
 }
 #endif
