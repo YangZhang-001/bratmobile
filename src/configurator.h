@@ -511,6 +511,17 @@ bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v);
  */
 std::pair<edgeDescriptor, bool> addEdgeRetrospectively(vertexDescriptor v, vertexDescriptor &v1, const State & s_tmp,std::pair<edgeDescriptor, bool> first_edge, Direction d, float linearSpeed);
 
+/**
+ * @brief Edits @param v out of the priority queue if the plan was recycled from a different vertex.
+ * Useful if the frontier of @param v results in a crash and a plan needs to be recycled from the state
+ * previous to it
+ * 
+ * @param pq priority queue
+ * @param v source v (which may have a crash in its frontier)
+ * @param startRecycle another state found to precede the frontier
+ * @param planProvSize size of the provisional plan: indicates if the recycling was successful or not
+ */
+void correctPriorityQ(std::vector<vertexDescriptor>& pq, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize);
 public:
 
 AttentiveConfigurator(){};

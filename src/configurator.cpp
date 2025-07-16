@@ -172,6 +172,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	EndedResult er;
 	do{
 		v=bestNext;
+		vertexDescriptor startRecycle=v;
 		bool wasClosed =closeVertex(closed, v);
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
@@ -201,7 +202,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 						std::pair<bool, edgeDescriptor> connectingEdge(false, edgeDescriptor());
 						std::vector <vertexDescriptor> task_vs= task_vertices(v1, &connectingEdge);
 						vertexDescriptor task_start= task_vs[0];
-						vertexDescriptor startRecycle=getRecyclingStart(v, v1);
+						startRecycle=getRecyclingStart(v, v1);
 						if (plan_prov.empty()){
 							recycle_plan(startRecycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
@@ -1114,4 +1115,13 @@ std::pair<edgeDescriptor, bool> AttentiveConfigurator::addEdgeRetrospectively(ve
 	transitionSystem[v1].direction=d;
 	transitionSystem[v].outcome=simResult::safeForNow;
 	return first_edge;
+}
+
+void AttentiveConfigurator::correctPriorityQ(std::vector<vertexDescriptor>& pq, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize){
+	if (planProvSize==0 || startRecycle==v){
+		return;
+	}
+	auto v_it=check_vector_for(pq, v);
+	*v_it=startRecycle;
+
 }

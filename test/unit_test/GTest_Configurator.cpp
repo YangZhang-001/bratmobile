@@ -424,6 +424,14 @@ TEST_P(ConfiguratorTakeBool, PropagateDisturbance){
     EXPECT_EQ(vertex_get_Dn(e.m_target)==vertex_get_Dn(currentVertex), hasSameDn);
 }
 
+TEST_F(ConfiguratorTakeBool, CorrectPQ){
+    transitionSystem=TransitionSystem(5);
+    std::vector<vertexDescriptor>pq={2, 3, 4}, plan={1, 2}, solution={2, 3, 1};
+    vertexDescriptor v=4, startRecycle=1;
+    correctPriorityQ(pq, v, startRecycle, plan.size());
+    EXPECT_EQ(pq, solution);
+}
+
 INSTANTIATE_TEST_CASE_P(Bool, ConfiguratorTakeBool, testing::Bool());
 
 INSTANTIATE_TEST_CASE_P(Backtrack, ConfiguratorBacktrackTest, ::testing::Values(std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform_zero, b2Transform(b2Vec2(0.6, 0), b2Rot(0)), b2Transform_zero),
