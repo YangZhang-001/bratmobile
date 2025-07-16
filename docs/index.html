@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>bratmobile: Bratmobile (BRanches of Tasks)</title>
+<title>bratmobile: Main Page</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,12 +62,12 @@ $(function() {
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Bratmobile (BRanches of Tasks) </div>  </div>
+<div class="title">bratmobile Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a>The purpose of this library is to showcase a framework for multi-step ahead planning using pure input control (see <a href="https://en.wikipedia.org/wiki/Braitenberg_vehicle">Braitenberg vehicles</a>). The navigation problem is broken down into several unique closed-loop input controllers, called Tasks. Each <a class="el" href="classTask.html">Task</a> produces a unique control behaviour (go straight, turn left/right 90 degrees) in response to a <a href="https://en.wikipedia.org/wiki/Errors_and_residuals">Disturbance</a> (an obstacle or target), which determines a <a class="el" href="classTask.html">Task</a>'s duration. A supervising module, called the <a class="el" href="classConfigurator.html">Configurator</a>, can simulate sequences of Tasks in game engine <a href="https://github.com/glafratta/box2d">Box2D</a>, retain their outcomes in a cognitive map, which can be searched to extract plans. The physics simulation represents the robot's <a href="https://www.harvardlds.org/wp-content/uploads/2017/01/SpelkeKinzler07-1.pdf">Core Knowledge</a> (Spelke, 2007).</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
-Features:</h1>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> The purpose of this library is to showcase a framework for multi-step ahead planning using pure input control (see <a href="https://en.wikipedia.org/wiki/Braitenberg_vehicle">Braitenberg vehicles</a>). The navigation problem is broken down into several unique closed-loop input controllers, called Tasks. Each <a class="el" href="classTask.html">Task</a> produces a unique control behaviour (go straight, turn left/right 90 degrees) in response to a <a href="https://en.wikipedia.org/wiki/Errors_and_residuals">Disturbance</a> (an obstacle or target), which determines a <a class="el" href="classTask.html">Task</a>'s duration. A supervising module, called the <a class="el" href="classConfigurator.html">Configurator</a>, can simulate sequences of Tasks in game engine <a href="https://github.com/glafratta/box2d">Box2D</a>, retain their outcomes in a cognitive map, which can be searched to extract plans. The physics simulation represents the robot's <a href="https://www.harvardlds.org/wp-content/uploads/2017/01/SpelkeKinzler07-1.pdf">Core Knowledge</a> (Spelke, 2007).</p>
+<h2><a class="anchor" id="autotoc_md0"></a>
+Features:</h2>
 <ul>
 <li>Completely on-the-fly, instantaneous construction of an abstract cognitive map of the environment, represented as a tree of tasks</li>
 <li>Hybrid state-space representation with flexible discretization</li>
@@ -76,30 +76,30 @@ Features:</h1>
 <li>Causal reasoning on the naive robot</li>
 <li>Plans represents set of instructions, not trajectories: no solvers required, completely closed-loop and object oriented</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md2"></a>
-Work in progress</h1>
+<h2><a class="anchor" id="autotoc_md1"></a>
+Work in progress</h2>
 <ul>
 <li>Closed-loop <a class="el" href="classTask.html">Task</a> execution with goal-directed behaviour (driving towards target)</li>
 <li>Debugging plan checking and recycling</li>
 <li>Adaptive thresholding of acceptable noise in state observations</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md3"></a>
-Documentation</h2>
+<h3><a class="anchor" id="autotoc_md2"></a>
+Documentation</h3>
 <p>Available at <a href="https://glafratta.github.io/bratmobile/">https://glafratta.github.io/bratmobile/</a></p>
-<h2><a class="anchor" id="autotoc_md4"></a>
-Publications</h2>
+<h3><a class="anchor" id="autotoc_md3"></a>
+Publications</h3>
 <p>Giulia Lafratta, Bernd Porr, Christopher Chandler, Alice Miller; Closed-Loop Multistep Planning. Neural Computation 2025; 37 (7): 1288–1319. doi: <a href="https://doi.org/10.1162/neco_a_01761">https://doi.org/10.1162/neco_a_01761</a></p>
-<h1><a class="anchor" id="autotoc_md5"></a>
-Hardware</h1>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Hardware</h2>
 <p>The indoor robot is equipped with</p><ul>
 <li>360 Parallax Continuous Rotation Servo motors (see <a href="https://github.com/berndporr/alphabot/blob/main/alphabot.cpp">here</a> for wiring)</li>
 <li>A1 SLAMTEC LIDAR (see <a href="https://github.com/berndporr/rplidar_rpi">here</a> for wiring)</li>
 <li>Raspberry Pi model 3b+</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md6"></a>
-Prerequisites</h1>
-<h2><a class="anchor" id="autotoc_md7"></a>
-Development packages</h2>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Prerequisites</h2>
+<h3><a class="anchor" id="autotoc_md6"></a>
+Development packages</h3>
 <ul>
 <li>G++ compiler</li>
 <li>CMake</li>
@@ -111,30 +111,30 @@ Development packages</h2>
 <li>Gtest</li>
 </ul>
 <p><code>sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev</code></p>
-<h2><a class="anchor" id="autotoc_md8"></a>
-Compile from source</h2>
+<h3><a class="anchor" id="autotoc_md7"></a>
+Compile from source</h3>
 <ul>
 <li><a href="https://github.com/berndporr/rplidar_rpi">LIDAR API</a></li>
 <li><a href="https://github.com/berndporr/alphabot">Motors API</a></li>
 <li><a href="https://github.com/berndporr/cppTimer">Cpp Timer</a></li>
 <li><a href="https://github.com/glafratta/box2d">Box2D v2.4.1</a> ** if not installed automatically, go to <code>box2d/build</code> and run <code>sudo make install</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md9"></a>
-Build</h1>
+<h2><a class="anchor" id="autotoc_md8"></a>
+Build</h2>
 <div class="fragment"><div class="line">cd CloCK</div>
 <div class="line">sh build.sh</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md10"></a>
-Run</h1>
-<h2><a class="anchor" id="autotoc_md11"></a>
-Navigation demo (Raspberry Pi)</h2>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
+Run</h2>
+<h3><a class="anchor" id="autotoc_md10"></a>
+Navigation demo (Raspberry Pi)</h3>
 <ul>
 <li><code>sudo ./targetless</code> : this program demonstrates planning over a 1m distance horizon for a control goal that is not a target location but rather an objective to drive straight for the longest time with the least amount of disturbances</li>
 <li><code>sudo ./target</code>: this program (under construction) demonstrates target seeking behaviour, where the target is imaginary and located at x=1.0m, y=0m. Run with options <code>0 [custom-stepDistance]</code>: for turning debug options off. In debug mode, LIDAR coordinates, Box2D objects and robot trajectories are dumped into the <code>/tmp</code> folder. The stepDistance is the maximum distance covered by a single task, 1.0m by default.</li>
 </ul>
 <p>Only planning and execution (tracking using dead reckoning) demonstrated</p>
 <p>WARNING! Due to the point cloud clustering algorithm used (Partition), an obstacle such as a cul-de-sac will be detected as a solid box, so take into account that representation of concave objects may be inaccurate. </p>
-<h2><a class="anchor" id="autotoc_md12"></a>
-Simulation (x86 architecture)</h2>
+<h3><a class="anchor" id="autotoc_md11"></a>
+Simulation (x86 architecture)</h3>
 <ul>
 <li><code>test/simulations/target_sim [folder_with_scans/] [bool: is_real_time]</code> : runs a simulation of a planning and plan recycling scenario (not fully debugged). Args:<ul>
 <li><code>folder_with_scans</code> : a folder containing 2D LIDAR scans</li>
@@ -142,8 +142,8 @@ Simulation (x86 architecture)</h2>
 </ul>
 </li>
 </ul>
-<h2><a class="anchor" id="autotoc_md13"></a>
-Unit tests (x86 architecture)</h2>
+<h3><a class="anchor" id="autotoc_md12"></a>
+Unit tests (x86 architecture)</h3>
 <p>run <code>make test</code> </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
