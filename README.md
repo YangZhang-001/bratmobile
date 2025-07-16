@@ -28,7 +28,7 @@ Available at [https://glafratta.github.io/bratmobile/](https://glafratta.github.
 
 ### Publications
 
-Giulia Lafratta, Bernd Porr, Christopher Chandler, Alice Miller; Closed-Loop Multistep Planning. Neural Computation 2025; 37 (7): 1288–1319. doi: [https://doi.org/10.1162/neco_a_01761]https://doi.org/10.1162/neco_a_01761
+Giulia Lafratta, Bernd Porr, Christopher Chandler, Alice Miller; Closed-Loop Multistep Planning. Neural Computation 2025; 37 (7): 1288–1319. doi: [https://doi.org/10.1162/neco_a_01761](https://doi.org/10.1162/neco_a_01761_
 
 ## Hardware
 The indoor robot is equipped with 
