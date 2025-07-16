@@ -8,6 +8,10 @@ The purpose of this library is to showcase a framework for multi-step ahead plan
 
 * Work in progress: real-time adjustment of a threshold used to determine disturbance novelty
 
+### Documentation
+
+Available at [https://glafratta.github.io/bratmobile/](https://glafratta.github.io/bratmobile/)
+
 ## Hardware
 The indoor robot is equipped with 
 * 360 Parallax Continuous Rotation Servo motors (see [here](https://github.com/berndporr/alphabot/blob/main/alphabot.cpp) for wiring)
