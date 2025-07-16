@@ -172,13 +172,14 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	EndedResult er;
 	do{
 		v=bestNext;
+		vertexDescriptor start_recycle=v;
 		bool wasClosed =closeVertex(closed, v);
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
 		//g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
 		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
 		for (Direction d: g[v].options){ //add and evaluate all vertices
-			v0_exp=v;
+			v0_exp=start_recycle;
 			std::vector <Direction> options=g[v0_exp].options;
 			while (!options.empty()){
 				options.erase(options.begin());
@@ -200,7 +201,8 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					if (currentTask.is_over()){
 						std::pair<bool, edgeDescriptor> connectingEdge(false, edgeDescriptor());
 						std::vector <vertexDescriptor> task_vs= task_vertices(v1, &connectingEdge);
-						vertexDescriptor task_start= task_vs[0], start_recycle=getRecyclingStart(v, v1);
+						vertexDescriptor task_start= task_vs[0];
+						start_recycle=getRecyclingStart(v, v1);
 						if (plan_prov.empty()){
 							recycle_plan(start_recycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
@@ -992,22 +994,22 @@ void AttentiveConfigurator::reassign_direction(vertexDescriptor bestNext, Direct
 
 }
 
-// bool AttentiveConfigurator::matchToSafe(VertexMatch &match,const  std::vector<VertexMatch>& other_matches){
-// 	bool result=false;
-// 	if (match.first==StateMatcher::_FALSE){
-// 		return result;
-// 	}
-// 	if (transitionSystem[match.second].outcome!=simResult::crashed){
-// 		return result;
-// 	}
-// 	for (VertexMatch m: other_matches){
-// 		if (transitionSystem[m.second].outcome!=simResult::crashed){
-// 			match.second=m.second;
-// 			return true;
-// 		}
-// 	}
-// 	return result;
-// }
+bool AttentiveConfigurator::matchToSafe(VertexMatch &match,const  std::vector<VertexMatch>& other_matches){
+	bool result=false;
+	if (match.first==StateMatcher::_FALSE){
+		return result;
+	}
+	if (transitionSystem[match.second].outcome!=simResult::crashed){
+		return result;
+	}
+	for (VertexMatch m: other_matches){
+		if (transitionSystem[m.second].outcome!=simResult::crashed){
+			match.second=m.second;
+			return true;
+		}
+	}
+	return result;
+}
 
 std::pair<edgeDescriptor, bool> AttentiveConfigurator::setup_match_edge(VertexMatch &match, vertexDescriptor &v0, vertexDescriptor & v1,const Edge& k, Direction direction, bool changedMatch){
 	v1=match.second; //frontier

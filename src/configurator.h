@@ -440,14 +440,14 @@ std::pair<State, Edge> simulation_setup(b2World& w, Task & t, vertexDescriptor v
  */
 void reassign_direction(vertexDescriptor bestNext, Direction& direction);
 
-// /**
-//  * @brief  if the match is a crashed task
-//  * 
-//  * @param match 
-//  * @param other_matches 
-//  * @return true if changes match
-//  */
-// bool matchToSafe(VertexMatch &match,const std::vector<VertexMatch> &other_matches=std::vector<VertexMatch>());
+/**
+ * @brief  if the match is a crashed task
+ * 
+ * @param match 
+ * @param other_matches 
+ * @return true if changes match
+ */
+bool matchToSafe(VertexMatch &match,const std::vector<VertexMatch> &other_matches=std::vector<VertexMatch>());
 
 /**
  * @brief Given a valid match, sets up the edge with the previous vertex

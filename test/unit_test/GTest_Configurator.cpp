@@ -420,6 +420,7 @@ TEST_P(ConfiguratorTakeBool, PropagateDisturbance){
         vertex_set_direction(currentVertex, transitionSystem[e.m_target].direction);
         hasSameDn=false;
     }
+    propagateD(e.m_target, currentVertex);
     EXPECT_EQ(vertex_get_Dn(e.m_target)==vertex_get_Dn(currentVertex), hasSameDn);
 }
 
