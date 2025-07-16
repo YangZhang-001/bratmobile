@@ -33,8 +33,12 @@ jobs:
       - name : Build
         shell: bash
         run : sh build.sh
+  test:
+    steps:
       - name : Test
         run: |
               cd test/unit_test & ctest --output-on-failure
+  make-docs:
+    steps:
 
 

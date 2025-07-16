@@ -77,7 +77,7 @@ TEST(Boost, CopyFTS){
     EXPECT_EQ(g2.m_vertices.size(), 4);
 }
 
-TEST_P(HighLevelTestOneScene, FirstPlan){
+TEST_P(HighLevelTest, FirstPlan){
     Task goal;
     bool hasGoal=std::get<0>(GetParam()), success=false;
     if (hasGoal){
@@ -135,7 +135,7 @@ TEST_P(HighLevelTest, CheckPlan){
 }
 
 
-TEST_P(HighLevelTestOneScene, Recycle){
+TEST_P(HighLevelTest, Recycle){
     Task goal;
     b2Transform shift=b2Transform_zero;
     if (std::get<0>(GetParam())){
@@ -196,12 +196,6 @@ INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 89)
                                                                    ));
 
-INSTANTIATE_TEST_CASE_P(InitialScenarios, HighLevelTest, ::testing::Values(
-                                                                   std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 2),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 2),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 2)
-                                                                   ));
-
 
 
 
@@ -213,11 +207,3 @@ int main(int argc, char** argv){
     return 0;
 }
 
-
-
-
-int main(int argc, char** argv){
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-    return 0;
-}

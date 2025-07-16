@@ -245,7 +245,6 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
 
 };
 
-class HighLevelTestOneScene:public HighLevelTest{};
 
 
 /**
