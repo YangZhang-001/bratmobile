@@ -230,8 +230,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		evaluationQueue.push_back(v1);
 		}
 	}
-	backtrack(evaluationQueue, priorityQueue, closed, plan_prov);
-	correctPriorityQ(priorityQueue, v, startRecycle, plan_prov.size());
+	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
 }while(g[bestNext].options.size()>0 && !er.ended);
@@ -292,7 +291,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 }
 
 
-void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov){
+void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor v, vertexDescriptor startRecycle){
 	for (vertexDescriptor v:evaluation_q){
 		std::pair<bool, edgeDescriptor> ep(false, edgeDescriptor());
 		std::vector <vertexDescriptor> split = task_vertices(v, &ep); 
@@ -300,6 +299,7 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 		if (split.size()<2){
 			split =splitTask(v, DEFAULT, ep.second.m_source);
 		}
+		correctQueue(split, v, startRecycle, plan_prov.size());
 		for (int i=0; i<split.size(); i++){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
 			if (i<1){
@@ -1117,11 +1117,11 @@ std::pair<edgeDescriptor, bool> AttentiveConfigurator::addEdgeRetrospectively(ve
 	return first_edge;
 }
 
-void AttentiveConfigurator::correctPriorityQ(std::vector<vertexDescriptor>& pq, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize){
+void AttentiveConfigurator::correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize){
 	if (planProvSize==0 || startRecycle==v){
 		return;
 	}
-	auto v_it=check_vector_for(pq, v);
+	auto v_it=check_vector_for(queue, v);
 	*v_it=startRecycle;
 
 }

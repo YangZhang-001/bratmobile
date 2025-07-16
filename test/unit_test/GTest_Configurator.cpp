@@ -424,11 +424,11 @@ TEST_P(ConfiguratorTakeBool, PropagateDisturbance){
     EXPECT_EQ(vertex_get_Dn(e.m_target)==vertex_get_Dn(currentVertex), hasSameDn);
 }
 
-TEST_F(ConfiguratorTest, CorrectPQ){
+TEST_F(ConfiguratorTest, CorrectQueue){
     transitionSystem=TransitionSystem(5);
     std::vector<vertexDescriptor>pq={2, 3, 4}, plan={1, 2}, solution={2, 3, 1};
     vertexDescriptor v=4, startRecycle=1;
-    correctPriorityQ(pq, v, startRecycle, plan.size());
+    correctQueue(pq, v, startRecycle, plan.size());
     EXPECT_EQ(pq, solution);
 }
 
