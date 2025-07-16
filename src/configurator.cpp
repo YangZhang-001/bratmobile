@@ -179,8 +179,9 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		//g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
 		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
 		for (Direction d: g[v].options){ //add and evaluate all vertices
-			v0_exp=start_recycle;
+			v0_exp=v;
 			std::vector <Direction> options=g[v0_exp].options;
+			v0_exp=start_recycle;
 			while (!options.empty()){
 				options.erase(options.begin());
 				v0=v0_exp; //node being expanded
