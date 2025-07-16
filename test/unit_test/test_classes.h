@@ -749,7 +749,7 @@ void ConfiguratorTakeBool::shallowExpand(vertexDescriptor v){
     }
 }
 
-void ConfiguratorTestGetGoal::vertex_setup(vertexDescriptor v, const Disturbance & Di, const Disturbance &Dn=Disturbance()){
+void ConfiguratorTestGetGoal::vertex_setup(vertexDescriptor v, const Disturbance & Di, const Disturbance &Dn){
     transitionSystem[v].direction=std::get<1>(GetParam());
     transitionSystem[v].endPose=std::get<0>(GetParam());
     vertex_options_push_back(v, std::get<2>(GetParam()));
