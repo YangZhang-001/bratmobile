@@ -181,7 +181,6 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		for (Direction d: g[v].options){ //add and evaluate all vertices
 			v0_exp=v;
 			std::vector <Direction> options=g[v0_exp].options;
-			v0_exp=start_recycle;
 			while (!options.empty()){
 				options.erase(options.begin());
 				v0=v0_exp; //node being expanded
@@ -203,9 +202,9 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 						std::pair<bool, edgeDescriptor> connectingEdge(false, edgeDescriptor());
 						std::vector <vertexDescriptor> task_vs= task_vertices(v1, &connectingEdge);
 						vertexDescriptor task_start= task_vs[0];
-						start_recycle=getRecyclingStart(v, v1);
+						v=getRecyclingStart(v, v1);
 						if (plan_prov.empty()){
-							recycle_plan(start_recycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
+							recycle_plan(v, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
 						if (m_plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
 							shift_states(g, task_vs, shift_start);
