@@ -45,8 +45,7 @@ jobs:
       - name : Install Doxygen
         run: |
            sudo apt-get install doxygen
-            cd doxygen
-            doxygen Doxyfile 
+            doxygen doxygen/Doxyfile 
       - name: Checkout code
         uses: actions/checkout@v3
       - name : Doxygen
