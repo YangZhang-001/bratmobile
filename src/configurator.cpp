@@ -221,7 +221,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				}
 				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
 				g[v1].phi=Planner::evaluationFunction(er, v1, plan_prov);
-				propagateD(v1, v0, &closed); //if v0 is a dummy vertex it propagates the disturbance back
+				propagateD(v1, v0, &closed); //if v0 is a dummy vertex it propagates the disturbance
 				v0_exp=v0;					
 				options=g[v0_exp].options;
 				v0=v1;						
@@ -321,19 +321,17 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 }
 
 void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
-	if (transitionSystem[v1].outcome == simResult::successful ||
-		 !boost::edge(v0, v1, transitionSystem).second ||
-		  transitionSystem[v0].direction==STOP){
+	if (transitionSystem[v1].outcome == simResult::successful || !boost::edge(v0, v1, transitionSystem).second){
 		return;
 	}
 	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
-	if (same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE){
+	bool shouldBeUpdated= transitionSystem[v0].direction==STOP;
+	if (shouldBeUpdated&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
-		if (v1==currentVertex){
-			transitionSystem[v0].outcome=simResult::safeForNow;
-		} 	
+ 	}
+	if (v1==currentVertex){
+		transitionSystem[v0].outcome=simResult::safeForNow;
 	}
-
 	return;
 }
 
