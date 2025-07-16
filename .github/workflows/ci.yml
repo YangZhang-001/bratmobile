@@ -47,7 +47,7 @@ jobs:
       - name : Install Doxygen
         run: |
            sudo apt-get install doxygen
-            doxygen doxygen/Doxyfile 
+            doxygen Doxyfile 
       - name: Disable Jekyll
         run: touch docs/.nojekyll
       # - name: Commit and Push Docs
