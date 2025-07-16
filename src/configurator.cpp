@@ -231,6 +231,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		}
 	}
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov);
+	correctPriorityQ(priorityQueue, v, startRecycle, plan_prov.size());
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
 }while(g[bestNext].options.size()>0 && !er.ended);

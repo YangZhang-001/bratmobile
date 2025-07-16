@@ -424,7 +424,7 @@ TEST_P(ConfiguratorTakeBool, PropagateDisturbance){
     EXPECT_EQ(vertex_get_Dn(e.m_target)==vertex_get_Dn(currentVertex), hasSameDn);
 }
 
-TEST_F(ConfiguratorTakeBool, CorrectPQ){
+TEST_F(ConfiguratorTest, CorrectPQ){
     transitionSystem=TransitionSystem(5);
     std::vector<vertexDescriptor>pq={2, 3, 4}, plan={1, 2}, solution={2, 3, 1};
     vertexDescriptor v=4, startRecycle=1;
