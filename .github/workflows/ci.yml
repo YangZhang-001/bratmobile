@@ -51,12 +51,12 @@ jobs:
            sudo apt-get install doxygen
             doxygen doxygen/Doxyfile 
       - name: Disable Jekyll
-        run: touch doxygen/docs/html/.nojekyll
+        run: touch docs/html/.nojekyll
       - name : Doxygen
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./doxygen/docs/html
+          publish_dir: ./docs/html
 
 
 
