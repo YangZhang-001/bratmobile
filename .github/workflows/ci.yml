@@ -42,12 +42,12 @@ jobs:
   make-docs:
     runs-on: ubuntu-22.04
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name : Install Doxygen
         run: |
            sudo apt-get install doxygen
             doxygen doxygen/Doxyfile 
-      - name: Checkout code
-        uses: actions/checkout@v3
       - name : Doxygen
         uses: peaceiris/actions-gh-pages@v3
         with:
