@@ -206,9 +206,9 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 							recycle_plan(startRecycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
 						if (m_plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
-							// if (startRecycle!=v){
-							// 	task_vs.push_back(startRecycle);
-							// }							
+							if (startRecycle!=v){
+								task_vs.push_back(startRecycle);
+							}							
 							shift_states(g, task_vs, shift_start);
 
 						}
