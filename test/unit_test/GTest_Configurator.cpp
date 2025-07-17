@@ -432,6 +432,24 @@ TEST_F(ConfiguratorTest, CorrectQueue){
     EXPECT_EQ(pq, solution);
 }
 
+TEST_P(ConfiguratorTakeBool, CheckVectorForPredicate){
+    vertexDescriptor v1;
+    Edge e;
+    bool solution=false; 
+    if (GetParam()){
+        iteration=2;
+        solution=true;
+    }
+    transitionSystem[currentVertex].options={DEFAULT, LEFT, RIGHT};
+    add_vertex_now(currentVertex, v1, controlGoal.get_disturbance(), e,true);
+    SameIteration si(transitionSystem, 2);
+    std::vector<edgeDescriptor> ie=inEdges(v1, UNDEFINED);
+    auto it=check_vector_for(ie, si);
+    bool hasResult=it!=ie.end();
+    EXPECT_EQ(hasResult, solution);
+    
+}
+
 INSTANTIATE_TEST_CASE_P(Bool, ConfiguratorTakeBool, testing::Bool());
 
 INSTANTIATE_TEST_CASE_P(Backtrack, ConfiguratorBacktrackTest, ::testing::Values(std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform_zero, b2Transform(b2Vec2(0.6, 0), b2Rot(0)), b2Transform_zero),
