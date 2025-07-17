@@ -14,6 +14,10 @@
 struct Frontier{
     vertexDescriptor frontier=TransitionSystem::null_vertex();
     std::vector<vertexDescriptor> connecting;
+
+    Frontier()=default;
+
+    Frontier(vertexDescriptor _f, const std::vector<vertexDescriptor>&_c):frontier(_f), connecting(_c){}
 };
 
 /**
@@ -25,7 +29,7 @@ struct ComparePhi{
 	ComparePhi(){}
 
 	bool operator()(const std::pair<State*, Frontier>& p1, const std::pair<State*, Frontier>& p2) const{
-		return (*p1.frontier).phi<(*p2.frontier).phi;
+		return (*p1.first).phi<(*p2.first).phi;
 	}
 };
 

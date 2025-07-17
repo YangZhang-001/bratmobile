@@ -188,8 +188,8 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 			addToPriorityQueue(f, priorityQueue, g);
 		}
 		if (!priorityQueue.empty()){
-			src=priorityQueue.begin()->first; //lowest phi vertex
-			add=std::vector <vertexDescriptor>(priorityQueue.begin()->second.begin(), priorityQueue.begin()->second.end());//lowest phi frontier
+			src=priorityQueue.begin()->frontier; //lowest phi vertex
+			add=std::vector <vertexDescriptor>(priorityQueue.begin()->connecting.begin(), priorityQueue.begin()->connecting.end());//lowest phi frontier
 			add.push_back(src);
 			path2add2(path, add, paths, g); //find path to add frontier (add) to
 			for (vertexDescriptor c:add){
