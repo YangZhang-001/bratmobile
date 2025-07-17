@@ -247,24 +247,6 @@ std::pair <bool,edgeDescriptor>  gt::visitedEdge(const std::vector <edgeDescript
 // }
 
 
-
-void gt::adjustProbability(TransitionSystem &g, const edgeDescriptor &e){
-	if (e.m_target==TransitionSystem::null_vertex()){
-		return;
-	}
-	std::vector <edgeDescriptor> es=gt::outEdges(g, e.m_source, g[e.m_target].direction);
-	float totObs=0;
-	//find total observations
-	for (edgeDescriptor & ei:es){
-		g[ei].probability=g[ei.m_target].nObs/es.size();
-		 	totObs+=g[ei.m_target].nObs;
-	}
-	//adjust
-	for (edgeDescriptor &ei: es){
-		g[ei].probability=g[ei.m_target].nObs/totObs;
-	}
-}
-
 std::pair <edgeDescriptor, bool> gt::add_edge(const vertexDescriptor & u, const  vertexDescriptor & v, TransitionSystem& g, const int &it, Direction d){
 	std::pair <edgeDescriptor, bool> result=boost::edge(u, v, g);
 	if (u==v){

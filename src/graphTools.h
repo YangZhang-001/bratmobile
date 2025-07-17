@@ -33,6 +33,10 @@ struct CompareValue{
 	}
 };
 
+/**
+ * @brief Edges connecting states in the transition system
+ * 
+ */
 struct Edge{
 	float probability=1.0;
 	int step=0;
@@ -58,7 +62,10 @@ struct Edge{
 	bool enableOverride();
 };
 
-
+/**
+ * @brief Hybrid states in the transition system
+ * 
+ */
 struct State{
 	Disturbance Di; //initial Disturbance
 	Disturbance Dn; //new Disturbance
@@ -86,6 +93,10 @@ struct State{
 		return phi<NAIVE_PHI;
 	}
 
+	/**
+	 * @brief Sets the phi value to its naive value (call to visited() will return false)
+	 * 
+	 */
 	void resetVisited(){
 		phi=NAIVE_PHI;
 	}
@@ -124,8 +135,10 @@ struct State{
 };
 
 
-
-
+/**
+ * @brief Contains the differences between the contiuous components of two hybrid states
+ * 
+ */
 struct StateDifference{
 	b2Transform pose=b2Transform_zero;
 	BodyFeatures Di, Dn;
@@ -209,8 +222,8 @@ struct StateDifference{
 };
 
 
-
 typedef boost::adjacency_list<boost::setS, boost::vecS, boost::bidirectionalS, State, Edge> TransitionSystem;
+
 typedef boost::graph_traits<TransitionSystem>::vertex_iterator vertexIterator; 
 typedef boost::graph_traits<TransitionSystem>::vertex_descriptor vertexDescriptor;
 typedef boost::graph_traits<TransitionSystem>::edge_descriptor edgeDescriptor;
@@ -265,17 +278,6 @@ private:
 TransitionSystem * g=NULL;
 };
 
-typedef std::pair<vertexDescriptor, std::vector<vertexDescriptor>> Frontier;
-
-
-struct ComparePhi{
-
-	ComparePhi(){}
-
-	bool operator()(const std::pair<State*, Frontier>& p1, const std::pair<State*, Frontier>& p2) const{
-		return (*p1.first).phi<(*p2.first).phi;
-	}
-};
 
 
 namespace gt{
@@ -342,10 +344,15 @@ namespace gt{
 	 */
 	std::pair <bool,edgeDescriptor> visitedEdge(const std::vector <edgeDescriptor>& es, TransitionSystem& g, vertexDescriptor cv=TransitionSystem::null_vertex());
 
-	void adjustProbability(TransitionSystem&, const edgeDescriptor &);
 
 	std::pair <edgeDescriptor, bool> add_edge(const vertexDescriptor&, const vertexDescriptor &, TransitionSystem&, const int &, Direction d=UNDEFINED); //wrapper around boost function, disallows edges to self
 
+	/**
+	 * @brief Checks that 
+	 * 
+	 * @return true 
+	 * @return false 
+	 */
 	bool check_edge_direction(const std::pair<edgeDescriptor, bool> &, TransitionSystem&, Direction);
 	/**
 	 * @brief Travels in the graph to find the end of the task in e.m_target. In case the task

@@ -524,6 +524,14 @@ std::pair<edgeDescriptor, bool> addEdgeRetrospectively(vertexDescriptor v, verte
  * @param planProvSize size of the provisional plan: indicates if the recycling was successful or not
  */
 void correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize);
+
+/**
+ * @brief Adjusts the probability that a continuous state (edge target) will occur after taking a discrete state transition from the edge source
+ * 
+ * @param e an edge descriptor
+ */
+void adjustProbability(const edgeDescriptor &e);
+
 public:
 
 AttentiveConfigurator(){};

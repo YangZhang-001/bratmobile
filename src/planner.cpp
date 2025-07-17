@@ -109,8 +109,8 @@ std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, 
 					}
 					if (g[(*ei3).m_target].direction==frontier_direction){
 						Frontier f;
-						f.first= (*ei3).m_target;
-						f.second=connecting2;
+						f.frontier= (*ei3).m_target;
+						f.connecting=connecting2;
 						result.push_back(f);
 						if (ei3!=ei){
 							ei3++;
@@ -160,7 +160,7 @@ std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, 
 
 void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Frontier>& queue, TransitionSystem &g, vertexDescriptor goal){
 	for (auto i =queue.begin(); i!=queue.end(); i++){
-		if (g[f.first].phi <abs(g[(*i).first].phi)){
+		if (g[f.frontier].phi <abs(g[(*i).frontier].phi)){
 			queue.insert(i, f);
 			return;
 		}

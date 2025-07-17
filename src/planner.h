@@ -2,55 +2,80 @@
 #define PLANNER_H
 
 #include "task.h"
+#include "graphTools.h"
 /** \file */
 
+/**
+ * @brief Contains the frontier (first) and the connecting vertices
+ * 
+ */
+//typedef std::pair<vertexDescriptor, std::vector<vertexDescriptor>> Frontier;
 
-    /**
-     * @brief Information about what the configurator is doing (current Task, current vertex), what it wants to do (overarching goal), and whether it has done it before (been, goal vertex) 
-     * 
-     */
-    class ExecutionInfo{
-        private:
-        vertexDescriptor m_currentVertex=0, m_goalVertex=TransitionSystem::null_vertex();
-        Task m_currentTask;
-        Task m_overarchingGoal; 
-        bool m_been; //has a plan been made to fulfill this overarching goal before?
-        std::vector <vertexDescriptor> m_plan;
-        protected:
-        friend class Configurator;
+struct Frontier{
+    vertexDescriptor frontier=TransitionSystem::null_vertex();
+    std::vector<vertexDescriptor> connecting;
+};
 
-        void been(bool b){m_been=b;}
+/**
+ * @brief Predicate which compares
+ * 
+ */
+struct ComparePhi{
 
-        void goalVertex(vertexDescriptor gv){m_goalVertex=gv;}
-        
+	ComparePhi(){}
 
-        public:
-        ExecutionInfo(){}
-
-        ExecutionInfo( vertexDescriptor _cv, vertexDescriptor _goal, Task & _ct, Task & _gt, bool _been, std::vector<vertexDescriptor> _plan){
-            m_currentVertex=_cv;
-            m_goalVertex=_goal;
-            m_currentTask=_ct;
-            m_overarchingGoal=_gt;
-            m_been=_been;
-            m_plan=_plan;
-        }
-        void overarchingGoal(const Task & og){m_overarchingGoal=og;}
+	bool operator()(const std::pair<State*, Frontier>& p1, const std::pair<State*, Frontier>& p2) const{
+		return (*p1.frontier).phi<(*p2.frontier).phi;
+	}
+};
 
 
-        vertexDescriptor currentVertex()const{return m_currentVertex;}
+/**
+ * @brief Information about what the configurator is doing (current Task, current vertex), what it wants to do (overarching goal), and whether it has done it before (been, goal vertex) 
+ * 
+ */
+class ExecutionInfo{
+    private:
+    vertexDescriptor m_currentVertex=0, m_goalVertex=TransitionSystem::null_vertex();
+    Task m_currentTask;
+    Task m_overarchingGoal; 
+    bool m_been; //has a plan been made to fulfill this overarching goal before?
+    std::vector <vertexDescriptor> m_plan;
+    protected:
+    friend class Configurator;
 
-        vertexDescriptor goalVertex()const{return m_goalVertex;}
+    void been(bool b){m_been=b;}
 
-        Task& currentTask(){return m_currentTask;}
+    void goalVertex(vertexDescriptor gv){m_goalVertex=gv;}
+    
 
-        Task& overarchingGoal() {return m_overarchingGoal;}
+    public:
+    ExecutionInfo(){}
 
-        bool been()const{return m_been;}
+    ExecutionInfo( vertexDescriptor _cv, vertexDescriptor _goal, Task & _ct, Task & _gt, bool _been, std::vector<vertexDescriptor> _plan){
+        m_currentVertex=_cv;
+        m_goalVertex=_goal;
+        m_currentTask=_ct;
+        m_overarchingGoal=_gt;
+        m_been=_been;
+        m_plan=_plan;
+    }
+    void overarchingGoal(const Task & og){m_overarchingGoal=og;}
 
-        std::vector<vertexDescriptor> plan()const{return m_plan;}
 
-    };
+    vertexDescriptor currentVertex()const{return m_currentVertex;}
+
+    vertexDescriptor goalVertex()const{return m_goalVertex;}
+
+    Task& currentTask(){return m_currentTask;}
+
+    Task& overarchingGoal() {return m_overarchingGoal;}
+
+    bool been()const{return m_been;}
+
+    std::vector<vertexDescriptor> plan()const{return m_plan;}
+
+};
 
 
 class Planner{

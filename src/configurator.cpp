@@ -202,9 +202,9 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 						std::pair<bool, edgeDescriptor> connectingEdge(false, edgeDescriptor());
 						std::vector <vertexDescriptor> task_vs= task_vertices(v1, &connectingEdge);
 						vertexDescriptor task_start= task_vs[0];
-						startRecycle=getRecyclingStart(v, v1);
+						//startRecycle=getRecyclingStart(v, v1);
 						if (plan_prov.empty()){
-							recycle_plan(startRecycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
+							recycle_plan(getRecyclingStart(v, v1), v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
 						if (m_plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
 							shift_states(g, task_vs, shift_start);
@@ -218,7 +218,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				}
 				if(edge.second){
 					gt::set(edge.first, sk, g, v1==currentVertex, iteration);
-					gt::adjustProbability(g, edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
+					adjustProbability(g, edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
 				}
 				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
 				g[v1].phi=Planner::evaluationFunction(er, v1, plan_prov);
@@ -1124,4 +1124,21 @@ void AttentiveConfigurator::correctQueue(std::vector<vertexDescriptor>& queue, v
 	auto v_it=check_vector_for(queue, v);
 	*v_it=startRecycle;
 
+}
+
+void AttentiveConfigurator::adjustProbability(const edgeDescriptor &e){
+	if (e.m_target==TransitionSystem::null_vertex()){
+		return;
+	}
+	std::vector <edgeDescriptor> es=gt::outEdges(transitionSystem, e.m_source, transitionSystem[e.m_target].direction);
+	float totObs=0;
+	//find total observations
+	for (edgeDescriptor & ei:es){
+		transitionSystem[ei].probability=transitionSystem[ei.m_target].nObs/es.size();
+		 	totObs+=transitionSystem[ei.m_target].nObs;
+	}
+	//adjust
+	for (edgeDescriptor &ei: es){
+		transitionSystem[ei].probability=transitionSystem[ei.m_target].nObs/totObs;
+	}
 }
