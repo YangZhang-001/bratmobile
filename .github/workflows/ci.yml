@@ -34,6 +34,7 @@ jobs:
         shell: bash
         run : sh build.sh
   test:
+    runs-on: ubuntu-22.04
     steps:
       - name : Test
         run: |
