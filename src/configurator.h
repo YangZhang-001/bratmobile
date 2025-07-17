@@ -236,10 +236,10 @@ Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & wor
  * @param priority_q the priority queue to add vertices to
  * @param closed closed set 
  * @param plan_prov provisional plan
- * @param v source vertex from which modular expansion began
+ * @param module_src source vertex from which modular expansion began
  * @param startRecycle vertex from which plan recycling started (for correcting pq)
  */
-void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor src=MOVING_VERTEX, vertexDescriptor startRecycle=MOVING_VERTEX);
+void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src=MOVING_VERTEX, vertexDescriptor startRecycle=MOVING_VERTEX);
 
 /**
  * @brief Split tasks into sub-states of fixed length
