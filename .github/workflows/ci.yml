@@ -1,6 +1,10 @@
 
 name: ci
-on: [push]
+on: 
+  push:
+    paths:
+      - 'src/*'
+      - 'test/unit_test/*'
 
 jobs:
   build:
@@ -39,4 +43,7 @@ jobs:
       - name : Test
         run: |
               cd test/unit_test & ctest --output-on-failure
+
+
+
 
