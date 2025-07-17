@@ -291,7 +291,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 }
 
 
-void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor src, vertexDescriptor startRecycle){
+void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){
 	for (vertexDescriptor v:evaluation_q){
 		std::pair<bool, edgeDescriptor> ep(false, edgeDescriptor());
 		std::vector <vertexDescriptor> split = task_vertices(v, &ep); 
