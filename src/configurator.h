@@ -532,12 +532,6 @@ void correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vert
  */
 void adjustProbability(const edgeDescriptor &e);
 
-/**
- * @brief Wrapper around boost funcition
- * 
- */
-void removeEdge(std::pair<edgeDescriptor, bool> e);
-
 public:
 
 AttentiveConfigurator(){};
