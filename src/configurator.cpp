@@ -210,7 +210,6 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 								task_vs.push_back(startRecycle);
 							}							
 							shift_states(g, task_vs, shift_start);
-
 						}
 					}
 				}
@@ -309,6 +308,9 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 				auto ep=gt::getMostLikely(transitionSystem, inEdges(split_v), iteration);
 				if (ep.first){
 					src=ep.second.m_source;
+				}
+				else{
+					src=ep.second.m_target;
 				}
 			}
 			else{
