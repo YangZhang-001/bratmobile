@@ -291,7 +291,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 }
 
 
-void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor v, vertexDescriptor startRecycle){
+void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor src, vertexDescriptor startRecycle){
 	for (vertexDescriptor v:evaluation_q){
 		std::pair<bool, edgeDescriptor> ep(false, edgeDescriptor());
 		std::vector <vertexDescriptor> split = task_vertices(v, &ep); 
@@ -299,7 +299,7 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 		if (split.size()<2){
 			split =splitTask(v, DEFAULT, ep.second.m_source);
 		}
-		correctQueue(split, v, startRecycle, plan_prov.size());
+		correctQueue(split, src, startRecycle, plan_prov.size());
 		for (int i=0; i<split.size(); i++){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
 			if (i<1){

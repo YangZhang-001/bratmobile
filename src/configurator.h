@@ -239,7 +239,7 @@ Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & wor
  * @param v source vertex from which modular expansion began
  * @param startRecycle vertex from which plan recycling started (for correcting pq)
  */
-void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor v=MOVING_VERTEX, vertexDescriptor startRecycle=MOVING_VERTEX);
+void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor src=MOVING_VERTEX, vertexDescriptor startRecycle=MOVING_VERTEX);
 
 /**
  * @brief Split tasks into sub-states of fixed length
