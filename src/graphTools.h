@@ -315,7 +315,6 @@ namespace gt{
 	 * @param it iteration
 	 */
 	void update(edgeDescriptor e,  std::pair <State, Edge> sk, TransitionSystem& g, bool current, int it); 
-
 	/**
 	 * @brief Resets the target of e=(src, target). The difference with update is that it resets the outcome and it doesn't update if the vertex is already filled
 	 * 
