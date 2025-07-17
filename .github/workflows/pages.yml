@@ -16,12 +16,13 @@ jobs:
             doxygen Doxyfile 
       - name: Disable Jekyll Theme
         run: touch docs/.nojekyll
-
+      - name: Debug generated files
+        run: ls -R docs/*html
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/html
+          publish_dir: ./docs
           publish_branch: gh-pages
 
       # - name: Disable Jekyll Theme in roor
