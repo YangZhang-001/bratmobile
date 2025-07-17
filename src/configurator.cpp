@@ -310,7 +310,7 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 					src=ep.second.m_source;
 				}
 				else{
-					src=ep.second.m_target;
+					src=split_v;
 				}
 			}
 			else{
