@@ -938,8 +938,11 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	bool finished=false, result=false;
 	bool been = matchType==StateMatcher::ABSTRACT || matchType==StateMatcher::_TRUE;
 	Task controlGoal_adjusted= controlGoal;
+	//position of task start with respect to goal disturbance
 	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
-	Configurator::applyAffineTrans(shift_start, controlGoal_adjusted); //as start
+	//Configurator::applyAffineTrans(-shift_start, controlGoal_adjusted); //as start
+	Disturbance newD(controlGoal.getAffIndex(), controlGoal.get_disturbance().pose().p-shift_start.p, controlGoal.get_disturbance().q.GetAngle()-shift_start.q.GetAngle());
+	controlGoal_adjusted=Task(newD, UNDEFINED, start-shift_start, false);
 	boost::remove_edge(edge.first, transitionSystem);
 	edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
 	transitionSystem[edge.first].enableOverride();	
