@@ -37,9 +37,6 @@ jobs:
       - name : Build
         shell: bash
         run : sh build.sh
-  test:
-    runs-on: ubuntu-22.04
-    steps:
       - name : Test
         run: |
               cd test/unit_test & ctest --output-on-failure
