@@ -939,7 +939,7 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	bool been = matchType==StateMatcher::ABSTRACT || matchType==StateMatcher::_TRUE;
 	Task controlGoal_adjusted= controlGoal;
 	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
-	Configurator::applyAffineTrans(-shift_start, controlGoal_adjusted); //as start
+	Configurator::applyAffineTrans(shift_start, controlGoal_adjusted); //as start
 	boost::remove_edge(edge.first, transitionSystem);
 	edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
 	transitionSystem[edge.first].enableOverride();	
@@ -947,7 +947,6 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	info.overarchingGoal(controlGoal_adjusted); 
 	auto plan_tmp=planner->plan(transitionSystem, v, info, &finished); //not v but task start
 	//printf("out of explore planner\n");
-	bool filler=0;
 	if (finished){
 		plan_prov=plan_tmp;
 		result=true;

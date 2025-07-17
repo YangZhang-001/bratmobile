@@ -21,7 +21,7 @@ struct Frontier{
 };
 
 /**
- * @brief Predicate which compares
+ * @brief Predicate which compares evaluation functions in State-Frontier pairs
  * 
  */
 struct ComparePhi{
@@ -81,7 +81,10 @@ class ExecutionInfo{
 
 };
 
-
+/**
+ * @brief Searches the transition system and extracts a plan
+ * 
+ */
 class Planner{
     protected:
 
@@ -203,6 +206,10 @@ public:
 
 };
 
+/**
+ * @brief Does not extract a plan
+ * 
+ */
 class NoPlanner:public Planner{
 
     std::vector<vertexDescriptor> plan(TransitionSystem& g, vertexDescriptor src, ExecutionInfo & info, bool * finished=NULL)override{}
