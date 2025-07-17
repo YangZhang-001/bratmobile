@@ -16,8 +16,8 @@ jobs:
             doxygen Doxyfile 
       - name: Disable Jekyll Theme
         run: touch docs/.nojekyll
-      - name: Disable Jekyll Theme in roor
-        run: touch ./.nojekyll
+      # - name: Disable Jekyll Theme in roor
+      #   run: touch ./.nojekyll
       # - name: Commit and Push Docs
       #   run: |
       #     git config user.name "github-actions[bot]"
