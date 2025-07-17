@@ -199,8 +199,11 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					g[v0].options.erase(g[v0].options.begin());
 					edge=setup_match_edge(match, v0, v1, sk.second, t.get_direction(), false);
 					if (currentTask.is_over()){
-						std::pair<bool, edgeDescriptor> connectingEdge(false, edgeDescriptor());
-						std::vector <vertexDescriptor> task_vs= task_vertices(v1, &connectingEdge);
+						//std::pair<bool, edgeDescriptor> connectingEdge(false, edgeDescriptor());
+						// if (plan_prov.empty()){
+						// 	boost::remove_edge(edge.first, transitionSystem);
+						// }
+						std::vector <vertexDescriptor> task_vs= task_vertices(v1);
 						vertexDescriptor task_start= task_vs[0];
 						startRecycle=getRecyclingStart(v, v1);
 						if (plan_prov.empty()){
@@ -939,7 +942,9 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	Task controlGoal_adjusted= controlGoal;
 	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
 	Configurator::applyAffineTrans(-shift_start, controlGoal_adjusted); //as start
-	boost::remove_edge(edge.first, transitionSystem);
+	//	TO  DO GET edge v0-v1
+	// removeEdge(edge);
+	// boost::remove_edge(edge.first, transitionSystem);
 	edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
 	transitionSystem[edge.first].enableOverride();	
 	ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
@@ -1144,5 +1149,11 @@ void AttentiveConfigurator::adjustProbability(const edgeDescriptor &e){
 	//adjust
 	for (edgeDescriptor &ei: es){
 		transitionSystem[ei].probability=transitionSystem[ei.m_target].nObs/totObs;
+	}
+}
+
+void AttentiveConfigurator::removeEdge(std::pair<edgeDescriptor, bool> e){
+	if (e.second){
+		boost::remove_edge(e.first, transitionSystem);
 	}
 }
