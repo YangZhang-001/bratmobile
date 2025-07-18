@@ -1,10 +1,17 @@
 #include "configurator.h"
 #include <chrono>
 
-void Configurator::applyAffineTrans(const b2Transform& deltaPose, Task& task){
-	math::applyAffineTrans(deltaPose, task.start);
-	math::applyAffineTrans(deltaPose, task.disturbance);
+void Configurator::MulT(const b2Transform& B, Task& task){
+	math::MulT(B, task.start);
+	math::MulT(B, task.disturbance);
 }
+
+void Configurator::Mul(const b2Transform&B , Task &task){
+	task.start=b2Mul(B, task.start);
+	task.disturbance.bf.pose=b2Mul(B, task.disturbance.pose());
+
+}
+
 
 void Configurator::init(Task _task){
 	controlGoal=_task;
@@ -772,7 +779,7 @@ void AttentiveConfigurator::shift_states(TransitionSystem & g, const std::vector
 		return;
 	}
 	for (const vertexDescriptor &v:p){
-		math::applyAffineTrans(shift_start, g[v]);
+		math::MulT(shift_start, g[v]);
 	}
 }
 
@@ -857,8 +864,8 @@ void Configurator::change_task(){
 }
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPose){
-	math::applyAffineTrans(_deltaPose, g);
-	Configurator::applyAffineTrans(_deltaPose, controlGoal);
+	math::MulT(_deltaPose, g);
+	Configurator::MulT(_deltaPose, controlGoal);
 }
 
 
@@ -875,7 +882,7 @@ void Configurator::adjust_goal_expectation(){
 		// debug::print_pose(b2Mul(from_Di,task_controller->to_goal()), "from Di mulT to goal:");
 // 		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
 // //		debug::print_pose(difference, "difference between pose and likely goal pose:");
-// 		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
+// 		math::MulT(difference, &controlGoal);//update goal with ratio info
 		debug::print_pose(controlGoal.disturbance.pose(), "goal after adjusting");
 		printf("distance after adjusting %f\n", controlGoal.disturbance.pose().p.Length());
 	}
@@ -938,13 +945,14 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	bool finished=false, result=false;
 	bool been = matchType==StateMatcher::ABSTRACT || matchType==StateMatcher::_TRUE;
 	Task controlGoal_adjusted= controlGoal;
-	//position of task start with respect to goal disturbance
+	//position of task start with respect to goal disturbance (pov)
 	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
-	//Configurator::applyAffineTrans(-shift_start, controlGoal_adjusted); //as start
-	b2Transform newTransform =b2Mul(shift_start, controlGoal.get_disturbance().pose());
-	Disturbance newD(controlGoal.getAffIndex(), newTransform.p, newTransform.q.GetAngle());
-//	Disturbance newD(controlGoal.getAffIndex(), controlGoal.get_disturbance().pose().p+shift_start.p, controlGoal.get_disturbance().pose().q.GetAngle()+shift_start.q.GetAngle());
-	controlGoal_adjusted=Task(newD, UNDEFINED, b2Mul(shift_start, controlGoal.getStart()), false);
+	//Configurator::MulT(-shift_start, controlGoal_adjusted); //as start
+// 	b2Transform newTransform =b2Mul(shift_start, controlGoal.get_disturbance().pose());
+// 	Disturbance newD(controlGoal.getAffIndex(), newTransform.p, newTransform.q.GetAngle());
+// //	Disturbance newD(controlGoal.getAffIndex(), controlGoal.get_disturbance().pose().p+shift_start.p, controlGoal.get_disturbance().pose().q.GetAngle()+shift_start.q.GetAngle());
+// 	controlGoal_adjusted=Task(newD, UNDEFINED, b2Mul(shift_start, controlGoal.getStart()), false);
+	Mul(shift_start, controlGoal_adjusted);
 	boost::remove_edge(edge.first, transitionSystem);
 	edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
 	transitionSystem[edge.first].enableOverride();	

@@ -2,7 +2,7 @@
 
 b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects){
     b2Transform result=get_transform(t, pts, t.get_disturbance_ptr(), objects);
-    math::applyAffineTrans(-result, *t.get_disturbance_ptr());
+    math::MulT(-result, *t.get_disturbance_ptr());
     t.setMotorStep(t.getMotorStep()-1);
     if (t.getMotorStep()<1){
         t.set_change(true);

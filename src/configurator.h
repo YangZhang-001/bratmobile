@@ -186,7 +186,17 @@ void register_logger(Logger * l){
 	logger=l;
 }
 
-static void applyAffineTrans(const b2Transform& , Task &);
+/**
+ * @brief Matrix multiply by transpose
+ * 
+ */
+static void MulT(const b2Transform& B, Task & task);
+
+/**
+ * @brief Matrix multiplication
+ * 
+ */
+static void Mul(const b2Transform& B, Task &task);
 
 
 protected:

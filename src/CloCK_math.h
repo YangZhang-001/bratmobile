@@ -2,15 +2,15 @@
 
 namespace math {
 
-	void applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose);
+	void MulT(const b2Transform& deltaPose, b2Transform& pose);
 
-	void applyAffineTrans(const b2Transform&, State& );
+	void MulT(const b2Transform&, State& );
 
-	//void applyAffineTrans(const b2Transform& , Task* );
+	//void MulT(const b2Transform& , Task* );
 
-	void applyAffineTrans(const b2Transform&, TransitionSystem&);
+	void MulT(const b2Transform&, TransitionSystem&);
 
-	void applyAffineTrans(const b2Transform&, Disturbance&);
+	void MulT(const b2Transform&, Disturbance&);
 
 	// b2Mat33 b2d_affine_matrix33(const b2Transform &); //returns a box2d object
 
