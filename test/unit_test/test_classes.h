@@ -193,6 +193,10 @@ class DebugConfigurator:public AttentiveConfigurator{
         return current_vertices;
     }
 
+    static Task generateGoalTask();
+
+    static Disturbance generateGoal();
+    
 
 };
 
@@ -510,6 +514,16 @@ bool DebugConfigurator::plan_reaches_horizon(){
 bool DebugConfigurator::plan_reaches_goal(){
     return (plan_end_b2Vec2()-controlGoal.get_disturbance().pose().p).Length()<0.02;
 }
+
+Task DebugConfigurator::generateGoalTask(){
+    return Task(generateGoal(), UNDEFINED);
+    
+}
+
+Disturbance DebugConfigurator::generateGoal(){
+    return Disturbance(PURSUE, b2Vec2(1.0,0));
+}
+
 
 void HighLevelTest::init( const Task& goal){
     di.registerInterface(&ci);
