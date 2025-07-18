@@ -79,11 +79,12 @@ bool Configurator::Spawner(){
 	float duration_getFeatures=abs(float(d_getFeatures.count())/1000); //express in seconds
 	// printf("built wolrd in %f\n", duration);
 	explore_plan(world);
+	endTime =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>d_withExplore= now- endTime; //in seconds
 	float duration_withExplore=abs(float(d_withExplore.count())/1000); //express in seconds
 	//FORMAT: vertices	bodies	total_dur	just_worldbuilding
 	if (logger){
-		logger->log("%i\t%i\t%0.4f\t%0.4f\n", transitionSystem.m_vertices.size(), worldBuilder.bodies, duration_withExplore, duration_getFeatures);
+		logger->log("%i\t%i\t%0.6f\t%0.6f\n", transitionSystem.m_vertices.size(), worldBuilder.bodies, duration_withExplore, duration_getFeatures);
 	}
 	worldBuilder.resetBodies();
 	return 1;

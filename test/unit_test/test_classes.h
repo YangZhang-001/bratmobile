@@ -241,7 +241,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
             testCaseDir.erase(testCaseDir.begin()+index, testCaseDir.end());
         }
         testCaseDir=testCaseDir+scenario;
-        return Logger(testCaseDir, systemArchDir.c_str());
+        return Logger(testCaseDir.c_str(), systemArchDir.c_str());
     }
 
 

@@ -8,8 +8,17 @@ std::string Logger::file_dateTime(const char* custom, char name[60]){
 	m = ltm->tm_mon +1;
 	d=ltm->tm_mday;
 	h= ltm->tm_hour;
-	min = ltm->tm_min;
-	sprintf(name, "%s_%02i%02i%02i_%02i%02i.txt",custom, d,m,y,h,min);
+	min = ltm->tm_min;		
+	struct stat buffer;
+	std::string addOn="";
+	int count=0;
+	while (stat (fileName, &buffer)==0){
+		count++;
+	}
+	if (count>0){
+		addOn=std::to_string(count);
+	}
+	sprintf(name, "%s_%02i%02i%02i_%02i%02i_%s.txt",custom, d,m,y,h,min, addOn);
 	return std::string(name);
 }
 
