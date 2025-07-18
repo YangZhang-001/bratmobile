@@ -1,10 +1,8 @@
 var searchData=
 [
-  ['package_5finfo_213',['package_info',['../classAttentiveConfigurator.html#a63637f301a4a562f03f1ad37794b98bf',1,'AttentiveConfigurator']]],
-  ['partition_5fclusters_214',['partition_clusters',['../classWorldBuilder.html#a224b89e6744786fdfe6bee3673e90303',1,'WorldBuilder']]],
-  ['path2add2_215',['path2add2',['../classHorizonStarPlanner.html#af09006cf441f61897fb5c6953c25efb1',1,'HorizonStarPlanner']]],
-  ['pid_216',['PID',['../classMotor__Out.html#ad8c4a2c3d8d83a4efe498d0b83458199',1,'Motor_Out']]],
-  ['plan_217',['plan',['../classPlanner.html#aae39b978d83cd3e6a41ee85eb672384c',1,'Planner::plan()'],['../classHorizonStarPlanner.html#afdc4a15288b0da11057e8123a1741108',1,'HorizonStarPlanner::plan()']]],
-  ['pre_5fexplore_218',['pre_explore',['../classAttentiveConfigurator.html#a17898a950b20d3bd5a8e9f663919f096',1,'AttentiveConfigurator']]],
-  ['processdata_219',['processData',['../classWorldBuilder.html#a73b2748701310d051e86b6698748f8ba',1,'WorldBuilder']]]
+  ['object_5ffiltering_5fbox_270',['object_filtering_box',['../classWorldBuilder.html#a774e1fbfc14b4d3f69bf165f779594a5',1,'WorldBuilder']]],
+  ['on_5fnew_5freading_271',['on_new_reading',['../classTracker.html#a181a3106e0809c0ba3911c0fcc2317d7',1,'Tracker::on_new_reading()'],['../classDeadReckoner.html#a3dfc08c7bc63d10f787a95696ba10ed3',1,'DeadReckoner::on_new_reading()'],['../classClosedLoop__Tracker.html#aa4be1a2016835b29518c21fecb811836',1,'ClosedLoop_Tracker::on_new_reading()']]],
+  ['on_5fnew_5ftask_272',['on_new_task',['../classTracker.html#a127e94da954f48f78c827cbcc28cfd86',1,'Tracker::on_new_task()'],['../classDeadReckoner.html#a7bd1259d7ba405c9c986405b8b752057',1,'DeadReckoner::on_new_task()'],['../classClosedLoop__Tracker.html#ade73eb0fbfe72bb9be6c0608a452fb0d',1,'ClosedLoop_Tracker::on_new_task()']]],
+  ['operator_2a_273',['operator*',['../classBundle.html#a88f36267db977f3056c93b3af590d5bb',1,'Bundle::operator*(const Bundle &amp;b) const'],['../classBundle.html#ac59daf4358cbfcb0e6c5366a9e9b0dad',1,'Bundle::operator*(float) const']]],
+  ['outer_5floop_274',['outer_loop',['../classMotor__Out.html#a9ac747ab8d83d3936410cb4da04b8872',1,'Motor_Out']]]
 ];

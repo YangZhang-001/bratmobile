@@ -69,12 +69,20 @@ $(function() {
 <div class="title">Edge Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Edges connecting states in the transition system.  
+ <a href="structEdge.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="graphTools_8h_source.html">graphTools.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a547b413571ca9d6e8684acdcbfe1d494"><td class="memItemLeft" align="right" valign="top"><a id="a547b413571ca9d6e8684acdcbfe1d494"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>weighted_probability</b> (int it)</td></tr>
 <tr class="separator:a547b413571ca9d6e8684acdcbfe1d494"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d2ab2b62015835205f5728d24e4ad8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structEdge.html#a0d2ab2b62015835205f5728d24e4ad8c">enableOverride</a> ()</td></tr>
+<tr class="memdesc:a0d2ab2b62015835205f5728d24e4ad8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this edge has zero steps, it sets override to true.  <a href="structEdge.html#a0d2ab2b62015835205f5728d24e4ad8c">More...</a><br /></td></tr>
+<tr class="separator:a0d2ab2b62015835205f5728d24e4ad8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -87,9 +95,38 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>step</b> =0</td></tr>
 <tr class="memitem:a7032742b3a2c35f0402a7d338c291b15"><td class="memItemLeft" align="right" valign="top"><a id="a7032742b3a2c35f0402a7d338c291b15"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>it_observed</b> =-1</td></tr>
 <tr class="separator:a7032742b3a2c35f0402a7d338c291b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5796bc484af3da36dd0016402cf8ef5d"><td class="memItemLeft" align="right" valign="top"><a id="a5796bc484af3da36dd0016402cf8ef5d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>overrideZeroSteps</b> =false</td></tr>
+<tr class="separator:a5796bc484af3da36dd0016402cf8ef5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Edges connecting states in the transition system. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a0d2ab2b62015835205f5728d24e4ad8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d2ab2b62015835205f5728d24e4ad8c">&#9670;&nbsp;</a></span>enableOverride()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Edge::enableOverride </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>If this edge has zero steps, it sets override to true. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if override was changed to true </dd>
+<dd>
+false if no changes were made </dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following files:<ul>
 <li>src/<a class="el" href="graphTools_8h_source.html">graphTools.h</a></li>
+<li>src/graphTools.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

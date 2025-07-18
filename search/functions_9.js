@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['logger_203',['Logger',['../classLogger.html#af2513ccaec076f5c996f92215ffe26cb',1,'Logger']]]
+  ['kmeans_5fclusters_260',['kmeans_clusters',['../classWorldBuilder.html#a295f092345f4b62721428e073c3e47f2',1,'WorldBuilder']]]
 ];

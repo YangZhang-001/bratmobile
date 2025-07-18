@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['reactive_5fcontroller_152',['Reactive_Controller',['../classReactive__Controller.html',1,'']]],
-  ['reactiveconfigurator_153',['ReactiveConfigurator',['../classReactiveConfigurator.html',1,'']]],
-  ['robot_154',['Robot',['../classRobot.html',1,'']]]
+  ['planner_189',['Planner',['../classPlanner.html',1,'']]],
+  ['pointf_190',['Pointf',['../classPointf.html',1,'']]]
 ];

@@ -13,7 +13,7 @@ digraph "ReactiveConfigurator"
   Node5 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" goal_changer" ,fontname="Helvetica"];
   Node5 [label="GoalChanger",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structGoalChanger.html",tooltip=" "];
   Node6 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" planner" ,fontname="Helvetica"];
-  Node6 [label="Planner",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classPlanner.html",tooltip=" "];
+  Node6 [label="Planner",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classPlanner.html",tooltip="Searches the transition system and extracts a plan."];
   Node7 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" controlGoal\ncurrentTask" ,fontname="Helvetica"];
   Node7 [label="Task",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classTask.html",tooltip=" "];
   Node8 -> Node7 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" action" ,fontname="Helvetica"];

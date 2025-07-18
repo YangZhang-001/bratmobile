@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['viableedge_165',['ViableEdge',['../structViableEdge.html',1,'']]],
-  ['visited_166',['Visited',['../structVisited.html',1,'']]]
+  ['task_200',['Task',['../classTask.html',1,'']]],
+  ['threshold_201',['Threshold',['../classThreshold.html',1,'']]],
+  ['thresholdlearner_202',['ThresholdLearner',['../classThresholdLearner.html',1,'']]],
+  ['tracker_203',['Tracker',['../classTracker.html',1,'']]],
+  ['type_3c_20pointf_20_3e_204',['Type&lt; Pointf &gt;',['../structcv_1_1traits_1_1Type_3_01Pointf_01_4.html',1,'cv::traits']]]
 ];

@@ -92,9 +92,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7078f2619e14b6e68870e25ddb3f29f8"><td class="memItemLeft" align="right" valign="top"><a id="a7078f2619e14b6e68870e25ddb3f29f8"></a>
 AffordanceIndex&#160;</td><td class="memItemRight" valign="bottom"><b>getAffIndex</b> ()</td></tr>
 <tr class="separator:a7078f2619e14b6e68870e25ddb3f29f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88e80a7bcc4f3fec34fdfad250f1fc81"><td class="memItemLeft" align="right" valign="top"><a id="a88e80a7bcc4f3fec34fdfad250f1fc81"></a>
-Direction&#160;</td><td class="memItemRight" valign="bottom"><b>H</b> (<a class="el" href="structDisturbance.html">Disturbance</a>, Direction, bool topDown=0)</td></tr>
-<tr class="separator:a88e80a7bcc4f3fec34fdfad250f1fc81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a046f8f7ef3668be98836c7119600ac3f"><td class="memItemLeft" align="right" valign="top">Direction&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTask.html#a046f8f7ef3668be98836c7119600ac3f">H</a> (<a class="el" href="structDisturbance.html">Disturbance</a> ob, Direction d, bool topDown=0)</td></tr>
+<tr class="memdesc:a046f8f7ef3668be98836c7119600ac3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Agent transfer function H which generates a motor output (<a class="el" href="structTask_1_1Action.html">Action</a>) in response to a disturbance.  <a href="classTask.html#a046f8f7ef3668be98836c7119600ac3f">More...</a><br /></td></tr>
+<tr class="separator:a046f8f7ef3668be98836c7119600ac3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e5e1a4079f17ba64c17350f02f14ca0"><td class="memItemLeft" align="right" valign="top"><a id="a5e5e1a4079f17ba64c17350f02f14ca0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setEndCriteria</b> (const <a class="el" href="classAngle.html">Angle</a> &amp;angle=SAFE_ANGLE, const <a class="el" href="classDistance.html">Distance</a> &amp;distance=BOX2DRANGE)</td></tr>
 <tr class="separator:a5e5e1a4079f17ba64c17350f02f14ca0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -104,15 +104,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setEndCriteria</b> (c
 <tr class="memitem:a2358bcb54052b47ff9ca0549910382e1"><td class="memItemLeft" align="right" valign="top"><a id="a2358bcb54052b47ff9ca0549910382e1"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setEndCriteria</b> (const <a class="el" href="structEndCriteria.html">EndCriteria</a> &amp;ec)</td></tr>
 <tr class="separator:a2358bcb54052b47ff9ca0549910382e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7de5eab824ab321c6381ca90d0ec979"><td class="memItemLeft" align="right" valign="top"><a id="ae7de5eab824ab321c6381ca90d0ec979"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setErrorWeights</b> ()</td></tr>
-<tr class="separator:ae7de5eab824ab321c6381ca90d0ec979"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e1686b63e4bef0552182364f837ec8c"><td class="memItemLeft" align="right" valign="top"><a id="a3e1686b63e4bef0552182364f837ec8c"></a>
-<a class="el" href="structEndedResult.html">EndedResult</a>&#160;</td><td class="memItemRight" valign="bottom"><b>checkEnded</b> (b2Transform robotTransform=b2Transform_zero, Direction dir=UNDEFINED, bool relax=0, b2Body *robot=NULL, std::pair&lt; bool, b2Transform &gt; use_start=std::pair&lt; bool, b2Transform &gt;(1, b2Transform_zero))</td></tr>
+<tr class="memitem:a3e1686b63e4bef0552182364f837ec8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structEndedResult.html">EndedResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTask.html#a3e1686b63e4bef0552182364f837ec8c">checkEnded</a> (b2Transform robotTransform=b2Transform_zero, Direction dir=UNDEFINED, bool relax=0, b2Body *robot=NULL, std::pair&lt; bool, b2Transform &gt; use_start=std::pair&lt; bool, b2Transform &gt;(1, b2Transform_zero))</td></tr>
+<tr class="memdesc:a3e1686b63e4bef0552182364f837ec8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if this task has ended based on state information (default are info for the task which calls the method)  <a href="classTask.html#a3e1686b63e4bef0552182364f837ec8c">More...</a><br /></td></tr>
 <tr class="separator:a3e1686b63e4bef0552182364f837ec8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4076aefe395c767fbeeff9800ca70b7"><td class="memItemLeft" align="right" valign="top"><a id="ac4076aefe395c767fbeeff9800ca70b7"></a>
-<a class="el" href="structEndedResult.html">EndedResult</a>&#160;</td><td class="memItemRight" valign="bottom"><b>checkEnded</b> (const <a class="el" href="structState.html">State</a> &amp;, Direction dir=UNDEFINED, bool relax=false, std::pair&lt; bool, b2Transform &gt; use_start=std::pair&lt; bool, b2Transform &gt;(1, b2Transform_zero))</td></tr>
-<tr class="separator:ac4076aefe395c767fbeeff9800ca70b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a89b3bcfbb09a4924debce3ff374bf4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structEndedResult.html">EndedResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTask.html#a5a89b3bcfbb09a4924debce3ff374bf4">checkEnded</a> (const <a class="el" href="structState.html">State</a> &amp;n, Direction dir=UNDEFINED, bool relax=false, std::pair&lt; bool, b2Transform &gt; use_start=std::pair&lt; bool, b2Transform &gt;(1, b2Transform_zero))</td></tr>
+<tr class="memdesc:a5a89b3bcfbb09a4924debce3ff374bf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a state represents the end of this task.  <a href="classTask.html#a5a89b3bcfbb09a4924debce3ff374bf4">More...</a><br /></td></tr>
+<tr class="separator:a5a89b3bcfbb09a4924debce3ff374bf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a1c3ff485bb643b086ed864b1d1825b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTask.html#a1a1c3ff485bb643b086ed864b1d1825b">checkEnded</a> (const b2PolygonShape &amp;box, const b2Transform &amp;robot_pose=b2Transform_zero, <a class="el" href="structDisturbance.html">Disturbance</a> *dist_obs=NULL)</td></tr>
 <tr class="memdesc:a1a1c3ff485bb643b086ed864b1d1825b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses a virtual sensor (attention window) to determine whether the task has ended or not.  <a href="classTask.html#a1a1c3ff485bb643b086ed864b1d1825b">More...</a><br /></td></tr>
 <tr class="separator:a1a1c3ff485bb643b086ed864b1d1825b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,9 +119,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setErrorWeights</b> (
 <tr class="memitem:a15542ea3f2093130a05e882592489daa"><td class="memItemLeft" align="right" valign="top"><a id="a15542ea3f2093130a05e882592489daa"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Task</b> (<a class="el" href="structDisturbance.html">Disturbance</a> ob, Direction d, b2Transform _start=b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)), bool topDown=0)</td></tr>
 <tr class="separator:a15542ea3f2093130a05e882592489daa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c481b64f2129c9e14c1e2410a7f2f06"><td class="memItemLeft" align="right" valign="top"><a id="a5c481b64f2129c9e14c1e2410a7f2f06"></a>
-<a class="el" href="structsimResult.html">simResult</a>&#160;</td><td class="memItemRight" valign="bottom"><b>bumping_that</b> (b2World &amp;, int, b2Body *, float remaining=SIM_DURATION)</td></tr>
-<tr class="separator:a5c481b64f2129c9e14c1e2410a7f2f06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84bea294049f83c6a3ebfc00b37b9a47"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structsimResult.html">simResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTask.html#a84bea294049f83c6a3ebfc00b37b9a47">bumping_that</a> (b2World &amp;_world, int iteration, b2Body *, float remaining=SIM_DURATION)</td></tr>
+<tr class="memdesc:a84bea294049f83c6a3ebfc00b37b9a47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes this task in a Box2D simulation.  <a href="classTask.html#a84bea294049f83c6a3ebfc00b37b9a47">More...</a><br /></td></tr>
+<tr class="separator:a84bea294049f83c6a3ebfc00b37b9a47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d9434b3562a2476a4d346f989d0d82b"><td class="memItemLeft" align="right" valign="top"><a id="a0d9434b3562a2476a4d346f989d0d82b"></a>
 <a class="el" href="structEndCriteria.html">EndCriteria</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getEndCriteria</b> (const <a class="el" href="structDisturbance.html">Disturbance</a> &amp;)</td></tr>
 <tr class="separator:a0d9434b3562a2476a4d346f989d0d82b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -143,6 +140,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_change</b> (bool 
 <tr class="memitem:aacf8fb6c03465dd1df73934ab20b88f1"><td class="memItemLeft" align="right" valign="top"><a id="aacf8fb6c03465dd1df73934ab20b88f1"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>get_change</b> ()</td></tr>
 <tr class="separator:aacf8fb6c03465dd1df73934ab20b88f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe864bdf39d00228049c320f4a26ba14"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTask.html#afe864bdf39d00228049c320f4a26ba14">is_over</a> ()</td></tr>
+<tr class="memdesc:afe864bdf39d00228049c320f4a26ba14"><td class="mdescLeft">&#160;</td><td class="mdescRight">If task has finished executing.  <a href="classTask.html#afe864bdf39d00228049c320f4a26ba14">More...</a><br /></td></tr>
+<tr class="separator:afe864bdf39d00228049c320f4a26ba14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba51215655bfc156ceb87918c0a6f9e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDisturbance.html">Disturbance</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTask.html#aba51215655bfc156ceb87918c0a6f9e4">get_disturbance_ptr</a> ()</td></tr>
 <tr class="memdesc:aba51215655bfc156ceb87918c0a6f9e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a pointer to the disturbance.  <a href="classTask.html#aba51215655bfc156ceb87918c0a6f9e4">More...</a><br /></td></tr>
 <tr class="separator:aba51215655bfc156ceb87918c0a6f9e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -208,8 +208,118 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Configurator</b></td
 <tr class="separator:a9af43d9b2a8f0cc0a0a9904136a57284"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a84bea294049f83c6a3ebfc00b37b9a47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84bea294049f83c6a3ebfc00b37b9a47">&#9670;&nbsp;</a></span>bumping_that()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structsimResult.html">simResult</a> Task::bumping_that </td>
+          <td>(</td>
+          <td class="paramtype">b2World &amp;&#160;</td>
+          <td class="paramname"><em>_world</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>iteration</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">b2Body *&#160;</td>
+          <td class="paramname"><em>robot</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>remaining</em> = <code>SIM_DURATION</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Executes this task in a Box2D simulation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_world</td><td>box2d world </td></tr>
+    <tr><td class="paramname">iteration</td><td>configurator iteration (for logging) </td></tr>
+    <tr><td class="paramname">remaining</td><td>(simulation duration in seconds) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structsimResult.html">simResult</a> </dd></dl>
+
+</div>
+</div>
+<a id="a3e1686b63e4bef0552182364f837ec8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e1686b63e4bef0552182364f837ec8c">&#9670;&nbsp;</a></span>checkEnded() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structEndedResult.html">EndedResult</a> Task::checkEnded </td>
+          <td>(</td>
+          <td class="paramtype">b2Transform&#160;</td>
+          <td class="paramname"><em>robotTransform</em> = <code>b2Transform_zero</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Direction&#160;</td>
+          <td class="paramname"><em>dir</em> = <code>UNDEFINED</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>relax</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">b2Body *&#160;</td>
+          <td class="paramname"><em>robot</em> = <code>NULL</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::pair&lt; bool, b2Transform &gt;&#160;</td>
+          <td class="paramname"><em>use_start</em> = <code>std::pair&#160;&lt;bool,b2Transform&gt;(1,&#160;b2Transform_zero)</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if this task has ended based on state information (default are info for the task which calls the method) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">robotTransform</td><td>the robot's pose to evaluate </td></tr>
+    <tr><td class="paramname">dir</td><td>the direction of the task being carried out </td></tr>
+    <tr><td class="paramname">relax</td><td>apply a larger threshold to check whehter a goal was reached </td></tr>
+    <tr><td class="paramname">robot</td><td>robot box2d body </td></tr>
+    <tr><td class="paramname">use_start</td><td>use a custom start for the task </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structEndedResult.html">EndedResult</a> </dd></dl>
+
+</div>
+</div>
 <a id="a1a1c3ff485bb643b086ed864b1d1825b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a1c3ff485bb643b086ed864b1d1825b">&#9670;&nbsp;</a></span>checkEnded()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a1c3ff485bb643b086ed864b1d1825b">&#9670;&nbsp;</a></span>checkEnded() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -255,6 +365,58 @@ false </dd></dl>
 
 </div>
 </div>
+<a id="a5a89b3bcfbb09a4924debce3ff374bf4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a89b3bcfbb09a4924debce3ff374bf4">&#9670;&nbsp;</a></span>checkEnded() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structEndedResult.html">EndedResult</a> Task::checkEnded </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structState.html">State</a> &amp;&#160;</td>
+          <td class="paramname"><em>n</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Direction&#160;</td>
+          <td class="paramname"><em>dir</em> = <code>UNDEFINED</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>relax</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::pair&lt; bool, b2Transform &gt;&#160;</td>
+          <td class="paramname"><em>use_start</em> = <code>std::pair&#160;&lt;bool,b2Transform&gt;(1,&#160;b2Transform_zero)</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if a state represents the end of this task. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">n</td><td>the state </td></tr>
+    <tr><td class="paramname">dir</td><td>the direction of the task being carried out </td></tr>
+    <tr><td class="paramname">relax</td><td>apply a larger threshold to check whehter a goal was reached </td></tr>
+    <tr><td class="paramname">use_start</td><td>use a custom start for the task </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structEndedResult.html">EndedResult</a> </dd></dl>
+
+</div>
+</div>
 <a id="aba51215655bfc156ceb87918c0a6f9e4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aba51215655bfc156ceb87918c0a6f9e4">&#9670;&nbsp;</a></span>get_disturbance_ptr()</h2>
 
@@ -280,6 +442,82 @@ false </dd></dl>
 
 <p>Get a pointer to the disturbance. </p>
 <dl class="section return"><dt>Returns</dt><dd>Disturbance* </dd></dl>
+
+</div>
+</div>
+<a id="a046f8f7ef3668be98836c7119600ac3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a046f8f7ef3668be98836c7119600ac3f">&#9670;&nbsp;</a></span>H()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Direction Task::H </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structDisturbance.html">Disturbance</a>&#160;</td>
+          <td class="paramname"><em>ob</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Direction&#160;</td>
+          <td class="paramname"><em>d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>topDown</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Agent transfer function H which generates a motor output (<a class="el" href="structTask_1_1Action.html">Action</a>) in response to a disturbance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ob</td><td>the disturbance </td></tr>
+    <tr><td class="paramname">d</td><td>top-down instruction on how to generate the <a class="el" href="structTask_1_1Action.html">Action</a>. DEFAULT with no top down control generates a reflex </td></tr>
+    <tr><td class="paramname">topDown</td><td>whether the input direction should be used as is (true) or to generate a reflex (false) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Direction</dd></dl>
+<p>NB: only generates default turns if absolute angle of the disturbance is larger than .1rad </p>
+
+</div>
+</div>
+<a id="afe864bdf39d00228049c320f4a26ba14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe864bdf39d00228049c320f4a26ba14">&#9670;&nbsp;</a></span>is_over()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Task::is_over </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If task has finished executing. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if step==0 or if manually set to change </dd>
+<dd>
+false </dd></dl>
 
 </div>
 </div>

@@ -247,207 +247,130 @@ $(function() {
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        }</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    };</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="comment">// struct Correct{</span></div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    </div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="comment">//     Correct(){}</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<a class="code" href="structTask_1_1Action.html">Task::Action</a> getAction()<span class="keyword">const</span>{</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordflow">return</span> action;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;}</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="comment">//     void operator()( Action&amp;, int);</span></div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160; </div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="comment">//     float errorCalc(Action , double);</span></div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;AffordanceIndex getAffIndex(){</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="keywordflow">return</span> affordance;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;}</div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="comment">//     float getError(){</span></div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="comment">//         return p();</span></div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="comment">//     }</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="comment">//     float Ki(){</span></div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="comment">//         return ki;</span></div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="comment">//     }</span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160; </div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="comment">//     float Kp(){</span></div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="comment">//         return kp;</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="comment">//     }</span></div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="comment">//     float Kd(){</span></div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="comment">//         return kd;</span></div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="comment">//     }</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;Direction <a class="code" href="classTask.html#a046f8f7ef3668be98836c7119600ac3f">H</a>(<a class="code" href="structDisturbance.html">Disturbance</a> ob, Direction d, <span class="keywordtype">bool</span> topDown=0); <span class="comment">//topDown enables Configurator topdown control on reactive behaviour</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="keywordtype">void</span> setEndCriteria(<span class="keyword">const</span> <a class="code" href="classAngle.html">Angle</a>&amp; angle=SAFE_ANGLE, <span class="keyword">const</span> <a class="code" href="classDistance.html">Distance</a>&amp; distance=BOX2DRANGE);</div>
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160; </div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="comment">//     float get_i(){</span></div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="comment">//         return i;</span></div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="comment">//     }</span></div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="comment">//     float get_d(){</span></div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="comment">//         return d;</span></div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="comment">//     }</span></div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<span class="comment">//     float update(float);</span></div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="comment">//     void reset(){</span></div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="comment">//         p_buffer=std::vector &lt;float&gt;(bufferSize,0);</span></div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="comment">//         i=0;</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;<span class="comment">//         d=0;</span></div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="comment">//         mf.buffer=std::vector&lt;float&gt;(mf.kernelSize,0);</span></div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="comment">//     }</span></div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="comment">//     float kp=0.075;    </span></div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="comment">//     float kd=0, ki=0;</span></div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="comment">//     private:</span></div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160; </div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="comment">//     float p(){</span></div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="comment">//         float sum=0;</span></div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="comment">//         for (int j=0;j&lt;p_buffer.size(); j++){</span></div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="comment">//             sum+=p_buffer[j];</span></div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="comment">//         }</span></div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="comment">//         return sum;</span></div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;<span class="comment">//     }</span></div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="comment">//     int correction_rate=2; //Hz</span></div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="comment">//     int bufferSize= correction_rate*(FPS/MOTOR_CALLBACK);</span></div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="comment">//     std::vector &lt;float&gt;p_buffer=std::vector &lt;float&gt;(bufferSize,0);</span></div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="comment">//     float i=0, d=0;</span></div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="comment">//     float tolerance_upper=0.01, tolerance_lower=-0.01;</span></div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160; </div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="comment">//     struct MedianFilter{</span></div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="comment">//         int kernelSize=3;</span></div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;<span class="comment">//         std::vector&lt;float&gt;buffer=std::vector&lt;float&gt;(kernelSize,0);</span></div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160; </div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;<span class="comment">//         float get_median(){</span></div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="comment">//             std::vector &lt;float&gt; tmp=buffer;</span></div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;<span class="comment">//             std::sort(tmp.begin(), tmp.end());</span></div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="comment">//             return tmp[int(kernelSize/2)];</span></div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;<span class="comment">//         }</span></div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;<span class="comment">//     }mf;</span></div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    </div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<span class="comment">// }correct;</span></div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160; </div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="comment">// friend Task::Correct;    </span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="keywordtype">void</span> setEndCriteria(<span class="keyword">const</span> <a class="code" href="classDistance.html">Distance</a>&amp; distance);</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="keywordtype">void</span> setEndCriteria(<span class="keyword">const</span> <a class="code" href="structEndCriteria.html">EndCriteria</a> &amp; ec){</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    endCriteria=ec;</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;}</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<a class="code" href="structEndedResult.html">EndedResult</a> <a class="code" href="classTask.html#a3e1686b63e4bef0552182364f837ec8c">checkEnded</a>(b2Transform robotTransform= b2Transform_zero, Direction dir=UNDEFINED, <span class="keywordtype">bool</span> relax=0, b2Body* robot=NULL, std::pair&lt;bool,b2Transform&gt; use_start= std::pair &lt;bool,b2Transform&gt;(1, b2Transform_zero));</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<a class="code" href="structEndedResult.html">EndedResult</a> <a class="code" href="classTask.html#a3e1686b63e4bef0552182364f837ec8c">checkEnded</a>(<span class="keyword">const</span> <a class="code" href="structState.html">State</a>&amp; n, Direction dir=UNDEFINED, <span class="keywordtype">bool</span> relax=<span class="keyword">false</span>, std::pair&lt;bool,b2Transform&gt; use_start= std::pair &lt;bool,b2Transform&gt;(1, b2Transform_zero)); <span class="comment">//usually used to check against control goal</span></div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160; </div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classTask.html#a3e1686b63e4bef0552182364f837ec8c">checkEnded</a>( <span class="keyword">const</span> b2PolygonShape &amp;box, <span class="keyword">const</span> b2Transform&amp; robot_pose=b2Transform_zero, <a class="code" href="structDisturbance.html">Disturbance</a> * dist_obs=NULL );</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160; </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<a class="code" href="classTask.html">Task</a>(){</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;    direction = DEFAULT;</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    action.init(direction);</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;}</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160; </div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<a class="code" href="classTask.html">Task</a>(Direction d){</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    direction=d;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    action.init(direction);</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;}</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="comment">// class ControlLearner{ //to learn wheel speed controls</span></div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;<span class="comment">//     private:</span></div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;<span class="comment">//     float weight=1.0;</span></div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;<span class="comment">// };</span></div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160; </div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<a class="code" href="structTask_1_1Action.html">Task::Action</a> getAction()<span class="keyword">const</span>{</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <span class="keywordflow">return</span> action;</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;}</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160; </div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;AffordanceIndex getAffIndex(){</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <span class="keywordflow">return</span> affordance;</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;}</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160; </div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;Direction H(<a class="code" href="structDisturbance.html">Disturbance</a>, Direction, <span class="keywordtype">bool</span> topDown=0); <span class="comment">//topDown enables Configurator topdown control on reactive behaviour</span></div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160; </div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="keywordtype">void</span> setEndCriteria(<span class="keyword">const</span> <a class="code" href="classAngle.html">Angle</a>&amp; angle=SAFE_ANGLE, <span class="keyword">const</span> <a class="code" href="classDistance.html">Distance</a>&amp; distance=BOX2DRANGE);</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="keywordtype">void</span> setEndCriteria(<span class="keyword">const</span> <a class="code" href="classDistance.html">Distance</a>&amp; distance);</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="keywordtype">void</span> setEndCriteria(<span class="keyword">const</span> <a class="code" href="structEndCriteria.html">EndCriteria</a> &amp; ec){</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;    endCriteria=ec;</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;}</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<a class="code" href="classTask.html">Task</a>(<a class="code" href="structDisturbance.html">Disturbance</a> ob, Direction d, b2Transform _start=b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)), <span class="keywordtype">bool</span> topDown=0){</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    start = _start;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    disturbance = ob;</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    affordance=disturbance.getAffIndex();</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    direction = <a class="code" href="classTask.html#a046f8f7ef3668be98836c7119600ac3f">H</a>(disturbance, d, topDown);  </div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    action.init(direction);</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    setEndCriteria();</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;}</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<a class="code" href="structsimResult.html">simResult</a> <a class="code" href="classTask.html#a84bea294049f83c6a3ebfc00b37b9a47">bumping_that</a>(b2World &amp; _world, <span class="keywordtype">int</span> iteration, b2Body *, <span class="keywordtype">float</span> remaining = SIM_DURATION);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<a class="code" href="structEndCriteria.html">EndCriteria</a> getEndCriteria(<span class="keyword">const</span> <a class="code" href="structDisturbance.html">Disturbance</a>&amp;);</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<a class="code" href="structEndCriteria.html">EndCriteria</a> getEndCriteria(){</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;    <span class="keywordflow">return</span> endCriteria;</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;}</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160; </div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="keywordtype">bool</span> endCriteria_met(<a class="code" href="classAngle.html">Angle</a> &amp;, <a class="code" href="classDistance.html">Distance</a> &amp;);</div>
 <div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="keywordtype">void</span> setErrorWeights();</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;b2Transform from_Di( <span class="keyword">const</span> b2Transform * custom_start=NULL, <a class="code" href="structDisturbance.html">Disturbance</a> * d_obs=NULL); <span class="comment">//d_obs disturbance observed rather than D with which task was init</span></div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<a class="code" href="structEndedResult.html">EndedResult</a> checkEnded(b2Transform robotTransform= b2Transform_zero, Direction dir=UNDEFINED, <span class="keywordtype">bool</span> relax=0, b2Body* robot=NULL, std::pair&lt;bool,b2Transform&gt; use_start= std::pair &lt;bool,b2Transform&gt;(1, b2Transform_zero));</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<a class="code" href="structEndedResult.html">EndedResult</a> checkEnded(<span class="keyword">const</span> <a class="code" href="structState.html">State</a>&amp;, Direction dir=UNDEFINED, <span class="keywordtype">bool</span> relax=<span class="keyword">false</span>, std::pair&lt;bool,b2Transform&gt; use_start= std::pair &lt;bool,b2Transform&gt;(1, b2Transform_zero)); <span class="comment">//usually used to check against control goal</span></div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<span class="keywordtype">void</span> set_change(<span class="keywordtype">bool</span> b){</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    change=b;</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;}</div>
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="keywordtype">bool</span> checkEnded( <span class="keyword">const</span> b2PolygonShape &amp;box, <span class="keyword">const</span> b2Transform&amp; robot_pose=b2Transform_zero, <a class="code" href="structDisturbance.html">Disturbance</a> * dist_obs=NULL );</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160; </div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<a class="code" href="classTask.html">Task</a>(){</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    direction = DEFAULT;</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    action.init(direction);</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;}</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160; </div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<a class="code" href="classTask.html">Task</a>(Direction d){</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    direction=d;</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    action.init(direction);</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;}</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160; </div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<a class="code" href="classTask.html">Task</a>(<a class="code" href="structDisturbance.html">Disturbance</a> ob, Direction d, b2Transform _start=b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)), <span class="keywordtype">bool</span> topDown=0){</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    start = _start;</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    disturbance = ob;</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    affordance=disturbance.getAffIndex();</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    direction = H(disturbance, d, topDown);  </div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    action.init(direction);</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    setEndCriteria();</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="keywordtype">bool</span> get_change(){</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    <span class="keywordflow">return</span> change;</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;}</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
+<div class="line"><a name="l00302"></a><span class="lineno"><a class="line" href="classTask.html#afe864bdf39d00228049c320f4a26ba14">  302</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classTask.html#afe864bdf39d00228049c320f4a26ba14">is_over</a>(){</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    <span class="keywordflow">return</span> change || motorStep==0;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;}</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
+<div class="line"><a name="l00311"></a><span class="lineno"><a class="line" href="classTask.html#aba51215655bfc156ceb87918c0a6f9e4">  311</a></span>&#160;<a class="code" href="structDisturbance.html">Disturbance</a> * <a class="code" href="classTask.html#aba51215655bfc156ceb87918c0a6f9e4">get_disturbance_ptr</a>(){</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keywordflow">return</span> &amp;disturbance;</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;}</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="keyword">const</span> <a class="code" href="structDisturbance.html">Disturbance</a> &amp; get_disturbance()<span class="keyword">const</span>{</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    <span class="keywordflow">return</span> disturbance;</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;}</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160; </div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="keywordtype">void</span> setMotorStep(<span class="keywordtype">int</span> i){</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    motorStep=i;</div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;}</div>
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160; </div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160; </div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<a class="code" href="structsimResult.html">simResult</a> bumping_that(b2World &amp;, <span class="keywordtype">int</span>, b2Body *, <span class="keywordtype">float</span> remaining = SIM_DURATION);</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<a class="code" href="structEndCriteria.html">EndCriteria</a> getEndCriteria(<span class="keyword">const</span> <a class="code" href="structDisturbance.html">Disturbance</a>&amp;);</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160; </div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;<a class="code" href="structEndCriteria.html">EndCriteria</a> getEndCriteria(){</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    <span class="keywordflow">return</span> endCriteria;</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;}</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160; </div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;<span class="keywordtype">bool</span> endCriteria_met(<a class="code" href="classAngle.html">Angle</a> &amp;, <a class="code" href="classDistance.html">Distance</a> &amp;);</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160; </div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;b2Transform from_Di( <span class="keyword">const</span> b2Transform * custom_start=NULL, <a class="code" href="structDisturbance.html">Disturbance</a> * d_obs=NULL); <span class="comment">//d_obs disturbance observed rather than D with which task was init</span></div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="keywordtype">void</span> set_change(<span class="keywordtype">bool</span> b){</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    change=b;</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;}</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160; </div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;<span class="keywordtype">bool</span> get_change(){</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keywordflow">return</span> change || motorStep==0;</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;}</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
-<div class="line"><a name="l00349"></a><span class="lineno"><a class="line" href="classTask.html#aba51215655bfc156ceb87918c0a6f9e4">  349</a></span>&#160;<a class="code" href="structDisturbance.html">Disturbance</a> * <a class="code" href="classTask.html#aba51215655bfc156ceb87918c0a6f9e4">get_disturbance_ptr</a>(){</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    <span class="keywordflow">return</span> &amp;disturbance;</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;}</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160; </div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;<span class="keyword">const</span> <a class="code" href="structDisturbance.html">Disturbance</a> &amp; get_disturbance()<span class="keyword">const</span>{</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    <span class="keywordflow">return</span> disturbance;</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;}</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160; </div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;<span class="keywordtype">void</span> setMotorStep(<span class="keywordtype">int</span> i){</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    motorStep=i;</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;}</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160; </div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="keywordtype">int</span> &amp; getMotorStep(){<span class="keywordflow">return</span> motorStep;}</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160; </div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;b2Transform getStart(){</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keywordflow">return</span> start;</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;}</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160; </div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;b2Transform&amp; getStartRef(){</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    <span class="keywordflow">return</span> start;</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;}</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160; </div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;Direction get_direction(){</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    <span class="keywordflow">return</span> direction;</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;}</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160; </div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="keywordtype">void</span> set_direction(Direction d){</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;    direction=d;</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;}</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160; </div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    Action action;</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;    <a class="code" href="structDisturbance.html">Disturbance</a> disturbance;</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160; </div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160; </div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;};</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160; </div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;<span class="keywordtype">int</span> &amp; getMotorStep(){<span class="keywordflow">return</span> motorStep;}</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160; </div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;b2Transform getStart(){</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <span class="keywordflow">return</span> start;</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;}</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;b2Transform&amp; getStartRef(){</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keywordflow">return</span> start;</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;}</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;Direction get_direction(){</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    <span class="keywordflow">return</span> direction;</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;}</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160; </div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="keywordtype">void</span> set_direction(Direction d){</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    direction=d;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;}</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    Action action;</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <a class="code" href="structDisturbance.html">Disturbance</a> disturbance;</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160; </div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160; </div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;};</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassAngle_html"><div class="ttname"><a href="classAngle.html">Angle</a></div><div class="ttdef"><b>Definition:</b> measurement.h:44</div></div>
-<div class="ttc" id="aclassConfigurator_html"><div class="ttname"><a href="classConfigurator.html">Configurator</a></div><div class="ttdef"><b>Definition:</b> configurator.h:16</div></div>
+<div class="ttc" id="aclassConfigurator_html"><div class="ttname"><a href="classConfigurator.html">Configurator</a></div><div class="ttdef"><b>Definition:</b> configurator.h:17</div></div>
 <div class="ttc" id="aclassDistance_html"><div class="ttname"><a href="classDistance.html">Distance</a></div><div class="ttdef"><b>Definition:</b> measurement.h:52</div></div>
 <div class="ttc" id="aclassTask_1_1Listener_html"><div class="ttname"><a href="classTask_1_1Listener.html">Task::Listener</a></div><div class="ttdef"><b>Definition:</b> task.h:140</div></div>
 <div class="ttc" id="aclassTask_html"><div class="ttname"><a href="classTask.html">Task</a></div><div class="ttdef"><b>Definition:</b> task.h:19</div></div>
-<div class="ttc" id="aclassTask_html_aba51215655bfc156ceb87918c0a6f9e4"><div class="ttname"><a href="classTask.html#aba51215655bfc156ceb87918c0a6f9e4">Task::get_disturbance_ptr</a></div><div class="ttdeci">Disturbance * get_disturbance_ptr()</div><div class="ttdoc">Get a pointer to the disturbance.</div><div class="ttdef"><b>Definition:</b> task.h:349</div></div>
-<div class="ttc" id="astructDisturbance_html"><div class="ttname"><a href="structDisturbance.html">Disturbance</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:114</div></div>
+<div class="ttc" id="aclassTask_html_a046f8f7ef3668be98836c7119600ac3f"><div class="ttname"><a href="classTask.html#a046f8f7ef3668be98836c7119600ac3f">Task::H</a></div><div class="ttdeci">Direction H(Disturbance ob, Direction d, bool topDown=0)</div><div class="ttdoc">Agent transfer function H which generates a motor output (Action) in response to a disturbance.</div><div class="ttdef"><b>Definition:</b> task.cpp:175</div></div>
+<div class="ttc" id="aclassTask_html_a3e1686b63e4bef0552182364f837ec8c"><div class="ttname"><a href="classTask.html#a3e1686b63e4bef0552182364f837ec8c">Task::checkEnded</a></div><div class="ttdeci">EndedResult checkEnded(b2Transform robotTransform=b2Transform_zero, Direction dir=UNDEFINED, bool relax=0, b2Body *robot=NULL, std::pair&lt; bool, b2Transform &gt; use_start=std::pair&lt; bool, b2Transform &gt;(1, b2Transform_zero))</div><div class="ttdoc">Check if this task has ended based on state information (default are info for the task which calls th...</div><div class="ttdef"><b>Definition:</b> task.cpp:240</div></div>
+<div class="ttc" id="aclassTask_html_a84bea294049f83c6a3ebfc00b37b9a47"><div class="ttname"><a href="classTask.html#a84bea294049f83c6a3ebfc00b37b9a47">Task::bumping_that</a></div><div class="ttdeci">simResult bumping_that(b2World &amp;_world, int iteration, b2Body *, float remaining=SIM_DURATION)</div><div class="ttdoc">Executes this task in a Box2D simulation.</div><div class="ttdef"><b>Definition:</b> task.cpp:59</div></div>
+<div class="ttc" id="aclassTask_html_aba51215655bfc156ceb87918c0a6f9e4"><div class="ttname"><a href="classTask.html#aba51215655bfc156ceb87918c0a6f9e4">Task::get_disturbance_ptr</a></div><div class="ttdeci">Disturbance * get_disturbance_ptr()</div><div class="ttdoc">Get a pointer to the disturbance.</div><div class="ttdef"><b>Definition:</b> task.h:311</div></div>
+<div class="ttc" id="aclassTask_html_afe864bdf39d00228049c320f4a26ba14"><div class="ttname"><a href="classTask.html#afe864bdf39d00228049c320f4a26ba14">Task::is_over</a></div><div class="ttdeci">bool is_over()</div><div class="ttdoc">If task has finished executing.</div><div class="ttdef"><b>Definition:</b> task.h:302</div></div>
+<div class="ttc" id="astructDisturbance_html"><div class="ttname"><a href="structDisturbance.html">Disturbance</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:112</div></div>
 <div class="ttc" id="astructEndCriteria_html"><div class="ttname"><a href="structEndCriteria.html">EndCriteria</a></div><div class="ttdef"><b>Definition:</b> measurement.h:60</div></div>
 <div class="ttc" id="astructEndedResult_html"><div class="ttname"><a href="structEndedResult.html">EndedResult</a></div><div class="ttdef"><b>Definition:</b> measurement.h:74</div></div>
-<div class="ttc" id="astructState_html"><div class="ttname"><a href="structState.html">State</a></div><div class="ttdef"><b>Definition:</b> graphTools.h:60</div></div>
+<div class="ttc" id="astructState_html"><div class="ttname"><a href="structState.html">State</a></div><div class="ttdoc">Hybrid states in the transition system.</div><div class="ttdef"><b>Definition:</b> graphTools.h:69</div></div>
 <div class="ttc" id="astructTask_1_1Action_html"><div class="ttname"><a href="structTask_1_1Action.html">Task::Action</a></div><div class="ttdef"><b>Definition:</b> task.h:33</div></div>
 <div class="ttc" id="astructTask_1_1Action_html_a380ba865561c98173374f50eab19cda0"><div class="ttname"><a href="structTask_1_1Action.html#a380ba865561c98173374f50eab19cda0">Task::Action::getOmega</a></div><div class="ttdeci">float getOmega(const float l, const float r, float dt=1) const</div><div class="ttdoc">Uses kinematic model to calculate angle.</div><div class="ttdef"><b>Definition:</b> task.h:122</div></div>
-<div class="ttc" id="astructsimResult_html"><div class="ttname"><a href="structsimResult.html">simResult</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:270</div></div>
+<div class="ttc" id="astructsimResult_html"><div class="ttname"><a href="structsimResult.html">simResult</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:268</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

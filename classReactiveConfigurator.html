@@ -117,9 +117,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>dummy_vertex</b> (ver
 <tr class="memitem:a1846e9cbdb8941f9ecebe691a1127ac0 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a1846e9cbdb8941f9ecebe691a1127ac0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>printPlan</b> (std::vector&lt; vertexDescriptor &gt; *p=NULL)</td></tr>
 <tr class="separator:a1846e9cbdb8941f9ecebe691a1127ac0 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45c09aaf7c609a4d50018ddd1c18c4e0 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">std::pair&lt; edgeDescriptor, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a45c09aaf7c609a4d50018ddd1c18c4e0">addVertex</a> (const vertexDescriptor &amp;src, vertexDescriptor &amp;v1, TransitionSystem &amp;g, <a class="el" href="structEdge.html">Edge</a> edge=<a class="el" href="structEdge.html">Edge</a>(), bool topDown=0)</td></tr>
-<tr class="memdesc:a45c09aaf7c609a4d50018ddd1c18c4e0 inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add state to the cognitive map and set next state <a class="el" href="classTask.html">Task</a> direction and options.  <a href="classConfigurator.html#a45c09aaf7c609a4d50018ddd1c18c4e0">More...</a><br /></td></tr>
-<tr class="separator:a45c09aaf7c609a4d50018ddd1c18c4e0 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3273045337b602fbbd10a08c90a896bd inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">std::pair&lt; edgeDescriptor, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a3273045337b602fbbd10a08c90a896bd">addVertex</a> (const vertexDescriptor &amp;src, vertexDescriptor &amp;v1, <a class="el" href="structEdge.html">Edge</a> edge=<a class="el" href="structEdge.html">Edge</a>(), bool topDown=0)</td></tr>
+<tr class="memdesc:a3273045337b602fbbd10a08c90a896bd inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add state to the cognitive map and set next state <a class="el" href="classTask.html">Task</a> direction and options.  <a href="classConfigurator.html#a3273045337b602fbbd10a08c90a896bd">More...</a><br /></td></tr>
+<tr class="separator:a3273045337b602fbbd10a08c90a896bd inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d7ea2a8707c52dc15ba1e6bbabfc97e inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a0d7ea2a8707c52dc15ba1e6bbabfc97e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> ()</td></tr>
 <tr class="separator:a0d7ea2a8707c52dc15ba1e6bbabfc97e inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -183,6 +183,14 @@ Additional Inherited Members</h2></td></tr>
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a26cced006fc019f9791c44090a08b1c5">run</a> (<a class="el" href="classConfigurator.html">Configurator</a> *)</td></tr>
 <tr class="memdesc:a26cced006fc019f9791c44090a08b1c5 inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spawns tasks, creates plans, tracks task and controls real-world task switching option to run in thread. Thread can be used if planning time might exceed 200ms (LIDAR sampling rate) but doesn't have to be. <br /></td></tr>
 <tr class="separator:a26cced006fc019f9791c44090a08b1c5 inherit pub_static_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a704276c74e381175b74317a75d76de71 inherit pub_static_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a704276c74e381175b74317a75d76de71"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a704276c74e381175b74317a75d76de71">MulT</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:a704276c74e381175b74317a75d76de71 inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
+<tr class="separator:a704276c74e381175b74317a75d76de71 inherit pub_static_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa770e198ec1a69f31a661f3642971779 inherit pub_static_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="aa770e198ec1a69f31a661f3642971779"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#aa770e198ec1a69f31a661f3642971779">Mul</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:aa770e198ec1a69f31a661f3642971779 inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiplication. <br /></td></tr>
+<tr class="separator:aa770e198ec1a69f31a661f3642971779 inherit pub_static_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classConfigurator"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classConfigurator')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classConfigurator.html">Configurator</a></td></tr>
 <tr class="memitem:ae3084e3ef59e7b142987926e09b16fab inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ae3084e3ef59e7b142987926e09b16fab"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>iteration</b> =0</td></tr>
@@ -223,9 +231,9 @@ std::chrono::high_resolution_clock::time_point&#160;</td><td class="memItemRight
 <tr class="memitem:a908777535572355d5c49165088b50ad2 inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a908777535572355d5c49165088b50ad2"></a>
 <a class="el" href="structGoalChanger.html">GoalChanger</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>goal_changer</b> =NULL</td></tr>
 <tr class="separator:a908777535572355d5c49165088b50ad2 inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4ebd2f05e7ae2360afd5e6fdbf9680c inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ab4ebd2f05e7ae2360afd5e6fdbf9680c"></a>
-std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>plan</b></td></tr>
-<tr class="separator:ab4ebd2f05e7ae2360afd5e6fdbf9680c inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8afdb653e54965f573f2969777ea5b6 inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ad8afdb653e54965f573f2969777ea5b6"></a>
+std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_plan</b></td></tr>
+<tr class="separator:ad8afdb653e54965f573f2969777ea5b6 inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5f00dfb0081ae16c39a2b2469e6770f inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ac5f00dfb0081ae16c39a2b2469e6770f"></a>
 std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>current_vertices</b></td></tr>
 <tr class="separator:ac5f00dfb0081ae16c39a2b2469e6770f inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -245,7 +253,7 @@ TransitionSystem&#160;</td><td class="memItemRight" valign="bottom"><b>transitio
 <a class="el" href="classWorldBuilder.html">WorldBuilder</a>&#160;</td><td class="memItemRight" valign="bottom"><b>worldBuilder</b></td></tr>
 <tr class="separator:aac8730b8c13bfccfa8e6ddba3adb8aca inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee68156f37ea19bca0256ec7f002d07c inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="aee68156f37ea19bca0256ec7f002d07c"></a>
-vertexDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentVertex</b> =<a class="el" href="planner_8h.html#a00898133c8fd292a44fe7a90f14c9c8f">movingVertex</a></td></tr>
+vertexDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentVertex</b> =MOVING_VERTEX</td></tr>
 <tr class="separator:aee68156f37ea19bca0256ec7f002d07c inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1b5b91eb18f6ce14aadf638cb26e250 inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ad1b5b91eb18f6ce14aadf638cb26e250"></a>
 edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>movingEdge</b> =edgeDescriptor()</td></tr>

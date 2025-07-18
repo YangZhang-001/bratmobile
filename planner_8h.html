@@ -66,13 +66,13 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
 <div class="title">planner.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;task.h&quot;</code><br />
+<code>#include &quot;graphTools.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for planner.h:</div>
 <div class="dyncontent">
@@ -88,23 +88,24 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFrontier.html">Frontier</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the frontier (first) and the connecting vertices.  <a href="structFrontier.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structComparePhi.html">ComparePhi</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Predicate which compares evaluation functions in State-Frontier pairs.  <a href="structComparePhi.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classExecutionInfo.html">ExecutionInfo</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Information about what the configurator is doing (current <a class="el" href="classTask.html">Task</a>, current vertex), what it wants to do (overarching goal), and whether it has done it before (been, goal vertex)  <a href="classExecutionInfo.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlanner.html">Planner</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches the transition system and extracts a plan.  <a href="classPlanner.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHorizonStarPlanner.html">HorizonStarPlanner</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs iterative deepening search over one unit of modular expansion (see below), i.e. search over one branch stops when it reaches a DEFAULT task. Each DEFAULT <a class="el" href="classTask.html">Task</a> represents the frontier. The planner expands the search from the frontier with the lowest cost phi (A*-style search), which are logged into a priority queue.  <a href="classHorizonStarPlanner.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNoPlanner.html">NoPlanner</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does not extract a plan.  <a href="classNoPlanner.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a00898133c8fd292a44fe7a90f14c9c8f"><td class="memItemLeft" align="right" valign="top"><a id="a00898133c8fd292a44fe7a90f14c9c8f"></a>
-const vertexDescriptor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="planner_8h.html#a00898133c8fd292a44fe7a90f14c9c8f">movingVertex</a> =0</td></tr>
-<tr class="memdesc:a00898133c8fd292a44fe7a90f14c9c8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">vertex reprensenting instantaneous position of the robot relative to itself Trivial: in the graph it's always located at the origin with an orientation of 0 degrees, and should always be connected to the vertex representing the current state. <br /></td></tr>
-<tr class="separator:a00898133c8fd292a44fe7a90f14c9c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

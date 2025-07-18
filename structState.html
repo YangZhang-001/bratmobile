@@ -69,6 +69,11 @@ $(function() {
 <div class="title">State Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Hybrid states in the transition system.  
+ <a href="structState.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="graphTools_8h_source.html">graphTools.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for State:</div>
 <div class="dyncontent">
@@ -84,26 +89,41 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>State</b> (const b2Transform &amp;_start, const <a class="el" href="structDisturbance.html">Disturbance</a> &amp;di, const Direction &amp;dir)</td></tr>
 <tr class="separator:a2baa7bbab07a182a13982277f6da88fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17a6bc302f149d4fb244fd0b4235370e"><td class="memItemLeft" align="right" valign="top"><a id="a17a6bc302f149d4fb244fd0b4235370e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>visited</b> ()</td></tr>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structState.html#a17a6bc302f149d4fb244fd0b4235370e">visited</a> ()</td></tr>
+<tr class="memdesc:a17a6bc302f149d4fb244fd0b4235370e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether this state has been visited in exploration using evaluation function phi as proxy. <br /></td></tr>
 <tr class="separator:a17a6bc302f149d4fb244fd0b4235370e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a25bcbd881b002ca3ef0fd36444364af2"><td class="memItemLeft" align="right" valign="top"><a id="a25bcbd881b002ca3ef0fd36444364af2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>resetVisited</b> ()</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structState.html#a25bcbd881b002ca3ef0fd36444364af2">resetVisited</a> ()</td></tr>
+<tr class="memdesc:a25bcbd881b002ca3ef0fd36444364af2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the phi value to its naive value (call to <a class="el" href="structState.html#a17a6bc302f149d4fb244fd0b4235370e" title="Whether this state has been visited in exploration using evaluation function phi as proxy.">visited()</a> will return false) <br /></td></tr>
 <tr class="separator:a25bcbd881b002ca3ef0fd36444364af2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa40b5e0292a7166ebfe566cc70d9cc8"><td class="memItemLeft" align="right" valign="top"><a id="afa40b5e0292a7166ebfe566cc70d9cc8"></a>
-b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>start_from_Di</b> () const</td></tr>
+b2Transform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structState.html#afa40b5e0292a7166ebfe566cc70d9cc8">start_from_Di</a> () const</td></tr>
+<tr class="memdesc:afa40b5e0292a7166ebfe566cc70d9cc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return transformation from start to Di position. <br /></td></tr>
 <tr class="separator:afa40b5e0292a7166ebfe566cc70d9cc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae49ae7d8ee88b7b578bd6b40a553a599"><td class="memItemLeft" align="right" valign="top"><a id="ae49ae7d8ee88b7b578bd6b40a553a599"></a>
-b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>start_from_Dn</b> () const</td></tr>
+b2Transform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structState.html#ae49ae7d8ee88b7b578bd6b40a553a599">start_from_Dn</a> () const</td></tr>
+<tr class="memdesc:ae49ae7d8ee88b7b578bd6b40a553a599"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return transformation from start to Dn position. <br /></td></tr>
 <tr class="separator:ae49ae7d8ee88b7b578bd6b40a553a599"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad34e2d484d4b1bf709c1d25adfd580d7"><td class="memItemLeft" align="right" valign="top"><a id="ad34e2d484d4b1bf709c1d25adfd580d7"></a>
-b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>end_from_Dn</b> () const</td></tr>
+b2Transform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structState.html#ad34e2d484d4b1bf709c1d25adfd580d7">end_from_Dn</a> () const</td></tr>
+<tr class="memdesc:ad34e2d484d4b1bf709c1d25adfd580d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return transformation from end to Di position. <br /></td></tr>
 <tr class="separator:ad34e2d484d4b1bf709c1d25adfd580d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcef12d359c936396d10da52a1e34daa"><td class="memItemLeft" align="right" valign="top"><a id="adcef12d359c936396d10da52a1e34daa"></a>
-b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>end_from_Di</b> () const</td></tr>
+b2Transform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structState.html#adcef12d359c936396d10da52a1e34daa">end_from_Di</a> () const</td></tr>
+<tr class="memdesc:adcef12d359c936396d10da52a1e34daa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return transformation from end to Di position. <br /></td></tr>
 <tr class="separator:adcef12d359c936396d10da52a1e34daa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae91a67eb072fafa37bc5bb8e952986e6"><td class="memItemLeft" align="right" valign="top"><a id="ae91a67eb072fafa37bc5bb8e952986e6"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>distance</b> ()</td></tr>
 <tr class="separator:ae91a67eb072fafa37bc5bb8e952986e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01133253b341c231a6c574e96bd8fad9"><td class="memItemLeft" align="right" valign="top"><a id="a01133253b341c231a6c574e96bd8fad9"></a>
+b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>travel_transform</b> ()</td></tr>
+<tr class="separator:a01133253b341c231a6c574e96bd8fad9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb1a0102a61f3b472f6bf516027eba0f"><td class="memItemLeft" align="right" valign="top"><a id="abb1a0102a61f3b472f6bf516027eba0f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isTurning</b> ()</td></tr>
+<tr class="separator:abb1a0102a61f3b472f6bf516027eba0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e8246443b468cfca4cd20bf8fea3d4a"><td class="memItemLeft" align="right" valign="top"><a id="a2e8246443b468cfca4cd20bf8fea3d4a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isGoingStraight</b> ()</td></tr>
+<tr class="separator:a2e8246443b468cfca4cd20bf8fea3d4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -131,9 +151,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>filled</b> =0</td></t
 <tr class="memitem:af90c22d576b6e24785d42925579afdf6"><td class="memItemLeft" align="right" valign="top"><a id="af90c22d576b6e24785d42925579afdf6"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>nObs</b> =0</td></tr>
 <tr class="separator:af90c22d576b6e24785d42925579afdf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93ac2a793966febb8465005eb452ab20"><td class="memItemLeft" align="right" valign="top"><a id="a93ac2a793966febb8465005eb452ab20"></a>
-<a class="el" href="structState.html">State</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>ID</b> =this</td></tr>
-<tr class="separator:a93ac2a793966febb8465005eb452ab20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73916e36cc6e5521fd3b460cfaa6f320"><td class="memItemLeft" align="right" valign="top"><a id="a73916e36cc6e5521fd3b460cfaa6f320"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>phi</b> =NAIVE_PHI</td></tr>
 <tr class="separator:a73916e36cc6e5521fd3b460cfaa6f320"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -144,7 +161,9 @@ VERTEX_LABEL&#160;</td><td class="memItemRight" valign="bottom"><b>label</b> =VE
 Direction&#160;</td><td class="memItemRight" valign="bottom"><b>direction</b> =DEFAULT</td></tr>
 <tr class="separator:a5104df75e3d0fd8d1e86abf9f8d55f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following files:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Hybrid states in the transition system. </p>
+</div><hr/>The documentation for this struct was generated from the following files:<ul>
 <li>src/<a class="el" href="graphTools_8h_source.html">graphTools.h</a></li>
 <li>src/graphTools.cpp</li>
 </ul>
