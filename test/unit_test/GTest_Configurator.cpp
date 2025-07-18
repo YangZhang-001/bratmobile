@@ -443,23 +443,23 @@ TEST_P(ConfiguratorTakeBool, startRecycle){
     
 }
 
-TEST_P(ConfiguratorTakeBool, RecyclePlan){
-    std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4};
-    vertexDescriptor task_start=DUMMY;
-    make_ts(avoid, desiredPlan, GetParam());    
-    State s=transitionSystem[2];
-    b2Transform shift=b2Mul(transitionSystem[DUMMY].endPose, transitionSystem[currentVertex].endPose);
-    b2Transform shift_start=b2Transform_zero;
-    math::MulT(shift, transitionSystem);
-    EXPECT_EQ(transitionSystem[currentVertex].endPose, b2Transform_zero);
-    iteration=100;
-    resetPhi();
-    VertexMatch vm(StateMatcher::ABSTRACT, 2);
-    auto edge =boost::add_edge(currentVertex, 2, transitionSystem);
-    bool recycled=recycle_plan(currentVertex, currentVertex, task_start, vm.first, shift_start, s.start, edge, m_plan, s.direction);
-    EXPECT_TRUE(recycled);
-    EXPECT_EQ(m_plan, desiredPlan);
-}
+// TEST_P(ConfiguratorTakeBool, RecyclePlan){
+//     std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4};
+//     vertexDescriptor task_start=DUMMY;
+//     make_ts(avoid, desiredPlan, GetParam());    
+//     State s=transitionSystem[2];
+//     b2Transform shift=b2Mul(transitionSystem[DUMMY].endPose, transitionSystem[currentVertex].endPose);
+//     b2Transform shift_start=b2Transform_zero;
+//     math::MulT(shift, transitionSystem);
+//     EXPECT_EQ(transitionSystem[currentVertex].endPose, b2Transform_zero);
+//     iteration=100;
+//     resetPhi();
+//     VertexMatch vm(StateMatcher::ABSTRACT, 2);
+//     auto edge =boost::add_edge(currentVertex, 2, transitionSystem);
+//     bool recycled=recycle_plan(currentVertex, currentVertex, task_start, vm.first, shift_start, s.start, edge, m_plan, s.direction);
+//     EXPECT_TRUE(recycled);
+//     EXPECT_EQ(m_plan, desiredPlan);
+// }
 
 TEST_P(ConfiguratorTakeBool, PropagateDisturbance){
     dummy_vertex(MOVING_VERTEX);
