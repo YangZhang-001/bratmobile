@@ -233,10 +233,14 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     /**
      * @brief Make logger that dumps in different directories depending on test case and system architecture
     */
-    Logger makeLogger(){
+    Logger makeLogger(std::string scenario=""){
         
         std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
-        const char * testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
+        std::string  testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
+        if (std::size_t index=testCaseDir.find_first_of("/"); index!=std::string::npos){
+            testCaseDir.erase(testCaseDir.begin()+index, testCaseDir.end());
+        }
+        testCaseDir=testCaseDir+scenario;
         return Logger(testCaseDir, systemArchDir.c_str());
     }
 

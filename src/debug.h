@@ -43,6 +43,12 @@ class Logger{
 		
 	}
 
+	/**
+	 * @brief 
+	 * 
+	 * @param format printf style e.g. "hello%s"
+	 * @param ... other parameters
+	 */
 	bool log(const char * format, ...);
 
 	const char * get_fileName(){
