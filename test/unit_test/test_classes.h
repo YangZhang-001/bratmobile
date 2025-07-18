@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include "../callbacks.h"
 #include <string>
+#include <numeric>
 
 /**
  * @brief Setting up ostream operator for use with GTest
@@ -26,13 +27,13 @@ class DebugConfigurator:public AttentiveConfigurator{
 
     int n_vertices(){return transitionSystem.m_vertices.size();}
 
-    const std::vector <vertexDescriptor>& get_plan(){ return plan;}
+    const std::vector <vertexDescriptor>& get_plan(){ return m_plan;}
 
     bool plan_reaches_horizon();
 
     bool plan_reaches_goal();
 
-    vertexDescriptor plan_end(){return plan[plan.size()-1];}
+    vertexDescriptor plan_end(){return m_plan[m_plan.size()-1];}
 
     b2Vec2 plan_end_b2Vec2(){return transitionSystem[plan_end()].endPose.p;}
 
@@ -61,7 +62,7 @@ class DebugConfigurator:public AttentiveConfigurator{
     }
 
     void clear_plan(){
-        plan.clear();
+        m_plan.clear();
     }
 
 
@@ -139,13 +140,9 @@ class DebugConfigurator:public AttentiveConfigurator{
     }
     
 
-    int get_vertex_in_degree(vertexDescriptor v){
-        return boost::in_degree(v, transitionSystem);
-    }
+    int get_vertex_in_degree(vertexDescriptor v);
 
-    int get_vertex_out_degree(vertexDescriptor v){
-        return boost::out_degree(v, transitionSystem);
-    }
+    int get_vertex_out_degree(vertexDescriptor v);
 
     /**
      * @brief Wrapper
@@ -171,6 +168,36 @@ class DebugConfigurator:public AttentiveConfigurator{
         worldBuilder.set_world_objects(worldBuilder.getFeatures(cc, b2Transform_zero, WorldBuilder::PARTITION));
 
     }
+
+    void set_edge_step(vertexDescriptor u, vertexDescriptor v, int step){
+        auto e=boost::edge(u, v, transitionSystem);
+        if (e.second){
+            transitionSystem[e.first].step=step;
+        }
+    }
+
+    void set_plan(std::vector<vertexDescriptor> _p){
+        m_plan=_p;
+    }
+
+    void set_running(bool b){
+        running=b;
+    }
+
+    void set_current_v(vertexDescriptor v){
+        currentVertex=v;
+        current_vertices={v};
+    }
+
+    std::vector<vertexDescriptor>& get_current_vertices(){
+        return current_vertices;
+    }
+
+    static Task generateGoalTask();
+
+    static Disturbance generateGoal();
+    
+
 };
 
 
@@ -222,6 +249,8 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
 
 };
 
+
+
 /**
  * @brief Fixture class for testing Configurator functions
  */
@@ -244,20 +273,20 @@ protected:
     };
 
     /**
-     * @brief Creates a vertex whose state starts and end at the origin
+     * @brief Creates a vertex whose state starts and end at the origin. Not visited by default
      * 
      * @param v0 
      * @return edgeDescriptor 
      */
     edgeDescriptor make_successful(vertexDescriptor v0=0);
     /**
-     * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state
+     * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state. Not visited by default
      * 
      */
     edgeDescriptor make_v1_crashed( vertexDescriptor v0=0, b2Transform start=b2Transform_zero, b2Transform end=b2Transform_zero, b2Transform Dn=b2Transform_inf);
 
     /**
-     * @brief Makes a basic expansion module, start/endPose and disturbances not set. Module looks like this
+     * @brief Makes a basic expansion module,  disturbances not set. Module looks like this
      *               
      *              v2(LEFT)---v3(DEFAULT)
                    /   
@@ -265,26 +294,38 @@ protected:
                    \
                     v4(RIGHT) --- v5(DEFAULT)
      * 
+     * Not visited by default
      */
     void make_module(vertexDescriptor mv=0);
+
+    /**
+     * @brief Assign phi to all vertices
+     * 
+     */
+    void setAllVisited();
+
+    /**
+     * @brief Assign phi to state @param s
+     * 
+     * @param s 
+     */
+    void setPhi(State & s);
+
+    void set_Di(std::vector<vertexDescriptor> vec, const Disturbance& Di);
+
+    void set_Dn(std::vector<vertexDescriptor> vec, const Disturbance& Dn);
+
 public:
 
     /**
      * @brief makes bodyfeatures
      * 
      */
-    BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth){
-        BodyFeatures bf;
-        bf.pose.p.x=x;
-        bf.pose.p.y=y;
-        bf.pose.q.Set(q);
-        bf.halfLength=hlength;
-        bf.halfWidth=hwidth;
-        bf.attention=true;
-        return bf;
-    }
+    BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth);
 
+    void add_edge_withPoses(vertexDescriptor u, vertexDescriptor v);
 
+    void addStepToEdge(edgeDescriptor e);
 
 };
 
@@ -314,12 +355,156 @@ class ConfiguratorTest32DT:public ConfiguratorTest, public testing::WithParamInt
     public:
         void SetUp(){
         transitionSystem=TransitionSystem(1);
+        setAllVisited();
     }
 
     void TearDown(){
         transitionSystem.clear();
     }
 };
+
+class ConfiguratorBacktrackTest: public ConfiguratorTest32DT{
+    protected:
+};
+
+
+class ConfiguratorTestTransitionMatrix: public ConfiguratorTest, public testing::WithParamInterface<std::tuple<b2Transform, Direction, simResult::resultType>>{
+protected:
+    /**
+     * @brief number of expected options
+     * 
+     * @param dir direction of current vertex
+     * @param o outcome of current vertex task
+     * @param d goal disturbance
+     * @return int 
+     */
+    int expectedOptions(Direction dir, simResult::resultType o, Disturbance d);
+
+    /**
+     * @brief sets plan to the vertex that has a certain direction
+     * 
+     */
+    void planIsDirection(Direction direction);
+
+    void SetUp()override{
+        transitionSystem=TransitionSystem(1);
+        currentVertex=MOVING_VERTEX;
+    }
+
+    void TearDown()override{
+        transitionSystem.clear();
+    }
+
+};
+
+
+class ConfiguratorTakeBool:public ConfiguratorTest, public testing::WithParamInterface<bool>{
+    public:
+
+/**
+ * @brief makes transition system looking like this
+ * 
+ *      *             
+                     v3(LEFT)---v4(DEFAULT)                      v13(LEFT)*---v14(DEFAULT)*
+                    /                                           /
+                   v1 --- v2(DEFAULT)       v8(LEFT)*---v9(DEFAULT)* --- v12(DEFAULT)
+                    \                       /                   \
+                    v5(RIGHT)* --- v6(DEFAULT)* --- v7(DEFAULT)    v15(RIGHT) --- v16(DEFAULT)  
+                                            \
+                                              v10(RIGHT) --- v11(DEFAULT)        
+                                                       
+                                                    
+
+        *                  
+ * 
+ * @param avoid vertices whose Di is an obstacle to avoid
+ * @param desiredPlan 
+ */
+
+    void make_ts(std::vector <vertexDescriptor>& avoid, std::vector<vertexDescriptor>& desiredPlan, bool haGoal);
+
+    void SetUp()override{
+        register_planner(new HorizonStarPlanner);
+    }
+    void TearDown()override{
+        delete planner;
+        transitionSystem=TransitionSystem(1);
+    }
+
+    /**
+     * @brief Expands vertex @param v with a maximum depth of 1
+     */
+    void shallowExpand(vertexDescriptor v);
+
+};
+
+/**
+ * @brief int is the number of vertices we want crashed
+ * 
+ */
+class ConfiguratorPlannerHybrid: public ConfiguratorTakeBool, public HorizonStarPlanner, public ::testing::WithParamInterface<std::tuple<int, Direction, simResult::resultType>>{
+    protected:
+    std::vector<vertexDescriptor> withDirection(Direction d);
+
+    void assignOutcome();
+
+    int n_successful(std::vector<vertexDescriptor> vec);
+
+};
+
+/**
+ * @brief Parameters: robot position, previous task direction, current task direction
+ * 
+ */
+class ConfiguratorTestGetGoal:public ConfiguratorTest, public testing::WithParamInterface<std::tuple<b2Transform, Direction,Direction>>{
+    protected:
+    /**
+     * @brief Sets up vertex for testing using the parameters
+     * 
+     * @param v 
+     */
+    void vertex_setup(vertexDescriptor v, const Disturbance & Di, const Disturbance &Dn=Disturbance());
+
+    void SetUp(){
+        Disturbance goal(PURSUE, b2Vec2(1.0, 0));
+        init(Task(goal, UNDEFINED));
+        data2fp.emplace(Pointf(0.55, 0)); //make point corresponding to obstacle
+        dummy_vertex(MOVING_VERTEX);
+    }
+
+    void TearDown(){
+        controlGoal=Task();
+        boost::remove_vertex(currentVertex, transitionSystem);
+    }
+};
+
+class ConfiguratorTestGetObstacle: public ConfiguratorTestGetGoal{
+    protected:
+    void SetUp(){
+        Disturbance goal(PURSUE, b2Vec2(1.0, 0));
+        init(Task(goal, UNDEFINED));
+        data2fp.emplace(Pointf(0.55, 0)); //make point corresponding to obstacle
+        dummy_vertex(MOVING_VERTEX);
+    }
+
+    void TearDown(){
+        controlGoal=Task();
+        boost::remove_vertex(currentVertex, transitionSystem);
+    }
+};
+
+
+
+////////////////////////////////////////////////////////////////////////
+
+int DebugConfigurator::get_vertex_in_degree(vertexDescriptor v){
+    return boost::in_degree(v, transitionSystem);
+}
+
+int DebugConfigurator::get_vertex_out_degree(vertexDescriptor v){
+    return boost::out_degree(v, transitionSystem);
+}
+
 
 
 bool DebugConfigurator::plan_reaches_horizon(){
@@ -329,6 +514,15 @@ bool DebugConfigurator::plan_reaches_horizon(){
 bool DebugConfigurator::plan_reaches_goal(){
     return (plan_end_b2Vec2()-controlGoal.get_disturbance().pose().p).Length()<0.02;
 }
+
+Task DebugConfigurator::generateGoalTask(){
+    return Task(generateGoal(), UNDEFINED);   
+}
+
+Disturbance DebugConfigurator::generateGoal(){
+    return Disturbance(PURSUE, b2Vec2(1.0,0));
+}
+
 
 void HighLevelTest::init( const Task& goal){
     di.registerInterface(&ci);
@@ -357,6 +551,7 @@ edgeDescriptor ConfiguratorTest::make_successful(vertexDescriptor v0){
     auto e=boost::add_edge(v0, v1, transitionSystem);
     transitionSystem[v1].direction=DEFAULT;
     transitionSystem[e.first].step=1;
+    transitionSystem[e.first].it_observed=iteration;
     return e.first;
 }
 
@@ -367,24 +562,216 @@ edgeDescriptor ConfiguratorTest::make_v1_crashed( vertexDescriptor v0, b2Transfo
     transitionSystem[v1].start=start; //start
     transitionSystem[v1].endPose=end;//pose
     transitionSystem[v1].Dn=Disturbance(AVOID, Dn.p,Dn.q.GetAngle());
+    transitionSystem[e].it_observed=iteration;
     return e;
 }
 
 void ConfiguratorTest::make_module(vertexDescriptor mv){
-    for (int i=0; i<6; i++){
-        boost::add_vertex(transitionSystem);
+    //mv=currentVertex;
+    std::vector<vertexDescriptor>new_vertices;
+    for (int i=0; i<5; i++){
+        new_vertices.push_back(boost::add_vertex(transitionSystem));
     }
-    transitionSystem[mv+1].direction=DEFAULT;
-    transitionSystem[mv+3].direction=DEFAULT;
-    transitionSystem[mv+5].direction=DEFAULT;
-    transitionSystem[mv+2].direction=LEFT;
-    transitionSystem[mv+4].direction=RIGHT;
-    boost::add_edge(mv,mv+1, transitionSystem);
-    boost::add_edge(mv,mv+2, transitionSystem);
-    boost::add_edge(mv,mv+4, transitionSystem);
-    boost::add_edge(mv+2,mv+3, transitionSystem);
-    boost::add_edge(mv+4,mv+5, transitionSystem);
+    // vertexDescriptor nv=n_vertices()-1;
+    transitionSystem[new_vertices[0]].direction=DEFAULT;
+    transitionSystem[new_vertices[2]].direction=DEFAULT;
+    transitionSystem[new_vertices[4]].direction=DEFAULT;
+    transitionSystem[new_vertices[1]].direction=LEFT;
+    transitionSystem[new_vertices[3]].direction=RIGHT;
+
+    add_edge_withPoses(mv,new_vertices[0]);
+    add_edge_withPoses(mv,new_vertices[1]);
+    add_edge_withPoses(mv,new_vertices[3]);
+    add_edge_withPoses(new_vertices[1],new_vertices[2]);
+    add_edge_withPoses(new_vertices[3],new_vertices[4]);
 
 }
 
+BodyFeatures ConfiguratorTest::bodyFeatures(float x, float y, float q, float hlength, float hwidth){
+    BodyFeatures bf;
+    bf.pose.p.x=x;
+    bf.pose.p.y=y;
+    bf.pose.q.Set(q);
+    bf.halfLength=hlength;
+    bf.halfWidth=hwidth;
+    bf.attention=true;
+    return bf;
+}
+
+void ConfiguratorTest::add_edge_withPoses(vertexDescriptor u, vertexDescriptor v){
+    transitionSystem[v].start=transitionSystem[u].endPose;
+    b2Transform distance=b2Transform_zero;
+    switch (transitionSystem[v].direction){
+        case DEFAULT:
+            distance.p.x=.5;
+        break;
+        case LEFT:
+            distance.q.Set(M_PI_2);
+        break;
+        case RIGHT:
+            distance.q.Set(-M_PI_2);
+        break;
+        default: break;
+    }
+    transitionSystem[v].endPose=b2Mul(distance, transitionSystem[v].start);
+    auto e=boost::add_edge(u, v, transitionSystem);
+    addStepToEdge(e.first);
+    transitionSystem[e.first].it_observed=iteration;
+}
+
+void ConfiguratorTest::addStepToEdge(edgeDescriptor e){
+    Task::Action a;
+    Direction direction=transitionSystem[e.m_target].direction;
+    a.init(direction);
+    transitionSystem[e].step=Controller::motor_step(a, transitionSystem[e.m_target].distance());
+
+    
+}
+
+
+int ConfiguratorTestTransitionMatrix::expectedOptions(Direction dir, simResult::resultType o, Disturbance d){
+    if (o==simResult::safeForNow){
+        if(dir==DEFAULT || dir==STOP){
+            return 2;
+        }
+    }
+    else if (o==simResult::successful){
+        if (dir==LEFT || dir==RIGHT){
+            if (d.getPosition().x<0){
+                return 2;
+            }
+            else{
+                return 1;
+            }
+        }
+        else{
+           if (d.isValid() && d.getPosition().y !=0 ){
+                return 3;
+            }
+            else{
+                return 1;
+            }
+        }
+
+    }
+    else if (o==simResult::crashed){
+        return 0;
+    }
+}
+
+void ConfiguratorTestTransitionMatrix::planIsDirection(Direction direction){
+    auto oe=gt::outEdges(transitionSystem, currentVertex, direction);
+    if (oe.empty()){
+        return;
+    }
+    m_plan={oe[0].m_target};
+
+}
+
+void ConfiguratorTest::setAllVisited(){
+    auto vs=boost::vertices(transitionSystem);
+    for (auto vi=vs.first; vi!=vs.second; vi++){
+        setPhi(transitionSystem[*vi]);
+    }
+}
+
+void ConfiguratorTest::setPhi(State & s){
+    s.phi=Planner::estimateCost(s, s.start, s.direction, controlGoal).cost;   
+}
+
+void ConfiguratorTest::set_Di(std::vector<vertexDescriptor> vec, const Disturbance& Di){
+    for (vertexDescriptor v:vec){
+        vertex_set_Di(v, Di);
+    }
+}
+
+void ConfiguratorTest::set_Dn(std::vector<vertexDescriptor> vec, const Disturbance& Dn){
+        for (vertexDescriptor v:vec){
+        vertex_set_Dn(v, Dn);
+    }
+}
+
+
+void ConfiguratorTakeBool::make_ts(std::vector <vertexDescriptor>& avoid, std::vector<vertexDescriptor>& desiredPlan, bool hasGoal){
+    addIteration();
+    b2Vec2 d_position(1,0);
+    Disturbance obstacle(AVOID, b2Vec2(.6,0)), goal(PURSUE, d_position);
+    if (hasGoal){
+        init(Task(goal,DEFAULT));
+    }
+    dummy_vertex(MOVING_VERTEX);
+    make_module(currentVertex);
+    currentVertex=n_vertices()-1; //6, if no goal
+    if (hasGoal){
+        make_module(6);
+        make_module(9);
+        std::vector<vertexDescriptor> all(n_vertices()-1), safe(n_vertices()-7);
+        std::iota(all.begin(), all.end(), 1);
+        std::iota(safe.begin(), safe.end(), 7);
+        avoid.push_back(4);
+        avoid.push_back(6);
+        set_Di(avoid, obstacle);
+        set_Di(safe, goal);
+        vertex_set_Di(2, goal);
+        desiredPlan={1,5, 6, 8, 9, 13, 14};
+        currentVertex=14;
+    }
+    else{
+        transitionSystem[4].endPose.p.y=1;
+        transitionSystem[6].endPose.p.y=-1;
+
+    }
+    vertex_set_Dn(2, obstacle);
+    vertex_set_outcome(2,simResult::crashed);
+    currentTask.setMotorStep(0);
+    currentTask.set_change(1);
+    }
+
+
+
+
+std::vector<vertexDescriptor> ConfiguratorPlannerHybrid::withDirection(Direction d){
+    std::vector<vertexDescriptor> result;
+    for (int i=1; i<n_vertices(); i++){
+        if (transitionSystem[vertexDescriptor(i)].direction==d){
+            result.push_back(i);
+        }
+   }
+   return result;
+}
+
+int ConfiguratorPlannerHybrid::n_successful(std::vector<vertexDescriptor> vec){
+    int count=0;
+    for (vertexDescriptor v:vec){
+        if (vertex_get_outcome(v)==simResult::successful){
+            count++;
+        }
+    }
+    return count;
+}
+
+void ConfiguratorTakeBool::shallowExpand(vertexDescriptor v){
+    vertexDescriptor v1, v2, v3;
+    Disturbance disturbance;
+    transitionSystem[v].options={DEFAULT, LEFT, RIGHT};
+    Edge e;
+    e.it_observed=iteration;
+    add_vertex_now(v, v1, disturbance, e, false);
+    if (GetParam()){
+        add_vertex_now(v, v2, disturbance, e, false);
+        add_vertex_now(v, v3, disturbance, e, false);
+    }
+}
+
+void ConfiguratorTestGetGoal::vertex_setup(vertexDescriptor v, const Disturbance & Di, const Disturbance &Dn){
+    transitionSystem[v].direction=std::get<1>(GetParam());
+    transitionSystem[v].endPose=std::get<0>(GetParam());
+    vertex_options_push_back(v, std::get<2>(GetParam()));
+    transitionSystem[v].Di=Di; 
+    transitionSystem[v].Di.validate();
+    transitionSystem[v].Dn=Dn; 
+    if (Dn.getAffIndex()!=NONE){
+        transitionSystem[v].Dn.validate();  
+    }
+}
 #endif

@@ -21,6 +21,28 @@ auto check_vector_for(std::vector <I>& vector, const I& item){
 	return vector.end();
 }
 
+template <class P, class I>
+auto check_vector_for(std::vector <I>& vector, const P& predicate){
+	for (int i=0; i<vector.size(); i++){
+		if (predicate(vector[i])){
+			return vector.begin()+i;
+		}
+	}
+	return vector.end();
+}
+
+/**
+ * @brief Finds item in vector and erases it
+ */
+template <typename I>
+void erase_from_vector(std::vector<I>& vec, const I& i){
+	auto it=check_vector_for(vec, i);
+	if (it!=vec.end()){
+		vec.erase(it);
+	}
+}
+
+
 float angle_subtract(float a1, float a2);
 
 
@@ -32,6 +54,8 @@ void operator+=(Transform &, Transform const&);
 Transform operator+( Transform const &, Transform const &);
 Transform operator-( Transform const &, Transform const &);
 Transform operator-(Transform const &);
+Transform operator+( Transform const &, b2Vec2 const &);
+
 
 
 

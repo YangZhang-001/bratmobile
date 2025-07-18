@@ -42,6 +42,14 @@ Transform operator+(Transform const & t1, Transform const&t2){
 	return result;
 }
 
+Transform operator+(Transform const & t1, b2Vec2 const&v2){
+	b2Transform result;
+	result.p.x=t1.p.x+v2.x;
+	result.p.y=t1.p.y+v2.y;
+	result.q.Set(t1.q.GetAngle());
+	return result;
+}
+
 Transform operator-(Transform const & t1, Transform const&t2){
 	b2Transform result;
 	result.p.x=t1.p.x-t2.p.x;

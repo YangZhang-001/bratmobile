@@ -1,18 +1,30 @@
 #include "configurator.h"
 #include <chrono>
 
+void Configurator::MulT(const b2Transform& B, Task& task){
+	math::MulT(B, task.start);
+	math::MulT(B, task.disturbance);
+}
+
+void Configurator::Mul(const b2Transform&B , Task &task){
+	task.start=b2Mul(B, task.start);
+	task.disturbance.bf.pose=b2Mul(B, task.disturbance.pose());
+
+}
+
+
 void Configurator::init(Task _task){
 	controlGoal=_task;
 	currentTask=_task;
 	register_tracker(tracker);
 	//previousTimeScan = std::chrono::high_resolution_clock::now();
-	//movingVertex=boost::add_vertex(transitionSystem);
-	transitionSystem[movingVertex].Di=controlGoal.disturbance;
-	currentVertex=movingVertex;
-	//boost::add_edge(movingVertex, currentVertex,transitionSystem);
+	//MOVING_VERTEX=boost::add_vertex(transitionSystem);
+	transitionSystem[MOVING_VERTEX].Di=controlGoal.disturbance;
+	currentVertex=MOVING_VERTEX;
+	//boost::add_edge(MOVING_VERTEX, currentVertex,transitionSystem);
 	currentTask.action.setVelocities(0,0);
 	currentTask.set_change(1);
-	gt::fill(simResult(), &transitionSystem[movingVertex]);
+	gt::fill(simResult(), &transitionSystem[MOVING_VERTEX]);
 
 }
 
@@ -23,25 +35,25 @@ void Configurator::dummy_vertex(vertexDescriptor src){
 	transitionSystem[currentVertex].nObs++;
 	transitionSystem[currentVertex].Di=controlGoal.disturbance;
 	currentTask=Task(controlGoal.disturbance, Direction::STOP, b2Transform_zero, true);
-	movingEdge = boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
+	movingEdge = boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
 	currentEdge = boost::add_edge(src, currentVertex, transitionSystem).first;
 	// printf("dummy, current edge = %i, %i\n", src, currentVertex);
-	transitionSystem[movingVertex].direction=STOP;
+	transitionSystem[MOVING_VERTEX].direction=STOP;
 	transitionSystem[currentVertex].direction=STOP;
 }
 
-std::pair <edgeDescriptor, bool> AttentiveConfigurator::add_vertex_now(const vertexDescriptor & src, vertexDescriptor &v1, TransitionSystem &g, Disturbance Di,Edge edge, bool topDown){
-	std::pair<edgeDescriptor, bool> result=addVertex(src, v1, g, edge, topDown);
-	if (!g[v1].filled){
-		g[v1].Di= Di;
+std::pair <edgeDescriptor, bool> AttentiveConfigurator::add_vertex_now(const vertexDescriptor & src, vertexDescriptor &v1, Disturbance Di,Edge edge, bool topDown){
+	std::pair<edgeDescriptor, bool> result=addVertex(src, v1, edge, topDown);
+	if (!transitionSystem[v1].filled){
+		transitionSystem[v1].Di= Di;
 	}
 	return result;
 }
 
-std::pair <edgeDescriptor, bool> AttentiveConfigurator::add_vertex_retro(vertexDescriptor & src, vertexDescriptor &v1, TransitionSystem &g, Edge edge, bool topDown){
-	std::pair<edgeDescriptor, bool> result=addVertex(src, v1, g, edge, topDown);
-	g[v1].Di= g[src].Di;
-	g[v1].Dn=g[src].Dn;
+std::pair <edgeDescriptor, bool> AttentiveConfigurator::add_vertex_retro(vertexDescriptor & src, vertexDescriptor &v1,Edge edge, bool topDown){
+	std::pair<edgeDescriptor, bool> result=addVertex(src, v1, edge, topDown);
+	transitionSystem[v1].Di= transitionSystem[src].Di;
+	transitionSystem[v1].Dn=transitionSystem[src].Dn;
 	return result;
 }
 
@@ -77,11 +89,11 @@ bool Configurator::Spawner(){
 	return 1;
 }
 
-void AttentiveConfigurator::resetPhi(TransitionSystem&g){
-	auto vs=boost::vertices(g);
+void AttentiveConfigurator::resetPhi(){
+	auto vs=boost::vertices(transitionSystem);
 	for (auto vi=vs.first; vi!=vs.second; vi++){
-		g[*vi].resetVisited();
-		g[*vi].options.clear();
+		transitionSystem[*vi].resetVisited();
+		transitionSystem[*vi].options.clear();
 	}
 }
 
@@ -99,7 +111,7 @@ std::pair <bool, Direction> AttentiveConfigurator::getOppositeDirection(Directio
 }
 Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
 	if (!g[v].Dn.isValid() ){
-		std::vector <edgeDescriptor> in=gt::inEdges(g, v, UNDEFINED);
+		std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 			if (visited.first ||out.empty()){
@@ -120,7 +132,7 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 				//check if Di was eliminated 
 				return controlGoal.get_disturbance();
 			}
-			else if (v==movingVertex){
+			else if (v==MOVING_VERTEX){
 				return g[v].Di;
 			}
 	}
@@ -160,17 +172,18 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	}
 	vertexDescriptor v1=v, v0=v, bestNext=v, v0_exp=v;
 	Direction direction=currentTask.get_direction();
-	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=plan;
+	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=m_plan;
 	std::set <vertexDescriptor> closed;
-	Task t;
+	Task t=currentTask;
 	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
 	EndedResult er;
 	do{
 		v=bestNext;
-		closed.emplace(*priorityQueue.begin().base());
+		vertexDescriptor startRecycle=v;
+		bool wasClosed =closeVertex(closed, v);
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
-		applyTransitionMatrix(g, v, direction, er.ended, v, plan_prov);
+		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
 		for (Direction d: g[v].options){ //add and evaluate all vertices
 			v0_exp=v;
 			std::vector <Direction> options=g[v0_exp].options;
@@ -178,137 +191,90 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				options.erase(options.begin());
 				v0=v0_exp; //node being expanded
 				v1 =v0; //frontier
-				std::vector <vertexDescriptor> propagated;
 				do {
-					//task_to_sim_setup
-				start=g[v0].endPose +shift;
-				Disturbance Di=getDisturbance(g, v0, w, g[v0].options[0], start);
-				t = Task(Di, g[v0].options[0], start, true);//need to update end crit
-				std::pair <State, Edge> sk(State(start, Di, g[v0].options[0]), Edge());
-				adjust_simulated_task(v0, g, &t);
-				worldBuilder.buildWorld(w, t.getStart(), t.get_direction(), t.get_disturbance(), 0.15, WorldBuilder::PARTITION); //was g[v].endPose
-				//end setup
+				std::pair<State, Edge> sk=simulation_setup(w, t, v0, shift, start, g[v0].options);
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
 				gt::fill(sim, &sk.first, &sk.second); //find simulation result
 				sk.second.it_observed=iteration;
 				er  = Planner::estimateCost(sk.first, g[v0].endPose, sk.first.direction,controlGoal);
 				StateDifference sd;
-				std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(sk.first, g, g[v0].ID, t.get_direction(), StateMatcher::MATCH_TYPE::ABSTRACT, &sd);		//, closest_match	
+				std::vector <VertexMatch> other_matches;
+				VertexMatch match=findMatch(sk.first, t.get_direction(), StateMatcher::MATCH_TYPE::ABSTRACT, &sd, &other_matches);		//, closest_match	
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
 				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
 					g[v0].options.erase(g[v0].options.begin());
-					v1=match.second; //frontier
-					edge= gt::add_edge(v0, v1, g, iteration, t.get_direction()); //assumes edge added
-					if (edge.second){
-						g[edge.first]=sk.second; //doesn't update motorstep
-					}
-					if (currentTask.get_change()){
-						std::vector <vertexDescriptor> task_vertices=gt::task_vertices(v1, g, iteration, currentVertex);
-						vertexDescriptor task_start= task_vertices[0];
+					edge=setup_match_edge(match, v0, v1, sk.second, t.get_direction(), false);
+					if (currentTask.is_over()){
+						std::vector <vertexDescriptor> task_vs= task_vertices(v1);
+						vertexDescriptor task_start= task_vs[0];
+						startRecycle=getRecyclingStart(v, v1, task_start);
 						if (plan_prov.empty()){
-							bool finished=false, been=matcher.match_equal(match.first, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
-							//shift here?
-							Task controlGoal_adjusted= controlGoal;
-							shift_start= b2MulT(b2MulT(sk.first.start, controlGoal.getStart()), g[task_start].start);
-							math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
-							boost::remove_edge(edge.first, g);
-							edge= gt::add_edge(v0, task_start, g, iteration, g[edge.first.m_target].direction);
-							ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
-							info.overarchingGoal(controlGoal_adjusted); 
-							auto plan_tmp=planner->plan(g, v, info, &finished); //not v but task start
-							//printf("out of explore planner\n");
-							bool filler=0;
-							if (finished){
-								plan_prov=plan_tmp;
-								if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
-									//printf("inserting current vertex\n");
-									plan_prov.insert(plan_prov.begin(), task_start);
-								}
-								if (t.get_direction()== g[task_start].direction){
-									g[v0].options.clear();
-								}
-								else{
-									g[v0].options={g[task_start].direction};
-								}
-							}
-							//recycle_plan(v, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
+							recycle_plan(startRecycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
-						if (plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
-							shift_states(g, task_vertices, shift_start);
+						if (m_plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
+							if (startRecycle!=v){
+								task_vs.push_back(startRecycle);
+							}							
+							shift_states(g, task_vs, shift_start);
 						}
 					}
-					
 				}
 				else{
 					auto out_expected=gt::outEdges(g, v0, t.get_direction());
-					edge= add_vertex_now(v0, v1,g,sk.first.Di, sk.second); //addVertex
+					edge= add_vertex_now(v0, v1,sk.first.Di, sk.second); //addVertex
 					shift=b2Transform_zero;
 				}
 				if(edge.second){
 					gt::set(edge.first, sk, g, v1==currentVertex, iteration);
-					gt::adjustProbability(g, edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
+					//adjustProbability(edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
 				}
-				applyTransitionMatrix(g, v1, t.get_direction(), er.ended, v0, plan_prov);
+				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
 				g[v1].phi=Planner::evaluationFunction(er, v1, plan_prov);
-				propagateD(v1, v0, g,&propagated, &closed); //og v1 v0
-				v0_exp=v0;
+				propagateD(v1, v0, &closed); //if v0 is a dummy vertex it propagates the disturbance
+				v0_exp=v0;					
 				options=g[v0_exp].options;
 				v0=v1;						
 			}while(t.get_direction() !=DEFAULT & int(g[v0].options.size())!=0);
 		evaluationQueue.push_back(v1);
 		}
 	}
-	backtrack(evaluationQueue, priorityQueue, closed, g, plan_prov);
+	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
 	bestNext=priorityQueue[0];
-	std::vector <edgeDescriptor> best_in_edges= gt::inEdges(g,bestNext);
-	if (best_in_edges.empty()){
-		direction=currentTask.get_direction();
-	}
-	else{
-		direction = g[bestNext].direction;
-		g[best_in_edges[0]].it_observed=iteration;
-	}
+	reassign_direction(bestNext, direction);
 }while(g[bestNext].options.size()>0 && !er.ended);
 // printf("finished exploring, plan =%i\n", plan_prov.size());
 return plan_prov;
 }
 
-std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescriptor v, TransitionSystem& g, Direction d, vertexDescriptor src){
+std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescriptor v,  Direction d, vertexDescriptor src){
 	std::vector <vertexDescriptor> split={v};
-	auto first_edge=boost::edge(src, v, g); //assumes exists
-
-	if (gt::check_edge_direction(first_edge, g, RIGHT)|| gt::check_edge_direction(first_edge, g, LEFT)){ //d
+	auto first_edge=boost::edge(src, v, transitionSystem); //assumes exists
+	if (gt::check_edge_direction(first_edge, transitionSystem, RIGHT)|| gt::check_edge_direction(first_edge, transitionSystem, LEFT)){ //d
 		return split;
 	}
-	if (g[v].outcome != simResult::crashed){
+	if (transitionSystem[v].outcome != simResult::crashed){
 		return split;
 	}
-	if (auto ie=gt::inEdges(g, src, DEFAULT), stop_edges=gt::inEdges(g, src, STOP); !ie.empty()|| !stop_edges.empty()){
+	auto ie=inEdges(src);
+	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
+	if ((transitionSystem[src].direction==DEFAULT || transitionSystem[src].direction==STOP)&& 
+			!ie.empty()){ //&& sameIterationEdgeIt!=ie.end()
 		split.insert(split.begin(), src);
-		g[src].outcome=simResult::safeForNow;
+		transitionSystem[src].outcome=simResult::safeForNow;
 	}
 	vertexDescriptor v1=v;
-	float nNodes = g[v].distance()/simulationStep, og_phi=g[v].phi;
-	b2Transform endPose = g[v].endPose;
+	float nNodes = transitionSystem[v].distance()/simulationStep, og_phi=transitionSystem[v].phi;
+	b2Transform endPose = transitionSystem[v].endPose;
 	Task::Action a;
 	a.init(d);
 	while(nNodes>1){
-		State s_tmp=State(g[v]);
+		State s_tmp=State(transitionSystem[v]);
 		if(nNodes >1){
 			b2Vec2 step_v(simulationStep*endPose.q.c, simulationStep*endPose.q.s);
-			s_tmp.endPose=g[v].start+b2Transform(step_v, b2Rot(0));
-			std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(s_tmp, g, NULL, d);
+			s_tmp.endPose=transitionSystem[v].start+b2Transform(step_v, b2Rot(0));
+			VertexMatch match=findMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE){
-				g[v].options = {d};
-				g[v].endPose=s_tmp.endPose;
-				g[v].Dn=s_tmp.Dn;
-				g[first_edge.first].step= gt::distanceToSimStep(g[v].distance(), a.getLinearSpeed());
-				first_edge=add_vertex_retro(v, v1,g); 
-				g[v1].Di=g[v].Di;
-				g[v1].start=g[v].endPose;
-				g[v].phi=NAIVE_PHI;
-				g[v1].direction=d;
-				g[v].outcome=simResult::safeForNow;
+				first_edge=addEdgeRetrospectively(v, v1, s_tmp, first_edge, d, a.getLinearSpeed());
 			}
 			else{
 				v1=match.second;
@@ -318,46 +284,47 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 		}
 		if (nNodes<=1){
 			s_tmp.endPose=endPose;
-			std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> match=findMatch(s_tmp, g, NULL, d);
+			VertexMatch match=findMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE || match.second==v){
-				g[v1].endPose = endPose;
-				g[first_edge.first].step= gt::distanceToSimStep(g[v1].distance(), a.getLinearSpeed());	
-				g[v1].outcome=simResult::crashed;	
-				g[v1].phi=og_phi;
+				transitionSystem[v1].endPose = endPose;
+				transitionSystem[first_edge.first].step= gt::distanceToSimStep(transitionSystem[v1].distance(), a.getLinearSpeed());	
+				transitionSystem[v1].outcome=simResult::crashed;	
+				transitionSystem[v1].phi=og_phi;
 			}
-
 		}
-
 		v=v1;
-
 	}
 	return split;
 }
 
 
-void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, const std::set<vertexDescriptor>& closed, TransitionSystem&g, std::vector <vertexDescriptor>& plan_prov){
+void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){
 	for (vertexDescriptor v:evaluation_q){
 		std::pair<bool, edgeDescriptor> ep(false, edgeDescriptor());
-		std::vector <vertexDescriptor> split = gt::task_vertices(v, g, iteration, currentVertex, &ep); 
-		Direction direction= g[ep.second.m_target].direction;
+		std::vector <vertexDescriptor> split = task_vertices(v, &ep); 
+		Direction direction= transitionSystem[ep.second.m_target].direction;
 		if (split.size()<2){
-			split =splitTask(v, g, DEFAULT, ep.second.m_source);
+			split =splitTask(v, DEFAULT, ep.second.m_source);
 		}
+		correctQueue(split, module_src, startRecycle, plan_prov.size());
 		for (int i=0; i<split.size(); i++){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
 			if (i<1){
-				auto ep=gt::getMostLikely(g, gt::inEdges(g, split_v), iteration);
+				auto ep=gt::getMostLikely(transitionSystem, inEdges(split_v), iteration);
 				if (ep.first){
 					src=ep.second.m_source;
+				}
+				else{
+					src=split_v;
 				}
 			}
 			else{
 				src=split[i-1];
 			}
-			EndedResult local_er=Planner::estimateCost(g[split_v],g[split_v].start,direction, controlGoal);
-			g[split_v].phi=Planner::evaluationFunction(local_er, split_v, plan_prov);
-			applyTransitionMatrix(g, split_v, direction, local_er.ended,src, plan_prov);
-			addToPriorityQueue(split_v, priority_q, g, closed);
+			EndedResult local_er=Planner::estimateCost(transitionSystem[split_v],transitionSystem[split_v].start,direction, controlGoal);
+			transitionSystem[split_v].phi=Planner::evaluationFunction(local_er, split_v, plan_prov);
+			applyTransitionMatrix(split_v, direction, local_er.ended,src, plan_prov);
+			addToPriorityQueue(split_v, priority_q, closed);
 			src=split_v;
 		}
 	}
@@ -365,40 +332,44 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 
 }
 
-void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,TransitionSystem&g, std::vector<vertexDescriptor>*propagated, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
-	if (g[v1].outcome == simResult::successful){
+void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
+	if (transitionSystem[v1].outcome == simResult::successful || !boost::edge(v0, v1, transitionSystem).second){
 		return;
 	}
-	vertexDescriptor p=TransitionSystem::null_vertex();
-	std::pair <edgeDescriptor, bool> ep= boost::edge(v0, v1, g);
-	Disturbance dist = g[v1].Dn;
-	if (!ep.second){
-		return;
-	}
-	Direction dir= g[v1].direction;
-	bool same_Di=g[ep.first.m_source].Di==g[ep.first.m_target].Di;
-	ep.first= *(boost::in_edges(ep.first.m_source, g).first);
-	ep.second= boost::edge(ep.first.m_source, ep.first.m_target, g).second;
-	bool same_direction=gt::check_edge_direction(ep, g, dir) ||( (gt::check_edge_direction(ep, g, STOP))&& dir==DEFAULT) ;
-	if (same_direction&& same_Di && g[ep.first.m_target].Dn.getAffIndex()==NONE){
- 			g[ep.first.m_target].Dn = dist; //was target
+	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
+	bool shouldBeUpdated= transitionSystem[v0].direction==STOP;
+	if (shouldBeUpdated&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE){
+ 			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
 	if (v1==currentVertex){
-		g[v0].outcome=simResult::safeForNow;
+		transitionSystem[v0].outcome=simResult::safeForNow;
 	}
 	return;
 }
 
+std::pair<edgeDescriptor, bool> Configurator::addVertex(const vertexDescriptor & src, vertexDescriptor &v1, Edge edge, bool topDown){ //returns edge added
+	std::pair<edgeDescriptor, bool> result;
+	result.second=false;
+	if (transitionSystem[src].options.size()>0 || topDown){
+		v1 = boost::add_vertex(transitionSystem);
+		result = add_edge(src, v1, transitionSystem);
+		transitionSystem[result.first] =edge;
+		transitionSystem[v1].direction=transitionSystem[src].options[0];
+		transitionSystem[result.first].it_observed=iteration;
+		if (!topDown){
+			transitionSystem[src].options.erase(transitionSystem[src].options.begin());
+		}
 
-
-
+	}
+	return result;
+}
 
 
 
 
 void Configurator::printPlan(std::vector <vertexDescriptor>* p){
 
-	std::vector <vertexDescriptor> _plan= plan;
+	std::vector <vertexDescriptor> _plan= m_plan;
 	if (p){
 	_plan=*p;		
 	}
@@ -480,7 +451,7 @@ void Configurator::run(Configurator * c){
 			}
 			c->update_graph(c->transitionSystem, deltaPose);
 			if (c->goal_changer!=NULL){
-				if (( c->currentTask.get_change()& c->transitionSystem[c->currentVertex].direction!=STOP && c->plan.empty() && c->getIteration()>1)){
+				if (( c->currentTask.is_over()& c->transitionSystem[c->currentVertex].direction!=STOP && c->m_plan.empty() && c->getIteration()>1)){
 					c->goal_changer->change_goal(&c->controlGoal);
 				}					
 			}
@@ -495,69 +466,80 @@ void Configurator::run(Configurator * c){
 
 }
 
-
-void AttentiveConfigurator::unexplored_transitions(TransitionSystem& g, const vertexDescriptor& v){
-	std::vector <Direction> to_remove;
-	for (int i=0; i<g[v].options.size(); i++){
-		for (edgeDescriptor &e: gt::outEdges(g, v, g[v].options[i])){
-			if (g[e].it_observed==iteration){ //g[e.m_target].visited()
-				to_remove.push_back(g[e.m_target].direction);
+std::vector <Direction>  AttentiveConfigurator::getExploredDirections(vertexDescriptor v, const std::vector<Direction>& directions){
+	std::vector <Direction> result;
+	for (Direction direction: directions){
+		for (edgeDescriptor &e: gt::outEdges(transitionSystem, v, direction)){
+			if (transitionSystem[e].it_observed==iteration){ //g[e.m_target].visited()
+				result.push_back(transitionSystem[e.m_target].direction);
 			}
 		}
 	}
-	for (Direction & d:to_remove){
-		auto it=std::find(g[v].options.begin(), g[v].options.end(), d);
-		if (it !=g[v].options.end()){
-			g[v].options.erase(it);
-		}
+	return result;
+}
+
+
+
+void AttentiveConfigurator::removeExploredTransitions( vertexDescriptor v){
+	std::vector<Direction>options=getExploredDirections(v, transitionSystem[v].options);
+	for (Direction d:options){
+		erase_from_vector(transitionSystem[v].options, d);
 	}
 }
 
-void AttentiveConfigurator::transitionMatrix(State& state, Direction d, vertexDescriptor src){
-	Task temp(controlGoal.get_disturbance(), DEFAULT, state.endPose); //reflex to disturbance
+void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src){
+	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
 	srand(unsigned(time(NULL)));
-	if (state.outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
-		if (d ==DEFAULT ||d==STOP){
-				//in order, try the task which represents the reflex towards the goal
-				if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
-					state.options.push_back(temp.get_direction());
-					state.options.push_back(getOppositeDirection(temp.get_direction()).second);
+	auto oe=gt::outEdges(transitionSystem, v, d);
+	if (( !currentTask.get_change() ||!oe.empty()) && iteration>1){
+		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
+		if (ve.first){
+			if(transitionSystem[ve.second.m_target].visited()){
+				if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
+					transitionSystem[v].options={currentTask.get_direction()};
 				}
-				else{
-					int random= rand();
-					if (random%2==0){
-						state.options = {LEFT, RIGHT};
+				else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
+				std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
+				erase_from_vector(result, currentTask.get_direction());
+				transitionSystem[v].options=result;
+				}
+			}
+		}
+	}
+	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
+		if (d ==DEFAULT ||d==STOP){
+					transitionSystem[v].options.push_back(temp.get_direction());
+					transitionSystem[v].options.push_back(getOppositeDirection(temp.get_direction()).second);
+				//prioritise reflex
+				if (temp.getAction().getOmega()==0){ //if the task chosen is a turning task
+					if (rand()%2==0){
+						 transitionSystem[v].options = {LEFT, RIGHT};
 					}
 					else{
-						state.options = {RIGHT, LEFT};
-					}
+						transitionSystem[v].options = {RIGHT, LEFT};
+					} //no idea why it doesn't work using std shuffle/swap
 				}
 			}
 	}
-	else if (state.outcome==simResult::successful) { //will only enter if successful
+	else if (transitionSystem[v].outcome==simResult::successful) { //will only enter if successful
 		if (d== LEFT || d == RIGHT){
-			state.options = {DEFAULT};
+			transitionSystem[v].options = {DEFAULT};
 			if (src==currentVertex && controlGoal.getAffIndex()==PURSUE && SignedVectorLength(controlGoal.get_disturbance().pose().p)<0){
-				state.options.push_back(d);
+				transitionSystem[v].options.push_back(d);
 			}
 		}
 		else {
-			if (src==TransitionSystem::null_vertex()){
-				if (!currentTask.get_change()){
-					state.options={currentTask.get_direction()};
-				}
-				else{
-					state.options={DEFAULT, LEFT, RIGHT};
-				}
-				
-			}
-			else if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
-				state.options.push_back(temp.get_direction());
-				state.options.push_back(getOppositeDirection(temp.get_direction()).second);
-				state.options.push_back(DEFAULT);
+			// if (src==TransitionSystem::null_vertex()){
+			// 	transitionSystem[v].options={DEFAULT, LEFT, RIGHT};				
+			// }
+			// else
+			 if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
+				transitionSystem[v].options.push_back(temp.get_direction());
+				transitionSystem[v].options.push_back(getOppositeDirection(temp.get_direction()).second);
+				transitionSystem[v].options.push_back(DEFAULT);
 			}
 			else{
-				state.options={DEFAULT};
+				transitionSystem[v].options={DEFAULT};
 			}
 
 		}
@@ -565,8 +547,8 @@ void AttentiveConfigurator::transitionMatrix(State& state, Direction d, vertexDe
 	}
 }
 
-void AttentiveConfigurator::applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov){
-	if (!g[v0].options.empty()){
+void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov){
+	if (!transitionSystem[v0].options.empty()){
 		return;
 	}
 	if (controlGoal.getEndCriteria().hasEnd()){
@@ -574,55 +556,61 @@ void AttentiveConfigurator::applyTransitionMatrix(TransitionSystem&g, vertexDesc
 			return;
 		}
 	}
-	else if(round(g[v0].endPose.p.Length()*100)/100>=BOX2DRANGE){ // OR g[vd].totDs>4
+	else if(round(transitionSystem[v0].endPose.p.Length()*100)/100>=BOX2DRANGE){ // OR g[vd].totDs>4
 		return;
 	}
-	if (src!=movingVertex  && uint(src)<(g.m_vertices.size()-1)&& v0!=movingVertex){ //src< v size is to check that src isn't a garbage value (was giving throuble with tests)
-		auto e=boost::edge(src, v0, g); //not adding options to vertices which don't cover a distance unless they're current v
+	if (src!=MOVING_VERTEX  && uint(src)<(transitionSystem.m_vertices.size()-1)&& v0!=MOVING_VERTEX){ //src< v size is to check that src isn't a garbage value (was giving throuble with tests)
+		auto e=boost::edge(src, v0, transitionSystem); //not adding options to vertices which don't cover a distance unless they're current v
 		if (e.second){
-			if (g[e.first].step==0){
+			if (transitionSystem[e.first].step==0){
 				return;
 			}			
 		}
 	}
 	std::vector <vertexDescriptor> full_plan=plan_prov;
-	if (!currentTask.get_change()){
+	if (!currentTask.get_change() && !full_plan.empty()){
 		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
 	}
-	if (v0==movingVertex || src==TransitionSystem::null_vertex()){
-		transitionMatrix(g[v0], DEFAULT, TransitionSystem::null_vertex());	
-	}
-	else if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
-		auto e=boost::edge(src, v0, g);
-		// if (!e.second){
-		// 	printf("no edge wtf, %i -> %i\n", src, v0);
-		// }
-		gt::to_task_end(e.first, g, full_plan, it);
-		if ((g[e.first.m_target].visited()&& g[e.first].it_observed<iteration)|| !g[e.first.m_target].visited()){ // 
-			g[v0].options={g[e.first.m_target].direction};
+	if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
+		auto e=boost::edge(src, v0, transitionSystem);
+		gt::to_task_end(e.first, transitionSystem, full_plan, it);
+		if(transitionSystem[e.first.m_target].visited()){
+			if (transitionSystem[e.first.m_target].outcome==simResult::crashed){
+				transitionMatrix(v0, d, src);
+				erase_from_vector(transitionSystem[v0].options, transitionSystem[e.first.m_target].direction);
+			}
+			else if (transitionSystem[e.first].it_observed<iteration){ // 
+				transitionSystem[v0].options={transitionSystem[e.first.m_target].direction};
+			}
+		}
+		else{
+			transitionSystem[v0].options={transitionSystem[e.first.m_target].direction};
 		}
 	}
 	else{
-		transitionMatrix(g[v0], d, src);
+		transitionMatrix(v0, d, src);
 	}
-	unexplored_transitions(g, v0);
+	removeExploredTransitions(v0);
+
 
 }
 
 
-void AttentiveConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, TransitionSystem &g, const std::set <vertexDescriptor>& closed){
-	if (g[v].outcome==simResult::crashed){
+void AttentiveConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, const std::set <vertexDescriptor>& closed){
+	if (transitionSystem[v].outcome==simResult::crashed){
 		return;
 	}
-	for (auto i =queue.begin(); i!=queue.end(); i++){
-		bool expanded=0;
-		auto found=closed.find(v); 
-		if (g[v].phi <abs(g[*i].phi) && found==closed.end()){
-			queue.insert(i, v);
-			return;
+	auto found=closed.find(v); 
+	if(found==closed.end()){ //if not in closed
+		for (auto i =queue.begin(); i!=queue.end(); i++){
+			bool expanded=0;
+			if (transitionSystem[v].phi <abs(transitionSystem[*i].phi) ){
+				queue.insert(i, v);
+				return;
+			}
 		}
+		queue.push_back(v);		
 	}
-	queue.push_back(v);
 }
 
 
@@ -689,22 +677,22 @@ void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, Transition
 
 
 
-	std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> AttentiveConfigurator::findMatch(State s, TransitionSystem& g, State * src, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd){
-	std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex()), backup=result;
-	auto vs= boost::vertices(g);
+VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
+	VertexMatch result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex()), backup=result;
+	auto vs= boost::vertices(transitionSystem);
 	float prob=0, sum=10000;
-	//need to find best match too
-	ComparePair comparePair;
-	std::set <std::pair <vertexDescriptor, float>, ComparePair>others_set(comparePair);
+	typedef std::tuple <vertexDescriptor, StateMatcher::MATCH_TYPE, float> VertexMatchTuple;
+	CompareValue compareValue;
+	std::set <VertexMatchTuple, CompareValue>others_set(compareValue);
 	for (auto vi=vs.first; vi!= vs.second; vi++){
 		vertexDescriptor v=*vi;
-		bool Tmatch=dir==Direction::UNDEFINED ||g[v].direction==dir;
+		bool Tmatch=dir==Direction::UNDEFINED ||transitionSystem[v].direction==dir ||(transitionSystem[v].direction==STOP &&dir==DEFAULT &&iteration>1);
 		//make state representing a whole task, this is inefficient and when i have time should be susbtituted with subgraph
-		State q= g[v];
-			if (auto vertices=gt::task_vertices(v, g, iteration, currentVertex); vertices.size()>1){
-				q.start=g[vertices[0]].start;
+		State q= transitionSystem[v];
+			if (auto vertices=task_vertices(v); vertices.size()>1){
+				q.start=transitionSystem[vertices[0]].start;
 			}			
-		if (v==currentVertex && !currentTask.get_change()){
+		if (v==currentVertex && !currentTask.is_over()){
 			q.start=b2Transform_zero;
 		}
 		StateDifference sd(s, q);
@@ -718,11 +706,13 @@ void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, Transition
 			std::cerr<< "check tracker is set up ok! "<<e.what()<<std::endl;
 		}
 		condition=matcher.match_equal(m, match_type);
-		
-		if (v!=movingVertex && boost::in_degree(v, g)>0 &&Tmatch ){ 
+		if (v!=MOVING_VERTEX && (boost::in_degree(v, transitionSystem)>0 || iteration>1)  &&Tmatch ){ 
 			if (condition){
 				result.first= m;
 				result.second=v;
+				VertexMatchTuple to_add(v, m, sum_tmp);
+				others_set.emplace(to_add);
+				
 			}
 			if (sum_tmp<sum){
 				sum=sum_tmp;
@@ -733,23 +723,19 @@ void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, Transition
 				}
 			}
 		}	
-
 	}
-
-	// if (others==NULL){
-	// 	return result;
-	// }
-	// printf("others not null\n");
-	// for (auto vp:others_set){
-	// 	others->push_back(vp.first);
-	// }
+	if (NULL!=other_matches){
+		for (VertexMatchTuple item:others_set){
+			other_matches->push_back(VertexMatch(std::get<1>(item), std::get<0>(item)));
+		}
+	}
 	return result;
 }
 
 
 
 void AttentiveConfigurator::planPriority(TransitionSystem&g, vertexDescriptor v){
-    for (vertexDescriptor p:plan){
+    for (vertexDescriptor p:m_plan){
 		if (p==v){
        		g[v].phi-=.1;
 			break;
@@ -791,7 +777,7 @@ void AttentiveConfigurator::shift_states(TransitionSystem & g, const std::vector
 		return;
 	}
 	for (const vertexDescriptor &v:p){
-		math::applyAffineTrans(shift_start, g[v]);
+		math::MulT(shift_start, g[v]);
 	}
 }
 
@@ -800,8 +786,8 @@ vertexDescriptor AttentiveConfigurator::get_explore_start(TransitionSystem & g){
 		dummy_vertex(currentVertex);
 		currentTask.set_change(true);
 	}
-	if (!plan.empty() || !currentTask.get_change()){ //
-		return movingVertex;
+	if (!m_plan.empty() || !currentTask.is_over()){ //
+		return MOVING_VERTEX;
 	}
 	else{
 		return currentVertex;
@@ -809,35 +795,29 @@ vertexDescriptor AttentiveConfigurator::get_explore_start(TransitionSystem & g){
 }
 
 void AttentiveConfigurator::pre_explore(){
-	//if (movingVertex!=currentVertex){
-		boost::remove_out_edge_if(movingVertex, is_not_v(currentVertex), transitionSystem);
+	//if (MOVING_VERTEX!=currentVertex){
+		boost::remove_out_edge_if(MOVING_VERTEX, is_not_v(currentVertex), transitionSystem);
 	//}	
-		//transitionSystem[movingVertex].Di=currentTask.get_disturbance();
-		transitionSystem[movingVertex].Di=transitionSystem[currentVertex].Di;
+		//transitionSystem[MOVING_VERTEX].Di=currentTask.get_disturbance();
+		transitionSystem[MOVING_VERTEX].Di=transitionSystem[currentVertex].Di;
+		transitionSystem[MOVING_VERTEX].outcome=simResult::successful;
+		movingEdge=boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
+		transitionSystem[MOVING_VERTEX].phi=Planner::evaluationFunction(EndedResult(), MOVING_VERTEX, m_plan);
 
-		transitionSystem[movingVertex].outcome=simResult::successful;
-		movingEdge=boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
 	//  if (currentTask.get_change()){
 	//  	transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	//  }
 }
 
-std::vector <State> AttentiveConfigurator::output_plan(const std::vector <vertexDescriptor>& p, const TransitionSystem &g){
-	std::vector <State> rho;
-	for (const vertexDescriptor &v: p){
-		rho.push_back(g[v]);
-	}
-	return rho;
-}
 
 void Configurator::estimate_current_vertex(){
 	if(current_vertices.empty()){
-		currentVertex=movingVertex;
+		currentVertex=MOVING_VERTEX;
 		return;
 	}
 	if (current_vertices.size()==1){
 		currentVertex=current_vertices[0];
-		auto e=boost::add_edge(movingVertex, currentVertex, transitionSystem);
+		auto e=boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem);
 		movingEdge=e.first;
 		return;
 	}
@@ -861,20 +841,18 @@ void Configurator::estimate_current_vertex(){
 	}
 	printf("current vertex cv=%i\n", cv);
 	currentVertex=cv;
-	//auto e=boost::add_edge(movingVertex, currentVertex, transitionSystem);
-	//movingEdge=e.first;
 
 }
 
 
 void Configurator::change_task(){
-	if (!currentTask.get_change()){
+	if (!currentTask.is_over()){
 		return;
 	}
 	if (task_controller==NULL){
 		throw std::invalid_argument("no controller, please add!");
 	}
-	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, plan);
+	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
 	//transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
 	tracker->on_new_task(&currentTask);
@@ -884,13 +862,13 @@ void Configurator::change_task(){
 }
 
 void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPose){
-	math::applyAffineTrans(_deltaPose, g);
-	math::applyAffineTrans(_deltaPose, &controlGoal);
+	math::MulT(_deltaPose, g);
+	Configurator::MulT(_deltaPose, controlGoal);
 }
 
 
 void Configurator::adjust_goal_expectation(){
-	if (controlGoal.getAffIndex()==PURSUE && !plan.empty()&&task_controller->get_disturbance().getAffIndex()!=NONE){
+	if (controlGoal.getAffIndex()==PURSUE && !m_plan.empty()&&task_controller->get_disturbance().getAffIndex()!=NONE){
 		b2Transform from_Di=b2Transform_zero;
 		//if (task_controller->get_disturbance().getAffIndex()==AVOID){
 		from_Di=currentTask.from_Di();
@@ -902,7 +880,7 @@ void Configurator::adjust_goal_expectation(){
 		// debug::print_pose(b2Mul(from_Di,task_controller->to_goal()), "from Di mulT to goal:");
 // 		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
 // //		debug::print_pose(difference, "difference between pose and likely goal pose:");
-// 		math::applyAffineTrans(difference, &controlGoal);//update goal with ratio info
+// 		math::MulT(difference, &controlGoal);//update goal with ratio info
 		debug::print_pose(controlGoal.disturbance.pose(), "goal after adjusting");
 		printf("distance after adjusting %f\n", controlGoal.disturbance.pose().p.Length());
 	}
@@ -912,17 +890,17 @@ void Configurator::adjust_goal_expectation(){
 void AttentiveConfigurator::explore_plan(b2World&world){
     pre_explore();
     vertexDescriptor src=get_explore_start(transitionSystem);
-    resetPhi(transitionSystem);
+    resetPhi();
     std::vector <vertexDescriptor> plan_tmp=explorer(src, transitionSystem, world);
     if (DEBUG){
-        std::vector<vertexDescriptor> _plan=(plan);
+        std::vector<vertexDescriptor> _plan=(m_plan);
         debug::graph_file(iteration, transitionSystem, controlGoal.get_disturbance(), _plan, currentVertex);
     }	
 	try{
-		ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
+		ts_cleanup(transitionSystem, m_plan); //remove self-edge and singleton states
 	}
 	catch(...){}	
-    if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.get_change())){ //currentv not visited means that it wasn't observed ()
+    if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.is_over())){ //currentv not visited means that it wasn't observed ()
         printf("no plan, searchign from %i\n", src);
         bool finished=false;
         ExecutionInfo info=package_info();
@@ -931,65 +909,25 @@ void AttentiveConfigurator::explore_plan(b2World&world){
     else{
         printf("recycled plan in explorer:\n");
     }
-    plan=plan_tmp;
-    printPlan(&plan);
+    m_plan=plan_tmp;
+    printPlan(&m_plan);
 }
-
-std::vector<Direction>::iterator AttentiveConfigurator::get_next_option(vertexDescriptor v,vertexDescriptor src, std::vector <vertexDescriptor> full_plan){
-	if (!currentTask.get_change()){
-		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
-	}
-	std::vector<vertexDescriptor>::iterator it=full_plan.end();
-	std::vector<vertexDescriptor>::iterator it_next=it;
-	if (it =check_vector_for(full_plan, v); (it!=full_plan.end() && it!=(full_plan.end()-1)) || v==movingVertex){
-		if(v!=movingVertex){
-			std::pair<edgeDescriptor, bool> e=boost::edge(src, v, transitionSystem);
-			it_next=gt::to_task_end(e.first, transitionSystem, full_plan, it);
-			if (it_next==full_plan.end()){
-				return transitionSystem[*it].options.end();
-			}			
-		}
-		else{
-		full_plan.insert(full_plan.begin(), movingVertex);
-		it=full_plan.begin(); //0
-		it_next=plan.begin();
-		}
-		//if the direction of the iterator is among the options
-		if (it_next!=full_plan.end() && it_next!=plan.end()){ //
-			if(auto dir_it=check_vector_for(transitionSystem[*it].options, transitionSystem[*it_next].direction); dir_it!=transitionSystem[*it].options.end()){
-				return dir_it;
-			}
-			//if there is no option (either it's not there or it's been explored)
-			else{
-				auto oe=gt::outEdges(transitionSystem, v, currentTask.get_direction());
-				auto ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
-				if(ve.first) {
-					if (transitionSystem[ve.second.m_target].outcome==simResult::successful){
-						return transitionSystem[*it].options.end();			
-					}
-			}
-			}
-		}
-	}
-	return (transitionSystem[v].options.begin());
-}
-
 
 void ReactiveConfigurator::explore_plan(b2World &world){
 	if (transitionSystem.m_vertices.size()==1 && iteration<=1){
-		movingEdge = boost::add_edge(movingVertex, currentVertex, transitionSystem).first;
-		transitionSystem[movingVertex].direction=DEFAULT;
+		movingEdge = boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
+		transitionSystem[MOVING_VERTEX].direction=DEFAULT;
 		currentTask.getAction().init(transitionSystem[currentVertex].direction);
 	}
 	if (currentTask.getAction().getOmega()!=0 && currentTask.getMotorStep()<(transitionSystem[movingEdge].step)){
 		return;
 	}
 	//adjustStepDistance(currentVertex, transitionSystem, &currentTask, _simulationStep);
-	worldBuilder.buildWorld(world, transitionSystem[movingVertex].start, currentTask.get_direction()); //was g[v].endPose
+	worldBuilder.buildWorld(world, transitionSystem[MOVING_VERTEX].start, currentTask.get_direction()); //was g[v].endPose
 	Task t=currentTask;
 	t.H(t.get_disturbance(), t.get_direction(), true);
 	simResult result = simulate(t, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],
-	gt::fill(result, transitionSystem[currentVertex].ID, &transitionSystem[currentEdge]);
+	gt::fill(result, &transitionSystem[currentVertex], &transitionSystem[currentEdge]);
 	
 	//transitionSystem[currentVertex].Dn.set_affordance(as.affordance);
 	currentTask.set_change(transitionSystem[currentVertex].outcome!=simResult::successful);
@@ -999,25 +937,26 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 }
 
 
-bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE matchType, 
-											b2Transform & shift_start, b2Transform sk_first_start, std::pair<edgeDescriptor, bool>&edge, 
+bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE& matchType, 
+											b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge, 
 											std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction){
-	bool finished=false, been=matcher.match_equal(matchType, StateMatcher::ABSTRACT); //(match.first==StateMatcher::DISTURBANCE); //ADD representation of task but shifted
-	//shift here?
+	bool finished=false, result=false;
+	bool been = matchType==StateMatcher::ABSTRACT || matchType==StateMatcher::_TRUE;
 	Task controlGoal_adjusted= controlGoal;
+	//position of task start with respect to goal disturbance (pov)
 	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
-	math::applyAffineTrans(-shift_start, &controlGoal_adjusted); //as start
+	Mul(shift_start, controlGoal_adjusted);
 	boost::remove_edge(edge.first, transitionSystem);
 	edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
+	transitionSystem[edge.first].enableOverride();	
 	ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
 	info.overarchingGoal(controlGoal_adjusted); 
 	auto plan_tmp=planner->plan(transitionSystem, v, info, &finished); //not v but task start
 	//printf("out of explore planner\n");
-	bool filler=0;
 	if (finished){
 		plan_prov=plan_tmp;
+		result=true;
 		if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
-			//printf("inserting current vertex\n");
 			plan_prov.insert(plan_prov.begin(), task_start);
 		}
 		if (t_get_direction== transitionSystem[task_start].direction){
@@ -1026,5 +965,189 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor &v, vertexDescriptor &
 		else{
 			transitionSystem[v0].options={transitionSystem[task_start].direction};
 		}
+	}
+	return result;
+}
+
+std::pair<State, Edge> AttentiveConfigurator::simulation_setup(b2World& w, Task & t, vertexDescriptor v0, b2Transform shift, b2Transform &start, std::vector<Direction>v0_options){
+	start=transitionSystem[v0].endPose +shift;
+	Disturbance Di=getDisturbance(transitionSystem, v0, w, v0_options[0], start);
+	t = Task(Di, v0_options[0], start, true);//need to update end crit
+	std::pair <State, Edge> sk(State(start, Di, v0_options[0]), Edge());
+	adjust_simulated_task(v0, transitionSystem, &t);
+	worldBuilder.buildWorld(w, t.getStart(), t.get_direction(), t.get_disturbance(), 0.15, WorldBuilder::PARTITION); //was g[v].endPose
+	return sk;
+}
+
+void AttentiveConfigurator::reassign_direction(vertexDescriptor bestNext, Direction& direction){
+	std::vector <edgeDescriptor> best_in_edges= inEdges(bestNext);
+	if (best_in_edges.empty()){
+		direction=currentTask.get_direction();
+	}
+	else{
+		direction = transitionSystem[bestNext].direction;
+		transitionSystem[best_in_edges[0]].it_observed=iteration;
+	}
+
+}
+
+bool AttentiveConfigurator::matchToSafe(VertexMatch &match,const  std::vector<VertexMatch>& other_matches){
+	bool result=false;
+	if (match.first==StateMatcher::_FALSE){
+		return result;
+	}
+	if (transitionSystem[match.second].outcome!=simResult::crashed){
+		return result;
+	}
+	for (VertexMatch m: other_matches){
+		if (transitionSystem[m.second].outcome!=simResult::crashed){
+			match.second=m.second;
+			return true;
+		}
+	}
+	return result;
+}
+
+std::pair<edgeDescriptor, bool> AttentiveConfigurator::setup_match_edge(VertexMatch &match, vertexDescriptor &v0, vertexDescriptor & v1,const Edge& k, Direction direction, bool changedMatch){
+	v1=match.second; //frontier
+	std::pair<edgeDescriptor, bool> edge= gt::add_edge(v0, v1, transitionSystem, iteration, direction); //assumes edge added
+	if (edge.second){
+		transitionSystem[edge.first]=k; //doesn't update motorstep
+	}
+	return edge;
+}
+
+std::vector <vertexDescriptor> AttentiveConfigurator::task_vertices( vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep){
+	std::vector <vertexDescriptor> result= {v};
+	Direction d=UNDEFINED;
+	std::pair<bool, edgeDescriptor>ep2(false, edgeDescriptor()), _ep=ep2;
+	do {
+		std::vector <edgeDescriptor> ie=inEdges( v);
+		ep2= gt::visitedEdge(ie, transitionSystem,v);
+		if (!ep2.first){
+			ep2=gt::getMostLikely(transitionSystem, ie, iteration);
+		}
+		if (ep2.first){
+			if (ep2.second.m_target==result[0]){ //size 1
+				_ep=ep2; //assign ep to define direction
+				d= transitionSystem[_ep.second.m_target].direction;
+				if (ep!=NULL){
+					transitionSystem[_ep.second].it_observed=iteration;
+				}
+				for (edgeDescriptor e: ie){
+					if (transitionSystem[e.m_target].direction==d && e!=ep2.second && 
+						transitionSystem[e.m_source].Di == transitionSystem[_ep.second.m_source].Di &&
+						transitionSystem[e.m_source].Dn == transitionSystem[_ep.second.m_target].Dn){
+						ep2.second=e;
+						break;
+					}
+			}
+			}
+			else if (transitionSystem[ep2.second.m_target].direction==d &&
+			 	transitionSystem[ep2.second.m_target].Di == transitionSystem[_ep.second.m_target].Di &&
+			 	transitionSystem[ep2.second.m_target].Dn == transitionSystem[_ep.second.m_target].Dn){ //same task!
+				result.push_back(ep2.second.m_target); //source
+			}
+
+		}
+		else{
+			break;
+		}
+		v=ep2.second.m_source;
+		if (ep2.second.m_target==currentVertex){ //source
+			break;
+		}
+	}while(transitionSystem[ep2.second.m_target].direction==d);
+	std::reverse(result.begin(), result.end());
+	if (NULL!=ep){
+		*ep=_ep;
+	}
+	return result;
+}
+
+std::vector <edgeDescriptor> AttentiveConfigurator::inEdges(vertexDescriptor v, Direction d){
+	std::vector <edgeDescriptor> result;
+	auto es = boost::in_edges(v, transitionSystem);
+	if (v==TransitionSystem::null_vertex()){
+		return result;
+	}
+	if (transitionSystem[v].direction!=d && d!=UNDEFINED){
+		return result;
+	}
+	for (auto ei = es.first; ei!=es.second; ++ei){
+		//if (transitionSystem[(*ei).m_target].direction == d || d==UNDEFINED){
+			if ((*ei).m_source!=v){
+				result.push_back(*ei);
+			}
+		//}
+	}
+	return result;
+}
+
+vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, vertexDescriptor v1, vertexDescriptor taskStart){
+	auto ies=inEdges(taskStart);
+	vertexDescriptor result=v;
+	if (transitionSystem[v1].outcome==simResult::crashed){
+		int last_iteration=-1;
+		for (auto ie: ies){
+			if (ie.m_source!=v &&
+			 transitionSystem[ie].it_observed>last_iteration){
+				result=ie.m_source;
+			}
+		}
+	}
+	return result;
+}
+
+bool AttentiveConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
+	int MAX_OUT=3;
+	if (transitionSystem[v].isTurning()){MAX_OUT=2;}
+	std::vector<Direction> directions={UNDEFINED};
+	if (getExploredDirections(v, directions).size()>=MAX_OUT){
+		closed.emplace(v);
+		return true;
+	}
+	return false;
+
+
+}
+
+std::pair<edgeDescriptor, bool> AttentiveConfigurator::addEdgeRetrospectively(vertexDescriptor v, vertexDescriptor & v1, const State & s_tmp, std::pair<edgeDescriptor, bool> first_edge, Direction d, float linearSpeed){
+	transitionSystem[v].options = {d};
+	transitionSystem[v].endPose=s_tmp.endPose;
+	transitionSystem[v].Dn=s_tmp.Dn;
+	transitionSystem[first_edge.first].step= gt::distanceToSimStep(transitionSystem[v].distance(), linearSpeed);
+	first_edge=add_vertex_retro(v, v1); 
+	transitionSystem[v1].Di=transitionSystem[v].Di;
+	transitionSystem[v1].start=transitionSystem[v].endPose;
+	transitionSystem[v].phi=NAIVE_PHI;
+	transitionSystem[v1].direction=d;
+	transitionSystem[v].outcome=simResult::safeForNow;
+	return first_edge;
+}
+
+void AttentiveConfigurator::correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize){
+	if (planProvSize==0 || startRecycle==v){
+		return;
+	}
+	auto v_it=check_vector_for(queue, v);
+	*v_it=startRecycle;
+
+}
+
+void AttentiveConfigurator::adjustProbability(const edgeDescriptor &e){
+	if (e.m_target==TransitionSystem::null_vertex()){
+		return;
+	}
+	std::vector <edgeDescriptor> es=gt::outEdges(transitionSystem, e.m_source, transitionSystem[e.m_target].direction);
+	float totObs=0;
+	//find total observations
+	for (edgeDescriptor & ei:es){
+		transitionSystem[ei].probability=transitionSystem[ei.m_target].nObs/es.size();
+		 	totObs+=transitionSystem[ei.m_target].nObs;
+	}
+	//adjust
+	for (edgeDescriptor &ei: es){
+		transitionSystem[ei].probability=transitionSystem[ei.m_target].nObs/totObs;
 	}
 }

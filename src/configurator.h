@@ -6,6 +6,7 @@
 #include <ncurses.h>
 #include <fstream>
 #include <algorithm>
+#include <random>
 #include <sys/stat.h>
 #include "debug.h"
 #include "planner.h"
@@ -28,13 +29,13 @@ protected:
 	float simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);
 	std::chrono::high_resolution_clock::time_point previousTimeScan;
 	GoalChanger * goal_changer=NULL;	
-	std::vector<vertexDescriptor>plan, current_vertices;
+	std::vector<vertexDescriptor>m_plan, current_vertices;
 	int bodies=0;
 	Task controlGoal;
 	CoordinateContainer data2fp;
 	TransitionSystem transitionSystem=TransitionSystem(1);
 	WorldBuilder worldBuilder;
-	vertexDescriptor currentVertex=movingVertex;
+	vertexDescriptor currentVertex=MOVING_VERTEX;
 	edgeDescriptor movingEdge=edgeDescriptor(), currentEdge=edgeDescriptor();
 
 	public:
@@ -92,26 +93,10 @@ void printPlan(std::vector <vertexDescriptor>* p=NULL);
  * 
  * @param src source state
  * @param v1 new state
- * @param g cognitive map
  * @param edge connecting edge between src->v1
  * @param topDown flag determining whether state v1 has been simulated already or not
  */
-std::pair<edgeDescriptor, bool> addVertex(const vertexDescriptor & src, vertexDescriptor &v1, TransitionSystem &g, Edge edge=Edge(), bool topDown=0){ //returns edge added
-	std::pair<edgeDescriptor, bool> result;
-	result.second=false;
-	if (g[src].options.size()>0 || topDown){
-		v1 = boost::add_vertex(g);
-		result = add_edge(src, v1, g);
-		g[result.first] =edge;
-		g[v1].direction=g[src].options[0];
-		g[result.first].it_observed=iteration;
-		if (!topDown){
-			g[src].options.erase(g[src].options.begin());
-		}
-
-	}
-	return result;
-}
+std::pair<edgeDescriptor, bool> addVertex(const vertexDescriptor & src, vertexDescriptor &v1, Edge edge=Edge(), bool topDown=0);
 
 //search the TS for a plan
 //std::vector <vertexDescriptor> planner(TransitionSystem&, vertexDescriptor, vertexDescriptor goal=TransitionSystem::null_vertex(), bool been=0, const Task* custom_ctrl_goal=NULL, bool * finished =NULL) ;
@@ -201,15 +186,20 @@ void register_logger(Logger * l){
 	logger=l;
 }
 
-protected:
-	// void log(char * format, ){
-	// 	if (NULL!=logger){
-	// 		va_list args;
-	// 		//va_start(args, format);
-	// 		logger->log(format, args);
-	// 	}
-	// }
+/**
+ * @brief Matrix multiply by transpose
+ * 
+ */
+static void MulT(const b2Transform& B, Task & task);
 
+/**
+ * @brief Matrix multiplication
+ * 
+ */
+static void Mul(const b2Transform& B, Task &task);
+
+
+protected:
 
 
 };
@@ -230,7 +220,7 @@ class AttentiveConfigurator:public Configurator{
  * @return Planner::ExecutionInfo 
  */
 ExecutionInfo package_info(vertexDescriptor gv=TransitionSystem::null_vertex(), bool been=false){
-	return ExecutionInfo(currentVertex, gv, currentTask, controlGoal, been, plan);
+	return ExecutionInfo(currentVertex, gv, currentTask, controlGoal, been, m_plan);
 }
 
 /**
@@ -248,15 +238,38 @@ ExecutionInfo package_info(vertexDescriptor gv=TransitionSystem::null_vertex(), 
  */
 Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start);
 
+/**
+ * @brief Iterates through vertices, if they result in crash, it splits the tasks and recalculates
+ * evaluation functions and adds to priority queue
+ * 
+ * @param evaluation_q evaluation queue: lists of vertices to be evaluated for splitting
+ * @param priority_q the priority queue to add vertices to
+ * @param closed closed set 
+ * @param plan_prov provisional plan
+ * @param module_src source vertex from which modular expansion began
+ * @param startRecycle vertex from which plan recycling started (for correcting pq)
+ */
+void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src=MOVING_VERTEX, vertexDescriptor startRecycle=MOVING_VERTEX);
 
-//add waypoints to proprity queue
-void backtrack(std::vector <vertexDescriptor>&, std::vector <vertexDescriptor>&, const std::set<vertexDescriptor>&, TransitionSystem&, std::vector <vertexDescriptor>&);
+/**
+ * @brief Split tasks into sub-states of fixed length
+ * 
+ * @param v the vertex to split
+ * @param d direction of the task to split
+ * @param src source vertex for v
+ * @return std::vector <vertexDescriptor> : the vertices making up substates in the original task
+ */
+std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex());
 
-//split this state into sub-state representing waypoints
-std::vector <vertexDescriptor> splitTask(vertexDescriptor v, TransitionSystem&, Direction, vertexDescriptor src=TransitionSystem::null_vertex());
-
-//if same task, it will terminate in the same disturbance
-void propagateD(vertexDescriptor, vertexDescriptor, TransitionSystem&, std::vector<vertexDescriptor>*propagated=NULL, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE);
+/**
+ * @brief Propagate a disturbance backwards to all states representing the same task
+ * 
+ * @param v1 final vertex linked to the final sub-state in the task
+ * @param v0 source of v1
+ * @param closed closed set
+ * @param match is v1 a match of any kind to a vertex in the graph
+ */
+void propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE);
 
 //if in plan the vertex gets priority
 void planPriority(TransitionSystem&, vertexDescriptor); 
@@ -266,65 +279,93 @@ void adjust_simulated_task(const vertexDescriptor&, TransitionSystem &, Task*);
 //adjust real-world task
 void adjust_rw_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);
 
-//void recall_plan_from(const vertexDescriptor&, TransitionSystem & , b2World &, std::vector <vertexDescriptor>&, bool&, Disturbance *dist);
+/**
+ * @brief Return edge with maximum probablitit in a vector
+ * 
+ * @param ev vector of edges
+ * @return std::pair <edgeDescriptor, bool> 
+ */
+std::pair <edgeDescriptor, bool> maxProbability(std::vector<edgeDescriptor> ev, TransitionSystem&);
 
-std::pair <edgeDescriptor, bool> maxProbability(std::vector<edgeDescriptor>, TransitionSystem&);
+/**
+ * @brief Searches transition System for a match to a state provided. Continuous states are
+ * matched, with the option to also match the discrete state (the direction)
+ * 
+ * @param s the state to find a match for
+ * @param dir simulated task direction (allowing to match continuous states only)
+ * @param match_type fuzzy operator indicating what parameters in the continuous state match
+ * @param _sd pointer to state difference, can be used for further calculatins
+ * @param other_matches pointer to a vector of other matches (all of the type defined by @param match_type)
+ * @return VertexMatch the best match found and its type
+ */
+VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL); //matches to most likely
 
-std::pair <StateMatcher::MATCH_TYPE, vertexDescriptor> findMatch(State, TransitionSystem&, State * src, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL); //matches to most likely
+/**
+ * @brief Constructs transition system using a Box2D simulation combined with an A* graph
+ * expansion algorithm
+ * 
+ * @param v starting vertex
+ * @param g the transition system
+ * @param w box2d world
+ * @return std::vector<vertexDescriptor> a plan, if recycled from previous knowledge
+ */
+std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w); //evaluates only after DEFAULT, internal one step lookahead
 
-std::vector<vertexDescriptor> explorer(vertexDescriptor, TransitionSystem&, b2World &); //evaluates only after DEFAULT, internal one step lookahead
-
+/**
+ * @return std::pair <bool, Direction>(opposite exists, opposite direction)
+ */
 std::pair <bool, Direction> getOppositeDirection(Direction);
 
-void resetPhi(TransitionSystem&g);
+/**
+ * @brief Resets all vertices evaluation function phi to a default unitialised value of 10
+ */
+void resetPhi();
 
 /**
  * @brief Adds state after discovering it in exploration
  * 
  * @param src source state
  * @param v1 new state
- * @param g cognitive map
  * @param Di the initial disturbance of v1
  * @param edge connecting edge between src->v1
  * @param topDown flag determining whether state v1 has been simulated already or not
  */
-std::pair <edgeDescriptor, bool> add_vertex_now(const vertexDescriptor & src, vertexDescriptor & v1, TransitionSystem & g, Disturbance obs,Edge edge=Edge(), bool topDown=0);
+std::pair <edgeDescriptor, bool> add_vertex_now(const vertexDescriptor & src, vertexDescriptor & v1, Disturbance obs,Edge edge=Edge(), bool topDown=0);
 
 /**
  * @brief Adds vertices retroactively (e.g. after a state is split)
  * 
  * @param src source state
  * @param v1 new state
- * @param g cognitive map
  * @param edge connecting edge between src->v1
  * @param topDown flag determining whether state v1 has been simulated already or not
  */
-std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &src, vertexDescriptor &v1, TransitionSystem &g, Edge edge=Edge(), bool topDown=0);
+std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &src, vertexDescriptor &v1, Edge edge=Edge(), bool topDown=0);
 
+/** * returns a vector of which directions in vector @param directions were explored (at the present iteration) from vertex @param v */
+std::vector <Direction> getExploredDirections(vertexDescriptor v, const std::vector<Direction>& directions);
 
-//only keeps unexplored transitions out of vertex 
-
-void unexplored_transitions(TransitionSystem&g, const vertexDescriptor& v);
+/** * only keeps unexplored transitions out of vertex @param v*/
+void removeExploredTransitions(vertexDescriptor v);
 
 /**
 *Combines edges K and jump function: represents possible transitions out of a state
-*@param state the state to which transitions are being assigned
+*@param v the vertex to which transitions are being assigned
 *@param d state direction (redundant)
 *@param src source vertex of state
 */
-void transitionMatrix(State& state, Direction d, vertexDescriptor src); 
+void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src); 
 
 /**
  * @brief Sets permitted transitions out of a state
  * 
- * @param g transitionSystem
  * @param v0 vertex descriptor for source state
  * @param d direction of state (to be removed later)
  * @param ended whether the overarching goal has ended
  * @param src source vertex of v0
  * @param plan_prov the plan
  */
-void applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov);
+void applyTransitionMatrix(vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov);
 
 /**
  * @brief Adds vertexDescriptor  to priority queue according to a custom heuristic
@@ -334,7 +375,7 @@ void applyTransitionMatrix(TransitionSystem&g, vertexDescriptor v0, Direction d,
  * @param g the transition system
  * @param closed closed states: ones which have already been simulated and expanded
  */
-void addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, TransitionSystem &g, const std::set <vertexDescriptor>& closed);
+void addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, const std::set <vertexDescriptor>& closed);
 
 
 //removes singleton vertices and self-edges
@@ -353,10 +394,8 @@ vertexDescriptor get_explore_start(TransitionSystem &);
  */
 void pre_explore();
 
-//reactive behaviour: simulate task to find disturbances and react to them
-//void reactive(b2World&);
 
-std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const TransitionSystem &);
+//std::vector <State> output_plan(const std::vector<vertexDescriptor> &, const TransitionSystem &);
 
 void explore_plan(b2World&)override;
 
@@ -387,9 +426,122 @@ std::vector<Direction>::iterator  get_next_option(vertexDescriptor v, vertexDesc
  * @return true 
  * @return false 
  */
-bool recycle_plan(vertexDescriptor &v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE matchType, 
-				b2Transform & shift_start, b2Transform sk_first_start, std::pair<edgeDescriptor, bool>&edge,
+bool recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
+				b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
 				std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction);
+
+
+/**
+ * @brief Sets up for simulation
+ * 
+ * @param W box2d world
+ * @param t task (gets modified)
+ * @param v0 source vertex for the next state
+ * @param shift any shift to be applied (in case of plan recycling)
+ * @param start task start
+ * @param v0_options a subset of transitionSystem[0].options
+ * @return sk,  pair of state and edge
+ */
+std::pair<State, Edge> simulation_setup(b2World& w, Task & t, vertexDescriptor v0, b2Transform shift, b2Transform &start, std::vector<Direction>v0_options);
+
+/**
+ * @brief Reassigns direction as the direction of the bext task to expand next in explorer
+ * 
+ * @param bestNext vertices representing task with lowest phi
+ * @param direction direction to reassign
+ */
+void reassign_direction(vertexDescriptor bestNext, Direction& direction);
+
+/**
+ * @brief  if the match is a crashed task
+ * 
+ * @param match 
+ * @param other_matches 
+ * @return true if changes match
+ */
+bool matchToSafe(VertexMatch &match,const std::vector<VertexMatch> &other_matches=std::vector<VertexMatch>());
+
+/**
+ * @brief Given a valid match, sets up the edge with the previous vertex
+ * Creates new edge if it doesn't exist, changes the match to a safe state
+ * and allow the edge to be used in planning
+ * 
+ * @param match 
+ * @param v0 
+ * @param v1 
+ * @param k 
+ * @param direction 
+ * @return std::pair<edgeDescriptor, bool> 
+ */
+std::pair<edgeDescriptor, bool> setup_match_edge(VertexMatch &match, vertexDescriptor &v0, vertexDescriptor & v1,const Edge& k, Direction direction, bool changedMatch);
+
+/**
+ * @brief Rerturns all the vertices making up a task
+ * 
+ * @param v a vertex representing a state
+ * @param ep connecting edge to the task
+ */
+std::vector <vertexDescriptor> task_vertices(vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep=NULL);
+
+/**
+ * @brief Returns a visited edge if present, or if the current 
+ * 
+ * @param es 
+ * @param g 
+ * @param cv 
+ * @return std::vector <vertexDescriptor> 
+ */
+std::vector <vertexDescriptor> visitedOrVisitingEdge(const std::vector <edgeDescriptor>& es, TransitionSystem& g, vertexDescriptor cv=TransitionSystem::null_vertex());
+
+/**
+ * @brief Returns the vertex from which to start recycling plan
+ * 
+ * @param v source vertex which is being expanded
+ * @param v1 last vertex in task, or the match
+ * @param taskStart start of the task
+ * @return @param v if the task is successful, @param connectingEdge if it ends in crash
+ */
+vertexDescriptor getRecyclingStart(vertexDescriptor v, vertexDescriptor v1, vertexDescriptor taskStart);
+
+/**
+ * @brief Returns a vector of all the in-edges of vertex @param v. Option to enter 
+ * @param d to select a subset of edge. Does not return self-edges
+ * @return std::vector <edgeDescriptor>
+ */
+std::vector <edgeDescriptor> inEdges(vertexDescriptor v, Direction d = UNDEFINED); //returns a vector containing all the in-edges of a vertex which have the specified direction
+
+bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v);
+
+/**
+ * @brief Adds edge retrospectively (used in split task)
+ * 
+ * @param v source 
+ * @param v1 target
+ * @param s_tmp_endPose endPose for the new sub-state
+ * @param first_edge original unsplit task edge
+ * @param Direction d
+ * @return std::pair<edgeDescriptor, bool> 
+ */
+std::pair<edgeDescriptor, bool> addEdgeRetrospectively(vertexDescriptor v, vertexDescriptor &v1, const State & s_tmp,std::pair<edgeDescriptor, bool> first_edge, Direction d, float linearSpeed);
+
+/**
+ * @brief Edits @param v out of the queue if the plan was recycled from a different vertex.
+ * Useful if the frontier of @param v results in a crash and a plan needs to be recycled from the state
+ * previous to it
+ * 
+ * @param queue queue
+ * @param v source v (which may have a crash in its frontier)
+ * @param startRecycle another state found to precede the frontier
+ * @param planProvSize size of the provisional plan: indicates if the recycling was successful or not
+ */
+void correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize);
+
+/**
+ * @brief Adjusts the probability that a continuous state (edge target) will occur after taking a discrete state transition from the edge source
+ * 
+ * @param e an edge descriptor
+ */
+void adjustProbability(const edgeDescriptor &e);
 
 public:
 

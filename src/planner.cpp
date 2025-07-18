@@ -21,31 +21,31 @@ EndedResult Planner::estimateCost(const State &state, b2Transform start, Directi
 
 void HorizonStarPlanner::path2add2(std::vector<std::vector<vertexDescriptor>>::reverse_iterator & path, const std::vector <vertexDescriptor> & add, std::vector<std::vector<vertexDescriptor>> &paths, TransitionSystem &g){
     	std::pair<edgeDescriptor, bool> edge(edgeDescriptor(), false);
-		std::vector<vertexDescriptor>::reverse_iterator pend=(path->rbegin());
+		std::vector<vertexDescriptor>::reverse_iterator path_end_rit=(path->rbegin()); //reverse iterator to end of path
 		while (!edge.second){
-			vertexDescriptor end=*(pend.base()-1); //equivalent to path.end()
+			vertexDescriptor end=*(path_end_rit.base()-1); //equivalent to path.end()
 			edge= boost::edge(end,add[0], g);
-			if (!add.empty()&!edge.second & path!=paths.rend()){ //if this path does not have an edge and there are 
+			if (!add.empty()&&!edge.second && path!=paths.rend()){ //if this path does not have an edge and there are 
 													//other possible paths, go to previous paths
-				if (pend.base()-1!=(path->begin())){ //if the current vertex is not the root of the path
-					pend++; //go back a step
+				if (path_end_rit.base()-1!=(path->begin())){ //if the current vertex is not the root of the path
+					path_end_rit++; //go back a step
 				}
 				else{
 					path++; //go back a previously explored path
-					pend=(*path).rbegin(); 
+					path_end_rit=(*path).rbegin(); //reset the path end
 				}
 			}
-			else if (edge.second & pend.base()!=path->rbegin().base()){  //if there is an edge with the end of current path
+			else if (edge.second && path_end_rit.base()!=path->rbegin().base()){  //if there is an edge with the end of current path
 				bool found=0;
 				for (auto _p=paths.rbegin(); _p!=paths.rend(); _p++ ){ // see if theres a path with this beginning and end
-					if (std::vector <vertexDescriptor>(path->begin(), pend.base())==*_p){
+					if (std::vector <vertexDescriptor>(path->begin(), path_end_rit.base())==*_p){
 						path=_p; //switch to this path
 						found=1;
 					}
 				}
 				if (!found){
 					//create new empty path
-					paths.emplace_back(std::vector <vertexDescriptor>(path->begin(), pend.base()));
+					paths.emplace_back(std::vector <vertexDescriptor>(path->begin(), path_end_rit.base()));
 					path=paths.rbegin();				
 				}
 				break;
@@ -88,7 +88,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::best_path(const std::vector<s
 
 std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, TransitionSystem& g, ExecutionInfo & info){
 	std::vector <Frontier> result;
-	std::pair<edgeDescriptor, bool> ep=boost::edge(movingVertex, v, g); 
+	std::pair<edgeDescriptor, bool> ep=boost::edge(MOVING_VERTEX, v, g); 
 	vertexDescriptor v0=v, v1=v, v0_exp;
 	//do{
 		if ((info.overarchingGoal().get_disturbance().getPosition()-g[v].endPose.p).Length() >= DISTANCE_ERROR_TOLERANCE){
@@ -101,7 +101,7 @@ std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, 
 			std::vector <vertexDescriptor>connecting2;
 			NotSelfEdge not_self_edge(&g);
 			do {
-				if ((g[(*ei3).m_target].visited() || info.been())&& not_self_edge(*ei3)){ //(*ei3).m_source!=(*ei3).m_target
+				if ((g[(*ei3).m_target].visited() || info.been())&& (not_self_edge(*ei3) || g[*ei3].overrideZeroSteps)){ //(*ei3).m_source!=(*ei3).m_target
 					if (!g[(*ei3).m_target].visited()){
 						EndedResult er = estimateCost(g[(*ei3).m_target], g[(*ei3).m_source].endPose, g[(*ei3).m_target].direction,info.overarchingGoal());
 						std::vector<vertexDescriptor>_plan=info.plan();
@@ -109,8 +109,8 @@ std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, 
 					}
 					if (g[(*ei3).m_target].direction==frontier_direction){
 						Frontier f;
-						f.first= (*ei3).m_target;
-						f.second=connecting2;
+						f.frontier= (*ei3).m_target;
+						f.connecting=connecting2;
 						result.push_back(f);
 						if (ei3!=ei){
 							ei3++;
@@ -160,7 +160,7 @@ std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, 
 
 void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Frontier>& queue, TransitionSystem &g, vertexDescriptor goal){
 	for (auto i =queue.begin(); i!=queue.end(); i++){
-		if (g[f.first].phi <abs(g[(*i).first].phi)){
+		if (g[f.frontier].phi <abs(g[(*i).frontier].phi)){
 			queue.insert(i, f);
 			return;
 		}
@@ -174,14 +174,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 	std::vector <Frontier> frontier_v;
 	bool _finished=false;
 	std::vector <Frontier> priorityQueue={Frontier(src, std::vector<vertexDescriptor>())};
-	//THIS SECTION WAS COMMENTED OUT TO MAKE PLANNER USABLE IN EXPLORER AND CONFIGURATOR. NO LONGER NEEDED NOW THAT CUSTOM INFO CAN BE ENTERED
-	// Task overarching_goal;
-	// if (NULL==custom_ctrl_goal){ //IN EXPLORER: pass in directly the goal you want!
-	// 	overarching_goal=controlGoal;
-	// }
-	// else{
-	// 	overarching_goal=*custom_ctrl_goal;
-	// }
+
 	int no_out=0;
 	std::vector <vertexDescriptor> add;
 	std::vector<std::vector<vertexDescriptor>>::reverse_iterator path= paths.rbegin();
@@ -195,8 +188,8 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 			addToPriorityQueue(f, priorityQueue, g);
 		}
 		if (!priorityQueue.empty()){
-			src=priorityQueue.begin()->first; //lowest phi vertex
-			add=std::vector <vertexDescriptor>(priorityQueue.begin()->second.begin(), priorityQueue.begin()->second.end());//lowest phi frontier
+			src=priorityQueue.begin()->frontier; //lowest phi vertex
+			add=std::vector <vertexDescriptor>(priorityQueue.begin()->connecting.begin(), priorityQueue.begin()->connecting.end());//lowest phi frontier
 			add.push_back(src);
 			path2add2(path, add, paths, g); //find path to add frontier (add) to
 			for (vertexDescriptor c:add){

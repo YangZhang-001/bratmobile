@@ -14,6 +14,7 @@ find_package(Threads)
 find_package(GTest CONFIG REQUIRED)
 
 include(CTest)
+include(FetchContent)
 
 include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
 include(GoogleTest)
@@ -21,17 +22,9 @@ add_executable(GTest_HighLevel GTest_HighLevel.cpp)
 target_link_libraries(GTest_HighLevel gtest gtest_main)
 target_link_libraries(GTest_HighLevel  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
-add_executable(GTest_AdjustGoal GTest_AdjustGoal.cpp)
-target_link_libraries(GTest_AdjustGoal gtest gtest_main)
-target_link_libraries(GTest_AdjustGoal  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
-
-add_executable(GTest_SplitTask GTest_SplitTask.cpp)
-target_link_libraries(GTest_SplitTask gtest gtest_main)
-target_link_libraries(GTest_SplitTask  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
-
-add_executable(GTest_Backtrack GTest_Backtrack.cpp)
-target_link_libraries(GTest_Backtrack gtest gtest_main)
-target_link_libraries(GTest_Backtrack CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+add_executable(GTest_Math GTest_Math.cpp)
+target_link_libraries(GTest_Math gtest gtest_main)
+target_link_libraries(GTest_Math  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 add_executable(GTest_Configurator GTest_Configurator.cpp)
 target_link_libraries(GTest_Configurator gtest gtest_main)
@@ -45,18 +38,42 @@ add_executable(GTest_Logger GTest_Logger.cpp)
 target_link_libraries(GTest_Logger gtest gtest_main)
 target_link_libraries(GTest_Logger  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
-gtest_discover_tests(GTest_HighLevel)
-gtest_discover_tests(GTest_AdjustGoal)
-gtest_discover_tests(GTest_Configurator)
-gtest_discover_tests(GTest_Worldbuilding)
-gtest_discover_tests(GTest_SplitTask)
-gtest_discover_tests(GTest_Backtrack)
-gtest_discover_tests(GTest_Logger)
+add_executable(GTest_Matcher GTest_Matcher.cpp)
+target_link_libraries(GTest_Matcher gtest gtest_main)
+target_link_libraries(GTest_Matcher  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
+add_executable(GTest_Graph GTest_Graph.cpp)
+target_link_libraries(GTest_Graph gtest gtest_main)
+target_link_libraries(GTest_Graph  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Planner GTest_Planner.cpp)
+target_link_libraries(GTest_Planner gtest gtest_main)
+target_link_libraries(GTest_Planner  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 add_library(test_classes test_classes.h ../test_essentials.h ../callbacks.h)
 target_link_libraries(test_classes gtest gtest_main)
 target_link_libraries( test_classes CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+#make a single executable
+#file(GLOB TEST_SOURCES "./GTest*.cpp")
+# add_executable(all_tests ${TEST_SOURCES})
+# target_link_libraries(all_tests test_classes)
+#target_link_libraries(all_tests gtest gtest_main)
+#target_link_libraries(all_tests  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+# gtest_discover_tests(all_tests)
+
+gtest_discover_tests(GTest_HighLevel)
+gtest_discover_tests(GTest_Math)
+gtest_discover_tests(GTest_Configurator)
+gtest_discover_tests(GTest_Worldbuilding)
+#gtest_discover_tests(GTest_SplitTask)
+#gtest_discover_tests(GTest_Backtrack)
+gtest_discover_tests(GTest_Logger)
+gtest_discover_tests(GTest_Matcher)
+gtest_discover_tests(GTest_Graph)
+gtest_discover_tests(GTest_Planner)
+
+
 
 # INCLUDE_DIRECTORIES("/usr/local/include/")
 # enable_testing()
@@ -219,19 +236,6 @@ target_link_libraries( test_classes CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_m
 
 
 
-# # add_test(NAME replanner_68_9 COMMAND replanner ../target_68cm/ 9 1 34)
-# # add_test(NAME replanner_68_11 COMMAND replanner ../target_68cm/ 11 1 34)
-# # add_test(NAME replanner_68_10 COMMAND replanner ../target_68cm/ 9 1 50)
-# # add_test(NAME replanner_68_12 COMMAND replanner ../target_68cm/ 11 1 50)
-
-
-# #ARGUMENTS: vertex match, goal?, how many iterations have passed?
-# add_test(NAME checkPlan COMMAND checkPlan ../target_68cm/ 2 1 1)
-# add_test(NAME checkPlan_4 COMMAND checkPlan ../target_68cm/ 2 1 4)
-# add_test(NAME checkPlan_21 COMMAND checkPlan ../target_68cm/ 2 1 21)
-# #add_test(NAME checkPlan_40cm COMMAND checkPlan ../target_40cm/ 2 1 1)
-# #add_test(NAME checkPlan_40cm_4 COMMAND checkPlan ../target_40cm/ 2 1 4)
-# add_test(NAME checkPlan_40cm_21 COMMAND checkPlan ../target_40cm/ 2 1 21)
 
 # #ARGUMENTS: Dn affordance, new task direction, Di/goal affordance
 # add_test(NAME task_to_execute_default_to_ob COMMAND task_to_execute 1 2 2)

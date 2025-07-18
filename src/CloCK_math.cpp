@@ -1,41 +1,41 @@
 #include "CloCK_math.h"
 
 
-void math::applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose){
+void math::MulT(const b2Transform& deltaPose, b2Transform& pose){
 	pose =b2MulT(deltaPose, pose);
 }
 
-void math::applyAffineTrans(const b2Transform& deltaPose, State& state){
-	math::applyAffineTrans(deltaPose, state.endPose);
-	math::applyAffineTrans(deltaPose, state.start);
-	math::applyAffineTrans(deltaPose, state.Dn);
-	math::applyAffineTrans(deltaPose, state.Di);
+void math::MulT(const b2Transform& deltaPose, State& state){
+	math::MulT(deltaPose, state.endPose);
+	math::MulT(deltaPose, state.start);
+	math::MulT(deltaPose, state.Dn);
+	math::MulT(deltaPose, state.Di);
 
 }
 
-void math::applyAffineTrans(const b2Transform& deltaPose, Task* task){
-	math::applyAffineTrans(deltaPose, task->getStartRef());
-	math::applyAffineTrans(deltaPose, *task->get_disturbance_ptr());
-}
+// void math::MulT(const b2Transform& deltaPose, Task* task){
+// 	math::MulT(deltaPose, task->getStartRef());
+// 	math::MulT(deltaPose, *task->get_disturbance_ptr());
+// }
 
 
 
-void math::applyAffineTrans(const b2Transform& deltaPose, TransitionSystem& g){
+void math::MulT(const b2Transform& deltaPose, TransitionSystem& g){
 	auto vPair =boost::vertices(g);
 	for (auto vIt= vPair.first; vIt!=vPair.second; ++vIt){ //each node is adjusted in explorer, so now we update
 		if (*vIt!=0){
-			math::applyAffineTrans(deltaPose, g[*vIt]);
+			math::MulT(deltaPose, g[*vIt]);
 		}
 		else{
-			math::applyAffineTrans(deltaPose, g[*vIt].Di);
-			math::applyAffineTrans(deltaPose, g[*vIt].Dn);
+			math::MulT(deltaPose, g[*vIt].Di);
+			math::MulT(deltaPose, g[*vIt].Dn);
 		}
 	}
 }
 
-void math::applyAffineTrans(const b2Transform& deltaPose, Disturbance& d){
+void math::MulT(const b2Transform& deltaPose, Disturbance& d){
 	if (d.getAffIndex()!=NONE){
-		math::applyAffineTrans(deltaPose, d.bf.pose);
+		math::MulT(deltaPose, d.bf.pose);
 	}
 }
 

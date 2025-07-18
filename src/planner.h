@@ -2,64 +2,89 @@
 #define PLANNER_H
 
 #include "task.h"
+#include "graphTools.h"
 /** \file */
 
-
-    /**
-     * @brief Information about what the configurator is doing (current Task, current vertex), what it wants to do (overarching goal), and whether it has done it before (been, goal vertex) 
-     * 
-     */
-    class ExecutionInfo{
-        private:
-        vertexDescriptor m_currentVertex=0, m_goalVertex=TransitionSystem::null_vertex();
-        Task m_currentTask;
-        Task m_overarchingGoal; 
-        bool m_been; //has a plan been made to fulfill this overarching goal before?
-        std::vector <vertexDescriptor> m_plan;
-        protected:
-        friend class Configurator;
-
-        void been(bool b){m_been=b;}
-
-        void goalVertex(vertexDescriptor gv){m_goalVertex=gv;}
-        
-
-        public:
-        ExecutionInfo(){}
-
-        ExecutionInfo( vertexDescriptor _cv, vertexDescriptor _goal, Task & _ct, Task & _gt, bool _been, std::vector<vertexDescriptor> _plan){
-            m_currentVertex=_cv;
-            m_goalVertex=_goal;
-            m_currentTask=_ct;
-            m_overarchingGoal=_gt;
-            m_been=_been;
-            m_plan=_plan;
-        }
-        void overarchingGoal(const Task & og){m_overarchingGoal=og;}
-
-
-        vertexDescriptor currentVertex()const{return m_currentVertex;}
-
-        vertexDescriptor goalVertex()const{return m_goalVertex;}
-
-        Task& currentTask(){return m_currentTask;}
-
-        Task& overarchingGoal() {return m_overarchingGoal;}
-
-        bool been()const{return m_been;}
-
-        std::vector<vertexDescriptor> plan()const{return m_plan;}
-
-    };
-
 /**
- * @brief vertex reprensenting instantaneous position of the robot relative to itself
- * Trivial: in the graph it's always located at the origin with an orientation of 0 degrees, and
- * should always be connected to the vertex representing the current state.
+ * @brief Contains the frontier (first) and the connecting vertices
  * 
  */
-const vertexDescriptor movingVertex=0; 
+//typedef std::pair<vertexDescriptor, std::vector<vertexDescriptor>> Frontier;
 
+struct Frontier{
+    vertexDescriptor frontier=TransitionSystem::null_vertex();
+    std::vector<vertexDescriptor> connecting;
+
+    Frontier()=default;
+
+    Frontier(vertexDescriptor _f, const std::vector<vertexDescriptor>&_c):frontier(_f), connecting(_c){}
+};
+
+/**
+ * @brief Predicate which compares evaluation functions in State-Frontier pairs
+ * 
+ */
+struct ComparePhi{
+
+	ComparePhi(){}
+
+	bool operator()(const std::pair<State*, Frontier>& p1, const std::pair<State*, Frontier>& p2) const{
+		return (*p1.first).phi<(*p2.first).phi;
+	}
+};
+
+
+/**
+ * @brief Information about what the configurator is doing (current Task, current vertex), what it wants to do (overarching goal), and whether it has done it before (been, goal vertex) 
+ * 
+ */
+class ExecutionInfo{
+    private:
+    vertexDescriptor m_currentVertex=0, m_goalVertex=TransitionSystem::null_vertex();
+    Task m_currentTask;
+    Task m_overarchingGoal; 
+    bool m_been; //has a plan been made to fulfill this overarching goal before?
+    std::vector <vertexDescriptor> m_plan;
+    protected:
+    friend class Configurator;
+
+    void been(bool b){m_been=b;}
+
+    void goalVertex(vertexDescriptor gv){m_goalVertex=gv;}
+    
+
+    public:
+    ExecutionInfo(){}
+
+    ExecutionInfo( vertexDescriptor _cv, vertexDescriptor _goal, Task & _ct, Task & _gt, bool _been, std::vector<vertexDescriptor> _plan){
+        m_currentVertex=_cv;
+        m_goalVertex=_goal;
+        m_currentTask=_ct;
+        m_overarchingGoal=_gt;
+        m_been=_been;
+        m_plan=_plan;
+    }
+    void overarchingGoal(const Task & og){m_overarchingGoal=og;}
+
+
+    vertexDescriptor currentVertex()const{return m_currentVertex;}
+
+    vertexDescriptor goalVertex()const{return m_goalVertex;}
+
+    Task& currentTask(){return m_currentTask;}
+
+    Task& overarchingGoal() {return m_overarchingGoal;}
+
+    bool been()const{return m_been;}
+
+    std::vector<vertexDescriptor> plan()const{return m_plan;}
+
+};
+
+/**
+ * @brief Searches the transition system and extracts a plan
+ * 
+ */
 class Planner{
     protected:
 
@@ -181,6 +206,10 @@ public:
 
 };
 
+/**
+ * @brief Does not extract a plan
+ * 
+ */
 class NoPlanner:public Planner{
 
     std::vector<vertexDescriptor> plan(TransitionSystem& g, vertexDescriptor src, ExecutionInfo & info, bool * finished=NULL)override{}

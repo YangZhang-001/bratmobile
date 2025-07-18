@@ -74,4 +74,5 @@ const std::map <Direction, std::pair<float, float>> default_kinematics={{DEFAULT
 
 const std::map<Direction, char*> dirmap={{DEFAULT, "DEFAULT"}, {LEFT, "LEFT"}, {RIGHT, "RIGHT"}, {STOP, "STOP"}, {UNDEFINED, "UNDEFINED"}, {BACK, "BACK"}};
 
+
 #endif
