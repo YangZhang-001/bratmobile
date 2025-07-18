@@ -516,8 +516,7 @@ bool DebugConfigurator::plan_reaches_goal(){
 }
 
 Task DebugConfigurator::generateGoalTask(){
-    return Task(generateGoal(), UNDEFINED);
-    
+    return Task(generateGoal(), UNDEFINED);   
 }
 
 Disturbance DebugConfigurator::generateGoal(){
