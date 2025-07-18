@@ -207,7 +207,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					if (currentTask.is_over()){
 						std::vector <vertexDescriptor> task_vs= task_vertices(v1);
 						vertexDescriptor task_start= task_vs[0];
-						startRecycle=getRecyclingStart(v, task_vs[0]);
+						startRecycle=getRecyclingStart(v, v1, task_start);
 						if (plan_prov.empty()){
 							recycle_plan(startRecycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
@@ -226,7 +226,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				}
 				if(edge.second){
 					gt::set(edge.first, sk, g, v1==currentVertex, iteration);
-					adjustProbability(edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
+					//adjustProbability(edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
 				}
 				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
 				g[v1].phi=Planner::evaluationFunction(er, v1, plan_prov);
@@ -1084,8 +1084,8 @@ std::vector <edgeDescriptor> AttentiveConfigurator::inEdges(vertexDescriptor v, 
 	return result;
 }
 
-vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, vertexDescriptor v1){
-	auto ies=inEdges(v1);
+vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, vertexDescriptor v1, vertexDescriptor taskStart){
+	auto ies=inEdges(taskStart);
 	vertexDescriptor result=v;
 	if (transitionSystem[v1].outcome==simResult::crashed){
 		int last_iteration=-1;

@@ -498,9 +498,10 @@ std::vector <vertexDescriptor> visitedOrVisitingEdge(const std::vector <edgeDesc
  * 
  * @param v source vertex which is being expanded
  * @param v1 last vertex in task, or the match
+ * @param taskStart start of the task
  * @return @param v if the task is successful, @param connectingEdge if it ends in crash
  */
-vertexDescriptor getRecyclingStart(vertexDescriptor v, vertexDescriptor v1);
+vertexDescriptor getRecyclingStart(vertexDescriptor v, vertexDescriptor v1, vertexDescriptor taskStart);
 
 /**
  * @brief Returns a vector of all the in-edges of vertex @param v. Option to enter 
