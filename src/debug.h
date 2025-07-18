@@ -31,7 +31,7 @@ class Logger{
 	 * @param _dir directory containing new_folder
 	 * @param customName file prefix (/ must be at the beginning)
 	 */
-	Logger(char * new_folder="", char * _dir="/tmp", char * customName="/stats"){
+	Logger(const char * new_folder, const char * _dir="/tmp", char * customName="/stats"){
 		init(new_folder, _dir, customName);
 	}
 
@@ -45,9 +45,14 @@ class Logger{
 
 	bool log(const char * format, ...);
 
-	char * get_fileName(){
+	const char * get_fileName(){
 		return fileName;
 	}
+
+	/**
+	 * @brief Returns a string with system architecture
+	 */
+	static const char * getSystemArchitecture();
 
 	protected:
 
@@ -59,12 +64,8 @@ class Logger{
 	 */
 	std::string file_dateTime(const char* custom, char name[60]);
 
-	void init(char * new_folder, char * _dir=NULL, char * customName="/stats");
+	void init(const char * new_folder, const  char * _dir=NULL, char * customName="/stats");
 
-	/**
-	 * @brief Returns a string with system architecture
-	 */
-	static const char * getSystemArchitecture();
 
 };
 

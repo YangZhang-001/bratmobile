@@ -21,7 +21,7 @@ bool Logger::log(const char * format, ...){
 	fflush(f);
 }
 
-void Logger::init(char * new_folder, char * _dir, char * customName){
+void Logger::init(const char * new_folder, const char * _dir, char * customName){
 		std::string dirName=_dir;
 		// if (_dir==NULL){
 		// 	//sprintf(dirName, "benchmark");
