@@ -160,7 +160,7 @@ TEST_P(HighLevelTest, Recycle){
     EXPECT_EQ(configurator->getTask().get_direction(), configurator->vertex_get_direction(last_v));
     EXPECT_TRUE(configurator->getTask().get_disturbance()==configurator->vertex_get_Di(last_v));
     EXPECT_EQ(configurator->get_current_vertex(), last_v);
-    math::applyAffineTrans(shift, configurator->get_ts());
+    math::MulT(shift, configurator->get_ts());
     b2Transform newStart=configurator->vertex_get_endPose(last_v);
     EXPECT_LT(newStart.p.Length(),0.0001);
     EXPECT_LT(newStart.q.GetAngle(),0.0001);

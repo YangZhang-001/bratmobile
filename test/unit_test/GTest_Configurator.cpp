@@ -274,7 +274,7 @@ TEST(AffineTransform, NotReturnGarbage){
     b2Transform shift(position, b2Rot(0));
     Disturbance d(PURSUE, position);
     Task task(d, DEFAULT);
-    Configurator::applyAffineTrans(-shift, task);
+    Configurator::MulT(-shift, task);
     EXPECT_EQ(task.get_disturbance().getPosition().x, 2);
     EXPECT_EQ(task.get_disturbance().getPosition().y, 0);
     EXPECT_EQ(task.get_disturbance().pose().q.GetAngle(), 0);
@@ -306,7 +306,7 @@ TEST_P(ConfiguratorTest2DT, adjustGoal){
     vertex_set_options(0, std::vector<Direction>(DEFAULT));
     add_vertex_now(MOVING_VERTEX, v1, goal.get_disturbance());
     m_plan={v1};
-    math::applyAffineTrans(deltaPose, deltaPose);
+    math::MulT(deltaPose, deltaPose);
     update_graph(transitionSystem, deltaPose);
     b2Transform expected =b2MulT(controller.get_disturbance().pose(), transitionSystem[plan_end()].Di.pose()); //position of goal wrt current disturbance
     /**/
@@ -450,7 +450,7 @@ TEST_P(ConfiguratorTakeBool, RecyclePlan){
     State s=transitionSystem[2];
     b2Transform shift=b2Mul(transitionSystem[DUMMY].endPose, transitionSystem[currentVertex].endPose);
     b2Transform shift_start=b2Transform_zero;
-    math::applyAffineTrans(shift, transitionSystem);
+    math::MulT(shift, transitionSystem);
     EXPECT_EQ(transitionSystem[currentVertex].endPose, b2Transform_zero);
     iteration=100;
     resetPhi();
