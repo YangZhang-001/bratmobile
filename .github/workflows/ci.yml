@@ -44,7 +44,7 @@ jobs:
         run: |
               cd test/unit_test & ctest --output-on-failure
       - name : Push to data repo
-          if : success()
+          if : ${{ success() }}
           env: 
             GIT-USER: glafratta
             TARGET_REPO: ${{secrets.DATA_REP0_NAME}}
