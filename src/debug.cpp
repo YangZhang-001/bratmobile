@@ -18,7 +18,7 @@ std::string Logger::file_dateTime(const char* custom, char name[60]){
 	if (count>0){
 		addOn=std::to_string(count);
 	}
-	sprintf(name, "%s_%02i%02i%02i_%02i%02i_%s.txt",custom, d,m,y,h,min, addOn);
+	sprintf(name, "%s_%02i%02i%02i_%02i%02i_%s.txt",custom, d,m,y,h,min, addOn.c_str());
 	return std::string(name);
 }
 
