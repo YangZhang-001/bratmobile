@@ -22,14 +22,14 @@ bool Logger::log(const char * format, ...){
 }
 
 void Logger::init(char * new_folder, char * _dir, char * customName){
-		std::string dirName;
-		if (_dir==NULL){
-			//sprintf(dirName, "benchmark");
-			dirName="benchmark";
-		}
-		else{
-			dirName=_dir;
-		}
+		std::string dirName=_dir;
+		// if (_dir==NULL){
+		// 	//sprintf(dirName, "benchmark");
+		// 	dirName="/tmp";
+		// }
+		// else{
+		// 	dirName=_dir;
+		// }
 		if (!opendir(dirName.c_str())){
 			mkdir(dirName.c_str(), 0777);
 		}
@@ -41,7 +41,25 @@ void Logger::init(char * new_folder, char * _dir, char * customName){
 		std::string customfile=new_path +customName;
 		file_dateTime(customfile.c_str(), fileName);
 		f = fopen(fileName, "w");
-	}
+}
+
+const char * Logger::getSystemArchitecture(){
+	#if defined(__x86_64__) || defined(_M_X64)
+    return "x86_64";
+	#elif defined(__i386__) || defined(_M_IX86)
+		return "x86";
+	#elif defined(__aarch64__) || defined(_M_ARM64)
+		return "ARM64";
+	#elif defined(__arm__) || defined(_M_ARM)
+		return "ARM";
+	#elif defined(__ppc64__)
+		return "PowerPC64";
+	#elif defined(__ppc__)
+		return "PowerPC";
+	#else
+		return "UnknownArchitecture";
+	#endif
+}
 
 b2Vec2 GetWorldPoints(b2Body* b, b2Vec2 v){
 	b2Vec2 wp=b->GetWorldPoint(v);

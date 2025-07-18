@@ -6,6 +6,7 @@
 #include <string>
 #include <numeric>
 
+
 /**
  * @brief Setting up ostream operator for use with GTest
  * 
@@ -216,6 +217,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     DataInterface di;
     Motor_Out m;
     HorizonStarPlanner planner;
+    
     int iteration=0;
     void SetUp()override{
         std::cout<<"setup"<<std::endl;
@@ -227,6 +229,17 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     void TearDown()override{
         delete configurator;
     }
+
+    /**
+     * @brief Make logger that dumps in different directories depending on test case and system architecture
+    */
+    Logger makeLogger(){
+        const char* systemArchDir="benchmark"+Logger::getSystemArchitecture();
+        const char * testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->test_case_name();
+        return Logger(testCaseDir, systemArchDir);
+    }
+
+
     /**
      * @brief Initialises Fixture
      * 

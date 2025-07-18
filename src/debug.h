@@ -11,7 +11,10 @@
 #include <string>
 #include <dirent.h>
 
-
+/**
+ * @brief Class used to load data from the configurator
+ * 
+ */
 class Logger{
 	protected:
 	char fileName[60];
@@ -24,10 +27,11 @@ class Logger{
 	/**
 	 * @brief Construct a new Logger object
 	 * 
-	 * @param new_folder folder where files will be dumped
+	 * @param new_folder folder where files will be dumped (no / at the end)
 	 * @param _dir directory containing new_folder
+	 * @param customName file prefix (/ must be at the beginning)
 	 */
-	Logger(char * new_folder, char * _dir=NULL, char * customName="/stats"){
+	Logger(char * new_folder="", char * _dir="/tmp", char * customName="/stats"){
 		init(new_folder, _dir, customName);
 	}
 
@@ -57,8 +61,10 @@ class Logger{
 
 	void init(char * new_folder, char * _dir=NULL, char * customName="/stats");
 
-
-
+	/**
+	 * @brief Returns a string with system architecture
+	 */
+	static const char * getSystemArchitecture();
 
 };
 

@@ -77,6 +77,11 @@ TEST(Boost, CopyFTS){
     EXPECT_EQ(g2.m_vertices.size(), 4);
 }
 
+TEST_F(HighLevelTest, MakeLogger){
+    Logger logger=makeLogger();
+    std::cout<<logger.get_fileName()<<std::endl;
+}
+
 TEST_P(HighLevelTest, FirstPlan){
     Task goal;
     bool hasGoal=std::get<0>(GetParam()), success=false;
@@ -100,6 +105,8 @@ TEST_P(HighLevelTest, FirstPlan){
 }
 
 TEST_P(HighLevelTest, CheckPlan){
+    Logger logger=makeLogger();
+    configurator->register_logger(&logger);
     Task goal;
     if (std::get<0>(GetParam())){
         goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
@@ -136,6 +143,8 @@ TEST_P(HighLevelTest, CheckPlan){
 
 
 TEST_P(HighLevelTest, Recycle){
+    Logger logger=makeLogger();
+    configurator->register_logger(&logger);
     Task goal;
     b2Transform shift=b2Transform_zero;
     if (std::get<0>(GetParam())){
