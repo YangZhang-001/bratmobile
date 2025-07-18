@@ -183,7 +183,6 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		bool wasClosed =closeVertex(closed, v);
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
-		//g[v].phi=Planner::evaluationFunction(er, v, plan_prov);
 		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
 		for (Direction d: g[v].options){ //add and evaluate all vertices
 			v0_exp=v;
@@ -256,7 +255,6 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	if (transitionSystem[v].outcome != simResult::crashed){
 		return split;
 	}
-	//if (auto ie=inEdges(src, DEFAULT), stop_edges=inEdges(src, STOP); !ie.empty()|| !stop_edges.empty()){
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
 	if ((transitionSystem[src].direction==DEFAULT || transitionSystem[src].direction==STOP)&& 
@@ -947,11 +945,6 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	Task controlGoal_adjusted= controlGoal;
 	//position of task start with respect to goal disturbance (pov)
 	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
-	//Configurator::MulT(-shift_start, controlGoal_adjusted); //as start
-// 	b2Transform newTransform =b2Mul(shift_start, controlGoal.get_disturbance().pose());
-// 	Disturbance newD(controlGoal.getAffIndex(), newTransform.p, newTransform.q.GetAngle());
-// //	Disturbance newD(controlGoal.getAffIndex(), controlGoal.get_disturbance().pose().p+shift_start.p, controlGoal.get_disturbance().pose().q.GetAngle()+shift_start.q.GetAngle());
-// 	controlGoal_adjusted=Task(newD, UNDEFINED, b2Mul(shift_start, controlGoal.getStart()), false);
 	Mul(shift_start, controlGoal_adjusted);
 	boost::remove_edge(edge.first, transitionSystem);
 	edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
@@ -964,7 +957,6 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 		plan_prov=plan_tmp;
 		result=true;
 		if (plan_prov.empty()){ // task_start==currentVertex in\tead of pv empty
-			//printf("inserting current vertex\n");
 			plan_prov.insert(plan_prov.begin(), task_start);
 		}
 		if (t_get_direction== transitionSystem[task_start].direction){

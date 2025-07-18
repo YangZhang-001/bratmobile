@@ -164,7 +164,7 @@ TEST_P(HighLevelTest, Recycle){
     b2Transform newStart=configurator->vertex_get_endPose(last_v);
     EXPECT_LT(newStart.p.Length(),0.0001);
     EXPECT_LT(newStart.q.GetAngle(),0.0001);
-    std::vector<vertexDescriptor> updated_plan=get_plan(folder, 1); //map 2
+    std::vector<vertexDescriptor> updated_plan=get_plan(folder); //map 2
     int vertices_now=configurator->n_vertices();
     EXPECT_LE(vertices_now, vertices_og);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
