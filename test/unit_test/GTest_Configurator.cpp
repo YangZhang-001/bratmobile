@@ -439,7 +439,7 @@ TEST_P(ConfiguratorTakeBool, startRecycle){
         transitionSystem[2].outcome=simResult::successful;
         solution=currentVertex;
     }
-    EXPECT_EQ(getRecyclingStart(currentVertex,2), solution);
+    EXPECT_EQ(getRecyclingStart(currentVertex,2, 2), solution);
     
 }
 
