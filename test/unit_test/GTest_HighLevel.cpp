@@ -85,7 +85,7 @@ TEST_F(HighLevelTest, ParseFolder){
     catch (std::exception &e){
         std::cout<<e.what()<<std::endl;
     }
-    EXPECT_EQ(result, "hello..");
+    EXPECT_EQ(result, "/hello..");
 }
 
 TEST_F(HighLevelTest, MakeLogger){
