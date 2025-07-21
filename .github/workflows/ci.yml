@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/*'
       - 'test/unit_test/*'
+      - 'ci.yml'
 
 jobs:
   build:
