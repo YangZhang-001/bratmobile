@@ -42,7 +42,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name : Test
-        run: cd test/unit_test & ctest --output-on-failure
+        run: |
+            cd test/unit_test & ctest --output-on-failure
       - name : Push to data repo
         if : ${{ success()}}
         env: 
