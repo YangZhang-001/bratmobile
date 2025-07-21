@@ -45,7 +45,7 @@ jobs:
         if : ${{ success()}}
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.DATA_PUST_SSH_KEY}}
+          key: ${{secrets.DATA_PUSH_SSH_KEY}}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
         # env: 
         #     GIT-USER: glafratta

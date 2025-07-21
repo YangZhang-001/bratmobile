@@ -254,6 +254,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
      * @param goal overarching goal
      */
     void init( const Task& goal=Task());
+    
     /**
      * @brief Tests planning
      * 
@@ -265,7 +266,6 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     public:
 
     HighLevelTest(){}
-
 
 };
 
