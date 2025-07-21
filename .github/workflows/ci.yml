@@ -43,15 +43,16 @@ jobs:
             cd test/unit_test & ctest --output-on-failure
       - name : Push to data repo 
         if : ${{ success()}}
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{secrets.DATA_PUSH_SSH_KEY}}
-          known_hosts: ${{ secrets.KNOWN_HOSTS }}
-        # env: 
-        #     GIT-USER: glafratta
-        #     TARGET_REPO: ${{secrets.DATA_REP0_NAME}}
-        #     SSH_PRIVATE_KEY: ${{secrets.DATA_PUSH_SSH_KEY}}
-       # run:  #| 
+        # uses: shimataro/ssh-key-action@v2 #install ssh key
+        # with:
+        #   key: ${{secrets.DATA_PUSH_SSH_KEY}}
+        #   known_hosts: ${{ secrets.KNOWN_HOSTS }}
+        env: 
+            GIT-USER: glafratta
+            TARGET_REPO: ${{secrets.DATA_REP0_NAME}}
+            SSH_PRIVATE_KEY: ${{secrets.DATA_PUSH_SSH_KEY}}
+        run:  echo "hello!"
+        #| 
             # mkdir -p ~/.ssh
             # echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
             # chmod 600 ~/.ssh/id_rsa
