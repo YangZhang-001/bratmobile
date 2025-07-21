@@ -234,33 +234,19 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
      * 
      * @return const char* 
      */
-    std::string parseFolder(std::string valueParam){
-        int firstSlash=valueParam.find_first_of("/");
-        valueParam.erase(valueParam.begin(), valueParam.begin()+firstSlash);
-        int lastSlash=valueParam.find_last_of("/");
-        valueParam.erase(valueParam.begin()+lastSlash,valueParam.end());
-        return valueParam;
-    }
+    std::string parseFolder(std::string valueParam);
 
     /**
      * @brief Make logger that dumps in different directories depending on test case and system architecture
     */
-    Logger makeLogger(const char * testInfo=""){
-        std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
-        std::string addOn, dash("_"),  testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
-        std::string scenario;
-        if (std::size_t index=testCaseDir.find_first_of("/"); index!=std::string::npos){
-            addOn.append(testCaseDir.begin()+index+1, testCaseDir.end());
-            addOn=dash+addOn;
-            testCaseDir.erase(testCaseDir.begin()+index, testCaseDir.end());
-            scenario=parseFolder(std::string(testInfo))+addOn;
-        }
-       // testCaseDir=testCaseDir;
-        return Logger(testCaseDir.c_str(), systemArchDir.c_str(), scenario.c_str());
-    }
+    Logger makeLogger(const char * testInfo="");
 
-
-
+    /**
+     * @brief Simulates execution by updating task state each scan
+     * 
+     * @param nScans how many scans for
+     */
+    void iterateFor(int nScans);
 
     /**
      * @brief Initialises Fixture
@@ -579,6 +565,48 @@ std::vector<vertexDescriptor> HighLevelTest::get_plan(std::string folder, int it
     configurator->data2fp= ci.data2fp;
     configurator->Spawner();
     return configurator->get_plan();
+}
+
+std::string HighLevelTest::parseFolder(std::string valueParam){
+    int firstSlash=valueParam.find_first_of("/");
+    valueParam.erase(valueParam.begin(), valueParam.begin()+firstSlash);
+    int lastSlash=valueParam.find_last_of("/");
+    valueParam.erase(valueParam.begin()+lastSlash,valueParam.end());
+    return valueParam;
+}
+
+void HighLevelTest::iterateFor(int iteration){
+    for (int i=0;i<iteration-1; i++){ //simulate execution
+    if (configurator->getIteration()>1){
+        b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
+        //EXPECT_FALSE(deltaPose==b2Transform_zero);
+        configurator->update_graph(configurator->get_ts(), deltaPose);
+    }
+    configurator->change_task();
+    configurator->estimate_current_vertex();    
+    configurator->addIteration();
+    EXPECT_GT(configurator->get_current_vertices().size(), 0);
+    EXPECT_NE(configurator->get_current_vertices()[0], 0);
+    di.newScanAvail();
+    configurator->getFeatures(ci.data2fp);
+    configurator->preExplore();
+    EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
+}
+
+}
+
+Logger HighLevelTest::makeLogger(const char * testInfo){
+    std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
+    std::string addOn, dash("_"),  testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
+    std::string scenario;
+    if (std::size_t index=testCaseDir.find_first_of("/"); index!=std::string::npos){
+        addOn.append(testCaseDir.begin()+index+1, testCaseDir.end());
+        addOn=dash+addOn;
+        testCaseDir.erase(testCaseDir.begin()+index, testCaseDir.end());
+        scenario=parseFolder(std::string(testInfo))+addOn;
+    }
+    // testCaseDir=testCaseDir;
+    return Logger(testCaseDir.c_str(), systemArchDir.c_str(), scenario.c_str());
 }
 
 edgeDescriptor ConfiguratorTest::make_successful(vertexDescriptor v0){

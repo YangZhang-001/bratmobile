@@ -7,7 +7,6 @@ TEST(Math, affineTransform){
     Task task(disturbance, DEFAULT);
     math::MulT(transform, *task.get_disturbance_ptr());
     EXPECT_FALSE(task.get_disturbance().pose()==disturbance.pose());
-    
 }
 
 /**

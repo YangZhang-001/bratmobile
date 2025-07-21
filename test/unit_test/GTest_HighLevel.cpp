@@ -144,22 +144,23 @@ TEST_P(HighLevelTest, CheckPlan){
     std::vector<vertexDescriptor> plan= get_plan(folder);
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam());
-    for (int i=0;i<iteration-1; i++){ //simulate execution
-        if (configurator->getIteration()>1){
-            b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
-            //EXPECT_FALSE(deltaPose==b2Transform_zero);
-            configurator->update_graph(configurator->get_ts(), deltaPose);
-        }
-        configurator->change_task();
-        configurator->estimate_current_vertex();    
-        configurator->addIteration();
-        EXPECT_GT(configurator->get_current_vertices().size(), 0);
-        EXPECT_NE(configurator->get_current_vertices()[0], 0);
-        di.newScanAvail();
-        configurator->getFeatures(ci.data2fp);
-        configurator->preExplore();
-        EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
-    }
+    // for (int i=0;i<iteration-1; i++){ //simulate execution
+    //     if (configurator->getIteration()>1){
+    //         b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
+    //         //EXPECT_FALSE(deltaPose==b2Transform_zero);
+    //         configurator->update_graph(configurator->get_ts(), deltaPose);
+    //     }
+    //     configurator->change_task();
+    //     configurator->estimate_current_vertex();    
+    //     configurator->addIteration();
+    //     EXPECT_GT(configurator->get_current_vertices().size(), 0);
+    //     EXPECT_NE(configurator->get_current_vertices()[0], 0);
+    //     di.newScanAvail();
+    //     configurator->getFeatures(ci.data2fp);
+    //     configurator->preExplore();
+    //     EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
+    // }
+    iterateFor(iteration);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder, iteration-1); //map 2
     EXPECT_EQ(di.get_iteration(), iteration);
     int vertices_now=configurator->n_vertices();
