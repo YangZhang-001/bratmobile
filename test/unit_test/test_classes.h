@@ -229,20 +229,36 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     void TearDown()override{
         delete configurator;
     }
+    /**
+     * @brief From the parametrized values in string format @param valueParam , extracts the folder name
+     * 
+     * @return const char* 
+     */
+    std::string parseFolder(std::string valueParam){
+        int firstSlash=valueParam.find_first_of("/");
+        int lastSlash=valueParam.find_last_of("/");
+        valueParam=std::string(valueParam.begin()+firstSlash+1,valueParam.begin()+lastSlash);
+        return valueParam;
+    }
 
     /**
      * @brief Make logger that dumps in different directories depending on test case and system architecture
     */
-    Logger makeLogger(std::string scenario=""){
-        
+    Logger makeLogger(const char * testInfo=""){
         std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
-        std::string  testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
+        std::string addOn, dash("_"),  testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
         if (std::size_t index=testCaseDir.find_first_of("/"); index!=std::string::npos){
+            addOn.append(testCaseDir.begin()+index+1, testCaseDir.end());
+            addOn=dash+addOn;
             testCaseDir.erase(testCaseDir.begin()+index, testCaseDir.end());
         }
-        testCaseDir=testCaseDir+scenario;
-        return Logger(testCaseDir.c_str(), systemArchDir.c_str());
+        testCaseDir=testCaseDir;
+        std::string scenario=parseFolder(std::string(testInfo));
+        scenario=scenario+addOn;
+        return Logger(testCaseDir.c_str(), systemArchDir.c_str(), scenario.c_str());
     }
+
+
 
 
     /**

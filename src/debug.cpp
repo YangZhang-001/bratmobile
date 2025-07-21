@@ -1,6 +1,6 @@
  #include "debug.h"
 
-std::string Logger::file_dateTime(const char* custom, char name[60]){
+std::string Logger::file_dateTime(const char* custom, char name[80], const char * addOn){
 	time_t now =time(0);
 	tm *ltm = localtime(&now);
 	int y,m,d, h, min;
@@ -9,16 +9,13 @@ std::string Logger::file_dateTime(const char* custom, char name[60]){
 	d=ltm->tm_mday;
 	h= ltm->tm_hour;
 	min = ltm->tm_min;		
-	struct stat buffer;
-	std::string addOn="";
-	int count=0;
-	while (stat (fileName, &buffer)==0){
-		count++;
-	}
-	if (count>0){
-		addOn=std::to_string(count);
-	}
-	sprintf(name, "%s_%02i%02i%02i_%02i%02i_%s.txt",custom, d,m,y,h,min, addOn.c_str());
+//	struct stat buffer;
+	
+	sprintf(name, "%s_%02i%02i%02i_%02i%02i.txt",custom, d,m,y,h,min);
+	// int count=0;
+	// while (stat (fileName, &buffer)==0){
+	// 	count++;
+	// }	
 	return std::string(name);
 }
 
@@ -30,7 +27,7 @@ bool Logger::log(const char * format, ...){
 	fflush(f);
 }
 
-void Logger::init(const char * new_folder, const char * _dir, char * customName){
+void Logger::init(const char * new_folder, const char * _dir, const char * customName){
 		std::string dirName=_dir;
 		// if (_dir==NULL){
 		// 	//sprintf(dirName, "benchmark");

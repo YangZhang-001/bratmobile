@@ -62,11 +62,4 @@ TEST_F(ConfiguratorTest, logger){
     EXPECT_FALSE(get_logger()==NULL);
     loggerTest.log("%s\n", "hello!");
     loggerTest.log("%s\n", "hallo!","hullo!");
-
 }
-
-// TEST(Ofstream, callbacks){
-//     std::thread out_thread(LoggerTest::cerr);
-//     std::ofstream os("/tmp/ofstream.txt", std::ofstream::out);
-
-// }

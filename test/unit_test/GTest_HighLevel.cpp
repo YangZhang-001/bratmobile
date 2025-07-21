@@ -105,7 +105,8 @@ TEST_P(HighLevelTest, FirstPlan){
 }
 
 TEST_P(HighLevelTest, CheckPlan){
-    Logger logger=makeLogger();
+    auto info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(parseFolder(info));
     configurator->register_logger(&logger);
     Task goal;
     if (std::get<0>(GetParam())){

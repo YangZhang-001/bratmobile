@@ -19,6 +19,7 @@ class Logger{
 	protected:
 	char fileName[60];
 	FILE *f=NULL;
+	int fileCount=0;//files with the same name
 
 	public:
 
@@ -31,7 +32,7 @@ class Logger{
 	 * @param _dir directory containing new_folder
 	 * @param customName file prefix (/ must be at the beginning)
 	 */
-	Logger(const char * new_folder, const char * _dir="/tmp", char * customName="/stats"){
+	Logger(const char * new_folder, const char * _dir="/tmp", const char * customName="/stats"){
 		init(new_folder, _dir, customName);
 	}
 
@@ -68,9 +69,9 @@ class Logger{
 	 * @param custom custom
 	 * @param name empty char array
 	 */
-	std::string file_dateTime(const char* custom, char name[60]);
+	std::string file_dateTime(const char* custom, char name[80], const char * addOn=NULL);
 
-	void init(const char * new_folder, const  char * _dir=NULL, char * customName="/stats");
+	void init(const char * new_folder, const  char * _dir=NULL, const char * customName="/stats");
 
 
 };
