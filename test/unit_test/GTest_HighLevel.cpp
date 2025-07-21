@@ -144,22 +144,6 @@ TEST_P(HighLevelTest, CheckPlan){
     std::vector<vertexDescriptor> plan= get_plan(folder);
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam());
-    // for (int i=0;i<iteration-1; i++){ //simulate execution
-    //     if (configurator->getIteration()>1){
-    //         b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
-    //         //EXPECT_FALSE(deltaPose==b2Transform_zero);
-    //         configurator->update_graph(configurator->get_ts(), deltaPose);
-    //     }
-    //     configurator->change_task();
-    //     configurator->estimate_current_vertex();    
-    //     configurator->addIteration();
-    //     EXPECT_GT(configurator->get_current_vertices().size(), 0);
-    //     EXPECT_NE(configurator->get_current_vertices()[0], 0);
-    //     di.newScanAvail();
-    //     configurator->getFeatures(ci.data2fp);
-    //     configurator->preExplore();
-    //     EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
-    // }
     iterateFor(iteration);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder, iteration-1); //map 2
     EXPECT_EQ(di.get_iteration(), iteration);
@@ -208,7 +192,6 @@ TEST_P(HighLevelTest, Recycle){
     EXPECT_LE(vertices_now, vertices_og);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     EXPECT_TRUE(planned_to_goal);
-    //EXPECT_EQ(plan, updated_plan);
 }
 
 INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
@@ -227,7 +210,7 @@ INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 17),
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 38),
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 89),
-                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 3),
+                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 3),
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 4),
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 6), //,
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 17),

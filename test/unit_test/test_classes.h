@@ -266,7 +266,6 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
 
     HighLevelTest(){}
 
-    
 
 };
 
