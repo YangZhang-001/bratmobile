@@ -5,7 +5,7 @@ on:
     paths:
       - 'src/*'
       - 'test/unit_test/*'
-      - 'ci.yml'
+      - '.github/workflows/ci.yml'
 
 jobs:
   build:
