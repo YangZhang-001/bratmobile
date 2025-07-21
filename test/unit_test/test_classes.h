@@ -236,8 +236,9 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
      */
     std::string parseFolder(std::string valueParam){
         int firstSlash=valueParam.find_first_of("/");
+        valueParam.erase(valueParam.begin(), valueParam.begin()+firstSlash);
         int lastSlash=valueParam.find_last_of("/");
-        valueParam=std::string(valueParam.begin()+firstSlash+1,valueParam.begin()+lastSlash);
+        valueParam.erase(valueParam.begin()+lastSlash,valueParam.end());
         return valueParam;
     }
 
@@ -247,14 +248,14 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     Logger makeLogger(const char * testInfo=""){
         std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
         std::string addOn, dash("_"),  testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
+        std::string scenario;
         if (std::size_t index=testCaseDir.find_first_of("/"); index!=std::string::npos){
             addOn.append(testCaseDir.begin()+index+1, testCaseDir.end());
             addOn=dash+addOn;
             testCaseDir.erase(testCaseDir.begin()+index, testCaseDir.end());
+            scenario=parseFolder(std::string(testInfo))+addOn;
         }
-        testCaseDir=testCaseDir;
-        std::string scenario=parseFolder(std::string(testInfo));
-        scenario=scenario+addOn;
+       // testCaseDir=testCaseDir;
         return Logger(testCaseDir.c_str(), systemArchDir.c_str(), scenario.c_str());
     }
 

@@ -77,9 +77,36 @@ TEST(Boost, CopyFTS){
     EXPECT_EQ(g2.m_vertices.size(), 4);
 }
 
+TEST_F(HighLevelTest, ParseFolder){
+    std::string str("\"../hello../\""), result;
+    try{
+        result=parseFolder(str);
+    }
+    catch (std::exception &e){
+        std::cout<<e.what()<<std::endl;
+    }
+    EXPECT_EQ(result, "hello..");
+}
+
 TEST_F(HighLevelTest, MakeLogger){
     Logger logger=makeLogger();
     std::cout<<logger.get_fileName()<<std::endl;
+}
+
+TEST_F(HighLevelTest, MakeLoggerParse){
+    Logger logger=makeLogger("../test../");
+    std::cout<<logger.get_fileName()<<std::endl;
+}
+
+TEST_F(HighLevelTest, MakeLoggerString){
+    std::string folder("../test../");
+    Logger logger=makeLogger(folder.c_str());
+    std::cout<<logger.get_fileName()<<std::endl;
+}
+
+TEST_P(HighLevelTest, MakeLoggerParseInfo){
+    const char* info=testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
 }
 
 TEST_P(HighLevelTest, FirstPlan){
@@ -105,8 +132,8 @@ TEST_P(HighLevelTest, FirstPlan){
 }
 
 TEST_P(HighLevelTest, CheckPlan){
-    auto info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-    Logger logger=makeLogger(parseFolder(info).c_str());
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
     configurator->register_logger(&logger);
     Task goal;
     if (std::get<0>(GetParam())){
@@ -144,7 +171,8 @@ TEST_P(HighLevelTest, CheckPlan){
 
 
 TEST_P(HighLevelTest, Recycle){
-    Logger logger=makeLogger();
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
     configurator->register_logger(&logger);
     Task goal;
     b2Transform shift=b2Transform_zero;
