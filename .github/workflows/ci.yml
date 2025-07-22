@@ -58,16 +58,16 @@ jobs:
             ssh-keyscan github.com >> ~/.ssh/known_hosts
             git clone "$TARGET_REPO" data_stats
             cd data_stats
+            echo "changed dir"
             cp ../benchmarkx* . -r
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-
-            # git config user.name "$GIT_USER"
-            # git config user.email "$GIT_USER@users.noreply.github.com"
-
+            echo "copied"
+            git config user.name "$GIT_USER"
+            git config user.email "$GIT_USER@users.noreply.github.com"
+            echo "config"
             git add .
             git commit -m "Update data from tests"
             git push origin main
+            echo "push"
 
 
 
