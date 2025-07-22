@@ -48,7 +48,7 @@ jobs:
         #   key: ${{secrets.DATA_PUSH_SSH_KEY}}
         #   known_hosts: ${{ secrets.KNOWN_HOSTS }}
         env: 
-            GIT-USER: git
+#            GIT-USER: git
             TARGET_REPO: ${{secrets.DATA_REP0_NAME}}
             SSH_PRIVATE_KEY: ${{secrets.DATA_PUSH_SSH_KEY}}
         run:  | 
@@ -59,8 +59,11 @@ jobs:
             git clone "$TARGET_REPO" data_stats
             cd data_stats
             cp ../benchmarkx* . -r
-            git config user.name "$GIT_USER"
-            git config user.email "$GIT_USER@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            # git config user.name "$GIT_USER"
+            # git config user.email "$GIT_USER@users.noreply.github.com"
 
             git add .
             git commit -m "Update data from tests"
