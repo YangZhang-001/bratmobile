@@ -48,7 +48,7 @@ jobs:
         #   key: ${{secrets.DATA_PUSH_SSH_KEY}}
         #   known_hosts: ${{ secrets.KNOWN_HOSTS }}
         env: 
-            GIT-USER: git
+            GIT-USER: glafratta
             TARGET_REPO: ${{secrets.DATA_REP0_NAME}}
             SSH_PRIVATE_KEY: ${{secrets.DATA_PUSH_SSH_KEY}}
         run:  | 
