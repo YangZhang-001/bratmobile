@@ -579,7 +579,7 @@ std::string HighLevelTest::parseFolder(std::string valueParam){
 
 std::string HighLevelTest::parseIteration(std::string valueParam){
     int lastSpace=valueParam.find_last_of(" ");
-    valueParam.erase(valueParam.begin(), valueParam.begin()+lastSpace);
+    valueParam.erase(valueParam.begin(), valueParam.begin()+lastSpace+1);
     int lastParenthesis=valueParam.find_last_of(")");
     valueParam.erase(valueParam.begin()+lastParenthesis,valueParam.end());
     return valueParam; 
