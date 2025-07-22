@@ -49,10 +49,12 @@ jobs:
         #   known_hosts: ${{ secrets.KNOWN_HOSTS }}
         env: 
             GIT-USER: glafratta
-            TARGET_REPO: git@github.com:glafratta/data_stats.git
+            TARGET_REPO: ${{secrets.DATA_REP0_NAME}}
             SSH_PRIVATE_KEY: ${{secrets.DATA_PUSH_SSH_KEY}}
         run:  | 
             mkdir -p ~/.ssh
+            git config user.name "$GIT_USER"
+            git config user.email "$GIT_USER@users.noreply.github.com"
             echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
             ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -62,8 +64,6 @@ jobs:
             echo "changed dir"
             cp ../benchmarkx* . -r
             echo "copied"
-            git config user.name "$GIT_USER"
-            git config user.email "$GIT_USER@users.noreply.github.com"
             echo "config"
             git add .
             git commit -m "Update data from tests"
