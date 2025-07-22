@@ -88,6 +88,17 @@ TEST_F(HighLevelTest, ParseFolder){
     EXPECT_EQ(result, "/hello..");
 }
 
+TEST_F(HighLevelTest, ParseIteration){
+    std::string str("(false, \"../cul_de_sac/\", 2)"), result;
+    try{
+        result=parseIteration(str);
+    }
+    catch (std::exception &e){
+        std::cout<<e.what()<<std::endl;
+    }
+    EXPECT_EQ(result, "2");
+}
+
 TEST_F(HighLevelTest, MakeLogger){
     Logger logger=makeLogger();
     std::cout<<logger.get_fileName()<<std::endl;

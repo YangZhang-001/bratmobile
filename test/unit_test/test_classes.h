@@ -230,11 +230,14 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
         delete configurator;
     }
     /**
-     * @brief From the parametrized values in string format @param valueParam , extracts the folder name
-     * 
-     * @return const char* 
+     * @brief From the parametrized values in string format @param valueParam (which are the values of this instance of the parametrized test), extracts the folder name
      */
     std::string parseFolder(std::string valueParam);
+
+    /**
+     * @brief Gets the iteration from @param valueParam (values of the parametrized test)
+     */
+    std::string parseIteration(std::string valueParam);
 
     /**
      * @brief Make logger that dumps in different directories depending on test case and system architecture
@@ -573,6 +576,15 @@ std::string HighLevelTest::parseFolder(std::string valueParam){
     valueParam.erase(valueParam.begin()+lastSlash,valueParam.end());
     return valueParam;
 }
+
+std::string HighLevelTest::parseIteration(std::string valueParam){
+    int lastSpace=valueParam.find_last_of(" ");
+    valueParam.erase(valueParam.begin(), valueParam.begin()+lastSpace);
+    int lastParenthesis=valueParam.find_last_of(")");
+    valueParam.erase(valueParam.begin()+lastParenthesis,valueParam.end());
+    return valueParam; 
+}
+
 
 void HighLevelTest::iterateFor(int iteration){
     for (int i=0;i<iteration-1; i++){ //simulate execution

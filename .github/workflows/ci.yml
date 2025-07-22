@@ -43,10 +43,6 @@ jobs:
             cd test/unit_test & ctest --output-on-failure
       - name : Push to data repo 
         if : ${{ success()}}
-        # uses: shimataro/ssh-key-action@v2 #install ssh key
-        # with:
-        #   key: ${{secrets.DATA_PUSH_SSH_KEY}}
-        #   known_hosts: ${{ secrets.KNOWN_HOSTS }}
         env: 
             TARGET_REPO: ${{secrets.DATA_REP0_NAME}}
             SSH_PRIVATE_KEY: ${{secrets.DATA_PUSH_SSH_KEY}}
@@ -57,8 +53,6 @@ jobs:
             ssh-keyscan github.com >> ~/.ssh/known_hosts
             git clone "$TARGET_REPO"
             cd data_stats
-            # count_r=$(ls -1q Recycle/* | wc -l)
-            # count_c=$(ls -1q CheckPlan/* | wc -l)
             cp ../test/unit_test/benchmark* . -r
             echo "copied"
             git config user.name "github-actions[bot]"
