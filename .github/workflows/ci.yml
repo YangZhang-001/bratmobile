@@ -49,7 +49,7 @@ jobs:
         #   known_hosts: ${{ secrets.KNOWN_HOSTS }}
         env: 
             GIT-USER: glafratta
-            TARGET_REPO: ${{secrets.DATA_REP0_NAME}}
+            TARGET_REPO: git@github.com:glafratta/data_stats.git
             SSH_PRIVATE_KEY: ${{secrets.DATA_PUSH_SSH_KEY}}
         run:  | 
             mkdir -p ~/.ssh
