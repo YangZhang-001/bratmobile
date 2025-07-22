@@ -58,7 +58,7 @@ jobs:
             ssh-keyscan github.com >> ~/.ssh/known_hosts
             git clone "$TARGET_REPO"
             cd data_stats
-            ls ../test/unit-test/benchmark*
+            ls ../test/unit-test/*
             cp ../test/unit-test/benchmark* . -r
             echo "copied"
             git config user.name "$GIT_USER"
