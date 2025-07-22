@@ -59,8 +59,7 @@ jobs:
             git clone "$TARGET_REPO"
             pwd
             cd data_stats
-            echo "changed dir"
-            cp ../benchmarkx* . -r
+            cp test/unit-test/benchmarkx* . -r
             echo "copied"
             git config user.name "$GIT_USER"
             git config user.email "$GIT_USER@users.noreply.github.com"
