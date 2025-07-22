@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['frontier_176',['Frontier',['../structFrontier.html',1,'']]]
+  ['frontier_178',['Frontier',['../structFrontier.html',1,'']]]
 ];

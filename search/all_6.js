@@ -11,5 +11,6 @@ var searchData=
   ['getomega_67',['getOmega',['../structTask_1_1Action.html#a380ba865561c98173374f50eab19cda0',1,'Task::Action']]],
   ['getoppositedirection_68',['getOppositeDirection',['../classAttentiveConfigurator.html#a42e79e5977c29fccef0eaffb0e2e58f7',1,'AttentiveConfigurator']]],
   ['getrecyclingstart_69',['getRecyclingStart',['../classAttentiveConfigurator.html#ad30db3cd48b2b4e95ec229be37b05e52',1,'AttentiveConfigurator']]],
-  ['goalchanger_70',['GoalChanger',['../structGoalChanger.html',1,'']]]
+  ['getsystemarchitecture_70',['getSystemArchitecture',['../classLogger.html#af2ce5c46d6a9b2ddcb51a98b4fc8a9b8',1,'Logger']]],
+  ['goalchanger_71',['GoalChanger',['../structGoalChanger.html',1,'']]]
 ];

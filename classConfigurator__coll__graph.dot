@@ -46,5 +46,5 @@ digraph "Configurator"
   Node20 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" worldBuilder" ,fontname="Helvetica"];
   Node20 [label="WorldBuilder",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classWorldBuilder.html",tooltip=" "];
   Node21 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" logger" ,fontname="Helvetica"];
-  Node21 [label="Logger",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classLogger.html",tooltip=" "];
+  Node21 [label="Logger",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classLogger.html",tooltip="Class used to load data from the configurator."];
 }
