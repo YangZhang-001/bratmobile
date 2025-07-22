@@ -57,8 +57,9 @@ jobs:
             chmod 600 ~/.ssh/id_rsa
             ssh-keyscan github.com >> ~/.ssh/known_hosts
             git clone "$TARGET_REPO"
+            pwd
+            ls 
             cd data_stats
-            ls ../test/unit-test/*
             cp ../test/unit-test/benchmark* . -r
             echo "copied"
             git config user.name "$GIT_USER"
