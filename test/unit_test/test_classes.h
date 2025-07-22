@@ -272,6 +272,17 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
 
 };
 
+class ReactToNoiseTest: public HighLevelTest, public testing::WithParamInterface<std::tuple<bool, std::string, std::string, int>>{
+    protected:
+    /**
+     * @brief Make logger that dumps in different directories depending on test case and system architecture
+    */
+    Logger makeLogger(const char * testInfo="");
+
+    std::pair<std::string, std::string> carveScenario(std::string info);
+
+
+};
 
 
 /**
@@ -585,6 +596,15 @@ std::string HighLevelTest::parseIteration(std::string valueParam){
     return valueParam; 
 }
 
+std::pair<std::string, std::string> ReactToNoiseTest::carveScenario(std::string valueParam){
+    valueParam.erase(valueParam.begin());
+    int firstSlash=valueParam.find_first_of("/");
+    int lastSlash=valueParam.find_last_of("/");
+    std::string str1(valueParam.begin(), valueParam.begin()+firstSlash);
+    std::string str2(valueParam.begin()+lastSlash+1, valueParam.end());
+    return std::pair<std::string, std::string>(str1, str2);
+}
+
 
 void HighLevelTest::iterateFor(int iteration){
     for (int i=0;i<iteration-1; i++){ //simulate execution
@@ -615,6 +635,22 @@ Logger HighLevelTest::makeLogger(const char * testInfo){
         addOn=dash+addOn;
         testCaseDir.erase(testCaseDir.begin()+index, testCaseDir.end());
         scenario=parseFolder(std::string(testInfo))+addOn;
+    }
+    // testCaseDir=testCaseDir;
+    return Logger(testCaseDir.c_str(), systemArchDir.c_str(), scenario.c_str());
+}
+
+Logger ReactToNoiseTest::makeLogger(const char * testInfo){
+    std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
+    std::string addOn, dash("_"),  testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
+    std::string bothScenarios, scenario;
+    if (std::size_t index=testCaseDir.find_first_of("/"); index!=std::string::npos){
+        addOn=parseIteration(std::string(testInfo));
+        addOn=dash+addOn;
+        testCaseDir.erase(testCaseDir.begin()+index, testCaseDir.end());
+        bothScenarios=parseFolder(std::string(testInfo));
+        std::pair<std::string, std::string> separateScenarios=carveScenario(bothScenarios);
+        scenario=separateScenarios.first+ separateScenarios.second+addOn;
     }
     // testCaseDir=testCaseDir;
     return Logger(testCaseDir.c_str(), systemArchDir.c_str(), scenario.c_str());

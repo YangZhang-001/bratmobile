@@ -120,6 +120,25 @@ TEST_P(HighLevelTest, MakeLoggerParseInfo){
     Logger logger=makeLogger(info);
 }
 
+TEST_F(ReactToNoiseTest, ParseFolder){
+    std::string str("../i_am/, /test/");    
+    std::string result=parseFolder(str);
+    EXPECT_EQ(result, "/i_am/, /test");    
+}
+
+TEST_F(ReactToNoiseTest, CarveIteration){
+    std::string str("/i_am/, /test");    
+    std::pair<std::string, std::string> result=carveScenario(str);
+    EXPECT_EQ(result.first, "i_am");    
+    EXPECT_EQ(result.second, "test");    
+}
+
+TEST_F(ReactToNoiseTest, MakeLogger){
+    Logger logger=makeLogger();
+    std::cout<<logger.get_fileName()<<std::endl;
+}
+
+
 TEST_P(HighLevelTest, FirstPlan){
     Task goal;
     bool hasGoal=std::get<0>(GetParam()), success=false;
@@ -229,7 +248,33 @@ INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
                                                                    std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 89)
                                                                    ));
 
+TEST_P(ReactToNoiseTest, NoisyPlan){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
+    Task goal;
+    if (std::get<0>(GetParam())){
+        goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
+    }
+    configurator->init(goal);
+    std::string folder=std::get<1>(GetParam()), folder2=std::get<2>(GetParam());
+    std::vector<vertexDescriptor> plan= get_plan(folder);
+    int vertices_og=configurator->n_vertices();
+    iterateFor(4);
+    std::vector<vertexDescriptor> updated_plan=get_plan(folder2, std::get<3>(GetParam())); //map 2
+    EXPECT_EQ(di.get_iteration(), iteration);
+    int vertices_now=configurator->n_vertices();
+    EXPECT_LE(vertices_now, vertices_og);
+    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+    bool success=planned_to_goal || configurator->getGoal().checkEnded(configurator->vertex_get_endPose(configurator->get_current_vertex())).ended;
+    EXPECT_TRUE(success);
+}
 
+INSTANTIATE_TEST_CASE_P(NoisyCombos, ReactToNoiseTest, testing::Combine(
+                                                        testing::Bool(),
+                                                        testing::Values("../cul_de_sac/", "../target_40cm/", "../target_68cm"),
+                                                        testing::Values("../cul_de_sac/", "../target_40cm/", "../target_68cm"),
+                                                        testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
 
 
 
