@@ -56,7 +56,8 @@ jobs:
             echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
             ssh-keyscan github.com >> ~/.ssh/known_hosts
-            git clone "$TARGET_REPO" data_stats
+            git clone "$TARGET_REPO"
+            pwd
             cd data_stats
             echo "changed dir"
             cp ../benchmarkx* . -r
