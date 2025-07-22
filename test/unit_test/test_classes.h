@@ -612,7 +612,6 @@ Logger HighLevelTest::makeLogger(const char * testInfo){
     std::string scenario;
     if (std::size_t index=testCaseDir.find_first_of("/"); index!=std::string::npos){
         addOn=parseIteration(std::string(testInfo));
-        //addOn.append(testCaseDir.begin()+index+1, testCaseDir.end());
         addOn=dash+addOn;
         testCaseDir.erase(testCaseDir.begin()+index, testCaseDir.end());
         scenario=parseFolder(std::string(testInfo))+addOn;
