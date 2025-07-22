@@ -59,7 +59,7 @@ jobs:
             git clone "$TARGET_REPO"
             cd data_stats
             ls ../test/unit-test/benchmark*
-            cp ../test/unit-test/benchmarkx* . -r
+            cp ../test/unit-test/benchmark* . -r
             echo "copied"
             git config user.name "$GIT_USER"
             git config user.email "$GIT_USER@users.noreply.github.com"
