@@ -57,15 +57,16 @@ jobs:
             chmod 600 ~/.ssh/id_rsa
             ssh-keyscan github.com >> ~/.ssh/known_hosts
             git clone "$TARGET_REPO"
-            pwd
-            ls 
             cd data_stats
             cp ../test/unit_test/benchmark* . -r
             echo "copied"
-            git config user.name "$GIT_USER"
-            git config user.email "$GIT_USER@users.noreply.github.com"
+            # git config user.name "$GIT_USER"
+            # git config user.email "$GIT_USER@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
             echo "config"
-            git add .
+            git add benchmark*/Recycle/*
+            git add benchmark*/CheckPlan/*
             git commit -m "Update data from tests"
             git push origin main
             echo "push"
