@@ -23,7 +23,7 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
 
 class DebugConfigurator:public AttentiveConfigurator{
     public:
-    friend class HighLevelTest;
+    friend class HighLevelTestBase;
     int n_edges(){return transitionSystem.m_edges.size();}
 
     int n_vertices(){return transitionSystem.m_vertices.size();}
@@ -208,7 +208,7 @@ class DebugConfigurator:public AttentiveConfigurator{
  * @param bool does plan have a target location
  * @param string the folder with the LIDAR scans
  */
-class HighLevelTest: public testing::Test, public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
+class HighLevelTestBase: public testing::Test{
     protected:
     DebugConfigurator * configurator=NULL;
     Wise_Controller wc;
@@ -242,7 +242,7 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
     /**
      * @brief Make logger that dumps in different directories depending on test case and system architecture
     */
-    Logger makeLogger(const char * testInfo="");
+    virtual Logger makeLogger(const char * testInfo="");
 
     /**
      * @brief Simulates execution by updating task state each scan
@@ -266,20 +266,24 @@ class HighLevelTest: public testing::Test, public testing::WithParamInterface<st
      * 
      */
     std::vector<vertexDescriptor> get_plan(std::string folder, int it=0);
-    public:
 
+
+};
+
+class HighLevelTest: public HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
+    public:
     HighLevelTest(){}
 
 };
 
-class ReactToNoiseTest: public HighLevelTest, public testing::WithParamInterface<std::tuple<bool, std::string, std::string, int>>{
+class ReactToNoiseTest: public HighLevelTestBase, public ::testing::WithParamInterface<std::tuple<bool, std::string, std::string, int>>{
     protected:
     /**
      * @brief Make logger that dumps in different directories depending on test case and system architecture
     */
-    Logger makeLogger(const char * testInfo="");
+    Logger makeLogger(const char * testInfo="")override;
 
-    std::pair<std::string, std::string> carveScenario(std::string info);
+    std::pair<std::string, std::string> carveScenario(std::string valueParam);
 
 
 };
@@ -558,7 +562,7 @@ Disturbance DebugConfigurator::generateGoal(){
 }
 
 
-void HighLevelTest::init( const Task& goal){
+void HighLevelTestBase::init( const Task& goal){
     di.registerInterface(&ci);
     configurator->register_controller(&wc);
     configurator->register_tracker(&tracker);
@@ -571,7 +575,7 @@ void HighLevelTest::init( const Task& goal){
 }
 
 
-std::vector<vertexDescriptor> HighLevelTest::get_plan(std::string folder, int it){
+std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, int it){
     di.set_iteration(it);
     di.set_folder(folder);
     di.newScanAvail();
@@ -580,7 +584,7 @@ std::vector<vertexDescriptor> HighLevelTest::get_plan(std::string folder, int it
     return configurator->get_plan();
 }
 
-std::string HighLevelTest::parseFolder(std::string valueParam){
+std::string HighLevelTestBase::parseFolder(std::string valueParam){
     int firstSlash=valueParam.find_first_of("/");
     valueParam.erase(valueParam.begin(), valueParam.begin()+firstSlash);
     int lastSlash=valueParam.find_last_of("/");
@@ -588,7 +592,7 @@ std::string HighLevelTest::parseFolder(std::string valueParam){
     return valueParam;
 }
 
-std::string HighLevelTest::parseIteration(std::string valueParam){
+std::string HighLevelTestBase::parseIteration(std::string valueParam){
     int lastSpace=valueParam.find_last_of(" ");
     valueParam.erase(valueParam.begin(), valueParam.begin()+lastSpace+1);
     int lastParenthesis=valueParam.find_last_of(")");
@@ -606,7 +610,7 @@ std::pair<std::string, std::string> ReactToNoiseTest::carveScenario(std::string 
 }
 
 
-void HighLevelTest::iterateFor(int iteration){
+void HighLevelTestBase::iterateFor(int iteration){
     for (int i=0;i<iteration-1; i++){ //simulate execution
     if (configurator->getIteration()>1){
         b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
@@ -626,7 +630,7 @@ void HighLevelTest::iterateFor(int iteration){
 
 }
 
-Logger HighLevelTest::makeLogger(const char * testInfo){
+Logger HighLevelTestBase::makeLogger(const char * testInfo){
     std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
     std::string addOn, dash("_"),  testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
     std::string scenario;

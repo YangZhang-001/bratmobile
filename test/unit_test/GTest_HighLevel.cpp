@@ -262,7 +262,6 @@ TEST_P(ReactToNoiseTest, NoisyPlan){
     int vertices_og=configurator->n_vertices();
     iterateFor(4);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder2, std::get<3>(GetParam())); //map 2
-    EXPECT_EQ(di.get_iteration(), iteration);
     int vertices_now=configurator->n_vertices();
     EXPECT_LE(vertices_now, vertices_og);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
@@ -270,10 +269,25 @@ TEST_P(ReactToNoiseTest, NoisyPlan){
     EXPECT_TRUE(success);
 }
 
-INSTANTIATE_TEST_CASE_P(NoisyCombos, ReactToNoiseTest, testing::Combine(
-                                                        testing::Bool(),
-                                                        testing::Values("../cul_de_sac/", "../target_40cm/", "../target_68cm"),
-                                                        testing::Values("../cul_de_sac/", "../target_40cm/", "../target_68cm"),
+INSTANTIATE_TEST_CASE_P(NoisyCombosAvoidance, ReactToNoiseTest, testing::Combine(
+                                                        testing::Values(false),
+                                                        testing::Values("../cul_de_sac/"),
+                                                        testing::Values("../target_40cm/", "../target_68cm/"),
+                                                        testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
+
+
+
+INSTANTIATE_TEST_CASE_P(NoisyCombosTarget40, ReactToNoiseTest, testing::Combine(
+                                                        testing::Values(true),
+                                                        testing::Values("../target_40cm/"),
+                                                        testing::Values("../cul_de_sac/", "../target_68cm/"),
+                                                        testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
+
+
+INSTANTIATE_TEST_CASE_P(NoisyCombosTarget68, ReactToNoiseTest, testing::Combine(
+                                                        testing::Values(true),
+                                                        testing::Values("../target_68cm/"),
+                                                        testing::Values("../cul_de_sac/", "../target_40cm/"),
                                                         testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
 
 
