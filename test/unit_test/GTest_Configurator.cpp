@@ -32,7 +32,55 @@ TEST_F(ConfiguratorTest, DummyVertex){
     EXPECT_FALSE(boost::edge(MOVING_VERTEX, MOVING_VERTEX, transitionSystem).second);
 }
 
+TEST_F(ConfiguratorTest, VisitingTS){
+    iteration=1;
+    make_module();
+    auto es=boost::edges(transitionSystem);
+    for (auto ei=es.first; ei!=es.second; ei++){
+        EXPECT_EQ(transitionSystem[*ei].it_observed,iteration);
+    }
+    VisitedEdge ve(&transitionSystem, iteration+1);
+    EXPECT_EQ(ve.getIteration(), 2);
+    iteration++;
+    EXPECT_EQ(n_visitedEdges(), 0);
+}
 
+
+TEST_F(ConfiguratorTest, VisitedTS){
+    iteration=1;
+    make_module();
+    auto es=boost::edges(transitionSystem);
+    for (auto ei=es.first; ei!=es.second; ei++){
+        EXPECT_EQ(transitionSystem[*ei].it_observed,iteration);
+    }
+    iteration=2;
+    auto e=make_successful();
+    VisitedEdge ve(&transitionSystem, iteration);
+    EXPECT_EQ(ve.getIteration(), 2);
+    VisitedTransitionSystem visitedTS(transitionSystem, ve);
+    EXPECT_EQ(n_visitedEdges(), 1);
+}
+
+TEST_F(ConfiguratorTest, VisitingEdge){
+    iteration=1;
+    make_module();
+    auto es=boost::edges(transitionSystem);
+    for (auto ei=es.first; ei!=es.second; ei++){
+        EXPECT_EQ(transitionSystem[*ei].it_observed,iteration);
+    }
+    VisitedEdge ve(&transitionSystem, iteration+1);
+    EXPECT_EQ(ve.getIteration(), 2);
+    auto e=boost::edge(2, 3, transitionSystem);
+    EXPECT_FALSE(ve(e.first));
+}
+
+TEST(VisitedEdge, Return){
+    TransitionSystem ts(2);
+    auto e=boost::add_edge(0, 1, ts);
+    ts[e.first].it_observed=1;
+    VisitedEdge ve(&ts, 2);
+    EXPECT_FALSE(ve(e.first));
+}
 
 TEST_P(ConfiguratorTestGetGoal, GetDisturbanceGoal){
     Disturbance solution=controlGoal.get_disturbance();
@@ -264,6 +312,8 @@ INSTANTIATE_TEST_CASE_P(SimulationOutcomes, ConfiguratorTestTransitionMatrix, ::
                                                                                 std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(.78,.2), b2Rot(0)), STOP, simResult::successful),
                                                                                 std::tuple<b2Transform, Direction, simResult::resultType>(b2Transform(b2Vec2(.78,.2), b2Rot(0)), STOP, simResult::safeForNow)
 ));
+
+
 
 /**
  * @brief Just checking it doens't return garbage

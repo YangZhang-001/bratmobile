@@ -21,37 +21,41 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
     return os;
 }
 
-/**
- * @brief Predicate used to decide if a vertex has been evaluated
- */
-struct Evaluated{
-	Evaluated(){}
-	Evaluated(TransitionSystem * ts):g(ts){}
+// /**
+//  * @brief Predicate used to decide if a vertex has been evaluated
+//  */
+// struct Evaluated{
+// 	Evaluated(){}
+// 	Evaluated(TransitionSystem * ts):g(ts){}
 
-	bool operator()(const vertexDescriptor&v)const{
-		return (*g)[v].visited();
-	}
-	private:
-	TransitionSystem *g;
-};
+// 	bool operator()(const vertexDescriptor&v)const{
+// 		return (*g)[v].visited();
+// 	}
+// 	private:
+// 	TransitionSystem *g=NULL;
+// };
 
-/**
- * @brief Predicate used to decide if an edge has been visited
- * 
- */
-struct Visited{ //for debug
-	Visited()=delete;
-	Visited(TransitionSystem & ts, int _it):g(ts), iteration(_it){}
+// /**
+//  * @brief Predicate used to decide if an edge has been visited
+//  * 
+//  */
+// struct VisitedEdge{ 
+// 	VisitedEdge()=default;
+// 	VisitedEdge(TransitionSystem * ts, int _it):g(ts), iteration(_it){}
 
-	bool operator()(const edgeDescriptor&e)const{
-		return g[e].it_observed==iteration;
-	}
-	private:
-	TransitionSystem &g;
-    int iteration=0;
-};
+// 	bool operator()(const edgeDescriptor&e){
+//         bool result=(*g)[e].it_observed==iteration;
+// 		return result;
+// 	}
 
-typedef boost::filtered_graph<TransitionSystem, Visited> VisitedTS;
+//     int getIteration(){return iteration;}
+// 	private:
+// 	TransitionSystem *g=NULL;
+//     int iteration=0;
+// };
+
+// //not sure why it doesn't filter the TS!
+// typedef boost::filtered_graph<TransitionSystem, VisitedEdge> VisitedTransitionSystem;
 
 
 class DebugConfigurator:public AttentiveConfigurator{
@@ -60,6 +64,15 @@ class DebugConfigurator:public AttentiveConfigurator{
     int n_edges(){return transitionSystem.m_edges.size();}
 
     int n_vertices(){return transitionSystem.m_vertices.size();}
+
+    int n_visitedEdges(){
+        int count=0;
+        auto es=boost::edges(transitionSystem);
+        for (auto ei=es.first; ei!=es.second; ei++){
+            count+=transitionSystem[*ei].it_observed==iteration;
+        }
+        return count;
+    }
 
     const std::vector <vertexDescriptor>& get_plan(){ return m_plan;}
 
@@ -81,6 +94,10 @@ class DebugConfigurator:public AttentiveConfigurator{
 
     TransitionSystem & get_ts(){
         return transitionSystem;
+    }
+
+    TransitionSystem* get_ts_ptr(){
+        return &transitionSystem;
     }
 
     Task & getGoal(){
@@ -614,12 +631,12 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
     di.set_folder(folder);
     di.newScanAvail();
     configurator->data2fp= ci.data2fp;
-    VisitedTS notVisitedTS(configurator->get_ts(), Visited(configurator->get_ts(), configurator->iteration+1));
-    EXPECT_EQ(notVisitedTS.m_g.m_edges.size(), 0);
+    EXPECT_EQ(configurator->n_visitedEdges(), 0);
     configurator->Spawner();
-    VisitedTS visitedTS(configurator->get_ts(), Visited(configurator->get_ts(), configurator->iteration));
     if (configurator->getIteration()>1){
-        EXPECT_LT(visitedTS.m_g.m_edges.size(), configurator->n_edges());
+        int visitedEdges=configurator->n_visitedEdges();
+        EXPECT_LT(visitedEdges, configurator->n_edges());
+        EXPECT_GT(visitedEdges, 0);
     }
     return configurator->get_plan();
 }
@@ -665,8 +682,8 @@ void HighLevelTestBase::trackFor(int iteration){
     di.newScanAvail();
     configurator->getFeatures(ci.data2fp);
     configurator->preExplore();
-    VisitedTS trackedTS(configurator->get_ts(), Visited(configurator->get_ts(), configurator->iteration));
-    EXPECT_EQ(trackedTS.m_g.m_edges.size(), 0);
+    //VisitedTransitionSystem trackedTS(configurator->get_ts(), VisitedEdge(configurator->get_ts_ptr(), configurator->iteration));
+    EXPECT_EQ(configurator->n_visitedEdges(), 0);
     EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
 }
 
