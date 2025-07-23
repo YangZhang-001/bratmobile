@@ -573,6 +573,9 @@ void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction
 	std::vector <vertexDescriptor> full_plan=plan_prov;
 	if (!currentTask.get_change() && !full_plan.empty()){
 		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
+		if (v0==MOVING_VERTEX){
+			full_plan.emplace(full_plan.begin(), v0);
+		}
 	}
 	if (auto it =check_vector_for(full_plan, v0); it!=full_plan.end() && it!=(full_plan.end()-1)){
 		auto e=boost::edge(src, v0, transitionSystem);

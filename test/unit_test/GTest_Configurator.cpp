@@ -57,7 +57,6 @@ TEST_F(ConfiguratorTest, VisitedTS){
     auto e=make_successful();
     VisitedEdge ve(&transitionSystem, iteration);
     EXPECT_EQ(ve.getIteration(), 2);
-    VisitedTransitionSystem visitedTS(transitionSystem, ve);
     EXPECT_EQ(n_visitedEdges(), 1);
 }
 
@@ -228,7 +227,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, naive){
  * @brief Simulates finding option for task executing
  * 
  */
-TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
+TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited0){
     EXPECT_EQ(n_vertices(), 1); 
     currentTask.set_direction(std::get<1>(GetParam()));
     vertex_set_direction(currentVertex, std::get<1>(GetParam()));
@@ -241,6 +240,27 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     EXPECT_EQ(n_vertices(), 7); 
     planIsDirection(std::get<1>(GetParam()));
     currentVertex=MOVING_VERTEX;
+    current_vertices={2};
+    currentTask.set_change(false);
+    currentTask.setMotorStep(20);
+    iteration=2;
+    applyTransitionMatrix(MOVING_VERTEX, currentTask.get_direction(), false, MOVING_VERTEX, m_plan);
+    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
+    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options[0], currentTask.get_direction());
+}
+TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisitedCV){
+    EXPECT_EQ(n_vertices(), 1); 
+    currentTask.set_direction(std::get<1>(GetParam()));
+    vertex_set_direction(currentVertex, std::get<1>(GetParam()));
+    if (std::get<1>(GetParam())==UNDEFINED || std::get<1>(GetParam())==STOP){
+        return;
+    }
+    //dummy_vertex(MOVING_VERTEX);
+    currentVertex = boost::add_vertex(transitionSystem);
+    make_module(currentVertex);
+    EXPECT_EQ(n_vertices(), 7); 
+    planIsDirection(std::get<1>(GetParam()));
+    currentVertex=2;
     current_vertices={2};
     currentTask.set_change(false);
     currentTask.setMotorStep(20);

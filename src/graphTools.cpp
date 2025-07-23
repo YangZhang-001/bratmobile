@@ -225,8 +225,8 @@ std::pair <bool,edgeDescriptor>  gt::visitedEdge(const std::vector <edgeDescript
 	std::pair <bool,edgeDescriptor> result(false, edgeDescriptor());
 	for (edgeDescriptor e:es){
 		if ((g[e.m_source].visited() & g[e.m_target].visited()) || e.m_target==DUMMY){ 
-			result.first=true;
 			result.second=e;
+			result.first=true;
 			break;
 			//return result;
 		}
