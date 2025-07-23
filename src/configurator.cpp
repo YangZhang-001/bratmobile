@@ -37,6 +37,8 @@ void Configurator::dummy_vertex(vertexDescriptor src){
 	currentTask=Task(controlGoal.disturbance, Direction::STOP, b2Transform_zero, true);
 	movingEdge = boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
 	currentEdge = boost::add_edge(src, currentVertex, transitionSystem).first;
+	transitionSystem[movingEdge].it_observed=iteration;
+	transitionSystem[currentEdge].it_observed=iteration;
 	// printf("dummy, current edge = %i, %i\n", src, currentVertex);
 	transitionSystem[MOVING_VERTEX].direction=STOP;
 	transitionSystem[currentVertex].direction=STOP;

@@ -283,7 +283,7 @@ class HighLevelTestBase: public testing::Test{
      * 
      * @param nScans how many scans for
      */
-    void iterateFor(int nScans);
+    void trackFor(int nScans);
 
     /**
      * @brief Initialises Fixture
@@ -614,11 +614,13 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
     di.set_folder(folder);
     di.newScanAvail();
     configurator->data2fp= ci.data2fp;
-    VisitedTS notVisitedTS(configurator->get_ts(), Visited(configurator->get_ts(), configurator->iteration));
+    VisitedTS notVisitedTS(configurator->get_ts(), Visited(configurator->get_ts(), configurator->iteration+1));
     EXPECT_EQ(notVisitedTS.m_g.m_edges.size(), 0);
     configurator->Spawner();
     VisitedTS visitedTS(configurator->get_ts(), Visited(configurator->get_ts(), configurator->iteration));
-    EXPECT_GT(visitedTS.m_g.m_edges.size(), 1);
+    if (configurator->getIteration()>1){
+        EXPECT_LT(visitedTS.m_g.m_edges.size(), configurator->n_edges());
+    }
     return configurator->get_plan();
 }
 
@@ -648,7 +650,7 @@ std::pair<std::string, std::string> ReactToNoiseTest::carveScenario(std::string 
 }
 
 
-void HighLevelTestBase::iterateFor(int iteration){
+void HighLevelTestBase::trackFor(int iteration){
     for (int i=0;i<iteration-1; i++){ //simulate execution
     if (configurator->getIteration()>1){
         b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
@@ -663,8 +665,8 @@ void HighLevelTestBase::iterateFor(int iteration){
     di.newScanAvail();
     configurator->getFeatures(ci.data2fp);
     configurator->preExplore();
-    VisitedTS visitedTS(configurator->get_ts(), Visited(configurator->get_ts(), configurator->iteration));
-    EXPECT_EQ(visitedTS.m_g.m_edges.size(), 0);
+    VisitedTS trackedTS(configurator->get_ts(), Visited(configurator->get_ts(), configurator->iteration));
+    EXPECT_EQ(trackedTS.m_g.m_edges.size(), 0);
     EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
 }
 

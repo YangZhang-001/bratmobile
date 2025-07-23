@@ -58,6 +58,7 @@ TEST_F(ConfiguratorTest, TSCleanup){
     EXPECT_EQ(boost::out_degree(0, transitionSystem), 3);
 }
 
+
 TEST(Boost, CopyGraph){
     TransitionSystem g1(5), g2;
     for (int i=1; i<4;i++){
@@ -174,7 +175,7 @@ TEST_P(HighLevelTest, CheckPlan){
     std::vector<vertexDescriptor> plan= get_plan(folder);
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam());
-    iterateFor(iteration);
+    trackFor(iteration);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder, iteration-1); //map 2
     EXPECT_EQ(di.get_iteration(), iteration);
     int vertices_now=configurator->n_vertices();
@@ -260,10 +261,11 @@ TEST_P(ReactToNoiseTest, NoisyPlan){
     std::string folder=std::get<1>(GetParam()), folder2=std::get<2>(GetParam());
     std::vector<vertexDescriptor> plan= get_plan(folder);
     int vertices_og=configurator->n_vertices();
-    iterateFor(4);
+    trackFor(4);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder2, std::get<3>(GetParam())); //map 2
     int vertices_now=configurator->n_vertices();
-    EXPECT_LE(vertices_now, vertices_og);
+    EXPECT_GE(vertices_now, vertices_og);
+
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     bool success=planned_to_goal || configurator->getGoal().checkEnded(configurator->vertex_get_endPose(configurator->get_current_vertex())).ended;
     EXPECT_TRUE(success);
