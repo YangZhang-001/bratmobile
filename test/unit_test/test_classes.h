@@ -614,8 +614,10 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
     di.set_folder(folder);
     di.newScanAvail();
     configurator->data2fp= ci.data2fp;
+    VisitedTS notVisitedTS(configurator->get_ts(), Visited(configurator->get_ts(), configurator->iteration));
+    EXPECT_EQ(notVisitedTS.m_g.m_edges.size(), 0);
     configurator->Spawner();
-    VisitedTS visitedTS(configurator->get_ts(), Visited(configurator->get_ts(), it));
+    VisitedTS visitedTS(configurator->get_ts(), Visited(configurator->get_ts(), configurator->iteration));
     EXPECT_GT(visitedTS.m_g.m_edges.size(), 1);
     return configurator->get_plan();
 }
@@ -661,6 +663,8 @@ void HighLevelTestBase::iterateFor(int iteration){
     di.newScanAvail();
     configurator->getFeatures(ci.data2fp);
     configurator->preExplore();
+    VisitedTS visitedTS(configurator->get_ts(), Visited(configurator->get_ts(), configurator->iteration));
+    EXPECT_EQ(visitedTS.m_g.m_edges.size(), 0);
     EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
 }
 
