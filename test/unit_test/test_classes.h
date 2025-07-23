@@ -35,24 +35,24 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
 // 	TransitionSystem *g=NULL;
 // };
 
-// /**
-//  * @brief Predicate used to decide if an edge has been visited
-//  * 
-//  */
-// struct VisitedEdge{ 
-// 	VisitedEdge()=default;
-// 	VisitedEdge(TransitionSystem * ts, int _it):g(ts), iteration(_it){}
+/**
+ * @brief Predicate used to decide if an edge has been visited
+ * 
+ */
+struct VisitedEdge{ 
+	VisitedEdge()=default;
+	VisitedEdge(TransitionSystem * ts, int _it):g(ts), iteration(_it){}
 
-// 	bool operator()(const edgeDescriptor&e){
-//         bool result=(*g)[e].it_observed==iteration;
-// 		return result;
-// 	}
+	bool operator()(const edgeDescriptor&e){
+        bool result=(*g)[e].it_observed==iteration;
+		return result;
+	}
 
-//     int getIteration(){return iteration;}
-// 	private:
-// 	TransitionSystem *g=NULL;
-//     int iteration=0;
-// };
+    int getIteration(){return iteration;}
+	private:
+	TransitionSystem *g=NULL;
+    int iteration=0;
+};
 
 // //not sure why it doesn't filter the TS!
 // typedef boost::filtered_graph<TransitionSystem, VisitedEdge> VisitedTransitionSystem;
