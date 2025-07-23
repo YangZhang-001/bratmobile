@@ -223,6 +223,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					}
 				}
 				else{
+					plan_prov.clear();
 					auto out_expected=gt::outEdges(g, v0, t.get_direction());
 					edge= add_vertex_now(v0, v1,sk.first.Di, sk.second); //addVertex
 					shift=b2Transform_zero;
@@ -728,6 +729,14 @@ VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatche
 				}
 			}
 		}	
+		else{
+			if (sum_tmp<sum){			
+				if (NULL!=_sd){
+					*_sd=sd;
+			}
+			}
+
+		}
 	}
 	if (NULL!=other_matches){
 		for (VertexMatchTuple item:others_set){
