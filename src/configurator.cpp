@@ -718,7 +718,6 @@ VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatche
 				result.second=v;
 				VertexMatchTuple to_add(v, m, sum_tmp);
 				others_set.emplace(to_add);
-				
 			}
 			if (sum_tmp<sum){
 				sum=sum_tmp;
@@ -808,8 +807,6 @@ void AttentiveConfigurator::pre_explore(){
 		transitionSystem[MOVING_VERTEX].Di=transitionSystem[currentVertex].Di;
 		transitionSystem[MOVING_VERTEX].outcome=simResult::successful;
 		movingEdge=boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
-		transitionSystem[MOVING_VERTEX].phi=Planner::evaluationFunction(EndedResult(), MOVING_VERTEX, m_plan);
-
 	//  if (currentTask.get_change()){
 	//  	transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	//  }
@@ -897,6 +894,7 @@ void AttentiveConfigurator::explore_plan(b2World&world){
     pre_explore();
     vertexDescriptor src=get_explore_start(transitionSystem);
     resetPhi();
+	transitionSystem[MOVING_VERTEX].phi=Planner::evaluationFunction(EndedResult(), MOVING_VERTEX, m_plan);
     std::vector <vertexDescriptor> plan_tmp=explorer(src, transitionSystem, world);
     if (DEBUG){
         std::vector<vertexDescriptor> _plan=(m_plan);
