@@ -227,7 +227,8 @@ std::pair <bool,edgeDescriptor>  gt::visitedEdge(const std::vector <edgeDescript
 		if ((g[e.m_source].visited() & g[e.m_target].visited()) || e.m_target==DUMMY){ 
 			result.first=true;
 			result.second=e;
-			return result;
+			break;
+			//return result;
 		}
 
 	}

@@ -241,7 +241,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited){
     EXPECT_EQ(n_vertices(), 7); 
     planIsDirection(std::get<1>(GetParam()));
     currentVertex=MOVING_VERTEX;
-    current_vertices={currentVertex};
+    current_vertices={2};
     currentTask.set_change(false);
     currentTask.setMotorStep(20);
     iteration=2;
