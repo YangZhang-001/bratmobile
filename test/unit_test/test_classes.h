@@ -21,6 +21,39 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
     return os;
 }
 
+/**
+ * @brief Predicate used to decide if a vertex has been evaluated
+ */
+struct Evaluated{
+	Evaluated(){}
+	Evaluated(TransitionSystem * ts):g(ts){}
+
+	bool operator()(const vertexDescriptor&v)const{
+		return (*g)[v].visited();
+	}
+	private:
+	TransitionSystem *g;
+};
+
+/**
+ * @brief Predicate used to decide if an edge has been visited
+ * 
+ */
+struct Visited{ //for debug
+	Visited()=delete;
+	Visited(TransitionSystem & ts, int _it):g(ts), iteration(_it){}
+
+	bool operator()(const edgeDescriptor&e)const{
+		return g[e].it_observed==iteration;
+	}
+	private:
+	TransitionSystem &g;
+    int iteration=0;
+};
+
+typedef boost::filtered_graph<TransitionSystem, Visited> VisitedTS;
+
+
 class DebugConfigurator:public AttentiveConfigurator{
     public:
     friend class HighLevelTestBase;
@@ -218,6 +251,7 @@ class HighLevelTestBase: public testing::Test{
     Motor_Out m;
     HorizonStarPlanner planner;
     
+
     int iteration=0;
     void SetUp()override{
         std::cout<<"setup"<<std::endl;
@@ -581,6 +615,8 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
     di.newScanAvail();
     configurator->data2fp= ci.data2fp;
     configurator->Spawner();
+    VisitedTS visitedTS(configurator->get_ts(), Visited(configurator->get_ts(), it));
+    EXPECT_GT(visitedTS.m_g.m_edges.size(), 1);
     return configurator->get_plan();
 }
 

@@ -447,7 +447,6 @@ struct SameIteration{
 
 
 typedef boost::filtered_graph<TransitionSystem, ViableEdge, Connected> FilteredTS;
-//typedef boost::filtered_graph<TransitionSystem, boost::keep_all, Visited> VisitedTS;
 
 
 class StateMatcher{
