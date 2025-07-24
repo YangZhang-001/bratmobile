@@ -254,6 +254,9 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	std::vector <vertexDescriptor> split={v};
 	auto first_edge=boost::edge(src, v, transitionSystem); //assumes exists
 	if (gt::check_edge_direction(first_edge, transitionSystem, RIGHT)|| gt::check_edge_direction(first_edge, transitionSystem, LEFT)){ //d
+		if ((src==MOVING_VERTEX || src==DUMMY )&& transitionSystem[v].outcome==simResult::crashed){
+			split.emplace(split.begin(), src);
+		}
 		return split;
 	}
 	if (transitionSystem[v].outcome != simResult::crashed){
