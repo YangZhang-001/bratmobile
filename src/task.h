@@ -135,10 +135,11 @@ void setVelocities(const float & l,const float &r){
 
 };
 
-
-
+/**
+ * @brief Used to find collisions in the Box2D simulation
+ * 
+ */
 class Listener : public b2ContactListener {
- // int iteration=1;
     Disturbance * d_ptr;
     std::vector <b2Body*> collisions;
     public:
