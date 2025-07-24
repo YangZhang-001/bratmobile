@@ -7,7 +7,7 @@ class TaskTest: public Task, public ::testing::TestWithParam<Direction>{
 
     // TaskTest()=default;
 
-    EndCriteria init(const Disturbance & _disturbance, Direction _direction){
+    EndCriteria taskInit(const Disturbance & _disturbance, Direction _direction){
         disturbance=_disturbance;
         direction=_direction;
         action.init(_direction);
@@ -39,7 +39,7 @@ INSTANTIATE_TEST_CASE_P(Directions, TaskTest, testing::Values(LEFT, RIGHT, DEFAU
 
 TEST_P(TaskTest, TaskHasFixedEndCriteria){
     Direction _direction=GetParam();    
-    EndCriteria ec= init(Disturbance(AVOID, b2Vec2(0.5,0), 0), _direction); //tracked d
+    EndCriteria ec= taskInit(Disturbance(AVOID, b2Vec2(0.5,0), 0), _direction); //tracked d
     std::vector<BodyFeatures> objects({disturbance.bf});
     ClosedLoop_Tracker tracker;
     tracker.set_tracked_disturbance(disturbance);
@@ -48,5 +48,22 @@ TEST_P(TaskTest, TaskHasFixedEndCriteria){
     CoordinateContainer data2fp={point};
     tracker.track(*this, data2fp, objects);
     EXPECT_EQ(ec, getEndCriteria());
+}
+
+class ConfiguratorTestTask:public ConfiguratorTest, public TaskTest{};
+
+TEST_P(ConfiguratorTestTask, AdjustSimTask){
+    auto e=make_successful(MOVING_VERTEX);
+    Direction _direction=GetParam();    
+    EndCriteria ec= taskInit(Disturbance(AVOID, b2Vec2(0.5,0), 0), _direction); //tracked d
+    transitionSystem[e.m_target].direction=GetParam();
+    transitionSystem[e.m_target].Di=disturbance;
+    CLTrackerTest cltracker;
+    register_tracker(&cltracker);
+    cltracker.setDeltaTransform(-(action.getTransform(LIDAR_SAMPLING_RATE)));
+    adjust_simulated_task(e.m_target, *this);
+    EXPECT_GT(ec.angle, endCriteria.angle);
+    EXPECT_EQ(ec.distance, endCriteria.distance);
+
 
 }

@@ -252,6 +252,7 @@ class DebugConfigurator:public AttentiveConfigurator{
 };
 
 
+
  /**
  * @brief Test fixture for testing high-level processes such as planning and state-space exploration
  * 
@@ -339,6 +340,10 @@ class ReactToNoiseTest: public HighLevelTestBase, public ::testing::WithParamInt
 
 };
 
+class CLTrackerTest:public ClosedLoop_Tracker{
+    public:
+    void setDeltaTransform(b2Transform t){deltaTransform=t;}
+};
 
 /**
  * @brief Fixture class for testing Configurator functions

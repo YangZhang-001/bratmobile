@@ -24,7 +24,7 @@ class Tracker{
 
     b2Transform getDeltaTransform(){return deltaTransform;}
     /**
-    * calculates 2d affine transformation of input task's disturbance from t-1 to t
+    * calculates 2d affine transformation of input task's disturbance from t-1 to t. In other words, expresses how much the disturbance has moved
     * @param t input task
     * @param pts point cloud
     * @param objects world objects as extracted in worldbuilder

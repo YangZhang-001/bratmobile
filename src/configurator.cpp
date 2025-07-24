@@ -642,10 +642,12 @@ std::pair <edgeDescriptor, bool> AttentiveConfigurator::maxProbability(std::vect
 
 void AttentiveConfigurator::adjust_simulated_task(const vertexDescriptor &v, Task & t){
 	std::pair<edgeDescriptor, bool> ep= boost::edge(v, currentVertex, g);
-
 	if(!ep.second){ //no tgt	
 		return; //check until needs to be checked
 	}
+	if (!t.getEndCriteria().angle.isValid()){return;}
+	if (t.get_direction()==DEFAULT){return;}
+	t.getEndCriteria().adjust(-tracker->getDeltaTransform());
 	// if (t.get_direction()==currentTask.get_direction()){
 	// 	t.setEndCriteria(currentTask.getEndCriteria());
 	// }

@@ -204,6 +204,13 @@ AffordanceIndex getAffIndex(){
 Direction H(Disturbance ob, Direction d, bool topDown=0); //topDown enables Configurator topdown control on reactive behaviour
 
 
+/**
+ * @brief Sets the end criteria for this task (bounds of the Flow condition). Angle is a valid measurement for turning task but not for DEFAULT
+ * Tasks. 
+ * 
+ * @param angle manually input angle
+ * @param distance manually input distance
+ */
 void setEndCriteria(const Angle& angle=SAFE_ANGLE, const Distance& distance=BOX2DRANGE);
 
 void setEndCriteria(const Distance& distance);
