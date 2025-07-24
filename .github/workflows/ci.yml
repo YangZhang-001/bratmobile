@@ -37,7 +37,9 @@ jobs:
           cd ../bratmobile
       - name : Build
         shell: bash
-        run : cmake . & make & sudo make install
+        run : |
+                cd src/ & cmake . & make & sudo make install
+                cd .. & cmake . & make & sudo make install
       - name : Test
         run: |
             cd test/unit_test & ctest --output-on-failure
