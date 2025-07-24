@@ -52,7 +52,7 @@ TEST_P(TaskTest, TaskHasFixedEndCriteria){
     EXPECT_TRUE(ec==endCriteria);
 }
 
-TEST(Task, AdjustEndCriteria){
+TEST_F(TaskTest, AdjustEndCriteria){
     b2Transform transform;
     transform.q.Set(M_PI_4);
     endCriteria.angle.set(M_PI_2);

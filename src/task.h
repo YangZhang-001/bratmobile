@@ -285,14 +285,33 @@ Task(Disturbance ob, Direction d, b2Transform _start=b2Transform(b2Vec2(0.0, 0.0
  */
 simResult bumping_that(b2World & _world, int iteration, b2Body *, float remaining = SIM_DURATION);
 
-EndCriteria getEndCriteria(const Disturbance&);
+/**
+ * @brief Returns the endCriteria for this Task if it were to counteract Disturbance @param d
+ */
+EndCriteria getEndCriteria(const Disturbance& d);
 
+/**
+ * @brief Returns a REFERENCE to the endCriteria
+ */
 EndCriteria & getEndCriteria(){
     return endCriteria;
 }
 
-bool endCriteria_met(Angle &, Distance &);
+/**
+ * @brief Returns true if the endCriteria is met based on
+ * 
+ * @param a angle from the disturbance
+ * @param d distance from the disturbance
+ */
+bool endCriteria_met(Angle & a, Distance &d);
 
+/**
+ * @brief Returns a b2Transform expressing the pose of the disturbance relative to the robot in the robot's local coordinates
+ * 
+ * @param custom_start global coordinates of the task start, if null defaults to the origin
+ * @param d_obs a disturbance different from the Di for this task. If null defaults to Di
+ * @return b2Transform 
+ */
 b2Transform from_Di( const b2Transform * custom_start=NULL, Disturbance * d_obs=NULL); //d_obs disturbance observed rather than D with which task was init
 
 void set_change(bool b){
