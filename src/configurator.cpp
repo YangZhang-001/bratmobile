@@ -640,49 +640,49 @@ std::pair <edgeDescriptor, bool> AttentiveConfigurator::maxProbability(std::vect
 	return result;
 }
 
-void AttentiveConfigurator::adjust_simulated_task(const vertexDescriptor &v, TransitionSystem &g, Task * t){
+void AttentiveConfigurator::adjust_simulated_task(const vertexDescriptor &v, Task & t){
 	std::pair<edgeDescriptor, bool> ep= boost::edge(v, currentVertex, g);
 
 	if(!ep.second){ //no tgt	
 		return; //check until needs to be checked
 	}
-	if (t->get_direction()==currentTask.get_direction()){
-		t->setEndCriteria(currentTask.getEndCriteria());
-	}
-	else if (t->get_direction()==getOppositeDirection(currentTask.get_direction()).second){
-		t->setEndCriteria(Angle(M_PI-t->getEndCriteria().angle.get()));
-	}
+	// if (t.get_direction()==currentTask.get_direction()){
+	// 	t.setEndCriteria(currentTask.getEndCriteria());
+	// }
+	// else if (t.get_direction()==getOppositeDirection(currentTask.get_direction()).second){
+	// 	t.setEndCriteria(Angle(M_PI-t.getEndCriteria().angle.get()));
+	// }
 }
 
 
 
-void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, TransitionSystem &g, Task * t, const b2Transform & deltaPose){
-	std::pair<edgeDescriptor, bool> ep= boost::edge(v, currentVertex, g);
+// void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, TransitionSystem &g, Task * t, const b2Transform & deltaPose){
+// 	std::pair<edgeDescriptor, bool> ep= boost::edge(v, currentVertex, g);
 
-	if(!ep.second){ //no tgt	
-		if (v==0){
-			printf("edge doesn't exist");
-		}
-		return; //check until needs to be checked
-	}
-	// auto eb=boost::edge(currentEdge.m_source,currentEdge.m_target, transitionSystem);
-	// int stepsTraversed= g[eb.first].step-currentTask.motorStep; //eb.first
-	// float theta_exp=stepsTraversed*MOTOR_CALLBACK*currentTask.action.getOmega();
-	// float theta_obs=theta_exp;//currentTask.correct.getError()-theta_exp;
-	if (t->getAction().getOmega()!=0){
-		float remainingAngle = t->getEndCriteria().angle.get()-abs(deltaPose.q.GetAngle());
-	//	printf("step =%i/%i, remaining angle=%f\n", currentTask.motorStep, transitionSystem[currentEdge].step,remainingAngle);
-		// if (t->direction==getOppositeDirection(t->direction).second){
-		// 	remainingAngle=M_PI-remainingAngle;
-		// }
-		t->setEndCriteria(Angle(remainingAngle));
-	}
-	if(t->getAction().getLinearSpeed()>0){
-		//step-= (stepsTraversed*MOTOR_CALLBACK)*currentTask.action.getLinearSpeed();
-		t->setEndCriteria(Distance(t->getEndCriteria().distance.get()-deltaPose.p.Length()));
-	}			// -estimated distance covered
+// 	if(!ep.second){ //no tgt	
+// 		if (v==0){
+// 			printf("edge doesn't exist");
+// 		}
+// 		return; //check until needs to be checked
+// 	}
+// 	// auto eb=boost::edge(currentEdge.m_source,currentEdge.m_target, transitionSystem);
+// 	// int stepsTraversed= g[eb.first].step-currentTask.motorStep; //eb.first
+// 	// float theta_exp=stepsTraversed*MOTOR_CALLBACK*currentTask.action.getOmega();
+// 	// float theta_obs=theta_exp;//currentTask.correct.getError()-theta_exp;
+// 	if (t->getAction().getOmega()!=0){
+// 		float remainingAngle = t->getEndCriteria().angle.get()-abs(deltaPose.q.GetAngle());
+// 	//	printf("step =%i/%i, remaining angle=%f\n", currentTask.motorStep, transitionSystem[currentEdge].step,remainingAngle);
+// 		// if (t->direction==getOppositeDirection(t->direction).second){
+// 		// 	remainingAngle=M_PI-remainingAngle;
+// 		// }
+// 		t->setEndCriteria(Angle(remainingAngle));
+// 	}
+// 	if(t->getAction().getLinearSpeed()>0){
+// 		//step-= (stepsTraversed*MOTOR_CALLBACK)*currentTask.action.getLinearSpeed();
+// 		t->setEndCriteria(Distance(t->getEndCriteria().distance.get()-deltaPose.p.Length()));
+// 	}			// -estimated distance covered
 
-}
+// }
 
 
 
@@ -990,7 +990,7 @@ std::pair<State, Edge> AttentiveConfigurator::simulation_setup(b2World& w, Task 
 	Disturbance Di=getDisturbance(transitionSystem, v0, w, v0_options[0], start);
 	t = Task(Di, v0_options[0], start, true);//need to update end crit
 	std::pair <State, Edge> sk(State(start, Di, v0_options[0]), Edge());
-	adjust_simulated_task(v0, transitionSystem, &t);
+	adjust_simulated_task(v0, t);
 	worldBuilder.buildWorld(w, t.getStart(), t.get_direction(), t.get_disturbance(), 0.15, WorldBuilder::PARTITION); //was g[v].endPose
 	return sk;
 }

@@ -2,7 +2,10 @@
 #define MEASUREMENT_H
 #include "graphTools.h" 
 
-
+/**
+ * @brief A class for a single Task execution info measurement
+ * 
+ */
 class Measurement{
 protected:
     bool valid =0;
@@ -67,6 +70,8 @@ struct EndCriteria{
     bool hasEnd();
 
     void adjust(const b2Transform&);
+
+    bool operator=( EndCriteria ec);
 
 };
 

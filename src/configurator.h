@@ -274,7 +274,13 @@ void propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescrip
 //if in plan the vertex gets priority
 void planPriority(TransitionSystem&, vertexDescriptor); 
 
-void adjust_simulated_task(const vertexDescriptor&, TransitionSystem &, Task*);
+/**
+ * @brief If Task @param t corresponds to current Task, change its end criteria so that it is only simulated for the remainder of the end criteria
+ * 
+ * @param v source vertex for the task
+ * @param t task reference
+ */
+void adjust_simulated_task(const vertexDescriptor&v,  Task& t);
 
 //adjust real-world task
 void adjust_rw_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);

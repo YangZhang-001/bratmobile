@@ -1,6 +1,23 @@
 #include "test_classes.h"
 
-class TaskTest: public Task, public ::testing::TestWithParam<Direction>{};
+class TaskTest: public Task, public ::testing::TestWithParam<Direction>{
+    protected:
+    void setDisturbance(const Disturbance& _dist){disturbance=_dist;};
+    public:
+
+    // TaskTest()=default;
+
+    EndCriteria init(const Disturbance & _disturbance, Direction _direction){
+        disturbance=_disturbance;
+        direction=_direction;
+        action.init(_direction);
+        setEndCriteria();
+        return endCriteria;
+    }
+    Task getTask(){
+        return Task(disturbance, direction, b2Transform_zero, true);
+    }
+};
 
 TEST_P(TaskTest, EndCriteriaAngleSign){
     direction=GetParam();
@@ -18,3 +35,18 @@ TEST_P(TaskTest, EndCriteriaAngleSign){
 }
 
 INSTANTIATE_TEST_CASE_P(Directions, TaskTest, testing::Values(LEFT, RIGHT, DEFAULT));
+
+
+TEST_P(TaskTest, TaskHasFixedEndCriteria){
+    Direction _direction=GetParam();    
+    EndCriteria ec= init(Disturbance(AVOID, b2Vec2(0.5,0), 0), _direction); //tracked d
+    std::vector<BodyFeatures> objects({disturbance.bf});
+    ClosedLoop_Tracker tracker;
+    tracker.set_tracked_disturbance(disturbance);
+    math::MulT(-(action.getTransform(LIDAR_SAMPLING_RATE)), disturbance);
+    Pointf point(disturbance.getPosition().x, disturbance.getPosition().y);
+    CoordinateContainer data2fp={point};
+    tracker.track(*this, data2fp, objects);
+    EXPECT_EQ(ec, getEndCriteria());
+
+}

@@ -8,6 +8,7 @@
 class Tracker{
     protected:
     ThresholdLearner *learner=NULL;
+    b2Transform deltaTransform=b2Transform_zero;
     public:
     Threshold threshold=Threshold();
 
@@ -20,6 +21,8 @@ class Tracker{
     void register_learner(ThresholdLearner * l){
         learner=l;
     }
+
+    b2Transform getDeltaTransform(){return deltaTransform;}
     /**
     * calculates 2d affine transformation of input task's disturbance from t-1 to t
     * @param t input task
@@ -55,6 +58,8 @@ class Tracker{
     virtual void on_new_reading(Task * task=NULL)=0;
 
     virtual void init(Task * goal)=0;
+
+    virtual EndCriteria taskExecutionInfo();
 
     /**
     * @brief opens file where all the data is dumped
