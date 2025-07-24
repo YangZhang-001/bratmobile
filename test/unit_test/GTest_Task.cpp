@@ -82,3 +82,28 @@ TEST_P(ConfiguratorTestTask, AdjustSimTask){
 }
 
 INSTANTIATE_TEST_CASE_P(Directions, ConfiguratorTestTask, testing::Values(LEFT, RIGHT, DEFAULT));
+
+TEST_P(TaskTest, TerminateEarly){
+    float angle =M_PI_4;
+    if (GetParam()!=DEFAULT){
+        if (GetParam()==RIGHT){
+            angle=-angle;
+        }
+        endCriteria.angle.set(angle);
+        endCriteria.angle.setValid(true);
+    }
+    direction=GetParam();
+    b2Transform bfPose;
+    bfPose.p.x=.5;
+    b2World world(GRAVITY);
+    WorldBuilder wb;
+    BodyFeatures bf(bfPose);
+    disturbance=Disturbance(bf);
+    bf.attention=true;
+    wb.set_world_objects({bf});
+    wb.buildWorld(world, start, direction);
+    Robot robot(&world);
+    simResult result=bumping_that(world, 1, robot.body);
+    EXPECT_LT(fabs(result.endPose.q.GetAngle()), M_PI_2);
+
+}

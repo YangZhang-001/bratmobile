@@ -68,6 +68,8 @@ const std::map <Direction, std::pair<float, float>> default_kinematics={{DEFAULT
                                                                          {LEFT, std::pair<float, float>(0, WHEEL_SPEED_TURN)},
                                                                          {RIGHT, std::pair<float, float>(0, -WHEEL_SPEED_TURN)}};
 
+const b2Vec2 GRAVITY(0,0);
+
 #define PLANNING true
 #define BENCHMARKING true
 #define DEBUG false
