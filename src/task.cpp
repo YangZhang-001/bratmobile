@@ -262,7 +262,7 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 			a =Angle(robotTransform.q.GetAngle());	
 			float safeAngle=SAFE_ANGLE;
 			if (getAffIndex()==AVOID){
-				safeAngle==endCriteria.angle.get();
+				safeAngle=endCriteria.angle.get();
 			}				
 			float angleL = start.q.GetAngle()+safeAngle;
 			float angleR = start.q.GetAngle()-safeAngle;

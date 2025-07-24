@@ -117,6 +117,8 @@ TEST_P(TaskTest, TerminateEarly){
     WorldBuilder wb;
     BodyFeatures bf(bfPose);
     disturbance=Disturbance(bf);
+    affordance=disturbance.getAffIndex();
+    EXPECT_EQ(disturbance.getAffIndex(), AVOID);
     disturbance.validate();
     bf.attention=true;
     wb.set_world_objects({bf});
