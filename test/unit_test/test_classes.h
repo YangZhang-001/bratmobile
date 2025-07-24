@@ -35,6 +35,7 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
 // 	TransitionSystem *g=NULL;
 // };
 
+
 /**
  * @brief Predicate used to decide if an edge has been visited
  * 

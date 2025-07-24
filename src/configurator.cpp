@@ -641,7 +641,7 @@ std::pair <edgeDescriptor, bool> AttentiveConfigurator::maxProbability(std::vect
 }
 
 void AttentiveConfigurator::adjust_simulated_task(const vertexDescriptor &v, Task & t){
-	std::pair<edgeDescriptor, bool> ep= boost::edge(v, currentVertex, g);
+	std::pair<edgeDescriptor, bool> ep= boost::edge(v, currentVertex, transitionSystem);
 	if(!ep.second){ //no tgt	
 		return; //check until needs to be checked
 	}

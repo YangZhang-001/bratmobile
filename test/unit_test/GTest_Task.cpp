@@ -62,7 +62,7 @@ TEST_P(ConfiguratorTestTask, AdjustSimTask){
     register_tracker(&cltracker);
     cltracker.setDeltaTransform(-(action.getTransform(LIDAR_SAMPLING_RATE)));
     adjust_simulated_task(e.m_target, *this);
-    EXPECT_GT(ec.angle, endCriteria.angle);
+    EXPECT_TRUE(endCriteria.angle< ec.angle);
     EXPECT_EQ(ec.distance, endCriteria.distance);
 
 

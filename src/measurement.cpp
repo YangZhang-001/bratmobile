@@ -33,6 +33,18 @@ bool Measurement::operator>=(Measurement &m2){
     return r;
 }
 
+bool Measurement::operator==(Measurement & m2){
+    bool r=false;
+    if (valid == m2.isValid() ){
+        if (valid){
+            r= get_signed()==m2.get_signed();
+        }
+        else {r=true;}
+    }
+    return r;
+}
+
+
 
 float Measurement::getStandardError(Measurement m2, float max){ 
     float result =0;

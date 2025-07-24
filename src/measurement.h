@@ -34,11 +34,22 @@ public:
         valid = b;
     }
 
+    /**
+     * @brief Compares absolute values
+     */
     bool operator<(Measurement &);
-
+    /**
+     * @brief Compares absolute values
+     */
     bool operator<=(Measurement &);
-
+    /**
+     * @brief Compares absolute values
+     */
     bool operator>=(Measurement &);
+    /**
+     * @brief Compares signed values
+     */
+    bool operator==(Measurement &);
 
     float getStandardError(Measurement, float); //relative standard error
 

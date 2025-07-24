@@ -59,7 +59,6 @@ class Tracker{
 
     virtual void init(Task * goal)=0;
 
-    virtual EndCriteria taskExecutionInfo();
 
     /**
     * @brief opens file where all the data is dumped
