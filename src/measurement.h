@@ -2,6 +2,7 @@
 #define MEASUREMENT_H
 #include "graphTools.h" 
 
+class Task; //forward decl
 /**
  * @brief A class for a single Task execution info measurement
  * 
@@ -46,14 +47,16 @@ public:
      * @brief Compares absolute values
      */
     bool operator>=(Measurement &);
+
     /**
      * @brief Compares signed values
      */
-    bool operator==(Measurement &);
-
+    bool operator==(Measurement& m2);
     float getStandardError(Measurement, float); //relative standard error
 
 };
+
+
 
 class Angle: public Measurement{
     public:
@@ -72,6 +75,7 @@ class Distance: public Measurement{
 };
 
 struct EndCriteria{
+    friend Task;
     Angle angle;
     Distance distance;    //max distance, ideal
     bool outOfSight=true;
@@ -80,9 +84,14 @@ struct EndCriteria{
     float getStandardError(Angle, Distance, State);
     bool hasEnd();
 
+
+    void operator=( EndCriteria ec){
+        angle=ec.angle;
+        distance=ec.distance;
+    }
+    //protected:
     void adjust(const b2Transform&);
 
-    bool operator=( EndCriteria ec);
 
 };
 

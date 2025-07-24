@@ -77,9 +77,6 @@ float EndCriteria::getStandardError(Angle a, Distance d, State n){
     return result/3; //normalised to max value it can take
 }
 
-bool EndCriteria::operator=(EndCriteria ec){
-    return angle.isValid()==ec.angle.isValid() && distance.isValid()==ec.distance.isValid() && angle.get_signed()==ec.angle.get_signed() && distance.get_signed()==ec.distance.get_signed();
-}
 
 
 float SignedVectorLength(b2Vec2 v){

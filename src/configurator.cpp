@@ -647,6 +647,7 @@ void AttentiveConfigurator::adjust_simulated_task(const vertexDescriptor &v, Tas
 	}
 	if (!t.getEndCriteria().angle.isValid()){return;}
 	if (t.get_direction()==DEFAULT){return;}
+	// t.adjustEndCriteria(-tracker->getDeltaTransform());
 	t.getEndCriteria().adjust(-tracker->getDeltaTransform());
 	// if (t.get_direction()==currentTask.get_direction()){
 	// 	t.setEndCriteria(currentTask.getEndCriteria());

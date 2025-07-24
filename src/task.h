@@ -219,6 +219,8 @@ void setEndCriteria(const EndCriteria & ec){
     endCriteria=ec;
 }
 
+// void adjustEndCriteria(b2Transform t){endCriteria.adjust(t);}
+
 /**
  * @brief Check if this task has ended based on state information (default are info for the task which calls the method)
  * 
@@ -285,7 +287,7 @@ simResult bumping_that(b2World & _world, int iteration, b2Body *, float remainin
 
 EndCriteria getEndCriteria(const Disturbance&);
 
-EndCriteria getEndCriteria(){
+EndCriteria & getEndCriteria(){
     return endCriteria;
 }
 

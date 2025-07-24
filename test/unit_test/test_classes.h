@@ -35,6 +35,11 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
 // 	TransitionSystem *g=NULL;
 // };
 
+bool operator==( EndCriteria &ec1, EndCriteria& ec2){
+    return ec1.angle==ec2.angle && ec1.distance==ec2.distance;
+
+}
+
 
 /**
  * @brief Predicate used to decide if an edge has been visited
@@ -248,6 +253,15 @@ class DebugConfigurator:public AttentiveConfigurator{
     static Task generateGoalTask();
 
     static Disturbance generateGoal();
+
+        /**
+     * @brief Creates a vertex whose state starts and end at the origin. Not visited by default
+     * 
+     * @param v0 
+     * @return edgeDescriptor 
+     */
+    edgeDescriptor make_successful(vertexDescriptor v0=0);
+
     
 
 };
@@ -320,6 +334,8 @@ class HighLevelTestBase: public testing::Test{
      */
     std::vector<vertexDescriptor> get_plan(std::string folder, int it=0);
 
+    
+
 
 };
 
@@ -367,13 +383,6 @@ protected:
         }
     };
 
-    /**
-     * @brief Creates a vertex whose state starts and end at the origin. Not visited by default
-     * 
-     * @param v0 
-     * @return edgeDescriptor 
-     */
-    edgeDescriptor make_successful(vertexDescriptor v0=0);
     /**
      * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state. Not visited by default
      * 
@@ -725,7 +734,7 @@ Logger ReactToNoiseTest::makeLogger(const char * testInfo){
     return Logger(testCaseDir.c_str(), systemArchDir.c_str(), scenario.c_str());
 }
 
-edgeDescriptor ConfiguratorTest::make_successful(vertexDescriptor v0){
+edgeDescriptor DebugConfigurator::make_successful(vertexDescriptor v0){
     auto v1=boost::add_vertex(transitionSystem);
     auto e=boost::add_edge(v0, v1, transitionSystem);
     transitionSystem[v1].direction=DEFAULT;
