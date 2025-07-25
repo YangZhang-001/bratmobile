@@ -82,6 +82,9 @@ class DebugConfigurator:public AttentiveConfigurator{
 
     const std::vector <vertexDescriptor>& get_plan(){ return m_plan;}
 
+    std::vector <vertexDescriptor>& get_plan_nConst(){ return m_plan;}
+
+
     bool plan_reaches_horizon();
 
     bool plan_reaches_goal();
@@ -262,10 +265,32 @@ class DebugConfigurator:public AttentiveConfigurator{
      */
     edgeDescriptor make_successful(vertexDescriptor v0=0);
 
-    
+        /**
+     * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state. Not visited by default
+     * 
+     */
+    edgeDescriptor make_v1_crashed( vertexDescriptor v0=0, b2Transform start=b2Transform_zero, b2Transform end=b2Transform_zero, b2Transform Dn=b2Transform_inf);
 
+    /**
+     * @brief Makes a basic expansion module,  disturbances not set. Module looks like this
+     *               
+     *              v2(LEFT)---v3(DEFAULT)
+                   /   
+                 v0 --- q1(DEFAULT)
+                   \
+                    v4(RIGHT) --- v5(DEFAULT)
+     * 
+     * Not visited by default
+     */
+    void make_module(vertexDescriptor mv=0);
+
+    void add_edge_withPoses(vertexDescriptor u, vertexDescriptor v);
+
+    void addStepToEdge(edgeDescriptor e);
+    
 };
 
+class WiseControllerTest: public Wise_Controller, public ::testing::Test{};
 
 
  /**
@@ -383,24 +408,6 @@ protected:
         }
     };
 
-    /**
-     * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state. Not visited by default
-     * 
-     */
-    edgeDescriptor make_v1_crashed( vertexDescriptor v0=0, b2Transform start=b2Transform_zero, b2Transform end=b2Transform_zero, b2Transform Dn=b2Transform_inf);
-
-    /**
-     * @brief Makes a basic expansion module,  disturbances not set. Module looks like this
-     *               
-     *              v2(LEFT)---v3(DEFAULT)
-                   /   
-                 v0 --- q1(DEFAULT)
-                   \
-                    v4(RIGHT) --- v5(DEFAULT)
-     * 
-     * Not visited by default
-     */
-    void make_module(vertexDescriptor mv=0);
 
     /**
      * @brief Assign phi to all vertices
@@ -427,9 +434,7 @@ public:
      */
     BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth);
 
-    void add_edge_withPoses(vertexDescriptor u, vertexDescriptor v);
 
-    void addStepToEdge(edgeDescriptor e);
 
 };
 
@@ -743,7 +748,7 @@ edgeDescriptor DebugConfigurator::make_successful(vertexDescriptor v0){
     return e.first;
 }
 
-edgeDescriptor ConfiguratorTest::make_v1_crashed( vertexDescriptor v0, b2Transform start, b2Transform end, b2Transform Dn){
+edgeDescriptor DebugConfigurator::make_v1_crashed( vertexDescriptor v0, b2Transform start, b2Transform end, b2Transform Dn){
     edgeDescriptor e=make_successful(v0);
     vertexDescriptor v1=e.m_target;
     transitionSystem[v1].outcome=simResult::crashed;
@@ -754,7 +759,7 @@ edgeDescriptor ConfiguratorTest::make_v1_crashed( vertexDescriptor v0, b2Transfo
     return e;
 }
 
-void ConfiguratorTest::make_module(vertexDescriptor mv){
+void DebugConfigurator::make_module(vertexDescriptor mv){
     //mv=currentVertex;
     std::vector<vertexDescriptor>new_vertices;
     for (int i=0; i<5; i++){
@@ -786,7 +791,7 @@ BodyFeatures ConfiguratorTest::bodyFeatures(float x, float y, float q, float hle
     return bf;
 }
 
-void ConfiguratorTest::add_edge_withPoses(vertexDescriptor u, vertexDescriptor v){
+void DebugConfigurator::add_edge_withPoses(vertexDescriptor u, vertexDescriptor v){
     transitionSystem[v].start=transitionSystem[u].endPose;
     b2Transform distance=b2Transform_zero;
     switch (transitionSystem[v].direction){
@@ -807,7 +812,7 @@ void ConfiguratorTest::add_edge_withPoses(vertexDescriptor u, vertexDescriptor v
     transitionSystem[e.first].it_observed=iteration;
 }
 
-void ConfiguratorTest::addStepToEdge(edgeDescriptor e){
+void DebugConfigurator::addStepToEdge(edgeDescriptor e){
     Task::Action a;
     Direction direction=transitionSystem[e.m_target].direction;
     a.init(direction);

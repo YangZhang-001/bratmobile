@@ -73,6 +73,18 @@ TEST_F(ConfiguratorTest, VisitingEdge){
     EXPECT_FALSE(ve(e.first));
 }
 
+TEST_F(ConfiguratorTest, CurrentVertices){
+    init();
+    EXPECT_EQ(current_vertices.size(), 0);
+}
+
+TEST_F(ConfiguratorTest, CurrentVerticesDummy){
+    init();
+    dummy_vertex(MOVING_VERTEX);
+    EXPECT_EQ(current_vertices.size(), 0);
+}
+
+
 TEST(VisitedEdge, Return){
     TransitionSystem ts(2);
     auto e=boost::add_edge(0, 1, ts);

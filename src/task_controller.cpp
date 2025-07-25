@@ -51,7 +51,6 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
 		float distance = g[p[end_it]].end_from_Dn().p.Length();
 		t.setEndCriteria(Distance(distance)); //set task to get within a certain distance from an object (as planned) and then terminate
         disturbance_q=g[p[0]].Dn;
-
 	}
 	else{
 		Disturbance Di;
