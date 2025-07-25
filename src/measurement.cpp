@@ -93,7 +93,9 @@ bool EndCriteria::hasEnd(){
 
 void EndCriteria::adjust(const b2Transform& delta){
     if (angle.isValid()){
-        angle.set(angle.get_signed()-delta.q.GetAngle());
+        b2Rot newAngle=b2MulT(b2Rot(angle.get_signed()), delta.q);
+        //angle.set(angle.get_signed()-delta.q.GetAngle());
+        angle.set(newAngle.GetAngle());
     }
     if (distance.isValid()){
         distance.set(distance.get_signed()-delta.p.Length());
