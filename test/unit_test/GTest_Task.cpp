@@ -1,6 +1,6 @@
 #include "test_classes.h"
 
-class TaskTest: public Task, public ::testing::TestWithParam<Direction>{
+class TaskTest: public Task{
     protected:
     void setDisturbance(const Disturbance& _dist){disturbance=_dist;};
     public:
@@ -21,7 +21,28 @@ class TaskTest: public Task, public ::testing::TestWithParam<Direction>{
     }
 };
 
-TEST_P(TaskTest, EndCriteriaAngleSign){
+class TaskTestEndCriteria: public Task, public ::testing::TestWithParam<Direction>{
+    protected:
+    void setDisturbance(const Disturbance& _dist){disturbance=_dist;};
+    public:
+
+    void TearDown(){
+        taskInit(Disturbance(), DEFAULT);
+    }
+
+    EndCriteria taskInit(const Disturbance & _disturbance, Direction _direction){
+        disturbance=_disturbance;
+        direction=_direction;
+        action.init(_direction);
+        setEndCriteria();
+        return endCriteria;
+    }
+    Task getTask(){
+        return Task(disturbance, direction, b2Transform_zero, true);
+    }
+};
+
+TEST_P(TaskTestEndCriteria, EndCriteriaAngleSign){
     direction=GetParam();
     action.init(direction);
     EXPECT_EQ(direction, GetParam());
@@ -36,7 +57,7 @@ TEST_P(TaskTest, EndCriteriaAngleSign){
     }
 }
 
-TEST_P(TaskTest, EndCriteriaAngleSignTarget){
+TEST_P(TaskTestEndCriteria, EndCriteriaAngleSignTarget){
     disturbance=Disturbance(PURSUE, b2Vec2(1.0,0));
     direction=GetParam();
     action.init(direction);
@@ -52,10 +73,10 @@ TEST_P(TaskTest, EndCriteriaAngleSignTarget){
     }
 }
 
-INSTANTIATE_TEST_CASE_P(Directions, TaskTest, testing::Values(LEFT, RIGHT, DEFAULT));
+INSTANTIATE_TEST_CASE_P(Directions, TaskTestEndCriteria, testing::Values(LEFT, RIGHT, DEFAULT));
 
 
-TEST_P(TaskTest, TaskHasFixedEndCriteria){
+TEST_P(TaskTestEndCriteria, TaskHasFixedEndCriteria){
     Direction _direction=GetParam();    
     EndCriteria ec= taskInit(Disturbance(AVOID, b2Vec2(0.5,0), 0), _direction); //tracked d
     std::vector<BodyFeatures> objects({disturbance.bf});
@@ -68,7 +89,7 @@ TEST_P(TaskTest, TaskHasFixedEndCriteria){
     EXPECT_TRUE(ec==endCriteria);
 }
 
-TEST_F(TaskTest, AdjustEndCriteria){
+TEST_F(TaskTestEndCriteria, AdjustEndCriteria){
     b2Transform transform;
     transform.q.Set(M_PI_4);
     endCriteria.angle.set(M_PI_2);
@@ -77,7 +98,7 @@ TEST_F(TaskTest, AdjustEndCriteria){
     EXPECT_LT(endCriteria.angle.get_signed(), M_PI_2);
 }
 
-class ConfiguratorTestTask:public DebugConfigurator, public TaskTest{};
+class ConfiguratorTestTask:public DebugConfigurator, public TaskTestEndCriteria{};
 
 TEST_P(ConfiguratorTestTask, AdjustSimTask){
     auto e=make_successful(MOVING_VERTEX);
@@ -92,6 +113,9 @@ TEST_P(ConfiguratorTestTask, AdjustSimTask){
     cltracker.setDeltaTransform(-(action.getTransform(LIDAR_SAMPLING_RATE)));
     adjust_simulated_task(e.m_source, *this);
     EXPECT_TRUE(endCriteria.angle< ec.angle);
+    if (GetParam()!=DEFAULT){
+        EXPECT_EQ(endCriteria.angle.get(), ec.angle.get()-fabs(cltracker.getDeltaTransform().q.GetAngle()));
+    }
     EXPECT_TRUE(ec.distance ==endCriteria.distance);
 
 }
@@ -109,22 +133,27 @@ TEST_P(ConfiguratorTestTask, AdjustSimOppositeTask){
     cltracker.setDeltaTransform(-(action.getTransform(LIDAR_SAMPLING_RATE)));
     adjust_simulated_task(e.m_source, *this);
     EXPECT_TRUE(ec.angle<endCriteria.angle);
+    if (GetParam()!=DEFAULT){
+        EXPECT_EQ(endCriteria.angle.get(), ec.angle.get()+fabs(cltracker.getDeltaTransform().q.GetAngle()));
+    }
     EXPECT_TRUE(ec.distance ==endCriteria.distance);
 }
 
 INSTANTIATE_TEST_CASE_P(Directions, ConfiguratorTestTask, testing::Values(LEFT, RIGHT, DEFAULT));
 
-TEST_P(TaskTest, TerminateEarly){
+class TaskTestTermination: public TaskTest, public testing::TestWithParam<std::tuple<Direction, float>>{};
+
+TEST_P(TaskTestTermination, TerminateEarly){
     float angle =0;
-    if (GetParam()!=DEFAULT){
-        angle=M_PI_4;
-        if (GetParam()==RIGHT){
+    if (std::get<0>(GetParam())!=DEFAULT){
+        angle=std::get<1>(GetParam());
+        if (std::get<0>(GetParam())==RIGHT){
             angle=-angle;
         }
         endCriteria.angle.set(angle);
         endCriteria.angle.setValid(true);
     }
-    direction=GetParam();
+    direction=std::get<0>(GetParam());
     action.init(direction);
     b2Transform bfPose;
     bfPose.p.x=.5;
@@ -142,4 +171,37 @@ TEST_P(TaskTest, TerminateEarly){
     simResult result=bumping_that(world, 1, robot.body);
     EXPECT_NEAR(robot.body->GetTransform().q.GetAngle(), angle, M_PI/(2*HZ));
 }
+
+INSTANTIATE_TEST_CASE_P(TerminateEarly, TaskTestTermination, ::testing::Combine(testing::Values(LEFT, RIGHT, DEFAULT), ::testing::Values(M_PI_4)));
+INSTANTIATE_TEST_CASE_P(TerminateLate, TaskTestTermination, ::testing::Combine(testing::Values(LEFT, RIGHT, DEFAULT), ::testing::Values(M_PI_4+M_PI_2)));
+
+
+// TEST_P(TaskTest, TerminateLate){
+//     float angle =0;
+//     if (GetParam()!=DEFAULT){
+//         angle=M_PI_4+M_PI_2;
+//         if (GetParam()==RIGHT){
+//             angle=-angle;
+//         }
+//         endCriteria.angle.set(angle);
+//         endCriteria.angle.setValid(true);
+//     }
+//     direction=GetParam();
+//     action.init(direction);
+//     b2Transform bfPose;
+//     bfPose.p.x=.5;
+//     b2World world(GRAVITY);
+//     WorldBuilder wb;
+//     BodyFeatures bf(bfPose);
+//     disturbance=Disturbance(bf);
+//     affordance=disturbance.getAffIndex();
+//     EXPECT_EQ(disturbance.getAffIndex(), AVOID);
+//     disturbance.validate();
+//     bf.attention=true;
+//     wb.set_world_objects({bf});
+//     wb.buildWorld(world, start, direction);
+//     Robot robot(&world);
+//     simResult result=bumping_that(world, 1, robot.body);
+//     EXPECT_NEAR(robot.body->GetTransform().q.GetAngle(), angle, M_PI/(2*HZ));
+// }
 

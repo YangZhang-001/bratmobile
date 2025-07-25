@@ -1,22 +1,24 @@
 #include "tracker.h"
 
 b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects){
-    deltaTransform=get_transform(t, pts, t.get_disturbance_ptr(), objects);
+    b2Transform result=get_transform(t, pts, t.get_disturbance_ptr(), objects);
     math::MulT(-deltaTransform, *t.get_disturbance_ptr());
     t.setMotorStep(t.getMotorStep()-1);
     if (t.getMotorStep()<1){
         t.set_change(true);
     }
-    return deltaTransform;
+    deltaTransform=b2Mul(deltaTransform, result);
+    return result;
 }
 
 b2Transform ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects){
-    deltaTransform=get_transform(t, pts, t.get_disturbance_ptr(), objects);
+    b2Transform result=get_transform(t, pts, t.get_disturbance_ptr(), objects);
 	bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
 	if(t.getMotorStep()==0 || ended){
 		t.set_change(true);
 	}    
-    return deltaTransform;
+    deltaTransform=b2Mul(deltaTransform, result);
+    return result;
 }
 
 
@@ -131,6 +133,7 @@ void ClosedLoop_Tracker::on_new_task(Task *task){
         throw "no task!";
     }
     tracked_disturbance=task->get_disturbance();
+    deltaTransform=b2Transform_zero;
 }
 
 void ClosedLoop_Tracker::on_new_reading(Task * goal){
