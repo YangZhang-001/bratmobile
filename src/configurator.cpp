@@ -577,7 +577,7 @@ void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction
 	std::vector <vertexDescriptor> full_plan=plan_prov;
 	//if (!currentTask.get_change()){ // && !full_plan.empty()
 		full_plan.insert(full_plan.begin(), current_vertices.begin(), current_vertices.end());
-		if (v0==MOVING_VERTEX ){ //&& !currentTask.get_change()
+		if (v0==MOVING_VERTEX && !currentTask.get_change()){
 			full_plan.emplace(full_plan.begin(), v0);
 		}
 	//}
@@ -647,7 +647,12 @@ void AttentiveConfigurator::adjust_simulated_task(const vertexDescriptor &v, Tas
 	}
 	if (!t.getEndCriteria().angle.isValid()){return;}
 	if (t.get_direction()==DEFAULT){return;}
-	t.getEndCriteria().adjust(-tracker->getDeltaTransform());
+	if (t.get_direction()==currentTask.get_direction()){
+		t.getEndCriteria().adjust(-tracker->getDeltaTransform());
+	}
+	else if (t.get_direction()==getOppositeDirection(currentTask.get_direction()).second){
+		t.getEndCriteria().adjust(tracker->getDeltaTransform());
+	}
 }
 
 

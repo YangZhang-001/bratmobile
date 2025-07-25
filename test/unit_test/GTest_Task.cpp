@@ -75,7 +75,6 @@ TEST_F(TaskTest, AdjustEndCriteria){
     endCriteria.angle.setValid(true);
     endCriteria.adjust(transform);
     EXPECT_LT(endCriteria.angle.get_signed(), M_PI_2);
-
 }
 
 class ConfiguratorTestTask:public DebugConfigurator, public TaskTest{};
@@ -95,6 +94,22 @@ TEST_P(ConfiguratorTestTask, AdjustSimTask){
     EXPECT_TRUE(endCriteria.angle< ec.angle);
     EXPECT_TRUE(ec.distance ==endCriteria.distance);
 
+}
+
+TEST_P(ConfiguratorTestTask, AdjustSimOppositeTask){
+    auto e=make_successful(MOVING_VERTEX);
+    currentVertex=e.m_target;
+    Direction _direction=getOppositeDirection(GetParam()).second;     
+    EndCriteria ec= taskInit(Disturbance(AVOID, b2Vec2(0.5,0), 0), _direction); //tracked d
+    transitionSystem[e.m_target].direction=GetParam();
+    currentTask.set_direction(GetParam());
+    transitionSystem[e.m_target].Di=disturbance;
+    CLTrackerTest cltracker;
+    register_tracker(&cltracker);
+    cltracker.setDeltaTransform(-(action.getTransform(LIDAR_SAMPLING_RATE)));
+    adjust_simulated_task(e.m_source, *this);
+    EXPECT_TRUE(ec.angle<endCriteria.angle);
+    EXPECT_TRUE(ec.distance ==endCriteria.distance);
 }
 
 INSTANTIATE_TEST_CASE_P(Directions, ConfiguratorTestTask, testing::Values(LEFT, RIGHT, DEFAULT));
@@ -127,3 +142,4 @@ TEST_P(TaskTest, TerminateEarly){
     simResult result=bumping_that(world, 1, robot.body);
     EXPECT_NEAR(robot.body->GetTransform().q.GetAngle(), angle, M_PI/(2*HZ));
 }
+
