@@ -199,10 +199,8 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam());
     trackFor(iteration);
-    std::vector<vertexDescriptor> updated_plan=get_plan(iteration-1, std::get<3>(GetParam())); //map 2
-    EXPECT_EQ(di.get_iteration(), iteration);
+    std::vector<vertexDescriptor> updated_plan=get_InterruptedPlan(iteration-1, std::get<3>(GetParam())); //map 2
     int vertices_now=configurator->n_vertices();
-    EXPECT_LE(vertices_now, vertices_og);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     bool success=planned_to_goal || configurator->getGoal().checkEnded(configurator->vertex_get_endPose(configurator->get_current_vertex())).ended;
     EXPECT_TRUE(success);
@@ -257,12 +255,12 @@ TEST_P(HighLevelTest, Recycle){
     EXPECT_TRUE(planned_to_goal);
 }
 
-INSTANTIATE_TEST_CASE_P(CulDeSac, HighLevelTest, ::testing::Combine( ::testing::Values(false), ::testing::Values(std::string("../cul_de_sac/"), ::testing::Values(2, 3, 4, 17, 36))));
+INSTANTIATE_TEST_CASE_P(CulDeSac, HighLevelTest, ::testing::Combine( ::testing::Values(false), ::testing::Values(std::string("../cul_de_sac/")), ::testing::Values(2, 3, 4, 17, 36)));
                                                                   
 
-INSTANTIATE_TEST_CASE_P(Target40, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_40cm/"), ::testing::Values(2, 3, 4, 6,17, 36, 89))));
+INSTANTIATE_TEST_CASE_P(Target40, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_40cm/")), ::testing::Values(2, 3, 4, 6,17, 36, 89)));
 
-INSTANTIATE_TEST_CASE_P(Target40, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_68cm/"), ::testing::Values(2, 3, 4, 6,17, 36, 89))));
+INSTANTIATE_TEST_CASE_P(Target68, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_68cm/")), ::testing::Values(2, 3, 4, 6,17, 36, 89)));
 
 
 

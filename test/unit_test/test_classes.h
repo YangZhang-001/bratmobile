@@ -383,7 +383,7 @@ class HighLevelInterruptTest: public HighLevelTestBase, public testing::WithPara
      * @param taskOrder order of task in plan we want to interrupt. 0 is the current task
      * 
      */
-    std::vector<vertexDescriptor> get_plan(int it, int taskOrder);
+    std::vector<vertexDescriptor> get_InterruptedPlan(int it, int taskOrder);
 
     Pointf generateInterruptingPoint(int taskOrder);
 
@@ -680,7 +680,7 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
     return configurator->get_plan();
 }
 
-std::vector<vertexDescriptor> HighLevelInterruptTest::get_plan(int it, int taskOrder){
+std::vector<vertexDescriptor> HighLevelInterruptTest::get_InterruptedPlan(int it, int taskOrder){
     di.set_iteration(it);
     configurator->set_data2fp({generateInterruptingPoint(taskOrder)});
     EXPECT_EQ(configurator->n_visitedEdges(), 0);
@@ -692,9 +692,16 @@ Pointf HighLevelInterruptTest::generateInterruptingPoint(int taskOrder){
     EXPECT_GT(configurator->get_plan().size(), taskOrder);
     vertexDescriptor vertexToInterrupt=configurator->get_plan()[taskOrder];
     //get task order length
-    float x=configurator->vertex_get_endPose(vertexToInterrupt).p.x;
-    float y=configurator->vertex_get_endPose(vertexToInterrupt).p.y;
-    return Pointf(x, y);
+    b2Vec2 br=Robot::get_vertices()[1];
+    b2Vec2 pt;
+    if (configurator->vertex_get_direction(vertexToInterrupt)==DEFAULT){
+        pt.x=configurator->vertex_get_endPose(vertexToInterrupt).p.x;
+        pt.y=configurator->vertex_get_endPose(vertexToInterrupt).p.y;
+    }
+    else{
+        pt=b2Mul(configurator->vertex_get_endPose(vertexToInterrupt), br);
+    }
+    return Pointf(pt.x, pt.y);
 }
     
 

@@ -36,7 +36,10 @@ public:
 		
 	}
 
-	static std::vector <b2Vec2> get_vertices(){ //returns vertices in local frame
+/**
+ * @brief Returns vertices in local frame. Order: bl, br, tl, tr 
+ */
+	static std::vector <b2Vec2> get_vertices(){ 
 		std::vector <b2Vec2>result ={b2Vec2(-ROBOT_HALFWIDTH, -ROBOT_HALFLENGTH), b2Vec2(ROBOT_HALFWIDTH, -ROBOT_HALFLENGTH), b2Vec2(-ROBOT_HALFWIDTH, ROBOT_HALFLENGTH), b2Vec2(ROBOT_HALFWIDTH, ROBOT_HALFLENGTH) };
 		return result;
 	}
