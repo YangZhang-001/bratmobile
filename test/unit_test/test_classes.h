@@ -370,6 +370,25 @@ class HighLevelTest: public HighLevelTestBase , public testing::WithParamInterfa
 
 };
 
+/**
+ * @brief For testing how the sysyem reacts when a plan s intrrupted
+ * 
+ */
+class HighLevelInterruptTest: public HighLevelTestBase, public testing::WithParamInterface<std::tuple<bool, std::string, int, int>>{
+    protected:
+        /**
+     * @brief Tests plan vs a scenario with one single point representing an obstacle interrupting a task
+     * 
+     * @param it iteration of data interface (determines which map will be read) - 0 reads map 1
+     * @param taskOrder order of task in plan we want to interrupt. 0 is the current task
+     * 
+     */
+    std::vector<vertexDescriptor> get_plan(int it, int taskOrder);
+
+    Pointf generateInterruptingPoint(int taskOrder);
+
+};
+
 class ReactToNoiseTest: public HighLevelTestBase, public ::testing::WithParamInterface<std::tuple<bool, std::string, std::string, int>>{
     protected:
     /**
@@ -660,6 +679,25 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
     }
     return configurator->get_plan();
 }
+
+std::vector<vertexDescriptor> HighLevelInterruptTest::get_plan(int it, int taskOrder){
+    di.set_iteration(it);
+    configurator->set_data2fp({generateInterruptingPoint(taskOrder)});
+    EXPECT_EQ(configurator->n_visitedEdges(), 0);
+    configurator->Spawner();
+    return configurator->get_plan();
+}
+
+Pointf HighLevelInterruptTest::generateInterruptingPoint(int taskOrder){
+    EXPECT_GT(configurator->get_plan().size(), taskOrder);
+    vertexDescriptor vertexToInterrupt=configurator->get_plan()[taskOrder];
+    //get task order length
+    float x=configurator->vertex_get_endPose(vertexToInterrupt).p.x;
+    float y=configurator->vertex_get_endPose(vertexToInterrupt).p.y;
+    return Pointf(x, y);
+}
+    
+
 
 std::string HighLevelTestBase::parseFolder(std::string valueParam){
     int firstSlash=valueParam.find_first_of("/");

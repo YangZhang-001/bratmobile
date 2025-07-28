@@ -185,6 +185,38 @@ TEST_P(HighLevelTest, CheckPlan){
     EXPECT_TRUE(success);
 }
 
+TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
+    Task goal;
+    if (std::get<0>(GetParam())){
+        goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
+    }
+    configurator->init(goal);
+    std::string folder=std::get<1>(GetParam());
+    std::vector<vertexDescriptor> plan= get_plan(folder);
+    int vertices_og=configurator->n_vertices();
+    int iteration=std::get<2>(GetParam());
+    trackFor(iteration);
+    std::vector<vertexDescriptor> updated_plan=get_plan(iteration-1, std::get<3>(GetParam())); //map 2
+    EXPECT_EQ(di.get_iteration(), iteration);
+    int vertices_now=configurator->n_vertices();
+    EXPECT_LE(vertices_now, vertices_og);
+    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+    bool success=planned_to_goal || configurator->getGoal().checkEnded(configurator->vertex_get_endPose(configurator->get_current_vertex())).ended;
+    EXPECT_TRUE(success);
+}
+
+INSTANTIATE_TEST_CASE_P(CulDeSacTurn, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
+                                                                           ::testing::Values(std::string("../cul_de_sac/")),
+                                                                           ::testing::Values(1, 10, 12),
+                                                                           ::testing::Values(0, 1) ));
+
+INSTANTIATE_TEST_CASE_P(CulDeSacAvoided, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
+                                                                           ::testing::Values(std::string("../cul_de_sac/")),
+                                                                           ::testing::Values(30),
+                                                                           ::testing::Values(0) ));
 
 TEST_P(HighLevelTest, Recycle){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
@@ -225,72 +257,57 @@ TEST_P(HighLevelTest, Recycle){
     EXPECT_TRUE(planned_to_goal);
 }
 
-INSTANTIATE_TEST_CASE_P(GoalAndMaps, HighLevelTest, ::testing::Values(
-                                                                   std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 2),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 2),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 2),
-                                                                   std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 3),
-                                                                   std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 4),
-                                                                   //std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 11), //if plan is to go right it doesn't work but works if plan to go left
-                                                                   std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 17),
-                                                                   std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 36),
-                                                                   //std::tuple<bool, std::string, int>(false, std::string("../cul_de_sac/"), 6), //FAILS BECAUSE CDS is represented as a big bloc
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 3),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 4),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 6), //,
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 17),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 38),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_40cm/"), 89),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 3),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 4),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 6), //,
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 17),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 38),
-                                                                   std::tuple<bool, std::string, int>(true, std::string("../target_68cm/"), 89)
-                                                                   ));
+INSTANTIATE_TEST_CASE_P(CulDeSac, HighLevelTest, ::testing::Combine( ::testing::Values(false), ::testing::Values(std::string("../cul_de_sac/"), ::testing::Values(2, 3, 4, 17, 36))));
+                                                                  
 
-TEST_P(ReactToNoiseTest, NoisyPlan){
-    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-    Logger logger=makeLogger(info);
-    configurator->register_logger(&logger);
-    Task goal;
-    if (std::get<0>(GetParam())){
-        goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
-    }
-    configurator->init(goal);
-    std::string folder=std::get<1>(GetParam()), folder2=std::get<2>(GetParam());
-    std::vector<vertexDescriptor> plan= get_plan(folder);
-    int vertices_og=configurator->n_vertices();
-    trackFor(4);
-    std::vector<vertexDescriptor> updated_plan=get_plan(folder2, std::get<3>(GetParam())); //map 2
-    int vertices_now=configurator->n_vertices();
-    EXPECT_GE(vertices_now, vertices_og);
+INSTANTIATE_TEST_CASE_P(Target40, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_40cm/"), ::testing::Values(2, 3, 4, 6,17, 36, 89))));
 
-    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-    bool success=planned_to_goal || configurator->getGoal().checkEnded(configurator->vertex_get_endPose(configurator->get_current_vertex())).ended;
-    EXPECT_TRUE(success);
-}
-
-INSTANTIATE_TEST_CASE_P(NoisyCombosAvoidance, ReactToNoiseTest, testing::Combine(
-                                                        testing::Values(false),
-                                                        testing::Values("../cul_de_sac/"),
-                                                        testing::Values("../target_40cm/", "../target_68cm/"),
-                                                        testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
+INSTANTIATE_TEST_CASE_P(Target40, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_68cm/"), ::testing::Values(2, 3, 4, 6,17, 36, 89))));
 
 
 
-INSTANTIATE_TEST_CASE_P(NoisyCombosTarget40, ReactToNoiseTest, testing::Combine(
-                                                        testing::Values(true),
-                                                        testing::Values("../target_40cm/"),
-                                                        testing::Values("../cul_de_sac/", "../target_68cm/"),
-                                                        testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
+// TEST_P(ReactToNoiseTest, NoisyPlan){
+//     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+//     Logger logger=makeLogger(info);
+//     configurator->register_logger(&logger);
+//     Task goal;
+//     if (std::get<0>(GetParam())){
+//         goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
+//     }
+//     configurator->init(goal);
+//     std::string folder=std::get<1>(GetParam()), folder2=std::get<2>(GetParam());
+//     std::vector<vertexDescriptor> plan= get_plan(folder);
+//     int vertices_og=configurator->n_vertices();
+//     trackFor(4);
+//     std::vector<vertexDescriptor> updated_plan=get_plan(folder2, std::get<3>(GetParam())); //map 2
+//     int vertices_now=configurator->n_vertices();
+//     EXPECT_GE(vertices_now, vertices_og);
+
+//     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+//     bool success=planned_to_goal || configurator->getGoal().checkEnded(configurator->vertex_get_endPose(configurator->get_current_vertex())).ended;
+//     EXPECT_TRUE(success);
+// }
+
+// INSTANTIATE_TEST_CASE_P(NoisyCombosAvoidance, ReactToNoiseTest, testing::Combine(
+//                                                         testing::Values(false),
+//                                                         testing::Values("../cul_de_sac/"),
+//                                                         testing::Values("../target_40cm/", "../target_68cm/"),
+//                                                         testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
 
 
-INSTANTIATE_TEST_CASE_P(NoisyCombosTarget68, ReactToNoiseTest, testing::Combine(
-                                                        testing::Values(true),
-                                                        testing::Values("../target_68cm/"),
-                                                        testing::Values("../cul_de_sac/", "../target_40cm/"),
-                                                        testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
+
+// INSTANTIATE_TEST_CASE_P(NoisyCombosTarget40, ReactToNoiseTest, testing::Combine(
+//                                                         testing::Values(true),
+//                                                         testing::Values("../target_40cm/"),
+//                                                         testing::Values("../cul_de_sac/", "../target_68cm/"),
+//                                                         testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
+
+
+// INSTANTIATE_TEST_CASE_P(NoisyCombosTarget68, ReactToNoiseTest, testing::Combine(
+//                                                         testing::Values(true),
+//                                                         testing::Values("../target_68cm/"),
+//                                                         testing::Values("../cul_de_sac/", "../target_40cm/"),
+//                                                         testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
 
 
 
