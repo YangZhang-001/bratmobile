@@ -314,7 +314,8 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 			split =splitTask(v, DEFAULT, ep.second.m_source);
 		}
 		correctQueue(split, module_src, startRecycle, plan_prov.size());
-		for (int i=0; i<split.size(); i++){ //
+		// for (int i=0; i<split.size(); i++){ //
+		for (int i=split.size()-1; i>=0; i--){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
 			if (i<1){
 				auto ep=gt::getMostLikely(transitionSystem, inEdges(split_v), iteration);
@@ -498,7 +499,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
 	srand(unsigned(time(NULL)));
 	auto oe=gt::outEdges(transitionSystem, v, d);
-	if (( !currentTask.get_change() ||!oe.empty()) && iteration>1){
+	if (( !currentTask.get_change() ||!oe.empty()) && (iteration>1)){
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
 		if (ve.first){
 			if(transitionSystem[ve.second.m_target].visited()){
