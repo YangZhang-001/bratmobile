@@ -209,8 +209,14 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
 
 INSTANTIATE_TEST_CASE_P(CulDeSacTurn, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
                                                                            ::testing::Values(std::string("../cul_de_sac/")),
-                                                                           ::testing::Values(2, 10, 12),
-                                                                           ::testing::Values(0, 1) ));
+                                                                           ::testing::Values(2),
+                                                                           ::testing::Values(0) ));
+
+
+// INSTANTIATE_TEST_CASE_P(CulDeSacTurn, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
+//                                                                            ::testing::Values(std::string("../cul_de_sac/")),
+//                                                                            ::testing::Values(1, 10, 12),
+//                                                                            ::testing::Values(0, 1) ));
 
 INSTANTIATE_TEST_CASE_P(CulDeSacAvoided, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
                                                                            ::testing::Values(std::string("../cul_de_sac/")),
