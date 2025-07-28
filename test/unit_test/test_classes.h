@@ -84,7 +84,6 @@ class DebugConfigurator:public AttentiveConfigurator{
 
     std::vector <vertexDescriptor>& get_plan_nConst(){ return m_plan;}
 
-
     bool plan_reaches_horizon();
 
     bool plan_reaches_goal();
@@ -287,6 +286,10 @@ class DebugConfigurator:public AttentiveConfigurator{
     void add_edge_withPoses(vertexDescriptor u, vertexDescriptor v);
 
     void addStepToEdge(edgeDescriptor e);
+
+    void data2fp_emplace(Pointf p){
+        data2fp.emplace(p);
+    }
     
 };
 
@@ -379,11 +382,12 @@ class HighLevelInterruptTest: public HighLevelTestBase, public testing::WithPara
         /**
      * @brief Tests plan vs a scenario with one single point representing an obstacle interrupting a task
      * 
+     * @param folder
      * @param it iteration of data interface (determines which map will be read) - 0 reads map 1
      * @param taskOrder order of task in plan we want to interrupt. 0 is the current task
      * 
      */
-    std::vector<vertexDescriptor> get_InterruptedPlan(int it, int taskOrder);
+    std::vector<vertexDescriptor> get_InterruptedPlan(std::string folder,int it, int taskOrder);
 
     Pointf generateInterruptingPoint(int taskOrder);
 
@@ -680,9 +684,12 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
     return configurator->get_plan();
 }
 
-std::vector<vertexDescriptor> HighLevelInterruptTest::get_InterruptedPlan(int it, int taskOrder){
+std::vector<vertexDescriptor> HighLevelInterruptTest::get_InterruptedPlan(std::string folder,int it, int taskOrder){
     di.set_iteration(it);
-    configurator->set_data2fp({generateInterruptingPoint(taskOrder)});
+    di.set_folder(folder);
+    di.newScanAvail();
+    configurator->set_data2fp(ci.data2fp);
+    configurator->data2fp_emplace(generateInterruptingPoint(taskOrder));
     EXPECT_EQ(configurator->n_visitedEdges(), 0);
     configurator->Spawner();
     return configurator->get_plan();
