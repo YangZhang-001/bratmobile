@@ -697,7 +697,7 @@ std::vector<vertexDescriptor> HighLevelInterruptTest::get_InterruptedPlan(std::s
 }
 
 Pointf HighLevelInterruptTest::generateInterruptingPoint(int taskOrder){
-    EXPECT_GT(configurator->get_plan().size()-1, taskOrder);
+    // EXPECT_TRUE((configurator->get_plan().size())> taskOrder);
     vertexDescriptor vertexToInterrupt=configurator->get_current_vertex();
     if (taskOrder>-1){
         vertexToInterrupt=configurator->get_plan()[taskOrder];

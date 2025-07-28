@@ -223,9 +223,8 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					}
 				}
 				else{
-					plan_prov.clear();
-					auto out_expected=gt::outEdges(g, v0, t.get_direction());
 					edge= add_vertex_now(v0, v1,sk.first.Di, sk.second); //addVertex
+					abandonPlan(plan_prov, v0, v1);
 					shift=b2Transform_zero;
 				}
 				if(edge.second){
@@ -1167,5 +1166,14 @@ void AttentiveConfigurator::adjustProbability(const edgeDescriptor &e){
 	//adjust
 	for (edgeDescriptor &ei: es){
 		transitionSystem[ei].probability=transitionSystem[ei.m_target].nObs/totObs;
+	}
+}
+
+void AttentiveConfigurator::abandonPlan(std::vector<vertexDescriptor>& planProv, vertexDescriptor v0, vertexDescriptor v1){
+	planProv.clear();
+	if (v0==MOVING_VERTEX && transitionSystem[v1].direction==currentTask.get_direction()){
+		currentTask.set_change(true);
+		current_vertices.clear();
+		//currentVertex=MOVING_VERTEX;
 	}
 }
