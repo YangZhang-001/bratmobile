@@ -689,8 +689,9 @@ std::vector<vertexDescriptor> HighLevelInterruptTest::get_InterruptedPlan(std::s
     di.set_folder(folder);
     di.newScanAvail();
     configurator->set_data2fp(ci.data2fp);
-    configurator->data2fp_emplace(generateInterruptingPoint(taskOrder));
-    EXPECT_EQ(configurator->n_visitedEdges(), 0);
+    Pointf pf=generateInterruptingPoint(taskOrder);
+    configurator->data2fp_emplace(pf);
+    EXPECT_GT(configurator->n_visitedEdges(), 0);
     configurator->Spawner();
     return configurator->get_plan();
 }
@@ -699,14 +700,14 @@ Pointf HighLevelInterruptTest::generateInterruptingPoint(int taskOrder){
     EXPECT_GT(configurator->get_plan().size(), taskOrder);
     vertexDescriptor vertexToInterrupt=configurator->get_plan()[taskOrder];
     //get task order length
-    b2Vec2 br=Robot::get_vertices()[1];
+    b2Vec2 pt0(0.12, 0.12);
     b2Vec2 pt;
     if (configurator->vertex_get_direction(vertexToInterrupt)==DEFAULT){
         pt.x=configurator->vertex_get_endPose(vertexToInterrupt).p.x;
         pt.y=configurator->vertex_get_endPose(vertexToInterrupt).p.y;
     }
     else{
-        pt=b2Mul(configurator->vertex_get_endPose(vertexToInterrupt), br);
+        pt=b2Mul(configurator->vertex_get_endPose(vertexToInterrupt), pt0);
     }
     return Pointf(pt.x, pt.y);
 }

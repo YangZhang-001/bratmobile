@@ -201,6 +201,7 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     trackFor(iteration);
     std::vector<vertexDescriptor> updated_plan=get_InterruptedPlan(folder,iteration-1, std::get<3>(GetParam())); //map 2
     int vertices_now=configurator->n_vertices();
+    EXPECT_GT(vertices_now, vertices_og);    
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     bool success=planned_to_goal || configurator->getGoal().checkEnded(configurator->vertex_get_endPose(configurator->get_current_vertex())).ended;
     EXPECT_TRUE(success);
@@ -208,7 +209,7 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
 
 INSTANTIATE_TEST_CASE_P(CulDeSacTurn, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
                                                                            ::testing::Values(std::string("../cul_de_sac/")),
-                                                                           ::testing::Values(1, 10, 12),
+                                                                           ::testing::Values(2, 10, 12),
                                                                            ::testing::Values(0, 1) ));
 
 INSTANTIATE_TEST_CASE_P(CulDeSacAvoided, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
