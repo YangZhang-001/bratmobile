@@ -556,6 +556,14 @@ void adjustProbability(const edgeDescriptor &e);
  */
 void abandonPlan(std::vector<vertexDescriptor>& planProv, vertexDescriptor v0, vertexDescriptor v1);
 
+/**
+ * @brief Assigns options to vertex which has in previous iteration been expanded.
+ * Assigns direction of successful current task, or direction of other tasks if unsuccessful
+ * 
+ * @param ve a visited edge and whetehr it exists
+ */
+std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve);
+
 public:
 
 AttentiveConfigurator(){};

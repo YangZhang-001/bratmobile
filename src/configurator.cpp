@@ -499,18 +499,19 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	auto oe=gt::outEdges(transitionSystem, v, d);
 	if (( !currentTask.get_change() ||!oe.empty()) && (iteration>1)){
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
-		if (ve.first){
-			if(transitionSystem[ve.second.m_target].visited()){
-				if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
-					transitionSystem[v].options={currentTask.get_direction()};
-				}
-				else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
-				std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
-				erase_from_vector(result, currentTask.get_direction());
-				transitionSystem[v].options=result;
-				}
-			}
-		}
+		// if (ve.first){
+		// 	if(transitionSystem[ve.second.m_target].visited()){
+		// 		if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
+		// 			transitionSystem[v].options={currentTask.get_direction()};
+		// 		}
+		// 		else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
+		// 		std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
+		// 		erase_from_vector(result, currentTask.get_direction());
+		// 		transitionSystem[v].options=result;
+		// 		}
+		// 	}
+		// }
+		transitionSystem[v].options=partiallyExplorativeOptions(ve);
 	}
 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
 		if (d ==DEFAULT ||d==STOP){
@@ -535,10 +536,6 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 			}
 		}
 		else {
-			// if (src==TransitionSystem::null_vertex()){
-			// 	transitionSystem[v].options={DEFAULT, LEFT, RIGHT};				
-			// }
-			// else
 			 if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
 				transitionSystem[v].options.push_back(temp.get_direction());
 				transitionSystem[v].options.push_back(getOppositeDirection(temp.get_direction()).second);
@@ -1174,4 +1171,19 @@ void AttentiveConfigurator::abandonPlan(std::vector<vertexDescriptor>& planProv,
 		current_vertices.clear();
 		//currentVertex=MOVING_VERTEX;
 	}
+}
+
+std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve){
+	if (ve.first){
+	if(transitionSystem[ve.second.m_target].visited()){
+		if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
+			return {currentTask.get_direction()};
+		}
+		else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
+		std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
+		erase_from_vector(result, currentTask.get_direction());
+		return result;
+		}
+	}
+
 }
