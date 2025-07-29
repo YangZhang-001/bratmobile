@@ -519,7 +519,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	else if (transitionSystem[v].outcome==simResult::successful) { //will only enter if successful
 		if (d== LEFT || d == RIGHT){
 			auto defaultVisited=gt::visitedEdge(gt::outEdges(transitionSystem, v, DEFAULT), transitionSystem, currentVertex);
-			if (!defaultVisited.first){
+			if (!defaultVisited.first){ //used to be just the inside of this statement
 				transitionSystem[v].options = {DEFAULT};
 				if ((src==currentVertex && controlGoal.getAffIndex()==PURSUE && SignedVectorLength(controlGoal.get_disturbance().pose().p)<0) ){
 					transitionSystem[v].options.push_back(d);
