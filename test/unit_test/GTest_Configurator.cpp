@@ -441,7 +441,7 @@ TEST_F(ConfiguratorTest, splitWithoutDummy){
     vertexDescriptor v1=n_vertices()-1;
     vertex_set_outcome(v1, simResult::crashed);
     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
-    int expected_splitSize=int(endPosition.Length()/(simulationStep+0.00001))+1;
+    int expected_splitSize=int(vertex_get_endPose(v1).p.Length()/(simulationStep+0.00001))+1;
     EXPECT_EQ(split.size(), expected_splitSize);
     
 }
