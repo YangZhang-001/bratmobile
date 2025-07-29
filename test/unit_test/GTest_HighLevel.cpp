@@ -262,6 +262,7 @@ TEST_F(HighLevelTest, BoxedIn){
     configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeCulDeSac(0.6, 0.5));
     b2World world(GRAVITY);
     configurator->explorePlan(world);
+    EXPECT_GT(configurator->get_plan().size(), 0);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     EXPECT_TRUE(planned_to_goal);
 }
