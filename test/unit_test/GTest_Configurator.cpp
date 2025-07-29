@@ -436,6 +436,8 @@ TEST_P(ConfiguratorTest32DT, splitTask){
 }
 
 TEST_F(ConfiguratorTest, splitWithoutDummy){
+    ClosedLoop_Tracker tracker;
+    register_tracker(&tracker);
     dummy_vertex(MOVING_VERTEX);
     make_module(currentVertex);
     vertexDescriptor v1=n_vertices()-1;
