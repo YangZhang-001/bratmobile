@@ -435,6 +435,17 @@ TEST_P(ConfiguratorTest32DT, splitTask){
     
 }
 
+TEST_F(ConfiguratorTest, splitWithoutDummy){
+    dummy_vertex(MOVING_VERTEX);
+    make_module(currentVertex);
+    vertexDescriptor v1=n_vertices()-1;
+    vertex_set_outcome(v1, simResult::crashed);
+    std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
+    int expected_splitSize=int(endPosition.Length()/(simulationStep+0.00001))+1;
+    EXPECT_EQ(split.size(), expected_splitSize);
+    
+}
+
 INSTANTIATE_TEST_CASE_P(SplitTask, ConfiguratorTest32DT, ::testing::Values(std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform_zero, b2Transform(b2Vec2(0.6, 0), b2Rot(0)), b2Transform_zero),
                                                                    std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform(b2Vec2(0, 0), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.26, -0.01), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.265, -0.16), b2Rot(0))),
                                                                    std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform_zero, b2Transform(b2Vec2(0, 0.6), b2Rot(M_PI_2)), b2Transform_zero),

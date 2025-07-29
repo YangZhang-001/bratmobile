@@ -258,7 +258,7 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
 
 TEST_F(HighLevelTest, BoxedIn){
     configurator->init();
-    iteration++;
+    configurator->addIteration();
     configurator->get_worldbuilder()->add_iteration();
     configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeCulDeSac(0.6, 0.5));
     b2World world(GRAVITY);

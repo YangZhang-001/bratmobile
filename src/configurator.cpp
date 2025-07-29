@@ -63,7 +63,6 @@ std::pair <edgeDescriptor, bool> AttentiveConfigurator::add_vertex_retro(vertexD
 
 
 bool Configurator::Spawner(){ 
-	//PREPARE VECTORS TO RECEIVE DATA
 	iteration++; //iteration set in getVelocity
 	worldBuilder.add_iteration();
 
