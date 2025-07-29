@@ -599,3 +599,31 @@ INSTANTIATE_TEST_CASE_P(Bool, ConfiguratorTakeBool, testing::Bool());
 
 INSTANTIATE_TEST_CASE_P(Backtrack, ConfiguratorBacktrackTest, ::testing::Values(std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform_zero, b2Transform(b2Vec2(0.6, 0), b2Rot(0)), b2Transform_zero),
                                                                    std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform(b2Vec2(0, 0), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.26, -0.01), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.265, -0.16), b2Rot(0)))));
+
+
+class ConfiguratorTaskVerticesTest: public ConfiguratorTest, public testing::TestWithParam<std::tuple<bool, Direction>>{};
+
+TEST_P(ConfiguratorTaskVerticesTest, SameTaskVertices){
+    std::cout<<"Testing if AttentiveConfigurator::task_vertices returns vertices of all the same task"<<std::endl;
+    Direction direction=std::get<1>(GetParam());
+    auto e1=make_successful(MOVING_VERTEX);
+    edgeDescriptor e2=make_successful(e1.m_target), e3;
+    int solution=3;
+    if (std::get<0>(GetParam())){
+        e3=make_successful(e2.m_target);
+    }
+    else{
+        e3=make_v1_crashed(e2.m_target);
+        solution++;
+    }
+    vertex_set_direction(e1.m_target, direction);
+    vertex_set_direction(e2.m_target, direction);
+    vertex_set_direction(e3.m_target, direction);
+    vertex_set_phi(e1.m_target, 0);
+    vertex_set_phi(e2.m_target, 0);
+    vertex_set_phi(e3.m_target, 0);
+    vertex_set_phi(e1.m_source, 0);
+    EXPECT_EQ(task_vertices(e3.m_target).size(), 3);
+}    
+
+INSTANTIATE_TEST_CASE_P(Directions, ConfiguratorTaskVerticesTest, testing::Combine(testing::Bool(), testing::Values(LEFT, RIGHT, DEFAULT)));

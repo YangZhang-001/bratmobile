@@ -157,6 +157,9 @@ class DebugConfigurator:public AttentiveConfigurator{
         transitionSystem[v].options=d;
     }
 
+    void vertex_set_phi(vertexDescriptor v, float f){
+        transitionSystem[v].phi=f;
+    }
     void vertex_options_push_back(vertexDescriptor v, Direction d){
         transitionSystem[v].options.push_back(d);
     }

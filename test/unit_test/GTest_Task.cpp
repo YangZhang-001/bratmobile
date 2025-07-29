@@ -149,16 +149,6 @@ TEST_P(ConfiguratorTestTask, addTurnToPriorityQueue){
     EXPECT_GT(priorityQ.size(), 0);
 }
 
-TEST_P(ConfiguratorTestTask, SameTaskVertices){
-    std::cout<<"Testing if AttentiveConfigurator::task_vertices returns vertices of all the same task"<<std::endl;
-    auto e1=make_successful(MOVING_VERTEX);
-    auto e2=make_successful(e1.m_target);
-    auto e3=make_successful(e2.m_target);
-    vertex_set_direction(e1.m_target, GetParam());
-    vertex_set_direction(e2.m_target, GetParam());
-    vertex_set_direction(e3.m_target, GetParam());
-    EXPECT_EQ(task_vertices(e3.m_target).size(), 3);
-}
 
 
 INSTANTIATE_TEST_CASE_P(Directions, ConfiguratorTestTask, testing::Values(LEFT, RIGHT, DEFAULT));
