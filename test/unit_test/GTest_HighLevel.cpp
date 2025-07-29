@@ -256,21 +256,21 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     EXPECT_TRUE(success);
 }
 
-INSTANTIATE_TEST_CASE_P(CulDeSacTurn, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
-                                                                           ::testing::Values(std::string("../cul_de_sac/")),
-                                                                           ::testing::Values(2),
-                                                                           ::testing::Values(-1) ));
-
-
 // INSTANTIATE_TEST_CASE_P(CulDeSacTurn, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
 //                                                                            ::testing::Values(std::string("../cul_de_sac/")),
-//                                                                            ::testing::Values(1, 10, 12),
-//                                                                            ::testing::Values(0, 1) ));
+//                                                                            ::testing::Values(2),
+//                                                                            ::testing::Values(-1) ));
 
-INSTANTIATE_TEST_CASE_P(CulDeSacAvoided, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
+
+INSTANTIATE_TEST_CASE_P(CulDeSac, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
                                                                            ::testing::Values(std::string("../cul_de_sac/")),
-                                                                           ::testing::Values(30),
-                                                                           ::testing::Values(0) ));
+                                                                           ::testing::Values(2, 12, 30),
+                                                                           ::testing::Values(-1, 0) ));
+
+// INSTANTIATE_TEST_CASE_P(CulDeSacAvoided, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
+//                                                                            ::testing::Values(std::string("../cul_de_sac/")),
+//                                                                            ::testing::Values(30),
+//                                                                            ::testing::Values(0) ));
 
 TEST_P(HighLevelTest, Recycle){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();

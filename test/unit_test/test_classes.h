@@ -296,6 +296,15 @@ class DebugConfigurator:public AttentiveConfigurator{
 
 class WiseControllerTest: public Wise_Controller, public ::testing::Test{};
 
+/**
+ * @brief Gives Worlbuilder option to generate synthetic data
+ * 
+ */
+class CreativeWorldBuilder: public WorldBuilder{
+
+    std::vector <BodyFeatures> makeCulDeSac(float halfWidth, float halfLength, b2Vec2 shift=b2Vec2(0,0));
+
+};
 
  /**
  * @brief Test fixture for testing high-level processes such as planning and state-space exploration
@@ -659,6 +668,21 @@ Task DebugConfigurator::generateGoalTask(){
 Disturbance DebugConfigurator::generateGoal(){
     return Disturbance(PURSUE, b2Vec2(1.0,0));
 }
+
+std::vector <BodyFeatures> CreativeWorldBuilder::makeCulDeSac(float width, float halfLength, b2Vec2 shift){
+    BodyFeatures front, Lside, Rside;
+    front.pose.p=b2Vec2(width+shift.x, 0+shift.y);
+    front.halfLength= halfLength-.05;
+    front.halfWidth= 0.05; //width of the panel
+    Lside=front, Rside=front;
+    Lside.pose.p=b2Vec2(0+shift.x, halfLength+shift.y);
+    Rside.pose.p=b2Vec2(0+shift.x, -halfLength-shift.y);
+    Lside.pose.q.Set(M_PI_2);
+    Lside.pose.q.Set(-M_PI_2);
+    return std::vector <BodyFeatures>({front, Lside, Rside});
+
+}
+
 
 
 void HighLevelTestBase::init( const Task& goal){
