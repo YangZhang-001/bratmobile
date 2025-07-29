@@ -9,6 +9,18 @@ TEST(Math, affineTransform){
     EXPECT_FALSE(task.get_disturbance().pose()==disturbance.pose());
 }
 
+TEST(Robot, Pose){
+    b2World world(GRAVITY);
+    std::vector<b2Vec2> robotVertices=Robot::get_vertices();
+    Robot robot(&world);
+    b2AABB aabb =robot.body->GetFixtureList()->GetAABB(0);
+    EXPECT_NEAR(aabb.upperBound.y, ROBOT_HALFLENGTH, 0.01);
+    EXPECT_NEAR(aabb.lowerBound.y, -ROBOT_HALFLENGTH, 0.01);
+    EXPECT_NEAR(aabb.upperBound.x, ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, 0.01);
+    EXPECT_NEAR(aabb.lowerBound.y, -ROBOT_HALFWIDTH-ROBOT_BOX_OFFSET_X, 0.01);
+
+}
+
 /**
  * @brief Class to test world building tools (third party)
  * 

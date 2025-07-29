@@ -62,14 +62,14 @@ TEST_P(HighLevelInterruptTestTest, GenerateInterruptPoint){
     configurator->set_data2fp({obstacle, newObstacle});
     BodyFeatures bf1(b2Transform(disturbance.getPosition(), b2Rot(0))), bf2(b2Transform(b2Vec2(newObstacle.x, newObstacle.y),b2Rot(0)));
     b2World world(GRAVITY);
-    configurator->get_worldbuilder()->set_world_objects(configurator->get_worldbuilder()->getFeatures(configurator->get_data2fp(), b2Transform_zero));
-    configurator->get_worldbuilder()->buildWorld(world, configurator->vertex_get_start(configurator->get_current_vertex()), DEFAULT);        
-    EXPECT_GE(world.GetBodyCount(),2);
+    // configurator->get_worldbuilder()->setSimulationStep(.5);
+    //configurator->get_worldbuilder()->set_world_objects(configurator->get_worldbuilder()->getFeatures(configurator->get_data2fp(), b2Transform_zero));
+    configurator->get_worldbuilder()->set_world_objects({bf2});
     for (Direction d: allDirections){
         Task task(disturbance, d, configurator->vertex_get_start(configurator->get_current_vertex()),true);
+        EXPECT_EQ(task.get_direction(), d);
+        configurator->get_worldbuilder()->buildWorld(world, b2Transform_zero, d);        
         simResult sim=configurator->simulate(task, world);
-        b2Body * robot =configurator->get_worldbuilder()->get_robot(&world);
-        world.DestroyBody(robot);
         EXPECT_GT(sim.step, 0);
         if (task.get_direction()==GetParam()){
             EXPECT_EQ(sim.resultCode, simResult::crashed);
@@ -78,6 +78,9 @@ TEST_P(HighLevelInterruptTestTest, GenerateInterruptPoint){
         }
         else{
             EXPECT_NE(sim.resultCode, simResult::crashed);
+            EXPECT_EQ(sim.collision.getPosition().x, 10000);
+            EXPECT_EQ(sim.collision.getPosition().y, 10000);
+
         }    
         if (::testing::Test::HasFailure()){
             std::cout<<"Failed with direction:"<<d<<std::endl;

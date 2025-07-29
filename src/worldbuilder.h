@@ -28,6 +28,7 @@ class WorldBuilder{
                                                                                                                                         //std::pair<points, obstaclestillthere>
     b2Body* makeBody(b2World&, BodyFeatures);
 
+
     /**
      * @brief returns a bounding box encompassing all points provided
      * 
@@ -114,6 +115,8 @@ class WorldBuilder{
     void set_world_objects(const std::vector <BodyFeatures>& wo){
         world_objects=wo;
     }
+
+    void setSimulationStep(float f){simulationStep=f;}
 
 };
 #endif

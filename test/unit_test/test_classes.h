@@ -709,7 +709,8 @@ Pointf HighLevelInterruptBase::generateInterruptingPoint(int taskOrder){
 
     }
     //get task order length
-    b2Vec2 pt0(-.12, 0);
+
+    b2Vec2 pt0(-(Robot::get_vertices()[1].Length()-0.01), 0);
     b2Vec2 pt;
     if (configurator->vertex_get_direction(vertexToInterrupt)==DEFAULT){
         pt.x=configurator->vertex_get_endPose(vertexToInterrupt).p.x;
