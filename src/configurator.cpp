@@ -1174,17 +1174,18 @@ void AttentiveConfigurator::abandonPlan(std::vector<vertexDescriptor>& planProv,
 }
 
 std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> &ve){
+	std::vector <Direction> result;
 	if (ve.first){
 	if(transitionSystem[ve.second.m_target].visited()){
 		if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
 			return {currentTask.get_direction()};
 		}
 		else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
-		std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
+		result={DEFAULT, LEFT, RIGHT};
 		erase_from_vector(result, currentTask.get_direction());
 		return result;
 		}
 	}
-	return {};
 }
+return result;
 }
