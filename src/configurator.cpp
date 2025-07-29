@@ -499,41 +499,36 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	auto oe=gt::outEdges(transitionSystem, v, d);
 	if (( !currentTask.get_change() ||!oe.empty()) && (iteration>1)){
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
-		// if (ve.first){
-		// 	if(transitionSystem[ve.second.m_target].visited()){
-		// 		if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
-		// 			transitionSystem[v].options={currentTask.get_direction()};
-		// 		}
-		// 		else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
-		// 		std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
-		// 		erase_from_vector(result, currentTask.get_direction());
-		// 		transitionSystem[v].options=result;
-		// 		}
-		// 	}
-		// }
 		transitionSystem[v].options=partiallyExplorativeOptions(ve);
 	}
 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
 		if (d ==DEFAULT ||d==STOP){
-					transitionSystem[v].options.push_back(temp.get_direction());
-					transitionSystem[v].options.push_back(getOppositeDirection(temp.get_direction()).second);
-				//prioritise reflex
-				if (temp.getAction().getOmega()==0){ //if the task chosen is a turning task
-					if (rand()%2==0){
-						 transitionSystem[v].options = {LEFT, RIGHT};
-					}
-					else{
-						transitionSystem[v].options = {RIGHT, LEFT};
-					} //no idea why it doesn't work using std shuffle/swap
+			transitionSystem[v].options.push_back(temp.get_direction());
+			transitionSystem[v].options.push_back(getOppositeDirection(temp.get_direction()).second);
+			//prioritise reflex
+			if (temp.getAction().getOmega()==0){ //if the task chosen is a turning task
+				if (rand()%2==0){
+						transitionSystem[v].options = {LEFT, RIGHT};
 				}
+				else{
+					transitionSystem[v].options = {RIGHT, LEFT};
+				} //no idea why it doesn't work using std shuffle/swap
 			}
+		}
 	}
 	else if (transitionSystem[v].outcome==simResult::successful) { //will only enter if successful
 		if (d== LEFT || d == RIGHT){
-			transitionSystem[v].options = {DEFAULT};
-			if (src==currentVertex && controlGoal.getAffIndex()==PURSUE && SignedVectorLength(controlGoal.get_disturbance().pose().p)<0){
+			auto defaultVisited=gt::visitedEdge(gt::outEdges(transitionSystem, v, DEFAULT), transitionSystem, currentVertex);
+			if (!defaultVisited.first){
+				transitionSystem[v].options = {DEFAULT};
+				if ((src==currentVertex && controlGoal.getAffIndex()==PURSUE && SignedVectorLength(controlGoal.get_disturbance().pose().p)<0) ){
+					transitionSystem[v].options.push_back(d);
+				}
+			}
+			else if (transitionSystem[defaultVisited.second.m_target].outcome==simResult::crashed){
 				transitionSystem[v].options.push_back(d);
 			}
+
 		}
 		else {
 			 if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
