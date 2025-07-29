@@ -601,7 +601,7 @@ INSTANTIATE_TEST_CASE_P(Backtrack, ConfiguratorBacktrackTest, ::testing::Values(
                                                                    std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform(b2Vec2(0, 0), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.26, -0.01), b2Rot(-M_PI_2)), b2Transform(b2Vec2(0.265, -0.16), b2Rot(0)))));
 
 
-class ConfiguratorTaskVerticesTest: public ConfiguratorTest, public testing::TestWithParam<std::tuple<bool, Direction>>{};
+class ConfiguratorTaskVerticesTest: public ConfiguratorTest, public testing::WithParamInterface<std::tuple<bool, Direction>>{};
 
 TEST_P(ConfiguratorTaskVerticesTest, SameTaskVertices){
     std::cout<<"Testing if AttentiveConfigurator::task_vertices returns vertices of all the same task"<<std::endl;
