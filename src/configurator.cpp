@@ -268,6 +268,9 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	}
 	vertexDescriptor v1=v;
 	float nNodes = transitionSystem[v].distance()/simulationStep, og_phi=transitionSystem[v].phi;
+	if (transitionSystem[src].isTurning()){
+		nNodes++; //for allowing turnign on the spot
+	}
 	b2Transform endPose = transitionSystem[v].endPose;
 	Task::Action a;
 	a.init(d);
