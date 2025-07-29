@@ -1173,7 +1173,7 @@ void AttentiveConfigurator::abandonPlan(std::vector<vertexDescriptor>& planProv,
 	}
 }
 
-std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> &ve){
+std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve){
 	std::vector <Direction> result;
 	if (ve.first){
 	if(transitionSystem[ve.second.m_target].visited()){
