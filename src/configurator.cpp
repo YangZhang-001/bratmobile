@@ -278,7 +278,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 		State s_tmp=State(transitionSystem[v]);
 		if(nNodes >1){
 			b2Vec2 step_v(simulationStep*endPose.q.c, simulationStep*endPose.q.s);
-			s_tmp.endPose=transitionSystem[v].start+b2Transform(step_v, b2Rot(0));
+			s_tmp.endPose=b2Mul(b2Transform(step_v, b2Rot(0)), transitionSystem[v].start);
 			VertexMatch match=findMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE){
 				first_edge=addEdgeRetrospectively(v, v1, s_tmp, first_edge, d, a.getLinearSpeed());
