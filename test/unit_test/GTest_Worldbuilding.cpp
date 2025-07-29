@@ -40,10 +40,10 @@ class ThirdPartyWB: public ::testing::Test, public testing::WithParamInterface<i
      * @param sideR right side (y<0)
      * @param front robot-facing side 
      */
-    void make_culdesac(std::vector<cv::Point2f>& pts, int pts_per_side, float halfWidth=0.05, std::vector<cv::Point2f>* sideL=NULL, std::vector<cv::Point2f>* sideR=NULL, std::vector<cv::Point2f>* front=NULL){
-        float x=0;
+    void make_culdesac(std::vector<cv::Point2f>& pts, int pts_per_side, std::vector<cv::Point2f>* sideL=NULL, std::vector<cv::Point2f>* sideR=NULL, std::vector<cv::Point2f>* front=NULL){
+        float y=0.05, x=0;
         for (int i=0; i<pts_per_side; i++){
-            cv::Point2f pt_Lside(x, halfWidth), pt_Rside(x, -y);
+            cv::Point2f pt_Lside(x, y), pt_Rside(x, -y);
             pts.push_back(pt_Lside);
             pts.push_back(pt_Rside);
             if (sideL){
@@ -55,12 +55,12 @@ class ThirdPartyWB: public ::testing::Test, public testing::WithParamInterface<i
             x+=0.01;
         }
         for (int i=0; i<pts_per_side; i++){
-            cv::Point2f pt_front(x, halfWidth);
+            cv::Point2f pt_front(x, y);
             if (front){
                 front->push_back(pt_front);
             }
             pts.push_back(pt_front);
-            halfWidth-=0.01;
+            y-=0.01;
 
         }
 

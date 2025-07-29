@@ -256,6 +256,10 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     EXPECT_TRUE(success);
 }
 
+TEST_F(HighLevelTest, BoxedIn){
+    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeCulDeSac(0.6, 0.5))
+}
+
 // INSTANTIATE_TEST_CASE_P(CulDeSacTurn, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
 //                                                                            ::testing::Values(std::string("../cul_de_sac/")),
 //                                                                            ::testing::Values(2),

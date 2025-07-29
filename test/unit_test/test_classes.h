@@ -301,8 +301,27 @@ class WiseControllerTest: public Wise_Controller, public ::testing::Test{};
  * 
  */
 class CreativeWorldBuilder: public WorldBuilder{
+    public:
 
-    std::vector <BodyFeatures> makeCulDeSac(float halfWidth, float halfLength, b2Vec2 shift=b2Vec2(0,0));
+    /**
+     * @brief 
+     * 
+     * @param width total width (x axis) of cul de sac
+     * @param halfLength half length (y axis) of the cul the sac
+     * @param shift 
+     * @return std::vector <BodyFeatures> : the different panels making up the cul de sac
+     *  
+     *                              width
+     *                             ===================         
+     *                                                ||    l
+     *                                                ||    e
+     *                  ROBOT --->          x         ||    n
+     *                        shift                   ||    g
+     *                                                ||    t
+     *                                                ||    h
+     *                             ===================
+     */
+    static std::vector <BodyFeatures> makeCulDeSac(float width, float halfLength, b2Vec2 shift=b2Vec2(0,0));
 
 };
 
