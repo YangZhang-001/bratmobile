@@ -225,6 +225,7 @@ TEST_P(HighLevelTest, CheckPlan){
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam());
     trackFor(iteration);
+    EXPECT_EQ(configurator->n_visitedEdges(), 0);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder, iteration-1); //map 2
     EXPECT_EQ(di.get_iteration(), iteration);
     int vertices_now=configurator->n_vertices();
@@ -304,6 +305,7 @@ TEST_P(HighLevelTest, Recycle){
     b2Transform newStart=configurator->vertex_get_endPose(last_v);
     EXPECT_LT(newStart.p.Length(),0.0001);
     EXPECT_LT(newStart.q.GetAngle(),0.0001);
+    EXPECT_EQ(configurator->n_visitedEdges(), 0);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder); //map 2
     int vertices_now=configurator->n_vertices();
     EXPECT_LE(vertices_now, vertices_og);
