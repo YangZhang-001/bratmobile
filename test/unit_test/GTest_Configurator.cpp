@@ -623,7 +623,7 @@ TEST_P(ConfiguratorTaskVerticesTest, SameTaskVertices){
     vertex_set_phi(e2.m_target, 0);
     vertex_set_phi(e3.m_target, 0);
     vertex_set_phi(e1.m_source, 0);
-    EXPECT_EQ(task_vertices(e3.m_target).size(), 3);
+    EXPECT_EQ(task_vertices(e3.m_target).size(), solution);
 }    
 
 INSTANTIATE_TEST_CASE_P(Directions, ConfiguratorTaskVerticesTest, testing::Combine(testing::Bool(), testing::Values(LEFT, RIGHT, DEFAULT)));
