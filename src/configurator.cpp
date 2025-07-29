@@ -250,7 +250,7 @@ return plan_prov;
 std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescriptor v,  Direction d, vertexDescriptor src){
 	std::vector <vertexDescriptor> split={v};
 	auto first_edge=boost::edge(src, v, transitionSystem); //assumes exists
-	// if (gt::check_edge_direction(first_edge, transitionSystem, RIGHT)|| gt::check_edge_direction(first_edge, transitionSystem, LEFT)){ //d
+	//if (gt::check_edge_direction(first_edge, transitionSystem, RIGHT)|| gt::check_edge_direction(first_edge, transitionSystem, LEFT)){ //d
 	if (transitionSystem[v].isTurning()){ //d
 		if ((src==MOVING_VERTEX || src==DUMMY )&& transitionSystem[v].outcome==simResult::crashed){
 			split.emplace(split.begin(), src);
@@ -262,7 +262,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	}
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
-	if (transitionSystem[src].isTurning()&& !ie.empty()){ //! //&& sameIterationEdgeIt!=ie.end()
+	if (!transitionSystem[src].isTurning()&& !ie.empty()){ //! //&& sameIterationEdgeIt!=ie.end()
 		transitionSystem[src].outcome=simResult::safeForNow;
 		split.insert(split.begin(), src);
 	}
