@@ -485,7 +485,7 @@ std::pair<edgeDescriptor, bool> setup_match_edge(VertexMatch &match, vertexDescr
  * @brief Rerturns all the vertices making up a task
  * 
  * @param v a vertex representing a state
- * @param ep connecting edge to the task
+ * @param ep connecting edge to vertex v
  */
 std::vector <vertexDescriptor> task_vertices(vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep=NULL);
 

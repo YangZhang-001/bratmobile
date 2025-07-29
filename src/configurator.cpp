@@ -261,8 +261,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	}
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
-	if (!transitionSystem[src].isTurning()&& 
-			!ie.empty()){ //&& sameIterationEdgeIt!=ie.end()
+	if (!transitionSystem[src].isTurning()&& !ie.empty()){ //&& sameIterationEdgeIt!=ie.end()
 		split.insert(split.begin(), src);
 		transitionSystem[src].outcome=simResult::safeForNow;
 	}
@@ -276,9 +275,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	while(nNodes>1){
 		State s_tmp=State(transitionSystem[v]);
 		if(nNodes >1){
-			//b2Vec2 step_v(simulationStep*endPose.q.c, simulationStep*endPose.q.s);
-			s_tmp.endPose=b2Mul(deltaTransform, transitionSystem[v].start);
-			// s_tmp.endPose=b2Mul(b2Transform(step_v, b2Rot(0)), transitionSystem[v].start);
+			s_tmp.endPose=b2Mul(transitionSystem[v].start, deltaTransform);
 			VertexMatch match=findMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE){
 				first_edge=addEdgeRetrospectively(v, v1, s_tmp, first_edge, d, a.getLinearSpeed());
@@ -1059,13 +1056,16 @@ std::vector <vertexDescriptor> AttentiveConfigurator::task_vertices( vertexDescr
 						ep2.second=e;
 						break;
 					}
-			}
+				}
 			}
 			else if (transitionSystem[ep2.second.m_target].direction==d &&
 			 	transitionSystem[ep2.second.m_target].Di == transitionSystem[_ep.second.m_target].Di &&
 			 	transitionSystem[ep2.second.m_target].Dn == transitionSystem[_ep.second.m_target].Dn){ //same task!
 				result.push_back(ep2.second.m_target); //source
 			}
+			// else if (transitionSystem[ep2.second.m_target].direction!=d && transitionSystem[result[0]].outcome==simResult::crashed){
+			// 	result.push_back(ep2.second.m_target);
+			// }
 
 		}
 		else{

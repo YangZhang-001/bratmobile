@@ -445,8 +445,8 @@ TEST_F(ConfiguratorTest, splitWithoutDummy){
     vertex_set_outcome(v1, simResult::crashed);
     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, v0);
     EXPECT_EQ(split.size(), 2);
-    
 }
+
 
 
 INSTANTIATE_TEST_CASE_P(SplitTask, ConfiguratorTest32DT, ::testing::Values(std::tuple<b2Transform, b2Transform, b2Transform>(b2Transform_zero, b2Transform(b2Vec2(0.6, 0), b2Rot(0)), b2Transform_zero),
