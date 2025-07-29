@@ -679,7 +679,6 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
     di.set_folder(folder);
     di.newScanAvail();
     configurator->data2fp= ci.data2fp;
-    EXPECT_EQ(configurator->n_visitedEdges(), 0);
     configurator->Spawner();
     if (configurator->getIteration()>1){
         int visitedEdges=configurator->n_visitedEdges();

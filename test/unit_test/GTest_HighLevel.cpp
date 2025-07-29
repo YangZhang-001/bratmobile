@@ -62,8 +62,6 @@ TEST_P(HighLevelInterruptTestTest, GenerateInterruptPoint){
     configurator->set_data2fp({obstacle, newObstacle});
     BodyFeatures bf1(b2Transform(disturbance.getPosition(), b2Rot(0))), bf2(b2Transform(b2Vec2(newObstacle.x, newObstacle.y),b2Rot(0)));
     b2World world(GRAVITY);
-    // configurator->get_worldbuilder()->setSimulationStep(.5);
-    //configurator->get_worldbuilder()->set_world_objects(configurator->get_worldbuilder()->getFeatures(configurator->get_data2fp(), b2Transform_zero));
     configurator->get_worldbuilder()->set_world_objects({bf2});
     for (Direction d: allDirections){
         Task task(disturbance, d, configurator->vertex_get_start(configurator->get_current_vertex()),true);
