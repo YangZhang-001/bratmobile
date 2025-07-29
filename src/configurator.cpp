@@ -262,8 +262,10 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
 	if ( !ie.empty()){ //!transitionSystem[src].isTurning()&& //&& sameIterationEdgeIt!=ie.end()
+		if (!transitionSystem[src].isTurning()){
+			transitionSystem[src].outcome=simResult::safeForNow;
+		}
 		split.insert(split.begin(), src);
-		transitionSystem[src].outcome=simResult::safeForNow;
 	}
 	vertexDescriptor v1=v;
 	float nNodes = transitionSystem[v].distance()/simulationStep, og_phi=transitionSystem[v].phi;
