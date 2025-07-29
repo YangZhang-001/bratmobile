@@ -261,10 +261,10 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	}
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
-	// if (!transitionSystem[src].isTurning()&& !ie.empty()){ //&& sameIterationEdgeIt!=ie.end()
-	// 	split.insert(split.begin(), src);
-	// 	transitionSystem[src].outcome=simResult::safeForNow;
-	// }
+	if ( !ie.empty()){ //!transitionSystem[src].isTurning()&& //&& sameIterationEdgeIt!=ie.end()
+		split.insert(split.begin(), src);
+		transitionSystem[src].outcome=simResult::safeForNow;
+	}
 	vertexDescriptor v1=v;
 	float nNodes = transitionSystem[v].distance()/simulationStep, og_phi=transitionSystem[v].phi;
 	b2Transform endPose = transitionSystem[v].endPose;
@@ -1063,10 +1063,6 @@ std::vector <vertexDescriptor> AttentiveConfigurator::task_vertices( vertexDescr
 			 	transitionSystem[ep2.second.m_target].Dn == transitionSystem[_ep.second.m_target].Dn){ //same task!
 				result.push_back(ep2.second.m_target); //source
 			}
-			else if (transitionSystem[ep2.second.m_target].direction!=d && transitionSystem[result[0]].outcome==simResult::crashed){
-				result.push_back(ep2.second.m_target);
-			}
-
 		}
 		else{
 			break;

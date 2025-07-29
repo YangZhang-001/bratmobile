@@ -614,7 +614,6 @@ TEST_P(ConfiguratorTaskVerticesTest, SameTaskVertices){
     }
     else{
         e3=make_v1_crashed(e2.m_target);
-        solution++;
     }
     vertex_set_direction(e1.m_target, direction);
     vertex_set_direction(e2.m_target, direction);
