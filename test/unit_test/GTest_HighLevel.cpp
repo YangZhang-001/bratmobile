@@ -41,6 +41,35 @@ TEST(Boost, RemoveoneEdgeIf){
     EXPECT_EQ(boost::in_degree(2, ts), 1);
 }
 
+TEST_P(HighLevelInterruptTestTest, GenerateInterruptPoint){
+    std::vector <Direction> allDirections={LEFT, RIGHT, DEFAULT};
+    std::vector<bool> collided;
+    Disturbance disturbance(AVOID, b2Vec2(0.7, 0));
+    configurator->dummy_vertex(MOVING_VERTEX);
+    configurator->vertex_set_direction(configurator->get_current_vertex(), GetParam());
+    if (GetParam()==DEFAULT){
+        configurator->vertex_set_endPose(configurator->get_current_vertex(), b2Transform(b2Vec2(0.5, 0), b2Rot(0)));
+    }
+    Pointf obstacle(disturbance.getPosition().x, disturbance.getPosition().y);
+    Pointf newObstacle=generateInterruptingPoint(-1);
+    configurator->set_data2fp({obstacle, newObstacle});
+    BodyFeatures bf1(b2Transform(disturbance.getPosition(), b2Rot(0))), bf2(b2Transform(b2Vec2(newObstacle.x, newObstacle.y),b2Rot(0)));
+    b2World world(GRAVITY);
+    configurator->get_worldbuilder()->buildWorld(world, configurator->vertex_get_start(configurator->get_current_vertex()), DEFAULT);
+    for (Direction d: allDirections){
+        Task task(disturbance, d, configurator->vertex_get_start(configurator->get_current_vertex()),true);
+        simResult sim=configurator->simulate(task, world);
+        if (task.get_direction()==GetParam()){
+            EXPECT_EQ(sim.resultCode, simResult::crashed);
+            EXPECT_EQ(sim.collision.getPosition(), b2Vec2(newObstacle.x, newObstacle.y));
+        }
+        else{
+            EXPECT_NE(sim.resultCode, simResult::crashed);
+        }
+    }
+    
+}
+
 TEST_F(ConfiguratorTest, TSCleanup){
     transitionSystem=TransitionSystem(5);
     for (int i=1; i<4;i++){

@@ -377,7 +377,7 @@ class HighLevelTest: public HighLevelTestBase , public testing::WithParamInterfa
  * @brief For testing how the sysyem reacts when a plan s intrrupted
  * 
  */
-class HighLevelInterruptTest: public HighLevelTestBase, public testing::WithParamInterface<std::tuple<bool, std::string, int, int>>{
+class HighLevelInterruptBase: public HighLevelTestBase, public testing::Test{
     protected:
         /**
      * @brief Tests plan vs a scenario with one single point representing an obstacle interrupting a task
@@ -392,6 +392,10 @@ class HighLevelInterruptTest: public HighLevelTestBase, public testing::WithPara
     Pointf generateInterruptingPoint(int taskOrder);
 
 };
+
+class HighLevelInterruptTest: public HighLevelInterruptBase, public testing::WithParamInterface<std::tuple<bool, std::string, int, int>>{};
+
+class HighLevelInterruptTestTest: public HighLevelInterruptBase, public testing::WithParamInterface<Direction>{};
 
 class ReactToNoiseTest: public HighLevelTestBase, public ::testing::WithParamInterface<std::tuple<bool, std::string, std::string, int>>{
     protected:
@@ -684,7 +688,7 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
     return configurator->get_plan();
 }
 
-std::vector<vertexDescriptor> HighLevelInterruptTest::get_InterruptedPlan(std::string folder,int it, int taskOrder){
+std::vector<vertexDescriptor> HighLevelInterruptBase::get_InterruptedPlan(std::string folder,int it, int taskOrder){
     di.set_iteration(it);
     di.set_folder(folder);
     di.newScanAvail();
@@ -696,7 +700,7 @@ std::vector<vertexDescriptor> HighLevelInterruptTest::get_InterruptedPlan(std::s
     return configurator->get_plan();
 }
 
-Pointf HighLevelInterruptTest::generateInterruptingPoint(int taskOrder){
+Pointf HighLevelInterruptBase::generateInterruptingPoint(int taskOrder){
     // EXPECT_TRUE((configurator->get_plan().size())> taskOrder);
     vertexDescriptor vertexToInterrupt=configurator->get_current_vertex();
     if (taskOrder>-1){
@@ -704,7 +708,7 @@ Pointf HighLevelInterruptTest::generateInterruptingPoint(int taskOrder){
 
     }
     //get task order length
-    b2Vec2 pt0(.13, -0.05);
+    b2Vec2 pt0(.08, 0);
     b2Vec2 pt;
     if (configurator->vertex_get_direction(vertexToInterrupt)==DEFAULT){
         pt.x=configurator->vertex_get_endPose(vertexToInterrupt).p.x;
