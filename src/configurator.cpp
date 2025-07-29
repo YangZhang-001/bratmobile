@@ -261,24 +261,27 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	}
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
-	if ((transitionSystem[src].direction==DEFAULT || transitionSystem[src].direction==STOP)&& 
+	vertexDescriptor v1=v;
+	float nNodes = transitionSystem[v].distance()/simulationStep, og_phi=transitionSystem[v].phi;
+	if (!transitionSystem[src].isTurning()&& 
 			!ie.empty()){ //&& sameIterationEdgeIt!=ie.end()
 		split.insert(split.begin(), src);
 		transitionSystem[src].outcome=simResult::safeForNow;
 	}
-	vertexDescriptor v1=v;
-	float nNodes = transitionSystem[v].distance()/simulationStep, og_phi=transitionSystem[v].phi;
-	if (transitionSystem[src].isTurning()){
-		nNodes++; //for allowing turnign on the spot
-	}
+	// if (transitionSystem[src].isTurning()){
+	// 	nNodes++; //for allowing turnign on the spot
+	// }
 	b2Transform endPose = transitionSystem[v].endPose;
 	Task::Action a;
 	a.init(d);
+	b2Transform deltaTransform=b2Transform_zero;
+	deltaTransform.p.x=simulationStep;
 	while(nNodes>1){
 		State s_tmp=State(transitionSystem[v]);
 		if(nNodes >1){
-			b2Vec2 step_v(simulationStep*endPose.q.c, simulationStep*endPose.q.s);
-			s_tmp.endPose=b2Mul(b2Transform(step_v, b2Rot(0)), transitionSystem[v].start);
+			//b2Vec2 step_v(simulationStep*endPose.q.c, simulationStep*endPose.q.s);
+			s_tmp.endPose=b2Mul(deltaTransform, transitionSystem[v].start);
+			// s_tmp.endPose=b2Mul(b2Transform(step_v, b2Rot(0)), transitionSystem[v].start);
 			VertexMatch match=findMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE){
 				first_edge=addEdgeRetrospectively(v, v1, s_tmp, first_edge, d, a.getLinearSpeed());
