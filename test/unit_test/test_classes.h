@@ -291,6 +291,7 @@ class DebugConfigurator:public AttentiveConfigurator{
         data2fp.emplace(p);
     }
     
+    const CoordinateContainer &get_data2fp(){return data2fp;}
 };
 
 class WiseControllerTest: public Wise_Controller, public ::testing::Test{};
@@ -377,7 +378,7 @@ class HighLevelTest: public HighLevelTestBase , public testing::WithParamInterfa
  * @brief For testing how the sysyem reacts when a plan s intrrupted
  * 
  */
-class HighLevelInterruptBase: public HighLevelTestBase, public testing::Test{
+class HighLevelInterruptBase: public HighLevelTestBase{
     protected:
         /**
      * @brief Tests plan vs a scenario with one single point representing an obstacle interrupting a task
@@ -708,7 +709,7 @@ Pointf HighLevelInterruptBase::generateInterruptingPoint(int taskOrder){
 
     }
     //get task order length
-    b2Vec2 pt0(.08, 0);
+    b2Vec2 pt0(-.12, 0);
     b2Vec2 pt;
     if (configurator->vertex_get_direction(vertexToInterrupt)==DEFAULT){
         pt.x=configurator->vertex_get_endPose(vertexToInterrupt).p.x;

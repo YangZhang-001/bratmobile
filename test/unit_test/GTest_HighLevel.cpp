@@ -50,25 +50,44 @@ TEST_P(HighLevelInterruptTestTest, GenerateInterruptPoint){
     if (GetParam()==DEFAULT){
         configurator->vertex_set_endPose(configurator->get_current_vertex(), b2Transform(b2Vec2(0.5, 0), b2Rot(0)));
     }
+    else {
+        float angle=M_PI_2;
+        if (GetParam()==RIGHT){
+            angle=-angle;
+        }
+        configurator->vertex_set_endPose(configurator->get_current_vertex(), b2Transform(b2Vec2(0,0), b2Rot(angle)));
+    }
     Pointf obstacle(disturbance.getPosition().x, disturbance.getPosition().y);
     Pointf newObstacle=generateInterruptingPoint(-1);
     configurator->set_data2fp({obstacle, newObstacle});
     BodyFeatures bf1(b2Transform(disturbance.getPosition(), b2Rot(0))), bf2(b2Transform(b2Vec2(newObstacle.x, newObstacle.y),b2Rot(0)));
     b2World world(GRAVITY);
-    configurator->get_worldbuilder()->buildWorld(world, configurator->vertex_get_start(configurator->get_current_vertex()), DEFAULT);
+    configurator->get_worldbuilder()->set_world_objects(configurator->get_worldbuilder()->getFeatures(configurator->get_data2fp(), b2Transform_zero));
+    configurator->get_worldbuilder()->buildWorld(world, configurator->vertex_get_start(configurator->get_current_vertex()), DEFAULT);        
+    EXPECT_GE(world.GetBodyCount(),2);
     for (Direction d: allDirections){
         Task task(disturbance, d, configurator->vertex_get_start(configurator->get_current_vertex()),true);
         simResult sim=configurator->simulate(task, world);
+        b2Body * robot =configurator->get_worldbuilder()->get_robot(&world);
+        world.DestroyBody(robot);
+        EXPECT_GT(sim.step, 0);
         if (task.get_direction()==GetParam()){
             EXPECT_EQ(sim.resultCode, simResult::crashed);
-            EXPECT_EQ(sim.collision.getPosition(), b2Vec2(newObstacle.x, newObstacle.y));
+            EXPECT_NEAR(sim.collision.getPosition().x, newObstacle.x, 0.01);
+            EXPECT_NEAR(sim.collision.getPosition().y, newObstacle.y, 0.01);
         }
         else{
             EXPECT_NE(sim.resultCode, simResult::crashed);
+        }    
+        if (::testing::Test::HasFailure()){
+            std::cout<<"Failed with direction:"<<d<<std::endl;
         }
     }
+
     
 }
+
+INSTANTIATE_TEST_CASE_P(TaskDirections, HighLevelInterruptTestTest, testing::Values(LEFT, RIGHT, DEFAULT));
 
 TEST_F(ConfiguratorTest, TSCleanup){
     transitionSystem=TransitionSystem(5);
