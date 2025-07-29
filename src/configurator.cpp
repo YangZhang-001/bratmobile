@@ -1187,3 +1187,4 @@ std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::p
 	}
 
 }
+}
