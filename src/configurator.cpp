@@ -71,8 +71,7 @@ bool Configurator::Spawner(){
 	auto now =std::chrono::high_resolution_clock::now();
 
 	//CREATE BOX2D ENVIRONMENT
-	b2Vec2 gravity = {0.0, 0.0};
-	b2World world= b2World(gravity);
+	b2World world= b2World(GRAVITY);
 	char name[256];
 	worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero, WorldBuilder::PARTITION));
 	// printf("got features =%i\n", worldBuilder.world_objects.size());	

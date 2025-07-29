@@ -292,6 +292,14 @@ class DebugConfigurator:public AttentiveConfigurator{
     }
     
     const CoordinateContainer &get_data2fp(){return data2fp;}
+
+    /**
+     * @brief Wrapper around explore_plan
+     * 
+     * @param world 
+     */
+    void explorePlan(b2World & world){explore_plan(world);}
+
 };
 
 class WiseControllerTest: public Wise_Controller, public ::testing::Test{};
@@ -390,8 +398,6 @@ class HighLevelTestBase: public testing::Test{
      * 
      */
     std::vector<vertexDescriptor> get_plan(std::string folder, int it=0);
-
-    
 
 
 };
@@ -692,12 +698,12 @@ std::vector <BodyFeatures> CreativeWorldBuilder::makeCulDeSac(float width, float
     BodyFeatures front, Lside, Rside;
     front.pose.p=b2Vec2(width+shift.x, 0+shift.y);
     front.halfLength= halfLength-.05;
-    front.halfWidth= 0.05; //width of the panel
+    front.halfWidth= 0.01; //width of the panel
     Lside=front, Rside=front;
     Lside.pose.p=b2Vec2(0+shift.x, halfLength+shift.y);
     Rside.pose.p=b2Vec2(0+shift.x, -halfLength-shift.y);
     Lside.pose.q.Set(M_PI_2);
-    Lside.pose.q.Set(-M_PI_2);
+    Rside.pose.q.Set(-M_PI_2);
     return std::vector <BodyFeatures>({front, Lside, Rside});
 
 }

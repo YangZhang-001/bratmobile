@@ -257,7 +257,13 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
 }
 
 TEST_F(HighLevelTest, BoxedIn){
-    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeCulDeSac(0.6, 0.5))
+    iteration++;
+    configurator->get_worldbuilder()->add_iteration();
+    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeCulDeSac(0.6, 0.5));
+    b2World world(GRAVITY);
+    configurator->explorePlan(world);
+    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+    EXPECT_TRUE(planned_to_goal);
 }
 
 // INSTANTIATE_TEST_CASE_P(CulDeSacTurn, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
