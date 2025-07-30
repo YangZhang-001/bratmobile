@@ -261,7 +261,7 @@ class DebugConfigurator:public AttentiveConfigurator{
      * @param v0 
      * @return edgeDescriptor 
      */
-    edgeDescriptor make_successful(vertexDescriptor v0=0);
+    edgeDescriptor make_successful(vertexDescriptor v0=0, Direction direction=DEFAULT);
 
         /**
      * @brief returns an edge connecting vertex v0 to a vertex pointing to a crashed state. Not visited by default
@@ -850,10 +850,10 @@ Logger ReactToNoiseTest::makeLogger(const char * testInfo){
     return Logger(testCaseDir.c_str(), systemArchDir.c_str(), scenario.c_str());
 }
 
-edgeDescriptor DebugConfigurator::make_successful(vertexDescriptor v0){
+edgeDescriptor DebugConfigurator::make_successful(vertexDescriptor v0, Direction direction){
     auto v1=boost::add_vertex(transitionSystem);
     auto e=boost::add_edge(v0, v1, transitionSystem);
-    transitionSystem[v1].direction=DEFAULT;
+    transitionSystem[v1].direction=direction;
     transitionSystem[e.first].step=1;
     transitionSystem[e.first].it_observed=iteration;
     return e.first;

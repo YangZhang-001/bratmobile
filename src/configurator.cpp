@@ -1185,3 +1185,18 @@ std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::p
 }
 return result;
 }
+
+void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v, TransitionSystem & g){
+	evaluationQueue.push_back(v);
+	if (g[v].outcome==simResult::successful){
+		if (lastAdded==TransitionSystem::null_vertex()){
+			return;
+		}
+		if (boost::edge(lastAdded, v, g).second){ //if edge exists
+			erase_from_vector(evaluationQueue, lastAdded);
+		}
+	}
+	lastAdded=v;
+
+
+}

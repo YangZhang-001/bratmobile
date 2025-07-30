@@ -564,6 +564,27 @@ void abandonPlan(std::vector<vertexDescriptor>& planProv, vertexDescriptor v0, v
  */
 std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve);
 
+/**
+ * @brief Adds and removes vertices from the evaluation queue
+ * 
+ */
+class EvaluationQueueManager{
+	protected:
+	vertexDescriptor lastAdded=TransitionSystem::null_vertex(); //last vertex added to the evaluation queue
+	public:
+
+	/**
+	 * @brief Adds to evaluation queue: if the vertex represents a successful task, it is added to the end of the queue regardless of direction.
+	 * If the vertex after lastAdded (representing a connecting vertex) is a successful straight task, lastAdded is removed from the queue
+	 * 
+	 * @param evaluationQueue 
+	 * @param v the vertex just added to the transition system
+	 * @param g the transition system
+	 */
+	void addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v, TransitionSystem & g);
+
+};
+
 public:
 
 AttentiveConfigurator(){};

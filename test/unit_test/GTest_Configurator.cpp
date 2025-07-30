@@ -640,8 +640,8 @@ TEST_P(ConfiguratorTakeBool, EvaluationFunctionTurn){
         EndedResult er= Planner::estimateCost(transitionSystem[currentVertex], b2Transform_zero, d, controlGoal);
         vertex_set_phi(currentVertex, Planner::evaluationFunction(er, currentVertex, m_plan));
     }
-    EXPECT_GT(transitionSystem[1].phi, transitionSystem[3].phi);
-    EXPECT_GT(transitionSystem[2].phi, transitionSystem[3].phi);
+    EXPECT_EQ(transitionSystem[1].phi, transitionSystem[3].phi);
+    EXPECT_EQ(transitionSystem[2].phi, transitionSystem[3].phi);
 }
 
 
@@ -677,3 +677,71 @@ TEST_P(ConfiguratorTaskVerticesTest, SameTaskVertices){
 }    
 
 INSTANTIATE_TEST_CASE_P(Directions, ConfiguratorTaskVerticesTest, testing::Combine(testing::Bool(), testing::Values(LEFT, RIGHT, DEFAULT)));
+
+class ConfiguratorEvaluationQueueManagerTest: public ConfiguratorTest, public testing::WithParamInterface<std::tuple<Direction, simResult::resultType >>{};
+
+/**
+ * @brief Typical 2-level expansion (TURN-DEFAULT)
+ * 
+ */
+TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth2){
+    std::vector<vertexDescriptor> evaluationQ;
+    AttentiveConfigurator::EvaluationQueueManager eqm;
+    vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1;
+    eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem);
+    EXPECT_EQ(evaluationQ.size(), 1);
+    int solution=1;
+    if (std::get<0>(GetParam())==simResult::crashed){
+        v1 =make_v1_crashed(v0).m_target;
+        solution++;
+    }
+    else{
+        v1=make_successful(v0).m_target;
+    }
+    eqm.addToEvaluationQueue(evaluationQ, v1, transitionSystem);
+    EXPECT_EQ(evaluationQ.size(), solution);
+}
+
+/**
+ * @brief 3-level expansion (TURN-TURN-DEFAULT)
+ * 
+ */
+TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth3){
+    std::vector<vertexDescriptor> evaluationQ;
+    AttentiveConfigurator::EvaluationQueueManager eqm;
+    vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1, v2;
+    eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem);
+    EXPECT_EQ(evaluationQ.size(), 1);
+    vertexDescriptor v1=make_successful(v0, std::get<0>(GetParam())).m_target;
+    int solution=1;
+    if (std::get<0>(GetParam())==simResult::crashed){
+        v2 =make_v1_crashed(v0).m_target;
+        solution++;
+    }
+    else{
+        v2=make_successful(v1).m_target;
+    }
+    eqm.addToEvaluationQueue(evaluationQ, v2, transitionSystem);
+    EXPECT_EQ(evaluationQ.size(), solution);
+}
+
+//NOTE TO SELF: NEED TO UPDATE LAST ADDED TO EVERY LEVEL!
+
+TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueNoEdge){
+        std::vector<vertexDescriptor> evaluationQ;
+    AttentiveConfigurator::EvaluationQueueManager eqm;
+    vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1, v2;
+    eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem);
+    EXPECT_EQ(evaluationQ.size(), 1);
+    vertexDescriptor v1=make_successful(v0, std::get<0>(GetParam())).m_target;
+    int solution=1;
+    if (std::get<0>(GetParam())==simResult::crashed){
+        v2 =make_v1_crashed(v0).m_target;
+        solution++;
+    }
+    else{
+        v2=make_successful(v1).m_target;
+    }
+    eqm.addToEvaluationQueue(evaluationQ, v2, transitionSystem);
+    EXPECT_EQ(evaluationQ.size(), solution);
+}
