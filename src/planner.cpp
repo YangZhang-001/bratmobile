@@ -11,7 +11,7 @@ float Planner::evaluationFunction(EndedResult er,  const vertexDescriptor& v, st
 
 EndedResult Planner::estimateCost(const State &state, b2Transform start, Direction d, Task &_goal){
 	EndedResult er = _goal.checkEnded(state);
-	Task t(state.Dn, d, start, true);
+	Task t(state.Dn, d, start);
 	er.cost += t.checkEnded(state.endPose).estimatedCost;
 	// if (state.outcome==simResult::crashed){
 	// 	er.cost+=2;
