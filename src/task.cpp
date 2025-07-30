@@ -299,7 +299,10 @@ EndedResult Task::checkEnded(const State& n,  Direction dir, bool relax, std::pa
 	Angle a;
 	Distance d;
 	r = checkEnded(n.endPose, dir, relax,NULL, use_start);
-	r.estimatedCost+= endCriteria.getStandardError(a,d, n);
+	if (n.filled && n.outcome==simResult::crashed){
+		r.estimatedCost+=2; //penalty for crashing
+	}
+	//r.estimatedCost+= endCriteria.getStandardError(a,d, n);
 	return r;
 }
 
