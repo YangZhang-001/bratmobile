@@ -81,9 +81,6 @@ class Distance: public Measurement{
 struct EndCriteria{
     Angle angle;
     Distance distance;    //max distance, ideal
-    //bool outOfSight=true;
-    //bool valid_d=false;
-
     /**
      * @brief Calculates normalised cumulative standard error for the given angle and distance
      */

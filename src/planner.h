@@ -114,9 +114,8 @@ class Planner{
     static float evaluationFunction(EndedResult er, const vertexDescriptor &v, std::vector<vertexDescriptor>& p);
 
     /**
-     * @brief Estimates cost (phi) of a state as a measure of:
-     *      past cost (gamma): the position relative to an obstacle, if present
-     *      future cost heuristic (chi): the position relative to a goal, if present
+     * @brief Provides a breakdown of the cost function into its components: past cost (gamma): the position relative to an obstacle, if present
+     *      future cost heuristic (chi): the position relative to a goal, if present, and whether the Task @param _goal has ended
      * 
      * @param state the current state
      * @param start where the task started from
