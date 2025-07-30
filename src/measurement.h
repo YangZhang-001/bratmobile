@@ -74,14 +74,25 @@ class Distance: public Measurement{
     valid =1;}
 };
 
+/**
+ * @brief Defines the end criteria for a Task, i.e. when it is considered to be finished
+ * 
+ */
 struct EndCriteria{
-    friend Task;
     Angle angle;
     Distance distance;    //max distance, ideal
     //bool outOfSight=true;
     //bool valid_d=false;
-    float getStandardError(Angle, Distance);
-    float getStandardError(Angle, Distance, State);
+
+    /**
+     * @brief Calculates normalised cumulative standard error for the given angle and distance
+     */
+    float getStandardError(Angle a, Distance d);
+
+    /**
+     * @brief Calculates the normalised cumulative standard error for the given angle, distance; state information @param n are used to add a penalty if the state results in collision
+     */
+    float getStandardError(Angle a, Distance d, State n);
     bool hasEnd();
 
 
@@ -89,7 +100,6 @@ struct EndCriteria{
         angle=ec.angle;
         distance=ec.distance;
     }
-    //protected:
     void adjust(const b2Transform&);
 
 
