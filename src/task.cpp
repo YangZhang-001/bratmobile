@@ -256,27 +256,27 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 		d= Distance(v.Length());
 		if (action.getOmega()!=0){
 			a =Angle(robotTransform.q.GetAngle());	
-			float safeAngle=SAFE_ANGLE;
-			if (getAffIndex()==AVOID){
-				safeAngle=endCriteria.angle.get();
-			}				
-			float angleL = start.q.GetAngle()+safeAngle;
-			float angleR = start.q.GetAngle()-safeAngle;
-			float robotAngle=robotTransform.q.GetAngle();
-			int mult= start.q.GetAngle()/(3*M_PI_4);
-			if (mult>0){
-				if (dir==LEFT& robotAngle<0){
-					robotAngle+=2*M_PI;
-				}
-			}
-			else if (mult<0){
-				if (dir==RIGHT & robotAngle>0){
-					robotAngle-=2*M_PI;
-				}
-			}
-			bool finishedLeft=(round(robotAngle*100)/100)>=(round(angleL*100)/100);//-(action.getOmega()*HZ)/2;
-			bool finishedRight=(round(robotAngle*100)/100)<=(round(angleR*100)/100);//+(action.getOmega()*HZ)/2;
-			if (finishedLeft|| finishedRight){
+			// float safeAngle=SAFE_ANGLE;
+			// if (getAffIndex()==AVOID){
+			// 	safeAngle=endCriteria.angle.get();
+			// }				
+			// float angleL = start.q.GetAngle()+safeAngle, angleR = start.q.GetAngle()-safeAngle;
+			// float robotAngle=robotTransform.q.GetAngle();
+			// int mult= start.q.GetAngle()/(3*M_PI_4);
+			// if (mult>0){
+			// 	if (dir==LEFT& robotAngle<0){
+			// 		robotAngle+=2*M_PI;
+			// 	}
+			// }
+			// else if (mult<0){
+			// 	if (dir==RIGHT & robotAngle>0){
+			// 		robotAngle-=2*M_PI;
+			// 	}
+			// }
+			// bool finishedLeft=(round(robotAngle*100)/100)>=(round(angleL*100)/100);//-(action.getOmega()*HZ)/2;
+			// bool finishedRight=(round(robotAngle*100)/100)<=(round(angleR*100)/100);//+(action.getOmega()*HZ)/2;
+			// if (finishedLeft|| finishedRight){
+			if (isTurnFinished(robotTransform, dir)){
 				if (disturbance.getAffIndex()==AVOID){
 					disturbance.invalidate();
 				}
@@ -419,3 +419,25 @@ bool Task::endCriteria_met(Angle & a, Distance & d){
 	return result;
 }
 
+bool Task::isTurnFinished(const b2Transform & robotTransform, Direction dir){
+	float safeAngle=SAFE_ANGLE;
+	if (getAffIndex()==AVOID){
+		safeAngle=endCriteria.angle.get();
+	}				
+	float angleL = start.q.GetAngle()+safeAngle, angleR = start.q.GetAngle()-safeAngle;
+	float robotAngle=robotTransform.q.GetAngle();
+	int mult= start.q.GetAngle()/(3*M_PI_4);
+	if (mult>0){
+		if (dir==LEFT& robotAngle<0){
+			robotAngle+=2*M_PI;
+		}
+	}
+	else if (mult<0){
+		if (dir==RIGHT & robotAngle>0){
+			robotAngle-=2*M_PI;
+		}
+	}
+	bool finishedLeft=(round(robotAngle*100)/100)>=(round(angleL*100)/100);//-(action.getOmega()*HZ)/2;
+	bool finishedRight=(round(robotAngle*100)/100)<=(round(angleR*100)/100);//+(action.getOmega()*HZ)/2;
+	return finishedLeft || finishedRight;
+}

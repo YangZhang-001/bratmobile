@@ -371,6 +371,9 @@ protected:
     Action action;
     Disturbance disturbance;
 
+bool isTurnFinished(const b2Transform & robotTransform, Direction dir);
+
+
 
 };
 
