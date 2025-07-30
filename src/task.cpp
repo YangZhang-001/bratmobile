@@ -282,6 +282,7 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 	else if (dir==LEFT || dir ==RIGHT){
 		float angleL = this_start.q.GetAngle()+endCriteria.angle.get(), angleR = this_start.q.GetAngle()-endCriteria.angle.get();
 		r.ended = (robotTransform.q.GetAngle()>=angleL || robotTransform.q.GetAngle()<=angleR);	
+		a= Angle(robotTransform.q.GetAngle());
 	}
 	else if (dir==DEFAULT && getAffIndex()==AVOID){
 		r.ended=true;
