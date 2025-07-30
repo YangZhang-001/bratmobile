@@ -97,7 +97,13 @@ struct EndCriteria{
         angle=ec.angle;
         distance=ec.distance;
     }
-    void adjust(const b2Transform&);
+
+    /**
+     * @brief Ajusts endcriteria based on the delta transform (2D transform representing how much the robot has travelled)
+     * 
+     * @param delta 
+     */
+    void adjust(const b2Transform& delta);
 
 
 };

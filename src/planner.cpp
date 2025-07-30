@@ -13,9 +13,9 @@ EndedResult Planner::estimateCost(const State &state, b2Transform start, Directi
 	EndedResult er = _goal.checkEnded(state);
 	Task t(state.Dn, d, start);
 	er.cost += t.checkEnded(state.endPose).estimatedCost;
-	if (state.outcome==simResult::crashed){
-		er.cost+=2;
-	}
+	// if (state.outcome==simResult::crashed){
+	// 	er.cost+=2;
+	// }
 	return er;
 }
 
