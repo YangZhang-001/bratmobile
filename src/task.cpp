@@ -302,6 +302,7 @@ EndedResult Task::checkEnded(const State& n,  Direction dir, bool relax, std::pa
 	if (n.filled && n.outcome==simResult::crashed){
 		r.estimatedCost+=2; //penalty for crashing
 	}
+	r=/3;
 	//r.estimatedCost+= endCriteria.getStandardError(a,d, n);
 	return r;
 }
