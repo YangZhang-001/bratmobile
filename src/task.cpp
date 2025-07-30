@@ -218,7 +218,7 @@ void Task::setEndCriteria(const Angle& angle, const Distance &distance){
 		break;
 	}
 	if (disturbance.isValid()){
-		endCriteria.valid_d=true;
+		//endCriteria.valid_d=true;
 	}
 	if (!action.getOmega()){
 		endCriteria.angle.setValid(false);
