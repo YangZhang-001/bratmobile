@@ -287,7 +287,6 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 		else if (dir==DEFAULT && getAffIndex()==AVOID){
 			r.ended=true;
 		}
-		a= Angle(robotTransform.q.GetAngle());
 	} 
 	r.estimatedCost = endCriteria.getStandardError(a,d);
 	return r;
