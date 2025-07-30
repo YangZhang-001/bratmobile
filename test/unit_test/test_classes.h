@@ -21,19 +21,15 @@ std::ostream& operator<<(std::ostream& os, const b2Transform& t){
     return os;
 }
 
-// /**
-//  * @brief Predicate used to decide if a vertex has been evaluated
-//  */
-// struct Evaluated{
-// 	Evaluated(){}
-// 	Evaluated(TransitionSystem * ts):g(ts){}
-
-// 	bool operator()(const vertexDescriptor&v)const{
-// 		return (*g)[v].visited();
-// 	}
-// 	private:
-// 	TransitionSystem *g=NULL;
-// };
+template <typename T, class P>
+bool for_all(std::vector<T> vec, P predicate){
+    for (auto &v:vec){
+        if (!predicate(v)){
+            return false;
+        }
+    }
+    return true;
+}
 
 bool operator==( EndCriteria &ec1, EndCriteria& ec2){
     return ec1.angle==ec2.angle && ec1.distance==ec2.distance;

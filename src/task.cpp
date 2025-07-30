@@ -59,9 +59,8 @@ void world_cleanup(b2World & _world){
 simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, float remaining){ //CLOSED LOOP CONTROL, og return simreult
 	simResult result=simResult(simResult::resultType::successful);
 	result.endPose = start;
-
 	Listener listener(&disturbance);
-	int _count=_world.GetBodyCount();
+	int _count=_world.GetBodyCount(), stepb2d=0;;
 	_world.SetContactListener(&listener);	
 	FILE * robotPath;
 	if (DEBUG){
@@ -70,8 +69,6 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 	}
 	float theta = start.q.GetAngle();
 	b2Vec2 instVelocity = {0,0};		
-	int stepb2d=0;
-	float traj_error=0;
 	for (stepb2d; stepb2d < (HZ*remaining); stepb2d++) {//3 second
 		instVelocity.x = action.getLinearSpeed()*cos(theta);
 		instVelocity.y = action.getLinearSpeed()*sin(theta);
@@ -83,8 +80,7 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 		}
 		bool out_x= fabs(robot->GetTransform().p.x)>=(BOX2DRANGE-0.001);
 		bool out_y= fabs(robot->GetTransform().p.y)>=(BOX2DRANGE-0.001);
-		bool out=(out_x || out_y );
-		bool overlap=overlaps(robot, &disturbance);
+		bool out=(out_x || out_y ), overlap=overlaps(robot, &disturbance);
 		if (!overlap){
 			disturbance.invalidate();
 		}
@@ -398,17 +394,18 @@ b2Transform Task::from_Di(const  b2Transform* custom_start, Disturbance * d_obs)
 }
 
 EndCriteria Task::getEndCriteria(const Disturbance &d){
-	EndCriteria endCriteria;
+	EndCriteria result;
 	switch(disturbance.getAffIndex()){
 	case PURSUE:{
-		endCriteria.angle=Angle(0);
-		endCriteria.distance = Distance(0+DISTANCE_ERROR_TOLERANCE);
+		result.angle=Angle(0);
+		result.distance = Distance(0+DISTANCE_ERROR_TOLERANCE);
 	}
 	break;
 	default:
-	endCriteria.distance = BOX2DRANGE;
+	result.distance = BOX2DRANGE;
 	break;
 }
+return result;
 }
 
 bool Task::endCriteria_met(Angle & a, Distance & d){

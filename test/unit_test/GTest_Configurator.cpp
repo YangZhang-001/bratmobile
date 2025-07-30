@@ -592,8 +592,58 @@ TEST_P(ConfiguratorTakeBool, CheckVectorForPredicate){
     auto it=check_vector_for(ie, si);
     bool hasResult=it!=ie.end();
     EXPECT_EQ(hasResult, solution);
-    
 }
+
+/**
+ * @brief Testing that evaluation function is not affected by direction
+ * 
+ */
+TEST_P(ConfiguratorTakeBool, EvaluationFunctionSame){
+    std::vector <Direction> directions={LEFT, RIGHT, DEFAULT};
+    for (Direction d: directions){
+        dummy_vertex(MOVING_VERTEX);
+        vertex_set_direction(currentVertex, d);
+        if (GetParam()){
+            transitionSystem[currentVertex].outcome=simResult::successful;
+        }
+        else{
+            transitionSystem[currentVertex].outcome=simResult::crashed;
+            transitionSystem[currentVertex].Dn.isValid();
+            transitionSystem[currentVertex].Dn.setPose(b2Transform(b2Vec2(0.5, 0), b2Rot(0)));
+        }
+        EndedResult er= Planner::estimateCost(transitionSystem[currentVertex], b2Transform_zero, d, controlGoal);
+        vertex_set_phi(currentVertex, Planner::evaluationFunction(er, currentVertex, m_plan));
+    }
+    EXPECT_EQ(transitionSystem[1].phi, transitionSystem[3].phi);
+    EXPECT_EQ(transitionSystem[2].phi, transitionSystem[3].phi);
+}
+
+TEST_P(ConfiguratorTakeBool, EvaluationFunctionTurn){
+    std::vector <Direction> directions={LEFT, RIGHT, DEFAULT};
+    for (Direction d: directions){
+        dummy_vertex(MOVING_VERTEX);
+        vertex_set_direction(currentVertex, d);
+        if(d==LEFT){
+            transitionSystem[currentVertex].endPose.q.Set(M_PI_2);
+        }
+        else if (d==RIGHT){
+            transitionSystem[currentVertex].endPose.q.Set(-M_PI_2);
+        }
+        if (GetParam()){
+            transitionSystem[currentVertex].outcome=simResult::successful;
+        }
+        else{
+            transitionSystem[currentVertex].outcome=simResult::crashed;
+            transitionSystem[currentVertex].Dn.isValid();
+            transitionSystem[currentVertex].Dn.setPose(b2Transform(b2Vec2(0.5, 0), b2Rot(0)));
+        }
+        EndedResult er= Planner::estimateCost(transitionSystem[currentVertex], b2Transform_zero, d, controlGoal);
+        vertex_set_phi(currentVertex, Planner::evaluationFunction(er, currentVertex, m_plan));
+    }
+    EXPECT_GT(transitionSystem[1].phi, transitionSystem[3].phi);
+    EXPECT_GT(transitionSystem[2].phi, transitionSystem[3].phi);
+}
+
 
 INSTANTIATE_TEST_CASE_P(Bool, ConfiguratorTakeBool, testing::Bool());
 
