@@ -237,7 +237,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				v0=v1;
 				evaluationQueue.push_back(v1);						
 			}while(t.get_direction() !=DEFAULT & int(g[v0].options.size())!=0);
-		//evaluationQueue.push_back(v1);
+		evaluationQueue.push_back(v1);
 		}
 	}
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
