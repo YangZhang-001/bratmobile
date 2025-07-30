@@ -78,8 +78,8 @@ struct EndCriteria{
     friend Task;
     Angle angle;
     Distance distance;    //max distance, ideal
-    bool outOfSight=true;
-    bool valid_d=false;
+    //bool outOfSight=true;
+    //bool valid_d=false;
     float getStandardError(Angle, Distance);
     float getStandardError(Angle, Distance, State);
     bool hasEnd();
@@ -95,11 +95,14 @@ struct EndCriteria{
 
 };
 
-
+/**
+ * @brief Provides information on whether a Task has ended and with what heuristic -estimated- cost (chi) and past cost (gamma)
+ * 
+ */
 struct EndedResult{
 	bool ended=0;
-	float estimatedCost=0; //dot product of end criteria
-    float cost=0;
+	float estimatedCost=0; //dot product of end criteria, heuristic cost
+    float cost=0; //gamma
 
     EndedResult() = default;
 

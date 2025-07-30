@@ -244,8 +244,6 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 	EndedResult r;
 	Angle a;
 	Distance d;
-	//printf("check ended\n");
-	
 	b2Vec2 distance=this_start.p-robotTransform.p;
 	if (round(distance.Length()*100)/100>=BOX2DRANGE){ //if length reached or turn
 		r.ended =true;
@@ -256,26 +254,6 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 		d= Distance(v.Length());
 		if (action.getOmega()!=0){
 			a =Angle(robotTransform.q.GetAngle());	
-			// float safeAngle=SAFE_ANGLE;
-			// if (getAffIndex()==AVOID){
-			// 	safeAngle=endCriteria.angle.get();
-			// }				
-			// float angleL = start.q.GetAngle()+safeAngle, angleR = start.q.GetAngle()-safeAngle;
-			// float robotAngle=robotTransform.q.GetAngle();
-			// int mult= start.q.GetAngle()/(3*M_PI_4);
-			// if (mult>0){
-			// 	if (dir==LEFT& robotAngle<0){
-			// 		robotAngle+=2*M_PI;
-			// 	}
-			// }
-			// else if (mult<0){
-			// 	if (dir==RIGHT & robotAngle>0){
-			// 		robotAngle-=2*M_PI;
-			// 	}
-			// }
-			// bool finishedLeft=(round(robotAngle*100)/100)>=(round(angleL*100)/100);//-(action.getOmega()*HZ)/2;
-			// bool finishedRight=(round(robotAngle*100)/100)<=(round(angleR*100)/100);//+(action.getOmega()*HZ)/2;
-			// if (finishedLeft|| finishedRight){
 			if (isTurnFinished(robotTransform, dir)){
 				if (disturbance.getAffIndex()==AVOID){
 					disturbance.invalidate();
@@ -305,8 +283,7 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 		}
 	}
 	else if (dir==LEFT || dir ==RIGHT){
-		float angleL = this_start.q.GetAngle()+endCriteria.angle.get();
-		float angleR = this_start.q.GetAngle()-endCriteria.angle.get();
+		float angleL = this_start.q.GetAngle()+endCriteria.angle.get(), angleR = this_start.q.GetAngle()-endCriteria.angle.get();
 		r.ended = (robotTransform.q.GetAngle()>=angleL || robotTransform.q.GetAngle()<=angleR);	
 	}
 	else if (dir==DEFAULT && getAffIndex()==AVOID){

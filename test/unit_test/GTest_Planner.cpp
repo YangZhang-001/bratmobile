@@ -16,9 +16,7 @@ TEST_F(ConfiguratorPlannerHybrid,pathToAddTo){
     EXPECT_EQ(paths[1][paths[1].size()-2], 14);
     EXPECT_EQ(*path, paths[1]);
     EXPECT_TRUE(boost::edge(*(path->rbegin()), add[0], transitionSystem).second);
-    
 }
-
 
 
 // TEST_P(ConfiguratorTestPlanner, frontierVertices){
