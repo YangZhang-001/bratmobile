@@ -185,6 +185,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		priorityQueue.erase(priorityQueue.begin());
 		er = controlGoal.checkEnded(g[v], t.get_direction());
 		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
+		EvaluationQueueManager eqm;
 		for (Direction d: g[v].options){ //add and evaluate all vertices
 			v0_exp=v;
 			std::vector <Direction> options=g[v0_exp].options;
@@ -235,9 +236,9 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				v0_exp=v0;					
 				options=g[v0_exp].options;
 				v0=v1;
-				//evaluationQueue.push_back(v1);						
+				eqm.addToEvaluationQueue(evaluationQueue, v1, transitionSystem, v);				
 			}while(t.get_direction() !=DEFAULT & int(g[v0].options.size())!=0);
-		evaluationQueue.push_back(v1);
+		//evaluationQueue.push_back(v1);
 		}
 	}
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
