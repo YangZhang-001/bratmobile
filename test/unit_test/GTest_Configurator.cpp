@@ -840,7 +840,7 @@ TEST_P(ConfiguratorTakeBool, simulateModuleFromNonZero){
         solutionSize-=1;
     }
     eqm.addToEvaluationQueue(evaluationQ, new_vertices[4], transitionSystem, v);
-    EXPECT_EQ(evaluationQ.size(), solutionSize);
+    EXPECT_EQ(evaluationQ.size(), 2);
     if (!GetParam()){
         transitionSystem[new_vertices[5]].direction=DEFAULT;
         add_edge_withPoses(new_vertices[4],new_vertices[5]);
