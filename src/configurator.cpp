@@ -1186,17 +1186,20 @@ std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::p
 return result;
 }
 
-void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v, TransitionSystem & g){
-	evaluationQueue.push_back(v);
-	if (g[v].outcome==simResult::successful){
+void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v1, TransitionSystem & g, vertexDescriptor v0){
+	if (v0==MOVING_VERTEX || g[v1].direction==DEFAULT){
+		evaluationQueue.push_back(v);
+		if (g[v1].isTurning()){
+			lastAdded=v1;
+		}
+	}
+	if (g[v1].outcome==simResult::successful){
 		if (lastAdded==TransitionSystem::null_vertex()){
 			return;
 		}
-		if (boost::edge(lastAdded, v, g).second){ //if edge exists
+		if (boost::edge(lastAdded, v1, g).second){ //if edge exists
 			erase_from_vector(evaluationQueue, lastAdded);
+			reset();
 		}
 	}
-	lastAdded=v;
-
-
 }
