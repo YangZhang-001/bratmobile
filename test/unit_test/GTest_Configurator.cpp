@@ -678,16 +678,13 @@ TEST_P(ConfiguratorTaskVerticesTest, SameTaskVertices){
 
 INSTANTIATE_TEST_CASE_P(Directions, ConfiguratorTaskVerticesTest, testing::Combine(testing::Bool(), testing::Values(LEFT, RIGHT, DEFAULT)));
 
-class ConfiguratorEvaluationQueueManagerTest: public ConfiguratorTest, public testing::WithParamInterface<std::tuple<Direction, simResult::resultType >>{};
 
 /**
  * @brief Typical 2-level expansion (TURN-DEFAULT)
  * 
  */
 TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth2){
-    std::vector<vertexDescriptor> evaluationQ;
-    AttentiveConfigurator::EvaluationQueueManager eqm;
-    vertexDescriptor V=MOVING_VERTEX, v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1;
+    vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1;    
     eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 1);
     EXPECT_EQ(evaluationQ, std::vector<vertexDescriptor>({v0}));
@@ -708,9 +705,7 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth2){
  * 
  */
 TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth3){
-    std::vector<vertexDescriptor> evaluationQ;
-    AttentiveConfigurator::EvaluationQueueManager eqm;
-    vertexDescriptor v=MOVING_VERTEX, v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1, v2;
+    vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1, v2;
     eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 1);
     v1=make_successful(v0, std::get<0>(GetParam())).m_target;
@@ -730,9 +725,7 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth3){
 //NOTE TO SELF: NEED TO UPDATE LAST ADDED TO EVERY LEVEL!
 
 TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueNoEdge){
-    std::vector<vertexDescriptor> evaluationQ;
-    AttentiveConfigurator::EvaluationQueueManager eqm;
-    vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1, v2;
+    vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1;
     eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 1);
     int solution=2;

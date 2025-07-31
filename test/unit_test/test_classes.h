@@ -664,6 +664,23 @@ class ConfiguratorTestGetObstacle: public ConfiguratorTestGetGoal{
     }
 };
 
+class ConfiguratorEvaluationQueueManagerTest: public ConfiguratorTest, public testing::WithParamInterface<std::tuple<Direction, simResult::resultType >>{
+    protected:
+    std::vector<vertexDescriptor> evaluationQ;
+    AttentiveConfigurator::EvaluationQueueManager eqm;
+    vertexDescriptor v=MOVING_VERTEX;
+
+    void SetUp(){
+        transitionSystem[MOVING_VERTEX].direction=STOP;
+    }
+
+    void TearDown(){
+        evaluationQ.clear();
+        eqm.reset();
+        transitionSystem=TransitionSystem(1);
+    }
+};
+
 
 
 ////////////////////////////////////////////////////////////////////////
