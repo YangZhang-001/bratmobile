@@ -583,6 +583,9 @@ class EvaluationQueueManager{
 	 */
 	void addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v, TransitionSystem & g);
 
+	void reset(vertexDescriptor v=TransitionSystem::null_vertex()){
+		lastAdded=v;
+	}
 };
 
 public:
