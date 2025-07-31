@@ -235,7 +235,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				v0_exp=v0;					
 				options=g[v0_exp].options;
 				v0=v1;
-				evaluationQueue.push_back(v1);						
+				//evaluationQueue.push_back(v1);						
 			}while(t.get_direction() !=DEFAULT & int(g[v0].options.size())!=0);
 		evaluationQueue.push_back(v1);
 		}
