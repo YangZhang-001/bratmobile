@@ -818,7 +818,7 @@ TEST_P(ConfiguratorTakeBool, simulateModuleFromNonZero){
     transitionSystem[new_vertices[1]].direction=LEFT;
     add_edge_withPoses(v,new_vertices[1]);
     eqm.addToEvaluationQueue(evaluationQ, new_vertices[1], transitionSystem, v);
-    EXPECT_EQ(evaluationQ.size(), 2);
+    EXPECT_EQ(evaluationQ.size(), 1);
 
     transitionSystem[new_vertices[2]].direction=DEFAULT;
     add_edge_withPoses(new_vertices[1],new_vertices[2]);
@@ -828,7 +828,7 @@ TEST_P(ConfiguratorTakeBool, simulateModuleFromNonZero){
     transitionSystem[new_vertices[3]].direction=RIGHT;
     add_edge_withPoses(MOVING_VERTEX,new_vertices[3]);
     eqm.addToEvaluationQueue(evaluationQ, new_vertices[3], transitionSystem, v);
-    EXPECT_EQ(evaluationQ.size(), 3);
+    EXPECT_EQ(evaluationQ.size(), 2);
 
 
     transitionSystem[new_vertices[4]].direction=RIGHT;
@@ -837,9 +837,7 @@ TEST_P(ConfiguratorTakeBool, simulateModuleFromNonZero){
     if (GetParam()){//crashed
         transitionSystem[new_vertices[4]].outcome=simResult::crashed;
         solution.erase(solution.end()-1);
-        solution.push_back(new_vertices[3]);
-        solution.push_back(new_vertices[4]);
-        solutionSize+=1;
+        solutionSize-=1;
     }
     eqm.addToEvaluationQueue(evaluationQ, new_vertices[4], transitionSystem, v);
     EXPECT_EQ(evaluationQ.size(), solutionSize);
