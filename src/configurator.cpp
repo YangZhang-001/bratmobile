@@ -1187,9 +1187,9 @@ return result;
 }
 
 void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v1, TransitionSystem & g, vertexDescriptor v){
-	//if (g[v].direction==STOP || g[v1].direction==DEFAULT){
+	if (g[v].direction==STOP || g[v1].direction==DEFAULT){
 		evaluationQueue.push_back(v1);
-//	}
+	}
 	if (g[v1].outcome==simResult::successful){
 		if (lastAdded!=TransitionSystem::null_vertex()){
 			if (boost::edge(lastAdded, v1, g).second){ //if edge exists

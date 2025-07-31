@@ -687,7 +687,7 @@ class ConfiguratorEvaluationQueueManagerTest: public ConfiguratorTest, public te
 TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth2){
     std::vector<vertexDescriptor> evaluationQ;
     AttentiveConfigurator::EvaluationQueueManager eqm;
-    vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1;
+    vertexDescriptor V=MOVING_VERTEX, v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1;
     eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 1);
     EXPECT_EQ(evaluationQ, std::vector<vertexDescriptor>({v0}));
@@ -699,7 +699,7 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth2){
     else{
         v1=make_successful(v0).m_target;
     }
-    eqm.addToEvaluationQueue(evaluationQ, v1, transitionSystem, v0);
+    eqm.addToEvaluationQueue(evaluationQ, v1, transitionSystem, v);
     EXPECT_EQ(evaluationQ.size(), solution);
 }
 
@@ -710,11 +710,11 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth2){
 TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth3){
     std::vector<vertexDescriptor> evaluationQ;
     AttentiveConfigurator::EvaluationQueueManager eqm;
-    vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1, v2;
+    vertexDescriptor v=MOVING_VERTEX, v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1, v2;
     eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 1);
     v1=make_successful(v0, std::get<0>(GetParam())).m_target;
-    eqm.addToEvaluationQueue(evaluationQ, v1, transitionSystem, v1);
+    eqm.addToEvaluationQueue(evaluationQ, v1, transitionSystem, v);
     int solution=1;
     if (std::get<1>(GetParam())==simResult::crashed){
         v2 =make_v1_crashed(v1).m_target;
@@ -723,7 +723,7 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth3){
     else{
         v2=make_successful(v1).m_target;
     }
-    eqm.addToEvaluationQueue(evaluationQ, v2, transitionSystem, v1);
+    eqm.addToEvaluationQueue(evaluationQ, v2, transitionSystem, v);
     EXPECT_EQ(evaluationQ.size(), solution);
 }
 
