@@ -1188,7 +1188,7 @@ return result;
 
 void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v1, TransitionSystem & g, vertexDescriptor v0){
 	if (v0==MOVING_VERTEX || g[v1].direction==DEFAULT){
-		evaluationQueue.push_back(v);
+		evaluationQueue.push_back(v1);
 		if (g[v1].isTurning()){
 			lastAdded=v1;
 		}
