@@ -1199,7 +1199,6 @@ void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::ve
 		}
 		if (boost::edge(lastAdded, v1, g).second){ //if edge exists
 			erase_from_vector(evaluationQueue, lastAdded);
-			reset();
 		}
 	}
 }
