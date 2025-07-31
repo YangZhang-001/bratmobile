@@ -712,7 +712,7 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth3){
     vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1, v2;
     eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem);
     EXPECT_EQ(evaluationQ.size(), 1);
-    vertexDescriptor v1=make_successful(v0, std::get<0>(GetParam())).m_target;
+    v1=make_successful(v0, std::get<0>(GetParam())).m_target;
     int solution=1;
     if (std::get<1>(GetParam())==simResult::crashed){
         v2 =make_v1_crashed(v0).m_target;
