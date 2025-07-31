@@ -714,6 +714,7 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth3){
     eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 1);
     v1=make_successful(v0, std::get<0>(GetParam())).m_target;
+    eqm.addToEvaluationQueue(evaluationQ, v1, transitionSystem, v1);
     int solution=1;
     if (std::get<1>(GetParam())==simResult::crashed){
         v2 =make_v1_crashed(v1).m_target;
