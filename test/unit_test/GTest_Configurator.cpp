@@ -739,14 +739,15 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueNoEdge){
     EXPECT_EQ(evaluationQ.size(), solution);
 }
 
-TEST_F(ConfiguratorEvaluationQueueManagerTest, simulateModule){
+TEST_P(ConfiguratorTakeBool, simulateModule){
+    std::vector<vertexDescriptor> evaluationQ;
+    AttentiveConfigurator::EvaluationQueueManager eqm;
+    vertexDescriptor v=MOVING_VERTEX;
     std::vector<vertexDescriptor>new_vertices;
     for (int i=0; i<6; i++){
         new_vertices.push_back(boost::add_vertex(transitionSystem));
     }
-    std::vector<vertexDescriptor> evaluationQ;
-    AttentiveConfigurator::EvaluationQueueManager eqm;
-
+    std::vector<vertexDescriptor>solution={new_vertices[0], new_vertices[2], new_vertices[5]};
     transitionSystem[new_vertices[0]].direction=DEFAULT;
     add_edge_withPoses(MOVING_VERTEX,new_vertices[0]);
     eqm.addToEvaluationQueue(evaluationQ, new_vertices[0], transitionSystem, MOVING_VERTEX);    
@@ -770,14 +771,19 @@ TEST_F(ConfiguratorEvaluationQueueManagerTest, simulateModule){
 
     transitionSystem[new_vertices[4]].direction=RIGHT;
     add_edge_withPoses(new_vertices[3],new_vertices[4]);
+    if (GetParam()){//crashed
+        transitionSystem[new_vertices[4]].outcome=simResult::crashed;
+        solution.erase(solution.end()-1);
+    }
     eqm.addToEvaluationQueue(evaluationQ, new_vertices[4], transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 3);
-
-    transitionSystem[new_vertices[5]].direction=DEFAULT;
-    add_edge_withPoses(new_vertices[4],new_vertices[5]);
-    eqm.addToEvaluationQueue(evaluationQ, new_vertices[5], transitionSystem, MOVING_VERTEX);
+    if (!GetParam()){
+        transitionSystem[new_vertices[5]].direction=DEFAULT;
+        add_edge_withPoses(new_vertices[4],new_vertices[5]);
+        eqm.addToEvaluationQueue(evaluationQ, new_vertices[5], transitionSystem, MOVING_VERTEX);
+    }
     EXPECT_EQ(evaluationQ.size(), 3);
-
+    EXPECT_EQ(evaluationQ, solution);
 }
 
 INSTANTIATE_TEST_CASE_P(DirectionsAndOutcomes, 

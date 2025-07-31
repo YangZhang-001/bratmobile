@@ -669,7 +669,6 @@ class ConfiguratorEvaluationQueueManagerTest: public ConfiguratorTest, public te
     std::vector<vertexDescriptor> evaluationQ;
     AttentiveConfigurator::EvaluationQueueManager eqm;
     vertexDescriptor v=MOVING_VERTEX;
-
     void SetUp(){
         transitionSystem[MOVING_VERTEX].direction=STOP;
     }
