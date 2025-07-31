@@ -282,6 +282,21 @@ class DebugConfigurator:public AttentiveConfigurator{
      */
     void make_module(vertexDescriptor mv=0);
 
+    /**
+     * @brief Makes a basic expansion module,  disturbances not set. Module looks like this
+     *               
+     *              v2(LEFT)---v3(DEFAULT)
+                   /   
+                 v0 --- q1(DEFAULT)
+                   \
+                    v4(RIGHT)
+                        \
+                         v5(RIGHT) --- v6(DEFAULT)
+     * 
+     * Not visited by default
+     */
+    void make_module_all_depths(vertexDescriptor mv){
+
     void add_edge_withPoses(vertexDescriptor u, vertexDescriptor v);
 
     void addStepToEdge(edgeDescriptor e);
@@ -888,6 +903,28 @@ void DebugConfigurator::make_module(vertexDescriptor mv){
     add_edge_withPoses(mv,new_vertices[3]);
     add_edge_withPoses(new_vertices[1],new_vertices[2]);
     add_edge_withPoses(new_vertices[3],new_vertices[4]);
+}
+
+void DebugConfigurator::make_module_all_depths(vertexDescriptor mv){
+    //mv=currentVertex;
+    std::vector<vertexDescriptor>new_vertices;
+    for (int i=0; i<6; i++){
+        new_vertices.push_back(boost::add_vertex(transitionSystem));
+    }
+    // vertexDescriptor nv=n_vertices()-1;
+    transitionSystem[new_vertices[0]].direction=DEFAULT;
+    transitionSystem[new_vertices[2]].direction=DEFAULT;
+    transitionSystem[new_vertices[5]].direction=DEFAULT;
+    transitionSystem[new_vertices[1]].direction=LEFT;
+    transitionSystem[new_vertices[3]].direction=RIGHT;
+    transitionSystem[new_vertices[4]].direction=RIGHT;
+
+    add_edge_withPoses(mv,new_vertices[0]);
+    add_edge_withPoses(mv,new_vertices[1]);
+    add_edge_withPoses(mv,new_vertices[3]);
+    add_edge_withPoses(new_vertices[1],new_vertices[2]);
+    add_edge_withPoses(new_vertices[3],new_vertices[4]);
+    add_edge_withPoses(new_vertices[3],new_vertices[5]);
 
 }
 
