@@ -770,12 +770,12 @@ TEST_F(ConfiguratorEvaluationQueueManagerTest, simulateModule){
 
     transitionSystem[new_vertices[4]].direction=RIGHT;
     add_edge_withPoses(new_vertices[3],new_vertices[4]);
-    eqm.addToEvaluationQueue(evaluationQ, new_vertices[4], transitionSystem, new_vertices[3]);
+    eqm.addToEvaluationQueue(evaluationQ, new_vertices[4], transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 3);
 
     transitionSystem[new_vertices[5]].direction=DEFAULT;
     add_edge_withPoses(new_vertices[4],new_vertices[5]);
-    eqm.addToEvaluationQueue(evaluationQ, new_vertices[5], transitionSystem, new_vertices[4]);
+    eqm.addToEvaluationQueue(evaluationQ, new_vertices[5], transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 3);
 
 }
