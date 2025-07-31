@@ -688,8 +688,9 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth2){
     std::vector<vertexDescriptor> evaluationQ;
     AttentiveConfigurator::EvaluationQueueManager eqm;
     vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1;
-    eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem);
+    eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 1);
+    EXPECT_EQ(evaluationQ, std::vector<vertexDescriptor>({v0}));
     int solution=1;
     if (std::get<1>(GetParam())==simResult::crashed){
         v1 =make_v1_crashed(v0).m_target;
@@ -698,7 +699,7 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth2){
     else{
         v1=make_successful(v0).m_target;
     }
-    eqm.addToEvaluationQueue(evaluationQ, v1, transitionSystem);
+    eqm.addToEvaluationQueue(evaluationQ, v1, transitionSystem, v0);
     EXPECT_EQ(evaluationQ.size(), solution);
 }
 
@@ -710,18 +711,18 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueDepth3){
     std::vector<vertexDescriptor> evaluationQ;
     AttentiveConfigurator::EvaluationQueueManager eqm;
     vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1, v2;
-    eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem);
+    eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 1);
     v1=make_successful(v0, std::get<0>(GetParam())).m_target;
     int solution=1;
     if (std::get<1>(GetParam())==simResult::crashed){
-        v2 =make_v1_crashed(v0).m_target;
+        v2 =make_v1_crashed(v1).m_target;
         solution++;
     }
     else{
         v2=make_successful(v1).m_target;
     }
-    eqm.addToEvaluationQueue(evaluationQ, v2, transitionSystem);
+    eqm.addToEvaluationQueue(evaluationQ, v2, transitionSystem, v1);
     EXPECT_EQ(evaluationQ.size(), solution);
 }
 
@@ -731,7 +732,7 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueNoEdge){
     std::vector<vertexDescriptor> evaluationQ;
     AttentiveConfigurator::EvaluationQueueManager eqm;
     vertexDescriptor v0=make_successful(MOVING_VERTEX, std::get<0>(GetParam())).m_target, v1, v2;
-    eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem);
+    eqm.addToEvaluationQueue(evaluationQ, v0, transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 1);
     int solution=2;
     if (std::get<1>(GetParam())==simResult::crashed){
@@ -740,7 +741,7 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueNoEdge){
     else{
         v1=make_successful(MOVING_VERTEX).m_target;
     }
-    eqm.addToEvaluationQueue(evaluationQ, v1, transitionSystem);
+    eqm.addToEvaluationQueue(evaluationQ, v1, transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), solution);
 }
 
@@ -754,33 +755,33 @@ TEST_F(ConfiguratorEvaluationQueueManagerTest, simulateModule){
 
     transitionSystem[new_vertices[0]].direction=DEFAULT;
     add_edge_withPoses(MOVING_VERTEX,new_vertices[0]);
-    eqm.addToEvaluationQueue(evaluationQ, new_vertices[0], transitionSystem);
+    eqm.addToEvaluationQueue(evaluationQ, new_vertices[0], transitionSystem, MOVING_VERTEX);    
     EXPECT_EQ(evaluationQ.size(), 1);
 
     transitionSystem[new_vertices[1]].direction=LEFT;
     add_edge_withPoses(MOVING_VERTEX,new_vertices[1]);
-    eqm.addToEvaluationQueue(evaluationQ, new_vertices[1], transitionSystem);
+    eqm.addToEvaluationQueue(evaluationQ, new_vertices[1], transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 2);
 
     transitionSystem[new_vertices[2]].direction=DEFAULT;
     add_edge_withPoses(new_vertices[1],new_vertices[2]);
-    eqm.addToEvaluationQueue(evaluationQ, new_vertices[2], transitionSystem);
+    eqm.addToEvaluationQueue(evaluationQ, new_vertices[2], transitionSystem, new_vertices[1]);
     EXPECT_EQ(evaluationQ.size(), 2);
 
     transitionSystem[new_vertices[3]].direction=RIGHT;
     add_edge_withPoses(MOVING_VERTEX,new_vertices[3]);
-    eqm.addToEvaluationQueue(evaluationQ, new_vertices[3], transitionSystem);
+    eqm.addToEvaluationQueue(evaluationQ, new_vertices[3], transitionSystem, MOVING_VERTEX);
     EXPECT_EQ(evaluationQ.size(), 3);
 
 
     transitionSystem[new_vertices[4]].direction=RIGHT;
     add_edge_withPoses(new_vertices[3],new_vertices[4]);
-    eqm.addToEvaluationQueue(evaluationQ, new_vertices[4], transitionSystem);
+    eqm.addToEvaluationQueue(evaluationQ, new_vertices[4], transitionSystem, new_vertices[3]);
     EXPECT_EQ(evaluationQ.size(), 3);
 
     transitionSystem[new_vertices[5]].direction=DEFAULT;
-    add_edge_withPoses(new_vertices[3],new_vertices[5]);
-    eqm.addToEvaluationQueue(evaluationQ, new_vertices[5], transitionSystem);
+    add_edge_withPoses(new_vertices[4],new_vertices[5]);
+    eqm.addToEvaluationQueue(evaluationQ, new_vertices[5], transitionSystem, new_vertices[4]);
     EXPECT_EQ(evaluationQ.size(), 3);
 
 }

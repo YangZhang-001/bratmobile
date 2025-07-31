@@ -578,10 +578,11 @@ class EvaluationQueueManager{
 	 * If the vertex after lastAdded (representing a connecting vertex) is a successful straight task, lastAdded is removed from the queue
 	 * 
 	 * @param evaluationQueue 
-	 * @param v the vertex just added to the transition system
+	 * @param v1 the vertex just added to the transition system
 	 * @param g the transition system
+	 * @param v0 the source vertex of v1
 	 */
-	void addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v, TransitionSystem & g);
+	void addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v1, TransitionSystem & g, vertexDescriptor v0);
 
 	void reset(vertexDescriptor v=TransitionSystem::null_vertex()){
 		lastAdded=v;
