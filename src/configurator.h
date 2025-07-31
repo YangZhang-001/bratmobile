@@ -580,9 +580,9 @@ class EvaluationQueueManager{
 	 * @param evaluationQueue 
 	 * @param v1 the vertex just added to the transition system
 	 * @param g the transition system
-	 * @param v0 the source vertex of v1
+	 * @param v the source of the expansion of the module
 	 */
-	void addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v1, TransitionSystem & g, vertexDescriptor v0);
+	void addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v1, TransitionSystem & g, vertexDescriptor v);
 
 	void reset(vertexDescriptor v=TransitionSystem::null_vertex()){
 		lastAdded=v;
