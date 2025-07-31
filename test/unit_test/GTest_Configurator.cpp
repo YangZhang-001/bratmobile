@@ -744,7 +744,7 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, addToEvaluationQueueNoEdge){
     EXPECT_EQ(evaluationQ.size(), solution);
 }
 
-TEST_P(ConfiguratorEvaluationQueueManagerTest, simulateModule){
+TEST_F(ConfiguratorEvaluationQueueManagerTest, simulateModule){
     std::vector<vertexDescriptor>new_vertices;
     for (int i=0; i<6; i++){
         new_vertices.push_back(boost::add_vertex(transitionSystem));
@@ -783,5 +783,11 @@ TEST_P(ConfiguratorEvaluationQueueManagerTest, simulateModule){
     eqm.addToEvaluationQueue(evaluationQ, new_vertices[5], transitionSystem);
     EXPECT_EQ(evaluationQ.size(), 3);
 
-
 }
+
+INSTANTIATE_TEST_CASE_P(DirectionsAndOutcomes, 
+                        ConfiguratorEvaluationQueueManagerTest, 
+                        testing::Combine(
+                            testing::Values(LEFT, RIGHT), 
+                            testing::Values(simResult::successful, simResult::crashed))
+                        );
