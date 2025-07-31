@@ -1192,11 +1192,11 @@ void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::ve
 	}
 	if (g[v1].outcome==simResult::successful){
 		if (lastAdded!=TransitionSystem::null_vertex()){
-			if (boost::edge(lastAdded, v1, g).second){ //if edge exists
+			if (boost::edge(lastAdded, v1, g).second ){ //if edge exists
 				erase_from_vector(evaluationQueue, lastAdded);
 			}
 		}
-	}		
+	}
 	lastAdded=v1;
 
 }

@@ -743,6 +743,7 @@ TEST_P(ConfiguratorTakeBool, simulateModule){
     std::vector<vertexDescriptor> evaluationQ;
     AttentiveConfigurator::EvaluationQueueManager eqm;
     vertexDescriptor v=MOVING_VERTEX;
+    transitionSystem[MOVING_VERTEX].direction=STOP;
     std::vector<vertexDescriptor>new_vertices;
     for (int i=0; i<6; i++){
         new_vertices.push_back(boost::add_vertex(transitionSystem));
