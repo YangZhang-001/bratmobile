@@ -849,7 +849,7 @@ void HighLevelTestBase::trackFor(int iteration){
     configurator->addIteration();
     EXPECT_GT(configurator->get_current_vertices().size(), 0);
     EXPECT_NE(configurator->get_current_vertices()[0], 0);
-    if (di.getFolder()!=SYNTH_DATA_FOLDER){
+    if (di.hasFolder()){
         di.newScanAvail();
     }
     else{
