@@ -41,8 +41,7 @@ jobs:
       - name : Test
         run: |
             cd test/unit_test
-            ctest
-            ctest --rerun-failed --output-on-failure
+            ctest & ctest --rerun-failed --output-on-failure
       - name : Push to data repo 
         if : ${{ success()}}
         env: 
