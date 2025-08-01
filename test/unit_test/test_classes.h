@@ -803,7 +803,6 @@ Pointf HighLevelInterruptBase::generateInterruptingPoint(int taskOrder){
         else if (configurator->vertex_get_direction(vertexToInterrupt)==RIGHT){
             pt0=Robot::get_vertices()[2]; //tl
         }
-        else
         pt=b2Mul(configurator->vertex_get_endPose(vertexToInterrupt), pt0);
     }
     return Pointf(pt.x, pt.y);
