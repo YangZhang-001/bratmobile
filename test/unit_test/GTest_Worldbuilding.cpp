@@ -9,15 +9,24 @@ TEST(Math, affineTransform){
     EXPECT_FALSE(task.get_disturbance().pose()==disturbance.pose());
 }
 
-TEST(Robot, Pose){
+TEST(Robot, Vertices){
     b2World world(GRAVITY);
     std::vector<b2Vec2> robotVertices=Robot::get_vertices();
     Robot robot(&world);
     b2AABB aabb =robot.body()->GetFixtureList()->GetAABB(0);
-    EXPECT_NEAR(aabb.upperBound.y, ROBOT_HALFLENGTH, 0.01);
-    EXPECT_NEAR(aabb.lowerBound.y, -ROBOT_HALFLENGTH, 0.01);
-    EXPECT_NEAR(aabb.upperBound.x, ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, 0.01);
+    const float MAX_Y= ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y;
+    const float MIN_Y= -ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y;
+    const float MAX_X= ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X;
+    const float MIN_X= -ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X;
+
+    EXPECT_NEAR(aabb.upperBound.y, MAX_Y, 0.01);
+    EXPECT_NEAR(aabb.lowerBound.y, MIN_Y, 0.01);
+    EXPECT_NEAR(aabb.upperBound.x,MAX_X, 0.01);
     EXPECT_NEAR(aabb.lowerBound.y, -ROBOT_HALFWIDTH-ROBOT_BOX_OFFSET_X, 0.01);
+    EXPECT_NEAR(robotVertices[0].x, MIN_X, 0.01);
+    EXPECT_NEAR(robotVertices[0].y, MIN_Y, 0.01);
+    EXPECT_NEAR(robotVertices[3].x, MAX_X, 0.01);
+    EXPECT_NEAR(robotVertices[3].y, MAX_Y, 0.01);
 
 }
 
