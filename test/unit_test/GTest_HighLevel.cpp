@@ -286,6 +286,7 @@ INSTANTIATE_TEST_CASE_P(CulDeSacTurning, HighLevelInterruptTest, testing::Combin
                                                                            ::testing::Values(std::string("../cul_de_sac/")),
                                                                            ::testing::Values(2),
                                                                            ::testing::Values(-1, 0) ));
+                                                                           //synth fails, debug later!
 
 INSTANTIATE_TEST_CASE_P(CulDeSacAvoided, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
                                                                            ::testing::Values(std::string("../cul_de_sac/")),
