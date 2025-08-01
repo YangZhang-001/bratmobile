@@ -785,16 +785,11 @@ std::vector<vertexDescriptor> HighLevelInterruptBase::get_InterruptedPlan(std::s
 }
 
 Pointf HighLevelInterruptBase::generateInterruptingPoint(int taskOrder){
-    // EXPECT_TRUE((configurator->get_plan().size())> taskOrder);
     vertexDescriptor vertexToInterrupt=configurator->get_current_vertex();
-    if (taskOrder>-1){
+    if (taskOrder>-1){    //get task order length
         vertexToInterrupt=configurator->get_plan()[taskOrder];
-
     }
-    //get task order length
-    //bottom left
     b2Vec2 cornerFromCentroid(ROBOT_HALFWIDTH, ROBOT_HALFLENGTH);   
-//    b2Vec2 pt0(-(Robot::get_vertices()[0].Length()-0.01), 0);
     b2Vec2 pt0(-(cornerFromCentroid.Length()-0.01), 0);
     b2Vec2 pt;
     if (configurator->vertex_get_direction(vertexToInterrupt)==DEFAULT){

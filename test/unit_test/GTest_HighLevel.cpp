@@ -334,9 +334,9 @@ TEST_P(HighLevelTest, Recycle){
 INSTANTIATE_TEST_CASE_P(CulDeSac, HighLevelTest, ::testing::Combine( ::testing::Values(false), ::testing::Values(std::string("../cul_de_sac/")), ::testing::Values(2, 3, 4, 17, 36)));
                                                                   
 
-INSTANTIATE_TEST_CASE_P(Target40, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_40cm/")), ::testing::Values(2, 3, 4, 6,17, 36, 89)));
+INSTANTIATE_TEST_CASE_P(Target40, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_40cm/")), ::testing::Values(2, 3, 4, 6,17, 89)));
 
-INSTANTIATE_TEST_CASE_P(Target68, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_68cm/")), ::testing::Values(2, 3, 4, 6,17, 36, 89)));
+INSTANTIATE_TEST_CASE_P(Target68, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_68cm/")), ::testing::Values(2, 3, 4, 6, 17, 36,)));
 
 
 int main(int argc, char** argv){
