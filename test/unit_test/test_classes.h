@@ -421,9 +421,10 @@ class HighLevelInterruptBase: public HighLevelTestBase{
      * @param folder
      * @param it iteration of data interface (determines which map will be read) - 0 reads map 1
      * @param taskOrder order of task in plan we want to interrupt. 0 is the current task
+     * @param pt point that interrupts the plan
      * 
      */
-    std::vector<vertexDescriptor> get_InterruptedPlan(std::string folder,int it, int taskOrder);
+    std::vector<vertexDescriptor> get_InterruptedPlan(std::string folder,int it, int taskOrder, Pointf *pt =NULL);
 
     Pointf generateInterruptingPoint(int taskOrder);
 
@@ -760,7 +761,7 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
     return configurator->get_plan();
 }
 
-std::vector<vertexDescriptor> HighLevelInterruptBase::get_InterruptedPlan(std::string folder,int it, int taskOrder){
+std::vector<vertexDescriptor> HighLevelInterruptBase::get_InterruptedPlan(std::string folder,int it, int taskOrder, Pointf *pt){
     di.set_iteration(it);
     if (folder!=SYNTH_DATA_FOLDER){
         di.set_folder(folder);
@@ -774,6 +775,9 @@ std::vector<vertexDescriptor> HighLevelInterruptBase::get_InterruptedPlan(std::s
     }
     configurator->set_data2fp(ci.data2fp);
     Pointf pf=generateInterruptingPoint(taskOrder);
+    if (pt!=NULL){
+        *pt=pf;
+    }
     configurator->data2fp_emplace(pf);
     configurator->Spawner();
     EXPECT_GT(configurator->n_visitedEdges(), 0);

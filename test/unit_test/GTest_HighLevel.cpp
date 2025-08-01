@@ -248,12 +248,23 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam()), taskToInterrupt=std::get<3>(GetParam());
     trackFor(iteration);
-    std::vector<vertexDescriptor> updated_plan=get_InterruptedPlan(folder,iteration-1, taskToInterrupt); //map 2
+    Pointf interruptingPoint;
+    std::vector<vertexDescriptor> updated_plan=get_InterruptedPlan(folder,iteration-1, taskToInterrupt, &interruptingPoint); //map 2
     int vertices_now=configurator->n_vertices();
     EXPECT_GT(vertices_now, vertices_og);    
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     bool success=planned_to_goal || configurator->getGoal().checkEnded(configurator->vertex_get_endPose(configurator->get_current_vertex())).ended;
-    EXPECT_TRUE(success);
+    Disturbance interruptingDisturbance(AVOID, b2Vec2(interruptingPoint.x, interruptingPoint.y), 0);
+    b2World world(GRAVITY);
+    configurator->get_worldbuilder()->buildWorld(world, b2Transform_zero, DEFAULT);
+    Robot robot(&world);
+    if (overlaps(robot.body, &interruptingDisturbance)){
+        EXPECT_TRUE(configurator->get_plan().size()==0);
+        EXPECT_FALSE(success);
+    }
+    else{
+        EXPECT_TRUE(success);
+    }
 }
 
 TEST_F(HighLevelTest, BoxedIn){
