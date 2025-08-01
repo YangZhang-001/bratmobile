@@ -119,10 +119,10 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 				if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[v].direction!=dir){
 					Task task(g[v].Di, DEFAULT, g[v].endPose, true);
 					Robot robot(&world);
-					robot.body->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
-					b2AABB box =worldBuilder.makeRobotSensor(robot.body, controlGoal.get_disturbance_ptr());
-					b2Fixture *sensor =GetSensor(robot.body);
-					bool overlap=overlaps(robot.body, &g[v].Di) && sensor;
+					robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
+					b2AABB box =worldBuilder.makeRobotSensor(robot.body(), controlGoal.get_disturbance_ptr());
+					b2Fixture *sensor =GetSensor(robot.body());
+					bool overlap=overlaps(robot.body(), &g[v].Di) && sensor;
 					world_cleanup(world);
 					if (overlap){
 						Disturbance Di= g[v].Di;
@@ -157,9 +157,9 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	float remaining=distance/controlGoal.action.getLinearSpeed();
 	Robot robot(&w);
 	worldBuilder.add_body_count();
-	robot.body->SetTransform(t.start.p, t.start.q.GetAngle());
-	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body, &controlGoal.disturbance);
-	result =t.bumping_that(w, iteration, robot.body, remaining); //default start from 0
+	robot.body()->SetTransform(t.start.p, t.start.q.GetAngle());
+	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), &controlGoal.disturbance);
+	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
 	//approximate angle to avoid rounding errors
 	float approximated_angle=approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode);
 	result.endPose.q.Set(approximated_angle);
