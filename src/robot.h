@@ -20,12 +20,13 @@ private:
 	b2FixtureDef fixtureDef;
 	//b2Vec2 velocity = {0,0};
 	b2Body* m_body=NULL;
-	b2BodyDef m_bodyDef;
+//	b2BodyDef m_bodyDef;
 	b2PolygonShape m_box;
 	public:
 
 
 	Robot(b2World * world) {
+		b2BodyDef m_bodyDef;
 		m_bodyDef.type = b2_dynamicBody;
 		m_bodyDef.position.Set(0.0f, 0.0f);
 		m_body = world->CreateBody(&m_bodyDef);
