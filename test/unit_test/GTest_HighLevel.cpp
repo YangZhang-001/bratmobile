@@ -271,12 +271,12 @@ TEST_F(HighLevelTest, BoxedIn){
 
 
 INSTANTIATE_TEST_CASE_P(CulDeSacTurning, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
-                                                                           ::testing::Values(std::string("../cul_de_sac/"), std::string("/synthetic/")),
+                                                                           ::testing::Values(std::string("../cul_de_sac/"), SYNTH_DATA_FOLDER),
                                                                            ::testing::Values(2, 12),
                                                                            ::testing::Values(-1, 0) ));
 
 INSTANTIATE_TEST_CASE_P(CulDeSacAvoided, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
-                                                                           ::testing::Values(std::string("../cul_de_sac/"), std::string("/synthetic/")),
+                                                                           ::testing::Values(std::string("../cul_de_sac/"), SYNTH_DATA_FOLDER),
                                                                            ::testing::Values(30),
                                                                            ::testing::Values(-1) ));
 
