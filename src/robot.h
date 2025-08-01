@@ -18,9 +18,7 @@
 class Robot {
 private: 
 	b2FixtureDef fixtureDef;
-	//b2Vec2 velocity = {0,0};
 	b2Body* m_body=NULL;
-//	b2BodyDef m_bodyDef;
 	b2PolygonShape m_box;
 	public:
 
@@ -41,8 +39,6 @@ private:
 	}
 
 	b2Body* body(){return m_body;} 
-
-	b2BodyDef bodyDef(){return m_bodyDef;}
 
 	b2PolygonShape box(){return m_box;}
 /**
