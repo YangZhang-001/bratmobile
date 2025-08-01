@@ -246,9 +246,9 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     std::string folder=std::get<1>(GetParam());
     std::vector<vertexDescriptor> plan= get_plan(folder);
     int vertices_og=configurator->n_vertices();
-    int iteration=std::get<2>(GetParam());
+    int iteration=std::get<2>(GetParam()), taskToInterrupt=std::get<3>(GetParam());
     trackFor(iteration);
-    std::vector<vertexDescriptor> updated_plan=get_InterruptedPlan(folder,iteration-1, std::get<3>(GetParam())); //map 2
+    std::vector<vertexDescriptor> updated_plan=get_InterruptedPlan(folder,iteration-1, taskToInterrupt); //map 2
     int vertices_now=configurator->n_vertices();
     EXPECT_GT(vertices_now, vertices_og);    
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;

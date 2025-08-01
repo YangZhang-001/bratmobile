@@ -1163,11 +1163,10 @@ void AttentiveConfigurator::adjustProbability(const edgeDescriptor &e){
 
 void AttentiveConfigurator::abandonPlan(std::vector<vertexDescriptor>& planProv, vertexDescriptor v0, vertexDescriptor v1){
 	planProv.clear();
-	if (v0==MOVING_VERTEX && transitionSystem[v1].direction==currentTask.get_direction()){
+//	if (v0==MOVING_VERTEX && transitionSystem[v1].direction==currentTask.get_direction()){
 		currentTask.set_change(true);
 		current_vertices.clear();
-		//currentVertex=MOVING_VERTEX;
-	}
+//	}
 }
 
 std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve){
