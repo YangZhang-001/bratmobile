@@ -748,6 +748,7 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
         di.newScanAvail();        
     }
     else{
+        di.set_folder("");
         ci.data2fp.emplace(Pointf(0.5,0)); //one point
     }
     configurator->data2fp= ci.data2fp;
@@ -798,10 +799,10 @@ Pointf HighLevelInterruptBase::generateInterruptingPoint(int taskOrder){
     }
     else{
         if (configurator->vertex_get_direction(vertexToInterrupt)==LEFT){
-            pt0=Robot::get_vertices()[0];//bl
+            pt0=b2Vec2(-cornerFromCentroid.x, -cornerFromCentroid.y); //bl
         }
         else if (configurator->vertex_get_direction(vertexToInterrupt)==RIGHT){
-            pt0=Robot::get_vertices()[2]; //tl
+            pt0=b2Vec2(-cornerFromCentroid.x, cornerFromCentroid.y); //tl
         }
         pt=b2Mul(configurator->vertex_get_endPose(vertexToInterrupt), pt0);
     }
