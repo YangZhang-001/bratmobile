@@ -748,7 +748,7 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
         di.newScanAvail();        
     }
     else{
-        di.set_folder("");
+        di.reset();
         ci.data2fp.emplace(Pointf(0.5,0)); //one point
     }
     configurator->data2fp= ci.data2fp;

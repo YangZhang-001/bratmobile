@@ -147,7 +147,7 @@ public:
     }
 
     bool hasFolder(){
-        return !folder.empty();
+        return folder.size()>0;
     }
     
     const std::string getFolder() const {
