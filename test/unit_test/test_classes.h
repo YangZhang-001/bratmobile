@@ -768,8 +768,8 @@ std::vector<vertexDescriptor> HighLevelInterruptBase::get_InterruptedPlan(std::s
     else{
         b2Vec2 pt(ci.data2fp.begin()->x, ci.data2fp.begin()->y);
         pt=b2Mul(configurator->getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), pt);
-        ci.data2fp.begin()->x= pt.x;
-        ci.data2fp.begin()->y= pt.y;
+        ci.data2fp.erase(ci.data2fp.begin());
+        ci.data2fp.emplace(Pointf(pt.x, pt.y));
     }
     configurator->set_data2fp(ci.data2fp);
     Pointf pf=generateInterruptingPoint(taskOrder);
@@ -846,8 +846,8 @@ void HighLevelTestBase::trackFor(int iteration){
     else{
         b2Vec2 pt(ci.data2fp.begin()->x, ci.data2fp.begin()->y);
         pt=b2Mul(configurator->getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), pt);
-        ci.data2fp.begin()->x= pt.x;
-        ci.data2fp.begin()->y= pt.y;
+        ci.data2fp.erase(ci.data2fp.begin());
+        ci.data2fp.emplace(Pointf(pt.x, pt.y));
     }
     configurator->getFeatures(ci.data2fp);
     configurator->preExplore();
