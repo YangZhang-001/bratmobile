@@ -180,40 +180,10 @@ TEST_P(TaskTestTermination, TerminateEarly){
     wb.set_world_objects({bf});
     wb.buildWorld(world, start, direction);
     Robot robot(&world);
-    simResult result=bumping_that(world, 1, robot.body);
-    EXPECT_NEAR(robot.body->GetTransform().q.GetAngle(), angle, M_PI/(2*HZ));
+    simResult result=bumping_that(world, 1, robot.body());
+    EXPECT_NEAR(robot.body()->GetTransform().q.GetAngle(), angle, M_PI/(2*HZ));
 }
 
 INSTANTIATE_TEST_CASE_P(TerminateEarly, TaskTestTermination, ::testing::Combine(testing::Values(LEFT, RIGHT, DEFAULT), ::testing::Values(M_PI_4)));
 INSTANTIATE_TEST_CASE_P(TerminateLate, TaskTestTermination, ::testing::Combine(testing::Values(LEFT, RIGHT, DEFAULT), ::testing::Values(M_PI_4+M_PI_2)));
-
-
-// TEST_P(TaskTest, TerminateLate){
-//     float angle =0;
-//     if (GetParam()!=DEFAULT){
-//         angle=M_PI_4+M_PI_2;
-//         if (GetParam()==RIGHT){
-//             angle=-angle;
-//         }
-//         endCriteria.angle.set(angle);
-//         endCriteria.angle.setValid(true);
-//     }
-//     direction=GetParam();
-//     action.init(direction);
-//     b2Transform bfPose;
-//     bfPose.p.x=.5;
-//     b2World world(GRAVITY);
-//     WorldBuilder wb;
-//     BodyFeatures bf(bfPose);
-//     disturbance=Disturbance(bf);
-//     affordance=disturbance.getAffIndex();
-//     EXPECT_EQ(disturbance.getAffIndex(), AVOID);
-//     disturbance.validate();
-//     bf.attention=true;
-//     wb.set_world_objects({bf});
-//     wb.buildWorld(world, start, direction);
-//     Robot robot(&world);
-//     simResult result=bumping_that(world, 1, robot.body);
-//     EXPECT_NEAR(robot.body->GetTransform().q.GetAngle(), angle, M_PI/(2*HZ));
-// }
 
