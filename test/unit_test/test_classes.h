@@ -763,15 +763,15 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
 
 std::vector<vertexDescriptor> HighLevelInterruptBase::get_InterruptedPlan(std::string folder,int it, int taskOrder, Pointf *pt){
     di.set_iteration(it);
-    if (folder!=SYNTH_DATA_FOLDER){
-        di.set_folder(folder);
+    if (di.hasFolder()){
+       // di.set_folder(folder);
         di.newScanAvail();
     }
     else{
-        b2Vec2 pt(ci.data2fp.begin()->x, ci.data2fp.begin()->y);
-        pt=b2Mul(configurator->getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), pt);
+        b2Vec2 pt2d(ci.data2fp.begin()->x, ci.data2fp.begin()->y);
+        pt2d=b2Mul(configurator->getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), pt2d);
         ci.data2fp.erase(ci.data2fp.begin());
-        ci.data2fp.emplace(Pointf(pt.x, pt.y));
+        ci.data2fp.emplace(Pointf(pt2d.x, pt2d.y));
     }
     configurator->set_data2fp(ci.data2fp);
     Pointf pf=generateInterruptingPoint(taskOrder);
@@ -797,6 +797,13 @@ Pointf HighLevelInterruptBase::generateInterruptingPoint(int taskOrder){
         pt.y=configurator->vertex_get_endPose(vertexToInterrupt).p.y;
     }
     else{
+        if (configurator->vertex_get_direction(vertexToInterrupt)==LEFT){
+            pt0=Robot::get_vertices()[0];//bl
+        }
+        else if (configurator->vertex_get_direction(vertexToInterrupt)==RIGHT){
+            pt0=Robot::get_vertices()[2]; //tl
+        }
+        else
         pt=b2Mul(configurator->vertex_get_endPose(vertexToInterrupt), pt0);
     }
     return Pointf(pt.x, pt.y);
