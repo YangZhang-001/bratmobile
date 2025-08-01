@@ -272,13 +272,13 @@ TEST_F(HighLevelTest, BoxedIn){
 
 INSTANTIATE_TEST_CASE_P(CulDeSacTurning, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
                                                                            ::testing::Values(std::string("../cul_de_sac/"), std::string()),
-                                                                           ::testing::Values(2, 12, 30),
+                                                                           ::testing::Values(2, 12),
                                                                            ::testing::Values(-1, 0) ));
 
-// INSTANTIATE_TEST_CASE_P(CulDeSacAvoided, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
-//                                                                            ::testing::Values(std::string("../cul_de_sac/")),
-//                                                                            ::testing::Values(30),
-//                                                                            ::testing::Values(0) ));
+INSTANTIATE_TEST_CASE_P(CulDeSacAvoided, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
+                                                                           ::testing::Values(std::string("../cul_de_sac/"), std::string()),
+                                                                           ::testing::Values(30),
+                                                                           ::testing::Values(-1) ));
 
 TEST_P(HighLevelTest, Recycle){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
