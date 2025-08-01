@@ -11,31 +11,39 @@
 #include "const.h"
 #include <opencv2/core.hpp>
 
-
-
+/**
+ * @brief Robot class for Box2D simulation.
+ * 
+ */
 class Robot {
 private: 
 	b2FixtureDef fixtureDef;
-public:
-	b2Vec2 velocity = {0,0};
-	b2Body* body;
-	b2BodyDef bodyDef;
+	//b2Vec2 velocity = {0,0};
+	b2Body* m_body=NULL;
+	b2BodyDef m_bodyDef;
+	b2PolygonShape m_box;
+	public:
+
 
 	Robot(b2World * world) {
-		bodyDef.type = b2_dynamicBody;
-		bodyDef.position.Set(0.0f, 0.0f);
-		body = world->CreateBody(&bodyDef);
+		m_bodyDef.type = b2_dynamicBody;
+		m_bodyDef.position.Set(0.0f, 0.0f);
+		m_body = world->CreateBody(&m_bodyDef);
 		//body->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
-		body->GetUserData().pointer=reinterpret_cast<uintptr_t>(ROBOT_FLAG);
+		m_body->GetUserData().pointer=reinterpret_cast<uintptr_t>(ROBOT_FLAG);
 		b2Vec2 center(ROBOT_BOX_OFFSET_X, ROBOT_BOX_OFFSET_Y);
-		b2PolygonShape box;
-		box.SetAsBox(ROBOT_HALFWIDTH, ROBOT_HALFLENGTH, center, ROBOT_BOX_OFFSET_ANGLE);
-		fixtureDef.shape = &box;
+		m_box.SetAsBox(ROBOT_HALFWIDTH, ROBOT_HALFLENGTH, center, ROBOT_BOX_OFFSET_ANGLE);
+		fixtureDef.shape = &m_box;
 		fixtureDef.friction =0;
-		body->CreateFixture(&fixtureDef);
+		m_body->CreateFixture(&fixtureDef);
 		
 	}
 
+	b2Body* body(){return m_body;} 
+
+	b2BodyDef bodyDef(){return m_bodyDef;}
+
+	b2PolygonShape box(){return m_box;}
 /**
  * @brief Returns vertices in local frame. Order: bl, br, tl, tr 
  */

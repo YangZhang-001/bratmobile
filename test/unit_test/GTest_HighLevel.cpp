@@ -258,7 +258,7 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     b2World world(GRAVITY);
     configurator->get_worldbuilder()->buildWorld(world, b2Transform_zero, DEFAULT);
     Robot robot(&world);
-    if (overlaps(robot.body->GetFixtureList()->GetShape(), &interruptingDisturbance)){
+    if (overlaps(robot.box(), &interruptingDisturbance)){
         EXPECT_TRUE(configurator->get_plan().size()==0);
         EXPECT_FALSE(success);
     }
