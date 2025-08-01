@@ -6,6 +6,7 @@
 #include <string>
 #include <numeric>
 
+const std::string SYNTH_DATA_FOLDER="/synthetic/";
 
 /**
  * @brief Setting up ostream operator for use with GTest
@@ -741,7 +742,7 @@ void HighLevelTestBase::init( const Task& goal){
 
 std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, int it){
     di.set_iteration(it);
-    if (folder.size()>0){
+    if (folder!=SYNTH_DATA_FOLDER){
         di.set_folder(folder);
         di.newScanAvail();        
     }
@@ -761,7 +762,7 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
 
 std::vector<vertexDescriptor> HighLevelInterruptBase::get_InterruptedPlan(std::string folder,int it, int taskOrder){
     di.set_iteration(it);
-    if (!folder.empty()){
+    if (folder!=SYNTH_DATA_FOLDER){
         di.set_folder(folder);
         di.newScanAvail();
     }
@@ -840,7 +841,7 @@ void HighLevelTestBase::trackFor(int iteration){
     configurator->addIteration();
     EXPECT_GT(configurator->get_current_vertices().size(), 0);
     EXPECT_NE(configurator->get_current_vertices()[0], 0);
-    if (di.hasFolder()){
+    if (di.getFolder()!=SYNTH_DATA_FOLDER){
         di.newScanAvail();
     }
     else{

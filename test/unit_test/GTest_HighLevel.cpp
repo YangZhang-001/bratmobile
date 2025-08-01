@@ -271,12 +271,12 @@ TEST_F(HighLevelTest, BoxedIn){
 
 
 INSTANTIATE_TEST_CASE_P(CulDeSacTurning, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
-                                                                           ::testing::Values(std::string("../cul_de_sac/"), std::string("")),
+                                                                           ::testing::Values(std::string("../cul_de_sac/"), std::string("/synthetic/")),
                                                                            ::testing::Values(2, 12),
                                                                            ::testing::Values(-1, 0) ));
 
 INSTANTIATE_TEST_CASE_P(CulDeSacAvoided, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
-                                                                           ::testing::Values(std::string("../cul_de_sac/"), std::string("")),
+                                                                           ::testing::Values(std::string("../cul_de_sac/"), std::string("/synthetic/")),
                                                                            ::testing::Values(30),
                                                                            ::testing::Values(-1) ));
 
@@ -325,53 +325,6 @@ INSTANTIATE_TEST_CASE_P(CulDeSac, HighLevelTest, ::testing::Combine( ::testing::
 INSTANTIATE_TEST_CASE_P(Target40, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_40cm/")), ::testing::Values(2, 3, 4, 6,17, 36, 89)));
 
 INSTANTIATE_TEST_CASE_P(Target68, HighLevelTest, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_68cm/")), ::testing::Values(2, 3, 4, 6,17, 36, 89)));
-
-
-
-// TEST_P(ReactToNoiseTest, NoisyPlan){
-//     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-//     Logger logger=makeLogger(info);
-//     configurator->register_logger(&logger);
-//     Task goal;
-//     if (std::get<0>(GetParam())){
-//         goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
-//     }
-//     configurator->init(goal);
-//     std::string folder=std::get<1>(GetParam()), folder2=std::get<2>(GetParam());
-//     std::vector<vertexDescriptor> plan= get_plan(folder);
-//     int vertices_og=configurator->n_vertices();
-//     trackFor(4);
-//     std::vector<vertexDescriptor> updated_plan=get_plan(folder2, std::get<3>(GetParam())); //map 2
-//     int vertices_now=configurator->n_vertices();
-//     EXPECT_GE(vertices_now, vertices_og);
-
-//     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-//     bool success=planned_to_goal || configurator->getGoal().checkEnded(configurator->vertex_get_endPose(configurator->get_current_vertex())).ended;
-//     EXPECT_TRUE(success);
-// }
-
-// INSTANTIATE_TEST_CASE_P(NoisyCombosAvoidance, ReactToNoiseTest, testing::Combine(
-//                                                         testing::Values(false),
-//                                                         testing::Values("../cul_de_sac/"),
-//                                                         testing::Values("../target_40cm/", "../target_68cm/"),
-//                                                         testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
-
-
-
-// INSTANTIATE_TEST_CASE_P(NoisyCombosTarget40, ReactToNoiseTest, testing::Combine(
-//                                                         testing::Values(true),
-//                                                         testing::Values("../target_40cm/"),
-//                                                         testing::Values("../cul_de_sac/", "../target_68cm/"),
-//                                                         testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
-
-
-// INSTANTIATE_TEST_CASE_P(NoisyCombosTarget68, ReactToNoiseTest, testing::Combine(
-//                                                         testing::Values(true),
-//                                                         testing::Values("../target_68cm/"),
-//                                                         testing::Values("../cul_de_sac/", "../target_40cm/"),
-//                                                         testing::Values(2, 3, 6, 11, 17, 39, 89, 97)));
-
-
 
 
 int main(int argc, char** argv){

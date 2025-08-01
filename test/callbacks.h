@@ -149,6 +149,10 @@ public:
     bool hasFolder(){
         return !folder.empty();
     }
+    
+    const std::string getFolder() const {
+        return folder;
+    }
 };
 
 class StepCallback{
