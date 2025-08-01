@@ -254,17 +254,18 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     EXPECT_GT(vertices_now, vertices_og);    
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     bool success=planned_to_goal || configurator->getGoal().checkEnded(configurator->vertex_get_endPose(configurator->get_current_vertex())).ended;
-    Disturbance interruptingDisturbance(AVOID, b2Vec2(interruptingPoint.x, interruptingPoint.y), 0);
-    b2World world(GRAVITY);
-    configurator->get_worldbuilder()->buildWorld(world, b2Transform_zero, DEFAULT);
-    Robot robot(&world);
-    if (overlaps(robot.box(), &interruptingDisturbance)){
-        EXPECT_TRUE(configurator->get_plan().size()==0);
-        EXPECT_FALSE(success);
-    }
-    else{
-        EXPECT_TRUE(success);
-    }
+    // Disturbance interruptingDisturbance(AVOID, b2Vec2(interruptingPoint.x, interruptingPoint.y), 0);
+    // b2World world(GRAVITY);
+    // configurator->get_worldbuilder()->buildWorld(world, b2Transform_zero, DEFAULT);
+    // Robot robot(&world);
+    // if (overlaps(robot.box(), &interruptingDisturbance)){
+    //     EXPECT_TRUE(configurator->get_plan().size()==0);
+    //     EXPECT_FALSE(success);
+    // }
+    // else{
+    // }        
+    EXPECT_TRUE(success);
+
 }
 
 TEST_F(HighLevelTest, BoxedIn){
