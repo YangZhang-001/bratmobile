@@ -741,8 +741,13 @@ void HighLevelTestBase::init( const Task& goal){
 
 std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, int it){
     di.set_iteration(it);
-    di.set_folder(folder);
-    di.newScanAvail();
+    if (folder.size()>0){
+        di.set_folder(folder);
+        di.newScanAvail();        
+    }
+    else{
+        ci.data2fp.emplace(Pointf(0.5,0)); //one point
+    }
     configurator->data2fp= ci.data2fp;
     EXPECT_EQ(configurator->n_visitedEdges(), 0);
     configurator->Spawner();
@@ -756,8 +761,16 @@ std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, in
 
 std::vector<vertexDescriptor> HighLevelInterruptBase::get_InterruptedPlan(std::string folder,int it, int taskOrder){
     di.set_iteration(it);
-    di.set_folder(folder);
-    di.newScanAvail();
+    if (!folder.empty()){
+        di.set_folder(folder);
+        di.newScanAvail();
+    }
+    else{
+        b2Vec2 pt(ci.data2fp.begin()->x, ci.data2fp.begin()->y);
+        pt=b2Mul(configurator->getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), pt);
+        ci.data2fp.begin()->x= pt.x;
+        ci.data2fp.begin()->y= pt.y;
+    }
     configurator->set_data2fp(ci.data2fp);
     Pointf pf=generateInterruptingPoint(taskOrder);
     configurator->data2fp_emplace(pf);
@@ -827,7 +840,15 @@ void HighLevelTestBase::trackFor(int iteration){
     configurator->addIteration();
     EXPECT_GT(configurator->get_current_vertices().size(), 0);
     EXPECT_NE(configurator->get_current_vertices()[0], 0);
-    di.newScanAvail();
+    if (di.hasFolder()){
+        di.newScanAvail();
+    }
+    else{
+        b2Vec2 pt(ci.data2fp.begin()->x, ci.data2fp.begin()->y);
+        pt=b2Mul(configurator->getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), pt);
+        ci.data2fp.begin()->x= pt.x;
+        ci.data2fp.begin()->y= pt.y;
+    }
     configurator->getFeatures(ci.data2fp);
     configurator->preExplore();
     //VisitedTransitionSystem trackedTS(configurator->get_ts(), VisitedEdge(configurator->get_ts_ptr(), configurator->iteration));

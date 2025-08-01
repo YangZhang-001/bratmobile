@@ -268,14 +268,10 @@ TEST_F(HighLevelTest, BoxedIn){
     EXPECT_TRUE(planned_to_goal);
 }
 
-// INSTANTIATE_TEST_CASE_P(CulDeSacTurn, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
-//                                                                            ::testing::Values(std::string("../cul_de_sac/")),
-//                                                                            ::testing::Values(2),
-//                                                                            ::testing::Values(-1) ));
 
 
-INSTANTIATE_TEST_CASE_P(CulDeSac, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
-                                                                           ::testing::Values(std::string("../cul_de_sac/")),
+INSTANTIATE_TEST_CASE_P(CulDeSacTurning, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
+                                                                           ::testing::Values(std::string("../cul_de_sac/"), std::string()),
                                                                            ::testing::Values(2, 12, 30),
                                                                            ::testing::Values(-1, 0) ));
 

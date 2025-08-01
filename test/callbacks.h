@@ -144,7 +144,10 @@ public:
     void reset(){
         folder.clear();
         ci=NULL;
+    }
 
+    bool hasFolder(){
+        return !folder.empty();
     }
 };
 
