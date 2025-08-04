@@ -693,10 +693,11 @@ VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatche
 		bool Tmatch=dir==Direction::UNDEFINED ||transitionSystem[v].direction==dir ||(transitionSystem[v].direction==STOP &&dir==DEFAULT &&iteration>1);
 		//make state representing a whole task, this is inefficient and when i have time should be susbtituted with subgraph
 		State q= transitionSystem[v];
-			if (auto vertices=task_vertices(v); vertices.size()>1){
-				q.start=transitionSystem[vertices[0]].start;
-			}			
-		if (v==currentVertex && !currentTask.is_over()){
+		auto vertices=task_vertices(v);
+		if ( vertices.size()>1){
+			q.start=transitionSystem[vertices[0]].start;
+		}			
+		if (check_vector_for(vertices, currentVertex)!=vertices.end() && !currentTask.is_over()){ //v==currentVertex
 			q.start=b2Transform_zero;
 		}
 		StateDifference sd(s, q);
