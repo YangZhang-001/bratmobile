@@ -649,38 +649,6 @@ void AttentiveConfigurator::adjust_simulated_task(const vertexDescriptor &v, Tas
 }
 
 
-
-// void AttentiveConfigurator::adjust_rw_task(const vertexDescriptor &v, TransitionSystem &g, Task * t, const b2Transform & deltaPose){
-// 	std::pair<edgeDescriptor, bool> ep= boost::edge(v, currentVertex, g);
-
-// 	if(!ep.second){ //no tgt	
-// 		if (v==0){
-// 			printf("edge doesn't exist");
-// 		}
-// 		return; //check until needs to be checked
-// 	}
-// 	// auto eb=boost::edge(currentEdge.m_source,currentEdge.m_target, transitionSystem);
-// 	// int stepsTraversed= g[eb.first].step-currentTask.motorStep; //eb.first
-// 	// float theta_exp=stepsTraversed*MOTOR_CALLBACK*currentTask.action.getOmega();
-// 	// float theta_obs=theta_exp;//currentTask.correct.getError()-theta_exp;
-// 	if (t->getAction().getOmega()!=0){
-// 		float remainingAngle = t->getEndCriteria().angle.get()-abs(deltaPose.q.GetAngle());
-// 	//	printf("step =%i/%i, remaining angle=%f\n", currentTask.motorStep, transitionSystem[currentEdge].step,remainingAngle);
-// 		// if (t->direction==getOppositeDirection(t->direction).second){
-// 		// 	remainingAngle=M_PI-remainingAngle;
-// 		// }
-// 		t->setEndCriteria(Angle(remainingAngle));
-// 	}
-// 	if(t->getAction().getLinearSpeed()>0){
-// 		//step-= (stepsTraversed*MOTOR_CALLBACK)*currentTask.action.getLinearSpeed();
-// 		t->setEndCriteria(Distance(t->getEndCriteria().distance.get()-deltaPose.p.Length()));
-// 	}			// -estimated distance covered
-
-// }
-
-
-
-
 VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
 	VertexMatch result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex()), backup=result;
 	auto vs= boost::vertices(transitionSystem);

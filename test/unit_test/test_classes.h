@@ -792,10 +792,15 @@ Pointf HighLevelInterruptBase::generateInterruptingPoint(int taskOrder){
     }
     b2Vec2 cornerFromCentroid(ROBOT_HALFWIDTH, ROBOT_HALFLENGTH);   
     b2Vec2 pt0(-(cornerFromCentroid.Length()-0.01), 0);
-    b2Vec2 pt;
+    b2Vec2 pt(0,0);
     if (configurator->vertex_get_direction(vertexToInterrupt)==DEFAULT){
-        pt.x=configurator->vertex_get_endPose(vertexToInterrupt).p.x;
-        pt.y=configurator->vertex_get_endPose(vertexToInterrupt).p.y;
+        if (configurator->vertex_get_Di(vertexToInterrupt).getAffIndex()==NONE){
+            pt.x=BOX2DRANGE;
+        }
+        else{
+            pt.x=configurator->vertex_get_endPose(vertexToInterrupt).p.x;
+            pt.y=configurator->vertex_get_endPose(vertexToInterrupt).p.y;
+        }
     }
     else{
         if (configurator->vertex_get_direction(vertexToInterrupt)==LEFT){
