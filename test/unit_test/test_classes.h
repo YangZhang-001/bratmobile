@@ -335,6 +335,8 @@ class CreativeWorldBuilder: public WorldBuilder{
     void addObject(const BodyFeatures& bf){world_objects.push_back(bf);}
 };
 
+class WorldBuilderTest: public CreativeWorldBuilder, public ::testing::Test{};
+
  /**
  * @brief Test fixture for testing high-level processes such as planning and state-space exploration
  * 
