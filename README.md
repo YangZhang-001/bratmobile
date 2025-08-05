@@ -32,7 +32,7 @@ Giulia Lafratta, Bernd Porr, Christopher Chandler, Alice Miller; Closed-Loop Mul
 ## Hardware
 The indoor robot is equipped with 
 * Raspberry Pi model 3b+
-* * 360 Parallax Continuous Rotation Servo motors (see [here](https://github.com/berndporr/alphabot/blob/main/alphabot.cpp) for wiring)
+* 360 Parallax Continuous Rotation Servo motors (see [here](https://github.com/berndporr/alphabot/blob/main/alphabot.cpp) for wiring)
 * A1 SLAMTEC LIDAR (see [here](https://github.com/berndporr/rplidar_rpi) for wiring)
 
 
