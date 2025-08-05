@@ -16,7 +16,7 @@
 
 class Configurator{
 protected:
-	int iteration=0; //represents that hasn't started yet, robot isn't moving and there are no map data
+	int iteration=0, simulatedTasks=0; 
 	Task currentTask; //need to make thread safe?
 	Controller * task_controller=NULL;
 	Tracker * tracker=NULL;
@@ -30,7 +30,6 @@ protected:
 	std::chrono::high_resolution_clock::time_point previousTimeScan;
 	GoalChanger * goal_changer=NULL;	
 	std::vector<vertexDescriptor>m_plan, current_vertices;
-	int bodies=0;
 	Task controlGoal;
 	CoordinateContainer data2fp;
 	TransitionSystem transitionSystem=TransitionSystem(1);
@@ -98,9 +97,6 @@ void printPlan(std::vector <vertexDescriptor>* p=NULL);
  */
 std::pair<edgeDescriptor, bool> addVertex(const vertexDescriptor & src, vertexDescriptor &v1, Edge edge=Edge(), bool topDown=0);
 
-//search the TS for a plan
-//std::vector <vertexDescriptor> planner(TransitionSystem&, vertexDescriptor, vertexDescriptor goal=TransitionSystem::null_vertex(), bool been=0, const Task* custom_ctrl_goal=NULL, bool * finished =NULL) ;
-
 /**
  * @brief Explores and plan
  * 
@@ -125,11 +121,8 @@ void registerInterface(LIDAR_In *, Motor_Out *);
  */
 static void run(Configurator *);
 
-// //uses LIDAR data to calculate an affine transform of disturbance Di if present
-// void track_task_execution();
-
 /**
- * @brief changes tasks to execute on
+ * @brief changes tasks executing on the robot
  */
 void change_task();
 

@@ -84,7 +84,7 @@ bool Configurator::Spawner(){
 	float duration_withExplore=abs(float(d_withExplore.count())/1000); //express in seconds
 	//FORMAT: vertices	bodies	total_dur	just_worldbuilding
 	if (logger){
-		logger->log("%i\t%i\t%0.6f\t%0.6f\n", transitionSystem.m_vertices.size(), worldBuilder.bodies, duration_withExplore, duration_getFeatures);
+		logger->log("%i\t%i\t%i\t%0.6f\t%0.6f\n", transitionSystem.m_vertices.size(), worldBuilder.bodies, simulatedTasks, duration_withExplore, duration_getFeatures);
 	}
 	worldBuilder.resetBodies();
 	return 1;
@@ -157,6 +157,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	float remaining=distance/controlGoal.action.getLinearSpeed();
 	Robot robot(&w);
 	worldBuilder.add_body_count();
+	simulatedTasks++;
 	robot.body()->SetTransform(t.start.p, t.start.q.GetAngle());
 	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), &controlGoal.disturbance);
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
