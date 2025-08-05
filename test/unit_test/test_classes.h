@@ -794,7 +794,7 @@ Pointf HighLevelInterruptBase::generateInterruptingPoint(int taskOrder){
     b2Vec2 pt0(-(cornerFromCentroid.Length()-0.01), 0);
     b2Vec2 pt(0,0);
     if (configurator->vertex_get_direction(vertexToInterrupt)==DEFAULT){
-        if (configurator->vertex_get_Di(vertexToInterrupt).getAffIndex()==NONE){
+        if (configurator->vertex_get_Di(vertexToInterrupt).getAffIndex()==NONE && taskOrder==-1){
             pt.x=BOX2DRANGE;
         }
         else{
