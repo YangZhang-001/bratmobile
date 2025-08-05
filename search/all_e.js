@@ -1,14 +1,15 @@
 var searchData=
 [
-  ['package_5finfo_102',['package_info',['../classAttentiveConfigurator.html#a63637f301a4a562f03f1ad37794b98bf',1,'AttentiveConfigurator']]],
-  ['partition_5fclusters_103',['partition_clusters',['../classWorldBuilder.html#a224b89e6744786fdfe6bee3673e90303',1,'WorldBuilder']]],
-  ['path2add2_104',['path2add2',['../classHorizonStarPlanner.html#af09006cf441f61897fb5c6953c25efb1',1,'HorizonStarPlanner']]],
-  ['pid_105',['PID',['../classMotor__Out.html#ad8c4a2c3d8d83a4efe498d0b83458199',1,'Motor_Out']]],
-  ['plan_106',['plan',['../classPlanner.html#aae39b978d83cd3e6a41ee85eb672384c',1,'Planner::plan()'],['../classHorizonStarPlanner.html#afdc4a15288b0da11057e8123a1741108',1,'HorizonStarPlanner::plan()']]],
-  ['planner_107',['Planner',['../classPlanner.html',1,'']]],
-  ['planner_2eh_108',['planner.h',['../planner_8h.html',1,'']]],
-  ['pointf_109',['Pointf',['../classPointf.html',1,'']]],
-  ['pre_5fexplore_110',['pre_explore',['../classAttentiveConfigurator.html#a17898a950b20d3bd5a8e9f663919f096',1,'AttentiveConfigurator']]],
-  ['processdata_111',['processData',['../classWorldBuilder.html#a73b2748701310d051e86b6698748f8ba',1,'WorldBuilder']]],
-  ['propagated_112',['propagateD',['../classAttentiveConfigurator.html#a1222f646fce034d1c9d009a31c2a2cb9',1,'AttentiveConfigurator']]]
+  ['package_5finfo_116',['package_info',['../classAttentiveConfigurator.html#a63637f301a4a562f03f1ad37794b98bf',1,'AttentiveConfigurator']]],
+  ['partiallyexplorativeoptions_117',['partiallyExplorativeOptions',['../classAttentiveConfigurator.html#ab44bc7a1149a82ebc32c38ca0f95e5f0',1,'AttentiveConfigurator']]],
+  ['partition_5fclusters_118',['partition_clusters',['../classWorldBuilder.html#a224b89e6744786fdfe6bee3673e90303',1,'WorldBuilder']]],
+  ['path2add2_119',['path2add2',['../classHorizonStarPlanner.html#af09006cf441f61897fb5c6953c25efb1',1,'HorizonStarPlanner']]],
+  ['pid_120',['PID',['../classMotor__Out.html#ad8c4a2c3d8d83a4efe498d0b83458199',1,'Motor_Out']]],
+  ['plan_121',['plan',['../classPlanner.html#aae39b978d83cd3e6a41ee85eb672384c',1,'Planner::plan()'],['../classHorizonStarPlanner.html#afdc4a15288b0da11057e8123a1741108',1,'HorizonStarPlanner::plan()']]],
+  ['planner_122',['Planner',['../classPlanner.html',1,'']]],
+  ['planner_2eh_123',['planner.h',['../planner_8h.html',1,'']]],
+  ['pointf_124',['Pointf',['../structPointf.html',1,'']]],
+  ['pre_5fexplore_125',['pre_explore',['../classAttentiveConfigurator.html#a17898a950b20d3bd5a8e9f663919f096',1,'AttentiveConfigurator']]],
+  ['processdata_126',['processData',['../classWorldBuilder.html#a73b2748701310d051e86b6698748f8ba',1,'WorldBuilder']]],
+  ['propagated_127',['propagateD',['../classAttentiveConfigurator.html#a1222f646fce034d1c9d009a31c2a2cb9',1,'AttentiveConfigurator']]]
 ];

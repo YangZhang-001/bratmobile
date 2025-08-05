@@ -95,6 +95,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1e553c90eb82848a9093bc9135a49716"><td class="memItemLeft" align="right" valign="top"><a id="a1e553c90eb82848a9093bc9135a49716"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>register_learner</b> (<a class="el" href="classThresholdLearner.html">ThresholdLearner</a> *l)</td></tr>
 <tr class="separator:a1e553c90eb82848a9093bc9135a49716"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a04ad85f12977662b6047b03c3d98d9"><td class="memItemLeft" align="right" valign="top"><a id="a0a04ad85f12977662b6047b03c3d98d9"></a>
+b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>getDeltaTransform</b> ()</td></tr>
+<tr class="separator:a0a04ad85f12977662b6047b03c3d98d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37d73d09fc03a2fda37990b6abdbe0b8"><td class="memItemLeft" align="right" valign="top">virtual b2Transform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a37d73d09fc03a2fda37990b6abdbe0b8">get_transform</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const CoordinateContainer &amp;pts, <a class="el" href="structDisturbance.html">Disturbance</a> *observed_disturbance, std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)=0</td></tr>
 <tr class="separator:a37d73d09fc03a2fda37990b6abdbe0b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a329af121a8bd768bc7cbafc15ea12cfb"><td class="memItemLeft" align="right" valign="top">virtual b2Transform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a329af121a8bd768bc7cbafc15ea12cfb">track</a> (<a class="el" href="classTask.html">Task</a> &amp;t, const CoordinateContainer &amp;pts, std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)=0</td></tr>
@@ -131,6 +134,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a77658990eb39bf1e66c79c1e8664598a"><td class="memItemLeft" align="right" valign="top"><a id="a77658990eb39bf1e66c79c1e8664598a"></a>
 <a class="el" href="classThresholdLearner.html">ThresholdLearner</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>learner</b> =NULL</td></tr>
 <tr class="separator:a77658990eb39bf1e66c79c1e8664598a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40aa09e7955081b5cd79f7963e5412d8"><td class="memItemLeft" align="right" valign="top"><a id="a40aa09e7955081b5cd79f7963e5412d8"></a>
+b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform</b> =b2Transform_zero</td></tr>
+<tr class="separator:a40aa09e7955081b5cd79f7963e5412d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tracking interface: Bridge between the real world and the simulation. Is used for tracking execution of tasks and using lived experience to modify the state-matching threshold. </p>
@@ -180,7 +186,7 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>calculates 2d affine transformation of input task's disturbance from t-1 to t </p><dl class="params"><dt>Parameters</dt><dd>
+<p>calculates 2d affine transformation of input task's disturbance from t-1 to t. In other words, expresses how much the disturbance has moved </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">t</td><td>input task </td></tr>
     <tr><td class="paramname">pts</td><td>point cloud </td></tr>

@@ -69,6 +69,11 @@ $(function() {
 <div class="title">EndCriteria Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Defines the end criteria for a <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>, i.e. when it is considered to be finished.  
+ <a href="structEndCriteria.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="measurement_8h_source.html">measurement.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for EndCriteria:</div>
 <div class="dyncontent">
@@ -77,18 +82,22 @@ Collaboration diagram for EndCriteria:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af5ef0062ec07baa3af420a7a5128694f"><td class="memItemLeft" align="right" valign="top"><a id="af5ef0062ec07baa3af420a7a5128694f"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>getStandardError</b> (<a class="el" href="classAngle.html">Angle</a>, <a class="el" href="classDistance.html">Distance</a>)</td></tr>
-<tr class="separator:af5ef0062ec07baa3af420a7a5128694f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e78919a2f10a71850f105886c94c9c7"><td class="memItemLeft" align="right" valign="top"><a id="a0e78919a2f10a71850f105886c94c9c7"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>getStandardError</b> (<a class="el" href="classAngle.html">Angle</a>, <a class="el" href="classDistance.html">Distance</a>, <a class="el" href="structState.html">State</a>)</td></tr>
-<tr class="separator:a0e78919a2f10a71850f105886c94c9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6ae696bbc97acfe8f38d4ec9849fcf3"><td class="memItemLeft" align="right" valign="top"><a id="ae6ae696bbc97acfe8f38d4ec9849fcf3"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structEndCriteria.html#ae6ae696bbc97acfe8f38d4ec9849fcf3">getStandardError</a> (<a class="el" href="classAngle.html">Angle</a> a, <a class="el" href="classDistance.html">Distance</a> d)</td></tr>
+<tr class="memdesc:ae6ae696bbc97acfe8f38d4ec9849fcf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates normalised cumulative standard error for the given angle and distance. <br /></td></tr>
+<tr class="separator:ae6ae696bbc97acfe8f38d4ec9849fcf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9473fd6646e3e207983b7c8e1a8dd1f2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structEndCriteria.html#a9473fd6646e3e207983b7c8e1a8dd1f2">getStandardError</a> (<a class="el" href="classAngle.html">Angle</a> a, <a class="el" href="classDistance.html">Distance</a> d, <a class="el" href="structState.html">State</a> n)</td></tr>
+<tr class="memdesc:a9473fd6646e3e207983b7c8e1a8dd1f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the normalised cumulative standard error for the given angle, distance; state information.  <a href="structEndCriteria.html#a9473fd6646e3e207983b7c8e1a8dd1f2">More...</a><br /></td></tr>
+<tr class="separator:a9473fd6646e3e207983b7c8e1a8dd1f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9357c7d97e2bb5b40b854d3f7cf36149"><td class="memItemLeft" align="right" valign="top"><a id="a9357c7d97e2bb5b40b854d3f7cf36149"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasEnd</b> ()</td></tr>
 <tr class="separator:a9357c7d97e2bb5b40b854d3f7cf36149"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7e17d6de10e2831f06379c62b96457a"><td class="memItemLeft" align="right" valign="top"><a id="ad7e17d6de10e2831f06379c62b96457a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>adjust</b> (const b2Transform &amp;)</td></tr>
-<tr class="separator:ad7e17d6de10e2831f06379c62b96457a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad08144063a2f812ce9423e519bfe286a"><td class="memItemLeft" align="right" valign="top"><a id="ad08144063a2f812ce9423e519bfe286a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structEndCriteria.html">EndCriteria</a> ec)</td></tr>
+<tr class="separator:ad08144063a2f812ce9423e519bfe286a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc8a4424794862389dadec49f71964a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structEndCriteria.html#adc8a4424794862389dadec49f71964a4">adjust</a> (const b2Transform &amp;delta)</td></tr>
+<tr class="memdesc:adc8a4424794862389dadec49f71964a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ajusts endcriteria based on the delta transform (2D transform representing how much the robot has travelled)  <a href="structEndCriteria.html#adc8a4424794862389dadec49f71964a4">More...</a><br /></td></tr>
+<tr class="separator:adc8a4424794862389dadec49f71964a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -98,13 +107,78 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a80e30952905e0612421e7a6b6b7a0f7e"><td class="memItemLeft" align="right" valign="top"><a id="a80e30952905e0612421e7a6b6b7a0f7e"></a>
 <a class="el" href="classDistance.html">Distance</a>&#160;</td><td class="memItemRight" valign="bottom"><b>distance</b></td></tr>
 <tr class="separator:a80e30952905e0612421e7a6b6b7a0f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2153a9520d6f07cad94b5955ac9f3092"><td class="memItemLeft" align="right" valign="top"><a id="a2153a9520d6f07cad94b5955ac9f3092"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>outOfSight</b> =true</td></tr>
-<tr class="separator:a2153a9520d6f07cad94b5955ac9f3092"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c41d08d87c0a71ee016196431f0bcd5"><td class="memItemLeft" align="right" valign="top"><a id="a4c41d08d87c0a71ee016196431f0bcd5"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>valid_d</b> =false</td></tr>
-<tr class="separator:a4c41d08d87c0a71ee016196431f0bcd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Defines the end criteria for a <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>, i.e. when it is considered to be finished. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="adc8a4424794862389dadec49f71964a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc8a4424794862389dadec49f71964a4">&#9670;&nbsp;</a></span>adjust()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EndCriteria::adjust </td>
+          <td>(</td>
+          <td class="paramtype">const b2Transform &amp;&#160;</td>
+          <td class="paramname"><em>delta</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Ajusts endcriteria based on the delta transform (2D transform representing how much the robot has travelled) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">delta</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9473fd6646e3e207983b7c8e1a8dd1f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9473fd6646e3e207983b7c8e1a8dd1f2">&#9670;&nbsp;</a></span>getStandardError()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float EndCriteria::getStandardError </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAngle.html">Angle</a>&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classDistance.html">Distance</a>&#160;</td>
+          <td class="paramname"><em>d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structState.html">State</a>&#160;</td>
+          <td class="paramname"><em>n</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculates the normalised cumulative standard error for the given angle, distance; state information. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">n</td><td>are used to add a penalty if the state results in collision </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
 <li>src/<a class="el" href="measurement_8h_source.html">measurement.h</a></li>
 <li>src/measurement.cpp</li>

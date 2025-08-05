@@ -65,7 +65,7 @@ $(function() {
 <div class="title">Bratmobile Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> The purpose of this library is to showcase a framework for multi-step ahead planning using pure input control (see <a href="https://en.wikipedia.org/wiki/Braitenberg_vehicle">Braitenberg vehicles</a>). The navigation problem is broken down into several unique closed-loop input controllers, called Tasks. Each <a class="el" href="classTask.html">Task</a> produces a unique control behaviour (go straight, turn left/right 90 degrees) in response to a <a href="https://en.wikipedia.org/wiki/Errors_and_residuals">Disturbance</a> (an obstacle or target), which determines a <a class="el" href="classTask.html">Task</a>'s duration. A supervising module, called the <a class="el" href="classConfigurator.html">Configurator</a>, can simulate sequences of Tasks in game engine <a href="https://github.com/glafratta/box2d">Box2D</a>, retain their outcomes in a cognitive map, which can be searched to extract plans. The physics simulation represents the robot's <a href="https://www.harvardlds.org/wp-content/uploads/2017/01/SpelkeKinzler07-1.pdf">Core Knowledge</a> (Spelke, 2007).</p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> The purpose of this library is to showcase a framework for multi-step ahead planning using pure input control (see <a href="https://en.wikipedia.org/wiki/Braitenberg_vehicle">Braitenberg vehicles</a>). The navigation problem is broken down into several unique closed-loop input controllers, called Tasks. Each <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> produces a unique control behaviour (go straight, turn left/right 90 degrees) in response to a <a href="https://en.wikipedia.org/wiki/Errors_and_residuals">Disturbance</a> (an obstacle or target), which determines a <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>'s duration. A supervising module, called the <a class="el" href="classConfigurator.html">Configurator</a>, can simulate sequences of Tasks in game engine <a href="https://github.com/glafratta/box2d">Box2D</a>, retain their outcomes in a cognitive map, which can be searched to extract plans. The physics simulation represents the robot's <a href="https://www.harvardlds.org/wp-content/uploads/2017/01/SpelkeKinzler07-1.pdf">Core Knowledge</a> (Spelke, 2007).</p>
 <h2><a class="anchor" id="autotoc_md0"></a>
 Features:</h2>
 <ul>
@@ -79,7 +79,7 @@ Features:</h2>
 <h2><a class="anchor" id="autotoc_md1"></a>
 Work in progress</h2>
 <ul>
-<li>Closed-loop <a class="el" href="classTask.html">Task</a> execution with goal-directed behaviour (driving towards target)</li>
+<li>Closed-loop <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> execution with goal-directed behaviour (driving towards target)</li>
 <li>Debugging plan checking and recycling</li>
 <li>Adaptive thresholding of acceptable noise in state observations</li>
 </ul>

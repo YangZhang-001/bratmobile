@@ -139,14 +139,16 @@ $(function() {
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                                                                         {LEFT, std::pair&lt;float, float&gt;(0, WHEEL_SPEED_TURN)},</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                                                                         {RIGHT, std::pair&lt;float, float&gt;(0, -WHEEL_SPEED_TURN)}};</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#define PLANNING true</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#define BENCHMARKING true</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#define DEBUG false</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">const</span> std::map&lt;Direction, char*&gt; dirmap={{DEFAULT, <span class="stringliteral">&quot;DEFAULT&quot;</span>}, {LEFT, <span class="stringliteral">&quot;LEFT&quot;</span>}, {RIGHT, <span class="stringliteral">&quot;RIGHT&quot;</span>}, {STOP, <span class="stringliteral">&quot;STOP&quot;</span>}, {UNDEFINED, <span class="stringliteral">&quot;UNDEFINED&quot;</span>}, {BACK, <span class="stringliteral">&quot;BACK&quot;</span>}};</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">const</span> b2Vec2 GRAVITY(0,0);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#define PLANNING true</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#define BENCHMARKING true</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#define DEBUG false</span></div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">const</span> std::map&lt;Direction, char*&gt; dirmap={{DEFAULT, <span class="stringliteral">&quot;DEFAULT&quot;</span>}, {LEFT, <span class="stringliteral">&quot;LEFT&quot;</span>}, {RIGHT, <span class="stringliteral">&quot;RIGHT&quot;</span>}, {STOP, <span class="stringliteral">&quot;STOP&quot;</span>}, {UNDEFINED, <span class="stringliteral">&quot;UNDEFINED&quot;</span>}, {BACK, <span class="stringliteral">&quot;BACK&quot;</span>}};</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -1,16 +1,19 @@
 var searchData=
 [
-  ['get_5fcurrent_5fvertex_59',['get_current_vertex',['../classController.html#a5d22609770b042f667d352c041319915',1,'Controller']]],
-  ['get_5fdisturbance_60',['get_disturbance',['../classController.html#adbfd7ff4cf0f13b3cdff9c8cb1ea1929',1,'Controller']]],
-  ['get_5fdisturbance_5fptr_61',['get_disturbance_ptr',['../classTask.html#aba51215655bfc156ceb87918c0a6f9e4',1,'Task']]],
-  ['get_5fnext_5foption_62',['get_next_option',['../classAttentiveConfigurator.html#ab1eb081b77a716b6f72bc61510d245fd',1,'AttentiveConfigurator']]],
-  ['get_5fsum_63',['get_sum',['../structStateDifference.html#a3e20abc6798ab392144e6cd7f5383ddc',1,'StateDifference']]],
-  ['get_5ftransform_64',['get_transform',['../classTracker.html#a37d73d09fc03a2fda37990b6abdbe0b8',1,'Tracker::get_transform()'],['../classDeadReckoner.html#a972753196687a831565d90285b2820cd',1,'DeadReckoner::get_transform()'],['../classClosedLoop__Tracker.html#a64d130992fcd1ab648d967270f2db96f',1,'ClosedLoop_Tracker::get_transform()']]],
-  ['getdisturbance_65',['getDisturbance',['../classAttentiveConfigurator.html#a61d49e196980b9dc0990aa74dc82c4a5',1,'AttentiveConfigurator']]],
-  ['getexploreddirections_66',['getExploredDirections',['../classAttentiveConfigurator.html#ab0092da725ac846eebf8b191e7dc2583',1,'AttentiveConfigurator']]],
-  ['getomega_67',['getOmega',['../structTask_1_1Action.html#a380ba865561c98173374f50eab19cda0',1,'Task::Action']]],
-  ['getoppositedirection_68',['getOppositeDirection',['../classAttentiveConfigurator.html#a42e79e5977c29fccef0eaffb0e2e58f7',1,'AttentiveConfigurator']]],
-  ['getrecyclingstart_69',['getRecyclingStart',['../classAttentiveConfigurator.html#ad30db3cd48b2b4e95ec229be37b05e52',1,'AttentiveConfigurator']]],
-  ['getsystemarchitecture_70',['getSystemArchitecture',['../classLogger.html#af2ce5c46d6a9b2ddcb51a98b4fc8a9b8',1,'Logger']]],
-  ['goalchanger_71',['GoalChanger',['../structGoalChanger.html',1,'']]]
+  ['get_5fcurrent_5fvertex_66',['get_current_vertex',['../classController.html#a5d22609770b042f667d352c041319915',1,'Controller']]],
+  ['get_5fdisturbance_67',['get_disturbance',['../classController.html#adbfd7ff4cf0f13b3cdff9c8cb1ea1929',1,'Controller']]],
+  ['get_5fdisturbance_5fptr_68',['get_disturbance_ptr',['../classTask.html#aba51215655bfc156ceb87918c0a6f9e4',1,'Task']]],
+  ['get_5fnext_5foption_69',['get_next_option',['../classAttentiveConfigurator.html#ab1eb081b77a716b6f72bc61510d245fd',1,'AttentiveConfigurator']]],
+  ['get_5fsum_70',['get_sum',['../structStateDifference.html#a3e20abc6798ab392144e6cd7f5383ddc',1,'StateDifference']]],
+  ['get_5ftransform_71',['get_transform',['../classTracker.html#a37d73d09fc03a2fda37990b6abdbe0b8',1,'Tracker::get_transform()'],['../classDeadReckoner.html#a972753196687a831565d90285b2820cd',1,'DeadReckoner::get_transform()'],['../classClosedLoop__Tracker.html#a64d130992fcd1ab648d967270f2db96f',1,'ClosedLoop_Tracker::get_transform()']]],
+  ['get_5fvertices_72',['get_vertices',['../classRobot.html#ae24ce4db742206b64072bdf8638d20e0',1,'Robot']]],
+  ['getdisturbance_73',['getDisturbance',['../classAttentiveConfigurator.html#a61d49e196980b9dc0990aa74dc82c4a5',1,'AttentiveConfigurator']]],
+  ['getendcriteria_74',['getEndCriteria',['../classTask.html#ae43d082acf552124999ded99f4f89219',1,'Task::getEndCriteria(const Disturbance &amp;d)'],['../classTask.html#adfb957c308924e79da803e19601afbd0',1,'Task::getEndCriteria()']]],
+  ['getexploreddirections_75',['getExploredDirections',['../classAttentiveConfigurator.html#ab0092da725ac846eebf8b191e7dc2583',1,'AttentiveConfigurator']]],
+  ['getomega_76',['getOmega',['../structTask_1_1Action.html#a380ba865561c98173374f50eab19cda0',1,'Task::Action']]],
+  ['getoppositedirection_77',['getOppositeDirection',['../classAttentiveConfigurator.html#a42e79e5977c29fccef0eaffb0e2e58f7',1,'AttentiveConfigurator']]],
+  ['getrecyclingstart_78',['getRecyclingStart',['../classAttentiveConfigurator.html#ad30db3cd48b2b4e95ec229be37b05e52',1,'AttentiveConfigurator']]],
+  ['getstandarderror_79',['getStandardError',['../structEndCriteria.html#ae6ae696bbc97acfe8f38d4ec9849fcf3',1,'EndCriteria::getStandardError(Angle a, Distance d)'],['../structEndCriteria.html#a9473fd6646e3e207983b7c8e1a8dd1f2',1,'EndCriteria::getStandardError(Angle a, Distance d, State n)']]],
+  ['getsystemarchitecture_80',['getSystemArchitecture',['../classLogger.html#af2ce5c46d6a9b2ddcb51a98b4fc8a9b8',1,'Logger']]],
+  ['goalchanger_81',['GoalChanger',['../structGoalChanger.html',1,'']]]
 ];
