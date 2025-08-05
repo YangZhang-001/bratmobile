@@ -6,6 +6,7 @@ on:
       - 'src/*'
       - 'test/unit_test/*'
       - '.github/workflows/ci.yml'
+  workflow_dispatch:
 
 jobs:
   build:
