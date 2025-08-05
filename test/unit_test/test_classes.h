@@ -332,6 +332,7 @@ class CreativeWorldBuilder: public WorldBuilder{
      */
     static std::vector <BodyFeatures> makeCulDeSac(float width, float halfLength, b2Vec2 shift=b2Vec2(0,0));
 
+    void addObject(const BodyFeatures& bf){world_objects.push_back(bf);}
 };
 
  /**

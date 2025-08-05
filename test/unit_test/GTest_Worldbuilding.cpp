@@ -27,9 +27,16 @@ TEST(Robot, Vertices){
     EXPECT_NEAR(robotVertices[0].y, MIN_Y, 0.01);
     EXPECT_NEAR(robotVertices[3].x, MAX_X, 0.01);
     EXPECT_NEAR(robotVertices[3].y, MAX_Y, 0.01);
-
 }
 
+TEST_F(CreativeWorldBuilder, BodyCount){
+    b2World world(GRAVITY);
+    BodyFeatures bf(b2Transform(b2Vec2(1,0), b2Rot(0))), bf2(b2Transform(b2Vec2(0.5,0), b2Rot(0)));
+    world_objects.push_back(bf);
+    world_objects.push_back(bf2);
+    buildWorld(world, b2Transform_zero, DEFAULT);
+    EXPECT_EQ(world.GetBodyCount(), 2);
+}
 /**
  * @brief Class to test world building tools (third party)
  * 

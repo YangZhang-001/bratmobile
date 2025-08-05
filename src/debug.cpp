@@ -29,13 +29,6 @@ bool Logger::log(const char * format, ...){
 
 void Logger::init(const char * new_folder, const char * _dir, const char * customName){
 		std::string dirName=_dir;
-		// if (_dir==NULL){
-		// 	//sprintf(dirName, "benchmark");
-		// 	dirName="/tmp";
-		// }
-		// else{
-		// 	dirName=_dir;
-		// }
 		if (!opendir(dirName.c_str())){
 			mkdir(dirName.c_str(), 0777);
 		}

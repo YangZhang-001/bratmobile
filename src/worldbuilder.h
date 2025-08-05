@@ -3,12 +3,12 @@
 #include "sensor.h"
 
 class WorldBuilder{
+    protected:
     int iteration=0;
     char bodyFile[100];
     float simulationStep=BOX2DRANGE;
     int bodies=0;
-    std::vector <BodyFeatures> world_objects;
-    protected:
+    std::vector <BodyFeatures> world_objects;    
     friend class Configurator;
     public:
     enum CLUSTERING{BOX=0, KMEANS=1, PARTITION=2}; //BOX: bounding box around points
