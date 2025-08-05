@@ -31,9 +31,10 @@ Giulia Lafratta, Bernd Porr, Christopher Chandler, Alice Miller; Closed-Loop Mul
 
 ## Hardware
 The indoor robot is equipped with 
+* Raspberry Pi model 3b+
 * 360 Parallax Continuous Rotation Servo motors (see [here](https://github.com/berndporr/alphabot/blob/main/alphabot.cpp) for wiring)
 * A1 SLAMTEC LIDAR (see [here](https://github.com/berndporr/rplidar_rpi) for wiring)
-* Raspberry Pi model 3b+
+
 
 ## Prerequisites
 ### Development packages
@@ -57,10 +58,16 @@ The indoor robot is equipped with
 * [Box2D v2.4.1](https://github.com/glafratta/box2d)
   ** if not installed automatically, go to `box2d/build` and run `sudo make install`
 
+## Clone 
+
+`git clone git@github.com:glafratta/bratmobile.git`
+
 ## Build
 ```
-cd CloCK
-sh build.sh
+cd bratmobile
+cmake .
+make
+sudo make install
 ```
 
 ## Run
@@ -69,14 +76,10 @@ sh build.sh
 * `sudo ./target`: this program (under construction) demonstrates target seeking behaviour, where the target is imaginary and located at x=1.0m, y=0m.
 Run with options `0 [custom-stepDistance]`: for turning debug options off. In debug mode, LIDAR coordinates, Box2D objects and robot trajectories are dumped into the `/tmp` folder. The stepDistance is the maximum distance covered by a single task, 1.0m by default.
 
-Only planning and execution (tracking using dead reckoning) demonstrated
+WARNING! Real-world execution not yet fully debugged so navigation may be unsafe
 
-WARNING! Due to the point cloud clustering algorithm used (Partition), an obstacle such as a cul-de-sac will be detected as a solid box, so take into account that representation of concave objects may be inaccurate.
-### Simulation (x86 architecture)
-* `test/simulations/target_sim [folder_with_scans/] [bool: is_real_time]` : runs a simulation of a planning and plan recycling scenario (not fully debugged). Args:
- - `folder_with_scans` : a folder containing 2D LIDAR scans
- - `is_real_time` : a boolean flag used to determine whether to use a timer to ensure that LIDAR callbacks are called every 200ms and motor callbacks every 100 (default=1)
+### Unit tests 
+`ctest`
 
-### Unit tests (x86 architecture)
 run `make test`
 
