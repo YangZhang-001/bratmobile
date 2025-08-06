@@ -188,7 +188,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a460b9c5fdd998becf58cdfc31e2df36d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a460b9c5fdd998becf58cdfc31e2df36d">backtrack</a> (std::vector&lt; vertexDescriptor &gt; &amp;evaluation_q, std::vector&lt; vertexDescriptor &gt; &amp;priority_q, std::set&lt; vertexDescriptor &gt; &amp;closed, std::vector&lt; vertexDescriptor &gt; &amp;plan_prov, vertexDescriptor module_src=MOVING_VERTEX, vertexDescriptor startRecycle=MOVING_VERTEX)</td></tr>
 <tr class="memdesc:a460b9c5fdd998becf58cdfc31e2df36d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterates through vertices, if they result in crash, it splits the tasks and recalculates evaluation functions and adds to priority queue.  <a href="classAttentiveConfigurator.html#a460b9c5fdd998becf58cdfc31e2df36d">More...</a><br /></td></tr>
 <tr class="separator:a460b9c5fdd998becf58cdfc31e2df36d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79980a3078cf0a0cf21ca54f2fe24f6f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a79980a3078cf0a0cf21ca54f2fe24f6f">splitTask</a> (vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex())</td></tr>
+<tr class="memitem:a79980a3078cf0a0cf21ca54f2fe24f6f"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a79980a3078cf0a0cf21ca54f2fe24f6f">splitTask</a> (vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex())</td></tr>
 <tr class="memdesc:a79980a3078cf0a0cf21ca54f2fe24f6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split tasks into sub-states of fixed length.  <a href="classAttentiveConfigurator.html#a79980a3078cf0a0cf21ca54f2fe24f6f">More...</a><br /></td></tr>
 <tr class="separator:a79980a3078cf0a0cf21ca54f2fe24f6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1222f646fce034d1c9d009a31c2a2cb9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a1222f646fce034d1c9d009a31c2a2cb9">propagateD</a> (vertexDescriptor v1, vertexDescriptor v0, std::set&lt; vertexDescriptor &gt; *closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE)</td></tr>
@@ -1987,7 +1987,7 @@ false </dd></dl>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
