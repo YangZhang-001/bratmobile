@@ -252,7 +252,7 @@ void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertex
  * @param src source vertex for v
  * @return std::vector <vertexDescriptor> : the vertices making up substates in the original task
  */
-std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex());
+virtual std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex());
 
 /**
  * @brief Propagate a disturbance backwards to all states representing the same task
