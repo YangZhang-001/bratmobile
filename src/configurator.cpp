@@ -1197,11 +1197,11 @@ std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::p
 	if (ve.first){
 		if(transitionSystem[ve.second.m_target].visited()){
 			if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
-				return {ve.second.direction};
+				return {transitionSystem[ve.second.m_target].direction};
 			}
 			else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
 			result={DEFAULT, LEFT, RIGHT};
-			erase_from_vector(result, ve.second.direction);
+			erase_from_vector(result, transitionSystem[ve.second.m_target].direction);
 			return result;
 			}
 		}
