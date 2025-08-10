@@ -51,7 +51,7 @@ class BodyFeatures{
     b2BodyType bodyType = b2_dynamicBody;
 
     b2Shape::Type shape = b2Shape::e_polygon;
-    bool attention=false;
+    bool attention=false; //attention is used to indicate that the disturbance is the initial disturbance of a task and is being tracked by the robot using the attention window
 
     BodyFeatures(){}
 

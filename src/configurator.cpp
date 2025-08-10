@@ -1079,7 +1079,7 @@ vertexDescriptor AttentiveConfigurator::getRecyclingStart(vertexDescriptor v, ve
 }
 
 bool AttentiveConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
-	int MAX_OUT=3;
+	int MAX_OUT=5;
 	if (transitionSystem[v].isTurning()){MAX_OUT=2;}
 	std::vector<Direction> directions={UNDEFINED};
 	if (getExploredDirections(v, directions).size()>=MAX_OUT){
