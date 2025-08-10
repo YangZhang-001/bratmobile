@@ -871,7 +871,7 @@ void AttentiveConfigurator::explore_plan(b2World&world){
     pre_explore();
     vertexDescriptor src=get_explore_start(transitionSystem);
     resetPhi();
-	transitionSystem[MOVING_VERTEX].phi=Planner::evaluationFunction(EndedResult(), MOVING_VERTEX, m_plan);
+	transitionSystem[MOVING_VERTEX].phi=evaluationFunction(EndedResult(), MOVING_VERTEX, m_plan);
     std::vector <vertexDescriptor> plan_tmp=explorer(src, transitionSystem, world);
     if (DEBUG){
         std::vector<vertexDescriptor> _plan=(m_plan);
