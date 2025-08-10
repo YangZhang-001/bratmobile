@@ -611,8 +611,8 @@ TEST_P(ConfiguratorTakeBool, EvaluationFunctionSame){
             transitionSystem[currentVertex].Dn.isValid();
             transitionSystem[currentVertex].Dn.setPose(b2Transform(b2Vec2(0.5, 0), b2Rot(0)));
         }
-        EndedResult er= Planner::estimateCost(transitionSystem[currentVertex], b2Transform_zero, d, controlGoal);
-        vertex_set_phi(currentVertex, Planner::evaluationFunction(er, currentVertex, m_plan));
+        EndedResult er= estimateCost(transitionSystem[currentVertex], b2Transform_zero, d, controlGoal);
+        vertex_set_phi(currentVertex, evaluationFunction(er, currentVertex, m_plan));
     }
     EXPECT_EQ(transitionSystem[1].phi, transitionSystem[3].phi);
     EXPECT_EQ(transitionSystem[2].phi, transitionSystem[3].phi);
@@ -637,8 +637,8 @@ TEST_P(ConfiguratorTakeBool, EvaluationFunctionTurn){
             transitionSystem[currentVertex].Dn.isValid();
             transitionSystem[currentVertex].Dn.setPose(b2Transform(b2Vec2(0.5, 0), b2Rot(0)));
         }
-        EndedResult er= Planner::estimateCost(transitionSystem[currentVertex], b2Transform_zero, d, controlGoal);
-        vertex_set_phi(currentVertex, Planner::evaluationFunction(er, currentVertex, m_plan));
+        EndedResult er= estimateCost(transitionSystem[currentVertex], b2Transform_zero, d, controlGoal);
+        vertex_set_phi(currentVertex, evaluationFunction(er, currentVertex, m_plan));
     }
     EXPECT_EQ(transitionSystem[1].phi, transitionSystem[3].phi);
     EXPECT_EQ(transitionSystem[2].phi, transitionSystem[3].phi);

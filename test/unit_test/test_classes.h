@@ -1035,7 +1035,7 @@ void ConfiguratorTest::setAllVisited(){
 }
 
 void ConfiguratorTest::setPhi(State & s){
-    s.phi=Planner::estimateCost(s, s.start, s.direction, controlGoal).cost;   
+    s.phi=estimateCost(s, s.start, s.direction, controlGoal).cost;   
 }
 
 void ConfiguratorTest::set_Di(std::vector<vertexDescriptor> vec, const Disturbance& Di){
