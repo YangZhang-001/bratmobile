@@ -582,6 +582,7 @@ class EvaluationQueueManager{
 	}
 };
 
+
 public:
 
 AttentiveConfigurator(){};

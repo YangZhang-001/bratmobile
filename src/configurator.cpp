@@ -496,6 +496,58 @@ void AttentiveConfigurator::removeExploredTransitions( vertexDescriptor v){
 	}
 }
 
+// void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src){
+// 	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
+// 	srand(unsigned(time(NULL)));
+// 	auto oe=gt::outEdges(transitionSystem, v, d);
+// 	if (( !currentTask.get_change() ||!oe.empty()) && (iteration>1)){
+// 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
+// 		transitionSystem[v].options=partiallyExplorativeOptions(ve);
+// 	}
+// 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
+// 		if (d ==DEFAULT ||d==STOP){
+// 			transitionSystem[v].options.push_back(temp.get_direction());
+// 			transitionSystem[v].options.push_back(getOppositeDirection(temp.get_direction()).second);
+// 			//prioritise reflex
+// 			if (temp.getAction().getOmega()==0){ //if the task chosen is a turning task
+// 				if (rand()%2==0){
+// 						transitionSystem[v].options = {LEFT, RIGHT};
+// 				}
+// 				else{
+// 					transitionSystem[v].options = {RIGHT, LEFT};
+// 				} //no idea why it doesn't work using std shuffle/swap
+// 			}
+// 		}
+// 	}
+// 	else if (transitionSystem[v].outcome==simResult::successful) { //will only enter if successful
+// 		if (d== LEFT || d == RIGHT){
+// 			std::vector <edgeDescriptor> defaultOutEdges=gt::outEdges(transitionSystem, v, DEFAULT);
+// 			auto defaultVisited=gt::visitedEdge(defaultOutEdges, transitionSystem, currentVertex);
+// 			if (!defaultVisited.first){ //used to be just the inside of this statement
+// 				transitionSystem[v].options = {DEFAULT};
+// 				if ((src==currentVertex && controlGoal.getAffIndex()==PURSUE && SignedVectorLength(controlGoal.get_disturbance().pose().p)<0) ){
+// 					transitionSystem[v].options.push_back(d);
+// 				}
+// 			}
+// 			else if (transitionSystem[defaultVisited.second.m_target].outcome==simResult::crashed){
+// 				transitionSystem[v].options.push_back(d);
+// 			}
+// 		}
+// 		else {
+// 			 if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
+// 				transitionSystem[v].options.push_back(temp.get_direction());
+// 				transitionSystem[v].options.push_back(getOppositeDirection(temp.get_direction()).second);
+// 				transitionSystem[v].options.push_back(DEFAULT);
+// 			}
+// 			else{
+// 				transitionSystem[v].options={DEFAULT};
+// 			}
+
+// 		}
+
+// 	}
+// }
+
 void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src){
 	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
 	srand(unsigned(time(NULL)));
@@ -521,7 +573,8 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	}
 	else if (transitionSystem[v].outcome==simResult::successful) { //will only enter if successful
 		if (d== LEFT || d == RIGHT){
-			auto defaultVisited=gt::visitedEdge(gt::outEdges(transitionSystem, v, DEFAULT), transitionSystem, currentVertex);
+			std::vector <edgeDescriptor> defaultOutEdges=gt::outEdges(transitionSystem, v, DEFAULT);
+			auto defaultVisited=gt::visitedEdge(defaultOutEdges, transitionSystem, currentVertex);
 			if (!defaultVisited.first){ //used to be just the inside of this statement
 				transitionSystem[v].options = {DEFAULT};
 				if ((src==currentVertex && controlGoal.getAffIndex()==PURSUE && SignedVectorLength(controlGoal.get_disturbance().pose().p)<0) ){
@@ -531,7 +584,6 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 			else if (transitionSystem[defaultVisited.second.m_target].outcome==simResult::crashed){
 				transitionSystem[v].options.push_back(d);
 			}
-
 		}
 		else {
 			 if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task
@@ -547,6 +599,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 
 	}
 }
+
 
 void AttentiveConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov){
 	if (!transitionSystem[v0].options.empty()){
@@ -1142,16 +1195,16 @@ void AttentiveConfigurator::abandonPlan(std::vector<vertexDescriptor>& planProv,
 std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve){
 	std::vector <Direction> result;
 	if (ve.first){
-	if(transitionSystem[ve.second.m_target].visited()){
-		if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
-			return {currentTask.get_direction()};
+		if(transitionSystem[ve.second.m_target].visited()){
+			if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
+				return {ve.second.direction};
+			}
+			else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
+			result={DEFAULT, LEFT, RIGHT};
+			erase_from_vector(result, ve.second.direction);
+			return result;
+			}
 		}
-		else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
-		result={DEFAULT, LEFT, RIGHT};
-		erase_from_vector(result, currentTask.get_direction());
-		return result;
-		}
-	}
 }
 return result;
 }
