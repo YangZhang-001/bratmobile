@@ -551,7 +551,7 @@ TEST_P(ConfiguratorTakeBool, FrontierVertices){
     ExecutionInfo info=package_info();
     auto vs=boost::vertices(transitionSystem);
     for (auto vi=vs.first; vi!=vs.second; ++vi){
-        transitionSystem[*vi].phi=estimateCost(transitionSystem[*vi], b2Transform_zero, transitionSystem[*vi].direction, controlGoal);
+        transitionSystem[*vi].phi=evaluationFunction(estimateCost(transitionSystem[*vi], b2Transform_zero, transitionSystem[*vi].direction, controlGoal), *vi, m_plan);
     }
     std::vector<Frontier> frontiers=frontierVertices(MOVING_VERTEX, transitionSystem, info);
     EXPECT_EQ(frontiers.size(), solution);
