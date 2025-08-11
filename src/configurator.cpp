@@ -1148,9 +1148,17 @@ std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::p
 				return {transitionSystem[ve.second.m_target].direction};
 			}
 			else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
-			result={DEFAULT, LEFT, RIGHT};
-			erase_from_vector(result, transitionSystem[ve.second.m_target].direction);
-			return result;
+				ExecutionInfo info=package_info();
+				std::vector <Frontier> frontiers=frontierVertices(ve.second.m_source, transitionSystem, info);
+				if (frontiers.size()<2){ //only default explored
+					result={DEFAULT, LEFT, RIGHT};
+					erase_from_vector(result, transitionSystem[ve.second.m_target].direction);
+					return result;
+				}
+				else if (frontiers.size()<4){ //left right explored
+					result={DEFAULT,DEFAULT};
+
+				}
 			}
 		}
 }

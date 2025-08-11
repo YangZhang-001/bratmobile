@@ -541,7 +541,7 @@ TEST_P(ConfiguratorTakeBool, startRecycle){
 
 TEST_P(ConfiguratorTakeBool, FrontierVertices){
     make_module(MOVING_VERTEX);
-    bool solution=3;
+    int solution=3;
     if (GetParam()){
         transitionSystem[1].outcome=simResult::crashed;
     }
