@@ -13,9 +13,6 @@ EndedResult estimateCost(const State &state, b2Transform start, Direction d, Tas
 	EndedResult er = _goal.checkEnded(state);
 	Task t(state.Dn, d, start);
 	er.cost += t.checkEnded(state.endPose).estimatedCost;
-	// if (state.outcome==simResult::crashed){
-	// 	er.cost+=2;
-	// }
 	return er;
 }
 
@@ -108,7 +105,6 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 						g[(*ei3).m_target].phi=evaluationFunction(er, (*ei3).m_target, _plan);
 					}
 					if (g[(*ei3).m_target].direction==DEFAULT){ // The depth-first search portion of iterative deepening will stop when it reaches a DEFAULT task
-
 						Frontier f;
 						f.frontier= (*ei3).m_target;
 						f.connecting=connecting2;

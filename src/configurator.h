@@ -509,6 +509,14 @@ vertexDescriptor getRecyclingStart(vertexDescriptor v, vertexDescriptor v1, vert
  */
 std::vector <edgeDescriptor> inEdges(vertexDescriptor v, Direction d = UNDEFINED); //returns a vector containing all the in-edges of a vertex which have the specified direction
 
+/**
+ * @brief Closes a vertex, i.e. adds it to the closed set if all its options have been exhausted
+ * 
+ * @param closed closed set
+ * @param v the vertex
+ * @return true 
+ * @return false 
+ */
 bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v);
 
 /**
