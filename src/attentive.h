@@ -1,3 +1,5 @@
+#ifndef ATTENTIVE_H
+#define ATTENTIVE_H
 #include "configurator.h"
 
 /**
@@ -32,7 +34,7 @@ ExecutionInfo package_info(vertexDescriptor gv=TransitionSystem::null_vertex(), 
  * 		   previous Dn if previous task is safe for now
  * 		   goal Di otherwise 
  */
-Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start);
+virtual Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start);
 
 /**
  * @brief Iterates through vertices, if they result in crash, it splits the tasks and recalculates
@@ -312,7 +314,7 @@ vertexDescriptor getRecyclingStart(vertexDescriptor v, vertexDescriptor v1, vert
  */
 std::vector <edgeDescriptor> inEdges(vertexDescriptor v, Direction d = UNDEFINED); //returns a vector containing all the in-edges of a vertex which have the specified direction
 
-bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v);
+virtual bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v);
 
 /**
  * @brief Adds edge retrospectively (used in split task)
@@ -358,7 +360,7 @@ void abandonPlan(std::vector<vertexDescriptor>& planProv, vertexDescriptor v0, v
  * 
  * @param ve a visited edge and whetehr it exists
  */
-std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve);
+virtual std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve);
 
 /**
  * @brief Adds and removes vertices from the evaluation queue
@@ -395,3 +397,5 @@ AttentiveConfigurator(Task _task){
 
 
 };
+
+#endif

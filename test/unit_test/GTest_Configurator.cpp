@@ -539,23 +539,25 @@ TEST_P(ConfiguratorTakeBool, startRecycle){
     
 }
 
-// TEST_P(ConfiguratorTakeBool, RecyclePlan){
-//     std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4};
-//     vertexDescriptor task_start=DUMMY;
-//     make_ts(avoid, desiredPlan, GetParam());    
-//     State s=transitionSystem[2];
-//     b2Transform shift=b2Mul(transitionSystem[DUMMY].endPose, transitionSystem[currentVertex].endPose);
-//     b2Transform shift_start=b2Transform_zero;
-//     math::MulT(shift, transitionSystem);
-//     EXPECT_EQ(transitionSystem[currentVertex].endPose, b2Transform_zero);
-//     iteration=100;
-//     resetPhi();
-//     VertexMatch vm(StateMatcher::ABSTRACT, 2);
-//     auto edge =boost::add_edge(currentVertex, 2, transitionSystem);
-//     bool recycled=recycle_plan(currentVertex, currentVertex, task_start, vm.first, shift_start, s.start, edge, m_plan, s.direction);
-//     EXPECT_TRUE(recycled);
-//     EXPECT_EQ(m_plan, desiredPlan);
-// }
+TEST_P(ConfiguratorTakeBool, FrontierVertices){
+    make_module(MOVING_VERTEX);
+    int solution=3;
+    if (GetParam()){
+        transitionSystem[1].outcome=simResult::crashed;
+    }
+    else{
+        transitionSystem[1].outcome=simResult::successful;
+    }
+    ExecutionInfo info=package_info();
+    auto vs=boost::vertices(transitionSystem);
+    for (auto vi=vs.first; vi!=vs.second; ++vi){
+        transitionSystem[*vi].phi=evaluationFunction(estimateCost(transitionSystem[*vi], b2Transform_zero, transitionSystem[*vi].direction, controlGoal), *vi, m_plan);
+    }
+    std::vector<Frontier> frontiers=frontierVertices(MOVING_VERTEX, transitionSystem, info);
+    EXPECT_EQ(frontiers.size(), solution);
+
+    
+}
 
 TEST_P(ConfiguratorTakeBool, PropagateDisturbance){
     dummy_vertex(MOVING_VERTEX);
@@ -611,8 +613,8 @@ TEST_P(ConfiguratorTakeBool, EvaluationFunctionSame){
             transitionSystem[currentVertex].Dn.isValid();
             transitionSystem[currentVertex].Dn.setPose(b2Transform(b2Vec2(0.5, 0), b2Rot(0)));
         }
-        EndedResult er= Planner::estimateCost(transitionSystem[currentVertex], b2Transform_zero, d, controlGoal);
-        vertex_set_phi(currentVertex, Planner::evaluationFunction(er, currentVertex, m_plan));
+        EndedResult er= estimateCost(transitionSystem[currentVertex], b2Transform_zero, d, controlGoal);
+        vertex_set_phi(currentVertex, evaluationFunction(er, currentVertex, m_plan));
     }
     EXPECT_EQ(transitionSystem[1].phi, transitionSystem[3].phi);
     EXPECT_EQ(transitionSystem[2].phi, transitionSystem[3].phi);
@@ -637,8 +639,8 @@ TEST_P(ConfiguratorTakeBool, EvaluationFunctionTurn){
             transitionSystem[currentVertex].Dn.isValid();
             transitionSystem[currentVertex].Dn.setPose(b2Transform(b2Vec2(0.5, 0), b2Rot(0)));
         }
-        EndedResult er= Planner::estimateCost(transitionSystem[currentVertex], b2Transform_zero, d, controlGoal);
-        vertex_set_phi(currentVertex, Planner::evaluationFunction(er, currentVertex, m_plan));
+        EndedResult er= estimateCost(transitionSystem[currentVertex], b2Transform_zero, d, controlGoal);
+        vertex_set_phi(currentVertex, evaluationFunction(er, currentVertex, m_plan));
     }
     EXPECT_EQ(transitionSystem[1].phi, transitionSystem[3].phi);
     EXPECT_EQ(transitionSystem[2].phi, transitionSystem[3].phi);

@@ -11,6 +11,7 @@
  */
 //typedef std::pair<vertexDescriptor, std::vector<vertexDescriptor>> Frontier;
 
+
 struct Frontier{
     vertexDescriptor frontier=TransitionSystem::null_vertex();
     std::vector<vertexDescriptor> connecting;
@@ -19,6 +20,7 @@ struct Frontier{
 
     Frontier(vertexDescriptor _f, const std::vector<vertexDescriptor>&_c):frontier(_f), connecting(_c){}
 };
+
 
 /**
  * @brief Predicate which compares evaluation functions in State-Frontier pairs
@@ -81,6 +83,41 @@ class ExecutionInfo{
 
 };
 
+
+/**
+ * @brief Performs iterative deepening search to find the frontier
+ * 
+ * @param v source vertex: we find the frontier from here
+ * @param g the transitionSystem
+ * @param d 
+ * @param  info
+ * @return std::vector <Frontier> 
+ */
+std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g, ExecutionInfo & info); //returns the closest vertices to the start vertex which are reached by executing a task of the specified direction
+
+/**
+ * @brief calculates cumulative cost phi, add discount factor if in plan
+ * 
+ * @param er contains information on whether a Task has ended and with that cumulative cost (phi)
+ * @param v the vertex that the Task corresponds to
+ * @param p the plan
+ * @return float 
+ */
+float evaluationFunction(EndedResult er, const vertexDescriptor &v, std::vector<vertexDescriptor>& p);
+
+/**
+ * @brief Provides a breakdown of the cost function into its components: past cost (gamma): the position relative to an obstacle, if present
+ *      future cost heuristic (chi): the position relative to a goal, if present, and whether the Task @param _goal has ended
+ * 
+ * @param state the current state
+ * @param start where the task started from
+ * @param d task direction
+ * @param _goal the overaraching goal
+ * @return EndedResult 
+ */
+EndedResult estimateCost(const State &state, b2Transform start, Direction d, Task & _goal); //returns whether the controlGoal has ended and fills node with cost and error
+
+
 /**
  * @brief Searches the transition system and extracts a plan
  * 
@@ -102,28 +139,6 @@ class Planner{
      * @return std::vector<vertexDescriptor> 
      */
     virtual std::vector<vertexDescriptor> plan(TransitionSystem& g, vertexDescriptor src, ExecutionInfo & info, bool *finished)=0;
-
-    /**
-     * @brief calculates cumulative cost phi, add discount factor if in plan
-     * 
-     * @param er contains information on whether a Task has ended and with that cumulative cost (phi)
-     * @param v the vertex that the Task corresponds to
-     * @param p the plan
-     * @return float 
-     */
-    static float evaluationFunction(EndedResult er, const vertexDescriptor &v, std::vector<vertexDescriptor>& p);
-
-    /**
-     * @brief Provides a breakdown of the cost function into its components: past cost (gamma): the position relative to an obstacle, if present
-     *      future cost heuristic (chi): the position relative to a goal, if present, and whether the Task @param _goal has ended
-     * 
-     * @param state the current state
-     * @param start where the task started from
-     * @param d task direction
-     * @param _goal the overaraching goal
-     * @return EndedResult 
-     */
-    static EndedResult estimateCost(const State &state, b2Transform start, Direction d, Task & _goal); //returns whether the controlGoal has ended and fills node with cost and error
 
 
 };
@@ -147,11 +162,6 @@ class Planner{
  */
 class HorizonStarPlanner:public Planner{
     protected:
-    /**
-     * @brief The depth-first search portion of iterative deepening will stop when it reaches a DEFAULT task
-     * 
-     */
-    const Direction frontier_direction=DEFAULT;
 
     /**
      * @brief Finds the best path to add a frontier to (frontier found separately)
@@ -175,17 +185,6 @@ class HorizonStarPlanner:public Planner{
      */
     std::vector <vertexDescriptor> best_path(const std::vector<std::vector<vertexDescriptor>>& paths, vertexDescriptor goal,  vertexDescriptor cv,  bool change, const TransitionSystem& g);
 
-
-    /**
-     * @brief Performs iterative deepening search to find the frontier
-     * 
-     * @param v source vertex: we find the frontier from here
-     * @param g the transitionSystem
-     * @param d 
-     * @param  info
-     * @return std::vector <Frontier> 
-     */
-    std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g, ExecutionInfo & info); //returns the closest vertices to the start vertex which are reached by executing a task of the specified direction
 
 
     /**

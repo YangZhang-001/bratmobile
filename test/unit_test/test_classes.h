@@ -198,18 +198,18 @@ class DebugConfigurator:public AttentiveConfigurator{
         return currentVertex;
     }
     
-
-    int get_vertex_in_degree(vertexDescriptor v);
-
-    int get_vertex_out_degree(vertexDescriptor v);
-
-    /**
+        /**
      * @brief Wrapper
      * 
      */
     void preExplore(){
         pre_explore();
     }
+
+    int get_vertex_in_degree(vertexDescriptor v);
+
+    int get_vertex_out_degree(vertexDescriptor v);
+
 
     int get_movingEdge_step(){
         return transitionSystem[movingEdge].step;
@@ -355,11 +355,9 @@ class HighLevelTestBase: public testing::Test{
     
 
     int iteration=0;
-    void SetUp()override{
-        std::cout<<"setup"<<std::endl;
+    virtual void SetUp()override{
         configurator=new DebugConfigurator();
         init();
-        std::cout<<"teardown"<<std::endl;
     }
 
     void TearDown()override{
@@ -459,6 +457,7 @@ class CLTrackerTest:public ClosedLoop_Tracker{
  */
 class ConfiguratorTest: public DebugConfigurator, public testing::Test{ //, testing::TestWithParam<float>
 protected:
+    friend HighLevelTestBase;
     /**
      * @brief Allows to set parameters manually from the Configurator
      * 
@@ -474,6 +473,7 @@ protected:
             _D_to_goal=b2MulT(disturbance_q.pose(), goal.pose());
         }
     };
+
 
 
     /**
@@ -1035,7 +1035,7 @@ void ConfiguratorTest::setAllVisited(){
 }
 
 void ConfiguratorTest::setPhi(State & s){
-    s.phi=Planner::estimateCost(s, s.start, s.direction, controlGoal).cost;   
+    s.phi=estimateCost(s, s.start, s.direction, controlGoal).cost;   
 }
 
 void ConfiguratorTest::set_Di(std::vector<vertexDescriptor> vec, const Disturbance& Di){

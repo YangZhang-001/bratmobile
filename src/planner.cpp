@@ -1,6 +1,6 @@
 #include "planner.h"
 
-float Planner::evaluationFunction(EndedResult er,  const vertexDescriptor& v, std::vector<vertexDescriptor>& p){ 
+float evaluationFunction(EndedResult er,  const vertexDescriptor& v, std::vector<vertexDescriptor>& p){ 
 	float result=(abs(er.estimatedCost)+abs(er.cost))/2;
 	if (auto it=check_vector_for(p, v); it!=p.end()){
 		result-=0.1;
@@ -9,13 +9,10 @@ float Planner::evaluationFunction(EndedResult er,  const vertexDescriptor& v, st
 }
 
 
-EndedResult Planner::estimateCost(const State &state, b2Transform start, Direction d, Task &_goal){
+EndedResult estimateCost(const State &state, b2Transform start, Direction d, Task &_goal){
 	EndedResult er = _goal.checkEnded(state);
 	Task t(state.Dn, d, start);
 	er.cost += t.checkEnded(state.endPose).estimatedCost;
-	// if (state.outcome==simResult::crashed){
-	// 	er.cost+=2;
-	// }
 	return er;
 }
 
@@ -86,7 +83,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::best_path(const std::vector<s
     return plan;
 }
 
-std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, TransitionSystem& g, ExecutionInfo & info){
+std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g, ExecutionInfo & info){
 	std::vector <Frontier> result;
 	std::pair<edgeDescriptor, bool> ep=boost::edge(MOVING_VERTEX, v, g); 
 	vertexDescriptor v0=v, v1=v, v0_exp;
@@ -107,7 +104,7 @@ std::vector <Frontier> HorizonStarPlanner::frontierVertices(vertexDescriptor v, 
 						std::vector<vertexDescriptor>_plan=info.plan();
 						g[(*ei3).m_target].phi=evaluationFunction(er, (*ei3).m_target, _plan);
 					}
-					if (g[(*ei3).m_target].direction==frontier_direction){
+					if (g[(*ei3).m_target].direction==DEFAULT){ // The depth-first search portion of iterative deepening will stop when it reaches a DEFAULT task
 						Frontier f;
 						f.frontier= (*ei3).m_target;
 						f.connecting=connecting2;

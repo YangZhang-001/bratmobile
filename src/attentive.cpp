@@ -102,7 +102,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				simResult sim=simulate(t, w); //sk.first, g[v0], 
 				gt::fill(sim, &sk.first, &sk.second); //find simulation result
 				sk.second.it_observed=iteration;
-				er  = Planner::estimateCost(sk.first, g[v0].endPose, sk.first.direction,controlGoal);
+				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction,controlGoal);
 				StateDifference sd;
 				std::vector <VertexMatch> other_matches;
 				VertexMatch match=findMatch(sk.first, t.get_direction(), StateMatcher::MATCH_TYPE::ABSTRACT, &sd, &other_matches);		//, closest_match	
@@ -135,7 +135,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					//adjustProbability(edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
 				}
 				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
-				g[v1].phi=Planner::evaluationFunction(er, v1, plan_prov);
+				g[v1].phi=evaluationFunction(er, v1, plan_prov);
 				propagateD(v1, v0, &closed); //if v0 is a dummy vertex it propagates the disturbance
 				v0_exp=v0;					
 				options=g[v0_exp].options;
@@ -233,8 +233,8 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 			else{
 				src=split[i-1];
 			}
-			EndedResult local_er=Planner::estimateCost(transitionSystem[split_v],transitionSystem[split_v].start,direction, controlGoal);
-			transitionSystem[split_v].phi=Planner::evaluationFunction(local_er, split_v, plan_prov);
+			EndedResult local_er=estimateCost(transitionSystem[split_v],transitionSystem[split_v].start,direction, controlGoal);
+			transitionSystem[split_v].phi=evaluationFunction(local_er, split_v, plan_prov);
 			applyTransitionMatrix(split_v, direction, local_er.ended,src, plan_prov);
 			addToPriorityQueue(split_v, priority_q, closed);
 			src=split_v;
@@ -559,7 +559,7 @@ void AttentiveConfigurator::explore_plan(b2World&world){
     pre_explore();
     vertexDescriptor src=get_explore_start(transitionSystem);
     resetPhi();
-	transitionSystem[MOVING_VERTEX].phi=Planner::evaluationFunction(EndedResult(), MOVING_VERTEX, m_plan);
+	transitionSystem[MOVING_VERTEX].phi=evaluationFunction(EndedResult(), MOVING_VERTEX, m_plan);
     std::vector <vertexDescriptor> plan_tmp=explorer(src, transitionSystem, world);
     if (DEBUG){
         std::vector<vertexDescriptor> _plan=(m_plan);
