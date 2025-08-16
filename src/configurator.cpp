@@ -116,7 +116,12 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 			if (visited.first ||out.empty()){
-				if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[v].direction!=dir){
+				ExecutionInfo info=package_info();
+				std::vector <Frontier> frontiers= frontierVertices(v, transitionSystem, info); 
+				if (frontiers.size()>2){
+
+				}
+				else if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[v].direction!=dir){
 					Task task(g[v].Di, DEFAULT, g[v].endPose, true);
 					Robot robot(&world);
 					robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
@@ -315,7 +320,6 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 			split =splitTask(v, DEFAULT, ep.second.m_source);
 		}
 		correctQueue(split, module_src, startRecycle, plan_prov.size());
-		// for (int i=0; i<split.size(); i++){ //
 		for (int i=split.size()-1; i>=0; i--){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
 			if (i<1){
