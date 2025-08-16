@@ -1,0 +1,1 @@
+#include "b2bconfigurator.h"

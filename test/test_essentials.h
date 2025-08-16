@@ -1,6 +1,7 @@
 #ifndef TEST_ESSENTIALS_H
 #define TEST_ESSENTIALS_H
-#include "configurator.h"
+#include "attentive.h"
+#include "b2bconfigurator.h"
 #include <unistd.h>
 #include <time.h>
 #include <stdio.h>
@@ -12,11 +13,6 @@
 #include <dirent.h>
 #include <filesystem>
 #define _USE_MATH_DEFINES
-
-
-// void Configurator::next_task(){
-//     follow_plan();
-// }
 
 bool debug_draw(b2Vec2 * sensor_v, std::vector <b2Vec2> d ){
     char name_v[256], name_s[256], name_d[256];
