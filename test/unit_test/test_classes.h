@@ -61,7 +61,7 @@ struct VisitedEdge{
 // typedef boost::filtered_graph<TransitionSystem, VisitedEdge> VisitedTransitionSystem;
 
 
-class DebugConfigurator:public AttentiveConfigurator{
+class DebugConfigurator:public virtual AttentiveConfigurator{
     public:
     friend class HighLevelTestBase;
     int n_edges(){return transitionSystem.m_edges.size();}

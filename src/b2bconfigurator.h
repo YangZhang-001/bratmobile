@@ -16,8 +16,10 @@ struct FrontierCrashed{
     Direction direction=UNDEFINED;
 };
 
-class B2BConfigurator : public AttentiveConfigurator {
+class B2BConfigurator : public virtual AttentiveConfigurator {
 public:
+    B2BConfigurator() = default;
+
     B2BConfigurator(Task & task) : AttentiveConfigurator(task) {}
 
 protected:
