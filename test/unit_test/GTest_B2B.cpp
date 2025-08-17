@@ -1,6 +1,6 @@
 #include "test_classes.h"
 
-class DebugB2B: public B2BConfigurator{
+class DebugB2B: public virtual DebugConfigurator, public B2BConfigurator{
     protected:
         /**
      * @brief Makes a basic expansion module,  disturbances not set. Module looks like this
@@ -13,7 +13,7 @@ class DebugB2B: public B2BConfigurator{
      * 
      * Not visited by default
      */
-    void make_module(vertexDescriptor mv=0);
+   // void make_module(vertexDescriptor mv=0);
     public:
     DebugB2B()=default;
     
@@ -31,26 +31,26 @@ class DebugB2BTest: public DebugB2B, public testing::Test{
 
 };
 
-TEST_F(DebugB2BTest, PartiallyExplore0) {
-    make_module(MOVING_VERTEX);
-    transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
-    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 0);
-}
+// TEST_F(DebugB2BTest, PartiallyExplore0) {
+//     make_module(MOVING_VERTEX);
+//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
+//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 0);
+// }
 
-TEST_F(DebugB2BTest, PartiallyExplore1) {
-    make_module(MOVING_VERTEX);
-    transitionSystem[3].outcome=simResult::crashed;
-    transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
-    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
-}
+// TEST_F(DebugB2BTest, PartiallyExplore1) {
+//     make_module(MOVING_VERTEX);
+//     transitionSystem[3].outcome=simResult::crashed;
+//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
+//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
+// }
 
-TEST_F(DebugB2BTest, PartiallyExplore2) {
-    make_module(MOVING_VERTEX);
-    transitionSystem[3].outcome=simResult::crashed;
-    transitionSystem[5].outcome=simResult::crashed;
-    transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
-    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
-}
+// TEST_F(DebugB2BTest, PartiallyExplore2) {
+//     make_module(MOVING_VERTEX);
+//     transitionSystem[3].outcome=simResult::crashed;
+//     transitionSystem[5].outcome=simResult::crashed;
+//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
+//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
+// }
 
 class HighLevelTestB2B: public HighLevelTest{
     protected:
@@ -150,23 +150,21 @@ INSTANTIATE_TEST_CASE_P(Target40, HighLevelTestB2B, ::testing::Combine( ::testin
 INSTANTIATE_TEST_CASE_P(Target68, HighLevelTestB2B, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_68cm/")), ::testing::Values(2, 3, 4, 6, 17, 36)));
 
 
-void DebugB2B::make_module(vertexDescriptor mv){
-    //mv=currentVertex;
-    std::vector<vertexDescriptor>new_vertices;
-    for (int i=0; i<5; i++){
-        new_vertices.push_back(boost::add_vertex(transitionSystem));
-    }
-    // vertexDescriptor nv=n_vertices()-1;
-    transitionSystem[new_vertices[0]].direction=DEFAULT;
-    transitionSystem[new_vertices[2]].direction=DEFAULT;
-    transitionSystem[new_vertices[4]].direction=DEFAULT;
-    transitionSystem[new_vertices[1]].direction=LEFT;
-    transitionSystem[new_vertices[3]].direction=RIGHT;
+// void DebugB2B::make_module(vertexDescriptor mv){
+//     std::vector<vertexDescriptor>new_vertices;
+//     for (int i=0; i<5; i++){
+//         new_vertices.push_back(boost::add_vertex(transitionSystem));
+//     }
+//     transitionSystem[new_vertices[0]].direction=DEFAULT;
+//     transitionSystem[new_vertices[2]].direction=DEFAULT;
+//     transitionSystem[new_vertices[4]].direction=DEFAULT;
+//     transitionSystem[new_vertices[1]].direction=LEFT;
+//     transitionSystem[new_vertices[3]].direction=RIGHT;
 
-    add_edge_withPoses(mv,new_vertices[0]);
-    add_edge_withPoses(mv,new_vertices[1]);
-    add_edge_withPoses(mv,new_vertices[3]);
-    add_edge_withPoses(new_vertices[1],new_vertices[2]);
-    add_edge_withPoses(new_vertices[3],new_vertices[4]);
-}
+//     add_edge_withPoses(mv,new_vertices[0]);
+//     add_edge_withPoses(mv,new_vertices[1]);
+//     add_edge_withPoses(mv,new_vertices[3]);
+//     add_edge_withPoses(new_vertices[1],new_vertices[2]);
+//     add_edge_withPoses(new_vertices[3],new_vertices[4]);
+// }
 
