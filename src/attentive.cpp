@@ -316,7 +316,6 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 			else if (transitionSystem[defaultVisited.second.m_target].outcome==simResult::crashed){
 				transitionSystem[v].options.push_back(d);
 			}
-
 		}
 		else {
 			 if (temp.getAction().getOmega()!=0){ //if the task chosen is a turning task

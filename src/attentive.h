@@ -158,7 +158,7 @@ void removeExploredTransitions(vertexDescriptor v);
 *@param d state direction (redundant)
 *@param src source vertex of state
 */
-void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src); 
+virtual void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src); 
 
 /**
  * @brief Sets permitted transitions out of a state

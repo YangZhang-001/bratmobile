@@ -22,6 +22,7 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
 class DebugB2BTest: public DebugB2B, public testing::Test{
     protected: 
     void SetUp() override {
+        iteration++;
     }
     void TearDown() override {
         transitionSystem.clear();
@@ -54,11 +55,11 @@ TEST_F(DebugB2BTest, PartiallyExplore2) {
 
 class HighLevelTestB2B: public HighLevelTest{
     protected:
-    DebugB2B * configurator=NULL;
     void SetUp()override{
         configurator=new DebugB2B();
         init();
     }
+
 };
 
 TEST_P(HighLevelTestB2B, FirstPlanB2B){
