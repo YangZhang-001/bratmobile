@@ -252,6 +252,19 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
         return current_vertices;
     }
 
+    /**
+     * @brief Assign phi to state @param s
+     * 
+     * @param s 
+     */
+    void setPhi(State & s);
+
+        /**
+     * @brief Assign phi to all vertices
+     * 
+     */
+    void setAllVisited();
+
     static Task generateGoalTask();
 
     static Disturbance generateGoal();
@@ -475,19 +488,6 @@ protected:
     };
 
 
-
-    /**
-     * @brief Assign phi to all vertices
-     * 
-     */
-    void setAllVisited();
-
-    /**
-     * @brief Assign phi to state @param s
-     * 
-     * @param s 
-     */
-    void setPhi(State & s);
 
     void set_Di(std::vector<vertexDescriptor> vec, const Disturbance& Di);
 
@@ -1027,14 +1027,14 @@ void ConfiguratorTestTransitionMatrix::planIsDirection(Direction direction){
 
 }
 
-void ConfiguratorTest::setAllVisited(){
+void DebugConfigurator::setAllVisited(){
     auto vs=boost::vertices(transitionSystem);
     for (auto vi=vs.first; vi!=vs.second; vi++){
         setPhi(transitionSystem[*vi]);
     }
 }
 
-void ConfiguratorTest::setPhi(State & s){
+void DebugConfigurator::setPhi(State & s){
     s.phi=estimateCost(s, s.start, s.direction, controlGoal).cost;   
 }
 

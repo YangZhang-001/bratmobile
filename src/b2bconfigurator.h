@@ -42,13 +42,14 @@ protected:
      */
     template <typename P>
     std::vector <Direction> transitionInHindsight(vertexDescriptor v, P predicate){
+        std::vector <Direction> result;
         ExecutionInfo info=package_info();
         std::vector <Frontier> frontiers=frontierVertices(v, transitionSystem, info);
         if (frontiers.size()<2){ //only default explored
            // result={DEFAULT, LEFT, RIGHT};
             //erase_from_vector(result, transitionSystem[ve.second.m_target].direction);
            // return result;
-           return predicate(v);
+           result= predicate(v);
         }
         else if (frontiers.size()<4){ //left right explored
             auto fLeft= std::find_if(frontiers.begin(), frontiers.end(), FrontierCrashed(transitionSystem, LEFT));
@@ -56,6 +57,7 @@ protected:
             if (fLeft!=frontiers.end()) result.push_back(DEFAULT);
             if (fRight!=frontiers.end()) result.push_back(DEFAULT);
         }
+        return result;
     }
 
         /**

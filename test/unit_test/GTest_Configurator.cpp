@@ -555,8 +555,20 @@ TEST_P(ConfiguratorTakeBool, FrontierVertices){
     }
     std::vector<Frontier> frontiers=frontierVertices(MOVING_VERTEX, transitionSystem, info);
     EXPECT_EQ(frontiers.size(), solution);
+}
 
-    
+TEST_F(ConfiguratorTest, IncompleteFrontier){
+    make_successful(MOVING_VERTEX);
+    int solution=1;
+    auto e =make_v1_crashed(MOVING_VERTEX);
+    transitionSystem[e.m_target].direction=LEFT;
+    ExecutionInfo info=package_info();
+    auto vs=boost::vertices(transitionSystem);
+    for (auto vi=vs.first; vi!=vs.second; ++vi){
+        transitionSystem[*vi].phi=evaluationFunction(estimateCost(transitionSystem[*vi], b2Transform_zero, transitionSystem[*vi].direction, controlGoal), *vi, m_plan);
+    }
+    std::vector<Frontier> frontiers=frontierVertices(MOVING_VERTEX, transitionSystem, info);
+    EXPECT_EQ(frontiers.size(), solution);
 }
 
 TEST_P(ConfiguratorTakeBool, PropagateDisturbance){
