@@ -17,6 +17,7 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
     public:
     DebugB2B()=default;
     
+    class ClearVoyanceTest:public B2BConfigurator::ClearVoyance{};
 };
 
 class DebugB2BTest: public DebugB2B, public testing::Test{
@@ -88,13 +89,36 @@ TEST(FrontierCrashed, predicate180Turn){
 //     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
 // }
 
+
+
+TEST(ClearVoyance, Add){
+    DebugB2BTest::ClearVoyanceTest cv;
+    Disturbance d(AVOID), d2(AVOID);
+    cv.add(0, d);
+    EXPECT_EQ(cv.size(), 1);
+    cv.add(0, d2);
+    EXPECT_EQ(cv.size(), 1);
+    cv.add(1, d);
+    EXPECT_EQ(cv.size(), 2);
+}
+
+TEST(ClearVoyance, Query){
+    DebugB2BTest::ClearVoyanceTest cv;
+    Disturbance d(AVOID);
+    b2Transform t=b2Transform(b2Vec2(1.0, 0), b2Rot(0));
+    d.setPose(t);
+    cv.add(0, d);
+    EXPECT_EQ(cv.query(0).pose(), t);     
+    EXPECT_EQ(cv.query(1).getAffIndex(), NONE); //not found
+}
+
 TEST_F(DebugB2BTest, AddOptionsHindSight){
     make_module(MOVING_VERTEX);
     setAllVisited();
     transitionSystem[3].outcome=simResult::crashed;
     std::vector <Direction> options={DEFAULT, LEFT, RIGHT};
     B2BConfigurator::ClearVoyance cv;
-    addOptionsHindSight(MOVING_VERTEX, 2, 3,  cv);
+    addOptionsInHindsight(MOVING_VERTEX, 2, 3,  cv);
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
 }
 

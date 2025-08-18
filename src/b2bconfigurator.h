@@ -95,15 +95,23 @@ class ClearVoyance{
         std::vector<Disturbance> disturbances;
         vertexDescriptor source;
 
+        DisturbanceLookahead()=default;
+
+        DisturbanceLookahead( vertexDescriptor v, const Disturbance & d) : source(v) {
+            disturbances.push_back(d);
+        }
+
     };
 
     bool add(vertexDescriptor v, const Disturbance& d);
 
-    const Disturbance & query(vertexDescriptor v);
+    Disturbance query(vertexDescriptor v);
+
+    void reset() {lookaheads.clear();}
     protected:
 
     std::vector<DisturbanceLookahead> lookaheads;
-};
+}clearvoyance;
 
 void addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1, ClearVoyance & clearvoyance);
 };

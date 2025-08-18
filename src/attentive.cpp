@@ -37,6 +37,7 @@ std::pair <bool, Direction> AttentiveConfigurator::getOppositeDirection(Directio
 	return result;
 }
 Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
+	b2Transform invmul=InvMul( g[v].endPose, start);
 	if (!g[v].Dn.isValid() ){
 		std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
@@ -52,7 +53,8 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 					world_cleanup(world);
 					if (overlap){
 						Disturbance Di= g[v].Di;
-						Di.bf.pose+= start-g[v].endPose;
+						//Di.bf.pose+= start-g[v].endPose;
+						Di.bf.pose=b2Mul(invmul, Di.bf.pose);
 						return Di;
 					}
 				}
@@ -61,10 +63,11 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 			}
 			else if (v==MOVING_VERTEX){
 				return g[v].Di;
-			}
+			}Dn.bf.pose
 	}
 	Disturbance Dn= g[v].Dn;
-	Dn.bf.pose+= start-g[v].endPose;
+	Dn.bf.pose=b2Mul(invmul, Dn.bf.pose);
+	//Dn.bf.pose+= start-g[v].endPose;
 	return Dn;
 	//return controlGoal.disturbance;
 }

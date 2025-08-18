@@ -120,7 +120,7 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 // 	}
 // }
 
-std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v, TransitionSystem& g, b2World & w){
+std::vector<vertexDescriptor> B2BConfigurator::explorer(vertexDescriptor v, TransitionSystem& g, b2World & w){
 	if (transitionSystem.m_vertices.size()==0){
 		throw "no dummy vertex!";
 	}
@@ -186,6 +186,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
 				g[v1].phi=evaluationFunction(er, v1, plan_prov);
 				propagateD(v1, v0, &closed); //if v0 is a dummy vertex it propagates the disturbance
+				addOptionsInHindsight(v, v0, v1, clearvoyance); //if default move fails, adds another default option to avoid this disturbance
 				v0_exp=v0;					
 				options=g[v0_exp].options;
 				v0=v1;
@@ -197,6 +198,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
 }while(g[bestNext].options.size()>0 && !er.ended);
+clearvoyance.reset();
 return plan_prov;
 }
 
@@ -213,7 +215,7 @@ bool B2BConfigurator::ClearVoyance::add(vertexDescriptor v, const Disturbance &d
 	}
 	auto vIt=std::find_if(lookaheads.begin(), lookaheads.end(), [&](const DisturbanceLookahead & dl){return dl.source==v;});
 	if (vIt==lookaheads.end()){
-		lookaheads.emplace_back(v, d);
+		lookaheads.emplace_back(ClearVoyance::DisturbanceLookahead(v, d));
 		return true;
 	}
 	else {
@@ -223,19 +225,14 @@ bool B2BConfigurator::ClearVoyance::add(vertexDescriptor v, const Disturbance &d
 
 }
 
-const Disturbance & B2BConfigurator::ClearVoyance::query(vertexDescriptor v){
+Disturbance B2BConfigurator::ClearVoyance::query(vertexDescriptor v){
 	auto vIt=std::find_if(lookaheads.begin(), lookaheads.end(), [&](const DisturbanceLookahead & dl){return dl.source==v;});
 	if (vIt!=lookaheads.end()){
 		if (!vIt->disturbances.empty()){
 			return *(vIt->disturbances.begin()); //return the last disturbance
 		}
-		else {
-			return Disturbance();
-		}
 	}
-	else {
-		return Disturbance();
-	}
+	return Disturbance();
 }
 
 
