@@ -387,6 +387,8 @@ class EvaluationQueueManager{
 	}
 };
 
+void visitedDirectionsPushBack( vertexDescriptor v, std::vector<Direction> & visitedDirections);
+
 public:
 
 AttentiveConfigurator(){};

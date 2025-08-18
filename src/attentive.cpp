@@ -259,15 +259,25 @@ void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 	return;
 }
 
+void AttentiveConfigurator::visitedDirectionsPushBack( vertexDescriptor v, std::vector<Direction> & visitedDirections, Direction direction){
+	for (edgeDescriptor &e: gt::outEdges(transitionSystem, v, direction)){
+		if (transitionSystem[e].it_observed==iteration){ //g[e.m_target].visited()
+			visitedDirections.push_back(transitionSystem[e.m_target].direction);
+		}
+	}
+
+
+}
 
 std::vector <Direction>  AttentiveConfigurator::getExploredDirections(vertexDescriptor v, const std::vector<Direction>& directions){
 	std::vector <Direction> result;
 	for (Direction direction: directions){
-		for (edgeDescriptor &e: gt::outEdges(transitionSystem, v, direction)){
-			if (transitionSystem[e].it_observed==iteration){ //g[e.m_target].visited()
-				result.push_back(transitionSystem[e.m_target].direction);
-			}
-		}
+		// for (edgeDescriptor &e: gt::outEdges(transitionSystem, v, direction)){
+		// 	if (transitionSystem[e].it_observed==iteration){ //g[e.m_target].visited()
+		// 		result.push_back(transitionSystem[e.m_target].direction);
+		// 	}
+		// }
+		visitedDirectionsPushBack(v, result, direction);
 	}
 	return result;
 }
