@@ -81,9 +81,10 @@ TEST_F(DebugB2BTest, PartiallyExplore2) {
 
 class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
     void SetUp()override{
-       configurator=new DebugB2B();
+       configurator=new DebugConfigurator();
        init();
     }
+
     void TearDown() override {
         HighLevelTestBase::TearDown();
     }
