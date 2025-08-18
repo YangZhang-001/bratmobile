@@ -63,7 +63,7 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 			}
 			else if (v==MOVING_VERTEX){
 				return g[v].Di;
-			}Dn.bf.pose
+			}
 	}
 	Disturbance Dn= g[v].Dn;
 	Dn.bf.pose=b2Mul(invmul, Dn.bf.pose);
