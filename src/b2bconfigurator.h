@@ -26,7 +26,7 @@ protected:
 
     bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v) override;
 
-    std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve) override;
+    //std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve) override;
 
     std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex()) override;
 
@@ -64,14 +64,48 @@ protected:
         return result;
     }
 
-        /**
-    *Combines edges K and jump function: represents possible transitions out of a state
-    *@param v the vertex to which transitions are being assigned
-    *@param d state direction (redundant)
-    *@param src source vertex of state
-    */
-    virtual void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src)override; 
+    //     /**
+    // *Combines edges K and jump function: represents possible transitions out of a state
+    // *@param v the vertex to which transitions are being assigned
+    // *@param d state direction (redundant)
+    // *@param src source vertex of state
+    // */
+    // virtual void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src)override; 
 
+    // virtual void removeExploredTransitions(vertexDescriptor v);
+
+/**
+ * @brief Constructs transition system using a Box2D simulation combined with an A* graph
+ * expansion algorithm
+ * 
+ * @param v starting vertex
+ * @param g the transition system
+ * @param w box2d world
+ * @return std::vector<vertexDescriptor> a plan, if recycled from previous knowledge
+ */
+virtual std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w); //evaluates only after DEFAULT, internal one step lookahead
+
+/**
+ * @brief Stores disturbance lookaheads for alternative DEFAULT tasks (where the disturbance is backpropagated)
+ * 
+ */
+class ClearVoyance{
+    public:
+    struct DisturbanceLookahead {
+        std::vector<Disturbance> disturbances;
+        vertexDescriptor source;
+
+    };
+
+    bool add(vertexDescriptor v, const Disturbance& d);
+
+    const Disturbance & query(vertexDescriptor v);
+    protected:
+
+    std::vector<DisturbanceLookahead> lookaheads;
+};
+
+void addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1, ClearVoyance & clearvoyance);
 };
 
 #endif

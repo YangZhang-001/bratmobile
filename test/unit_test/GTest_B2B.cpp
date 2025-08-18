@@ -55,37 +55,47 @@ TEST(FrontierCrashed, predicate180Turn){
 
 
 
-TEST_F(DebugB2BTest, PartiallyExplore0) {
-    make_module(MOVING_VERTEX);
-    setAllVisited();
-    transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
-    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 0);
-}
+// TEST_F(DebugB2BTest, PartiallyExplore0) {
+//     make_module(MOVING_VERTEX);
+//     setAllVisited();
+//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
+//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 0);
+// }
 
-TEST_F(DebugB2BTest, PartiallyExplore1) {
+// TEST_F(DebugB2BTest, PartiallyExplore1) {
+//     make_module(MOVING_VERTEX);
+//     setAllVisited();
+//     transitionSystem[3].outcome=simResult::crashed;
+//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
+//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
+// }
+
+// TEST_F(DebugB2BTest, PartiallyExplore2) {
+//     make_module(MOVING_VERTEX);
+//     setAllVisited();
+//     transitionSystem[3].outcome=simResult::crashed;
+//     transitionSystem[5].outcome=simResult::crashed;
+//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
+//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
+// }
+
+// TEST_F(DebugB2BTest, ApplyTransitionInHindsight){
+//     make_module(MOVING_VERTEX);
+//     setAllVisited();
+//     transitionSystem[3].outcome=simResult::crashed;
+//     transitionSystem[5].outcome=simResult::crashed;
+//     applyTransitionMatrix(MOVING_VERTEX, DEFAULT, false, MOVING_VERTEX, m_plan);
+//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
+// }
+
+TEST_F(DebugB2BTest, AddOptionsHindSight){
     make_module(MOVING_VERTEX);
     setAllVisited();
     transitionSystem[3].outcome=simResult::crashed;
-    transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
+    std::vector <Direction> options={DEFAULT, LEFT, RIGHT};
+    B2BConfigurator::ClearVoyance cv;
+    addOptionsHindSight(MOVING_VERTEX, 2, 3,  cv);
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
-}
-
-TEST_F(DebugB2BTest, PartiallyExplore2) {
-    make_module(MOVING_VERTEX);
-    setAllVisited();
-    transitionSystem[3].outcome=simResult::crashed;
-    transitionSystem[5].outcome=simResult::crashed;
-    transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
-    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
-}
-
-TEST_F(DebugB2BTest, ApplyTransitionInHindsight){
-    make_module(MOVING_VERTEX);
-    setAllVisited();
-    transitionSystem[3].outcome=simResult::crashed;
-    transitionSystem[5].outcome=simResult::crashed;
-    applyTransitionMatrix(MOVING_VERTEX, DEFAULT, false, MOVING_VERTEX, m_plan);
-    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
 }
 
 class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{

@@ -113,7 +113,7 @@ VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher:
  * @param w box2d world
  * @return std::vector<vertexDescriptor> a plan, if recycled from previous knowledge
  */
-std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w); //evaluates only after DEFAULT, internal one step lookahead
+virtual std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w); //evaluates only after DEFAULT, internal one step lookahead
 
 /**
  * @return std::pair <bool, Direction>(opposite exists, opposite direction)
@@ -150,7 +150,7 @@ std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &src, vertexD
 std::vector <Direction> getExploredDirections(vertexDescriptor v, const std::vector<Direction>& directions);
 
 /** * only keeps unexplored transitions out of vertex @param v*/
-void removeExploredTransitions(vertexDescriptor v);
+virtual void removeExploredTransitions(vertexDescriptor v);
 
 /**
 *Combines edges K and jump function: represents possible transitions out of a state

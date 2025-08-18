@@ -142,14 +142,12 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				v0=v1;
 				eqm.addToEvaluationQueue(evaluationQueue, v1, transitionSystem, v);				
 			}while(t.get_direction() !=DEFAULT & int(g[v0].options.size())!=0);
-		//evaluationQueue.push_back(v1);
 		}
 	}
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
 }while(g[bestNext].options.size()>0 && !er.ended);
-// printf("finished exploring, plan =%i\n", plan_prov.size());
 return plan_prov;
 }
 
@@ -272,11 +270,6 @@ void AttentiveConfigurator::visitedDirectionsPushBack( vertexDescriptor v, std::
 std::vector <Direction>  AttentiveConfigurator::getExploredDirections(vertexDescriptor v, const std::vector<Direction>& directions){
 	std::vector <Direction> result;
 	for (Direction direction: directions){
-		// for (edgeDescriptor &e: gt::outEdges(transitionSystem, v, direction)){
-		// 	if (transitionSystem[e].it_observed==iteration){ //g[e.m_target].visited()
-		// 		result.push_back(transitionSystem[e.m_target].direction);
-		// 	}
-		// }
 		visitedDirectionsPushBack(v, result, direction);
 	}
 	return result;
