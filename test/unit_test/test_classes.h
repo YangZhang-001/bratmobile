@@ -417,7 +417,7 @@ class HighLevelTestBase: public testing::Test{
 
 };
 
-class HighLevelTest: public HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
+class HighLevelTest: public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
     public:
     HighLevelTest(){}
 

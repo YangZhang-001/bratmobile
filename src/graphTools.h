@@ -70,7 +70,7 @@ struct State{
 	Disturbance Di; //initial Disturbance
 	Disturbance Dn; //new Disturbance
 	b2Transform endPose = b2Transform_zero, start = b2Transform_zero; 
-	simResult::resultType outcome;
+	simResult::resultType outcome=simResult::successful;
 	std::vector <Direction> options;
 	bool filled =0;
 	int nObs=0;

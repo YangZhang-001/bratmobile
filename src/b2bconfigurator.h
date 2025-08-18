@@ -52,12 +52,14 @@ protected:
            result= predicate(v);
         }
         else if (frontiers.size()<4){ //left right explored
-            // auto fLeft= std::find_if(frontiers.begin(), frontiers.end(), FrontierCrashed(transitionSystem, LEFT));
-            // auto fRight= std::find_if(frontiers.begin(), frontiers.end(), FrontierCrashed(transitionSystem, RIGHT));
-            auto fLeft= check_vector_for(frontiers, FrontierCrashed(transitionSystem, LEFT));
-            auto fRight= check_vector_for(frontiers, FrontierCrashed(transitionSystem, RIGHT));
-            if (fLeft!=frontiers.end()) result.push_back(DEFAULT);
-            if (fRight!=frontiers.end()) result.push_back(DEFAULT);
+            auto fLeft= std::find_if(frontiers.begin(), frontiers.end(), FrontierCrashed(transitionSystem, LEFT));
+            auto fRight= std::find_if(frontiers.begin(), frontiers.end(), FrontierCrashed(transitionSystem, RIGHT));
+            if (fLeft!=frontiers.end()){
+                result.push_back(DEFAULT);
+            } 
+            if (fRight!=frontiers.end()){
+                result.push_back(DEFAULT);
+            } 
         }
         return result;
     }

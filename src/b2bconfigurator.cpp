@@ -116,7 +116,7 @@ void B2BConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDe
 				transitionSystem[v].options.push_back(DEFAULT);
 			}
 			else{
-				transitionInHindsight(v, [&](vertexDescriptor v){ //LAMBDA FUNCTION! 
+				transitionSystem[v].options= transitionInHindsight(v, [&](vertexDescriptor v){ //LAMBDA FUNCTION! 
 					std::vector <Direction> result={DEFAULT}; 
 					return result;
 				});

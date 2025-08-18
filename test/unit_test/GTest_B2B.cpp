@@ -32,6 +32,27 @@ class DebugB2BTest: public DebugB2B, public testing::Test{
 
 };
 
+TEST(FrontierCrashed, predicate){
+    TransitionSystem ts(2);
+    ts[1].direction=DEFAULT;
+    ts[1].outcome=simResult::crashed;
+    ts[0].direction=LEFT;
+    Frontier f(1, std::vector<vertexDescriptor>{0});
+    FrontierCrashed fc(ts, LEFT);
+    EXPECT_TRUE(fc(f));
+}
+
+TEST(FrontierCrashed, predicate180Turn){
+    TransitionSystem ts(3);
+    ts[2].direction=DEFAULT;
+    ts[2].outcome=simResult::crashed;
+    ts[1].direction=LEFT;
+    ts[0].direction=LEFT;
+    Frontier f(2, std::vector<vertexDescriptor>{0,1});
+    FrontierCrashed fc(ts, LEFT);
+    EXPECT_TRUE(fc(f));
+}
+
 TEST_F(DebugB2BTest, PartiallyExplore0) {
     make_module(MOVING_VERTEX);
     setAllVisited();
@@ -56,10 +77,11 @@ TEST_F(DebugB2BTest, PartiallyExplore2) {
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
 }
 
-class HighLevelTestB2B: public HighLevelTest{
+class HighLevelTestB2B: public virtual HighLevelTest{
     protected:
     void SetUp()override{
-        configurator=new DebugB2B();
+       // configurator=new DebugB2B();
+       configurator=new DebugConfigurator();
         init();
     }
 
