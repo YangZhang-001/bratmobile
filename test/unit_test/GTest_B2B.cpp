@@ -79,6 +79,15 @@ TEST_F(DebugB2BTest, PartiallyExplore2) {
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
 }
 
+TEST_F(DebugB2BTest, ApplyTransitionInHindsight){
+    make_module(MOVING_VERTEX);
+    setAllVisited();
+    transitionSystem[3].outcome=simResult::crashed;
+    transitionSystem[5].outcome=simResult::crashed;
+    applyTransitionMatrix(MOVING_VERTEX, DEFAULT, false, MOVING_VERTEX, m_plan);
+    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
+}
+
 class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
     void SetUp()override{
        configurator=new DebugB2B();
@@ -136,7 +145,7 @@ TEST_P(HighLevelTestB2B, CheckPlanB2B){
     EXPECT_TRUE(success);
 }
 
-TEST_P(HighLevelTest, RecycleB2B){
+TEST_P(HighLevelTestB2B, RecycleB2B){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
     Logger logger=makeLogger(info);
     configurator->register_logger(&logger);
