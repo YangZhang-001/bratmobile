@@ -387,7 +387,13 @@ class EvaluationQueueManager{
 	}
 };
 
-void visitedDirectionsPushBack( vertexDescriptor v, std::vector<Direction> & visitedDirections);
+/**
+ * @brief Pushes directions visited at this iteration (not using phi) to input vector
+ * 
+ * @param v vertex
+ * @param visitedDirections input vector
+ */
+void visitedDirectionsPushBack( vertexDescriptor v, std::vector<Direction> & visitedDirections, Direction direction);
 
 public:
 
