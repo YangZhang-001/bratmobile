@@ -194,7 +194,6 @@ TEST_P(HighLevelTest, FirstPlan){
     bool hasGoal=std::get<0>(GetParam()), success=false;
     if (hasGoal){
         goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
-
     }
     configurator->init(goal);
     std::string folder=std::get<1>(GetParam());

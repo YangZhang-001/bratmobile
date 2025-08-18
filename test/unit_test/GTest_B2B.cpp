@@ -79,18 +79,14 @@ TEST_F(DebugB2BTest, PartiallyExplore2) {
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
 }
 
-class HighLevelTestB2B: public HighLevelTest{
-    // public:
-    // void SetUp()override{
-    // //    // configurator=new DebugB2B();
-    // //    configurator=new DebugConfigurator();
-    // //     init();
-    // HighLevelTest::SetUp();
-
-    // }
-    // void TearDown() override {
-    //     HighLevelTest::TearDown();
-    // }
+class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
+    void SetUp()override{
+       configurator=new DebugB2B();
+       init();
+    }
+    void TearDown() override {
+        HighLevelTestBase::TearDown();
+    }
 
 
 };
