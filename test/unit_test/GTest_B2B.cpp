@@ -53,6 +53,8 @@ TEST(FrontierCrashed, predicate180Turn){
     EXPECT_TRUE(fc(f));
 }
 
+
+
 TEST_F(DebugB2BTest, PartiallyExplore0) {
     make_module(MOVING_VERTEX);
     setAllVisited();
@@ -77,13 +79,19 @@ TEST_F(DebugB2BTest, PartiallyExplore2) {
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
 }
 
-class HighLevelTestB2B: public virtual HighLevelTest{
-    protected:
-    void SetUp()override{
-       // configurator=new DebugB2B();
-       configurator=new DebugConfigurator();
-        init();
-    }
+class HighLevelTestB2B: public HighLevelTest{
+    // public:
+    // void SetUp()override{
+    // //    // configurator=new DebugB2B();
+    // //    configurator=new DebugConfigurator();
+    // //     init();
+    // HighLevelTest::SetUp();
+
+    // }
+    // void TearDown() override {
+    //     HighLevelTest::TearDown();
+    // }
+
 
 };
 

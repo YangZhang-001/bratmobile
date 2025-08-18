@@ -541,9 +541,9 @@ vertexDescriptor AttentiveConfigurator::get_explore_start(TransitionSystem & g){
 }
 
 void AttentiveConfigurator::pre_explore(){
-	//if (MOVING_VERTEX!=currentVertex){
+	if (boost::out_degree(MOVING_VERTEX, transitionSystem)>0){
 		boost::remove_out_edge_if(MOVING_VERTEX, is_not_v(currentVertex), transitionSystem);
-	//}	
+	}	
 		//transitionSystem[MOVING_VERTEX].Di=currentTask.get_disturbance();
 		transitionSystem[MOVING_VERTEX].Di=transitionSystem[currentVertex].Di;
 		transitionSystem[MOVING_VERTEX].outcome=simResult::successful;

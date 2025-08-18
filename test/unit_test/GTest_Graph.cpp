@@ -3,6 +3,14 @@
 class EdgeTest: public Edge, public testing::Test, public testing::WithParamInterface<int>{
 };
 
+TEST(IsNotV, RemoveEdge){
+    is_not_v nv(MOVING_VERTEX);
+    TransitionSystem ts(1);
+    if (boost::out_degree(MOVING_VERTEX, ts)>0){
+        boost::remove_out_edge_if(MOVING_VERTEX,nv, ts);
+    }
+}
+
 TEST_P(EdgeTest, override){
     step=GetParam();
     enableOverride();
