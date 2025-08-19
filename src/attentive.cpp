@@ -37,7 +37,7 @@ std::pair <bool, Direction> AttentiveConfigurator::getOppositeDirection(Directio
 	return result;
 }
 Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
-	b2Transform invmul=InvMul( g[v].endPose, start);
+	b2Transform invmul=InvMul(start,g[v].endPose);
 	if (!g[v].Dn.isValid() ){
 		std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);

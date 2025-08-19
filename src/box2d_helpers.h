@@ -42,13 +42,7 @@ void erase_from_vector(std::vector<I>& vec, const I& i){
 	}
 }
 
-b2Transform InvMul(b2Transform const & t1, b2Transform const & t2){
-	b2Transform result;
-	b2Rot rot(-t1.q.GetAngle());
-	result.q= b2Mul(rot, t2.q);
-	result.p=b2Mul(rot, t2.p - t1.p);
-	return result;
-}
+b2Transform InvMul(b2Transform const & t1, b2Transform const & t2);
 
 
 float angle_subtract(float a1, float a2);

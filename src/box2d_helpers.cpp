@@ -22,6 +22,14 @@ bool operator==(Transform const &t1, Transform const& t2){
 	return (t1.p.x == t2.p.x) && (t1.p.y == t2.p.y) && (t1.q.GetAngle() == t2.q.GetAngle());
 }
 
+b2Transform InvMul(b2Transform const & t1, b2Transform const & t2){
+	b2Transform result;
+	b2Rot rot(-t1.q.GetAngle());
+	result.q= b2Mul(rot, t2.q);
+	result.p=b2Mul(rot, t2.p - t1.p);
+	return result;
+}
+
 void operator-=(Transform & t1, Transform const&t2){
 	t1.p.x-=t2.p.x;
 	t1.p.y-=t2.p.y;

@@ -48,7 +48,12 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 		if (visited.first ||out.empty()){
-			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[v].direction!=dir){
+			if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid()){
+				//if the disturbance is in the clearvoyance, return it
+				CVDi.bf.pose+= start-g[v].endPose;
+				return CVDi;
+			}
+			else if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[v].direction!=dir){
 				Task task(g[v].Di, DEFAULT, g[v].endPose, true);
 				Robot robot(&world);
 				robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
