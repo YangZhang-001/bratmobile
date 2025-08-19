@@ -20,6 +20,7 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
     class ClearVoyanceTest:public B2BConfigurator::ClearVoyance{
         public:
             int size(){return lookaheads.size();}
+
     };
 };
 
@@ -113,6 +114,19 @@ TEST(ClearVoyance, Query){
     cv.add(0, d);
     EXPECT_EQ(cv.query(0).pose(), t);     
     EXPECT_EQ(cv.query(1).getAffIndex(), NONE); //not found
+}
+
+TEST(ClearVoyance, Pop){
+    DebugB2BTest::ClearVoyanceTest cv;
+    Disturbance d(AVOID), d2(AVOID);
+    b2Transform t=b2Transform(b2Vec2(1.0, 0), b2Rot(0));
+    d2.setPose(t);
+    cv.add(0, d);
+    cv.add(0, d2);
+    cv.add(1, d);
+    cv.pop(0);
+    EXPECT_EQ(cv.query(0).pose(), t);   
+    EXPECT_EQ(cv.size(), 2);  
 }
 
 TEST_F(DebugB2BTest, AddOptionsHindSight){

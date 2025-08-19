@@ -43,6 +43,7 @@ std::vector <vertexDescriptor> B2BConfigurator::splitTask(vertexDescriptor v, Di
 }
 
 Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
+	b2Transform invmul=InvMul(start,g[v].endPose);
 	if (!g[v].Dn.isValid() ){
 		std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
@@ -50,7 +51,8 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		if (visited.first ||out.empty()){
 			if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid()){
 				//if the disturbance is in the clearvoyance, return it
-				CVDi.bf.pose+= start-g[v].endPose;
+				CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
+				clearvoyance.pop(v);
 				return CVDi;
 			}
 			else if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[v].direction!=dir){
@@ -63,7 +65,7 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 				world_cleanup(world);
 				if (overlap){
 					Disturbance Di= g[v].Di;
-					Di.bf.pose+= start-g[v].endPose;
+					Di.bf.pose=b2Mul(invmul, Di.bf.pose);
 					return Di;
 				}
 			}
@@ -75,7 +77,7 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		}
 	}
 	Disturbance Dn= g[v].Dn;
-	Dn.bf.pose+= start-g[v].endPose;
+	Dn.bf.pose=b2Mul(invmul, Dn.bf.pose);
 	return Dn;
 }
 
@@ -240,4 +242,12 @@ Disturbance B2BConfigurator::ClearVoyance::query(vertexDescriptor v){
 	return Disturbance();
 }
 
+void B2BConfigurator::ClearVoyance::pop(vertexDescriptor v){
+	auto vIt=std::find_if(lookaheads.begin(), lookaheads.end(), [&](const DisturbanceLookahead & dl){return dl.source==v;});
+	if (vIt!=lookaheads.end()){
+		if (!vIt->disturbances.empty()){
+			vIt->disturbances.erase(vIt->disturbances.begin());
+		}
+	}
+}
 

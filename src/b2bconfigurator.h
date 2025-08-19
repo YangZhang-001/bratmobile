@@ -105,7 +105,18 @@ class ClearVoyance{
 
     bool add(vertexDescriptor v, const Disturbance& d);
 
+    /**
+     * @brief Gets first disturbance predicted with a vertex
+     * 
+     * @param v vertex
+     * @return Disturbance 
+     */
     Disturbance query(vertexDescriptor v);
+
+    /**
+     * @brief Pops the vertex query (first of the disturbances)
+     */
+    void pop(vertexDescriptor v);
 
     void reset() {lookaheads.clear();}
     protected:
