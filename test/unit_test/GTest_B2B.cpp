@@ -17,7 +17,10 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
     public:
     DebugB2B()=default;
     
-    class ClearVoyanceTest:public B2BConfigurator::ClearVoyance{};
+    class ClearVoyanceTest:public B2BConfigurator::ClearVoyance{
+        public:
+            int size(){return lookaheads.size();}
+    };
 };
 
 class DebugB2BTest: public DebugB2B, public testing::Test{
