@@ -50,7 +50,6 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 		if (visited.first ||out.empty()){
 			if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid()){
-				//if the disturbance is in the clearvoyance, return it
 				CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
 				clearvoyance.pop(v);
 				return CVDi;
