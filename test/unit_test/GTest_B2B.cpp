@@ -26,7 +26,7 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
 
 class DebugB2BTest: public DebugB2B, public testing::Test{
     protected: 
-    void SetUp() override {
+    virtual void SetUp() override {
         iteration++;
     }
     void TearDown() override {
@@ -36,6 +36,7 @@ class DebugB2BTest: public DebugB2B, public testing::Test{
 
 
 };
+
 
 TEST(FrontierCrashed, predicate){
     TransitionSystem ts(2);
@@ -129,6 +130,8 @@ TEST(ClearVoyance, Pop){
     EXPECT_EQ(cv.size(), 2);  
 }
 
+
+
 TEST_F(DebugB2BTest, AddOptionsHindSight){
     make_module(MOVING_VERTEX);
     setAllVisited();
@@ -137,6 +140,13 @@ TEST_F(DebugB2BTest, AddOptionsHindSight){
     B2BConfigurator::ClearVoyance cv;
     addOptionsInHindsight(MOVING_VERTEX, 2, 3,  cv);
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
+}
+
+TEST_F(DebugB2BTest, splitTask){
+    b2Transform t=b2Transform(b2Vec2(0.6, 0), b2Rot(0));
+    vertexDescriptor v1=make_v1_crashed(MOVING_VERTEX, b2Transform_zero, t, t).m_target;
+    std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
+    EXPECT_EQ(split.size(), 2);
 }
 
 class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
