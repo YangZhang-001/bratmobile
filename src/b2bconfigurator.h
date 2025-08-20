@@ -85,7 +85,7 @@ protected:
  * @param w box2d world
  * @return std::vector<vertexDescriptor> a plan, if recycled from previous knowledge
  */
-virtual std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w); //evaluates only after DEFAULT, internal one step lookahead
+virtual std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w)override; //evaluates only after DEFAULT, internal one step lookahead
 
 /**
  * @brief Stores disturbance lookaheads for alternative DEFAULT tasks (where the disturbance is backpropagated)

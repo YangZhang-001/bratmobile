@@ -326,9 +326,27 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
 class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator{
     protected:
 
-    virtual Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start) override{
+    Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start) override{
         return B2BConfigurator::getDisturbance(g, v, world, dir, start);
     }
+
+    bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v) override{
+        return B2BConfigurator::closeVertex(closed, v);
+    }
+
+    std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex()) override{
+        return B2BConfigurator::splitTask(v, d, src);
+    }
+ 
+    std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w)override{
+        return B2BConfigurator::explorer(v, g, w);
+    }
+
+    bool Spawner(){
+        return B2BConfigurator::Spawner();
+    }
+
+
     public:
     DebugB2B()=default;
     
@@ -458,9 +476,10 @@ class HighLevelTest: public virtual HighLevelTestBase , public testing::WithPara
 
 };
 
-class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{    
+class HighLevelTestB2B:  public HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{    
     public:
     HighLevelTestB2B(){};
+
 
     virtual void SetUp()override{
        configurator=new DebugB2B;
