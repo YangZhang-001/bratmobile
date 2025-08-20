@@ -129,8 +129,6 @@ TEST(ClearVoyance, Pop){
     EXPECT_EQ(cv.size(), 2);  
 }
 
-
-
 TEST_F(DebugB2BTest, AddOptionsHindSight){
     iteration++;
     make_module(MOVING_VERTEX);
