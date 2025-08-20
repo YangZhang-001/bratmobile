@@ -447,7 +447,8 @@ class HighLevelTest: public virtual HighLevelTestBase , public testing::WithPara
 };
 
 class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
-
+    protected:
+    DebugB2B * configurator=NULL;
     
     public:
     HighLevelTestB2B(){};
