@@ -339,6 +339,18 @@ class DebugB2B: public virtual DebugConfigurator, public B2BConfigurator{
     };
 };
 
+
+class DebugB2BTest: public virtual DebugB2B, public testing::Test{
+    protected: 
+    // void SetUp() override {
+
+    // }
+    // void TearDown() override {
+    //     transitionSystem.clear();
+    // }
+};
+
+
 class WiseControllerTest: public Wise_Controller, public ::testing::Test{};
 
 /**
@@ -693,6 +705,11 @@ class ConfiguratorTestGetObstacle: public virtual ConfiguratorTestGetGoal{
         boost::remove_vertex(currentVertex, transitionSystem);
     }
 };
+
+class B2BTestGetGoal: public virtual DebugB2B, public virtual ConfiguratorTestGetGoal{}; 
+
+class B2BTestGetObstacle: public virtual DebugB2B, public virtual ConfiguratorTestGetObstacle{}; 
+
 
 class ConfiguratorEvaluationQueueManagerTest: public ConfiguratorTest, public testing::WithParamInterface<std::tuple<Direction, simResult::resultType >>{
     protected:

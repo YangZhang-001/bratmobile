@@ -1,19 +1,4 @@
 #include "test_classes.h"
-
-class DebugB2BTest: public virtual DebugB2B, public testing::Test{
-    protected: 
-    // void SetUp() override {
-
-    // }
-    // void TearDown() override {
-    //     transitionSystem.clear();
-    // }
-};
-
-class B2BTestGetGoal: public virtual DebugB2B, public virtual ConfiguratorTestGetGoal{}; 
-
-class B2BTestGetObstacle: public virtual DebugB2B, public virtual ConfiguratorTestGetObstacle{}; 
-
 TEST_F(DebugB2BTest, PreExplore){
     init();
     iteration++;
