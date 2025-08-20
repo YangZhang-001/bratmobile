@@ -463,7 +463,7 @@ class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::With
     HighLevelTestB2B(){};
 
     virtual void SetUp()override{
-       configurator=new DebugB2B();
+       configurator=new DebugB2B;
        init();
     }
 };
