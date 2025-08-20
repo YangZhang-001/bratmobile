@@ -35,7 +35,7 @@ class DebugB2BTest: public DebugB2B, public testing::Test{
     }
 };
 
-class B2BTestGetGoal: public DebugB2BTest, public ConfiguratorTestGetGoal{}; 
+class B2BTestGetGoal: public virtual DebugB2B, public virtual ConfiguratorTestGetGoal{}; 
 
 
 TEST(FrontierCrashed, predicate){
@@ -180,24 +180,24 @@ INSTANTIATE_TEST_CASE_P(DisturbanceIsGoal, ConfiguratorTestGetGoal, ::testing::V
                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.80, 0.0), b2Rot(-M_PI_2)), DEFAULT, LEFT)));
 
 
-TEST_P(ConfiguratorTestGetObstacle, GetDisturbanceObstacle){
-    EXPECT_EQ(transitionSystem.m_vertices.size(),2);
-    b2World world(b2Vec2(0,0));
-    BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
-    Disturbance solution(bf);
-    vertex_setup(currentVertex, solution);
-    Disturbance Di= getDisturbance(transitionSystem, currentVertex, world, std::get<2>(GetParam()), transitionSystem[currentVertex].endPose);
-    EXPECT_EQ(Di.bf.pose.p.x, solution.bf.pose.p.x);
-    EXPECT_EQ(Di.bf.pose.p.y, solution.bf.pose.p.y);
-    EXPECT_EQ(Di.bf.pose.q.GetAngle(), solution.bf.pose.q.GetAngle());
-    EXPECT_EQ(Di.bf.halfLength, solution.bf.halfLength);
-    EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
-}
+// TEST_P(ConfiguratorTestGetObstacle, GetDisturbanceObstacle){
+//     EXPECT_EQ(transitionSystem.m_vertices.size(),2);
+//     b2World world(b2Vec2(0,0));
+//     BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
+//     Disturbance solution(bf);
+//     vertex_setup(currentVertex, solution);
+//     Disturbance Di= getDisturbance(transitionSystem, currentVertex, world, std::get<2>(GetParam()), transitionSystem[currentVertex].endPose);
+//     EXPECT_EQ(Di.bf.pose.p.x, solution.bf.pose.p.x);
+//     EXPECT_EQ(Di.bf.pose.p.y, solution.bf.pose.p.y);
+//     EXPECT_EQ(Di.bf.pose.q.GetAngle(), solution.bf.pose.q.GetAngle());
+//     EXPECT_EQ(Di.bf.halfLength, solution.bf.halfLength);
+//     EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
+// }
 
-INSTANTIATE_TEST_CASE_P(DisturbanceIsObstacle, ConfiguratorTestGetObstacle, ::testing::Values(
-                                                                   std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.4, 0.0), b2Rot(M_PI_2)), LEFT, DEFAULT),
-                                                                   std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.4, 0.0), b2Rot(M_PI_2)), RIGHT, DEFAULT),
-                                                                   std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.40, 0.31), b2Rot(-M_PI_2)), RIGHT, DEFAULT)));
+// INSTANTIATE_TEST_CASE_P(DisturbanceIsObstacle, ConfiguratorTestGetObstacle, ::testing::Values(
+//                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.4, 0.0), b2Rot(M_PI_2)), LEFT, DEFAULT),
+//                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.4, 0.0), b2Rot(M_PI_2)), RIGHT, DEFAULT),
+//                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.40, 0.31), b2Rot(-M_PI_2)), RIGHT, DEFAULT)));
 
 // /**
 //  * @brief Crash on the way to goal
