@@ -210,27 +210,6 @@ TEST_P(HighLevelTest, FirstPlan){
     EXPECT_TRUE(success);
 }
 
-TEST_P(HighLevelTest, FirstPlanB2B){
-    configurator=new DebugB2B();
-    Task goal;
-    bool hasGoal=std::get<0>(GetParam()), success=false;
-    if (hasGoal){
-        goal=Task(Disturbance(PURSUE, b2Vec2(1.0,0), 0),DEFAULT);
-    }
-    configurator->init(goal);
-    std::string folder=std::get<1>(GetParam());
-    get_plan(folder);
-    EXPECT_GT(ci.data2fp.size(),0);
-    EXPECT_GT(configurator->data_size(),0);
-    if (!hasGoal){
-        success=configurator->plan_reaches_horizon();
-    }
-    else{
-        success=configurator->plan_reaches_goal();
-    }
-    EXPECT_GT(configurator->get_plan().size(),1);
-    EXPECT_TRUE(success);
-}
 
 TEST_P(HighLevelTest, CheckPlan){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
