@@ -326,26 +326,32 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
 class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator{
     protected:
 
-    Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start) override{
-        return B2BConfigurator::getDisturbance(g, v, world, dir, start);
-    }
+    // Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start) override{
+    //     return B2BConfigurator::getDisturbance(g, v, world, dir, start);
+    // }
 
-    bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v) override{
-        return B2BConfigurator::closeVertex(closed, v);
-    }
+    // bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v) override{
+    //     return B2BConfigurator::closeVertex(closed, v);
+    // }
 
-    std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex()) override{
-        return B2BConfigurator::splitTask(v, d, src);
-    }
+    // std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex()) override{
+    //     return B2BConfigurator::splitTask(v, d, src);
+    // }
  
-    std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w)override{
-        return B2BConfigurator::explorer(v, g, w);
-    }
+    // std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w)override{
+    //     return B2BConfigurator::explorer(v, g, w);
+    // }
 
-    bool Spawner()override{
-        return B2BConfigurator::Spawner();
-    }
-
+    // bool Spawner()override{
+    //     return B2BConfigurator::Spawner();
+    // }
+    using B2BConfigurator::getDisturbance;
+    using B2BConfigurator::closeVertex;
+    using B2BConfigurator::splitTask;
+    using B2BConfigurator::explorer;
+    using B2BConfigurator::Spawner;
+    using B2BConfigurator::ci;
+    
 
     public:
     DebugB2B()=default;
