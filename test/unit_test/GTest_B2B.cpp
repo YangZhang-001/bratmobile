@@ -14,6 +14,10 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
      * Not visited by default
      */
    // void make_module(vertexDescriptor mv=0);
+
+    virtual Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start) override{
+        return B2BConfigurator::getDisturbance(g, v, world, dir, start);
+    }
     public:
     DebugB2B()=default;
     
@@ -254,8 +258,10 @@ TEST_F(DebugB2BTest, ClearVoyance){
     make_module(MOVING_VERTEX);
     transitionSystem[MOVING_VERTEX].Di=Disturbance(bf); //current task was avoiding
     transitionSystem[MOVING_VERTEX].Di.validate();
-    transitionSystem[3].Dn=Disturbance(bf2); //current task was avoiding
-    transitionSystem[5].Dn=Disturbance(bf3); //current task was avoiding
+    transitionSystem[3].Dn=Disturbance(bf2); //obstacle on the left
+    transitionSystem[5].Dn=Disturbance(bf3); //obstacle on the right
+    transitionSystem[3].Dn.validate();
+    transitionSystem[5].Dn.validate();
     clearvoyance.add(MOVING_VERTEX, transitionSystem[3].Dn);
     clearvoyance.add(MOVING_VERTEX, transitionSystem[5].Dn);
    // Disturbance solution=transitionSystem[MOVING_VERTEX].Di;

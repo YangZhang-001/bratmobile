@@ -49,12 +49,7 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 		if (visited.first ||out.empty()){
-			if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid()){
-				CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
-				clearvoyance.pop(v);
-				return CVDi;
-			}
-			else if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[v].direction!=dir){
+			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[v].direction!=dir){
 				Task task(g[v].Di, DEFAULT, g[v].endPose, true);
 				Robot robot(&world);
 				robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
@@ -71,7 +66,12 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 			//check if Di was eliminated 
 			return controlGoal.get_disturbance();
 		}
-		else if (v==MOVING_VERTEX){
+		else if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid()){
+				CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
+				clearvoyance.pop(v);
+				return CVDi;
+			}
+		else  if (v==MOVING_VERTEX){
 			return g[v].Di;
 		}
 	}

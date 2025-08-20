@@ -21,11 +21,6 @@ TEST_P(LinearTransformationTest, rotateTransform){
     EXPECT_EQ(tAdd.p.y, tMul.p.y);
     EXPECT_EQ(tAdd.q.GetAngle(), tMul.q.GetAngle());
     EXPECT_EQ(tAdd.q.GetAngle(), tMul.q.GetAngle());
-
-    // EXPECT_EQ(tSub.p.x, tNeg.p.x);
-    // EXPECT_EQ(tSub.p.y, tNeg.p.y);
-    // EXPECT_EQ(tSub.q.GetAngle(), tNeg.q.GetAngle());
-    // EXPECT_EQ(tSub.q.GetAngle(), tNeg.q.GetAngle());
 }  
 
 
