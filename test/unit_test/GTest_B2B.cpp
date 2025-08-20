@@ -37,6 +37,9 @@ class DebugB2BTest: public DebugB2B, public testing::Test{
 
 class B2BTestGetGoal: public virtual DebugB2B, public virtual ConfiguratorTestGetGoal{}; 
 
+class B2BTestGetObstacle: public virtual DebugB2B, public virtual ConfiguratorTestGetObstacle{}; 
+
+
 
 TEST(FrontierCrashed, predicate){
     TransitionSystem ts(2);
@@ -180,66 +183,66 @@ INSTANTIATE_TEST_CASE_P(DisturbanceIsGoal, B2BTestGetGoal, ::testing::Values(
                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.80, 0.0), b2Rot(-M_PI_2)), DEFAULT, LEFT)));
 
 
-// TEST_P(ConfiguratorTestGetObstacle, GetDisturbanceObstacle){
-//     EXPECT_EQ(transitionSystem.m_vertices.size(),2);
-//     b2World world(b2Vec2(0,0));
-//     BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
-//     Disturbance solution(bf);
-//     vertex_setup(currentVertex, solution);
-//     Disturbance Di= getDisturbance(transitionSystem, currentVertex, world, std::get<2>(GetParam()), transitionSystem[currentVertex].endPose);
-//     EXPECT_EQ(Di.bf.pose.p.x, solution.bf.pose.p.x);
-//     EXPECT_EQ(Di.bf.pose.p.y, solution.bf.pose.p.y);
-//     EXPECT_EQ(Di.bf.pose.q.GetAngle(), solution.bf.pose.q.GetAngle());
-//     EXPECT_EQ(Di.bf.halfLength, solution.bf.halfLength);
-//     EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
-// }
+TEST_P(B2BTestGetObstacle, GetDisturbanceObstacle){
+    EXPECT_EQ(transitionSystem.m_vertices.size(),2);
+    b2World world(b2Vec2(0,0));
+    BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
+    Disturbance solution(bf);
+    vertex_setup(currentVertex, solution);
+    Disturbance Di= getDisturbance(transitionSystem, currentVertex, world, std::get<2>(GetParam()), transitionSystem[currentVertex].endPose);
+    EXPECT_EQ(Di.bf.pose.p.x, solution.bf.pose.p.x);
+    EXPECT_EQ(Di.bf.pose.p.y, solution.bf.pose.p.y);
+    EXPECT_EQ(Di.bf.pose.q.GetAngle(), solution.bf.pose.q.GetAngle());
+    EXPECT_EQ(Di.bf.halfLength, solution.bf.halfLength);
+    EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
+}
 
-// INSTANTIATE_TEST_CASE_P(DisturbanceIsObstacle, ConfiguratorTestGetObstacle, ::testing::Values(
-//                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.4, 0.0), b2Rot(M_PI_2)), LEFT, DEFAULT),
-//                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.4, 0.0), b2Rot(M_PI_2)), RIGHT, DEFAULT),
-//                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.40, 0.31), b2Rot(-M_PI_2)), RIGHT, DEFAULT)));
+INSTANTIATE_TEST_CASE_P(DisturbanceIsObstacle, B2BTestGetObstacle, ::testing::Values(
+                                                                   std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.4, 0.0), b2Rot(M_PI_2)), LEFT, DEFAULT),
+                                                                   std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.4, 0.0), b2Rot(M_PI_2)), RIGHT, DEFAULT),
+                                                                   std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.40, 0.31), b2Rot(-M_PI_2)), RIGHT, DEFAULT)));
 
-// /**
-//  * @brief Crash on the way to goal
-//  * 
-//  */
-// TEST_F(ConfiguratorTestGetObstacle, CrashToGoal){
-//     b2World world(b2Vec2(0,0));
-//     BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
-//     transitionSystem[currentVertex].Di=Disturbance(PURSUE, b2Vec2(1.0, 0)); //current task was avoiding
-//     transitionSystem[currentVertex].Dn=Disturbance(bf); //current task was avoiding
-//     transitionSystem[currentVertex].Dn.validate();
-//     Disturbance solution=transitionSystem[currentVertex].Dn;
-//     transitionSystem[currentVertex].direction=DEFAULT;
-//     transitionSystem[currentVertex].endPose.p.x=0.4;
-//     vertex_options_push_back(currentVertex, LEFT);
-//     Disturbance Di= getDisturbance(transitionSystem, currentVertex, world, LEFT, transitionSystem[currentVertex].endPose);
-//     EXPECT_EQ(Di.bf.pose.p.x, solution.bf.pose.p.x);
-//     EXPECT_EQ(Di.bf.pose.p.y, solution.bf.pose.p.y);
-//     EXPECT_EQ(Di.bf.pose.q.GetAngle(), solution.bf.pose.q.GetAngle());
-//     EXPECT_EQ(Di.bf.halfLength, solution.bf.halfLength);
-//     EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
-// }
+/**
+ * @brief Crash on the way to goal
+ * 
+ */
+TEST_F(B2BTestGetObstacle, CrashToGoal){
+    b2World world(b2Vec2(0,0));
+    BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
+    transitionSystem[currentVertex].Di=Disturbance(PURSUE, b2Vec2(1.0, 0)); //current task was avoiding
+    transitionSystem[currentVertex].Dn=Disturbance(bf); //current task was avoiding
+    transitionSystem[currentVertex].Dn.validate();
+    Disturbance solution=transitionSystem[currentVertex].Dn;
+    transitionSystem[currentVertex].direction=DEFAULT;
+    transitionSystem[currentVertex].endPose.p.x=0.4;
+    vertex_options_push_back(currentVertex, LEFT);
+    Disturbance Di= getDisturbance(transitionSystem, currentVertex, world, LEFT, transitionSystem[currentVertex].endPose);
+    EXPECT_EQ(Di.bf.pose.p.x, solution.bf.pose.p.x);
+    EXPECT_EQ(Di.bf.pose.p.y, solution.bf.pose.p.y);
+    EXPECT_EQ(Di.bf.pose.q.GetAngle(), solution.bf.pose.q.GetAngle());
+    EXPECT_EQ(Di.bf.halfLength, solution.bf.halfLength);
+    EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
+}
 
-// TEST_F(ConfiguratorTestGetObstacle, AvoidNoGoal){
-//     init(Task());
-//     EXPECT_FALSE(controlGoal.get_disturbance().isValid());
-//     EXPECT_EQ(controlGoal.get_disturbance().getAffIndex(), NONE);
-//     b2World world(b2Vec2(0,0));
-//     BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
-//     bf.attention=1;
-//     transitionSystem[MOVING_VERTEX].Di=Disturbance(bf); //current task was avoiding
-//     transitionSystem[MOVING_VERTEX].Di.validate();
-//     Disturbance solution=transitionSystem[MOVING_VERTEX].Di;
-//     transitionSystem[MOVING_VERTEX].direction=STOP;
-//     vertex_options_push_back(MOVING_VERTEX, LEFT);
-//     Disturbance Di= getDisturbance(transitionSystem, MOVING_VERTEX, world, LEFT, transitionSystem[MOVING_VERTEX].endPose);
-//     EXPECT_EQ(Di.bf.pose.p.x, solution.bf.pose.p.x);
-//     EXPECT_EQ(Di.bf.pose.p.y, solution.bf.pose.p.y);
-//     EXPECT_EQ(Di.bf.pose.q.GetAngle(), solution.bf.pose.q.GetAngle());
-//     EXPECT_EQ(Di.bf.halfLength, solution.bf.halfLength);
-//     EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
-// }
+TEST_F(B2BTestGetObstacle, AvoidNoGoal){
+    init(Task());
+    EXPECT_FALSE(controlGoal.get_disturbance().isValid()); //test case health check
+    EXPECT_EQ(controlGoal.get_disturbance().getAffIndex(), NONE);
+    b2World world(b2Vec2(0,0));
+    BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
+    bf.attention=1;
+    transitionSystem[MOVING_VERTEX].Di=Disturbance(bf); //current task was avoiding
+    transitionSystem[MOVING_VERTEX].Di.validate();
+    Disturbance solution=transitionSystem[MOVING_VERTEX].Di;
+    transitionSystem[MOVING_VERTEX].direction=STOP;
+    vertex_options_push_back(MOVING_VERTEX, LEFT);
+    Disturbance Di= getDisturbance(transitionSystem, MOVING_VERTEX, world, LEFT, transitionSystem[MOVING_VERTEX].endPose);
+    EXPECT_EQ(Di.bf.pose.p.x, solution.bf.pose.p.x);
+    EXPECT_EQ(Di.bf.pose.p.y, solution.bf.pose.p.y);
+    EXPECT_EQ(Di.bf.pose.q.GetAngle(), solution.bf.pose.q.GetAngle());
+    EXPECT_EQ(Di.bf.halfLength, solution.bf.halfLength);
+    EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
+}
 
 
 class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
