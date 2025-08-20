@@ -244,6 +244,39 @@ TEST_F(B2BTestGetObstacle, AvoidNoGoal){
     EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
 }
 
+TEST_F(B2BTestGetObstacle, ClearVoyance){
+    init(Task());
+    EXPECT_FALSE(controlGoal.get_disturbance().isValid()); //test case health check
+    EXPECT_EQ(controlGoal.get_disturbance().getAffIndex(), NONE);
+    b2World world(b2Vec2(0,0));
+    BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05), bf2=bodyFeatures(0, .55, 0, 0.02, 0.05), bf3=bodyFeatures(0, -0.55, 0, 0.02, 0.05);
+    //bf.attention=1;
+    make_module(MOVING_VERTEX);
+    transitionSystem[MOVING_VERTEX].Di=Disturbance(bf); //current task was avoiding
+    transitionSystem[MOVING_VERTEX].Di.validate();
+    transitionSystem[3].Dn=Disturbance(bf2); //current task was avoiding
+    transitionSystem[5].Dn=Disturbance(bf3); //current task was avoiding
+    clearvoyance.add(MOVING_VERTEX, transitionSystem[3].Dn);
+    clearvoyance.add(MOVING_VERTEX, transitionSystem[5].Dn);
+   // Disturbance solution=transitionSystem[MOVING_VERTEX].Di;
+    transitionSystem[MOVING_VERTEX].direction=STOP;
+    vertex_options_push_back(MOVING_VERTEX, DEFAULT);
+    vertex_options_push_back(MOVING_VERTEX, DEFAULT);
+    Disturbance Di= getDisturbance(transitionSystem, MOVING_VERTEX, world, DEFAULT, transitionSystem[MOVING_VERTEX].endPose);
+    EXPECT_EQ(Di.bf.pose.p.x, transitionSystem[3].Dn.bf.pose.p.x);
+    EXPECT_EQ(Di.bf.pose.p.y, transitionSystem[3].Dn.bf.pose.p.y);
+    EXPECT_EQ(Di.bf.pose.q.GetAngle(), transitionSystem[3].Dn.bf.pose.q.GetAngle());
+    EXPECT_EQ(Di.bf.halfLength, transitionSystem[3].Dn.bf.halfLength);
+    EXPECT_EQ(Di.bf.halfWidth, transitionSystem[3].Dn.bf.halfWidth);
+    Di= getDisturbance(transitionSystem, MOVING_VERTEX, world, DEFAULT, transitionSystem[MOVING_VERTEX].endPose);
+    EXPECT_EQ(Di.bf.pose.p.x, transitionSystem[5].Dn.bf.pose.p.x);
+    EXPECT_EQ(Di.bf.pose.p.y, transitionSystem[5].Dn.bf.pose.p.y);
+    EXPECT_EQ(Di.bf.pose.q.GetAngle(), transitionSystem[5].Dn.bf.pose.q.GetAngle());
+    EXPECT_EQ(Di.bf.halfLength, transitionSystem[5].Dn.bf.halfLength);
+    EXPECT_EQ(Di.bf.halfWidth, transitionSystem[5].Dn.bf.halfWidth);
+
+}
+
 
 class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
     void SetUp()override{
