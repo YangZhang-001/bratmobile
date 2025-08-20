@@ -244,7 +244,7 @@ TEST_F(B2BTestGetObstacle, AvoidNoGoal){
     EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
 }
 
-TEST_F(B2BTestGetObstacle, ClearVoyance){
+TEST_F(DebugB2BTest, ClearVoyance){
     init(Task());
     EXPECT_FALSE(controlGoal.get_disturbance().isValid()); //test case health check
     EXPECT_EQ(controlGoal.get_disturbance().getAffIndex(), NONE);

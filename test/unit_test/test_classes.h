@@ -191,6 +191,14 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
     const std::vector <Direction>& vertex_get_options(vertexDescriptor v){
         transitionSystem[v].options;
     }
+
+    /**
+     * @brief makes bodyfeatures
+     * 
+     */
+    BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth);
+
+
     
 
     vertexDescriptor get_current_vertex(){
@@ -491,14 +499,6 @@ protected:
     void set_Di(std::vector<vertexDescriptor> vec, const Disturbance& Di);
 
     void set_Dn(std::vector<vertexDescriptor> vec, const Disturbance& Dn);
-
-public:
-
-    /**
-     * @brief makes bodyfeatures
-     * 
-     */
-    BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth);
 
 
 
@@ -943,7 +943,7 @@ void DebugConfigurator::make_module(vertexDescriptor mv){
 }
 
 
-BodyFeatures ConfiguratorTest::bodyFeatures(float x, float y, float q, float hlength, float hwidth){
+BodyFeatures DebugConfigurator::bodyFeatures(float x, float y, float q, float hlength, float hwidth){
     BodyFeatures bf;
     bf.pose.p.x=x;
     bf.pose.p.y=y;
