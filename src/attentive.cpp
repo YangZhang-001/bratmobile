@@ -516,7 +516,7 @@ void AttentiveConfigurator::planPriority(TransitionSystem&g, vertexDescriptor v)
 
 
 
-void AttentiveConfigurator::ts_cleanup(TransitionSystem & g, std::vector <vertexDescriptor>& p){
+void AttentiveConfigurator::ts_cleanup(){
 	FilteredTS fts(transitionSystem, ViableEdge(&transitionSystem), Connected(&transitionSystem)); //boost::keep_all()
 	TransitionSystem tmp;
 	boost::copy_graph(fts, tmp);	
@@ -571,7 +571,7 @@ void AttentiveConfigurator::explore_plan(b2World&world){
         debug::graph_file(iteration, transitionSystem, controlGoal.get_disturbance(), _plan, currentVertex);
     }	
 	try{
-		ts_cleanup(transitionSystem, m_plan); //remove self-edge and singleton states
+		ts_cleanup(); //remove self-edge and singleton states
 	}
 	catch(...){}	
     if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.is_over())){ //currentv not visited means that it wasn't observed ()

@@ -99,7 +99,7 @@ TEST_F(ConfiguratorTest, TSCleanup){
     boost::add_edge(1,1, transitionSystem); //trivial self-edge
     auto e2= boost::add_edge(2,2, transitionSystem); //nontrivial self-edge
     transitionSystem[e2.first].step=1;
-    ts_cleanup(transitionSystem, m_plan);
+    ts_cleanup();
     EXPECT_EQ(transitionSystem.m_vertices.size(), 4);
     EXPECT_EQ(boost::out_degree(1, transitionSystem), 0); //out edge deleted
     EXPECT_EQ(boost::in_degree(1, transitionSystem), 1);

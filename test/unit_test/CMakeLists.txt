@@ -18,6 +18,7 @@ include(FetchContent)
 
 include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
 include(GoogleTest)
+
 add_executable(GTest_HighLevel GTest_HighLevel.cpp)
 target_link_libraries(GTest_HighLevel gtest gtest_main)
 target_link_libraries(GTest_HighLevel  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
@@ -33,7 +34,6 @@ target_link_libraries(GTest_Configurator  brat ${OpenCV_LIBS} box2d rt GTest::gt
 add_executable(GTest_B2B GTest_B2B.cpp)
 target_link_libraries(GTest_B2B gtest gtest_main)
 target_link_libraries(GTest_B2B  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
-
 
 add_executable(GTest_Worldbuilding GTest_Worldbuilding.cpp)
 target_link_libraries(GTest_Worldbuilding gtest gtest_main)
@@ -81,7 +81,6 @@ gtest_discover_tests(GTest_Math)
 gtest_discover_tests(GTest_Configurator)
 gtest_discover_tests(GTest_B2B)
 gtest_discover_tests(GTest_Worldbuilding)
-#gtest_discover_tests(GTest_SplitTask)
 gtest_discover_tests(GTest_Controller)
 gtest_discover_tests(GTest_Logger)
 gtest_discover_tests(GTest_Matcher)

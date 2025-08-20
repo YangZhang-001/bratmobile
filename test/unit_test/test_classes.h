@@ -323,6 +323,22 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
 
 };
 
+class DebugB2B: public virtual DebugConfigurator, public B2BConfigurator{
+    protected:
+
+    virtual Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start) override{
+        return B2BConfigurator::getDisturbance(g, v, world, dir, start);
+    }
+    public:
+    DebugB2B()=default;
+    
+    class ClearVoyanceTest:public B2BConfigurator::ClearVoyance{
+        public:
+            int size(){return lookaheads.size();}
+
+    };
+};
+
 class WiseControllerTest: public Wise_Controller, public ::testing::Test{};
 
 /**
@@ -428,6 +444,18 @@ class HighLevelTest: public virtual HighLevelTestBase , public testing::WithPara
     public:
     HighLevelTest(){}
 
+};
+
+class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
+
+    
+    public:
+    HighLevelTestB2B(){};
+
+    virtual void SetUp()override{
+       configurator=new DebugB2B();
+       init();
+    }
 };
 
 /**

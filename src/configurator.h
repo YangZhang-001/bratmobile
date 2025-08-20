@@ -17,7 +17,7 @@
 class Configurator{
 protected:
 	int iteration=0, simulatedTasks=0; 
-	Task currentTask; //need to make thread safe?
+	Task currentTask;
 	Controller * task_controller=NULL;
 	Tracker * tracker=NULL;
 	LIDAR_In * ci=NULL;

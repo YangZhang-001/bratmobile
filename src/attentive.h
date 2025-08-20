@@ -183,7 +183,7 @@ void addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue
 
 
 //removes singleton vertices and self-edges
-void ts_cleanup(TransitionSystem &, std::vector <vertexDescriptor>&);
+void ts_cleanup();
 
 //apply affine transformation to states (e.g. if the same situation encountered in the past is reencountered)
 void shift_states(TransitionSystem &, const std::vector<vertexDescriptor>&, const b2Transform &); //shifts a sequence of states by a certain transform

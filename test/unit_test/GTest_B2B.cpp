@@ -1,41 +1,13 @@
 #include "test_classes.h"
 
-class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator{
-    protected:
-        /**
-     * @brief Makes a basic expansion module,  disturbances not set. Module looks like this
-     *               
-     *              v2(LEFT)---v3(DEFAULT)
-                   /   
-                 v0 --- q1(DEFAULT)
-                   \
-                    v4(RIGHT) --- v5(DEFAULT)
-     * 
-     * Not visited by default
-     */
-   // void make_module(vertexDescriptor mv=0);
-
-    virtual Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start) override{
-        return B2BConfigurator::getDisturbance(g, v, world, dir, start);
-    }
-    public:
-    DebugB2B()=default;
-    
-    class ClearVoyanceTest:public B2BConfigurator::ClearVoyance{
-        public:
-            int size(){return lookaheads.size();}
-
-    };
-};
-
 class DebugB2BTest: public DebugB2B, public testing::Test{
     protected: 
-    virtual void SetUp() override {
-        iteration++;
+    void SetUp() override {
+        transitionSystem=TransitionSystem(1);
+
     }
     void TearDown() override {
         transitionSystem.clear();
-        transitionSystem=TransitionSystem(1);
     }
 };
 
@@ -43,7 +15,28 @@ class B2BTestGetGoal: public virtual DebugB2B, public virtual ConfiguratorTestGe
 
 class B2BTestGetObstacle: public virtual DebugB2B, public virtual ConfiguratorTestGetObstacle{}; 
 
+TEST_F(DebugB2BTest, PreExplore){
+    init();
+    iteration++;
+    pre_explore();
+}
 
+TEST_F(DebugB2BTest, TSCleanup){
+    transitionSystem=TransitionSystem(5);
+    for (int i=1; i<4;i++){
+        auto e=boost::add_edge(MOVING_VERTEX, i, transitionSystem);
+        transitionSystem[e.first].step=1;
+    }
+    boost::add_edge(1,1, transitionSystem); //trivial self-edge
+    auto e2= boost::add_edge(2,2, transitionSystem); //nontrivial self-edge
+    transitionSystem[e2.first].step=1;
+    ts_cleanup();
+    EXPECT_EQ(transitionSystem.m_vertices.size(), 4);
+    EXPECT_EQ(boost::out_degree(1, transitionSystem), 0); //out edge deleted
+    EXPECT_EQ(boost::in_degree(1, transitionSystem), 1);
+    EXPECT_EQ(boost::out_degree(2, transitionSystem), 1); //edge is preserved
+    EXPECT_EQ(boost::out_degree(0, transitionSystem), 3);
+}
 
 TEST(FrontierCrashed, predicate){
     TransitionSystem ts(2);
@@ -140,6 +133,7 @@ TEST(ClearVoyance, Pop){
 
 
 TEST_F(DebugB2BTest, AddOptionsHindSight){
+    iteration++;
     make_module(MOVING_VERTEX);
     setAllVisited();
     transitionSystem[3].outcome=simResult::crashed;
@@ -283,19 +277,6 @@ TEST_F(DebugB2BTest, ClearVoyance){
 
 }
 
-
-class HighLevelTestB2B:  public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
-    void SetUp()override{
-       configurator=new DebugB2B();
-       init();
-    }
-    
-    void TearDown() override {
-        HighLevelTestBase::TearDown();
-    }
-
-
-};
 
 TEST_P(HighLevelTestB2B, FirstPlanB2B){
     Task goal;

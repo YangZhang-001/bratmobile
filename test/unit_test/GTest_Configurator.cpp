@@ -45,6 +45,11 @@ TEST_F(ConfiguratorTest, VisitingTS){
     EXPECT_EQ(n_visitedEdges(), 0);
 }
 
+TEST_F(ConfiguratorTest, PreExplore){
+    init();
+    iteration++;
+    pre_explore();
+}
 
 TEST_F(ConfiguratorTest, VisitedTS){
     iteration=1;

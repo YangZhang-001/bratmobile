@@ -20,7 +20,9 @@ class B2BConfigurator : public virtual AttentiveConfigurator {
 public:
     B2BConfigurator() = default;
 
-    B2BConfigurator(Task & task) : AttentiveConfigurator(task) {}
+    B2BConfigurator(Task & task) {
+        init(task);
+    }
 
 protected:
 
