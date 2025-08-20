@@ -170,7 +170,7 @@ TEST_P(B2BTestGetGoal, GetDisturbanceGoal){
     EXPECT_EQ(Di.bf.halfWidth, solution.bf.halfWidth);
 }
 
-INSTANTIATE_TEST_CASE_P(DisturbanceIsGoal, ConfiguratorTestGetGoal, ::testing::Values(
+INSTANTIATE_TEST_CASE_P(DisturbanceIsGoal, B2BTestGetGoal, ::testing::Values(
                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.82, 0.31), b2Rot(0)), DEFAULT, DEFAULT),
                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.82, 0.31), b2Rot(0)), DEFAULT, RIGHT),
                                                                    std::tuple<b2Transform,Direction, Direction>(b2Transform(b2Vec2(0.82, 0.31), b2Rot(0)), LEFT, DEFAULT),
