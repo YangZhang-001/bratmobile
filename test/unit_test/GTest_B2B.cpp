@@ -1,14 +1,13 @@
 #include "test_classes.h"
 
-class DebugB2BTest: public DebugB2B, public testing::Test{
+class DebugB2BTest: public virtual DebugB2B, public testing::Test{
     protected: 
-    void SetUp() override {
-        transitionSystem=TransitionSystem(1);
+    // void SetUp() override {
 
-    }
-    void TearDown() override {
-        transitionSystem.clear();
-    }
+    // }
+    // void TearDown() override {
+    //     transitionSystem.clear();
+    // }
 };
 
 class B2BTestGetGoal: public virtual DebugB2B, public virtual ConfiguratorTestGetGoal{}; 
