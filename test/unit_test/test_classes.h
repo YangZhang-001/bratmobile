@@ -160,7 +160,6 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
     void vertex_options_push_back(vertexDescriptor v, Direction d){
         transitionSystem[v].options.push_back(d);
     }
-
     const State & vertex_get_state(vertexDescriptor v){
         return transitionSystem[v];
     }
@@ -468,7 +467,7 @@ class CLTrackerTest:public ClosedLoop_Tracker{
 /**
  * @brief Fixture class for testing Configurator functions
  */
-class ConfiguratorTest: public DebugConfigurator, public testing::Test{ //, testing::TestWithParam<float>
+class ConfiguratorTest: public virtual DebugConfigurator, public testing::Test{ //, testing::TestWithParam<float>
 protected:
     friend HighLevelTestBase;
     /**
@@ -632,7 +631,7 @@ class ConfiguratorPlannerHybrid: public ConfiguratorTakeBool, public HorizonStar
  * @brief Parameters: robot position, previous task direction, current task direction
  * 
  */
-class ConfiguratorTestGetGoal:public ConfiguratorTest, public testing::WithParamInterface<std::tuple<b2Transform, Direction,Direction>>{
+class ConfiguratorTestGetGoal:public virtual ConfiguratorTest, public testing::WithParamInterface<std::tuple<b2Transform, Direction,Direction>>{
     protected:
     /**
      * @brief Sets up vertex for testing using the parameters
@@ -654,7 +653,7 @@ class ConfiguratorTestGetGoal:public ConfiguratorTest, public testing::WithParam
     }
 };
 
-class ConfiguratorTestGetObstacle: public ConfiguratorTestGetGoal{
+class ConfiguratorTestGetObstacle: public virtual ConfiguratorTestGetGoal{
     protected:
     void SetUp(){
         Disturbance goal(PURSUE, b2Vec2(1.0, 0));
@@ -696,8 +695,6 @@ int DebugConfigurator::get_vertex_in_degree(vertexDescriptor v){
 int DebugConfigurator::get_vertex_out_degree(vertexDescriptor v){
     return boost::out_degree(v, transitionSystem);
 }
-
-
 
 bool DebugConfigurator::plan_reaches_horizon(){
     return fabs(plan_end_b2Vec2().Length()-BOX2DRANGE)<0.02;
