@@ -6,6 +6,7 @@ TEST_F(DebugB2BTest, PreExplore){
 }
 
 TEST_F(DebugB2BTest, TSCleanup){
+    init();
     transitionSystem=TransitionSystem(5);
     for (int i=1; i<4;i++){
         auto e=boost::add_edge(MOVING_VERTEX, i, transitionSystem);
@@ -20,6 +21,13 @@ TEST_F(DebugB2BTest, TSCleanup){
     EXPECT_EQ(boost::in_degree(1, transitionSystem), 1);
     EXPECT_EQ(boost::out_degree(2, transitionSystem), 1); //edge is preserved
     EXPECT_EQ(boost::out_degree(0, transitionSystem), 3);
+}
+
+TEST_F(DebugB2BTest, ExplorePlan){
+    init();
+    iteration++;
+    b2World world(GRAVITY);
+    explore_plan(world);
 }
 
 TEST(FrontierCrashed, predicate){

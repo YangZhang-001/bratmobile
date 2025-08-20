@@ -11,7 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - name: Install dependencies
@@ -39,7 +38,8 @@ jobs:
       - name : Build
         shell: bash
         run : sh build.sh
-      - name : Test
+      - name : Test    
+        timeout-minutes: 5
         run: |
             cd test/unit_test
             ctest & ctest --rerun-failed --output-on-failure
