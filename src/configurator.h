@@ -61,7 +61,7 @@ void init(Task _task=Task());
  * @return true 
  * @return false 
  */
-bool Spawner(); 
+virtual bool Spawner(); 
 
 int getIteration(){
 	return iteration;

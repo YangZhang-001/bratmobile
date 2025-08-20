@@ -342,7 +342,7 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
         return B2BConfigurator::explorer(v, g, w);
     }
 
-    bool Spawner(){
+    bool Spawner()override{
         return B2BConfigurator::Spawner();
     }
 
