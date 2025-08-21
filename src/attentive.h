@@ -285,7 +285,7 @@ std::pair<edgeDescriptor, bool> setup_match_edge(VertexMatch &match, vertexDescr
  * @param v a vertex representing a state
  * @param ep connecting edge to vertex v
  */
-std::vector <vertexDescriptor> task_vertices(vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep=NULL);
+virtual std::vector <vertexDescriptor> task_vertices(vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep=NULL);
 
 /**
  * @brief Returns a visited edge if present, or if the current 

@@ -38,40 +38,90 @@ std::vector <vertexDescriptor> B2BConfigurator::splitTask(vertexDescriptor v, Di
 		if ((src==MOVING_VERTEX || src==DUMMY )&& transitionSystem[v].outcome==simResult::crashed){
 			split.emplace(split.begin(), src);
 		}
+    	return split;
 	}		
-    return split;
-}
-
-void B2BConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){
-	for (vertexDescriptor v:evaluation_q){
-		std::pair<bool, edgeDescriptor> ep(false, edgeDescriptor());
-		std::vector <vertexDescriptor> split = task_vertices(v, &ep); 
-		Direction direction= transitionSystem[ep.second.m_target].direction;
-		correctQueue(split, module_src, startRecycle, plan_prov.size());
-		for (int i=split.size()-1; i>=0; i--){ //
-			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
-			if (i<1){
-				auto likelyEdge=gt::getMostLikely(transitionSystem, inEdges(split_v), iteration);
-				if (likelyEdge.first){
-					src=likelyEdge.second.m_source;
-				}
-				else{
-					src=split_v;
-				}
-			}
-			else{
-				src=split[i-1];
-			}
-			EndedResult local_er=estimateCost(transitionSystem[split_v],transitionSystem[split_v].start,direction, controlGoal);
-			transitionSystem[split_v].phi=evaluationFunction(local_er, split_v, plan_prov);
-			applyTransitionMatrix(split_v, direction, local_er.ended,src, plan_prov);
-			addToPriorityQueue(split_v, priority_q, closed);
-			src=split_v;
-		}
+	if (transitionSystem[v].outcome != simResult::crashed){
+		return split;
 	}
-	evaluation_q.clear();
-
+	auto ie=inEdges(src);
+	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
+	if (!transitionSystem[src].isTurning()&& !ie.empty()){ //! //&& sameIterationEdgeIt!=ie.end()
+		transitionSystem[src].outcome=simResult::safeForNow;
+		split.insert(split.begin(), src);
+	}
+	return split;
 }
+
+// void B2BConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){
+// 	for (vertexDescriptor v:evaluation_q){
+// 		std::pair<bool, edgeDescriptor> ep(false, edgeDescriptor());
+// 		std::vector <vertexDescriptor> split = task_vertices(v, &ep);
+		 
+// 		Direction direction= transitionSystem[ep.second.m_target].direction;
+// 		correctQueue(split, module_src, startRecycle, plan_prov.size());
+// 		for (int i=split.size()-1; i>=0; i--){ //
+// 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
+// 			if (i<1){
+// 				auto likelyEdge=gt::getMostLikely(transitionSystem, inEdges(split_v), iteration);
+// 				if (likelyEdge.first){
+// 					src=likelyEdge.second.m_source;
+// 				}
+// 				else{
+// 					src=split_v;
+// 				}
+// 			}
+// 			else{
+// 				src=split[i-1];
+// 			}
+// 			EndedResult local_er=estimateCost(transitionSystem[split_v],transitionSystem[split_v].start,direction, controlGoal);
+// 			transitionSystem[split_v].phi=evaluationFunction(local_er, split_v, plan_prov);
+// 			applyTransitionMatrix(split_v, direction, local_er.ended,src, plan_prov);
+// 			addToPriorityQueue(split_v, priority_q, closed);
+// 			src=split_v;
+// 		}
+// 	}
+// 	evaluation_q.clear();
+
+// }
+
+// std::vector <vertexDescriptor> B2BConfigurator::task_vertices( vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep){
+// 	std::vector <vertexDescriptor> result= {v};
+// 	Direction d=UNDEFINED;
+// 	std::pair<bool, edgeDescriptor>ep2(false, edgeDescriptor()), _ep=ep2;
+// 	//do {
+// 		std::vector <edgeDescriptor> ie=inEdges( v);
+// 		ep2= gt::visitedEdge(ie, transitionSystem,v);
+// 		if (!ep2.first){
+// 			ep2=gt::getMostLikely(transitionSystem, ie, iteration);
+// 		}
+// 		if (ep2.first){
+// 			//if (ep2.second.m_target==v){ //size 1
+// 				_ep=ep2; //assign ep to define direction
+// 				d= transitionSystem[_ep.second.m_target].direction;
+// 				if (ep!=NULL){
+// 					transitionSystem[_ep.second].it_observed=iteration;
+// 				}
+// 				// for (edgeDescriptor e: ie){
+// 				// 	if (transitionSystem[e.m_target].direction==d && e!=ep2.second && 
+// 				// 		transitionSystem[e.m_source].Di == transitionSystem[_ep.second.m_source].Di &&
+// 				// 		transitionSystem[e.m_source].Dn == transitionSystem[_ep.second.m_target].Dn){
+// 				// 		ep2.second=e;
+// 				// 		break;
+// 				// 	}
+// 				// }
+// 			// }
+// 			// else if (transitionSystem[ep2.second.m_target].direction==d &&
+// 			//  	transitionSystem[ep2.second.m_target].Di == transitionSystem[_ep.second.m_target].Di &&
+// 			//  	transitionSystem[ep2.second.m_target].Dn == transitionSystem[_ep.second.m_target].Dn){ //same task!
+// 			// 	result.emplace(result.begin(), ep2.second.m_target); //source
+// 			// }
+// 		}
+// 	if (NULL!=ep){
+// 		*ep=_ep;
+// 	}
+// 	return result;
+// }
+
 
 
 Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){

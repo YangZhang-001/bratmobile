@@ -144,9 +144,29 @@ TEST_F(DebugB2BTest, AddOptionsHindSight){
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
 }
 
-// TEST_F(DebugB2BTest, splitTask){
+class DebugB2BTestSplit : public DebugB2BTest, public ::testing::WithParamInterface<std::tuple<bool, Direction>> {
+};
+
+TEST_P(DebugB2BTestSplit, splitTaskCrashed){
+    b2Transform t=b2Transform(b2Vec2(0.6, 0), b2Rot(0));
+    vertexDescriptor v1=TransitionSystem::null_vertex();
+    int solution=2;
+    if (std::get<0>(GetParam())){
+        v1=make_successful(MOVING_VERTEX, std::get<1>(GetParam())).m_target;   
+        if (std::get<1>(GetParam())==DEFAULT){
+            solution=1; //default direction is not split
+        } 
+    }
+    else{
+        vertexDescriptor v1=make_v1_crashed(MOVING_VERTEX, b2Transform_zero, t, t).m_target;
+        vertex_set_direction(v1, std::get<1>(GetParam()));
+    }
+    std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
+    EXPECT_EQ(split.size(), solution);
+}
+// TEST_F(DebugB2BTest, splitTaskSuccess){
 //     b2Transform t=b2Transform(b2Vec2(0.6, 0), b2Rot(0));
-//     vertexDescriptor v1=make_v1_crashed(MOVING_VERTEX, b2Transform_zero, t, t).m_target;
+//     vertexDescriptor v1=make_successful(MOVING_VERTEX).m_target;
 //     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
 //     EXPECT_EQ(split.size(), 1);
 // }
@@ -154,10 +174,13 @@ TEST_F(DebugB2BTest, AddOptionsHindSight){
 // TEST_F(DebugB2BTest, splitTaskTurn){
 //     b2Transform t=b2Transform(b2Vec2(0.6, 0), b2Rot(0));
 //     vertexDescriptor v1=make_v1_crashed(MOVING_VERTEX, b2Transform_zero, t, t).m_target;
-//     vertex_set_direction(v1, LEFT);
 //     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
 //     EXPECT_EQ(split.size(), 2);
 // }
+
+INSTANTIATE_TEST_CASE_P(SplitTask, DebugB2BTestSplit, ::testing::Combine(
+    ::testing::Bool(), 
+    ::testing::Values(DEFAULT, LEFT, RIGHT)));
 
 TEST_P(B2BTestGetGoal, GetDisturbanceGoal){
     Disturbance solution=controlGoal.get_disturbance();
@@ -277,6 +300,33 @@ TEST_F(DebugB2BTest, ClearVoyance){
     EXPECT_EQ(Di.bf.halfWidth, transitionSystem[5].Dn.bf.halfWidth);
 
 }
+
+TEST_F(DebugB2BTest, BacktrackCollision){
+    init(Task());
+    dummy_vertex(MOVING_VERTEX);
+    make_v1_crashed(currentVertex);
+    std::vector <vertexDescriptor> evaluation_q, priority_q, plan_prov;
+    std::set <vertexDescriptor> closed;
+    setPhi(transitionSystem[currentVertex]);
+    EXPECT_TRUE(transitionSystem[currentVertex].visited());
+    backtrack(evaluation_q, priority_q, closed, plan_prov, currentVertex, currentVertex);
+    EXPECT_FALSE(std::find_if(priority_q.begin(), priority_q.end(), 
+        [this](vertexDescriptor v){return v==1;})==priority_q.end());
+}
+
+// TEST_F(ConfiguratorTest, BacktrackCollision){
+//     init(Task());
+//     dummy_vertex(MOVING_VERTEX);
+//     make_v1_crashed(currentVertex);
+//     transitionSystem[currentVertex].endPose.p.x=0.26;
+//     std::vector <vertexDescriptor> evaluation_q, priority_q, plan_prov;
+//     std::set <vertexDescriptor> closed;
+//     setPhi(transitionSystem[currentVertex]);
+//     EXPECT_TRUE(transitionSystem[currentVertex].visited());
+//     backtrack(evaluation_q, priority_q, closed, plan_prov, currentVertex, currentVertex);
+//     EXPECT_FALSE(std::find_if(priority_q.begin(), priority_q.end(), 
+//         [this](vertexDescriptor v){return v==1;})==priority_q.end());
+// }
 
 TEST_F(HighLevelTestB2B, Init){
     EXPECT_TRUE(configurator->get_motor_interface()!=(NULL));
