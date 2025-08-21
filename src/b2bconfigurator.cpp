@@ -51,9 +51,9 @@ void B2BConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, st
 		for (int i=split.size()-1; i>=0; i--){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
 			if (i<1){
-				auto ep=gt::getMostLikely(transitionSystem, inEdges(split_v), iteration);
-				if (ep.first){
-					src=ep.second.m_source;
+				auto likelyEdge=gt::getMostLikely(transitionSystem, inEdges(split_v), iteration);
+				if (likelyEdge.first){
+					src=likelyEdge.second.m_source;
 				}
 				else{
 					src=split_v;
