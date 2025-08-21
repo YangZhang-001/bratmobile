@@ -151,14 +151,13 @@ TEST_P(DebugB2BTestSplit, splitTask){
     b2Transform t=b2Transform(b2Vec2(0.9, 0), b2Rot(0));
     vertexDescriptor v1=TransitionSystem::null_vertex();
     int solution=2;
+    dummy_vertex(MOVING_VERTEX);
     if (std::get<0>(GetParam())){
-        v1=make_successful(MOVING_VERTEX, std::get<1>(GetParam())).m_target;   
-        //if (std::get<1>(GetParam())==DEFAULT){
+        v1=make_successful(currentVertex, std::get<1>(GetParam())).m_target;   
             solution=1; //default direction is not split
-        //} 
     }
     else{
-        v1=make_v1_crashed(MOVING_VERTEX, b2Transform_zero, t, t).m_target;
+        v1=make_v1_crashed(currentVertex, b2Transform_zero, t, t).m_target;
     }
     vertex_set_direction(v1, std::get<1>(GetParam()));
     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
@@ -304,10 +303,10 @@ TEST_F(DebugB2BTest, ClearVoyance){
 TEST_F(DebugB2BTest, BacktrackCollision){
     init(Task());
     dummy_vertex(MOVING_VERTEX);
-    make_v1_crashed(currentVertex);
-    std::vector <vertexDescriptor> evaluation_q, priority_q, plan_prov;
+    vertexDescriptor v1= make_v1_crashed(currentVertex).m_target;
+    std::vector <vertexDescriptor> evaluation_q={v1}, priority_q, plan_prov;
     std::set <vertexDescriptor> closed;
-    setPhi(transitionSystem[currentVertex]);
+    setAllVisited();
     EXPECT_TRUE(transitionSystem[currentVertex].visited());
     backtrack(evaluation_q, priority_q, closed, plan_prov, currentVertex, currentVertex);
     EXPECT_FALSE(std::find_if(priority_q.begin(), priority_q.end(), 

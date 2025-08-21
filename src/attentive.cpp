@@ -219,7 +219,6 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 			split =splitTask(v, DEFAULT, ep.second.m_source);
 		}
 		correctQueue(split, module_src, startRecycle, plan_prov.size());
-		// for (int i=0; i<split.size(); i++){ //
 		for (int i=split.size()-1; i>=0; i--){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
 			if (i<1){
