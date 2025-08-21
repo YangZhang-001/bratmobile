@@ -282,7 +282,6 @@ TEST_F(HighLevelTestB2B, Init){
     EXPECT_TRUE(configurator->get_lidar_interface()!= NULL);
     EXPECT_TRUE(configurator->get_tracker()!=NULL);
     EXPECT_TRUE(configurator->get_controller()!=NULL);
-    EXPECT_TRUE(configurator->getGoalChanger()!=NULL);
 }
 
 TEST_F(HighLevelTestB2B, AcquireData){

@@ -15,7 +15,6 @@ TEST_F(HighLevelTest, AcquireData){
     EXPECT_GT(ci.data2fp.size(),0);
     configurator->set_data2fp(ci.data2fp);
     EXPECT_GT(configurator->data_size(),0);
-
 }
 
 TEST(Initialisation, InitialMap){
