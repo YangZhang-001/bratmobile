@@ -19,6 +19,7 @@ TEST_F(DebugB2BTest, ExplorePlan){
     b2World world(GRAVITY);
     iteration++;
     B2BConfigurator::explore_plan(world);
+    EXPECT_FALSE(tracker==NULL);
     delete tracker;
 }
 
