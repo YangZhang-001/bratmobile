@@ -35,7 +35,7 @@ protected:
 	TransitionSystem transitionSystem=TransitionSystem(1);
 	WorldBuilder worldBuilder;
 	vertexDescriptor currentVertex=MOVING_VERTEX;
-	edgeDescriptor movingEdge=edgeDescriptor(), currentEdge=edgeDescriptor();
+	edgeDescriptor movingEdge=edgeDescriptor(), currentEdge=movingEdge;
 
 	public:
 

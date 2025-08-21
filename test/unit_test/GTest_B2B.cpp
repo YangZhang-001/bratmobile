@@ -15,11 +15,11 @@ TEST_F(DebugB2BTest, Explorer){
 
 TEST_F(DebugB2BTest, ExplorePlan){
     register_tracker(new ClosedLoop_Tracker);
-    B2BConfigurator::init();
+    init();
+    EXPECT_FALSE(tracker==NULL);
     b2World world(GRAVITY);
     iteration++;
-    B2BConfigurator::explore_plan(world);
-    EXPECT_FALSE(tracker==NULL);
+    explore_plan(world);
     delete tracker;
 }
 

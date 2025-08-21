@@ -21,7 +21,7 @@ void Configurator::init(Task _task){
 	//MOVING_VERTEX=boost::add_vertex(transitionSystem);
 	transitionSystem[MOVING_VERTEX].Di=controlGoal.disturbance;
 	currentVertex=MOVING_VERTEX;
-	//boost::add_edge(MOVING_VERTEX, currentVertex,transitionSystem);
+	boost::add_edge(MOVING_VERTEX, currentVertex,transitionSystem);
 	currentTask.action.setVelocities(0,0);
 	currentTask.set_change(1);
 	gt::fill(simResult(), &transitionSystem[MOVING_VERTEX]);
@@ -55,16 +55,14 @@ bool Configurator::Spawner(){
 	b2World world= b2World(GRAVITY);
 	char name[256];
 	worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero, WorldBuilder::PARTITION));
-	// printf("got features =%i\n", worldBuilder.world_objects.size());	
 	auto endTime =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>d_getFeatures= now- endTime; //in seconds
 	float duration_getFeatures=abs(float(d_getFeatures.count())/1000); //express in seconds
-	// printf("built wolrd in %f\n", duration);
 	explore_plan(world);
 	endTime =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>d_withExplore= now- endTime; //in seconds
 	float duration_withExplore=abs(float(d_withExplore.count())/1000); //express in seconds
-	//FORMAT: vertices	bodies	total_dur	just_worldbuilding
+	//FORMAT: vertices	bodies tasks	total_dur	just_worldbuilding
 	if (logger){
 		logger->log("%i\t%i\t%i\t%0.6f\t%0.6f\n", transitionSystem.m_vertices.size(), worldBuilder.bodies, simulatedTasks, duration_withExplore, duration_getFeatures);
 	}
