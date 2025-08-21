@@ -21,7 +21,7 @@ void Configurator::init(Task _task){
 	//MOVING_VERTEX=boost::add_vertex(transitionSystem);
 	transitionSystem[MOVING_VERTEX].Di=controlGoal.disturbance;
 	currentVertex=MOVING_VERTEX;
-	boost::add_edge(MOVING_VERTEX, currentVertex,transitionSystem);
+	//boost::add_edge(MOVING_VERTEX, currentVertex,transitionSystem);
 	currentTask.action.setVelocities(0,0);
 	currentTask.set_change(1);
 	gt::fill(simResult(), &transitionSystem[MOVING_VERTEX]);

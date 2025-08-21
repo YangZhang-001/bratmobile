@@ -550,13 +550,13 @@ void AttentiveConfigurator::pre_explore(){
 	if (boost::out_degree(MOVING_VERTEX, transitionSystem)>0){
 		boost::remove_out_edge_if(MOVING_VERTEX, is_not_v(currentVertex), transitionSystem);
 	}	
-		//transitionSystem[MOVING_VERTEX].Di=currentTask.get_disturbance();
-		transitionSystem[MOVING_VERTEX].Di=transitionSystem[currentVertex].Di;
-		transitionSystem[MOVING_VERTEX].outcome=simResult::successful;
-		movingEdge=boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
-	//  if (currentTask.get_change()){
-	//  	transitionSystem[movingEdge].step=currentTask.getMotorStep();
-	//  }
+	//transitionSystem[MOVING_VERTEX].Di=currentTask.get_disturbance();
+	transitionSystem[MOVING_VERTEX].Di=transitionSystem[currentVertex].Di;
+	transitionSystem[MOVING_VERTEX].outcome=simResult::successful;
+	movingEdge=boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
+//  if (currentTask.get_change()){
+//  	transitionSystem[movingEdge].step=currentTask.getMotorStep();
+//  }
 }
 
 
