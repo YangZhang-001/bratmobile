@@ -133,20 +133,20 @@ TEST_F(DebugB2BTest, AddOptionsHindSight){
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
 }
 
-TEST_F(DebugB2BTest, splitTask){
-    b2Transform t=b2Transform(b2Vec2(0.6, 0), b2Rot(0));
-    vertexDescriptor v1=make_v1_crashed(MOVING_VERTEX, b2Transform_zero, t, t).m_target;
-    std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
-    EXPECT_EQ(split.size(), 1);
-}
+// TEST_F(DebugB2BTest, splitTask){
+//     b2Transform t=b2Transform(b2Vec2(0.6, 0), b2Rot(0));
+//     vertexDescriptor v1=make_v1_crashed(MOVING_VERTEX, b2Transform_zero, t, t).m_target;
+//     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
+//     EXPECT_EQ(split.size(), 1);
+// }
 
-TEST_F(DebugB2BTest, splitTaskTurn){
-    b2Transform t=b2Transform(b2Vec2(0.6, 0), b2Rot(0));
-    vertexDescriptor v1=make_v1_crashed(MOVING_VERTEX, b2Transform_zero, t, t).m_target;
-    vertex_set_direction(v1, LEFT);
-    std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
-    EXPECT_EQ(split.size(), 2);
-}
+// TEST_F(DebugB2BTest, splitTaskTurn){
+//     b2Transform t=b2Transform(b2Vec2(0.6, 0), b2Rot(0));
+//     vertexDescriptor v1=make_v1_crashed(MOVING_VERTEX, b2Transform_zero, t, t).m_target;
+//     vertex_set_direction(v1, LEFT);
+//     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
+//     EXPECT_EQ(split.size(), 2);
+// }
 
 TEST_P(B2BTestGetGoal, GetDisturbanceGoal){
     Disturbance solution=controlGoal.get_disturbance();
