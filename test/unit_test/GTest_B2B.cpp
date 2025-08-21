@@ -147,20 +147,20 @@ TEST_F(DebugB2BTest, AddOptionsHindSight){
 class DebugB2BTestSplit : public DebugB2BTest, public ::testing::WithParamInterface<std::tuple<bool, Direction>> {
 };
 
-TEST_P(DebugB2BTestSplit, splitTaskCrashed){
-    b2Transform t=b2Transform(b2Vec2(0.6, 0), b2Rot(0));
+TEST_P(DebugB2BTestSplit, splitTask){
+    b2Transform t=b2Transform(b2Vec2(0.9, 0), b2Rot(0));
     vertexDescriptor v1=TransitionSystem::null_vertex();
     int solution=2;
     if (std::get<0>(GetParam())){
         v1=make_successful(MOVING_VERTEX, std::get<1>(GetParam())).m_target;   
-        if (std::get<1>(GetParam())==DEFAULT){
+        //if (std::get<1>(GetParam())==DEFAULT){
             solution=1; //default direction is not split
-        } 
+        //} 
     }
     else{
-        vertexDescriptor v1=make_v1_crashed(MOVING_VERTEX, b2Transform_zero, t, t).m_target;
-        vertex_set_direction(v1, std::get<1>(GetParam()));
+        v1=make_v1_crashed(MOVING_VERTEX, b2Transform_zero, t, t).m_target;
     }
+    vertex_set_direction(v1, std::get<1>(GetParam()));
     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
     EXPECT_EQ(split.size(), solution);
 }
