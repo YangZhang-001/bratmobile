@@ -5,6 +5,16 @@ TEST_F(DebugB2BTest, PreExplore){
     pre_explore();
 }
 
+
+TEST_F(DebugB2BTest, ExplorePlan){
+    register_tracker(new ClosedLoop_Tracker);
+    B2BConfigurator::init();
+    b2World world(GRAVITY);
+    iteration++;
+    B2BConfigurator::explore_plan(world);
+    delete tracker;
+}
+
 TEST_F(DebugB2BTest, TSCleanup){
     B2BConfigurator::init();
     transitionSystem=TransitionSystem(5);
@@ -21,13 +31,6 @@ TEST_F(DebugB2BTest, TSCleanup){
     EXPECT_EQ(boost::in_degree(1, transitionSystem), 1);
     EXPECT_EQ(boost::out_degree(2, transitionSystem), 1); //edge is preserved
     EXPECT_EQ(boost::out_degree(0, transitionSystem), 3);
-}
-
-TEST_F(DebugB2BTest, ExplorePlan){
-    B2BConfigurator::init();
-    iteration++;
-    b2World world(GRAVITY);
-    B2BConfigurator::explore_plan(world);
 }
 
 TEST(FrontierCrashed, predicate){
