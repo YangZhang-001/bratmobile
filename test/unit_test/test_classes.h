@@ -321,6 +321,10 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
      */
     void explorePlan(b2World & world){explore_plan(world);}
 
+    GoalChanger * getGoalChanger()const{
+        return goal_changer;
+    }
+
 };
 
 class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator{
@@ -349,9 +353,6 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
     using B2BConfigurator::closeVertex;
     using B2BConfigurator::backtrack;
     using B2BConfigurator::explorer;
-    using B2BConfigurator::ts_cleanup;
-    using B2BConfigurator::pre_explore;
-    using B2BConfigurator::ci;
     
 
     public:

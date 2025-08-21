@@ -5,6 +5,13 @@ TEST_F(DebugB2BTest, PreExplore){
     pre_explore();
 }
 
+TEST_F(DebugB2BTest, Explorer){
+    register_tracker(new ClosedLoop_Tracker);
+    iteration++;
+    b2World world(GRAVITY);
+    explorer(MOVING_VERTEX, transitionSystem, world);
+    delete tracker;
+}
 
 TEST_F(DebugB2BTest, ExplorePlan){
     register_tracker(new ClosedLoop_Tracker);
@@ -270,6 +277,22 @@ TEST_F(DebugB2BTest, ClearVoyance){
 
 }
 
+TEST_F(HighLevelTestB2B, Init){
+    EXPECT_TRUE(configurator->get_motor_interface()!=(NULL));
+    EXPECT_TRUE(configurator->get_lidar_interface()!= NULL);
+    EXPECT_TRUE(configurator->get_tracker()!=NULL);
+    EXPECT_TRUE(configurator->get_controller()!=NULL);
+    EXPECT_TRUE(configurator->getGoalChanger()!=NULL);
+}
+
+TEST_F(HighLevelTestB2B, AcquireData){
+    di.set_folder("../cul_de_sac/");
+    di.newScanAvail();
+    EXPECT_TRUE(di.has_interface());
+    EXPECT_GT(ci.data2fp.size(),0);
+    configurator->set_data2fp(ci.data2fp);
+    EXPECT_GT(configurator->data_size(),0);
+}
 
 TEST_P(HighLevelTestB2B, FirstPlanB2B){
     Task goal;
