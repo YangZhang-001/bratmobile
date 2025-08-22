@@ -345,7 +345,7 @@ TEST_F(HighLevelTestB2B, AcquireData){
 
 TEST_P(HighLevelTestB2B, FirstPlanB2B){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-    Logger logger=makeLogger(info);
+    Logger logger=HighLevelTest::makeLogger(info);
     configurator->register_logger(&logger);
     Task goal;
     bool hasGoal=std::get<0>(GetParam()), success=false;
@@ -369,7 +369,7 @@ TEST_P(HighLevelTestB2B, FirstPlanB2B){
 
 TEST_P(HighLevelTestB2B, CheckPlanB2B){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-    Logger logger=makeLogger(info);
+    Logger logger=HighLevelTest::makeLogger(info);
     configurator->register_logger(&logger);
     Task goal;
     if (std::get<0>(GetParam())){
@@ -392,7 +392,7 @@ TEST_P(HighLevelTestB2B, CheckPlanB2B){
 
 TEST_P(HighLevelTestB2B, RecycleB2B){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-    Logger logger=makeLogger(info);
+    Logger logger=HighLevelTest::makeLogger(info);
     configurator->register_logger(&logger);
     Task goal;
     b2Transform shift=b2Transform_zero;
