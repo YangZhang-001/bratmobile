@@ -63,6 +63,7 @@ jobs:
             git add benchmark*/Recycle/*
             git add benchmark*/CheckPlan*/*
             git add benchmark*/CheckNoisyPlan*/*
+            git add benchmark*/BoxedIn*/*
             git commit -m "Update data from tests"
             git push origin main
             
