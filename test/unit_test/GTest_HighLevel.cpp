@@ -149,7 +149,7 @@ TEST_F(HighLevelTest, ParseIteration){
 }
 
 TEST_F(HighLevelTest, MakeLogger){
-    Logger logger=makeLogger();
+    Logger logger=makeLogger("");
     std::cout<<logger.get_fileName()<<std::endl;
 }
 
@@ -183,7 +183,7 @@ TEST_F(ReactToNoiseTest, CarveIteration){
 }
 
 TEST_F(ReactToNoiseTest, MakeLogger){
-    Logger logger=makeLogger();
+    Logger logger=makeLogger("");
     std::cout<<logger.get_fileName()<<std::endl;
 }
 

@@ -437,7 +437,13 @@ class HighLevelTestBase: public testing::Test{
     /**
      * @brief Make logger that dumps in different directories depending on test case and system architecture, only for test fixtures
     */
-    virtual Logger makeLogger(const char * testInfo="");
+    virtual Logger makeLogger();
+
+        /**
+     * @brief Make logger that dumps in different directories depending on test case and system architecture
+    */
+    virtual Logger makeLogger(const char * testInfo);
+
 
     /**
      * @brief Simulates execution by updating task state each scan
@@ -472,7 +478,7 @@ class HighLevelTest: public virtual HighLevelTestBase , public testing::WithPara
     /**
      * @brief Make logger that dumps in different directories depending on test case and system architecture
     */
-    virtual Logger makeLogger(const char * testInfo="")override;
+   // virtual Logger makeLogger(const char * testInfo);
 
 };
 
@@ -491,7 +497,7 @@ class HighLevelTestB2B:  public HighLevelTest{ //Base , public testing::WithPara
  * @brief For testing how the sysyem reacts when a plan s intrrupted
  * 
  */
-class HighLevelInterruptBase: public HighLevelTest{
+class HighLevelInterruptBase: public HighLevelTestBase{
     protected:
         /**
      * @brief Tests plan vs a scenario with one single point representing an obstacle interrupting a task
@@ -514,12 +520,11 @@ class HighLevelInterruptTestTest: public HighLevelInterruptBase, public testing:
 
 class ReactToNoiseTest: public HighLevelTestBase, public ::testing::WithParamInterface<std::tuple<bool, std::string, std::string, int>>{
     protected:
+    std::pair<std::string, std::string> carveScenario(std::string valueParam);
     /**
      * @brief Make logger that dumps in different directories depending on test case and system architecture
     */
-    Logger makeLogger(const char * testInfo="")override;
-
-    std::pair<std::string, std::string> carveScenario(std::string valueParam);
+    Logger makeLogger(const char * testInfo)override;
 
 
 };
@@ -943,13 +948,13 @@ void HighLevelTestBase::trackFor(int iteration){
 
 }
 
-Logger HighLevelTestBase::makeLogger(const char * testInfo){
+Logger HighLevelTestBase::makeLogger(){
     std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
     std::string testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
     return Logger(testCaseDir.c_str(), systemArchDir.c_str());
 }
 
-Logger HighLevelTest::makeLogger(const char * testInfo){
+Logger HighLevelTestBase::makeLogger(const char * testInfo){
     std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
     std::string addOn, dash("_"),  testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
     std::string scenario;
