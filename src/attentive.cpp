@@ -45,7 +45,7 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 		if (visited.first ||out.empty()){
 			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex
 				Disturbance Di= g[v].Di;
-				if (std::pair <bool, edgeDescriptor> visitedDefault=gt::visitedEdge(gt::outEdges(g, v, DEFAULT), g, v); visitedDefault.first){
+				if (std::pair <bool, edgeDescriptor> visitedDefault=gt::visitedEdge(gt::outEdges(g, v, DEFAULT), g, v); visitedDefault.first && (g[v].isTurning() && isTurning(dir))){
 					if (visitedDefault.first && g[visitedDefault.second.m_target].outcome==simResult::crashed){
 						Di= g[visitedDefault.second.m_target].Di;
 					}
