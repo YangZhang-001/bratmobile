@@ -435,7 +435,7 @@ class HighLevelTestBase: public testing::Test{
     std::string parseIteration(std::string valueParam);
 
     /**
-     * @brief Make logger that dumps in different directories depending on test case and system architecture
+     * @brief Make logger that dumps in different directories depending on test case and system architecture, only for test fixtures
     */
     virtual Logger makeLogger(const char * testInfo="");
 
@@ -468,6 +468,11 @@ class HighLevelTestBase: public testing::Test{
 class HighLevelTest: public virtual HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
     public:
     HighLevelTest(){}
+
+    /**
+     * @brief Make logger that dumps in different directories depending on test case and system architecture
+    */
+    virtual Logger makeLogger(const char * testInfo="")override;
 
 };
 
@@ -939,6 +944,12 @@ void HighLevelTestBase::trackFor(int iteration){
 }
 
 Logger HighLevelTestBase::makeLogger(const char * testInfo){
+    std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
+    std::string testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
+    return Logger(testCaseDir.c_str(), systemArchDir.c_str());
+}
+
+Logger HighLevelTest::makeLogger(const char * testInfo){
     std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
     std::string addOn, dash("_"),  testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
     std::string scenario;
