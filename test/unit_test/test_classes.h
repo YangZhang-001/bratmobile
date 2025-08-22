@@ -476,7 +476,7 @@ class HighLevelTest: public virtual HighLevelTestBase , public testing::WithPara
 
 };
 
-class HighLevelTestB2B:  public HighLevelTestBase , public testing::WithParamInterface<std::tuple<bool, std::string, int>>{    
+class HighLevelTestB2B:  public HighLevelTest{ //Base , public testing::WithParamInterface<std::tuple<bool, std::string, int>>    
     public:
     HighLevelTestB2B(){};
 
