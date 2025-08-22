@@ -183,16 +183,17 @@ TEST_F(ConfiguratorTestGetObstacle, AvoidNoGoal){
 }
 
 TEST_F(ConfiguratorTest, GetDisturbance180Turn){
-    init();
+    init(generateGoalTask());
     b2World world(GRAVITY);
     BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05);
     bf.attention=1;
-    auto v1=make_successful(MOVING_VERTEX).m_target;
+    auto v1=boost::add_vertex(transitionSystem);
+    boost::add_edge(currentVertex, v1, transitionSystem);
     vertex_set_direction(v1, LEFT);
     transitionSystem[v1].Di=Disturbance(bf); //current task was avoiding
     transitionSystem[v1].Di.validate();
-    vertex_options_push_back(MOVING_VERTEX, LEFT);
-    Disturbance Di= getDisturbance(transitionSystem, MOVING_VERTEX, world, LEFT, transitionSystem[MOVING_VERTEX].endPose);
+    vertex_options_push_back(v1, LEFT);
+    Disturbance Di= getDisturbance(transitionSystem, v1, world, LEFT, transitionSystem[v1].endPose);
     EXPECT_EQ(Di.bf.pose.p.x, bf.pose.p.x);
     EXPECT_EQ(Di.bf.pose.p.y, bf.pose.p.y);
     EXPECT_EQ(Di.bf.pose.q.GetAngle(), bf.pose.q.GetAngle());
