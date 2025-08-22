@@ -126,15 +126,22 @@ static void run(Configurator *);
  */
 void change_task();
 
-//updates environment representation with time
 /**
+ * @brieF updates the cognitive map by applying a 2D transform
 *@param g the cognitive map
 *@param _deltaPose the transform to apply
 */
 void update_graph(TransitionSystem& g, const b2Transform & _deltaPose);
 
 //round angle to a divisor of PI/2
-float approximate_angle(const float &, const Direction &, const simResult::resultType &);
+/**
+ * @brief Approximating angle to divisors of pi/2
+ * @param angle the angle to approximate
+ * @param d the direction of the robot
+ * @param outcome the outcome of the last simulation
+ * 
+ */
+float approximate_angle(float angle, Direction d, simResult::resultType outcome));
 
 
 void adjust_goal_expectation();

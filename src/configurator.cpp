@@ -206,10 +206,11 @@ void Configurator::run(Configurator * c){
 	}
 
 }
-float Configurator::approximate_angle(const float & angle, const Direction & d, const simResult::resultType & outcome){
-	float result=angle, decimal, integer;
+float Configurator::approximate_angle(float angle, Direction d, simResult::resultType outcome){
+	float result=angle, decimal=0, integer=0;
 	if ((d==LEFT || d==RIGHT)&& outcome!=simResult::crashed){
-		float ratio= angle/ANGLE_RESOLUTION;
+		//float ratio= angle/ANGLE_RESOLUTION;
+		float ratio= angle/M_PI_4;
 		decimal=std::modf(ratio, &integer);
 		if (fabs(decimal)>=0.5){
 			if (integer<0){
