@@ -621,7 +621,8 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 }
 
 std::pair<State, Edge> AttentiveConfigurator::simulation_setup(b2World& w, Task & t, vertexDescriptor v0, b2Transform shift, b2Transform &start, std::vector<Direction>v0_options){
-	start=transitionSystem[v0].endPose +shift;
+	//start=transitionSystem[v0].endPose +shift;
+	start=b2Mul(shift, transitionSystem[v0].endPose);
 	Disturbance Di=getDisturbance(transitionSystem, v0, w, v0_options[0], start);
 	t = Task(Di, v0_options[0], start, true);//need to update end crit
 	std::pair <State, Edge> sk(State(start, Di, v0_options[0]), Edge());

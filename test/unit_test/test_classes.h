@@ -329,26 +329,6 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
 
 class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator{
     protected:
-
-    // Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start) override{
-    //     return B2BConfigurator::getDisturbance(g, v, world, dir, start);
-    // }
-
-    // bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v) override{
-    //     return B2BConfigurator::closeVertex(closed, v);
-    // }
-
-    // std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex()) override{
-    //     return B2BConfigurator::splitTask(v, d, src);
-    // }
- 
-    // std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w)override{
-    //     return B2BConfigurator::explorer(v, g, w);
-    // }
-
-    // bool Spawner()override{
-    //     return B2BConfigurator::Spawner();
-    // }
     using B2BConfigurator::getDisturbance;
     using B2BConfigurator::closeVertex;
     using B2BConfigurator::splitTask;
@@ -366,15 +346,7 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
 };
 
 
-class DebugB2BTest: public virtual DebugB2B, public testing::Test{
-    protected: 
-    // void SetUp() override {
-
-    // }
-    // void TearDown() override {
-    //     transitionSystem.clear();
-    // }
-};
+class DebugB2BTest: public virtual DebugB2B, public testing::Test{};
 
 
 class WiseControllerTest: public Wise_Controller, public ::testing::Test{};
