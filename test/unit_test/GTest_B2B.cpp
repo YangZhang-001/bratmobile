@@ -344,6 +344,9 @@ TEST_F(HighLevelTestB2B, AcquireData){
 }
 
 TEST_P(HighLevelTestB2B, FirstPlanB2B){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
     Task goal;
     bool hasGoal=std::get<0>(GetParam()), success=false;
     if (hasGoal){
@@ -423,6 +426,7 @@ TEST_P(HighLevelTestB2B, RecycleB2B){
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     EXPECT_TRUE(planned_to_goal);
 }
+
 
 INSTANTIATE_TEST_CASE_P(CulDeSac, HighLevelTestB2B, ::testing::Combine( ::testing::Values(false), ::testing::Values(std::string("../cul_de_sac/")), ::testing::Values(2, 3, 4, 17, 36)));
                                                                   

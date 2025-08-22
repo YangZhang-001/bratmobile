@@ -189,6 +189,9 @@ TEST_F(ReactToNoiseTest, MakeLogger){
 
 
 TEST_P(HighLevelTest, FirstPlan){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
     Task goal;
     bool hasGoal=std::get<0>(GetParam()), success=false;
     if (hasGoal){

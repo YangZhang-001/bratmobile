@@ -378,6 +378,21 @@ class CreativeWorldBuilder: public WorldBuilder{
      */
     static std::vector <BodyFeatures> makeCulDeSac(float width, float halfLength, b2Vec2 shift=b2Vec2(0,0));
 
+    /**
+     * @brief Makes a scenario where task splitting will fail
+     * 
+     *              ||
+     * 
+     *              ROBOT --->      || 
+     *        
+     *              ||    
+     *          
+     *                             x=0.3m   
+     * 
+     * @return std::vector <BodyFeatures> 
+     */
+    std::vector <BodyFeatures> makeTricky();
+
     void addObject(const BodyFeatures& bf){world_objects.push_back(bf);}
 };
 
@@ -767,6 +782,16 @@ std::vector <BodyFeatures> CreativeWorldBuilder::makeCulDeSac(float width, float
     return std::vector <BodyFeatures>({front, Lside, Rside});
 
 }
+
+std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(){
+    BodyFeatures front, Lside, Rside;
+    front.pose.p=b2Vec2(0.3, 0);
+    Lside.pose.p=b2Vec2(0, 0.09);
+    Rside.pose.p=b2Vec2(0, -0.09);
+    world_objects= std::vector <BodyFeatures>({front, Lside, Rside});
+    return world_objects;
+}
+
 
 
 
