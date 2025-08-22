@@ -270,6 +270,11 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
 
 }
 
+
+/**
+ * @brief The robot is boxed into a cul de sac
+ * 
+ */
 TEST_F(HighLevelTest, BoxedIn){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
     Logger logger=HighLevelTestBase::makeLogger();
@@ -285,6 +290,10 @@ TEST_F(HighLevelTest, BoxedIn){
     EXPECT_TRUE(planned_to_goal);
 }
 
+/**
+ * @brief The robot cannot pass in a small space between two obstacles and goes around
+ * 
+ */
 TEST_F(HighLevelTest, TrickyScenario){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
     Logger logger=makeLogger(info);
@@ -297,7 +306,7 @@ TEST_F(HighLevelTest, TrickyScenario){
     configurator->explorePlan(world);
     EXPECT_GT(configurator->get_plan().size(), 0);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-    EXPECT_FALSE(planned_to_goal);
+    EXPECT_TRUE(planned_to_goal);
 }
 
 

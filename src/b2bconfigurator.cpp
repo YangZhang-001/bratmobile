@@ -52,37 +52,12 @@ std::vector <vertexDescriptor> B2BConfigurator::splitTask(vertexDescriptor v, Di
 	return split;
 }
 
-// void B2BConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){
-// 	for (vertexDescriptor v:evaluation_q){
-// 		std::pair<bool, edgeDescriptor> ep(false, edgeDescriptor());
-// 		std::vector <vertexDescriptor> split = task_vertices(v, &ep);
-		 
-// 		Direction direction= transitionSystem[ep.second.m_target].direction;
-// 		correctQueue(split, module_src, startRecycle, plan_prov.size());
-// 		for (int i=split.size()-1; i>=0; i--){ //
-// 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
-// 			if (i<1){
-// 				auto likelyEdge=gt::getMostLikely(transitionSystem, inEdges(split_v), iteration);
-// 				if (likelyEdge.first){
-// 					src=likelyEdge.second.m_source;
-// 				}
-// 				else{
-// 					src=split_v;
-// 				}
-// 			}
-// 			else{
-// 				src=split[i-1];
-// 			}
-// 			EndedResult local_er=estimateCost(transitionSystem[split_v],transitionSystem[split_v].start,direction, controlGoal);
-// 			transitionSystem[split_v].phi=evaluationFunction(local_er, split_v, plan_prov);
-// 			applyTransitionMatrix(split_v, direction, local_er.ended,src, plan_prov);
-// 			addToPriorityQueue(split_v, priority_q, closed);
-// 			src=split_v;
-// 		}
-// 	}
-// 	evaluation_q.clear();
-
-// }
+void B2BConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){
+	AttentiveConfigurator::backtrack(evaluation_q, priority_q, closed, plan_prov, module_src, startRecycle);
+	for (ClearVoyance::DisturbanceLookahead & dl: clearvoyance.getLookaheads()){
+		addToPriorityQueue(dl.source, priority_q, closed);
+	}
+}
 
 // std::vector <vertexDescriptor> B2BConfigurator::task_vertices( vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep){
 // 	std::vector <vertexDescriptor> result= {v};
