@@ -491,7 +491,7 @@ class HighLevelTestB2B:  public HighLevelTest{ //Base , public testing::WithPara
  * @brief For testing how the sysyem reacts when a plan s intrrupted
  * 
  */
-class HighLevelInterruptBase: public HighLevelTestBase{
+class HighLevelInterruptBase: public HighLevelTest{
     protected:
         /**
      * @brief Tests plan vs a scenario with one single point representing an obstacle interrupting a task
