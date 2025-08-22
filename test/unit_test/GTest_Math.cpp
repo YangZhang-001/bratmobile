@@ -32,7 +32,7 @@ TEST_F(ConfiguratorTest, SimVsCalc){
     simResult result=task.bumping_that(world, 1, robot.body());
     float omega10Hz=task.getAction().getOmega(0.1); //angular vel/0.1s
     float theta=omega10Hz*result.step;
-    EXPECT_EQ(result.endPose.q.GetAngle(), theta);
+    EXPECT_NEAR(result.endPose.q.GetAngle(), theta, 0.00001);
     EXPECT_NEAR(approximate_angle(result.endPose.q.GetAngle(), LEFT, result.resultCode), M_PI_2, 0.00001);
     }
 
