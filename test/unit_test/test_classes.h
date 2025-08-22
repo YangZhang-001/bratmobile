@@ -391,7 +391,7 @@ class CreativeWorldBuilder: public WorldBuilder{
      * 
      * @return std::vector <BodyFeatures> 
      */
-    std::vector <BodyFeatures> makeTricky();
+    static std::vector <BodyFeatures> makeTricky();
 
     void addObject(const BodyFeatures& bf){world_objects.push_back(bf);}
 };
@@ -788,8 +788,7 @@ std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(){
     front.pose.p=b2Vec2(0.3, 0);
     Lside.pose.p=b2Vec2(0, 0.09);
     Rside.pose.p=b2Vec2(0, -0.09);
-    world_objects= std::vector <BodyFeatures>({front, Lside, Rside});
-    return world_objects;
+    return std::vector <BodyFeatures>({front, Lside, Rside});
 }
 
 
