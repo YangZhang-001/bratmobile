@@ -23,5 +23,17 @@ TEST_P(LinearTransformationTest, rotateTransform){
     EXPECT_EQ(tAdd.q.GetAngle(), tMul.q.GetAngle());
 }  
 
+TEST_F(ConfiguratorTest, SimVsCalc){
+    Disturbance d(AVOID, b2Vec2(0.5, 0));
+    Task task(d,LEFT);
+    world_objects().emplace(world_objects().begin(), d.bodyFeatures());
+    b2World world(b2Vec2(0, 0));
+    Robot robot(&world);
+    simResult result=task.bumping_that(world, 1, robot.body());
+    float omega10Hz=task.getAction().getOmega(0.1); //angular vel/0.1s
+    float theta=omega10Hz*result.step;
+    EXPECT_EQ(result.endPose.q.GetAngle(), theta);
+    }
+
 
 INSTANTIATE_TEST_CASE_P(Angles, LinearTransformationTest, testing::Values(0, M_PI_4, M_PI/6, M_PI_2, M_PI_2+M_PI/6,-M_PI_4, -M_PI/6, -M_PI_2, -M_PI_2-M_PI/6 ));

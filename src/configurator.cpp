@@ -85,7 +85,9 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), &controlGoal.disturbance);
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
 	//approximate angle to avoid rounding errors
-	float approximated_angle=approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode);
+	b2Transform travelTransform=b2MulT(result.endPose, t.start);
+	//float approximated_angle=approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode);
+	float approximated_angle=approximate_angle(travelTransform.q.GetAngle(), t.direction, result.resultCode);
 	result.endPose.q.Set(approximated_angle);
 	return result;
 	}
