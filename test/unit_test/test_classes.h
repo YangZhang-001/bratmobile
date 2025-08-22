@@ -475,11 +475,14 @@ class HighLevelTest: public virtual HighLevelTestBase , public testing::WithPara
     public:
     HighLevelTest(){}
 
-    /**
-     * @brief Make logger that dumps in different directories depending on test case and system architecture
-    */
-   // virtual Logger makeLogger(const char * testInfo);
+    bool has180Turn(std::vector<vertexDescriptor> plan){
+        for (int i=1; i<plan.size(); i++){
+            if (configurator->get_ts()[plan[i]].isTurning() && configurator->get_ts()[plan[i-1]].isTurning()){
+                return true;
+            }
 
+        }
+    }
 };
 
 class HighLevelTestB2B:  public HighLevelTest{ //Base , public testing::WithParamInterface<std::tuple<bool, std::string, int>>    

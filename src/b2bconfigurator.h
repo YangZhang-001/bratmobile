@@ -1,7 +1,10 @@
 #ifndef B2BCONFIGURATOR_H
 #define B2BCONFIGURATOR_H
 #include "attentive.h"
-
+/**
+ * @brief Predicate assessing whether a frontier is a crashed state
+ * 
+ */
 struct FrontierCrashed{
     FrontierCrashed() = default;
 
@@ -16,6 +19,11 @@ struct FrontierCrashed{
     Direction direction=UNDEFINED;
 };
 
+/**
+ * @brief B2BConfigurator is a class that extends the AttentiveConfigurator to eliminate the Task splitting in fixed sized steps
+ * but finds waypoints by propagating disturbances back in time and across branches of the transitionSystem
+ * 
+ */
 class B2BConfigurator : public virtual AttentiveConfigurator {
 public:
     B2BConfigurator() = default;
@@ -26,14 +34,49 @@ public:
 
 protected:
 
+    /**
+     * @brief Closes a vertex but the maximum out edges number for a default state to have is 5 instead of 3
+     * 
+     * @param closed 
+     * @param v 
+     */
     bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v) override;
 
     //std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve) override;
 
+    /**
+     * @brief Doesn't split the task, just returns the vertex of the task at hand; if Task fails or 
+     * it's currently executing, it returns the source vertex for the task aswell
+     * 
+     * @param v vertex of the task
+     * @param d direction of the task that are allowed to split (not used)
+     * @param src source of the task
+     * @return std::vector <vertexDescriptor> 
+     */
     std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex()) override;
 
+    /**
+     * @brief Same as AttentiveConfigurator::backtrack, but also adds vertex to priority queue if the vertex is in the clearvoyance
+     * 
+     * @param evaluation_q 
+     * @param priority_q 
+     * @param closed 
+     * @param plan_prov 
+     * @param module_src 
+     * @param startRecycle 
+     */
    virtual void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src=MOVING_VERTEX, vertexDescriptor startRecycle=MOVING_VERTEX)override;
 
+    /**
+     * @brief Uses clearvoyance to get the disturbance for a vertex if needed
+     * 
+     * @param g 
+     * @param v 
+     * @param world 
+     * @param dir 
+     * @param start 
+     * @return Disturbance 
+     */
     virtual Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start) override;
 
     //virtual std::vector <vertexDescriptor> task_vertices(vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep=NULL);
@@ -134,6 +177,14 @@ class ClearVoyance{
     std::vector<DisturbanceLookahead> lookaheads;
 }clearvoyance;
 
+/**
+ * @brief If the frontier is a default state and its source is a turning task, it adds an additional default option in hindsight if the state crashed
+ * 
+ * @param v source vertex (options are added to this vertex in hindsight)
+ * @param v0 connecting vertex (has to be LEFT or RIGHT task for DEFAULT option to be added)
+ * @param v1 frontier state (has to be DEFAULT and crashed if option is to be added)
+ * @param clearvoyance 
+ */
 void addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1, ClearVoyance & clearvoyance);
 };
 
