@@ -274,7 +274,7 @@ std::vector<vertexDescriptor> B2BConfigurator::explorer(vertexDescriptor v, Tran
 				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
 				g[v1].phi=evaluationFunction(er, v1, plan_prov);
 				propagateD(v1, v0, &closed); //if v0 is a dummy vertex it propagates the disturbance
-				//addOptionsInHindsight(v, v0, v1, clearvoyance); //if default move fails, adds another default option to avoid this disturbance
+				addOptionsInHindsight(v, v0, v1, clearvoyance); //if default move fails, adds another default option to avoid this disturbance
 				v0_exp=v0;					
 				options=g[v0_exp].options;
 				v0=v1;
@@ -285,7 +285,8 @@ std::vector<vertexDescriptor> B2BConfigurator::explorer(vertexDescriptor v, Tran
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
-}while(g[bestNext].options.size()>0 && !er.ended);
+//}while(g[bestNext].options.size()>0 && !er.ended);
+}while(!priorityQueue.empty() && !er.ended);
 clearvoyance.reset();
 return plan_prov;
 }
