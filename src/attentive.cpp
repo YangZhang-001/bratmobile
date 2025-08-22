@@ -399,7 +399,9 @@ void AttentiveConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<v
 	auto found=closed.find(v); 
 	if(found==closed.end()){ //if not in closed
 		for (auto i =queue.begin(); i!=queue.end(); i++){
-			bool expanded=0;
+			if (*i==v){
+				return; //already in queue
+			}
 			if (transitionSystem[v].phi <abs(transitionSystem[*i].phi) ){
 				queue.insert(i, v);
 				return;
