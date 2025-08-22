@@ -946,6 +946,7 @@ void HighLevelTestBase::trackFor(int iteration){
 Logger HighLevelTestBase::makeLogger(const char * testInfo){
     std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
     std::string testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
+    testCaseDir+=std::string("/");
     return Logger(testCaseDir.c_str(), systemArchDir.c_str());
 }
 
