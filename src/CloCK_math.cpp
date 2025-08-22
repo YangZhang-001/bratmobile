@@ -103,3 +103,7 @@ void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev)
     result.p.x=result.q.c*distance;
     result.p.y=result.q.s*distance;
 }
+
+bool isTurning(Direction d) {
+    return d == LEFT || d == RIGHT;
+}

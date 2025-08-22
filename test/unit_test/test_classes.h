@@ -791,8 +791,8 @@ std::vector <BodyFeatures> CreativeWorldBuilder::makeCulDeSac(float width, float
 std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(){
     BodyFeatures front, Lside, Rside;
     front.pose.p=b2Vec2(0.3, 0);
-    Lside.pose.p=b2Vec2(0, 0.09);
-    Rside.pose.p=b2Vec2(0, -0.09);
+    Lside.pose.p=b2Vec2(0, 0.3);
+    Rside.pose.p=b2Vec2(0, -0.3);
     return std::vector <BodyFeatures>({front, Lside, Rside});
 }
 

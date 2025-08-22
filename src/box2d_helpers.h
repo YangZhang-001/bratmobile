@@ -44,7 +44,6 @@ void erase_from_vector(std::vector<I>& vec, const I& i){
 
 b2Transform InvMul(b2Transform const & t1, b2Transform const & t2);
 
-
 float angle_subtract(float a1, float a2);
 
 

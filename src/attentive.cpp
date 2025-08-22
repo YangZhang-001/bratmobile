@@ -42,32 +42,30 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 		std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
-			if (visited.first ||out.empty()){
-				if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && g[v].direction!=dir){
-					Task task(g[v].Di, DEFAULT, g[v].endPose, true);
-					Robot robot(&world);
-					robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
-					b2AABB box =worldBuilder.makeRobotSensor(robot.body(), controlGoal.get_disturbance_ptr());
-					b2Fixture *sensor =GetSensor(robot.body());
-					bool overlap=overlaps(robot.body(), &g[v].Di) && sensor;
-					world_cleanup(world);
-					if (overlap){
-						Disturbance Di= g[v].Di;
-						//Di.bf.pose+= start-g[v].endPose;
-						Di.bf.pose=b2Mul(invmul, Di.bf.pose);
-						return Di;
-					}
+		if (visited.first ||out.empty()){
+			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || g[v].isTurning() && isTurning(dir))){ //if Di is valid and not the same direction as the vertex
+				Task task(g[v].Di, DEFAULT, g[v].endPose, true);
+				Robot robot(&world);
+				robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
+				b2AABB box =worldBuilder.makeRobotSensor(robot.body(), controlGoal.get_disturbance_ptr());
+				b2Fixture *sensor =GetSensor(robot.body());
+				bool overlap=overlaps(robot.body(), &g[v].Di) && sensor;
+				world_cleanup(world);
+				if (overlap){
+					Disturbance Di= g[v].Di;
+					Di.bf.pose=b2Mul(invmul, Di.bf.pose);
+					return Di;
 				}
-				//check if Di was eliminated 
-				return controlGoal.get_disturbance();
 			}
-			else if (v==MOVING_VERTEX){
-				return g[v].Di;
-			}
+			//check if Di was eliminated 
+			return controlGoal.get_disturbance();
+		}
+		else if (v==MOVING_VERTEX){
+			return g[v].Di;
+		}
 	}
 	Disturbance Dn= g[v].Dn;
 	Dn.bf.pose=b2Mul(invmul, Dn.bf.pose);
-	//Dn.bf.pose+= start-g[v].endPose;
 	return Dn;
 	//return controlGoal.disturbance;
 }
