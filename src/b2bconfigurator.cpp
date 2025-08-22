@@ -130,7 +130,6 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		}
 		else if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid()){
 				CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
-				clearvoyance.pop(v);
 				return CVDi;
 			}
 		else  if (v==MOVING_VERTEX){
