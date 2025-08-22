@@ -412,22 +412,6 @@ void AttentiveConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<v
 }
 
 
-std::pair <edgeDescriptor, bool> AttentiveConfigurator::maxProbability(std::vector<edgeDescriptor> ev, TransitionSystem& g){
-	std::pair <edgeDescriptor, bool> result;
-	if (ev.empty()){
-		result.second=false;
-		return result;
-	}
-	result.first = ev[0];
-	result.second=true;
-	for (edgeDescriptor e :ev){
-		if (g[e].probability>g[result.first].probability){
-			result.first =e;
-		}
-	}
-	return result;
-}
-
 void AttentiveConfigurator::adjust_simulated_task(const vertexDescriptor &v, Task & t){
 	std::pair<edgeDescriptor, bool> ep= boost::edge(v, currentVertex, transitionSystem);
 	if(!ep.second){ //no tgt	
@@ -830,6 +814,12 @@ std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::p
 	}
 }
 return result;
+}
+
+Robot AttentiveConfigurator::makeRobot(b2World & world, const b2Transform & start){
+	Robot robot=Configurator::makeRobot(world, start);
+	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), Configurator::getGoalDisturbance());
+	return robot;
 }
 
 void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::vector <vertexDescriptor>& evaluationQueue, vertexDescriptor v1, TransitionSystem & g, vertexDescriptor v){

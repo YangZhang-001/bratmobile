@@ -198,12 +198,11 @@ static void MulT(const b2Transform& B, Task & task);
  */
 static void Mul(const b2Transform& B, Task &task);
 
+virtual Robot makeRobot(b2World& world, const b2Transform & start);
 
+Disturbance * getGoalDisturbance(){return &controlGoal.disturbance;}
 
 };
-
-
-
 
 /**
  * @brief Implements a Braitenberg vehicle: only simulates one Task at a time

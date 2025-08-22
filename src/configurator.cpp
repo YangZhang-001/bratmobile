@@ -70,6 +70,13 @@ bool Configurator::Spawner(){
 	return 1;
 }
 
+Robot Configurator::makeRobot(b2World& world, const b2Transform & start){
+	Robot robot(&world);
+	robot.body()->SetTransform(start.p, start.q.GetAngle());
+	return robot;
+
+};
+
 simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State src, 
 		//EVALUATE NODE()
 	simResult result;
@@ -78,11 +85,12 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 		distance= controlGoal.disturbance.getPosition().Length();
 	}
 	float remaining=distance/controlGoal.action.getLinearSpeed();
-	Robot robot(&w);
+	//Robot robot(&w);
+	Robot robot=makeRobot(w, t.start);
 	worldBuilder.add_body_count();
 	simulatedTasks++;
-	robot.body()->SetTransform(t.start.p, t.start.q.GetAngle());
-	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), &controlGoal.disturbance);
+	//robot.body()->SetTransform(t.start.p, t.start.q.GetAngle());
+	//b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), &controlGoal.disturbance);
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
 	//approximate angle to avoid rounding errors
 	b2Transform travelTransform=b2MulT(result.endPose, t.start);

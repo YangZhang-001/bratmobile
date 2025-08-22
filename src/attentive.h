@@ -84,14 +84,6 @@ void adjust_simulated_task(const vertexDescriptor&v,  Task& t);
 void adjust_rw_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);
 
 /**
- * @brief Return edge with maximum probablitit in a vector
- * 
- * @param ev vector of edges
- * @return std::pair <edgeDescriptor, bool> 
- */
-std::pair <edgeDescriptor, bool> maxProbability(std::vector<edgeDescriptor> ev, TransitionSystem&);
-
-/**
  * @brief Searches transition System for a match to a state provided. Continuous states are
  * matched, with the option to also match the discrete state (the direction)
  * 
@@ -362,6 +354,7 @@ void abandonPlan(std::vector<vertexDescriptor>& planProv, vertexDescriptor v0, v
  */
 virtual std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve);
 
+virtual Robot makeRobot(b2World & w, const b2Transform & start);
 /**
  * @brief Adds and removes vertices from the evaluation queue
  * 
