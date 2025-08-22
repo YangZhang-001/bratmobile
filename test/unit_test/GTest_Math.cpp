@@ -33,7 +33,7 @@ TEST_F(ConfiguratorTest, SimVsCalc){
     float omega10Hz=task.getAction().getOmega(0.1); //angular vel/0.1s
     float theta=omega10Hz*result.step;
     EXPECT_EQ(result.endPose.q.GetAngle(), theta);
-    EXPECT_EQ(approximate_angle(result.endPose.q.GetAngle(), LEFT, result.resultCode), M_PI_2);
+    EXPECT_NEAR(approximate_angle(result.endPose.q.GetAngle(), LEFT, result.resultCode), M_PI_2, 0.00001);
     }
 
 

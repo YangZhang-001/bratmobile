@@ -61,8 +61,9 @@ public:
 class Angle: public Measurement{
     public:
     Angle(){}
-    Angle(float f)
-    {   value =round(f*1000)/1000;
+    Angle(float f){  
+        //value =round(f*1000)/1000;
+        value = f; //no rounding
         valid =1;}
 };
 
