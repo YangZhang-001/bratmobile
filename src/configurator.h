@@ -141,7 +141,7 @@ void update_graph(TransitionSystem& g, const b2Transform & _deltaPose);
  * @param outcome the outcome of the last simulation
  * 
  */
-float approximate_angle(float angle, Direction d, simResult::resultType outcome));
+float approximate_angle(float angle, Direction d, simResult::resultType outcome);
 
 
 void adjust_goal_expectation();
