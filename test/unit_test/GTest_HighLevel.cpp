@@ -272,7 +272,7 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
 
 TEST_F(HighLevelTest, BoxedIn){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-    Logger logger=HighLevelTestBase::makeLogger(info);
+    Logger logger=HighLevelTestBase::makeLogger();
     configurator->register_logger(&logger);
     configurator->init();
     configurator->addIteration();
