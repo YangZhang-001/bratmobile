@@ -43,7 +43,7 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 		if (visited.first ||out.empty()){
-			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || g[v].isTurning() && isTurning(dir))){ //if Di is valid and not the same direction as the vertex
+			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex
 				Task task(g[v].Di, DEFAULT, g[v].endPose, true);
 				Robot robot(&world);
 				robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
