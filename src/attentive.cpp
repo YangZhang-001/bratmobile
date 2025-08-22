@@ -44,15 +44,20 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 		if (visited.first ||out.empty()){
 			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex
-				Task task(g[v].Di, DEFAULT, g[v].endPose, true);
+				Disturbance Di= g[v].Di;
+				if (std::pair <bool, edgeDescriptor> visitedDefault=gt::visitedEdge(gt::outEdges(g, v, DEFAULT), g, v); visitedDefault.first){
+					if (visitedDefault.first && g[visitedDefault.second.m_target].outcome==simResult::crashed){
+						Di= g[visitedDefault.second.m_target].Di;
+					}
+				} //if the vertex has been visited in the default direction
+				Task task(Di, DEFAULT, g[v].endPose, true);
 				Robot robot(&world);
 				robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
 				b2AABB box =worldBuilder.makeRobotSensor(robot.body(), controlGoal.get_disturbance_ptr());
 				b2Fixture *sensor =GetSensor(robot.body());
-				bool overlap=overlaps(robot.body(), &g[v].Di) && sensor;
+				bool overlap=overlaps(robot.body(), &Di) && sensor;
 				world_cleanup(world);
 				if (overlap){
-					Disturbance Di= g[v].Di;
 					Di.bf.pose=b2Mul(invmul, Di.bf.pose);
 					return Di;
 				}
