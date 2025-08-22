@@ -134,6 +134,17 @@ protected:
  */
 virtual std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w)override; //evaluates only after DEFAULT, internal one step lookahead
 
+virtual simResult simulate(Task t, b2World & world, vertexDescriptor v0); 
+
+/**
+ * @brief Overload of makeRobot, uses a disturbance which may be the goal of the hindsight disturbance to make the sensor
+ * 
+ * @param t 
+ * @param world 
+ * @param focus disturbance focus of attention (used for making the sensor)
+ * @return Robot 
+ */
+virtual Robot makeRobot(Task t, b2World & world, const Disturbance & focus);
 /**
  * @brief Stores disturbance lookaheads for alternative DEFAULT tasks (where the disturbance is backpropagated)
  * 

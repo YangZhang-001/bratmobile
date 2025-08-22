@@ -74,7 +74,16 @@ void addIteration(int i=1){
 
 void dummy_vertex(vertexDescriptor src);
 
-simResult simulate(Task, b2World &);
+/**
+ * @brief Simulates this task, includes creating the robot object
+ * 
+ * @param t the task (should already be initialised)
+ * @param w the world (should already contain any objects aside from the robot)
+ * @return simResult 
+ */
+simResult simulate(Task t, b2World & w);
+
+float remainingSimulationTime();
 
 /**
 *@param g the cognitive map
@@ -198,6 +207,14 @@ static void MulT(const b2Transform& B, Task & task);
  */
 static void Mul(const b2Transform& B, Task &task);
 
+/**
+ * @brief Makes the robot object in the world with the given start position and task
+ * 
+ * @param world 
+ * @param start 
+ * @param taskWithGoal 
+ * @return Robot 
+ */
 virtual Robot makeRobot(b2World& world, const b2Transform & start);
 
 Disturbance * getGoalDisturbance(){return &controlGoal.disturbance;}

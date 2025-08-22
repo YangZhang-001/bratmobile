@@ -271,6 +271,24 @@ clearvoyance.reset();
 return plan_prov;
 }
 
+simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ //State& state, State src, 
+	simResult result;
+	float remaining=remainingSimulationTime();
+	Disturbance focus=controlGoal.get_disturbance();
+	if (Disturbance maybeFocus=clearvoyance.query(v); maybeFocus.isValid()){
+		focus=maybeFocus;
+		clearvoyance.pop(v);
+	}
+	Robot robot=makeRobot(w, t.getStart());
+	worldBuilder.add_body_count();
+	simulatedTasks++;
+	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
+	//approximate angle to avoid rounding errors
+	//b2Transform travelTransform=b2MulT(result.endPose, t.start);
+	result.endPose.q.Set(approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode));
+	return result;
+}
+
 void B2BConfigurator::addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1, ClearVoyance & clearvoyance){
 	if (!transitionSystem[v1].isTurning() && transitionSystem[v0].isTurning() && transitionSystem[v1].outcome==simResult::crashed){
 		transitionSystem[v].options.push_back(DEFAULT);

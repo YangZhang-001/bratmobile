@@ -78,28 +78,27 @@ Robot Configurator::makeRobot(b2World& world, const b2Transform & start){
 };
 
 simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State src, 
-		//EVALUATE NODE()
 	simResult result;
+	float remaining=remainingSimulationTime();
+	Robot robot=makeRobot(w, t.start);
+	worldBuilder.add_body_count();
+	simulatedTasks++;
+	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
+	//approximate angle to avoid rounding errors
+	//b2Transform travelTransform=b2MulT(result.endPose, t.start);
+	result.endPose.q.Set(approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode));
+	return result;
+}
+
+float Configurator::remainingSimulationTime(){
 	float distance=BOX2DRANGE;
 	if (controlGoal.disturbance.isValid()){
 		distance= controlGoal.disturbance.getPosition().Length();
 	}
-	float remaining=distance/controlGoal.action.getLinearSpeed();
-	//Robot robot(&w);
-	Robot robot=makeRobot(w, t.start);
-	worldBuilder.add_body_count();
-	simulatedTasks++;
-	//robot.body()->SetTransform(t.start.p, t.start.q.GetAngle());
-	//b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), &controlGoal.disturbance);
-	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
-	//approximate angle to avoid rounding errors
-	b2Transform travelTransform=b2MulT(result.endPose, t.start);
-	float approximated_angle=approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode);
-	//float approximated_transform=approximate_angle(travelTransform.q.GetAngle(), t.direction, result.resultCode);
-	result.endPose.q.Set(approximated_angle);
-	//result.endPose.q.Set(b2Mul(b2Rot(approximated_transform), t.start.q).GetAngle());
-	return result;
-	}
+	return distance/controlGoal.action.getLinearSpeed();
+
+}
+
 
 
 std::pair<edgeDescriptor, bool> Configurator::addVertex(const vertexDescriptor & src, vertexDescriptor &v1, Edge edge, bool topDown){ //returns edge added
