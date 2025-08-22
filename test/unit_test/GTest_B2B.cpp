@@ -435,7 +435,7 @@ INSTANTIATE_TEST_CASE_P(Target40, HighLevelTestB2B, ::testing::Combine( ::testin
 
 INSTANTIATE_TEST_CASE_P(Target68, HighLevelTestB2B, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_68cm/")), ::testing::Values(2, 3, 4, 6, 17, 36)));
 
-// TEST_F(HighLevelTest, TrickyScenarioB2B){
+// TEST_F(HighLevelTestB2B, TrickyScenarioB2B){
 //     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
 //     Logger logger=makeLogger(info);
 //     configurator->register_logger(&logger);
