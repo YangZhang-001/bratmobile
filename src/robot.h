@@ -22,6 +22,11 @@ private:
 	b2PolygonShape m_box;
 	public:
 
+	/**
+	 * @brief This creates a robot object but it's uninitialised!
+	 * 
+	 */
+	Robot() = default;
 
 	Robot(b2World * world) {
 		b2BodyDef m_bodyDef;

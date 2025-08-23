@@ -291,6 +291,7 @@ TEST_F(DebugB2BTest, ClearVoyance){
     EXPECT_EQ(Di.bf.pose.q.GetAngle(), transitionSystem[3].Dn.bf.pose.q.GetAngle());
     EXPECT_EQ(Di.bf.halfLength, transitionSystem[3].Dn.bf.halfLength);
     EXPECT_EQ(Di.bf.halfWidth, transitionSystem[3].Dn.bf.halfWidth);
+    //NEED TO MAKE METHOD TO CHECK THAT DISTUBRANCE IS NOT BEING POPPED OFF (MOCK?)
     Di= getDisturbance(transitionSystem, MOVING_VERTEX, world, DEFAULT, transitionSystem[MOVING_VERTEX].endPose);
     EXPECT_EQ(Di.bf.pose.p.x, transitionSystem[5].Dn.bf.pose.p.x);
     EXPECT_EQ(Di.bf.pose.p.y, transitionSystem[5].Dn.bf.pose.p.y);

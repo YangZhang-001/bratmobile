@@ -144,7 +144,7 @@ virtual simResult simulate(Task t, b2World & world, vertexDescriptor v0);
  * @param focus disturbance focus of attention (used for making the sensor)
  * @return Robot 
  */
-virtual Robot makeRobot(Task t, b2World & world, const Disturbance & focus);
+virtual Robot makeRobot( b2World & world, b2Transform start, const Disturbance & focus);
 /**
  * @brief Stores disturbance lookaheads for alternative DEFAULT tasks (where the disturbance is backpropagated)
  * 

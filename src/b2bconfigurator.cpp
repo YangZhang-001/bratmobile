@@ -129,9 +129,9 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 			return controlGoal.get_disturbance();
 		}
 		else if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid()){
-				CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
-				return CVDi;
-			}
+			CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
+			return CVDi;
+		}
 		else  if (v==MOVING_VERTEX){
 			return g[v].Di;
 		}
@@ -215,7 +215,7 @@ std::vector<vertexDescriptor> B2BConfigurator::explorer(vertexDescriptor v, Tran
 				v1 =v0; //frontier
 				do {
 				std::pair<State, Edge> sk=simulation_setup(w, t, v0, shift, start, g[v0].options);
-				simResult sim=simulate(t, w); //sk.first, g[v0], 
+				simResult sim=simulate(t, w, v0); 
 				gt::fill(sim, &sk.first, &sk.second); //find simulation result
 				sk.second.it_observed=iteration;
 				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction,controlGoal);
@@ -273,18 +273,21 @@ return plan_prov;
 simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ //State& state, State src, 
 	simResult result;
 	float remaining=remainingSimulationTime();
-	Disturbance focus=controlGoal.get_disturbance();
-	if (Disturbance maybeFocus=clearvoyance.query(v); maybeFocus.isValid()){
-		focus=maybeFocus;
+	Robot robot;
+	if (Disturbance focus=clearvoyance.query(v); focus.isValid()){
+		focus.set_affordance(PURSUE);
+		robot=makeRobot(w, t.getStart(), focus);
 		clearvoyance.pop(v);
 	}
-	Robot robot=makeRobot(w, t.getStart());
+	else{
+		robot=AttentiveConfigurator::makeRobot(w, t.getStart());
+	}
 	worldBuilder.add_body_count();
 	simulatedTasks++;
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
 	//approximate angle to avoid rounding errors
 	//b2Transform travelTransform=b2MulT(result.endPose, t.start);
-	result.endPose.q.Set(approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode));
+	result.endPose.q.Set(approximate_angle(result.endPose.q.GetAngle(), t.get_direction(), result.resultCode));
 	return result;
 }
 
