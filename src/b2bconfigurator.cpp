@@ -274,13 +274,11 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 	simResult result;
 	float remaining=remainingSimulationTime();
 	Robot robot;
-	if (Disturbance focus=clearvoyance.query(v); focus.isValid()){
-		focus.set_affordance(PURSUE);
-		robot=makeRobot(w, t.getStart(), focus);
+	Disturbance focus=controlGoal.get_disturbance();
+	if (Disturbance maybeFocus=clearvoyance.query(v); maybeFocus.isValid()){
+		maybeFocus.set_affordance(PURSUE);
+		focus=maybeFocus;
 		clearvoyance.pop(v);
-	}
-	else{
-		robot=AttentiveConfigurator::makeRobot(w, t.getStart());
 	}
 	worldBuilder.add_body_count();
 	simulatedTasks++;
@@ -290,6 +288,14 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 	result.endPose.q.Set(approximate_angle(result.endPose.q.GetAngle(), t.get_direction(), result.resultCode));
 	return result;
 }
+
+Robot B2BConfigurator::makeRobot( b2World & world, const b2Transform& start, Disturbance * focus){
+	Robot robot=Configurator::makeRobot(world, start);
+	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), focus);
+	return robot;
+
+}
+
 
 void B2BConfigurator::addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1, ClearVoyance & clearvoyance){
 	if (!transitionSystem[v1].isTurning() && transitionSystem[v0].isTurning() && transitionSystem[v1].outcome==simResult::crashed){

@@ -144,7 +144,7 @@ virtual simResult simulate(Task t, b2World & world, vertexDescriptor v0);
  * @param focus disturbance focus of attention (used for making the sensor)
  * @return Robot 
  */
-virtual Robot makeRobot( b2World & world, b2Transform start, const Disturbance & focus);
+virtual Robot makeRobot( b2World & world, const b2Transform& start, Disturbance * focus);
 /**
  * @brief Stores disturbance lookaheads for alternative DEFAULT tasks (where the disturbance is backpropagated)
  * 
@@ -174,7 +174,7 @@ class ClearVoyance{
     Disturbance query(vertexDescriptor v);
 
     /**
-     * @brief Pops the vertex query (first of the disturbances)
+     * @brief Pops the first disturbance off of the vector associated with the queried vertex
      */
     void pop(vertexDescriptor v);
 
