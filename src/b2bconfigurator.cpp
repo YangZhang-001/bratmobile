@@ -273,13 +273,13 @@ return plan_prov;
 simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ //State& state, State src, 
 	simResult result;
 	float remaining=remainingSimulationTime();
-	Robot robot;
 	Disturbance focus=controlGoal.get_disturbance();
 	if (Disturbance maybeFocus=clearvoyance.query(v); maybeFocus.isValid()){
 		maybeFocus.set_affordance(PURSUE);
 		focus=maybeFocus;
 		clearvoyance.pop(v);
 	}
+	Robot robot=makeRobot(w, t.getStart(), &focus);
 	worldBuilder.add_body_count();
 	simulatedTasks++;
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
