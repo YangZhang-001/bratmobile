@@ -59,7 +59,7 @@ add_executable(GTest_Task GTest_Task.cpp)
 target_link_libraries(GTest_Task gtest gtest_main)
 target_link_libraries(GTest_Task  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
-add_executable(GTest_Controller GTest_Controller)
+add_executable(GTest_Controller GTest_Controller.cpp)
 target_link_libraries(GTest_Controller gtest gtest_main)
 target_link_libraries(GTest_Controller  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
