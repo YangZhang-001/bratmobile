@@ -25,8 +25,16 @@ class WorldBuilder{
     };
 
     std::pair <CoordinateContainer, bool> salientPoints(b2Transform, const CoordinateContainer &, std::pair <Pointf, Pointf>); //gets points from the raw data that are relevant to the task based on bounding boxes
-                                                                                                                                        //std::pair<points, obstaclestillthere>
-    b2Body* makeBody(b2World&, BodyFeatures);
+                             
+    /**
+     * @brief Creates a body in the box2d world, and if the features represent a disturbance to which the attention window needs to
+     * be assigned, a flag is assigned to the body user data
+     * 
+     * @param w the box2d world
+     * @param features features of the body to be created
+     * @return * b2Body* 
+     */
+    b2Body* makeBody(b2World& w, const BodyFeatures& features);
 
 
     /**

@@ -277,6 +277,8 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 	if (Disturbance maybeFocus=clearvoyance.query(v); maybeFocus.isValid()){
 		maybeFocus.set_affordance(PURSUE);
 		focus=maybeFocus;
+		maybeFocus.bf.attention=true;
+		worldBuilder.makeBody(w, maybeFocus.bf); //add hindsight disturbance to the world even if it doesn't overlap with the task scope 
 		clearvoyance.pop(v);
 	}
 	Robot robot=makeRobot(w, t.getStart(), &focus);
