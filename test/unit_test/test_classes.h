@@ -1161,7 +1161,7 @@ void ConfiguratorTakeBool::make_ts(std::vector <vertexDescriptor>& avoid, std::v
     }
     vertex_set_Dn(2, obstacle);
     vertex_set_outcome(2,simResult::crashed);
-    currentTask.setMotorStep(0);
+    currentTask.getAction().set_motorStep(0);
     currentTask.set_change(1);
     }
 

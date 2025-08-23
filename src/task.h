@@ -52,7 +52,7 @@ class Task{
     EndCriteria endCriteria; //end criteria other than task encounters a disturbance
     Direction direction= DEFAULT;
     AffordanceIndex affordance=NONE;
-
+public:
 class Action{
     protected:
     float linearSpeed=WHEEL_SPEED_DEFAULT*2; //used to calculate instantaneous velocity using omega
@@ -165,6 +165,7 @@ void setVelocities(const float & l,const float &r){
 
 };
 
+protected:
 /**
  * @brief Used to find collisions in the Box2D simulation
  * 
@@ -213,6 +214,7 @@ class Listener : public b2ContactListener {
         }
 	};
 
+public:
 Task::Action getAction()const{
     return action;
 }

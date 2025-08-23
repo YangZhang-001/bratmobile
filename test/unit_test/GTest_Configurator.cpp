@@ -279,7 +279,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisited0){
     currentVertex=MOVING_VERTEX;
     current_vertices={2};
     currentTask.set_change(false);
-    currentTask.setMotorStep(20);
+    currentTask.getAction().set_motorStep(20);
     iteration=2;
     applyTransitionMatrix(MOVING_VERTEX, currentTask.get_direction(), false, MOVING_VERTEX, m_plan);
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
@@ -300,7 +300,7 @@ TEST_P(ConfiguratorTestTransitionMatrix, InPlanNotVisitedCV){
     currentVertex=2;
     current_vertices={2};
     currentTask.set_change(false);
-    currentTask.setMotorStep(20);
+    currentTask.getAction().set_motorStep(20);
     iteration=2;
     applyTransitionMatrix(MOVING_VERTEX, currentTask.get_direction(), false, MOVING_VERTEX, m_plan);
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);

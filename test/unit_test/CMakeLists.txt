@@ -31,15 +31,59 @@ add_executable(GTest_Configurator GTest_Configurator.cpp)
 target_link_libraries(GTest_Configurator gtest gtest_main)
 target_link_libraries(GTest_Configurator  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
+add_executable(GTest_B2B GTest_B2B.cpp)
+target_link_libraries(GTest_B2B gtest gtest_main)
+target_link_libraries(GTest_B2B  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Worldbuilding GTest_Worldbuilding.cpp)
+target_link_libraries(GTest_Worldbuilding gtest gtest_main)
+target_link_libraries(GTest_Worldbuilding  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Logger GTest_Logger.cpp)
+target_link_libraries(GTest_Logger gtest gtest_main)
+target_link_libraries(GTest_Logger  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Matcher GTest_Matcher.cpp)
+target_link_libraries(GTest_Matcher gtest gtest_main)
+target_link_libraries(GTest_Matcher  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Graph GTest_Graph.cpp)
+target_link_libraries(GTest_Graph gtest gtest_main)
+target_link_libraries(GTest_Graph  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Planner GTest_Planner.cpp)
+target_link_libraries(GTest_Planner gtest gtest_main)
+target_link_libraries(GTest_Planner  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Task GTest_Task.cpp)
+target_link_libraries(GTest_Task gtest gtest_main)
+target_link_libraries(GTest_Task  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Controller GTest_Controller)
+target_link_libraries(GTest_Controller gtest gtest_main)
+target_link_libraries(GTest_Controller  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
 add_executable(GTest_Deadreckoner GTest_Deadreckoner.cpp)
 target_link_libraries(GTest_Deadreckoner gtest gtest_main)
 target_link_libraries(GTest_Deadreckoner  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 
+
+add_library(test_classes test_classes.h ../test_essentials.h ../callbacks.h)
+target_link_libraries(test_classes gtest gtest_main)
+target_link_libraries( test_classes brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+#make a single executable
+#file(GLOB TEST_SOURCES "./GTest*.cpp")
+# add_executable(all_tests ${TEST_SOURCES})
+# target_link_libraries(all_tests test_classes)
+#target_link_libraries(all_tests gtest gtest_main)
+#target_link_libraries(all_tests  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+# gtest_discover_tests(all_tests)
+
 gtest_discover_tests(GTest_HighLevel)
 gtest_discover_tests(GTest_Math)
 gtest_discover_tests(GTest_Configurator)
-gtest_discover_tests(GTest_Deadreckoner)
 gtest_discover_tests(GTest_B2B)
 gtest_discover_tests(GTest_Worldbuilding)
 gtest_discover_tests(GTest_Controller)

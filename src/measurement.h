@@ -51,6 +51,7 @@ public:
      * @brief Compares signed values
      */
     bool operator==(Measurement& m2);
+    
     float getStandardError(Measurement, float); //relative standard error
 
 };
