@@ -62,7 +62,6 @@ class Angle: public Measurement{
     public:
     Angle(){}
     Angle(float f){  
-        //value =round(f*1000)/1000;
         value = f; //no rounding
         valid =1;}
 };
@@ -122,6 +121,11 @@ struct EndedResult{
 
 };
 
+/**
+ * @brief Returns negative distance if x is negative
+ * 
+ * @return float 
+ */
 float SignedVectorLength(b2Vec2);
 
 

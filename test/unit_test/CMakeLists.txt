@@ -65,7 +65,7 @@ target_link_libraries(GTest_Controller  brat ${OpenCV_LIBS} box2d rt GTest::gtes
 
 add_executable(GTest_Deadreckoner GTest_Deadreckoner.cpp)
 target_link_libraries(GTest_Deadreckoner gtest gtest_main)
-target_link_libraries(GTest_Deadreckoner  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+target_link_libraries(GTest_Deadreckoner  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 
 
