@@ -16,11 +16,11 @@ TEST_F(HighLevelTestBase, NextTaskChangeVerticesPlan){
     configurator->set_plan({2, 3});
     wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(),configurator->get_plan_nConst());
     EXPECT_EQ(configurator->get_current_vertices(), std::vector<vertexDescriptor>({2}));
+    EXPECT_NE(configurator->getTask().getMotorStep(),0);
 }
 
 TEST_F(HighLevelTestBase, NextTaskChangeVerticesDummy){
     configurator->dummy_vertex(MOVING_VERTEX);
     wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(),configurator->get_plan_nConst());
     EXPECT_TRUE(configurator->get_current_vertices().empty());
-
 }

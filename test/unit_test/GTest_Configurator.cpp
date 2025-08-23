@@ -895,3 +895,29 @@ INSTANTIATE_TEST_CASE_P(DirectionsAndOutcomes,
                             testing::Values(LEFT, RIGHT), 
                             testing::Values(simResult::successful, simResult::crashed))
                         );
+
+TEST_F(ConfiguratorTest, InitTask){
+    init(generateGoalTask());
+    EXPECT_EQ(currentTask.getMotorStep(), 0);
+    EXPECT_TRUE(currentTask.get_change());
+    EXPECT_TRUE(currentTask.is_over());
+}
+
+TEST_F(ConfiguratorTest, changeTask){
+    register_controller(new Wise_Controller);
+    register_tracker(new ClosedLoop_Tracker);
+    init(generateGoalTask());
+    dummy_vertex(MOVING_VERTEX);
+    auto e=make_successful(currentVertex);
+    transitionSystem[e].step=98;
+    m_plan={e.m_target};
+    change_task();
+    EXPECT_NE(currentTask.getMotorStep(), 0);
+    EXPECT_FALSE(currentTask.get_change());
+    EXPECT_FALSE(currentTask.is_over());
+    delete task_controller;
+    delete tracker;
+
+
+
+}

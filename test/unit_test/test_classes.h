@@ -941,7 +941,6 @@ void HighLevelTestBase::trackFor(int iteration){
     }
     configurator->getFeatures(ci.data2fp);
     configurator->preExplore();
-    //VisitedTransitionSystem trackedTS(configurator->get_ts(), VisitedEdge(configurator->get_ts_ptr(), configurator->iteration));
     EXPECT_EQ(configurator->n_visitedEdges(), 0);
     EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
 }
