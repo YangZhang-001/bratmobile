@@ -1,4 +1,4 @@
-#include "configurator.h"
+#include "attentive.h"
 //#include "libcam2opencv.h"
 #include "a1lidarrpi.h"
 #include "alphabot.h"
@@ -6,57 +6,25 @@
 //#include "CppTimer.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <bits/stdc++.h>
-#include <iostream>
-#include <sys/stat.h>
-#include <sys/types.h>
 #define _USE_MATH_DEFINES
 
 /**
- * * * * DEFINITION OF DATA INTERFACES FOR ROBOT SENSORS/MOTORS 
+ * * * * DEFINITION OF DATA INTERFACES FOR ROBOT SENSORS/MOTORS
  * 				+ SOME DEBUGGING HELPER FUNCTIONS
- * 
+ *
  */
 
 
-char statFile[100];
-
-void get_Foldername(char* custom, char name[60]){
-    time_t now =time(0);
-	tm *ltm = localtime(&now);
-	int y,m,d, h, min;
-	y=ltm->tm_year-100;
-	m = ltm->tm_mon +1;
-	d=ltm->tm_mday;
-	h= ltm->tm_hour;
-	min = ltm->tm_min;
-	sprintf(name, "%s_%02i%02i%02i_%02i%02i",custom, d,m,y,h,min);
-}
-
-
-
-std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer& points, const b2Transform& start){
-    std::vector <BodyFeatures> result;
-    std::vector <Pointf> ptset= set2vec(points);
-    std::pair<bool,BodyFeatures> feature= bounding_box(ptset);
-    if (feature.first){
-        feature.second.pose.q.Set(start.q.GetAngle());
-        result.push_back(feature.second);
-    }
-    return result;
-}
-
-
 class LidarInterface : public A1Lidar::DataInterface{
-LIDAR_In * ci;
-public: 
+LIDAR_In * ci=NULL;
+public:
     int mapCount =0;
 
     LidarInterface(LIDAR_In * _ci): ci(_ci){}
 
 	void newScanAvail(float, A1LidarData (&data)[A1Lidar::nDistance]){ //uncomment sections to write x and y to files
 		if (ci == NULL){
-			printf("null pointer to ci\n");
+			std::cerr<<"null pointer to ci"<<std::endl;
 			return;
 		}
 		//ci->data.clear();
@@ -110,37 +78,5 @@ void step( AlphaBot &motors){
 }
 };
 
-
-void dump_benchmarks(char * new_folder, char * _dir=NULL){
-		if (BENCHMARKING){
-		char dirName[50];
-		if (_dir==NULL){
-			sprintf(dirName, "benchmark");
-		}
-		else{
-			sprintf(dirName, _dir);
-		}
-		if (!opendir(dirName)){
-			mkdir(dirName, 0777);
-		}
-		char new_path[60];
-		sprintf(new_path, "%s/%s", dirName, new_folder);
-		if (!opendir(new_path)){
-			mkdir(new_path, 0777); //""
-		}
-		//TODAYS DATE AND TIME
-		time_t now =time(0);
-		tm *ltm = localtime(&now);
-		int y,m,d, h, min;
-		y=ltm->tm_year-100;
-		m = ltm->tm_mon +1;
-		d=ltm->tm_mday;
-		h= ltm->tm_hour;
-		min = ltm->tm_min;
-		sprintf(statFile, "%s/stats%02i%02i%02i_%02i%02i.txt",new_path, d,m,y,h,min);
-		FILE * f = fopen(statFile, "w");
-		fclose(f);
-	}
-}
 
 

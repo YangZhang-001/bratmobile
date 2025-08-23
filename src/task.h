@@ -2,28 +2,53 @@
 #define TASK_H
 #include "measurement.h"
 
-//if body has sensor, return the corresponding fixture
+/**
+ * @brief If the body @param body has an attention window sensor attached to it, it returns the sensor box2d fixture
+ */
 b2Fixture * GetSensor(b2Body * body);
 
-//from the bodies in the world, get the disturbance Di for a Task
-b2Body * GetDisturbance(b2World *);
+/**
+ * @brief from the bodies in the world @param w, get the disturbance Di for a Task
+ * 
+ */
+b2Body * GetDisturbance(b2World * x);
 
-//returns true 
-bool overlaps(b2Body *, Disturbance *);
+/**
+ * @brief Checks if the robot overlaps with a disturbance
+ * 
+ * @param robot robot box2d body
+ * @param disturbance 
+ * @return true if the robot overlaps with the disturbance OR if the robot doesn't have an attention window sensor OR if the disturbance is null
+ */
+bool overlaps(b2Body * robot, Disturbance * disturbance);
 
-bool overlaps(const b2PolygonShape&, Disturbance *, const b2Transform& robot_pose=b2Transform_zero);
+/**
+ * @brief Checks if a box2d body fixture overlaps with a disturbance
+ * 
+ * @param box the box2d fixture shape (must be a polygon
+ * @param d the disturbance to check against
+ * @param robot_pose the 2d transform representing the pose of the body that the box belongs to
+ * @return true if the box overlaps with the disturbance OR if the box has zero radius, OR if the disturbance is null OR if the disturbance is not an obstacle
+ */
+bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& robot_pose=b2Transform_zero);
 
-//deletes all bodies in the box2d world
+/**
+ * @brief deletes all bodies in the box2d @param world
+ * 
+ */
 void world_cleanup(b2World & _world);
 
+/**
+ * @brief A closed hybrid control loop. It has an initial disturbance representing the continuous state and a direction representing (in 2D) the discrete control strategy
+ * 
+ */
 class Task{
-    char planFile[250]; //for debug
-   // bool debug_k=false; //delete this it's for debugging on the bhenchod pi
-
-public:
     friend class Configurator;
-    b2Transform start=b2Transform_zero;
+    protected:
+    char planFile[250]; //for debug
+    bool debug_k=false; //delete this it's for debugging on the bhenchod pi
     bool change =0;
+    b2Transform start=b2Transform_zero;
     EndCriteria endCriteria; //end criteria other than task encounters a disturbance
     Direction direction= DEFAULT;
     AffordanceIndex affordance=NONE;
@@ -140,10 +165,11 @@ void setVelocities(const float & l,const float &r){
 
 };
 
-
-
+/**
+ * @brief Used to find collisions in the Box2D simulation
+ * 
+ */
 class Listener : public b2ContactListener {
- // int iteration=1;
     Disturbance * d_ptr;
     std::vector <b2Body*> collisions;
     public:
@@ -187,12 +213,6 @@ class Listener : public b2ContactListener {
         }
 	};
 
-public:
-
-
-
-Disturbance disturbance;
-
 Task::Action getAction()const{
     return action;
 }
@@ -201,21 +221,69 @@ AffordanceIndex getAffIndex(){
     return affordance;
 }
 
+/**
+ * @brief Agent transfer function H which generates a motor output (Action) in response to a disturbance
+ * 
+ * @param ob the disturbance
+ * @param d top-down instruction on how to generate the Action. DEFAULT with no top down control generates a reflex
+ * @param topDown whether the input direction should be used as is (true) or to generate a reflex (false)
+ * @return Direction 
+ * 
+ * NB: only generates default turns if absolute angle of the disturbance is larger than .1rad
+ */
+Direction H(Disturbance ob, Direction d, bool topDown=0); //topDown enables Configurator topdown control on reactive behaviour
 
-Direction H(Disturbance, Direction, bool topDown=0); //topDown enables Configurator topdown control on reactive behaviour
 
-
+/**
+ * @brief Sets the end criteria for this task (bounds of the Flow condition). Angle is a valid measurement for turning task but not for DEFAULT
+ * Tasks. 
+ * 
+ * @param angle manually input angle
+ * @param distance manually input distance
+ */
 void setEndCriteria(const Angle& angle=SAFE_ANGLE, const Distance& distance=BOX2DRANGE);
 
 void setEndCriteria(const Distance& distance);
 
-void setErrorWeights();
+void setEndCriteria(const EndCriteria & ec){
+    endCriteria=ec;
+}
 
-EndedResult checkEnded(b2Transform robotTransform = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)), Direction dir=UNDEFINED, bool relax=0, b2Body* robot=NULL, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0))));
+// void adjustEndCriteria(b2Transform t){endCriteria.adjust(t);}
 
-EndedResult checkEnded(const State&, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform(b2Vec2(0.0, 0.0), b2Rot(0.0)))); //usually used to check against control goal
+/**
+ * @brief Check if this task has ended based on state information (default are info for the task which calls the method)
+ * 
+ * @param robotTransform the robot's pose to evaluate
+ * @param dir the direction of the task being carried out
+ * @param relax apply a larger threshold to check whehter a goal was reached
+ * @param robot robot box2d body
+ * @param use_start use a custom start for the task
+ * @return EndedResult 
+ */
+EndedResult checkEnded(b2Transform robotTransform= b2Transform_zero, Direction dir=UNDEFINED, bool relax=0, b2Body* robot=NULL, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform_zero));
 
-bool checkEnded( const b2PolygonShape &, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL );
+/**
+ * @brief Check if a state represents the end of this task
+ * 
+ * @param n the state
+ * @param dir the direction of the task being carried out
+ * @param relax apply a larger threshold to check whehter a goal was reached
+ * @param use_start use a custom start for the task
+ * @return EndedResult 
+ */
+EndedResult checkEnded(const State& n, Direction dir=UNDEFINED, bool relax=false, std::pair<bool,b2Transform> use_start= std::pair <bool,b2Transform>(1, b2Transform_zero)); //usually used to check against control goal
+
+/**
+ * @brief Uses a virtual sensor (attention window) to determine whether the task has ended or not
+ * 
+ * @param box the sensor
+ * @param robot_pose 
+ * @param dist_obs pointer to the observed disturbance (the disturbance as it was at the beginning of the task, or as it was expected)
+ * @return true 
+ * @return false 
+ */
+bool checkEnded( const b2PolygonShape &box, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL );
 
 Task(){
     start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));
@@ -238,20 +306,42 @@ Task(Disturbance ob, Direction d, b2Transform _start=b2Transform(b2Vec2(0.0, 0.0
 }
 
 /**
- * @brief Simulates task and returns simulation results 
+ * @brief Executes this task in a Box2D simulation
  * 
  * @param _world box2d world
- * @param iteration configurator iteration (for printing to file)
- * @param robot robot box2d body
- * @param remaining simulation time remaining in seconds
+ * @param iteration configurator iteration (for logging)
+ * @param remaining (simulation duration in seconds)
  * @return simResult 
  */
-simResult bumping_that(b2World &_world, int iteration, b2Body * robot, float remaining = SIM_DURATION);
+simResult bumping_that(b2World & _world, int iteration, b2Body *, float remaining = SIM_DURATION);
 
-EndCriteria getEndCriteria(const Disturbance&);
+/**
+ * @brief Returns the endCriteria for this Task if it were to counteract Disturbance @param d
+ */
+EndCriteria getEndCriteria(const Disturbance& d);
 
-bool endCriteria_met(Angle &, Distance &);
+/**
+ * @brief Returns a REFERENCE to the endCriteria
+ */
+EndCriteria & getEndCriteria(){
+    return endCriteria;
+}
 
+/**
+ * @brief Returns true if the endCriteria is met based on
+ * 
+ * @param a angle from the disturbance
+ * @param d distance from the disturbance
+ */
+bool endCriteria_met(Angle & a, Distance &d);
+
+/**
+ * @brief Returns a b2Transform expressing the pose of the disturbance relative to the robot in the robot's local coordinates
+ * 
+ * @param custom_start global coordinates of the task start, if null defaults to the origin
+ * @param d_obs a disturbance different from the Di for this task. If null defaults to Di
+ * @return b2Transform 
+ */
 b2Transform from_Di( const b2Transform * custom_start=NULL, Disturbance * d_obs=NULL); //d_obs disturbance observed rather than D with which task was init
 
 void set_change(bool b){
@@ -263,17 +353,57 @@ bool get_change(){
 }
 
 /**
+ * @brief If task has finished executing
+ * 
+ * @return true if step==0 or if manually set to change
+ * @return false 
+ */
+bool is_over(){
+    return change || action.motorStep()==0;
+}
+
+/**
  * @brief Get a pointer to the disturbance
  * 
  * @return Disturbance* 
  */
-Disturbance * get_disturbance(){
+Disturbance * get_disturbance_ptr(){
     return &disturbance;
 }
 
-private:
+const Disturbance & get_disturbance()const{
+    return disturbance;
+}
 
-Action action;
+
+int getMotorStep(){ //before used to return a reference!
+    return action.motorStep();
+}
+
+b2Transform getStart(){
+    return start;
+}
+
+b2Transform& getStartRef(){
+    return start;
+}
+
+Direction get_direction(){
+    return direction;
+}
+
+void set_direction(Direction d){
+    direction=d;
+}
+
+protected:
+    Action action;
+    Disturbance disturbance;
+
+bool isTurnFinished(const b2Transform & robotTransform, Direction dir);
+
+
+
 };
 
 #endif

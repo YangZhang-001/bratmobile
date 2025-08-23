@@ -17,10 +17,10 @@ int Controller::motor_step(Task::Action a, float distance){
 void Wise_Controller::next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
 if (plan.empty()){
 	//printf("I DON'T KNOW WHAT TO DO NOW\n");
-	currentTask=Task(controlGoal.disturbance, UNDEFINED);
+	currentTask=Task(controlGoal.get_disturbance(), UNDEFINED);
 	currentTask.getAction().setLWheelSpeed(0);
 	currentTask.getAction().setRWheelSpeed(0);
-	currentTask.change=1;
+	currentTask.set_change(true);
 	return;
 }
 int i=to_task_end(g, plan);
@@ -51,13 +51,12 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
 		float distance = g[p[end_it]].end_from_Dn().p.Length();
 		t.setEndCriteria(Distance(distance)); //set task to get within a certain distance from an object (as planned) and then terminate
         disturbance_q=g[p[0]].Dn;
-
 	}
 	else{
 		Disturbance Di;
 		vertexDescriptor currentVertex=get_current_vertex(current_vertices);
 		if (g[p[0]].Di==g[currentVertex].Di){
-			Di=currentTask.disturbance;
+			Di=currentTask.get_disturbance();
 		}
 		else{
 			Di=g[p[0]].Di;
@@ -83,7 +82,7 @@ void Reactive_Controller::next_task(Task & currentTask, const Task & controlGoal
 		currentTask= Task(g[currentVertex].Dn, DEFAULT); //reactive
 	}
 	else{
-		currentTask = Task(controlGoal.disturbance, DEFAULT); //reactive
+		currentTask = Task(controlGoal.get_disturbance(), DEFAULT); //reactive
 	}
 	currentTask.getAction().set_motorStep(motor_step(currentTask.getAction()));
 	printf("changed to %f\n", currentTask.getAction().getOmega());

@@ -3,13 +3,14 @@
 #include "sensor.h"
 
 class WorldBuilder{
+    protected:
     int iteration=0;
     char bodyFile[100];
     float simulationStep=BOX2DRANGE;
     int bodies=0;
-
+    std::vector <BodyFeatures> world_objects;    
+    friend class Configurator;
     public:
-    std::vector <BodyFeatures> world_objects;
     enum CLUSTERING{BOX=0, KMEANS=1, PARTITION=2}; //BOX: bounding box around points
         struct CompareCluster{
         CompareCluster()=default;
@@ -27,6 +28,12 @@ class WorldBuilder{
                                                                                                                                         //std::pair<points, obstaclestillthere>
     b2Body* makeBody(b2World&, BodyFeatures);
 
+
+    /**
+     * @brief returns a bounding box encompassing all points provided
+     * 
+     * @return std::vector <BodyFeatures> 
+     */
     std::vector <BodyFeatures> processData(const CoordinateContainer&, const b2Transform&);
 
     std::vector <BodyFeatures> cluster_data(const CoordinateContainer &, const b2Transform&, CLUSTERING clustering=PARTITION);
@@ -101,6 +108,15 @@ class WorldBuilder{
     b2AABB  makeRobotSensor(b2Body*, Disturbance *goal); //returns bounding box in world coord
     
 
+    std::vector <BodyFeatures>& get_world_objects(){
+        return world_objects;
+    }
+
+    void set_world_objects(const std::vector <BodyFeatures>& wo){
+        world_objects=wo;
+    }
+
+    void setSimulationStep(float f){simulationStep=f;}
 
 };
 #endif

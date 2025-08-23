@@ -90,6 +90,17 @@ std::vector <std::vector<cv::Point2f>> WorldBuilder::partition_clusters( std::ve
     return result;
 }
 
+std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer& points, const b2Transform& start){
+    std::vector <BodyFeatures> result;
+    std::vector <Pointf> ptset= set2vec(points);
+    std::pair<bool,BodyFeatures> feature= bounding_box(ptset);
+    if (feature.first){
+        feature.second.pose.q.Set(start.q.GetAngle());
+        result.push_back(feature.second);
+    }
+    return result;
+}
+
 std::vector <BodyFeatures> WorldBuilder::cluster_data( const CoordinateContainer & pts, const b2Transform& start, CLUSTERING clustering){
     std::vector <BodyFeatures> result;
     std::vector <cv::Point2f> points, centers;
@@ -248,10 +259,10 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
 bool WorldBuilder::checkDisturbance(Pointf p, bool& obStillThere, Task * curr, float range){
     bool result=0;
 	if (NULL!=curr){ //
-        if (!curr->disturbance.isValid()){
+        if (!curr->get_disturbance().isValid()){
             return result;
         }
-        cv::Rect2f rect(curr->disturbance.getPosition().x-range, curr->disturbance.getPosition().y+range, range*2, range*2);
+        cv::Rect2f rect(curr->get_disturbance().getPosition().x-range, curr->get_disturbance().getPosition().y+range, range*2, range*2);
 		if (p.inside(rect)){
 			obStillThere =1;
             result =1;

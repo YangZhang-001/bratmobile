@@ -8,6 +8,7 @@
 class Tracker{
     protected:
     ThresholdLearner *learner=NULL;
+    b2Transform deltaTransform=b2Transform_zero;
     public:
     Threshold threshold=Threshold();
 
@@ -20,8 +21,10 @@ class Tracker{
     void register_learner(ThresholdLearner * l){
         learner=l;
     }
+
+    b2Transform getDeltaTransform(){return deltaTransform;}
     /**
-    * calculates 2d affine transformation of input task's disturbance from t-1 to t
+    * calculates 2d affine transformation of input task's disturbance from t-1 to t. In other words, expresses how much the disturbance has moved
     * @param t input task
     * @param pts point cloud
     * @param objects world objects as extracted in worldbuilder
@@ -55,6 +58,7 @@ class Tracker{
     virtual void on_new_reading(Task * task=NULL)=0;
 
     virtual void init(Task * goal)=0;
+
 
     /**
     * @brief opens file where all the data is dumped
@@ -168,7 +172,7 @@ class ClosedLoop_Tracker:public Tracker{
     }
 
     void init(Task * goal){
-        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
+        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance_ptr());
 
     }
 

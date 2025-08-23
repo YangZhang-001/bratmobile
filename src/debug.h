@@ -3,11 +3,82 @@
 
 #include "worldbuilder.h"
 #include <fstream>
+#include <bits/stdc++.h>
+#include <fstream>
+#include <iostream>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <string>
+#include <dirent.h>
+
+/**
+ * @brief Class used to load data from the configurator
+ * 
+ */
+class Logger{
+	protected:
+	char fileName[60];
+	FILE *f=NULL;
+	int fileCount=0;//files with the same name
+
+	public:
+
+	Logger(){}
+
+	/**
+	 * @brief Construct a new Logger object
+	 * 
+	 * @param new_folder folder where files will be dumped (no / at the end)
+	 * @param _dir directory containing new_folder
+	 * @param customName file prefix (/ must be at the beginning)
+	 */
+	Logger(const char * new_folder, const char * _dir="/tmp", const char * customName="/stats"){
+		init(new_folder, _dir, customName);
+	}
+
+	~Logger(){
+		if (NULL!=f){
+			fclose(f);
+		}
+		f=NULL;
+		
+	}
+
+	/**
+	 * @brief 
+	 * 
+	 * @param format printf style e.g. "hello%s"
+	 * @param ... other parameters
+	 */
+	bool log(const char * format, ...);
+
+	const char * get_fileName(){
+		return fileName;
+	}
+
+	/**
+	 * @brief Returns a string with system architecture
+	 */
+	static const char * getSystemArchitecture();
+
+	protected:
+
+	/**
+	 * @brief Creates filename name in format customdmy_hm.txt
+	 * 
+	 * @param custom custom
+	 * @param name empty char array
+	 */
+	std::string file_dateTime(const char* custom, char name[80], const char * addOn=NULL);
+
+	void init(const char * new_folder, const  char * _dir=NULL, const char * customName="/stats");
+
+
+};
+
+
 
 namespace debug{
-	
-// template <class T>
-// void graph_file(const int &, const T&,const Disturbance &, std::vector <vertexDescriptor>,const vertexDescriptor&);
 
 template <class T>
 void print_graph(const T& g, const Disturbance & goal, std::vector <vertexDescriptor>plan, const vertexDescriptor& c){

@@ -1,52 +1,64 @@
  #include "debug.h"
 
-// template <class T>
-// void debug::graph_file(const int& it,const T& g, const Disturbance& goal, const std::vector <vertexDescriptor> &plan, const vertexDescriptor& c){
-// 	char fileName[50];
-// 	sprintf(fileName, "/tmp/graph%04i.txt", it);
-// 	FILE * f=fopen(fileName, "w");
-// 	auto vs=boost::vertices(g);
-// 	for (auto vi=vs.first; vi!=vs.second; vi++){
-// 		auto es=boost::out_edges(*vi, g);
-// 		if (*vi==c){
-// 			fprintf(f,"!");
-// 		}
-// 		for (vertexDescriptor vp:plan){
-// 			if (*vi==vp){
-// 				fprintf(f,"*");
-// 			}
-// 		}
-// 		fprintf(f,"%i -> ", *vi);
-// 		for (auto ei=es.first; ei!=es.second; ei++){
-// 			fprintf(f, "%i (%f) ", (*ei).m_target, g[(*ei)].probability);
-// 		}
-// 		fprintf(f, "\t(x=%.3f, y= %.3f, theta= %.3f)\n", g[*vi].endPose.p.x, g[*vi].endPose.p.y, g[*vi].endPose.q.GetAngle());
-// 	}
-// 	fclose(f);
-// }
+std::string Logger::file_dateTime(const char* custom, char name[80], const char * addOn){
+	time_t now =time(0);
+	tm *ltm = localtime(&now);
+	int y,m,d, h, min;
+	y=ltm->tm_year-100;
+	m = ltm->tm_mon +1;
+	d=ltm->tm_mday;
+	h= ltm->tm_hour;
+	min = ltm->tm_min;		
+//	struct stat buffer;
+	
+	sprintf(name, "%s_%02i%02i%02i_%02i%02i.txt",custom, d,m,y,h,min);
+	// int count=0;
+	// while (stat (fileName, &buffer)==0){
+	// 	count++;
+	// }	
+	return std::string(name);
+}
 
-// template <class T>
-// void debug::print_graph(const T& g, const Disturbance& goal,const std::vector <vertexDescriptor> &plan, const vertexDescriptor& c){
-//     std::stringstream os;
-//     auto vs=boost::vertices(g);
-//     for (auto vi=vs.first; vi!=vs.second; vi++){
-// 		auto es=boost::out_edges(*vi, g);
-// 		if (*vi==c){
-// 			os<<"!";
-// 		}
-// 		for (vertexDescriptor vp:plan){
-// 			if (*vi==vp){
-// 				os<<"*";
-// 			}
-// 		}
-// 		os<<*vi<<"-> ";
-// 		for (auto ei=es.first; ei!=es.second; ei++){
-// 			os<<(*ei).m_target <<"("<g[(*ei)].probability<<")";
-// 		}
-// 		os<<"\t(x="<<g[*vi].endPose.p.x<<", y= "<<g[*vi].endPose.p.y<<", theta= "<<g[*vi].endPose.q.GetAngle()<<")\n";
-// 	}
-//     os.flush();
-// }
+bool Logger::log(const char * format, ...){
+	va_list args;
+	va_start(args, format);
+	vfprintf(f, format, args);
+	va_end(args);
+	fflush(f);
+}
+
+void Logger::init(const char * new_folder, const char * _dir, const char * customName){
+		std::string dirName=_dir;
+		if (!opendir(dirName.c_str())){
+			mkdir(dirName.c_str(), 0777);
+		}
+
+		std::string new_path=dirName + "/"+new_folder;
+		if (!opendir(new_path.c_str())){
+			mkdir(new_path.c_str(), 0777); //""
+		}
+		std::string customfile=new_path +customName;
+		file_dateTime(customfile.c_str(), fileName);
+		f = fopen(fileName, "w");
+}
+
+const char * Logger::getSystemArchitecture(){
+	#if defined(__x86_64__) || defined(_M_X64)
+    return "x86_64";
+	#elif defined(__i386__) || defined(_M_IX86)
+		return "x86";
+	#elif defined(__aarch64__) || defined(_M_ARM64)
+		return "ARM64";
+	#elif defined(__arm__) || defined(_M_ARM)
+		return "ARM";
+	#elif defined(__ppc64__)
+		return "PowerPC64";
+	#elif defined(__ppc__)
+		return "PowerPC";
+	#else
+		return "UnknownArchitecture";
+	#endif
+}
 
 b2Vec2 GetWorldPoints(b2Body* b, b2Vec2 v){
 	b2Vec2 wp=b->GetWorldPoint(v);
