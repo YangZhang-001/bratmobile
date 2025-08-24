@@ -163,7 +163,7 @@ class ClearVoyance{
 
     };
 
-    bool add(vertexDescriptor v, const Disturbance& d);
+    virtual bool add(vertexDescriptor v, const Disturbance& d);
 
     /**
      * @brief Gets first disturbance predicted with a vertex
@@ -171,7 +171,7 @@ class ClearVoyance{
      * @param v vertex
      * @return Disturbance 
      */
-    Disturbance query(vertexDescriptor v);
+    virtual Disturbance query(vertexDescriptor v);
 
     /**
      * @brief Pops the first disturbance off of the vector associated with the queried vertex

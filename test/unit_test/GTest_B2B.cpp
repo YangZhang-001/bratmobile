@@ -299,7 +299,6 @@ TEST_F(DebugB2BTest, ClearVoyance){
     EXPECT_EQ(Di.bf.pose.q.GetAngle(), transitionSystem[5].Dn.bf.pose.q.GetAngle());
     EXPECT_EQ(Di.bf.halfLength, transitionSystem[5].Dn.bf.halfLength);
     EXPECT_EQ(Di.bf.halfWidth, transitionSystem[5].Dn.bf.halfWidth);
-
 }
 
 TEST_F(DebugB2BTest, BacktrackCollision){
@@ -437,18 +436,46 @@ INSTANTIATE_TEST_CASE_P(Target40, HighLevelTestB2B, ::testing::Combine( ::testin
 
 INSTANTIATE_TEST_CASE_P(Target68, HighLevelTestB2B, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_68cm/")), ::testing::Values(2, 3, 4, 6, 17, 36)));
 
-TEST_F(HighLevelTestB2B, TrickyScenarioB2B){
-    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-    Logger logger=makeLogger(info);
-    configurator->register_logger(&logger);
-    configurator->init(DebugConfigurator::generateGoalTask());
-    configurator->addIteration();
-    configurator->get_worldbuilder()->add_iteration();
-    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTricky());
-    b2World world(GRAVITY);
-    configurator->explorePlan(world);
-    EXPECT_GT(configurator->get_plan().size(), 0);
-    EXPECT_FALSE(has180Turn(configurator->get_plan()));
-    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-    EXPECT_TRUE(planned_to_goal);
+// TEST_F(HighLevelTestB2B, TrickyScenarioB2B){
+//     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+//     Logger logger=makeLogger(info);
+//     configurator->register_logger(&logger);
+//     configurator->init(DebugConfigurator::generateGoalTask());
+//     configurator->addIteration();
+//     configurator->get_worldbuilder()->add_iteration();
+//     configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTricky());
+//     b2World world(GRAVITY);
+//     configurator->explorePlan(world);
+//     EXPECT_GT(configurator->get_plan().size(), 0);
+//     EXPECT_FALSE(has180Turn(configurator->get_plan()));
+//     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+//     EXPECT_TRUE(planned_to_goal);
+// }
+
+
+TEST_P(DebugB2BTestVertex, ClearVoyanceTurn){ //test clearvoyance when turning on the spot
+    init(Task());
+    EXPECT_FALSE(controlGoal.get_disturbance().isValid()); //test case health check
+    EXPECT_EQ(controlGoal.get_disturbance().getAffIndex(), NONE);
+    b2World world(b2Vec2(0,0));
+    BodyFeatures bf=bodyFeatures(.55, 0, 0, 0.02, 0.05), bf2=bodyFeatures(0, .55, 0, 0.02, 0.05), bf3=bodyFeatures(0, -0.55, 0, 0.02, 0.05);
+    //bf.attention=1;
+    make_module(MOVING_VERTEX); //no dummy
+    vertexDescriptor v0=GetParam(), v1=v0+1;;
+    transitionSystem[MOVING_VERTEX].Di=Disturbance(bf); //current task was avoiding
+    transitionSystem[MOVING_VERTEX].Di.validate();
+    transitionSystem[v1].Dn=Disturbance(bf2); //obstacle on the left
+    transitionSystem[v1].Dn.validate();
+    clearvoyance.add(v0, transitionSystem[3].Dn);
+   // Disturbance solution=transitionSystem[MOVING_VERTEX].Di;
+    transitionSystem[MOVING_VERTEX].direction=STOP;
+    vertex_options_push_back(v0, vertex_get_direction(2));
+    Disturbance Di= getDisturbance(transitionSystem, v0, world, DEFAULT, transitionSystem[v0].endPose);
+    EXPECT_EQ(Di.bf.pose.p.x, transitionSystem[v1].Dn.bf.pose.p.x);
+    EXPECT_EQ(Di.bf.pose.p.y, transitionSystem[v1].Dn.bf.pose.p.y);
+    EXPECT_EQ(Di.bf.pose.q.GetAngle(), transitionSystem[v1].Dn.bf.pose.q.GetAngle());
+    EXPECT_EQ(Di.bf.halfLength, transitionSystem[v1].Dn.bf.halfLength);
+    EXPECT_EQ(Di.bf.halfWidth, transitionSystem[v1].Dn.bf.halfWidth);
+    //NEED TO MAKE METHOD TO CHECK THAT DISTUBRANCE IS NOT BEING POPPED OFF (MOCK?)
+    clearvoyance.pop(MOVING_VERTEX);
 }

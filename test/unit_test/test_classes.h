@@ -3,6 +3,7 @@
 
 #include <gtest/gtest.h>
 #include "../callbacks.h"
+#include <gmock/gmock.h> 
 #include <string>
 #include <numeric>
 
@@ -333,20 +334,28 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
     using B2BConfigurator::closeVertex;
     using B2BConfigurator::splitTask;
     using B2BConfigurator::explorer;
-    
 
     public:
     DebugB2B()=default;
     
+    /**
+     * @brief Also a mock class
+     * 
+     */
     class ClearVoyanceTest:public B2BConfigurator::ClearVoyance{
         public:
             int size(){return lookaheads.size();}
 
+            MOCK_METHOD(Disturbance, query, (vertexDescriptor v), (override));
+
     };
+
 };
 
 
-class DebugB2BTest: public virtual DebugB2B, public testing::Test{};
+
+class DebugB2BTest: public virtual DebugB2B, public testing::Test{
+};
 
 
 class WiseControllerTest: public Wise_Controller, public ::testing::Test{};
