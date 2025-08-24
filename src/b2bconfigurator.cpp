@@ -115,9 +115,10 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 	if (!g[v].Dn.isValid() ){
 		std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
-		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
+		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);		
+		Disturbance CVDi=clearvoyance.query(v);
 		if (visited.first ||out.empty()){ //if edges have not been expanded OR if they were expanded in previous iteration
-			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
+			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && ! CVDi.isValid()&& (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
 				if (attentionWindowOverlaps(Di, g[v], world, controlGoal.get_disturbance_ptr())){
 					Di.bf.pose=b2Mul(invmul, Di.bf.pose); //DISTURBANCE FORWARD PROP
@@ -127,11 +128,11 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 			//check if Di was eliminated
 			return controlGoal.get_disturbance();
 		} 
-		else if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid()){ //if the configurator made a mental note to remmeber a disturbance
+		else if ( CVDi.isValid()){ //if the configurator made a mental note to remmeber a disturbance
 			// && g[v].isTurning()==isTurning(dir)
 			CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose); //DISTURBANCE BACK-AND-ACROSS PROP
 			return CVDi;
-			} 
+		} 
 		else  if (v==MOVING_VERTEX){
 			return g[v].Di;
 		}
