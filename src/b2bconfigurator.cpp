@@ -20,7 +20,7 @@ bool B2BConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDes
 // 				return {transitionSystem[ve.second.m_target].direction};
 // 			}
 // 			else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
-// 				transitionInHindsight(ve.second.m_source, [&](vertexDescriptor v){ //LAMBDA FUNCTION! 
+// 				transitionInHindsight(ve.second.m_source, [&](vertexDescriptor v){ //LAMBDA FUNCTION!
 // 					std::vector <Direction> result={DEFAULT, LEFT, RIGHT};
 // 					erase_from_vector(result, transitionSystem[v].direction);
 // 					return result;
@@ -39,7 +39,7 @@ std::vector <vertexDescriptor> B2BConfigurator::splitTask(vertexDescriptor v, Di
 			split.emplace(split.begin(), src);
 		}
     	return split;
-	}		
+	}
 	if (transitionSystem[v].outcome != simResult::crashed){
 		return split;
 	}
@@ -77,7 +77,7 @@ void B2BConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, st
 // 					transitionSystem[_ep.second].it_observed=iteration;
 // 				}
 // 				// for (edgeDescriptor e: ie){
-// 				// 	if (transitionSystem[e.m_target].direction==d && e!=ep2.second && 
+// 				// 	if (transitionSystem[e.m_target].direction==d && e!=ep2.second &&
 // 				// 		transitionSystem[e.m_source].Di == transitionSystem[_ep.second.m_source].Di &&
 // 				// 		transitionSystem[e.m_source].Dn == transitionSystem[_ep.second.m_target].Dn){
 // 				// 		ep2.second=e;
@@ -117,7 +117,7 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 		if (visited.first ||out.empty()){
-			 if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir )){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
+			 if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
 				// Task task(Di, DEFAULT, g[v].endPose, true);
 				// Robot robot(&world);
@@ -127,13 +127,14 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 				// bool overlap=overlaps(robot.body(), &Di) && sensor;
 				// world_cleanup(world);
 				if (attentionWindowOverlaps(Di, g[v].endPose, world, controlGoal.get_disturbance_ptr())){
+				//if (overlap){
 					Di.bf.pose=b2Mul(invmul, Di.bf.pose);
 					return Di;
 				}
 			}
-			//check if Di was eliminated 
+			//check if Di was eliminated
 			return controlGoal.get_disturbance();
-		} 
+		}
 		else if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid() && g[v].direction==dir){
 			CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
 			return CVDi;
@@ -176,8 +177,8 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 // 				transitionSystem[v].options.push_back(DEFAULT);
 // 			}
 // 			else{
-// 				transitionSystem[v].options= transitionInHindsight(v, [&](vertexDescriptor v){ //LAMBDA FUNCTION! 
-// 					std::vector <Direction> result={DEFAULT}; 
+// 				transitionSystem[v].options= transitionInHindsight(v, [&](vertexDescriptor v){ //LAMBDA FUNCTION!
+// 					std::vector <Direction> result={DEFAULT};
 // 					return result;
 // 				});
 // 			}
@@ -221,13 +222,13 @@ std::vector<vertexDescriptor> B2BConfigurator::explorer(vertexDescriptor v, Tran
 				v1 =v0; //frontier
 				do {
 				std::pair<State, Edge> sk=simulation_setup(w, t, v0, shift, start, g[v0].options);
-				simResult sim=simulate(t, w, v0); 
+				simResult sim=simulate(t, w, v0);
 				gt::fill(sim, &sk.first, &sk.second); //find simulation result
 				sk.second.it_observed=iteration;
 				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction,controlGoal);
 				StateDifference sd;
 				std::vector <VertexMatch> other_matches;
-				VertexMatch match=findMatch(sk.first, t.get_direction(), StateMatcher::MATCH_TYPE::ABSTRACT, &sd, &other_matches);		//, closest_match	
+				VertexMatch match=findMatch(sk.first, t.get_direction(), StateMatcher::MATCH_TYPE::ABSTRACT, &sd, &other_matches);		//, closest_match
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
 				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
 					g[v0].options.erase(g[v0].options.begin());
@@ -242,7 +243,7 @@ std::vector<vertexDescriptor> B2BConfigurator::explorer(vertexDescriptor v, Tran
 						if (m_plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
 							if (startRecycle!=v){
 								task_vs.push_back(startRecycle);
-							}							
+							}
 							shift_states(g, task_vs, shift_start);
 						}
 					}
@@ -260,10 +261,10 @@ std::vector<vertexDescriptor> B2BConfigurator::explorer(vertexDescriptor v, Tran
 				g[v1].phi=evaluationFunction(er, v1, plan_prov);
 				propagateD(v1, v0, &closed); //if v0 is a dummy vertex it propagates the disturbance
 				addOptionsInHindsight(v, v0, v1, clearvoyance); //if default move fails, adds another default option to avoid this disturbance
-				v0_exp=v0;					
+				v0_exp=v0;
 				options=g[v0_exp].options;
 				v0=v1;
-				eqm.addToEvaluationQueue(evaluationQueue, v1, transitionSystem, v);				
+				eqm.addToEvaluationQueue(evaluationQueue, v1, transitionSystem, v);
 			}while(t.get_direction() !=DEFAULT & int(g[v0].options.size())!=0);
 		}
 	}
@@ -276,7 +277,7 @@ clearvoyance.reset();
 return plan_prov;
 }
 
-simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ //State& state, State src, 
+simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ //State& state, State src,
 	simResult result;
 	float remaining=remainingSimulationTime();
 	Disturbance focus=controlGoal.get_disturbance();
@@ -284,7 +285,7 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 		maybeFocus.set_affordance(PURSUE);
 		focus=maybeFocus;
 		maybeFocus.bf.attention=true;
-		worldBuilder.makeBody(w, maybeFocus.bf); //add hindsight disturbance to the world even if it doesn't overlap with the task scope 
+		worldBuilder.makeBody(w, maybeFocus.bf); //add hindsight disturbance to the world even if it doesn't overlap with the task scope
 		clearvoyance.pop(v);
 	}
 	Robot robot=makeRobot(w, t.getStart(), &focus);
