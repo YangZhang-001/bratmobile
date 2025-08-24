@@ -139,21 +139,6 @@ b2Body* WorldBuilder::makeBody(b2World&w, const BodyFeatures& features){
             body->CreateFixture(fixtureDef.shape, features.shift);
             break;
         }
-        // case b2Shape::e_edge:{ //straight edge
-        //     b2EdgeShape fixture; 
-        //     fixtureDef.shape = &fixture; 
-        //     fixture.m_vertex1 =features.pose.p - b2Vec2(features.halfLength*features.pose.q.c, features.halfWidth*features.pose.q.s);
-        //     fixture.m_vertex2 =features.pose.p + b2Vec2(features.halfLength*features.pose.q.c, features.halfWidth*features.pose.q.s);
-	    //     body->CreateFixture(fixtureDef.shape, features.shift);
-        //     break;
-        // }
-        // case b2Shape::e_circle:{
-        //     b2CircleShape fixture;
-        //     fixtureDef.shape = &fixture; 
-        //     fixture.m_radius = features.halfLength;
-	    //     body->CreateFixture(fixtureDef.shape, features.shift);
-        //     break;
-        // }
         default:
         throw std::invalid_argument("not a valid shape\n");break;
     }
@@ -309,7 +294,7 @@ b2Fixture * WorldBuilder::get_chassis(b2Body * r){
 
 }
 
-b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, Disturbance * goal){
+b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, const Disturbance *const goal){
 	b2AABB result;
     if (!goal->isValid()){
         return result;

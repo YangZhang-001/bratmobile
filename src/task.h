@@ -20,7 +20,7 @@ b2Body * GetDisturbance(b2World * x);
  * @param disturbance 
  * @return true if the robot overlaps with the disturbance OR if the robot doesn't have an attention window sensor OR if the disturbance is null
  */
-bool overlaps(b2Body * robot, Disturbance * disturbance);
+bool overlaps(b2Body * robot, const Disturbance *const);
 
 /**
  * @brief Checks if a box2d body fixture overlaps with a disturbance

@@ -67,6 +67,8 @@ protected:
      */
    virtual void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src=MOVING_VERTEX, vertexDescriptor startRecycle=MOVING_VERTEX)override;
 
+    bool attentionWindowOverlaps(const Disturbance & Di, const State & q, b2World & world, const Disturbance *const focus )const;
+
     /**
      * @brief Uses clearvoyance to get the disturbance for a vertex if needed
      * 
@@ -197,6 +199,8 @@ class ClearVoyance{
  * @param clearvoyance 
  */
 void addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1, ClearVoyance & clearvoyance);
+
+
 };
 
 #endif

@@ -113,7 +113,7 @@ class WorldBuilder{
 
     b2Fixture * get_chassis(b2Body *);
 
-    b2AABB  makeRobotSensor(b2Body*, Disturbance *goal); //returns bounding box in world coord
+    b2AABB  makeRobotSensor(b2Body*, const Disturbance *const goal); //returns bounding box in world coord
     
 
     std::vector <BodyFeatures>& get_world_objects(){

@@ -97,6 +97,16 @@ void B2BConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, st
 // 	return result;
 // }
 
+bool B2BConfigurator::attentionWindowOverlaps(const Disturbance & Di,const State & q, b2World & world, const Disturbance *const focus)const{
+	Task task(Di, DEFAULT, q.endPose, true);
+	Robot robot(&world);
+	robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
+	b2AABB box =worldBuilder.makeRobotSensor(robot.body(), focus);
+	b2Fixture *sensor =GetSensor(robot.body());
+	bool overlap=overlaps(robot.body(), &Di) && sensor;
+	world_cleanup(world);
+
+}
 
 
 Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
@@ -112,11 +122,6 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 			}
 			else if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir )){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
-				// if (std::pair <bool, edgeDescriptor> visitedDefault=gt::visitedEdge(gt::outEdges(g, v, DEFAULT), g, v); visitedDefault.first && (g[v].isTurning() && isTurning(dir))){
-				// 	if (visitedDefault.first && g[visitedDefault.second.m_target].outcome==simResult::crashed){
-				// 		Di= g[visitedDefault.second.m_target].Di;
-				// 	}
-				// } //if the vertex has been visited in the default direction
 				Task task(Di, DEFAULT, g[v].endPose, true);
 				Robot robot(&world);
 				robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
@@ -305,6 +310,7 @@ void B2BConfigurator::addOptionsInHindsight(vertexDescriptor v, vertexDescriptor
 		clearvoyance.add(v, transitionSystem[v1].Dn);
 		clearvoyance.add(v0, transitionSystem[v1].Dn);
 	}
+
 }
 
 bool B2BConfigurator::ClearVoyance::add(vertexDescriptor v, const Disturbance &d){

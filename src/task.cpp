@@ -19,7 +19,7 @@ b2Body * GetDisturbance(b2World * w){
 }
 
 
-bool overlaps(b2Body * robot, Disturbance * disturbance){
+bool overlaps(b2Body * robot, const Disturbance *const disturbance){
 	b2Fixture * sensor=GetSensor(robot);
 	if (sensor==NULL){
 		return true;
