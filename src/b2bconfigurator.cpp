@@ -106,13 +106,17 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 		if (visited.first ||out.empty()){
-			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex
+			if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid() && g[v].direction==dir){
+			CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
+			return CVDi;
+			}
+			else if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir )){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
-				if (std::pair <bool, edgeDescriptor> visitedDefault=gt::visitedEdge(gt::outEdges(g, v, DEFAULT), g, v); visitedDefault.first && (g[v].isTurning() && isTurning(dir))){
-					if (visitedDefault.first && g[visitedDefault.second.m_target].outcome==simResult::crashed){
-						Di= g[visitedDefault.second.m_target].Di;
-					}
-				} //if the vertex has been visited in the default direction
+				// if (std::pair <bool, edgeDescriptor> visitedDefault=gt::visitedEdge(gt::outEdges(g, v, DEFAULT), g, v); visitedDefault.first && (g[v].isTurning() && isTurning(dir))){
+				// 	if (visitedDefault.first && g[visitedDefault.second.m_target].outcome==simResult::crashed){
+				// 		Di= g[visitedDefault.second.m_target].Di;
+				// 	}
+				// } //if the vertex has been visited in the default direction
 				Task task(Di, DEFAULT, g[v].endPose, true);
 				Robot robot(&world);
 				robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
@@ -127,11 +131,7 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 			}
 			//check if Di was eliminated 
 			return controlGoal.get_disturbance();
-		}
-		else if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid()){
-			CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
-			return CVDi;
-		}
+		} 
 		else  if (v==MOVING_VERTEX){
 			return g[v].Di;
 		}
