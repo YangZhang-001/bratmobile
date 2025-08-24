@@ -144,7 +144,7 @@ TEST_F(DebugB2BTest, AddOptionsHindSight){
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
 }
 
-TEST_F(DebugB2BTest, AddOptionsHindSight){
+TEST_F(DebugB2BTest, Add180TurnToClearvoyance){
     iteration++;
     auto v0=make_successful(MOVING_VERTEX, LEFT).m_target;
     auto v1=make_v1_crashed(v0).m_target;
