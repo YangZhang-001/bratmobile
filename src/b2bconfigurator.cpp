@@ -97,7 +97,7 @@ void B2BConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, st
 // 	return result;
 // }
 
-bool B2BConfigurator::attentionWindowOverlaps(const Disturbance & Di,const State & q, b2World & world, const Disturbance *const focus)const{
+bool B2BConfigurator::attentionWindowOverlaps(const Disturbance & Di,const State & q, b2World & world, const Disturbance *const focus){
 	Task task(Di, DEFAULT, q.endPose, true);
 	Robot robot(&world);
 	robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());

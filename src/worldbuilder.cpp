@@ -294,7 +294,7 @@ b2Fixture * WorldBuilder::get_chassis(b2Body * r){
 
 }
 
-b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, const Disturbance *const goal){
+b2AABB WorldBuilder::makeRobotSensor(b2Body* const robotBody, const Disturbance *const goal)const{
 	b2AABB result;
     if (!goal->isValid()){
         return result;

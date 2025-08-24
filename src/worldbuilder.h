@@ -113,7 +113,14 @@ class WorldBuilder{
 
     b2Fixture * get_chassis(b2Body *);
 
-    b2AABB  makeRobotSensor(b2Body*, const Disturbance *const goal); //returns bounding box in world coord
+    /**
+     * @brief Makes the robot attention window, i.e. a distal sensor which is comprised between the extremes of the robot body and the disturbance
+     *  
+     * @param robotBody 
+     * @param focus a disturbance representing the focus of the attention window 
+     * @return b2AABB 
+     */
+    b2AABB  makeRobotSensor(b2Body* const robotBody, const Disturbance *const focus)const; //returns bounding box in world coord
     
 
     std::vector <BodyFeatures>& get_world_objects(){
