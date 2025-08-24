@@ -86,7 +86,7 @@ protected:
 
     int minimumEdgesForClearvoyance(Direction direction);
 
-    bool canGoToClearVoyance(const std::vector <edgeDescriptor> &oe, Direction direction);
+   // bool canGoToClearVoyance(const std::vector <edgeDescriptor> &oe, Direction direction);
     /**
      * @brief Uses clearvoyance to get the disturbance for a vertex if needed
      * 
