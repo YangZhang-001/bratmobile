@@ -274,7 +274,7 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 	simResult result;
 	float remaining=remainingSimulationTime();
 	Disturbance focus=controlGoal.get_disturbance();
-	if (Disturbance maybeFocus=clearvoyance.query(v); maybeFocus.isValid()){
+	if (Disturbance maybeFocus=clearvoyance.query(v); maybeFocus.isValid()&& isTurning(t.get_direction())==transitionSystem[v].isTurning()){
 		maybeFocus.set_affordance(PURSUE);
 		focus=maybeFocus;
 		maybeFocus.bf.attention=true;
