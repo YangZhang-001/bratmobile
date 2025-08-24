@@ -346,7 +346,7 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
         public:
             int size(){return lookaheads.size();}
 
-            MOCK_METHOD(Disturbance, query, (vertexDescriptor v), (override));
+           // MOCK_METHOD(Disturbance, query, (vertexDescriptor v), (override));
 
     };
 
@@ -355,6 +355,12 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
 
 
 class DebugB2BTest: public virtual DebugB2B, public testing::Test{
+};
+
+class DebugB2BTestVertex:public DebugB2BTest, public testing::WithParamInterface<vertexDescriptor>{
+    public:
+    DebugB2BTestVertex(){}
+    
 };
 
 
@@ -1235,4 +1241,6 @@ void ConfiguratorTestGetGoal::vertex_setup(vertexDescriptor v, const Disturbance
         transitionSystem[v].Dn.validate();  
     }
 }
+
+            
 #endif

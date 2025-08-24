@@ -144,6 +144,18 @@ TEST_F(DebugB2BTest, AddOptionsHindSight){
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
 }
 
+TEST_F(DebugB2BTest, AddOptionsHindSight){
+    iteration++;
+    auto v0=make_successful(MOVING_VERTEX, LEFT).m_target;
+    auto v1=make_v1_crashed(v0).m_target;
+    setAllVisited();
+    transitionSystem[v1].outcome=simResult::crashed;
+    B2BConfigurator::ClearVoyance cv;
+    addOptionsInHindsight(MOVING_VERTEX, 2, 3,  cv);
+    EXPECT_EQ(transitionSystem[v0].options.size(), 0);
+    EXPECT_TRUE(clearvoyance.query(v0).isValid());
+}
+
 class DebugB2BTestSplit : public DebugB2BTest, public ::testing::WithParamInterface<std::tuple<bool, Direction>> {
 };
 
@@ -436,22 +448,38 @@ INSTANTIATE_TEST_CASE_P(Target40, HighLevelTestB2B, ::testing::Combine( ::testin
 
 INSTANTIATE_TEST_CASE_P(Target68, HighLevelTestB2B, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_68cm/")), ::testing::Values(2, 3, 4, 6, 17, 36)));
 
-// TEST_F(HighLevelTestB2B, TrickyScenarioB2B){
-//     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-//     Logger logger=makeLogger(info);
-//     configurator->register_logger(&logger);
-//     configurator->init(DebugConfigurator::generateGoalTask());
-//     configurator->addIteration();
-//     configurator->get_worldbuilder()->add_iteration();
-//     configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTricky());
-//     b2World world(GRAVITY);
-//     configurator->explorePlan(world);
-//     EXPECT_GT(configurator->get_plan().size(), 0);
-//     EXPECT_FALSE(has180Turn(configurator->get_plan()));
-//     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-//     EXPECT_TRUE(planned_to_goal);
-// }
+TEST_F(HighLevelTestB2B, TrickyScenarioB2B){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
+    configurator->init(DebugConfigurator::generateGoalTask());
+    configurator->addIteration();
+    configurator->get_worldbuilder()->add_iteration();
+    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTricky());
+    b2World world(GRAVITY);
+    configurator->explorePlan(world);
+    EXPECT_GT(configurator->get_plan().size(), 0);
+    EXPECT_FALSE(has180Turn(configurator->get_plan()));
+    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+    EXPECT_TRUE(planned_to_goal);
+}
 
+
+TEST_F(HighLevelTestB2B, TrapScenarioB2B){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
+    configurator->init(DebugConfigurator::generateGoalTask());
+    configurator->addIteration();
+    configurator->get_worldbuilder()->add_iteration();
+    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTrickyTrap());
+    b2World world(GRAVITY);
+    configurator->explorePlan(world);
+    EXPECT_GT(configurator->get_plan().size(), 0);
+    EXPECT_FALSE(has180Turn(configurator->get_plan()));
+    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+    EXPECT_TRUE(planned_to_goal);
+}
 
 TEST_P(DebugB2BTestVertex, ClearVoyanceTurn){ //test clearvoyance when turning on the spot
     init(Task());
@@ -466,7 +494,7 @@ TEST_P(DebugB2BTestVertex, ClearVoyanceTurn){ //test clearvoyance when turning o
     transitionSystem[MOVING_VERTEX].Di.validate();
     transitionSystem[v1].Dn=Disturbance(bf2); //obstacle on the left
     transitionSystem[v1].Dn.validate();
-    clearvoyance.add(v0, transitionSystem[3].Dn);
+    clearvoyance.add(v0, transitionSystem[v1].Dn);
    // Disturbance solution=transitionSystem[MOVING_VERTEX].Di;
     transitionSystem[MOVING_VERTEX].direction=STOP;
     vertex_options_push_back(v0, vertex_get_direction(2));
@@ -479,3 +507,5 @@ TEST_P(DebugB2BTestVertex, ClearVoyanceTurn){ //test clearvoyance when turning o
     //NEED TO MAKE METHOD TO CHECK THAT DISTUBRANCE IS NOT BEING POPPED OFF (MOCK?)
     clearvoyance.pop(MOVING_VERTEX);
 }
+
+INSTANTIATE_TEST_CASE_P(TurningVertices, DebugB2BTestVertex, ::testing::Values(2, 4));
