@@ -125,7 +125,7 @@ int B2BConfigurator::visitedEdgeCount(const std::vector <edgeDescriptor>& es){
 
 // }
 
-int minimumEdgesForClearvoyance(Direction direction){
+int B2BConfigurator::minimumEdgesForClearvoyance(Direction direction){
 	if (isTurning(direction)){
 		return 1; //if turning, only one edge is needed to be visited
 	}
