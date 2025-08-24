@@ -354,7 +354,7 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
 
 
 
-class DebugB2BTest: public virtual DebugB2B, public testing::Test{
+class DebugB2BTest: public DebugB2B, public testing::Test{
 };
 
 class DebugB2BTestVertex:public DebugB2BTest, public testing::WithParamInterface<vertexDescriptor>{
@@ -1029,6 +1029,7 @@ edgeDescriptor DebugConfigurator::make_v1_crashed( vertexDescriptor v0, b2Transf
     transitionSystem[v1].start=start; //start
     transitionSystem[v1].endPose=end;//pose
     transitionSystem[v1].Dn=Disturbance(AVOID, Dn.p,Dn.q.GetAngle());
+    transitionSystem[v1].Dn.validate();
     transitionSystem[e].it_observed=iteration;
     return e;
 }

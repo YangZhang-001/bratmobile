@@ -111,7 +111,7 @@ class BodyFeatures{
 
 struct Disturbance{ 
 
-private:
+protected:
 friend class ControlInterface;
 friend struct StateMatcher;
     AffordanceIndex affordanceIndex = NONE; //not using the enum because in the future we might want to add more affordances

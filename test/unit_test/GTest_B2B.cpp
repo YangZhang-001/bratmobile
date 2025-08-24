@@ -147,11 +147,9 @@ TEST_F(DebugB2BTest, AddOptionsHindSight){
 TEST_F(DebugB2BTest, Add180TurnToClearvoyance){
     iteration++;
     auto v0=make_successful(MOVING_VERTEX, LEFT).m_target;
-    auto v1=make_v1_crashed(v0).m_target;
+    auto v1=make_v1_crashed(v0, b2Transform_zero, b2Transform_zero, generateGoal().pose()).m_target;
     setAllVisited();
-    transitionSystem[v1].outcome=simResult::crashed;
-    B2BConfigurator::ClearVoyance cv;
-    addOptionsInHindsight(MOVING_VERTEX, 2, 3,  cv);
+    addOptionsInHindsight(MOVING_VERTEX, v0,v1,  clearvoyance);
     EXPECT_EQ(transitionSystem[v0].options.size(), 0);
     EXPECT_TRUE(clearvoyance.query(v0).isValid());
 }
