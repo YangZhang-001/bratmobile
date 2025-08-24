@@ -300,9 +300,10 @@ Robot B2BConfigurator::makeRobot( b2World & world, const b2Transform& start, Dis
 
 
 void B2BConfigurator::addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1, ClearVoyance & clearvoyance){
-	if (!transitionSystem[v1].isTurning() && transitionSystem[v0].isTurning() && transitionSystem[v1].outcome==simResult::crashed){
+	if (transitionSystem[v0].isTurning() && transitionSystem[v1].outcome==simResult::crashed){ //!transitionSystem[v1].isTurning() && 
 		transitionSystem[v].options.push_back(DEFAULT);
 		clearvoyance.add(v, transitionSystem[v1].Dn);
+		clearvoyance.add(v0, transitionSystem[v1].Dn);
 	}
 }
 

@@ -94,7 +94,7 @@ protected:
         std::vector <Direction> result;
         ExecutionInfo info=package_info();
         std::vector <Frontier> frontiers=frontierVertices(v, transitionSystem, info);
-        if (frontiers.size()<2){ //only default explored
+        if (frontiers.size()<2){ //only  explored
            // result={DEFAULT, LEFT, RIGHT};
             //erase_from_vector(result, transitionSystem[ve.second.m_target].direction);
            // return result;
