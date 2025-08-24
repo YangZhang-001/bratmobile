@@ -135,7 +135,7 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 			//check if Di was eliminated
 			return controlGoal.get_disturbance();
 		}
-		else if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid() ){ //&& g[v].isTurning()==isTurning(dir)
+		else if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid()&& g[v].isTurning()==isTurning(dir) ){ //
 			CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
 			return CVDi;
 		}
