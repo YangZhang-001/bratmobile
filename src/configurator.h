@@ -48,6 +48,10 @@ Configurator(Task _task){
 	init(_task);
 }
 
+virtual ~Configurator(){
+	stop();
+}
+
 /**
  * @brief Initialises configurator
  * 
