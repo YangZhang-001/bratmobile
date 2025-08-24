@@ -367,6 +367,9 @@ void B2BConfigurator::ClearVoyance::pop(vertexDescriptor v){
 		if (!vIt->disturbances.empty()){
 			vIt->disturbances.erase(vIt->disturbances.begin());
 		}
+		else{
+			lookaheads.erase(vIt); //erase the lookahead if no disturbances leftS
+		}
 	}
 }
 
