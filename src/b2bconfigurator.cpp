@@ -117,7 +117,11 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 		if (visited.first ||out.empty()){
-			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir )){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
+			if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid() && g[v].direction==dir){
+			CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
+			return CVDi;
+			}
+			else if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir )){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
 				// Task task(Di, DEFAULT, g[v].endPose, true);
 				// Robot robot(&world);
@@ -134,10 +138,6 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 			//check if Di was eliminated 
 			return controlGoal.get_disturbance();
 		} 
-		else if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid() && g[v].direction==dir){
-			CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose);
-			return CVDi;
-		}
 		else  if (v==MOVING_VERTEX){
 			return g[v].Di;
 		}
@@ -280,7 +280,7 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 	simResult result;
 	float remaining=remainingSimulationTime();
 	Disturbance focus=controlGoal.get_disturbance();
-	if (Disturbance maybeFocus=clearvoyance.query(v); maybeFocus.isValid()&& isTurning(t.get_direction())==transitionSystem[v].isTurning()){
+	if (Disturbance maybeFocus=clearvoyance.query(v); maybeFocus.isValid()){//&& isTurning(t.get_direction())==transitionSystem[v].isTurning()
 		maybeFocus.set_affordance(PURSUE);
 		focus=maybeFocus;
 		maybeFocus.bf.attention=true;
