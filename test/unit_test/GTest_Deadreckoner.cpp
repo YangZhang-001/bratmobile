@@ -26,7 +26,6 @@ TEST(DeadReckoning, test){
     do{}while(motor.get_motorStep()>1);
     timer.stop();
     EXPECT_EQ(motor.get_motorStep(),0);
-
 }
 
 int main(int argc, char** argv){
