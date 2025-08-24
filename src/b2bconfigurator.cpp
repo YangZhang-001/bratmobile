@@ -117,8 +117,8 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 		if (visited.first ||out.empty()){ //if edges have not been expanded OR if they were expanded in previous iterations
-			if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid() && g[v].isTurning()==isTurning(dir)){ //if the configurator made a mental note to remmeber a disturbance
-			//
+			if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid()){ //if the configurator made a mental note to remmeber a disturbance
+			// && g[v].isTurning()==isTurning(dir)
 			CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose); //DISTURBANCE BACK-AND-ACROSS PROP
 			return CVDi;
 			} 
