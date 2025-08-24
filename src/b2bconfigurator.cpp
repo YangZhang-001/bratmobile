@@ -117,12 +117,12 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);
 		if (visited.first ||out.empty()){ //if edges have not been expanded OR if they were expanded in previous iterations
-			if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid() ){ //if the configurator made a mental note to remmeber a disturbance
-			//&& g[v].isTurning()==isTurning(dir)
+			if (Disturbance CVDi=clearvoyance.query(v); CVDi.isValid() && g[v].isTurning()==isTurning(dir)){ //if the configurator made a mental note to remmeber a disturbance
+			//
 			CVDi.bf.pose= b2Mul(invmul, CVDi.bf.pose); //DISTURBANCE BACK-AND-ACROSS PROP
 			return CVDi;
 			} 
-			 if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
+			else if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
 				if (attentionWindowOverlaps(Di, g[v], world, controlGoal.get_disturbance_ptr())){
 					Di.bf.pose=b2Mul(invmul, Di.bf.pose); //DISTURBANCE FORWARD PROP
