@@ -109,15 +109,41 @@ bool B2BConfigurator::attentionWindowOverlaps(const Disturbance & Di,const State
 
 }
 
+int B2BConfigurator::visitedEdgeCount(const std::vector <edgeDescriptor>& es){
+	int count=0;
+	for (const edgeDescriptor& e: es){
+		if (transitionSystem[e].it_observed==iteration){
+			count++;
+		}
+	}
+	return count;
+}
+
+// bool canGoToClearVoyance(const std::vector <edgeDescriptor> &oe, Direction direction){
+// 	// int visitedCount=visitedEdgeCount(oe);
+// 	// if (isTurning)
+
+// }
+
+int minimumEdgesForClearvoyance(Direction direction){
+	if (isTurning(direction)){
+		return 1; //if turning, only one edge is needed to be visited
+	}
+	return 3; //if not turning, at least two edges are needed to be visited
+}
+
+
+
 
 Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
 	b2Transform invmul=InvMul(start,g[v].endPose);
 	if (!g[v].Dn.isValid() ){
-		std::vector <edgeDescriptor> in=inEdges(v);
+		//std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
-		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);		
+		//std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);	
+		//visitedOrVisitingEdge(out, transitionSystem, currentVertex);
 		Disturbance CVDi=clearvoyance.query(v);
-		if (visited.first ||out.empty()){ //if edges have not been expanded OR if they were expanded in previous iteration
+		if (visitedEdgeCount(out)<minimumEdgesForClearvoyance(g[v].direction) ||out.empty()){ //if edges have not been expanded OR if they were expanded in previous iteration
 			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
 				if (attentionWindowOverlaps(Di, g[v], world, controlGoal.get_disturbance_ptr())){

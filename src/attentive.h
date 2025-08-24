@@ -279,15 +279,15 @@ std::pair<edgeDescriptor, bool> setup_match_edge(VertexMatch &match, vertexDescr
  */
 virtual std::vector <vertexDescriptor> task_vertices(vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep=NULL);
 
-/**
- * @brief Returns a visited edge if present, or if the current 
- * 
- * @param es 
- * @param g 
- * @param cv 
- * @return std::vector <vertexDescriptor> 
- */
-std::vector <vertexDescriptor> visitedOrVisitingEdge(const std::vector <edgeDescriptor>& es, TransitionSystem& g, vertexDescriptor cv=TransitionSystem::null_vertex());
+// /**
+//  * @brief Returns a visited edge if present, or if the current 
+//  * 
+//  * @param es 
+//  * @param g 
+//  * @param cv 
+//  * @return std::vector <vertexDescriptor> 
+//  */
+// std::vector <vertexDescriptor> visitedOrVisitingEdge(const std::vector <edgeDescriptor>& es, TransitionSystem& g, vertexDescriptor cv=TransitionSystem::null_vertex());
 
 /**
  * @brief Returns the vertex from which to start recycling plan

@@ -67,8 +67,26 @@ protected:
      */
    virtual void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src=MOVING_VERTEX, vertexDescriptor startRecycle=MOVING_VERTEX)override;
 
+    /**
+     * @brief Returns true if attention window overlap with Di
+     * 
+     * @param Di previous state's Di
+     * @param q previous state
+     * @param world box2d world
+     * @param focus disturbance to keep in focus to make the attetnion window (e.g. goal)
+     */
     bool attentionWindowOverlaps(const Disturbance & Di, const State & q, b2World & world, const Disturbance *const focus );
 
+    /**
+     * @brief Counts the number of visited edges
+     * @param es the edges
+     * @return int 
+     */
+    int visitedEdgeCount(const std::vector <edgeDescriptor>& es);
+
+    int minimumEdgesForClearvoyance(Direction direction);
+
+    bool canGoToClearVoyance(const std::vector <edgeDescriptor> &oe, Direction direction);
     /**
      * @brief Uses clearvoyance to get the disturbance for a vertex if needed
      * 

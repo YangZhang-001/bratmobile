@@ -25,7 +25,6 @@ void AttentiveConfigurator::resetPhi(){
 }
 
 
-
 std::pair <bool, Direction> AttentiveConfigurator::getOppositeDirection(Direction d){
 	std::pair <bool, Direction> result(false, DEFAULT);
 		switch (d){
