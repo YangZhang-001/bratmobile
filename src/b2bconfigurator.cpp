@@ -105,6 +105,7 @@ bool B2BConfigurator::attentionWindowOverlaps(const Disturbance & Di,const State
 	b2Fixture *sensor =GetSensor(robot.body());
 	bool overlap=overlaps(robot.body(), &Di) && sensor;
 	world_cleanup(world);
+	return overlap;
 
 }
 
@@ -122,14 +123,14 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 			}
 			else if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir )){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
-				Task task(Di, DEFAULT, g[v].endPose, true);
-				Robot robot(&world);
-				robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
-				b2AABB box =worldBuilder.makeRobotSensor(robot.body(), controlGoal.get_disturbance_ptr());
-				b2Fixture *sensor =GetSensor(robot.body());
-				bool overlap=overlaps(robot.body(), &Di) && sensor;
-				world_cleanup(world);
-				if (overlap){
+				// Task task(Di, DEFAULT, g[v].endPose, true);
+				// Robot robot(&world);
+				// robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
+				// b2AABB box =worldBuilder.makeRobotSensor(robot.body(), controlGoal.get_disturbance_ptr());
+				// b2Fixture *sensor =GetSensor(robot.body());
+				// bool overlap=overlaps(robot.body(), &Di) && sensor;
+				// world_cleanup(world);
+				if (attentionWindowOverlaps(Di, g[v].endPose, world, controlGoal.get_disturbance_ptr())){
 					Di.bf.pose=b2Mul(invmul, Di.bf.pose);
 					return Di;
 				}
