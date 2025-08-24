@@ -126,7 +126,7 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 				// b2Fixture *sensor =GetSensor(robot.body());
 				// bool overlap=overlaps(robot.body(), &Di) && sensor;
 				// world_cleanup(world);
-				if (attentionWindowOverlaps(Di, g[v].endPose, world, controlGoal.get_disturbance_ptr())){
+				if (attentionWindowOverlaps(Di, g[v], world, controlGoal.get_disturbance_ptr())){
 				//if (overlap){
 					Di.bf.pose=b2Mul(invmul, Di.bf.pose);
 					return Di;
