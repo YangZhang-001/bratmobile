@@ -13,15 +13,14 @@ class AffordanceSetter{
         init(str.c_str());
     }
     
-    void init(const char * text){
+    void init(std::string text){
 	if (text== "AVOID") affordance= AVOID;
 	else if (text=="PURSUE") affordance= PURSUE;
 	else if (text== "NONE") affordance= NONE;
     else{
         std::cout<<"WHAT?? VALID AFFORDANCE PLEASE"<<std::endl;
-        std::string str;
-        std::cin >>str;
-        return init(str.c_str()); 
+        std::cin >>text;
+        return init(text); 
         }    
     }
 
@@ -38,15 +37,14 @@ class DirectionSetter{
         std::cin >>str;
         init(str.c_str());
     }
-    void init(const char* text){
+    void init(std::string text){
 	if (text== "LEFT") direction= LEFT;
 	else if (text=="RIGHT") direction= RIGHT;
 	else if (text== "DEFAULT") direction= DEFAULT;
 	else{
         std::cout<<"WHAT?? VALID DIRECTION PLEASE"<<std::endl;
-        std::string str;
-        std::cin >>str;
-        return init(str.c_str());
+        std::cin >>text;
+        return init(text);
     }
     }
 
@@ -68,26 +66,29 @@ class UserInputConfigurator: public ReactiveConfigurator{
             std::cout<<"ADD AN OBSTACLE PLEASE!"<<std::endl;
             return;
         }
-        if (currentTask.getAffIndex()!=NONE){
-            ReactiveConfigurator::explore_plan(world);
-        }
-        else{
+        if (iteration<=1){
+            simResult result;            
             Disturbance disturbance;
-            if(affordanceSetter->getAffIndex()!=NONE){
-                disturbance.bf=worldBuilder.get_world_objects()[0];
-                disturbance.set_affordance(affordanceSetter->getAffIndex());
-                disturbance.validate();
-                currentTask=Task(disturbance, directionSetter->getDirection(), b2Transform_zero, true);
-               if (directionSetter->getDirection()==DEFAULT){
-                    if (affordanceSetter->getAffIndex()==AVOID){
-                    currentTask=Task(Disturbance(PURSUE, b2Vec2(1.0, 0)), UNDEFINED);
-                    }
-                    else if (affordanceSetter->getAffIndex()==PURSUE){
-                        currentTask.setEndCriteria(Distance(0.07)); //go 7cm close to the obstacle
-                    }
-                }
+            disturbance.bf=worldBuilder.get_world_objects()[0];
+            disturbance.set_affordance(affordanceSetter->getAffIndex());
+            disturbance.validate();
+            vertexDescriptor v1=boost::add_vertex(currentVertex, transitionSystem);
+            auto e=boost::edge(currentVertex, v1, transitionSystem);
+            transitionSystem[v1].direction=directionSetter->getDirection();
+            if(affordanceSetter->getAffIndex()==PURSUE && transitionSystem[v1].direction==DEFAULT){
+                transitionSystem[v1].Dn=disturbance;
+                transitionSystem[v1].Di=controlGoal.disturbance;
+                transitionSystem[v1].endPose.p.x=disturbance.pose().p.x-0.07;
             }
+            else{
+                transitionSystem[v1].Di=disturbance;
+            }
+            currentTask.set_change(true);
+            transitionSystem[e.first].step=20;
+            transitionSystem[e.first].iteration=iteration;
+            m_plan={v1};
         }
+        
     }
     public:
     UserInputConfigurator()=delete;
@@ -103,7 +104,7 @@ class UserInputConfigurator: public ReactiveConfigurator{
     }
 };
 
-class OneTaskController: public Reactive_Controller{
+class OneTaskController: public Wise_Controller{
     protected:
     public:
     OneTaskController()=default;
@@ -134,6 +135,9 @@ int main(int argc, char** argv) {
     AffordanceSetter as;
     DirectionSetter ds;
     UserInputConfigurator configurator(&ds, &as);
+    Disturbance goal(PURSUE, b2Vec2(1.0));
+    Task controlGoal(goal, UNDEFINED);
+    configurator.init(goal);
 	ClosedLoop_Tracker tracker;
 	configurator.register_tracker(&tracker);
 	OneTaskController rc;

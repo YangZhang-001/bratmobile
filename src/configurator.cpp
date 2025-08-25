@@ -106,7 +106,7 @@ std::pair<edgeDescriptor, bool> Configurator::addVertex(const vertexDescriptor &
 	result.second=false;
 	if (transitionSystem[src].options.size()>0 || topDown){
 		v1 = boost::add_vertex(transitionSystem);
-		result = add_edge(src, v1, transitionSystem);
+		result = boost::add_edge(src, v1, transitionSystem);
 		transitionSystem[result.first] =edge;
 		transitionSystem[v1].direction=transitionSystem[src].options[0];
 		transitionSystem[result.first].it_observed=iteration;
