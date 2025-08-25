@@ -72,12 +72,12 @@ class UserInputConfigurator: public ReactiveConfigurator{
             disturbance.bf=worldBuilder.get_world_objects()[0];
             disturbance.set_affordance(affordanceSetter->getAffIndex());
             disturbance.validate();
-            vertexDescriptor v1=boost::add_vertex(currentVertex, transitionSystem);
-            auto e=boost::edge(currentVertex, v1, transitionSystem);
+            vertexDescriptor v1=boost::add_vertex(transitionSystem);
+            auto e=boost::add_edge(currentVertex, v1, transitionSystem);
             transitionSystem[v1].direction=directionSetter->getDirection();
             if(affordanceSetter->getAffIndex()==PURSUE && transitionSystem[v1].direction==DEFAULT){
                 transitionSystem[v1].Dn=disturbance;
-                transitionSystem[v1].Di=controlGoal.disturbance;
+                transitionSystem[v1].Di=controlGoal.get_disturbance();
                 transitionSystem[v1].endPose.p.x=disturbance.pose().p.x-0.07;
             }
             else{
@@ -85,7 +85,7 @@ class UserInputConfigurator: public ReactiveConfigurator{
             }
             currentTask.set_change(true);
             transitionSystem[e.first].step=20;
-            transitionSystem[e.first].iteration=iteration;
+            transitionSystem[e.first].it_observed=iteration;
             m_plan={v1};
         }
         
@@ -135,9 +135,9 @@ int main(int argc, char** argv) {
     AffordanceSetter as;
     DirectionSetter ds;
     UserInputConfigurator configurator(&ds, &as);
-    Disturbance goal(PURSUE, b2Vec2(1.0));
+    Disturbance goal(PURSUE, b2Vec2(1,0));
     Task controlGoal(goal, UNDEFINED);
-    configurator.init(goal);
+    configurator.init(controlGoal);
 	ClosedLoop_Tracker tracker;
 	configurator.register_tracker(&tracker);
 	OneTaskController rc;
