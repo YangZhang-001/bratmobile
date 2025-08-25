@@ -72,7 +72,7 @@ class UserInputConfigurator: public ReactiveConfigurator{
             std::cout<<"ADD AN OBSTACLE PLEASE!"<<std::endl;
             return;
         }
-        if (iteration>1){
+        if (currentTask.getAffIndex()!=NONE){
             ReactiveConfigurator::explore_plan(world);
         }
         else{
@@ -82,6 +82,14 @@ class UserInputConfigurator: public ReactiveConfigurator{
                 disturbance.set_affordance(affordanceSetter->getAffIndex());
                 disturbance.validate();
                 currentTask=Task(disturbance, directionSetter->getDirection(), b2Transform_zero, true);
+            1   if (directionSetter->getDirection()==DEFAULT){
+                    if (affordanceSetter->getAffIndex()==AVOID){
+                    currentTask=Task(Disturbance(PURSUE, b2Vec(1.0, 0), UNDEFINED));
+                    }
+                    else if (affordanceSetter->getAffIndex()==PURSUE){
+                        currentTask.setEndCriteria(Distance(0.07)); //go 7cm close to the obstacle
+                    }
+                }
             }
         }
     }
@@ -123,26 +131,23 @@ class OneTaskController: public Reactive_Controller{
 #define DEBUG true
 
 int main(int argc, char** argv) {
-	printf("PLANNING =%i\n", PLANNING);
 	A1Lidar lidar;
 	AlphaBot motors;
-    Task controlGoal;
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
-    Configurator configurator(controlGoal);
+    AffordanceSetter as(argv[1]);
+    DirectionSetter ds(argv[1]);
+    UserInputConfigurator configurator(&ds, &as);
 	ClosedLoop_Tracker tracker;
 	configurator.register_tracker(&tracker);
-	Reactive_Controller rc;
+	OneTaskController rc;
 	configurator.register_controller(&rc);
 	if (argc>2){
 		configuratorInterface.debugOn=atoi(argv[2]);
 	}
 	configurator.setSimulationStep(.5);
 	//printf("current vertices size=%i\n", configurator.current_vertices.size());
-	as=AffordanceSetter(AffordanceIndex(atoi(argv[1])));
-	if (argc>3){
-		ts =TaskSetter(Direction(atoi(argv[3])));
-	}
+
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
 	MotorCallback cb(&controlInterface);

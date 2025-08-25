@@ -163,6 +163,7 @@ void setVelocities(const float & l,const float &r){
 
 };
 
+protected:
 /**
  * @brief Used to find collisions in the Box2D simulation
  * 
@@ -211,6 +212,7 @@ class Listener : public b2ContactListener {
         }
 	};
 
+public:
 Task::Action getAction()const{
     return action;
 }
