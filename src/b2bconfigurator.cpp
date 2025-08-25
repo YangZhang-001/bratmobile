@@ -138,13 +138,13 @@ int B2BConfigurator::minimumEdgesForClearvoyance(Direction direction){
 Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
 	b2Transform invmul=InvMul(start,g[v].endPose);
 	if (!g[v].Dn.isValid() ){
-		//std::vector <edgeDescriptor> in=inEdges(v);
+		std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
 		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);	
 		//visitedOrVisitingEdge(out, transitionSystem, currentVertex);
 		Disturbance CVDi=clearvoyance.query(v);
-		//visitedEdgeCount(out)<minimumEdgesForClearvoyance(g[v].direction)
-		if (visited.first ||out.empty()){ //if edges have not been expanded OR if they were expanded in previous iteration
+		bool notClearVoyance=visitedEdgeCount(out)<minimumEdgesForClearvoyance(g[v].direction);
+		if ((visited.first||out.empty()) && notClearVoyance){ //if edges have not been expanded OR if they were expanded in previous iteration
 			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
 				if (attentionWindowOverlaps(Di, g[v], world, controlGoal.get_disturbance_ptr())){
