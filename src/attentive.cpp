@@ -585,8 +585,13 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	//position of task start with respect to goal disturbance (pov)
 	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
 	Mul(shift_start, controlGoal_adjusted);
-	boost::remove_edge(edge.first, transitionSystem);
-	edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
+	if (edge.first.m_source!=v0){
+		boost::remove_edge(edge.first, transitionSystem);
+		edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
+	}
+	if (!boost::edge(edge.first.m_source, edge.first.m_target, transitionSystem).second){
+		return false;
+	}
 	transitionSystem[edge.first].enableOverride();	
 	ExecutionInfo info=package_info(TransitionSystem::null_vertex(), been);
 	info.overarchingGoal(controlGoal_adjusted); 
