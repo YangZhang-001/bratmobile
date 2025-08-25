@@ -9,28 +9,6 @@ Disturbance set_target(int& run, b2Transform start){
 	}
 	return result;
 }
-void Configurator::explore_plan(b2World&world){
-	if (iteration>1){
-		return;
-	}
-    pre_explore(transitionSystem, plan, currentTask.change);
-    vertexDescriptor src=get_explore_start(transitionSystem);
-    resetPhi(transitionSystem);
-    plan=explorer(src, transitionSystem, world);
-    if (DEBUG){
-        std::vector<vertexDescriptor> _plan=(plan);
-        debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
-    }		
-    ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
-    if (plan.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
-        printf("no plan, searchign from %i\n", src);
-        bool finished=false;
-        plan= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
-    }
-    else{
-        printf("recycled plan in explorer:\n");
-    }
-}
 
 int main(int argc, char** argv) {
 	A1Lidar lidar;
@@ -38,7 +16,7 @@ int main(int argc, char** argv) {
     Task controlGoal;
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
-    Configurator configurator(controlGoal);
+    AttentiveConfigurator configurator(controlGoal);
 	DeadReckoner tracker;
 	configurator.register_tracker(&tracker);	
 	Wise_Controller wc;
