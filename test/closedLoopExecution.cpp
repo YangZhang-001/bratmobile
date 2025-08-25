@@ -71,11 +71,26 @@ class UserInputConfigurator: public virtual Configurator{
     DirectionSetter *directionSetter=NULL;
     AffordanceSetter *affordanceSetter=NULL;
 
+    // void init(Task _task)override{
+    //     if (!directionSetter){
+    //         throw "no direction setter!";
+    //     }
+    //     if (!affordanceSetter){
+    //         throw "no affordance setter";
+    //     }
+    //     if (directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==AVOID){
+            
+    //     }
+    // }
+
 
     void explore_plan(b2World &world)override{
         if (worldBuilder.get_world_objects().size()==0){
             std::cout<<"ADD AN OBSTACLE PLEASE!"<<std::endl;
             return;
+        }
+        if (worldBuilder.get_world_objects().size()>1){
+            throw "TOO MANY OBSTACLES!!";
         }
         std::cout<<iteration<<std::endl;
         if (iteration<=1){
@@ -94,6 +109,9 @@ class UserInputConfigurator: public virtual Configurator{
             }
             else{
                 transitionSystem[v1].Di=disturbance;
+                b2Transform newGoal=b2Mul(b2Transform(b2Vec2(.5, 0), b2Rot(0)), disturbance.pose());
+                controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED);
+                init(controlGoal);
             }
             currentTask.set_change(true);
             transitionSystem[e.first].step=20;
@@ -126,6 +144,7 @@ class OneTaskController: public Wise_Controller{
     void next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan)override{
         Wise_Controller::next_task(currentTask, controlGoal, g, current_vertices, plan);
         if (currentTask.is_over() && currentTask.getAction().getLWheelSpeed()!=0 && currentTask.getAction().getRWheelSpeed()!=0){
+            std::cout<<"terminating!"<<std::endl;
             currentTask=Task(Disturbance(), STOP);
             currentTask.getAction().setLWheelSpeed(0);
             currentTask.getAction().setRWheelSpeed(0);
@@ -151,7 +170,8 @@ int main(int argc, char** argv) {
     DirectionSetter ds;
     std::cout<<as.getAffIndex()<<", "<<ds.getDirection()<<std::endl;
     UserInputConfigurator configurator(&ds, &as);
-    Disturbance goal(PURSUE, b2Vec2(1,0));
+    b2Vec2 goalPos(1,0);
+    Disturbance goal(PURSUE, goalPos);
     Task controlGoal(goal, UNDEFINED);
     configurator.init(controlGoal);
 	ClosedLoop_Tracker tracker;

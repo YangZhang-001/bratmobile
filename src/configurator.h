@@ -57,7 +57,7 @@ virtual ~Configurator(){
  * 
  * @param _task the new overarching goal
  */
-void init(Task _task=Task());
+virtual void init(Task _task=Task());
 
 /**
  * @brief Calls functions to explore the state space and extract a plan
