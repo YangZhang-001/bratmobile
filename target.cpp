@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 	motors.stop();
 	configurator.stop();
 	lidar.stop();
-	~logger;
+	logger.~Logger();
 }
 	
 	
