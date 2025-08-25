@@ -131,8 +131,8 @@ int main(int argc, char** argv) {
 	AlphaBot motors;
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
-    AffordanceSetter as(argv[1]);
-    DirectionSetter ds(argv[1]);
+    AffordanceSetter as;
+    DirectionSetter ds;
     UserInputConfigurator configurator(&ds, &as);
 	ClosedLoop_Tracker tracker;
 	configurator.register_tracker(&tracker);
