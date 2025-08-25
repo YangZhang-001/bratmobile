@@ -14,15 +14,16 @@ class AffordanceSetter{
     void init(const char * text){
 	switch (text){
 		case "AVOID":
-			return AVOID;
+			affordance= AVOID;break;
 		case "PURSUE":
-			return PURSUE;
+			affordance= PURSUE;break;
 		case "NONE":
-			return NONE;
+			affordance= NONE;break;
         default:
             std::cout<<"WHAT?? VALID AFFORDANCE PLEASE"<<std::endl;
-            std::cin >>text;
-            return init(text);
+            std::string str;
+            std::cin >>str;
+            return init(str.c_str());
             break;
 	    }
     }
@@ -49,8 +50,9 @@ class DirectionSetter{
 	    }
         default:
             std::cout<<"WHAT?? VALID DIRECTION PLEASE"<<std::endl;
-            std::cin >>text;
-            return DirectionSetter(text);
+            std::string str;
+            std::cin >>str;
+            return init(str.c_str());
             break;
     }
 
@@ -82,7 +84,7 @@ class UserInputConfigurator: public ReactiveConfigurator{
                 disturbance.set_affordance(affordanceSetter->getAffIndex());
                 disturbance.validate();
                 currentTask=Task(disturbance, directionSetter->getDirection(), b2Transform_zero, true);
-            1   if (directionSetter->getDirection()==DEFAULT){
+               if (directionSetter->getDirection()==DEFAULT){
                     if (affordanceSetter->getAffIndex()==AVOID){
                     currentTask=Task(Disturbance(PURSUE, b2Vec(1.0, 0), UNDEFINED));
                     }

@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
     AttentiveConfigurator configurator(controlGoal);
+	HorizonStarPlanner planner;
 	DeadReckoner tracker;
 	configurator.register_planner(&planner);
 	configurator.register_tracker(&tracker);
