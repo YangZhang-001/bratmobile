@@ -22,10 +22,12 @@ int main(int argc, char** argv) {
 	Motor_Out controlInterface;
     AttentiveConfigurator configurator(controlGoal);
 	DeadReckoner tracker;
+	configurator.register_planner(&planner);
 	configurator.register_tracker(&tracker);
 	Wise_Controller wc;
 	configurator.register_controller(&wc);
-	dump_benchmarks( "rt-update", "/tmp");
+	Logger logger( "rt-update-targetless", "/tmp");
+	configurator.register_logger(&logger);
 	if (argc>1){
 		#define DEBUG atoi(argv[1])
 	}
@@ -43,6 +45,7 @@ int main(int argc, char** argv) {
 	motors.stop();
 	configurator.stop();
 	lidar.stop();
+	~logger;
 }
 	
 	

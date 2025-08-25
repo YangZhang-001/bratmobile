@@ -33,6 +33,18 @@ bool Measurement::operator>=(Measurement &m2){
     return r;
 }
 
+bool Measurement::operator==(Measurement & m2){
+    bool r=false;
+    if (valid == m2.isValid() ){
+        if (valid){
+            r= get_signed()==m2.get_signed();
+        }
+        else {r=true;}
+    }
+    return r;
+}
+
+
 
 float Measurement::getStandardError(Measurement m2, float max){ 
     float result =0;
@@ -66,6 +78,7 @@ float EndCriteria::getStandardError(Angle a, Distance d, State n){
 }
 
 
+
 float SignedVectorLength(b2Vec2 v){
 	float signedLength = v.Length();
 	if (v.x <0){
@@ -80,7 +93,9 @@ bool EndCriteria::hasEnd(){
 
 void EndCriteria::adjust(const b2Transform& delta){
     if (angle.isValid()){
-        angle.set(angle.get_signed()-delta.q.GetAngle());
+        b2Rot newAngle=b2MulT(b2Rot(angle.get_signed()), delta.q);
+        //angle.set(angle.get_signed()-delta.q.GetAngle());
+       angle.set(newAngle.GetAngle());
     }
     if (distance.isValid()){
         distance.set(distance.get_signed()-delta.p.Length());

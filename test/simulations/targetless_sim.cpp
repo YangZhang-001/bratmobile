@@ -1,7 +1,7 @@
 #include "../callbacks.h"
 
 //argv: 1. directory to open 2. timeoff (0=timeron) 3. planning on 4. debug on
-class ConfiguratorAccessible:public Configurator{
+class ConfiguratorAccessible:public AttentiveConfigurator{
     public:
     ConfiguratorAccessible(const Task& t){
         init(t);

@@ -1,5 +1,5 @@
  
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.10)
 
 SET(CMAKE_CXX_STANDARD 17)
 
@@ -14,35 +14,86 @@ find_package(Threads)
 find_package(GTest CONFIG REQUIRED)
 
 include(CTest)
+include(FetchContent)
 
 include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
 include(GoogleTest)
+
 add_executable(GTest_HighLevel GTest_HighLevel.cpp)
 target_link_libraries(GTest_HighLevel gtest gtest_main)
-target_link_libraries(GTest_HighLevel  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+target_link_libraries(GTest_HighLevel  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
-add_executable(GTest_AdjustGoal GTest_AdjustGoal.cpp)
-target_link_libraries(GTest_AdjustGoal gtest gtest_main)
-target_link_libraries(GTest_AdjustGoal  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+add_executable(GTest_Math GTest_Math.cpp)
+target_link_libraries(GTest_Math gtest gtest_main)
+target_link_libraries(GTest_Math  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 add_executable(GTest_Configurator GTest_Configurator.cpp)
 target_link_libraries(GTest_Configurator gtest gtest_main)
-target_link_libraries(GTest_Configurator  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+target_link_libraries(GTest_Configurator  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_B2B GTest_B2B.cpp)
+target_link_libraries(GTest_B2B gtest gtest_main)
+target_link_libraries(GTest_B2B  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_B2BTmp GTest_B2BTmp.cpp)
+target_link_libraries(GTest_B2BTmp gtest gtest_main)
+target_link_libraries(GTest_B2BTmp  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 
 add_executable(GTest_Worldbuilding GTest_Worldbuilding.cpp)
 target_link_libraries(GTest_Worldbuilding gtest gtest_main)
-target_link_libraries(GTest_Worldbuilding  CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+target_link_libraries(GTest_Worldbuilding  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
-gtest_discover_tests(GTest_HighLevel)
-gtest_discover_tests(GTest_AdjustGoal)
-gtest_discover_tests(GTest_Configurator)
-gtest_discover_tests(GTest_Worldbuilding)
+add_executable(GTest_Logger GTest_Logger.cpp)
+target_link_libraries(GTest_Logger gtest gtest_main)
+target_link_libraries(GTest_Logger  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Matcher GTest_Matcher.cpp)
+target_link_libraries(GTest_Matcher gtest gtest_main)
+target_link_libraries(GTest_Matcher  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Graph GTest_Graph.cpp)
+target_link_libraries(GTest_Graph gtest gtest_main)
+target_link_libraries(GTest_Graph  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Planner GTest_Planner.cpp)
+target_link_libraries(GTest_Planner gtest gtest_main)
+target_link_libraries(GTest_Planner  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Task GTest_Task.cpp)
+target_link_libraries(GTest_Task gtest gtest_main)
+target_link_libraries(GTest_Task  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Controller GTest_Controller)
+target_link_libraries(GTest_Controller gtest gtest_main)
+target_link_libraries(GTest_Controller  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 
 add_library(test_classes test_classes.h ../test_essentials.h ../callbacks.h)
 target_link_libraries(test_classes gtest gtest_main)
-target_link_libraries( test_classes CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+target_link_libraries( test_classes brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+#make a single executable
+#file(GLOB TEST_SOURCES "./GTest*.cpp")
+# add_executable(all_tests ${TEST_SOURCES})
+# target_link_libraries(all_tests test_classes)
+#target_link_libraries(all_tests gtest gtest_main)
+#target_link_libraries(all_tests  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+# gtest_discover_tests(all_tests)
+
+gtest_discover_tests(GTest_HighLevel)
+gtest_discover_tests(GTest_Math)
+gtest_discover_tests(GTest_Configurator)
+gtest_discover_tests(GTest_B2B)
+gtest_discover_tests(GTest_B2BTmp)
+gtest_discover_tests(GTest_Worldbuilding)
+gtest_discover_tests(GTest_Controller)
+gtest_discover_tests(GTest_Logger)
+gtest_discover_tests(GTest_Matcher)
+gtest_discover_tests(GTest_Graph)
+gtest_discover_tests(GTest_Planner)
+gtest_discover_tests(GTest_Task)
+
 
 # INCLUDE_DIRECTORIES("/usr/local/include/")
 # enable_testing()
@@ -71,7 +122,7 @@ target_link_libraries( test_classes CloCK ${OpenCV_LIBS} box2d rt GTest::gtest_m
 # add_executable(make_sensor ../test_essentials.h make_sensor.cpp)
 # add_executable(end_contact ../test_essentials.h end_contact.cpp)
 # add_executable(get_disturbance ../test_essentials.h get_disturbance.cpp)
-add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
+#add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
 # add_executable(task_to_execute ../test_essentials.h task_to_execute.cpp)
 # add_executable(closed_loop_ended ../test_essentials.h closed_loop_ended.cpp)
 # add_executable(axb ../test_essentials.h axb.cpp)
@@ -84,53 +135,48 @@ add_executable(checkPlan ../test_essentials.h checkPlan.cpp)
 # add_executable(calc_transform ../test_essentials.h calc_transform.cpp)
 # add_executable(PID_inst PID.cpp)
 
-# target_link_libraries(PID_inst CloCK ${OpenCV_LIBS} box2d rt)
-# target_link_libraries(calc_transform CloCK ${OpenCV_LIBS} box2d rt)
-# target_link_libraries(estimate_vertex CloCK ${OpenCV_LIBS} box2d rt)
-# target_link_libraries(filter_box CloCK ${OpenCV_LIBS} box2d)
-# target_link_libraries(kalman CloCK ${OpenCV_LIBS} box2d)
-# target_link_libraries(wb_get_transform_sim CloCK ${OpenCV_LIBS} box2d)
-# target_link_libraries(rwf CloCK ${OpenCV_LIBS} box2d)
-# target_link_libraries(D_affine CloCK ${OpenCV_LIBS} box2d)
-# target_link_libraries(axb CloCK ${OpenCV_LIBS} box2d)
-# target_link_libraries(closed_loop_ended CloCK ${OpenCV_LIBS} box2d rt)
-# target_link_libraries(task_to_execute CloCK ${OpenCV_LIBS} box2d rt)
-# #target_link_libraries(split_task CloCK ${OpenCV_LIBS} box2d rt  )
-# target_link_libraries(backtrack CloCK ${OpenCV_LIBS} box2d rt  )
-# #target_link_libraries(explorer CloCK ${OpenCV_LIBS} box2d rt  )
-# target_link_libraries(transitionMatrix CloCK ${OpenCV_LIBS} box2d rt  )
-# target_link_libraries(disturbance_dimensions CloCK ${OpenCV_LIBS} box2d rt  )
-#target_link_libraries(plan CloCK ${OpenCV_LIBS} box2d rt  )
-# target_link_libraries(split_step CloCK ${OpenCV_LIBS} box2d rt  )
-# target_link_libraries(affine_transformation CloCK ${OpenCV_LIBS} box2d rt  )
-# target_link_libraries(processData_k CloCK ${OpenCV_LIBS} box2d rt)
-# target_link_libraries(partition_clusters CloCK ${OpenCV_LIBS} box2d rt)
-# target_link_libraries(kmeans_clusters CloCK ${OpenCV_LIBS} box2d rt)
-# target_link_libraries(match CloCK ${OpenCV_LIBS} box2d )
-# target_link_libraries(find_match_state CloCK ${OpenCV_LIBS} box2d )
-# target_link_libraries(state_difference CloCK ${OpenCV_LIBS} box2d )
-# target_link_libraries(match_equal CloCK ${OpenCV_LIBS} box2d )
-# target_link_libraries(replanner CloCK ${OpenCV_LIBS} box2d )
-# target_link_libraries(fill_for_dist CloCK ${OpenCV_LIBS} box2d)
-# target_link_libraries(make_sensor CloCK ${OpenCV_LIBS} box2d)
-# target_link_libraries(end_contact CloCK ${OpenCV_LIBS} box2d)
-# target_link_libraries(get_disturbance CloCK ${OpenCV_LIBS} box2d)
-target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d )
+# target_link_libraries(PID_inst brat ${OpenCV_LIBS} box2d rt)
+# target_link_libraries(calc_transform brat ${OpenCV_LIBS} box2d rt)
+# target_link_libraries(estimate_vertex brat ${OpenCV_LIBS} box2d rt)
+# target_link_libraries(filter_box brat ${OpenCV_LIBS} box2d)
+# target_link_libraries(kalman brat ${OpenCV_LIBS} box2d)
+# target_link_libraries(wb_get_transform_sim brat ${OpenCV_LIBS} box2d)
+# target_link_libraries(rwf brat ${OpenCV_LIBS} box2d)
+# target_link_libraries(D_affine brat ${OpenCV_LIBS} box2d)
+# target_link_libraries(axb brat ${OpenCV_LIBS} box2d)
+# target_link_libraries(closed_loop_ended brat ${OpenCV_LIBS} box2d rt)
+# target_link_libraries(task_to_execute brat ${OpenCV_LIBS} box2d rt)
+# #target_link_libraries(split_task brat ${OpenCV_LIBS} box2d rt  )
+# target_link_libraries(backtrack brat ${OpenCV_LIBS} box2d rt  )
+# #target_link_libraries(explorer brat ${OpenCV_LIBS} box2d rt  )
+# target_link_libraries(transitionMatrix brat ${OpenCV_LIBS} box2d rt  )
+# target_link_libraries(disturbance_dimensions brat ${OpenCV_LIBS} box2d rt  )
+#target_link_libraries(plan brat ${OpenCV_LIBS} box2d rt  )
+# #target_link_libraries(explorer brat ${OpenCV_LIBS} box2d rt  )
+# target_link_libraries(transitionMatrix brat ${OpenCV_LIBS} box2d rt  )
+# target_link_libraries(disturbance_dimensions brat ${OpenCV_LIBS} box2d rt  )
+#target_link_libraries(plan brat ${OpenCV_LIBS} box2d rt  )
+# target_link_libraries(split_step brat ${OpenCV_LIBS} box2d rt  )
+# target_link_libraries(affine_transformation brat ${OpenCV_LIBS} box2d rt  )
+# target_link_libraries(processData_k brat ${OpenCV_LIBS} box2d rt)
+# target_link_libraries(partition_clusters brat ${OpenCV_LIBS} box2d rt)
+# target_link_libraries(kmeans_clusters brat ${OpenCV_LIBS} box2d rt)
+# target_link_libraries(match brat ${OpenCV_LIBS} box2d )
+# target_link_libraries(find_match_state brat ${OpenCV_LIBS} box2d )
+# target_link_libraries(state_difference brat ${OpenCV_LIBS} box2d )
+# target_link_libraries(match_equal brat ${OpenCV_LIBS} box2d )
+# target_link_libraries(replanner brat ${OpenCV_LIBS} box2d )
+# target_link_libraries(fill_for_dist brat ${OpenCV_LIBS} box2d)
+# target_link_libraries(make_sensor brat ${OpenCV_LIBS} box2d)
+# target_link_libraries(end_contact brat ${OpenCV_LIBS} box2d)
+# target_link_libraries(get_disturbance brat ${OpenCV_LIBS} box2d)
+#target_link_libraries(checkPlan brat ${OpenCV_LIBS} box2d test_classes)
 
 
 
-# # add_test(NAME split_task COMMAND split_task 0.6 0 0)
-# # add_test(NAME split_task_-01 COMMAND split_task 0.26 -0.01 -1.570796 0 0 -1.570796 0.265 -0.16 0)
-# # add_test(NAME split_task_angle COMMAND split_task 0.0 .6 1.57079633)
-# # add_test(NAME split_task_offset COMMAND split_task 0.75 0.27 0 0.2 0.27 0)
-# # add_test(NAME split_task_offset_angle COMMAND split_task 0.27 0.75 1.57079633 0.27 0.2 1.57079633)
-# # add_test(NAME split_task_1_node COMMAND split_task 0.27 0 0)
-# # add_test(NAME split_task_0_nodes COMMAND split_task 0.18 0 0)
 
 # add_test(NAME split_step COMMAND split_step 0.68 0 )
 
-# add_test(NAME backtrack COMMAND backtrack 0.6 0 0)
-# add_test(NAME backtrack_-01 COMMAND backtrack 0.26 -0.01 -1.570796 0 0 -1.570796 0.265 -0.16 0)
 # add_test(NAME affine_transformation_ahead COMMAND affine_transformation 1 0 0)
 
 # add_test(NAME transition COMMAND transitionMatrix)
@@ -164,29 +210,12 @@ target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d )
 # add_test(NAME end_contact_obstacle_goal COMMAND end_contact 0 1)
 # add_test(NAME end_contact_goal COMMAND end_contact 1 1)
 
-# add_test(NAME get_disturbance_0dl COMMAND get_disturbance 0 2 0) #position 1, prev: DEF, curr: LEFT
-# add_test(NAME get_disturbance_1l COMMAND get_disturbance 1 0) #position 1, prev: LEFT, curr: DEF
-# add_test(NAME get_disturbance_2r COMMAND get_disturbance 2 1) #position 2, prev: RIGHT, curr:DEF
-# add_test(NAME get_disturbance_3 COMMAND get_disturbance 3) #obstacle behind (pos 3), prev: DEF, curr: DEF
-# add_test(NAME get_disturbance_3dr COMMAND get_disturbance 3 2 1) #pos 3, prev: DEF, curr: RIGHT
-# add_test(NAME get_disturbance_3l COMMAND get_disturbance 3 0)
-# add_test(NAME get_disturbance_3r COMMAND get_disturbance 3 1)
-# add_test(NAME get_disturbance_4r COMMAND get_disturbance 4)
-# add_test(NAME get_disturbance_4dr COMMAND get_disturbance 4 2 1)
+
 
 # add_test(NAME disturbance_dimensions_1d COMMAND disturbance_dimensions)
 # #add_test(NAME disturbance_dimensions_2d COMMAND disturbance_dimensions 2)
 
 
-# # add_test(NAME explorer_no COMMAND explorer)
-# # add_test(NAME explorer_cds COMMAND explorer ../cul_de_sac/ 0)
-# # add_test(NAME explorer_target COMMAND explorer ../target_68cm/ 1)
-
-
-# add_test(NAME plan_no COMMAND plan)
-# add_test(NAME plan_cds COMMAND plan ../cul_de_sac/ 0)
-# add_test(NAME plan_target_40cm COMMAND plan ../target_40cm/ 1)
-# add_test(NAME plan_target_68cm COMMAND plan ../target_68cm/ 1)
 
 
 # add_test(NAME match_false COMMAND match)
@@ -227,19 +256,6 @@ target_link_libraries(checkPlan CloCK ${OpenCV_LIBS} box2d )
 
 
 
-# # add_test(NAME replanner_68_9 COMMAND replanner ../target_68cm/ 9 1 34)
-# # add_test(NAME replanner_68_11 COMMAND replanner ../target_68cm/ 11 1 34)
-# # add_test(NAME replanner_68_10 COMMAND replanner ../target_68cm/ 9 1 50)
-# # add_test(NAME replanner_68_12 COMMAND replanner ../target_68cm/ 11 1 50)
-
-
-# #ARGUMENTS: vertex match, goal?, how many iterations have passed?
-add_test(NAME checkPlan COMMAND checkPlan ../target_68cm/ 2 1 1)
-add_test(NAME checkPlan_4 COMMAND checkPlan ../target_68cm/ 2 1 4)
-add_test(NAME checkPlan_21 COMMAND checkPlan ../target_68cm/ 2 1 21)
-#add_test(NAME checkPlan_40cm COMMAND checkPlan ../target_40cm/ 2 1 1)
-#add_test(NAME checkPlan_40cm_4 COMMAND checkPlan ../target_40cm/ 2 1 4)
-add_test(NAME checkPlan_40cm_21 COMMAND checkPlan ../target_40cm/ 2 1 21)
 
 # #ARGUMENTS: Dn affordance, new task direction, Di/goal affordance
 # add_test(NAME task_to_execute_default_to_ob COMMAND task_to_execute 1 2 2)

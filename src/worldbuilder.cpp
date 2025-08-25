@@ -90,6 +90,17 @@ std::vector <std::vector<cv::Point2f>> WorldBuilder::partition_clusters( std::ve
     return result;
 }
 
+std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer& points, const b2Transform& start){
+    std::vector <BodyFeatures> result;
+    std::vector <Pointf> ptset= set2vec(points);
+    std::pair<bool,BodyFeatures> feature= bounding_box(ptset);
+    if (feature.first){
+        feature.second.pose.q.Set(start.q.GetAngle());
+        result.push_back(feature.second);
+    }
+    return result;
+}
+
 std::vector <BodyFeatures> WorldBuilder::cluster_data( const CoordinateContainer & pts, const b2Transform& start, CLUSTERING clustering){
     std::vector <BodyFeatures> result;
     std::vector <cv::Point2f> points, centers;
@@ -112,7 +123,7 @@ std::vector <BodyFeatures> WorldBuilder::cluster_data( const CoordinateContainer
 
 }
 
-b2Body* WorldBuilder::makeBody(b2World&w, BodyFeatures features){
+b2Body* WorldBuilder::makeBody(b2World&w, const BodyFeatures& features){
 	b2Body * body;
 	b2BodyDef bodyDef;
 	b2FixtureDef fixtureDef;
@@ -126,21 +137,6 @@ b2Body* WorldBuilder::makeBody(b2World&w, BodyFeatures features){
             fixtureDef.shape = &fixture;             
             fixture.SetAsBox(features.halfWidth, features.halfLength); 
             body->CreateFixture(fixtureDef.shape, features.shift);
-            break;
-        }
-        case b2Shape::e_edge:{ //straight edge
-            b2EdgeShape fixture; 
-            fixtureDef.shape = &fixture; 
-            fixture.m_vertex1 =features.pose.p - b2Vec2(features.halfLength*features.pose.q.c, features.halfWidth*features.pose.q.s);
-            fixture.m_vertex2 =features.pose.p + b2Vec2(features.halfLength*features.pose.q.c, features.halfWidth*features.pose.q.s);
-	        body->CreateFixture(fixtureDef.shape, features.shift);
-            break;
-        }
-        case b2Shape::e_circle:{
-            b2CircleShape fixture;
-            fixtureDef.shape = &fixture; 
-            fixture.m_radius = features.halfLength;
-	        body->CreateFixture(fixtureDef.shape, features.shift);
             break;
         }
         default:
@@ -209,6 +205,7 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
 
 
 
+
  void WorldBuilder::buildWorld(b2World& world, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
     float boxLength=simulationStep-ROBOT_BOX_OFFSET_X;
     std::vector <cv::Point2f> points_to_track, *pointer_to_track;
@@ -248,10 +245,10 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
 bool WorldBuilder::checkDisturbance(Pointf p, bool& obStillThere, Task * curr, float range){
     bool result=0;
 	if (NULL!=curr){ //
-        if (!curr->disturbance.isValid()){
+        if (!curr->get_disturbance().isValid()){
             return result;
         }
-        cv::Rect2f rect(curr->disturbance.getPosition().x-range, curr->disturbance.getPosition().y+range, range*2, range*2);
+        cv::Rect2f rect(curr->get_disturbance().getPosition().x-range, curr->get_disturbance().getPosition().y+range, range*2, range*2);
 		if (p.inside(rect)){
 			obStillThere =1;
             result =1;
@@ -297,7 +294,7 @@ b2Fixture * WorldBuilder::get_chassis(b2Body * r){
 
 }
 
-b2AABB WorldBuilder::makeRobotSensor(b2Body* robotBody, Disturbance * goal){
+b2AABB WorldBuilder::makeRobotSensor(b2Body* const robotBody, const Disturbance *const goal)const{
 	b2AABB result;
     if (!goal->isValid()){
         return result;

@@ -2,7 +2,11 @@
 #define MEASUREMENT_H
 #include "graphTools.h" 
 
-
+class Task; //forward decl
+/**
+ * @brief A class for a single Task execution info measurement
+ * 
+ */
 class Measurement{
 protected:
     bool valid =0;
@@ -31,21 +35,35 @@ public:
         valid = b;
     }
 
+    /**
+     * @brief Compares absolute values
+     */
     bool operator<(Measurement &);
-
+    /**
+     * @brief Compares absolute values
+     */
     bool operator<=(Measurement &);
-
+    /**
+     * @brief Compares absolute values
+     */
     bool operator>=(Measurement &);
 
+    /**
+     * @brief Compares signed values
+     */
+    bool operator==(Measurement& m2);
     float getStandardError(Measurement, float); //relative standard error
 
 };
 
+
+
 class Angle: public Measurement{
     public:
     Angle(){}
-    Angle(float f)
-    {   value =round(f*1000)/1000;
+    Angle(float f){  
+        //value =round(f*1000)/1000;
+        value = f; //no rounding
         valid =1;}
 };
 
@@ -57,24 +75,48 @@ class Distance: public Measurement{
     valid =1;}
 };
 
+/**
+ * @brief Defines the end criteria for a Task, i.e. when it is considered to be finished
+ * 
+ */
 struct EndCriteria{
     Angle angle;
     Distance distance;    //max distance, ideal
-    bool outOfSight=true;
-    bool valid_d=false;
-    float getStandardError(Angle, Distance);
-    float getStandardError(Angle, Distance, State);
+    /**
+     * @brief Calculates normalised cumulative standard error for the given angle and distance
+     */
+    float getStandardError(Angle a, Distance d);
+
+    /**
+     * @brief Calculates the normalised cumulative standard error for the given angle, distance; state information @param n are used to add a penalty if the state results in collision
+     */
+    float getStandardError(Angle a, Distance d, State n);
     bool hasEnd();
 
-    void adjust(const b2Transform&);
+
+    void operator=( EndCriteria ec){
+        angle=ec.angle;
+        distance=ec.distance;
+    }
+
+    /**
+     * @brief Ajusts endcriteria based on the delta transform (2D transform representing how much the robot has travelled)
+     * 
+     * @param delta 
+     */
+    void adjust(const b2Transform& delta);
+
 
 };
 
-
+/**
+ * @brief Provides information on whether a Task has ended and with what heuristic -estimated- cost (chi) and past cost (gamma)
+ * 
+ */
 struct EndedResult{
 	bool ended=0;
-	float estimatedCost=0; //dot product of end criteria
-    float cost=0;
+	float estimatedCost=0; //dot product of end criteria, heuristic cost
+    float cost=0; //gamma
 
     EndedResult() = default;
 

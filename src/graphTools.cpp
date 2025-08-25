@@ -1,20 +1,5 @@
 #include "graphTools.h"
 
-// orientation subtract(orientation o1, orientation o2){
-// 	orientation result;
-// 	if (!o1.first){
-// 		o1.second=0;
-// 	}
-// 	if (!o2.first){
-// 		o2.second=0;
-// 	}
-// 	result.first= o1.first ||o2.first;
-// 	result.second=o1.second-o2.second;
-// 	return result;
-// }
-
-
-
 b2Transform State::start_from_Di()const{
 	if (Di.getAffIndex()==NONE){
 		return b2Transform_inf;
@@ -45,7 +30,20 @@ b2Transform State::end_from_Di()const{
 }
 
 float State::distance(){
-	return (start-endPose).p.Length();
+	return (InvMul(endPose, start)).p.Length();
+}
+
+b2Transform State::travel_transform(){
+	//return start-endPose;
+	return InvMul(endPose, start);
+}
+
+bool Edge::enableOverride(){
+	if (step==0){
+		overrideZeroSteps=true;
+		return true;
+	}
+	return false;
 }
 
 
@@ -196,21 +194,6 @@ std::vector <edgeDescriptor> gt::outEdges(TransitionSystem&g, vertexDescriptor v
 	return result;
 }
 
-std::vector <edgeDescriptor> gt::inEdges(TransitionSystem&g, const vertexDescriptor& v, const Direction &d){
-	std::vector <edgeDescriptor> result;
-	auto es = boost::in_edges(v, g);
-	if (v==TransitionSystem::null_vertex()){
-		return result;
-	}
-	for (auto ei = es.first; ei!=es.second; ++ei){
-		if (g[(*ei).m_target].direction == d || d==UNDEFINED){
-			if ((*ei).m_source!=v){
-				result.push_back(*ei);
-			}
-		}
-	}
-	return result;
-}
 
 std::pair< bool, edgeDescriptor> gt::getMostLikely(TransitionSystem& g, std::vector <edgeDescriptor> oe, int it){
 	std::pair< bool, edgeDescriptor> mostLikely(false, edgeDescriptor());
@@ -242,32 +225,18 @@ Disturbance gt::getExpectedDisturbance(TransitionSystem& g, vertexDescriptor v, 
 std::pair <bool,edgeDescriptor>  gt::visitedEdge(const std::vector <edgeDescriptor> &es, TransitionSystem& g, vertexDescriptor cv){
 	std::pair <bool,edgeDescriptor> result(false, edgeDescriptor());
 	for (edgeDescriptor e:es){
-		if ((g[e.m_source].visited() & g[e.m_target].visited()) || e.m_source==0 || (e.m_source==cv & cv !=TransitionSystem::null_vertex()) ){
-			result.first=true;
+		if ((g[e.m_source].visited() & g[e.m_target].visited()) || e.m_target==DUMMY){ 
 			result.second=e;
-			return result;
+			result.first=true;
+			break;
+			//return result;
 		}
+
 	}
 	return result;
 }
 
 
-void gt::adjustProbability(TransitionSystem &g, const edgeDescriptor &e){
-	if (e.m_target==TransitionSystem::null_vertex()){
-		return;
-	}
-	std::vector <edgeDescriptor> es=gt::outEdges(g, e.m_source, g[e.m_target].direction);
-	float totObs=0;
-	//find total observations
-	for (edgeDescriptor & ei:es){
-		g[ei].probability=g[ei.m_target].nObs/es.size();
-		 	totObs+=g[ei.m_target].nObs;
-	}
-	//adjust
-	for (edgeDescriptor &ei: es){
-		g[ei].probability=g[ei.m_target].nObs/totObs;
-	}
-}
 
 std::pair <edgeDescriptor, bool> gt::add_edge(const vertexDescriptor & u, const  vertexDescriptor & v, TransitionSystem& g, const int &it, Direction d){
 	std::pair <edgeDescriptor, bool> result=boost::edge(u, v, g);
@@ -303,53 +272,6 @@ bool gt::check_edge_direction(const std::pair<edgeDescriptor, bool> & ep, Transi
 }
 
 
-std::vector <vertexDescriptor> gt::task_vertices( vertexDescriptor v, TransitionSystem& g, const int & it, const vertexDescriptor & current_v, std::pair<bool, edgeDescriptor>* ep){
-	std::vector <vertexDescriptor> result= {v};
-	Direction d=UNDEFINED;
-	std::pair<bool, edgeDescriptor>ep2(false, edgeDescriptor()), _ep=ep2;
-	do {
-		std::vector <edgeDescriptor> ie=gt::inEdges(g, v);
-		ep2= visitedEdge(ie, g,v);
-		if (!ep2.first){
-			ep2=getMostLikely(g, ie, it);
-		}
-		if (ep2.first){
-			if (ep2.second.m_target==result[0]){ //size 1
-				_ep=ep2; //assign ep to define direction
-				d= g[_ep.second.m_target].direction;
-				if (ep!=NULL){
-					g[_ep.second].it_observed=it;
-				}
-				for (edgeDescriptor e: ie){
-					if (g[e.m_target].direction==d && e!=ep2.second && g[e.m_source].Di == g[_ep.second.m_source].Di &&g[e.m_source].Dn == g[_ep.second.m_target].Dn){
-						ep2.second=e;
-						break;
-					}
-			}
-			}
-			else if (g[ep2.second.m_target].direction==d &&
-			 		g[ep2.second.m_target].Di == g[_ep.second.m_target].Di &&
-			 		g[ep2.second.m_target].Dn == g[_ep.second.m_target].Dn){ //same task!
-				result.push_back(ep2.second.m_target); //source
-			}
-
-
-		}
-		else{
-			break;
-		}
-		v=ep2.second.m_source;
-		if (ep2.second.m_target==current_v){ //source
-			break;
-		}
-	}while(g[ep2.second.m_target].direction==d);
-	std::reverse(result.begin(), result.end());
-	if (NULL!=ep){
-		*ep=_ep;
-	}
-	return result;
-}
-
 
 std::vector<vertexDescriptor>::iterator gt::to_task_end(edgeDescriptor& e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan,  std::vector<vertexDescriptor>::iterator it){
 edgeDescriptor e_start=e;
@@ -365,39 +287,56 @@ do{
 	if (g[e.m_target].direction==g[e_start.m_target].direction){
 		it++;
 	}
-	//it++; //includes the next vertex not belonging to this task
 }while(g[e.m_target].direction==g[e_start.m_target].direction &&
 		 it != plan.end() && it!=(plan.end()-1)               &&
-		// g[e.m_target].direction==DEFAULT                     &&
 		 (g[e.m_target].Di==g[e_start.m_source].Di)
-		 //&& ep.second
 		 );
 
 return (it);
 }
 
 
+
+
 bool StateMatcher::match_equal(const MATCH_TYPE& candidate, const MATCH_TYPE& desired){
 	bool result=false;
 	switch (desired){ //the desired match
 		case ANY:
-			if (candidate!=_FALSE){
+			if (int(candidate)!=int(_FALSE)){
 				result=true;
 			}
 			break;
 		case POSE:
-			if (candidate==_TRUE || candidate == POSE){
+			if (int(candidate)==int(_TRUE) || int(candidate) == int(POSE)){
 				result=true;
 			}
 			break;
 		case ABSTRACT:
-			if (candidate==_TRUE || candidate ==ABSTRACT){
+			if (int(candidate)==_TRUE || int(candidate) ==ABSTRACT){
 				result=true;
 			}
 			break;
+		case _FALSE:
+			result=int(candidate)==int(desired);
+			break;
+		case _TRUE:
+			result=int(candidate)==int(desired);
+			break;
+		case DN_SHAPE:
+			result =(int(candidate)==int(desired))|| int(candidate)==_TRUE || int(candidate)==ABSTRACT || candidate== D_NEW;
+			break;			
+		case DN_POSE:
+			result =(int(candidate)==int(desired))|| candidate==_TRUE || int(candidate)==ABSTRACT || candidate== D_NEW;
+			break;			
+		case DI_SHAPE:
+			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_INIT;
+			break;			
+		case DI_POSE:
+			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_INIT;
+			break;			
 		default:
-			result =int(candidate)==int(desired);
-		break;
+			result =(int(candidate)==int(desired)) ||candidate==_TRUE || candidate==ABSTRACT ;
+			break;
 	}
 	return result;
 }
@@ -452,49 +391,5 @@ float StateMatcher::get_coefficient(const float & endDistance){
 }
 
 
-// bool operator!=(Transform const &t1, Transform const& t2){
-// 	return t1.p.x != t2.p.x || t1.p.y != t2.p.y || t1.q.GetAngle() != t2.q.GetAngle();
-// }
 
-// bool operator==(Transform const &t1, Transform const& t2){
-// 	return (t1.p.x == t2.p.x) && (t1.p.y == t2.p.y) && (t1.q.GetAngle() == t2.q.GetAngle());
-// }
-
-// void operator-=(Transform & t1, Transform const&t2){
-// 	t1.p.x-=t2.p.x;
-// 	t1.p.y-=t2.p.y;
-// 	t1.q.Set(angle_subtract(t1.q.GetAngle(), t2.q.GetAngle()));
-// }
-
-// void operator+=(Transform & t1, Transform const&t2){
-// 	t1.p.x+=t2.p.x;
-// 	t1.p.y+=t2.p.y;
-// 	t1.q.Set(t1.q.GetAngle()+t2.q.GetAngle());
-// }
-
-// Transform operator+(Transform const & t1, Transform const&t2){
-// 	b2Transform result;
-// 	result.p.x=t1.p.x+t2.p.x;
-// 	result.p.y=t1.p.y+t2.p.y;
-// 	result.q.Set(t1.q.GetAngle()+t2.q.GetAngle());
-// 	return result;
-// }
-
-// Transform operator-(Transform const & t1, Transform const&t2){
-// 	b2Transform result;
-// 	result.p.x=t1.p.x-t2.p.x;
-// 	result.p.y=t1.p.y-t2.p.y;
-// 	result.q.Set(angle_subtract(t1.q.GetAngle(), t2.q.GetAngle()));
-// 	return result;
-
-// }
-
-// Transform operator-(Transform const & t){
-// 	b2Transform result;
-// 	result.p.x=-(t.p.x);
-// 	result.p.y=-(t.p.y);
-// 	result.q.Set(-t.q.GetAngle());
-// 	return result;
-
-// }
 

@@ -1,7 +1,42 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
 
+TEST(Math, affineTransform){
+    Disturbance disturbance(AVOID, b2Vec2(0,0));
+    b2Transform transform(b2Vec2(0.5,0), b2Rot(M_PI_2));
+    Task task(disturbance, DEFAULT);
+    math::MulT(transform, *task.get_disturbance_ptr());
+    EXPECT_FALSE(task.get_disturbance().pose()==disturbance.pose());
+}
 
+TEST(Robot, Vertices){
+    b2World world(GRAVITY);
+    std::vector<b2Vec2> robotVertices=Robot::get_vertices();
+    Robot robot(&world);
+    b2AABB aabb =robot.body()->GetFixtureList()->GetAABB(0);
+    const float MAX_Y= ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y;
+    const float MIN_Y= -ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y;
+    const float MAX_X= ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X;
+    const float MIN_X= -ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X;
+
+    EXPECT_NEAR(aabb.upperBound.y, MAX_Y, 0.01);
+    EXPECT_NEAR(aabb.lowerBound.y, MIN_Y, 0.01);
+    EXPECT_NEAR(aabb.upperBound.x,MAX_X, 0.01);
+    EXPECT_NEAR(aabb.lowerBound.y, -ROBOT_HALFWIDTH-ROBOT_BOX_OFFSET_X, 0.01);
+    EXPECT_NEAR(robotVertices[0].x, MIN_X, 0.01);
+    EXPECT_NEAR(robotVertices[0].y, MIN_Y, 0.01);
+    EXPECT_NEAR(robotVertices[3].x, MAX_X, 0.01);
+    EXPECT_NEAR(robotVertices[3].y, MAX_Y, 0.01);
+}
+
+TEST_F(WorldBuilderTest, BodyCount){
+    b2World world(GRAVITY);
+    BodyFeatures bf(b2Transform(b2Vec2(1,0), b2Rot(0))), bf2(b2Transform(b2Vec2(0.5,0), b2Rot(0)));
+    world_objects.push_back(bf);
+    world_objects.push_back(bf2);
+    buildWorld(world, b2Transform_zero, DEFAULT);
+    EXPECT_EQ(bodies, 2);
+}
 /**
  * @brief Class to test world building tools (third party)
  * 

@@ -24,7 +24,6 @@ struct Remember{
 	TransitionSystem *g;
 }remember;
 
-Visited visited;
 
 template <typename Predicate> 
 void printEdges(TransitionSystem& g, Predicate p){
@@ -60,16 +59,16 @@ float print_belowP(TransitionSystem& g, float p){
     return ct/g.m_vertices.size();
 }
 
-void getVisited(TransitionSystem& g, vertexDescriptor cv){
-    auto es = boost::edges(g);
-    float ct=0;
-    for (auto ei=es.first; ei!=es.second;ei++){
-        if ((g[(*ei).m_source].visited()|| (*ei).m_source==0 || (*ei).m_source==cv)& g[(*ei).m_target].visited()){
-            ct++;
-            printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
-        }
-    }
-}
+// void getVisited(TransitionSystem& g, vertexDescriptor cv){
+//     auto es = boost::edges(g);
+//     float ct=0;
+//     for (auto ei=es.first; ei!=es.second;ei++){
+//         if ((g[(*ei).m_source].visited()|| (*ei).m_source==0 || (*ei).m_source==cv)& g[(*ei).m_target].visited()){
+//             ct++;
+//             printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
+//         }
+//     }
+// }
 
 class DataInterface {
 int iteration = 0;
@@ -78,6 +77,7 @@ LIDAR_In * ci=NULL;
 std::string folder;
 public:
 
+    DataInterface(){}
     DataInterface(LIDAR_In * _ci): ci(_ci){}
 
 	bool newScanAvail(){ //uncomment sections to write x and y to files		
@@ -92,6 +92,7 @@ public:
             printf("%s\n", filePath);
             FILE *f;
             if (!(f=fopen(filePath, "r"))){
+                throw "can't open file!";
                 if (iteration>1){
                     iteration=1;
                 }
@@ -126,7 +127,31 @@ public:
     }
 
     int get_iteration(){
-        return iteration;
+        return iteration;}
+        
+    void set_iteration(int i){
+        iteration=i;
+    }
+
+    void registerInterface(LIDAR_In *i){
+        ci=i;
+    }
+
+    bool has_interface(){
+        return ci!=NULL;
+    }
+
+    void reset(){
+        folder.clear();
+        ci=NULL;
+    }
+
+    bool hasFolder(){
+        return folder.size()>0;
+    }
+    
+    const std::string getFolder() const {
+        return folder;
     }
 };
 

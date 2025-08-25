@@ -1,6 +1,7 @@
 #ifndef TEST_ESSENTIALS_H
 #define TEST_ESSENTIALS_H
-#include "configurator.h"
+#include "attentive.h"
+#include "b2bconfigurator.h"
 #include <unistd.h>
 #include <time.h>
 #include <stdio.h>
@@ -12,11 +13,6 @@
 #include <dirent.h>
 #include <filesystem>
 #define _USE_MATH_DEFINES
-
-
-// void Configurator::next_task(){
-//     follow_plan();
-// }
 
 bool debug_draw(b2Vec2 * sensor_v, std::vector <b2Vec2> d ){
     char name_v[256], name_s[256], name_d[256];
@@ -82,16 +78,6 @@ bool debug_draw(b2World & w, int file){
     fclose(f_d);
 }
 
-std::vector <BodyFeatures> WorldBuilder::processData(const CoordinateContainer& points, const b2Transform& start){
-    std::vector <BodyFeatures> result;
-    std::vector <Pointf> ptset= set2vec(points);
-    std::pair<bool,BodyFeatures> feature= bounding_box(ptset);
-    if (feature.first){
-        feature.second.pose.q.Set(start.q.GetAngle());
-        result.push_back(feature.second);
-    }
-    return result;
-}
 
 void round_mat(b2Transform & t){
     t.p.x=round(t.p.x*100)/100;
@@ -102,27 +88,7 @@ void print_matrix(const cv::Mat & m){
 	std::cout << "M = " << std::endl << " "  << m << std::endl << std::endl;
 }
 
-void Configurator::explore_plan(b2World&world){
-    pre_explore(transitionSystem, plan, currentTask.change);
-    vertexDescriptor src=get_explore_start(transitionSystem);
-    resetPhi(transitionSystem);
-    std::vector <vertexDescriptor> plan_tmp=explorer(src, transitionSystem, world);
-    if (DEBUG){
-        std::vector<vertexDescriptor> _plan=(plan);
-        debug::graph_file(iteration, transitionSystem, controlGoal.disturbance, _plan, currentVertex);
-    }		
-    ts_cleanup(transitionSystem, plan); //remove self-edge and singleton states
-    if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.change)){ //currentv not visited means that it wasn't observed ()
-        printf("no plan, searchign from %i\n", src);
-        bool finished=false;
-        plan_tmp= planner(transitionSystem, currentVertex, TransitionSystem::null_vertex(), false, NULL, &finished); //src
-    }
-    else{
-        printf("recycled plan in explorer:\n");
-    }
-    plan=plan_tmp;
-    printPlan(&plan);
-}
+
 
 //debug, to visualise 
 void flush_points(const std::vector<std::vector<cv::Point2f>> clusters, char * where){
@@ -165,7 +131,9 @@ void get_coordinate_container(char * file_name, CoordinateContainer & points, co
     file.close();
 }
 
-
+void print_graph(const TransitionSystem & g){
+    boost::print_graph(g);
+}
 
 
 

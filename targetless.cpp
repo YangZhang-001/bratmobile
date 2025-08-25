@@ -16,17 +16,20 @@ int main(int argc, char** argv) {
     Task controlGoal;
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
+	HorizonStarPlanner planner;
     AttentiveConfigurator configurator(controlGoal);
-	DeadReckoner tracker;
+	ClosedLoop_Tracker tracker;
 	configurator.register_tracker(&tracker);	
+	configurator.register_planner(&planner);
 	Wise_Controller wc;
 	configurator.register_controller(&wc);
 	char name[60];
-	dump_benchmarks( "rt-update-targetless", "/tmp");
+	Logger logger( "rt-update-targetless", "/tmp");
+	configurator.register_logger(&logger);
 	if (argc>1){
 		#define DEBUG atoi(argv[1])
 		//configuratorInterface.debugOn = atoi(argv[1]);
-	}	configurator.setSimulationStep(.5);
+	}	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
 	MotorCallback cb(&controlInterface);
@@ -40,7 +43,7 @@ int main(int argc, char** argv) {
 	configurator.stop();
 	motors.stop();
 	lidar.stop();
-
+	~logger;
 }
 	
 	

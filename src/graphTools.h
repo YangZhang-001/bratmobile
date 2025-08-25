@@ -16,36 +16,34 @@
 #include "disturbance.h"
 #include "box2d_helpers.h"
 
-// namespace math{
-// //	void applyAffineTrans(const b2Transform& deltaPose, b2Transform& pose);
-
-
-// };
-
-
 const float NAIVE_PHI=10.0;
 
 class Task;
 enum VERTEX_LABEL {UNLABELED, MOVING, ESCAPE, ESCAPE2};
 
-struct ComparePair{
-	ComparePair()=default;
-
-	template <class V>
-	bool operator()(const std::pair<V, float> & p1, const std::pair<V, float> &p2) const{
-		return p1.second<p2.second;
+/**
+ * @brief Compares the last float in a tuple
+ * 
+*/
+struct CompareValue{
+	CompareValue()=default;
+	template <class V, class M>
+	bool operator()(const std::tuple<V,M, float> & p1, const std::tuple<V, M, float> &p2) const{
+		return std::get<2>(p1)< std::get<2>(p2);
 	}
 };
 
+/**
+ * @brief Edges connecting states in the transition system
+ * 
+ */
 struct Edge{
-	//Direction direction=DEFAULT;
 	float probability=1.0;
 	int step=0;
 	int it_observed=-1; //last iteration where this edge was observed
+	bool overrideZeroSteps=false; //set to true if an edge with no steps should not be considered a self-edge
 
 	Edge()=default;
-
-	//Edge(Direction d):direction(d){}
 
 	float weighted_probability(int it){
 		float result=0;
@@ -54,19 +52,28 @@ struct Edge{
 		}
 		return result;
 	}
+
+	/**
+	 * @brief If this edge has zero steps, it sets override to true
+	 * 
+	 * @return true if override was changed to true
+	 * @return false if no changes were made
+	 */
+	bool enableOverride();
 };
 
-
+/**
+ * @brief Hybrid states in the transition system
+ * 
+ */
 struct State{
 	Disturbance Di; //initial Disturbance
 	Disturbance Dn; //new Disturbance
 	b2Transform endPose = b2Transform_zero, start = b2Transform_zero; 
-	simResult::resultType outcome;
+	simResult::resultType outcome=simResult::successful;
 	std::vector <Direction> options;
-	//int nodesInSameSpot =0;
 	bool filled =0;
 	int nObs=0;
-	State* ID=this;
 	float phi=NAIVE_PHI; //arbitrarily large phi
 	VERTEX_LABEL label=VERTEX_LABEL::UNLABELED;
 	Direction direction=DEFAULT;
@@ -79,29 +86,59 @@ struct State{
 
 	State(const b2Transform &_start, const Disturbance& di, const Direction & dir): start(_start), Di(di), direction(dir){}
 
+	/**
+	 * @brief Whether this state has been visited in exploration using evaluation function phi as proxy
+	 */
 	bool visited(){
 		return phi<NAIVE_PHI;
 	}
 
+	/**
+	 * @brief Sets the phi value to its naive value (call to visited() will return false)
+	 * 
+	 */
 	void resetVisited(){
 		phi=NAIVE_PHI;
 	}
 
+	/**
+	 * @brief Return transformation from start to Di position
+	 */
 	b2Transform start_from_Di()const;
 
+	/**
+	 * @brief Return transformation from start to Dn position
+	 */
 	b2Transform start_from_Dn()const;
 
+	/**
+	 * @brief Return transformation from end to Di position
+	 */
 	b2Transform end_from_Dn()const;
 
+	/**
+	 * @brief Return transformation from end to Di position
+	 */
 	b2Transform end_from_Di()const;
 
 	float distance();
 
+	b2Transform travel_transform();
+
+	bool isTurning(){
+		return direction==LEFT || direction==RIGHT;
+	}
+
+	bool isGoingStraight(){
+		return direction==DEFAULT || direction==STOP;
+	}
 };
 
 
-
-
+/**
+ * @brief Contains the differences between the contiuous components of two hybrid states
+ * 
+ */
 struct StateDifference{
 	b2Transform pose=b2Transform_zero;
 	BodyFeatures Di, Dn;
@@ -117,67 +154,117 @@ struct StateDifference{
 		return sum_r()+sum_D(Di)+ sum_D(Dn);
 	}
 
+	/**
+	 * @brief Total difference in "global" robot pose 
+	 */
 	float sum_r(){
 		return fabs(pose.p.x)+fabs(pose.p.y)+fabs(pose.q.GetAngle());
 	}
 
+	/**
+	 * @brief Total difference in disturbance pose
+	 * 
+	 * @param bf body features of disturbance
+	 */
 	float sum_D_pos(const BodyFeatures& bf){
 		return fabs(bf.pose.p.x)+fabs(bf.pose.p.y)+bf.pose.q.GetAngle();
 	}
 
+	/**
+	 * @brief Total difference in disturbance shape
+	 * 
+	 * @param bf body features of disturbance
+	 */
 	float sum_D_shape(const BodyFeatures& bf){
 		return fabs(bf.width())+fabs(bf.length());
 	}
 
+	/**
+	 * @brief Total difference in disturbance pose and shape combined
+	 * 
+	 * @param bf body features of disturbance
+	 */
 	float sum_D(const BodyFeatures& bf){
 		return sum_D_pos(bf)+sum_D_shape(bf);
 	}
 	
-	float get_sum(int);
+	/**
+	 * @brief Returns difference in certain aspects we want to match between states
+	 * 
+	 * @param mt the match type
+	 */
+	float get_sum(int mt);
 
-	void init(const State& ,const State&);
+	/**
+	 * @brief Initialises the difference object using two states we want to compare
+	 * 
+	 * @param s1 
+	 * @param s2 
+	 */
+	void init(const State& s1,const State& s2);
 
+	/**
+	 * @brief Fills bf match with large values indicating no match
+	 * 
+	 */
 	void fill_invalid_bodyfeatures(BodyFeatures &);
 
-	void fill_valid_bodyfeatures(BodyFeatures &, const State&, const State&, WHAT_D_FLAG);
+/**
+ * @brief Fills the bodyfeatures match with differences between disturbances in the two states. Differences
+ * are calculated in the position local to the robot in that state, not globally
+ * 
+ * @param bf body features to fill
+ * @param s1 
+ * @param s2 
+ * @param flag whether it's a Di or Dn
+ */
+	void fill_valid_bodyfeatures(BodyFeatures & bf, const State& s1, const State& s2, WHAT_D_FLAG flag);
 };
 
 
-// typedef b2Transform Transform;
-// bool operator!=(Transform const &, Transform const &);
-// bool operator==(Transform const &, Transform const &);
-// void operator-=(Transform &, Transform const&);
-// void operator+=(Transform &, Transform const&);
-// Transform operator+( Transform const &, Transform const &);
-// Transform operator-( Transform const &, Transform const &);
-// Transform operator-(Transform const &);
-
-
-// typedef std::pair<bool, float> orientation;
-// orientation subtract(orientation, orientation);
-
 typedef boost::adjacency_list<boost::setS, boost::vecS, boost::bidirectionalS, State, Edge> TransitionSystem;
+
 typedef boost::graph_traits<TransitionSystem>::vertex_iterator vertexIterator; 
 typedef boost::graph_traits<TransitionSystem>::vertex_descriptor vertexDescriptor;
 typedef boost::graph_traits<TransitionSystem>::edge_descriptor edgeDescriptor;
 typedef boost::graph_traits<TransitionSystem>::edge_iterator edgeIterator;
-//typedef boost::adjacency_list_traits< boost::vecS, boost::vecS, boost::directedS > Traits;
-// typedef boost::subgraph<boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS>> CognitiveMap;
 
+//SPECIAL VERTICES
+const vertexDescriptor DUMMY=1;
 
+/**
+ * @brief vertex reprensenting instantaneous position of the robot relative to itself
+ * Trivial: in the graph it's always located at the origin with an orientation of 0 degrees, and
+ * should always be connected to the vertex representing the current state.
+ * 
+ */
+const vertexDescriptor MOVING_VERTEX=0; 
 
+/**
+ * @brief Used as a predicate, gives info on whether a vertex is the current vertex
+ * 
+ */
 struct is_not_v{
 	is_not_v(){}
+	/**
+	 * @brief Constructor assigns current vertex
+	 * 
+	 * @param _cv the current vertex
+	 */
 	is_not_v(vertexDescriptor _cv): cv(_cv){}
+
 	bool operator()(edgeDescriptor e){
 		return e.m_target!=cv;
 	}	
 
 	private:
-	vertexDescriptor cv;
+	vertexDescriptor cv=0;
 };
 
-
+/**
+ * @brief Predicate: gives info on whether a vertex has connections or is a singleton
+ * 
+ */
 struct Connected{
 	Connected(){}
 	Connected(TransitionSystem * ts): g(ts){}
@@ -188,68 +275,97 @@ struct Connected{
 	 	return (in || out) || v==0 ;
 	}
 private:
-TransitionSystem * g;
+TransitionSystem * g=NULL;
 };
 
-
-
-
-
-struct Visited{ //for debug
-	Visited(){}
-	Visited(TransitionSystem * ts):g(ts){}
-
-	bool operator()(const vertexDescriptor&v)const{
-		return (*g)[v].visited();
-	}
-	private:
-	TransitionSystem *g;
-};
-
-
-typedef std::pair<vertexDescriptor, std::vector<vertexDescriptor>> Frontier;
-
-struct ComparePhi{
-
-	ComparePhi(){}
-
-	bool operator()(const std::pair<State*, Frontier>& p1, const std::pair<State*, Frontier>& p2) const{
-		return (*p1.first).phi<(*p2.first).phi;
-	}
-};
 
 
 namespace gt{
 
-	void fill(simResult, State* s=NULL, Edge* e=NULL);
+	/**
+	 * @brief Fills a state-edge usign the box2d simulation result
+	 * 
+	 * @param sr simulation result
+	 * @param s state pointer
+	 * @param e edge pointer
+	 */
+	void fill(simResult sr, State* s=NULL, Edge* e=NULL);
 
-	int simToMotorStep(int);
+	/**
+	 * @brief returns the number of motor steps corresponding to @param simStep simulation steps (uses macros in const.h)
+	 */
+	int simToMotorStep(int simstep);
 
-	int distanceToSimStep(const float&, const float&);
-	
-	void update(edgeDescriptor,  std::pair <State, Edge>, TransitionSystem&, bool, int); //returns disturbance rror based on expected vs observed D
+	/**
+	 * @brief Returns simulation steps necessary to cover a certain distance given a velocity
+	 * 
+	 * @param s distance
+	 * @param ds velocity
+	 * @return int 
+	 */
+	int distanceToSimStep(const float& s, const float& ds);
 
-	void set(edgeDescriptor,  std::pair <State, Edge>, TransitionSystem&, bool, int);
+	/**
+	 * @brief Updates the target of e=(src, target)
+	 * 
+	 * @param e the edge whose target will be updated
+	 * @param sk a state-edge observation
+	 * @param g the transitionsystem
+	 * @param current is this edge the current edge? (if yes the step is not updated)
+	 * @param it iteration
+	 */
+	void update(edgeDescriptor e,  std::pair <State, Edge> sk, TransitionSystem& g, bool current, int it); 
+	/**
+	 * @brief Resets the target of e=(src, target). The difference with update is that it resets the outcome and it doesn't update if the vertex is already filled
+	 * 
+	 * @param e the edge whose target will be updated
+	 * @param sk a state-edge observation
+	 * @param g the transitionsystem
+	 * @param current is this edge the current edge? (if yes the step is not updated)
+	 * @param it iteration
+	 */
+	void set(edgeDescriptor e,  std::pair <State, Edge>sk, TransitionSystem&, bool current, int it);
+
 
 	std::pair< bool, edgeDescriptor> getMostLikely(TransitionSystem&,std::vector<edgeDescriptor>, int);
 
 	std::vector <edgeDescriptor> outEdges(TransitionSystem&, vertexDescriptor, Direction); //returns a vector containing all the out-edges of a vertex which have the specified direction
 
-	std::vector <edgeDescriptor> inEdges(TransitionSystem&, const vertexDescriptor&, const Direction & d = UNDEFINED); //returns a vector containing all the in-edges of a vertex which have the specified direction
-
 	Disturbance getExpectedDisturbance(TransitionSystem&, vertexDescriptor, Direction, int);
 
-	std::pair <bool,edgeDescriptor> visitedEdge(const std::vector <edgeDescriptor>&, TransitionSystem&, vertexDescriptor cv=TransitionSystem::null_vertex());
+	/**
+	 * @brief Returns a valid visited edge, if present
+	 * 
+	 * @param es vector of out-edges
+	 * @param g transitionSystem
+	 * @param cv current vertex 
+	 * @return std::pair <bool,edgeDescriptor> (is edge valid, visited edge). Returns true if cv is the source of any of the outedges
+	 */
+	std::pair <bool,edgeDescriptor> visitedEdge(const std::vector <edgeDescriptor>& es, TransitionSystem& g, vertexDescriptor cv=TransitionSystem::null_vertex());
 
-	void adjustProbability(TransitionSystem&, const edgeDescriptor &);
 
 	std::pair <edgeDescriptor, bool> add_edge(const vertexDescriptor&, const vertexDescriptor &, TransitionSystem&, const int &, Direction d=UNDEFINED); //wrapper around boost function, disallows edges to self
 
+	/**
+	 * @brief Checks that 
+	 * 
+	 * @return true 
+	 * @return false 
+	 */
 	bool check_edge_direction(const std::pair<edgeDescriptor, bool> &, TransitionSystem&, Direction);
+	/**
+	 * @brief Travels in the graph to find the end of the task in e.m_target. In case the task
+	 * is only one vertex, e will be changed to the next edge not belonging to the task, and it is an iterator
+	 * in the plan vector to the next vertex in the plan 
+	 * @param e edge whose target is the task we want to find the end of
+	 * @param g the graph
+	 * @param plan the plan
+	 * @param it iterator to the vertex e.m_target (in plan vector)
+	 * @return std::vector<vertexDescriptor>::iterator 
+	 */
+	std::vector<vertexDescriptor>::iterator to_task_end(edgeDescriptor &e, TransitionSystem &g, const std::vector<vertexDescriptor> & plan, std::vector<vertexDescriptor>::iterator it); //in a vector, finds vertices belonging to the same task and skips to the end fo the task
 
-	std::vector <vertexDescriptor> task_vertices(vertexDescriptor, TransitionSystem&, const int &, const vertexDescriptor &, std::pair<bool, edgeDescriptor>* ep=NULL);
 
-	std::vector<vertexDescriptor>::iterator to_task_end(edgeDescriptor &, TransitionSystem &, const std::vector<vertexDescriptor> &, std::vector<vertexDescriptor>::iterator); //in a vector, finds vertices belonging to the same task and skips to the end fo the task
 
 }
 
@@ -266,16 +382,6 @@ struct InPlan{
 	std::vector<vertexDescriptor> *plan;
 };
 
-//check if two states belong to the same task
-// IsTaskStep{
-// 	IsTaskStep()=default;
-// 	bool operator()(const TransitionSystem & g, )
-// };
-// bool is_task_step(const vertexDescriptor & v, const vertexDescriptor & v1, const TransitionSystem& g) {
-// 	return (g[v].Di==g[v1].Di && g[v].direction==g[v1].direction && g[v].Dn==g[v1].Dn);
-// }
-
-
 
 
 struct NotSelfEdge{
@@ -284,17 +390,22 @@ struct NotSelfEdge{
 
 	bool operator()(const edgeDescriptor & e) const {
 		bool not_self= e.m_source!=e.m_target && (*g)[e].step!=0  ; 
-		if (e.m_source==e.m_target){
-			auto def_kin =(*default_kinematics.find((*g)[e.m_target].direction)).second;
+		// if (e.m_source==e.m_target){
+		// 	auto def_kin =(*default_kinematics.find((*g)[e.m_target].direction)).second;
 
-		}
+		// }
 		return not_self;
 	}
 	private:
-	TransitionSystem * g;
+	TransitionSystem * g=NULL;
 };
 
-
+/**
+ * @brief Predicate: gives info on whether an edge is worth keeping. Namely,
+ * the edge is either not a self-edge (the vertex is not connected to itself)
+ * and if it is, the edge is not trivial (i.e. simulating this self-transition takes more than 0 simulation steps)
+ * 
+ */
 struct ViableEdge{
 	ViableEdge()=default;
 	ViableEdge(TransitionSystem * _g): g(_g){}
@@ -305,38 +416,43 @@ struct ViableEdge{
 		return not_self;
 	}
 	private:
-	TransitionSystem * g;
+	TransitionSystem * g=NULL;
 };
 
+struct InviableEdge{
+	InviableEdge()=default;
+	InviableEdge(TransitionSystem * _g): g(_g){}
 
-// struct KeepEdge{
-// 	KeepEdge()=default;
-// 	KeepEdge(TransitionSystem * _g,std::vector <vertexDescriptor>* _p): g(_g), plan(_p){
-// 		nse=NotSelfEdge(g);
-// 		ip=InPlan(plan);
-// 	}
+	bool operator()(const edgeDescriptor & e) const {
+		ViableEdge ve(g);
+		return !ve(e);
+	}
 
-// 	bool operator()(const edgeDescriptor & e)const{
-// 		return nse(e) || (!nse(e) && ip(e));
-// 	}
+private:
+TransitionSystem * g=NULL;
+};
 
-// 	private:
-// 	TransitionSystem* g;
-// 	std::vector <vertexDescriptor> * plan;
-// 	NotSelfEdge nse;
-// 	InPlan ip;
-// };
+struct SameIteration{
+	SameIteration()=default;
+	SameIteration(TransitionSystem & _g, int _i): g(_g), iteration(_i){}
+
+	bool operator()(const edgeDescriptor & e) const {
+		return g[e].it_observed==iteration;
+	}
+	private:
+	TransitionSystem & g;
+	int iteration=-1;
+};
 
 
 
 typedef boost::filtered_graph<TransitionSystem, ViableEdge, Connected> FilteredTS;
-typedef boost::filtered_graph<TransitionSystem, boost::keep_all, Visited> VisitedTS;
 
 
 class StateMatcher{
 	public:
 		//@brief {_FALSE=0, D_NEW=2, DN_POSE=3, _TRUE=1, ANY=4, D_INIT=5, ABSTRACT=6, DI_POSE=7, DN_SHAPE=8, DI_SHAPE=9, POSE=10};
-		enum MATCH_TYPE {_FALSE=0, D_NEW=2, DN_POSE=3, _TRUE=1, ANY=4, D_INIT=5, ABSTRACT=6, DI_POSE=7, DN_SHAPE=8, DI_SHAPE=9, POSE=10};
+		enum MATCH_TYPE {_FALSE, D_NEW, DN_POSE, _TRUE, ANY, D_INIT, ABSTRACT, DI_POSE, DN_SHAPE, DI_SHAPE, POSE};
 
 		float mu=0.001;
 	    StateMatcher()=default;
@@ -462,5 +578,6 @@ class StateMatcher{
 	const float COEFFICIENT_INCREASE_THRESHOLD=0.0;
 };
 
+typedef std::pair<StateMatcher::MATCH_TYPE, vertexDescriptor> VertexMatch;
 
 #endif
