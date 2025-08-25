@@ -144,7 +144,7 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		//visitedOrVisitingEdge(out, transitionSystem, currentVertex);
 		Disturbance CVDi=clearvoyance.query(v);
 		bool notClearVoyance=visitedEdgeCount(out)<minimumEdgesForClearvoyance(g[v].direction);
-		if ((visited.first||out.empty()) && notClearVoyance){ //if edges have not been expanded OR if they were expanded in previous iteration
+		if ((visited.first||out.empty())){ //if edges have not been expanded OR if they were expanded in previous iteration
 			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
 				if (attentionWindowOverlaps(Di, g[v], world, controlGoal.get_disturbance_ptr())){
