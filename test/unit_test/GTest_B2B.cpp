@@ -289,6 +289,7 @@ TEST_F(DebugB2BTest, ClearVoyance){
     transitionSystem[5].Dn=Disturbance(bf3); //obstacle on the right
     transitionSystem[3].Dn.validate();
     transitionSystem[5].Dn.validate();
+    setAllVisited();
     clearvoyance.add(MOVING_VERTEX, transitionSystem[3].Dn);
     clearvoyance.add(MOVING_VERTEX, transitionSystem[5].Dn);
    // Disturbance solution=transitionSystem[MOVING_VERTEX].Di;
@@ -460,6 +461,7 @@ TEST_P(DebugB2BTestVertex, ClearVoyanceTurn){ //test clearvoyance when turning o
     transitionSystem[MOVING_VERTEX].Di.validate();
     transitionSystem[v1].Dn=Disturbance(bf2); //obstacle on the left
     transitionSystem[v1].Dn.validate();
+    setAllVisited();
     clearvoyance.add(v0, transitionSystem[v1].Dn);
    // Disturbance solution=transitionSystem[MOVING_VERTEX].Di;
     transitionSystem[MOVING_VERTEX].direction=STOP;
