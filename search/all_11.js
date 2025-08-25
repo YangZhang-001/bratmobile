@@ -1,13 +1,21 @@
 var searchData=
 [
-  ['task_155',['Task',['../classTask.html',1,'']]],
-  ['task_5fto_5fexecute_156',['task_to_execute',['../classWise__Controller.html#ab161b0479909e1a10af434ef5b7a8c9e',1,'Wise_Controller']]],
-  ['task_5fvertices_157',['task_vertices',['../classAttentiveConfigurator.html#ac94a392af016a60e7d8d684e8a56a172',1,'AttentiveConfigurator']]],
-  ['threshold_158',['Threshold',['../classThreshold.html',1,'']]],
-  ['thresholdlearner_159',['ThresholdLearner',['../classThresholdLearner.html',1,'']]],
-  ['to_5ftask_5fend_160',['to_task_end',['../classWise__Controller.html#ab66c87e49e757ae2202bfa39277a2850',1,'Wise_Controller']]],
-  ['track_161',['track',['../classTracker.html#a329af121a8bd768bc7cbafc15ea12cfb',1,'Tracker::track()'],['../classDeadReckoner.html#aeb06e35b7912d1822ab3aaa917cfa741',1,'DeadReckoner::track()'],['../classClosedLoop__Tracker.html#a8da478e81fe9fe85af8760bd94c066e4',1,'ClosedLoop_Tracker::track()']]],
-  ['tracker_162',['Tracker',['../classTracker.html',1,'']]],
-  ['transitionmatrix_163',['transitionMatrix',['../classAttentiveConfigurator.html#a7a03d7acc9c3b98d1281c0ecce40d6e3',1,'AttentiveConfigurator']]],
-  ['type_3c_20pointf_20_3e_164',['Type&lt; Pointf &gt;',['../structcv_1_1traits_1_1Type_3_01Pointf_01_4.html',1,'cv::traits']]]
+  ['sameiteration_150',['SameIteration',['../structSameIteration.html',1,'']]],
+  ['setendcriteria_151',['setEndCriteria',['../classTask.html#a5e5e1a4079f17ba64c17350f02f14ca0',1,'Task']]],
+  ['setup_5fmatch_5fedge_152',['setup_match_edge',['../classAttentiveConfigurator.html#a11cfa68b1faf613f971b566815ea9355',1,'AttentiveConfigurator']]],
+  ['simresult_153',['simResult',['../structsimResult.html',1,'']]],
+  ['simulate_154',['simulate',['../classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c',1,'Configurator']]],
+  ['simulation_5fsetup_155',['simulation_setup',['../classAttentiveConfigurator.html#a546f17fc837062c95a3900c7b8b21977',1,'AttentiveConfigurator']]],
+  ['spawner_156',['Spawner',['../classConfigurator.html#a50ba743a0d5b7c141dec30e6a704a43c',1,'Configurator']]],
+  ['splittask_157',['splitTask',['../classAttentiveConfigurator.html#a79980a3078cf0a0cf21ca54f2fe24f6f',1,'AttentiveConfigurator::splitTask()'],['../classB2BConfigurator.html#afba9914f70bbb518922e05499c1df046',1,'B2BConfigurator::splitTask()']]],
+  ['start_5ffrom_5fdi_158',['start_from_Di',['../structState.html#afa40b5e0292a7166ebfe566cc70d9cc8',1,'State']]],
+  ['start_5ffrom_5fdn_159',['start_from_Dn',['../structState.html#ae49ae7d8ee88b7b578bd6b40a553a599',1,'State']]],
+  ['state_160',['State',['../structState.html',1,'']]],
+  ['statedifference_161',['StateDifference',['../structStateDifference.html',1,'']]],
+  ['statematch_162',['StateMatch',['../structStateMatcher_1_1StateMatch.html',1,'StateMatcher']]],
+  ['statematcher_163',['StateMatcher',['../classStateMatcher.html',1,'']]],
+  ['sum_5fd_164',['sum_D',['../structStateDifference.html#a08eca3ca4dc4ab02ba8a1cbb64d11c4b',1,'StateDifference']]],
+  ['sum_5fd_5fpos_165',['sum_D_pos',['../structStateDifference.html#acd6e39bf5a0c0e8e0d23c87629711f6d',1,'StateDifference']]],
+  ['sum_5fd_5fshape_166',['sum_D_shape',['../structStateDifference.html#ada461c14a61f0dc4bfb63c7b596694ab',1,'StateDifference']]],
+  ['sum_5fr_167',['sum_r',['../structStateDifference.html#ae3a10eaecfa6a3bcd702bbb6f1b385e4',1,'StateDifference']]]
 ];

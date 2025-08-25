@@ -64,7 +64,6 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classHorizonStarPlanner-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">HorizonStarPlanner Class Reference</div>  </div>
@@ -100,29 +99,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a4e2246600849cc0f8262cf4d59a79ef7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHorizonStarPlanner.html#a4e2246600849cc0f8262cf4d59a79ef7">best_path</a> (const std::vector&lt; std::vector&lt; vertexDescriptor &gt;&gt; &amp;paths, vertexDescriptor goal, vertexDescriptor cv, bool change, const TransitionSystem &amp;g)</td></tr>
 <tr class="memdesc:a4e2246600849cc0f8262cf4d59a79ef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches all paths for best path according to the lowest final cost phi.  <a href="classHorizonStarPlanner.html#a4e2246600849cc0f8262cf4d59a79ef7">More...</a><br /></td></tr>
 <tr class="separator:a4e2246600849cc0f8262cf4d59a79ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9670f3ec10cd4f8ca1fe7726d1e0e996"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structFrontier.html">Frontier</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHorizonStarPlanner.html#a9670f3ec10cd4f8ca1fe7726d1e0e996">frontierVertices</a> (vertexDescriptor v, TransitionSystem &amp;g, <a class="el" href="classExecutionInfo.html">ExecutionInfo</a> &amp;info)</td></tr>
-<tr class="memdesc:a9670f3ec10cd4f8ca1fe7726d1e0e996"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs iterative deepening search to find the frontier.  <a href="classHorizonStarPlanner.html#a9670f3ec10cd4f8ca1fe7726d1e0e996">More...</a><br /></td></tr>
-<tr class="separator:a9670f3ec10cd4f8ca1fe7726d1e0e996"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a975dab6bf400b75b3649a86b87c5b625"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHorizonStarPlanner.html#a975dab6bf400b75b3649a86b87c5b625">addToPriorityQueue</a> (const <a class="el" href="structFrontier.html">Frontier</a> &amp;f, std::vector&lt; <a class="el" href="structFrontier.html">Frontier</a> &gt; &amp;queue, TransitionSystem &amp;g, vertexDescriptor goal=TransitionSystem::null_vertex())</td></tr>
 <tr class="memdesc:a975dab6bf400b75b3649a86b87c5b625"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds frontier to priority queue.  <a href="classHorizonStarPlanner.html#a975dab6bf400b75b3649a86b87c5b625">More...</a><br /></td></tr>
 <tr class="separator:a975dab6bf400b75b3649a86b87c5b625"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:a4b7d42c68c10d4a67cafbcc9cc0b03ca"><td class="memItemLeft" align="right" valign="top"><a id="a4b7d42c68c10d4a67cafbcc9cc0b03ca"></a>
-const Direction&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHorizonStarPlanner.html#a4b7d42c68c10d4a67cafbcc9cc0b03ca">frontier_direction</a> =DEFAULT</td></tr>
-<tr class="memdesc:a4b7d42c68c10d4a67cafbcc9cc0b03ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">The depth-first search portion of iterative deepening will stop when it reaches a DEFAULT task. <br /></td></tr>
-<tr class="separator:a4b7d42c68c10d4a67cafbcc9cc0b03ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_static_methods_classPlanner"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classPlanner')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classPlanner.html">Planner</a></td></tr>
-<tr class="memitem:aa94060b9c65f37c129860a236e10edd5 inherit pub_static_methods_classPlanner"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlanner.html#aa94060b9c65f37c129860a236e10edd5">evaluationFunction</a> (<a class="el" href="structEndedResult.html">EndedResult</a> er, const vertexDescriptor &amp;v, std::vector&lt; vertexDescriptor &gt; &amp;p)</td></tr>
-<tr class="memdesc:aa94060b9c65f37c129860a236e10edd5 inherit pub_static_methods_classPlanner"><td class="mdescLeft">&#160;</td><td class="mdescRight">calculates cumulative cost phi, add discount factor if in plan  <a href="classPlanner.html#aa94060b9c65f37c129860a236e10edd5">More...</a><br /></td></tr>
-<tr class="separator:aa94060b9c65f37c129860a236e10edd5 inherit pub_static_methods_classPlanner"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4087e146d998f56464bf42b969db3d3e inherit pub_static_methods_classPlanner"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structEndedResult.html">EndedResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlanner.html#a4087e146d998f56464bf42b969db3d3e">estimateCost</a> (const <a class="el" href="structState.html">State</a> &amp;state, b2Transform start, Direction d, <a class="el" href="classTask.html">Task</a> &amp;_goal)</td></tr>
-<tr class="memdesc:a4087e146d998f56464bf42b969db3d3e inherit pub_static_methods_classPlanner"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a breakdown of the cost function into its components: past cost (gamma): the position relative to an obstacle, if present future cost heuristic (chi): the position relative to a goal, if present, and whether the <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>.  <a href="classPlanner.html#a4087e146d998f56464bf42b969db3d3e">More...</a><br /></td></tr>
-<tr class="separator:a4087e146d998f56464bf42b969db3d3e inherit pub_static_methods_classPlanner"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Performs iterative deepening search over one unit of modular expansion (see below), i.e. search over one branch stops when it reaches a DEFAULT task. Each DEFAULT <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> represents the frontier. The planner expands the search from the frontier with the lowest cost phi (A*-style search), which are logged into a priority queue. </p>
@@ -259,60 +238,6 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the plan! </dd></dl>
-
-</div>
-</div>
-<a id="a9670f3ec10cd4f8ca1fe7726d1e0e996"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9670f3ec10cd4f8ca1fe7726d1e0e996">&#9670;&nbsp;</a></span>frontierVertices()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="structFrontier.html">Frontier</a> &gt; HorizonStarPlanner::frontierVertices </td>
-          <td>(</td>
-          <td class="paramtype">vertexDescriptor&#160;</td>
-          <td class="paramname"><em>v</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">TransitionSystem &amp;&#160;</td>
-          <td class="paramname"><em>g</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classExecutionInfo.html">ExecutionInfo</a> &amp;&#160;</td>
-          <td class="paramname"><em>info</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Performs iterative deepening search to find the frontier. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">v</td><td>source vertex: we find the frontier from here </td></tr>
-    <tr><td class="paramname">g</td><td>the transitionSystem </td></tr>
-    <tr><td class="paramname">d</td><td></td></tr>
-    <tr><td class="paramname">info</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>std::vector &lt;Frontier&gt; </dd></dl>
 
 </div>
 </div>

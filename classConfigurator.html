@@ -89,7 +89,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad82bdcea089cccd0aa3469d66ba269b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">init</a> (<a class="el" href="classTask.html">Task</a> _task=<a class="el" href="classTask.html">Task</a>())</td></tr>
 <tr class="memdesc:ad82bdcea089cccd0aa3469d66ba269b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises configurator.  <a href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">More...</a><br /></td></tr>
 <tr class="separator:ad82bdcea089cccd0aa3469d66ba269b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50ba743a0d5b7c141dec30e6a704a43c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a50ba743a0d5b7c141dec30e6a704a43c">Spawner</a> ()</td></tr>
+<tr class="memitem:a50ba743a0d5b7c141dec30e6a704a43c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a50ba743a0d5b7c141dec30e6a704a43c">Spawner</a> ()</td></tr>
 <tr class="memdesc:a50ba743a0d5b7c141dec30e6a704a43c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls functions to explore the state space and extract a plan.  <a href="classConfigurator.html#a50ba743a0d5b7c141dec30e6a704a43c">More...</a><br /></td></tr>
 <tr class="separator:a50ba743a0d5b7c141dec30e6a704a43c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a29ffaaaafaca73241199b3ea65f4de"><td class="memItemLeft" align="right" valign="top"><a id="a3a29ffaaaafaca73241199b3ea65f4de"></a>
@@ -101,9 +101,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>addIteration</b> (int
 <tr class="memitem:aca99eb139966cbba245426ba045bafa2"><td class="memItemLeft" align="right" valign="top"><a id="aca99eb139966cbba245426ba045bafa2"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>dummy_vertex</b> (vertexDescriptor src)</td></tr>
 <tr class="separator:aca99eb139966cbba245426ba045bafa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1affc949ef7e6d32845de5ce48123ba3"><td class="memItemLeft" align="right" valign="top"><a id="a1affc949ef7e6d32845de5ce48123ba3"></a>
-<a class="el" href="structsimResult.html">simResult</a>&#160;</td><td class="memItemRight" valign="bottom"><b>simulate</b> (<a class="el" href="classTask.html">Task</a>, b2World &amp;)</td></tr>
-<tr class="separator:a1affc949ef7e6d32845de5ce48123ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af76bd78ed717bafd3d98ec4c8262278c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structsimResult.html">simResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c">simulate</a> (<a class="el" href="classTask.html">Task</a> t, b2World &amp;w)</td></tr>
+<tr class="memdesc:af76bd78ed717bafd3d98ec4c8262278c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simulates this task, includes creating the robot object.  <a href="classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c">More...</a><br /></td></tr>
+<tr class="separator:af76bd78ed717bafd3d98ec4c8262278c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a786510bdcb146292d4aa15beb0e1e275"><td class="memItemLeft" align="right" valign="top"><a id="a786510bdcb146292d4aa15beb0e1e275"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>remainingSimulationTime</b> ()</td></tr>
+<tr class="separator:a786510bdcb146292d4aa15beb0e1e275"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5909d6f8f82ef074d2b01e8296d635ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a5909d6f8f82ef074d2b01e8296d635ed">estimate_current_vertex</a> ()</td></tr>
 <tr class="separator:a5909d6f8f82ef074d2b01e8296d635ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1846e9cbdb8941f9ecebe691a1127ac0"><td class="memItemLeft" align="right" valign="top"><a id="a1846e9cbdb8941f9ecebe691a1127ac0"></a>
@@ -131,9 +134,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="separator:afd6e00cf4faa38476236c7bde59808bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12e02ba69e205acb0789c6a26d999061"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a12e02ba69e205acb0789c6a26d999061">update_graph</a> (TransitionSystem &amp;g, const b2Transform &amp;_deltaPose)</td></tr>
 <tr class="separator:a12e02ba69e205acb0789c6a26d999061"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41f9343dae2ab09d1a7db24f4ce92457"><td class="memItemLeft" align="right" valign="top"><a id="a41f9343dae2ab09d1a7db24f4ce92457"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>approximate_angle</b> (const float &amp;, const Direction &amp;, const simResult::resultType &amp;)</td></tr>
-<tr class="separator:a41f9343dae2ab09d1a7db24f4ce92457"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2984dc129d74fd6877cc833cebcad015"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a2984dc129d74fd6877cc833cebcad015">approximate_angle</a> (float angle, Direction d, simResult::resultType outcome)</td></tr>
+<tr class="memdesc:a2984dc129d74fd6877cc833cebcad015"><td class="mdescLeft">&#160;</td><td class="mdescRight">Approximating angle to divisors of pi/2.  <a href="classConfigurator.html#a2984dc129d74fd6877cc833cebcad015">More...</a><br /></td></tr>
+<tr class="separator:a2984dc129d74fd6877cc833cebcad015"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93f9fc1ab8bfb68c5f381341f838bca9"><td class="memItemLeft" align="right" valign="top"><a id="a93f9fc1ab8bfb68c5f381341f838bca9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>adjust_goal_expectation</b> ()</td></tr>
 <tr class="separator:a93f9fc1ab8bfb68c5f381341f838bca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,6 +167,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setSimulationStep</b>
 <tr class="memitem:a6ecb1314987887614d49f172543e4566"><td class="memItemLeft" align="right" valign="top"><a id="a6ecb1314987887614d49f172543e4566"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>register_logger</b> (<a class="el" href="classLogger.html">Logger</a> *l)</td></tr>
 <tr class="separator:a6ecb1314987887614d49f172543e4566"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f3c294493e8a8ce303113e44b73cb71"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classRobot.html">Robot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a0f3c294493e8a8ce303113e44b73cb71">makeRobot</a> (b2World &amp;world, const b2Transform &amp;start)</td></tr>
+<tr class="memdesc:a0f3c294493e8a8ce303113e44b73cb71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the robot object in the world with the given start position and task.  <a href="classConfigurator.html#a0f3c294493e8a8ce303113e44b73cb71">More...</a><br /></td></tr>
+<tr class="separator:a0f3c294493e8a8ce303113e44b73cb71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a354f3060a489aaaaede157ced893cb2d"><td class="memItemLeft" align="right" valign="top"><a id="a354f3060a489aaaaede157ced893cb2d"></a>
+<a class="el" href="structDisturbance.html">Disturbance</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getGoalDisturbance</b> ()</td></tr>
+<tr class="separator:a354f3060a489aaaaede157ced893cb2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -249,7 +258,7 @@ vertexDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentVe
 edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>movingEdge</b> =edgeDescriptor()</td></tr>
 <tr class="separator:ad1b5b91eb18f6ce14aadf638cb26e250"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aafc924b720ef5dfed4d18682ad2f4a"><td class="memItemLeft" align="right" valign="top"><a id="a6aafc924b720ef5dfed4d18682ad2f4a"></a>
-edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge</b> =edgeDescriptor()</td></tr>
+edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge</b> =movingEdge</td></tr>
 <tr class="separator:a6aafc924b720ef5dfed4d18682ad2f4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
@@ -298,6 +307,50 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
     <tr><td class="paramname">v1</td><td>new state </td></tr>
     <tr><td class="paramname">edge</td><td>connecting edge between src-&gt;v1 </td></tr>
     <tr><td class="paramname">topDown</td><td>flag determining whether state v1 has been simulated already or not </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2984dc129d74fd6877cc833cebcad015"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2984dc129d74fd6877cc833cebcad015">&#9670;&nbsp;</a></span>approximate_angle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Configurator::approximate_angle </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>angle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Direction&#160;</td>
+          <td class="paramname"><em>d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">simResult::resultType&#160;</td>
+          <td class="paramname"><em>outcome</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Approximating angle to divisors of pi/2. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">angle</td><td>the angle to approximate </td></tr>
+    <tr><td class="paramname">d</td><td>the direction of the robot </td></tr>
+    <tr><td class="paramname">outcome</td><td>the outcome of the last simulation </td></tr>
   </table>
   </dd>
 </dl>
@@ -354,11 +407,101 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
 
 </div>
 </div>
+<a id="a0f3c294493e8a8ce303113e44b73cb71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f3c294493e8a8ce303113e44b73cb71">&#9670;&nbsp;</a></span>makeRobot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classRobot.html">Robot</a> Configurator::makeRobot </td>
+          <td>(</td>
+          <td class="paramtype">b2World &amp;&#160;</td>
+          <td class="paramname"><em>world</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const b2Transform &amp;&#160;</td>
+          <td class="paramname"><em>start</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Makes the robot object in the world with the given start position and task. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">world</td><td></td></tr>
+    <tr><td class="paramname">start</td><td></td></tr>
+    <tr><td class="paramname">taskWithGoal</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classRobot.html" title="Robot class for Box2D simulation.">Robot</a> </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classAttentiveConfigurator.html#a88fbd42d1c2d37bf721bc753f1b2da8a">AttentiveConfigurator</a>.</p>
+
+</div>
+</div>
+<a id="af76bd78ed717bafd3d98ec4c8262278c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af76bd78ed717bafd3d98ec4c8262278c">&#9670;&nbsp;</a></span>simulate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structsimResult.html">simResult</a> Configurator::simulate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classTask.html">Task</a>&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">b2World &amp;&#160;</td>
+          <td class="paramname"><em>w</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Simulates this task, includes creating the robot object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>the task (should already be initialised) </td></tr>
+    <tr><td class="paramname">w</td><td>the world (should already contain any objects aside from the robot) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structsimResult.html">simResult</a> </dd></dl>
+
+</div>
+</div>
 <a id="a50ba743a0d5b7c141dec30e6a704a43c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a50ba743a0d5b7c141dec30e6a704a43c">&#9670;&nbsp;</a></span>Spawner()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool Configurator::Spawner </td>
@@ -367,6 +510,11 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Calls functions to explore the state space and extract a plan. </p>
@@ -401,7 +549,7 @@ false </dd></dl>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="params"><dt>Parameters</dt><dd>
+<p>@brieF updates the cognitive map by applying a 2D transform </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">g</td><td>the cognitive map </td></tr>
     <tr><td class="paramname">_deltaPose</td><td>the transform to apply </td></tr>

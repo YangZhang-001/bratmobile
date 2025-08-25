@@ -1,20 +1,13 @@
 var searchData=
 [
-  ['sameiteration_138',['SameIteration',['../structSameIteration.html',1,'']]],
-  ['setendcriteria_139',['setEndCriteria',['../classTask.html#a5e5e1a4079f17ba64c17350f02f14ca0',1,'Task']]],
-  ['setup_5fmatch_5fedge_140',['setup_match_edge',['../classAttentiveConfigurator.html#a11cfa68b1faf613f971b566815ea9355',1,'AttentiveConfigurator']]],
-  ['simresult_141',['simResult',['../structsimResult.html',1,'']]],
-  ['simulation_5fsetup_142',['simulation_setup',['../classAttentiveConfigurator.html#a546f17fc837062c95a3900c7b8b21977',1,'AttentiveConfigurator']]],
-  ['spawner_143',['Spawner',['../classConfigurator.html#a50ba743a0d5b7c141dec30e6a704a43c',1,'Configurator']]],
-  ['splittask_144',['splitTask',['../classAttentiveConfigurator.html#a79980a3078cf0a0cf21ca54f2fe24f6f',1,'AttentiveConfigurator']]],
-  ['start_5ffrom_5fdi_145',['start_from_Di',['../structState.html#afa40b5e0292a7166ebfe566cc70d9cc8',1,'State']]],
-  ['start_5ffrom_5fdn_146',['start_from_Dn',['../structState.html#ae49ae7d8ee88b7b578bd6b40a553a599',1,'State']]],
-  ['state_147',['State',['../structState.html',1,'']]],
-  ['statedifference_148',['StateDifference',['../structStateDifference.html',1,'']]],
-  ['statematch_149',['StateMatch',['../structStateMatcher_1_1StateMatch.html',1,'StateMatcher']]],
-  ['statematcher_150',['StateMatcher',['../classStateMatcher.html',1,'']]],
-  ['sum_5fd_151',['sum_D',['../structStateDifference.html#a08eca3ca4dc4ab02ba8a1cbb64d11c4b',1,'StateDifference']]],
-  ['sum_5fd_5fpos_152',['sum_D_pos',['../structStateDifference.html#acd6e39bf5a0c0e8e0d23c87629711f6d',1,'StateDifference']]],
-  ['sum_5fd_5fshape_153',['sum_D_shape',['../structStateDifference.html#ada461c14a61f0dc4bfb63c7b596694ab',1,'StateDifference']]],
-  ['sum_5fr_154',['sum_r',['../structStateDifference.html#ae3a10eaecfa6a3bcd702bbb6f1b385e4',1,'StateDifference']]]
+  ['reactive_5fcontroller_140',['Reactive_Controller',['../classReactive__Controller.html',1,'']]],
+  ['reactiveconfigurator_141',['ReactiveConfigurator',['../classReactiveConfigurator.html',1,'']]],
+  ['real_5fworld_5ffocus_142',['real_world_focus',['../classClosedLoop__Tracker.html#a6d68445d0de37127cf356211223cdc35',1,'ClosedLoop_Tracker']]],
+  ['reassign_5fdirection_143',['reassign_direction',['../classAttentiveConfigurator.html#a0e9a1588b88b9a47f807b81caef9b3ba',1,'AttentiveConfigurator']]],
+  ['recycle_5fplan_144',['recycle_plan',['../classAttentiveConfigurator.html#a4209d12894cf75b285fabfc529c39da0',1,'AttentiveConfigurator']]],
+  ['removeexploredtransitions_145',['removeExploredTransitions',['../classAttentiveConfigurator.html#aaff9aa8999a177a8044fd95ec53b1a28',1,'AttentiveConfigurator']]],
+  ['resetphi_146',['resetPhi',['../classAttentiveConfigurator.html#ae73a19ece7e104bc308a4e55157b6a63',1,'AttentiveConfigurator']]],
+  ['resetvisited_147',['resetVisited',['../structState.html#a25bcbd881b002ca3ef0fd36444364af2',1,'State']]],
+  ['robot_148',['Robot',['../classRobot.html',1,'Robot'],['../classRobot.html#a136b20cc34a9cda8da9ef2c85646f747',1,'Robot::Robot()']]],
+  ['run_149',['run',['../classConfigurator.html#a26cced006fc019f9791c44090a08b1c5',1,'Configurator']]]
 ];

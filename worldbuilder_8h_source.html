@@ -96,69 +96,69 @@ $(function() {
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    };</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    std::pair &lt;CoordinateContainer, bool&gt; salientPoints(b2Transform, <span class="keyword">const</span> CoordinateContainer &amp;, std::pair &lt;Pointf, Pointf&gt;); <span class="comment">//gets points from the raw data that are relevant to the task based on bounding boxes</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                                                                                                                                        <span class="comment">//std::pair&lt;points, obstaclestillthere&gt;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    b2Body* makeBody(b2World&amp;, <a class="code" href="classBodyFeatures.html">BodyFeatures</a>);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    std::vector &lt;BodyFeatures&gt; <a class="code" href="classWorldBuilder.html#a73b2748701310d051e86b6698748f8ba">processData</a>(<span class="keyword">const</span> CoordinateContainer&amp;, <span class="keyword">const</span> b2Transform&amp;);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                             </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    b2Body* <a class="code" href="classWorldBuilder.html#a99075db67b8e3664aa10bd83d17ec48c">makeBody</a>(b2World&amp; w, <span class="keyword">const</span> <a class="code" href="classBodyFeatures.html">BodyFeatures</a>&amp; features);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    std::vector &lt;BodyFeatures&gt; cluster_data(<span class="keyword">const</span> CoordinateContainer &amp;, <span class="keyword">const</span> b2Transform&amp;, CLUSTERING clustering=PARTITION);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">bool</span> checkDisturbance(<a class="code" href="structPointf.html">Pointf</a>, <span class="keywordtype">bool</span>&amp;,<a class="code" href="classTask.html">Task</a> * curr =NULL, <span class="keywordtype">float</span> range=0.025);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    std::vector &lt;BodyFeatures&gt; getFeatures(<span class="keyword">const</span> CoordinateContainer &amp;, b2Transform, CLUSTERING clustering=PARTITION);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classWorldBuilder.html#aa8fced331769ea18a04d9ad547b301a0">buildWorld</a>(b2World&amp;,b2Transform, Direction,  <a class="code" href="structDisturbance.html">Disturbance</a> disturbance=<a class="code" href="structDisturbance.html">Disturbance</a>(), <span class="keywordtype">float</span> halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, <a class="code" href="classTask.html">Task</a> * task=NULL);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="comment">//returns top and bottom of rotated rectangle (not side-specific)</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    std::pair &lt;Pointf, Pointf&gt; bounds(Direction, b2Transform t, <span class="keywordtype">float</span> boxLength, <span class="keywordtype">float</span> halfWindowWidth,std::vector &lt;Pointf&gt; *_bounds=NULL); <span class="comment">//returns bottom and top of bounding box</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    b2PolygonShape <a class="code" href="classWorldBuilder.html#a774e1fbfc14b4d3f69bf165f779594a5">object_filtering_box</a>(<span class="keywordtype">float</span> halfWindowWidth, <span class="keywordtype">float</span> boxLength, b2Transform start, Direction d);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    std::pair &lt;bool, BodyFeatures&gt; bounding_approx_poly(std::vector &lt;cv::Point2f&gt;nb);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    std::vector &lt;std::vector&lt;cv::Point2f&gt;&gt; <a class="code" href="classWorldBuilder.html#a295f092345f4b62721428e073c3e47f2">kmeans_clusters</a>( std::vector &lt;cv::Point2f&gt;, std::vector &lt;cv::Point2f&gt;&amp;);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    std::vector &lt;std::vector&lt;cv::Point2f&gt;&gt; <a class="code" href="classWorldBuilder.html#a224b89e6744786fdfe6bee3673e90303">partition_clusters</a>( std::vector &lt;cv::Point2f&gt;);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    b2Vec2 averagePoint(<span class="keyword">const</span> CoordinateContainer &amp;, <a class="code" href="structDisturbance.html">Disturbance</a> &amp;, <span class="keywordtype">float</span> rad = 0.025); <span class="comment">//finds centroid of a poitn cluster, return position vec difference</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordtype">int</span> getBodies(){</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordflow">return</span> bodies;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordtype">int</span> add_body_count(){</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        bodies++;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    std::vector &lt;BodyFeatures&gt; <a class="code" href="classWorldBuilder.html#a73b2748701310d051e86b6698748f8ba">processData</a>(<span class="keyword">const</span> CoordinateContainer&amp;, <span class="keyword">const</span> b2Transform&amp;);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    std::vector &lt;BodyFeatures&gt; cluster_data(<span class="keyword">const</span> CoordinateContainer &amp;, <span class="keyword">const</span> b2Transform&amp;, CLUSTERING clustering=PARTITION);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">bool</span> checkDisturbance(<a class="code" href="structPointf.html">Pointf</a>, <span class="keywordtype">bool</span>&amp;,<a class="code" href="classTask.html">Task</a> * curr =NULL, <span class="keywordtype">float</span> range=0.025);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    std::vector &lt;BodyFeatures&gt; getFeatures(<span class="keyword">const</span> CoordinateContainer &amp;, b2Transform, CLUSTERING clustering=PARTITION);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classWorldBuilder.html#aa8fced331769ea18a04d9ad547b301a0">buildWorld</a>(b2World&amp;,b2Transform, Direction,  <a class="code" href="structDisturbance.html">Disturbance</a> disturbance=<a class="code" href="structDisturbance.html">Disturbance</a>(), <span class="keywordtype">float</span> halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, <a class="code" href="classTask.html">Task</a> * task=NULL);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="comment">//returns top and bottom of rotated rectangle (not side-specific)</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    std::pair &lt;Pointf, Pointf&gt; bounds(Direction, b2Transform t, <span class="keywordtype">float</span> boxLength, <span class="keywordtype">float</span> halfWindowWidth,std::vector &lt;Pointf&gt; *_bounds=NULL); <span class="comment">//returns bottom and top of bounding box</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    b2PolygonShape <a class="code" href="classWorldBuilder.html#a774e1fbfc14b4d3f69bf165f779594a5">object_filtering_box</a>(<span class="keywordtype">float</span> halfWindowWidth, <span class="keywordtype">float</span> boxLength, b2Transform start, Direction d);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    std::pair &lt;bool, BodyFeatures&gt; bounding_approx_poly(std::vector &lt;cv::Point2f&gt;nb);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    std::vector &lt;std::vector&lt;cv::Point2f&gt;&gt; <a class="code" href="classWorldBuilder.html#a295f092345f4b62721428e073c3e47f2">kmeans_clusters</a>( std::vector &lt;cv::Point2f&gt;, std::vector &lt;cv::Point2f&gt;&amp;);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    std::vector &lt;std::vector&lt;cv::Point2f&gt;&gt; <a class="code" href="classWorldBuilder.html#a224b89e6744786fdfe6bee3673e90303">partition_clusters</a>( std::vector &lt;cv::Point2f&gt;);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    b2Vec2 averagePoint(<span class="keyword">const</span> CoordinateContainer &amp;, <a class="code" href="structDisturbance.html">Disturbance</a> &amp;, <span class="keywordtype">float</span> rad = 0.025); <span class="comment">//finds centroid of a poitn cluster, return position vec difference</span></div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">void</span> resetBodies(){</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        bodies =0;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">int</span> getBodies(){</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordflow">return</span> bodies;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">void</span> add_iteration(<span class="keywordtype">int</span> i=1){</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        iteration+=1;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">int</span> add_body_count(){</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        bodies++;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    b2Body * get_robot(b2World *);</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    b2Fixture * get_chassis(b2Body *);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">void</span> resetBodies(){</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        bodies =0;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    }</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    b2AABB  makeRobotSensor(b2Body*, <a class="code" href="structDisturbance.html">Disturbance</a> *goal); <span class="comment">//returns bounding box in world coord</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    std::vector &lt;BodyFeatures&gt;&amp; get_world_objects(){</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordflow">return</span> world_objects;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordtype">void</span> set_world_objects(<span class="keyword">const</span> std::vector &lt;BodyFeatures&gt;&amp; wo){</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        world_objects=wo;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    }</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordtype">void</span> setSimulationStep(<span class="keywordtype">float</span> f){simulationStep=f;}</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;};</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordtype">void</span> add_iteration(<span class="keywordtype">int</span> i=1){</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        iteration+=1;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    }</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    b2Body * get_robot(b2World *);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    b2Fixture * get_chassis(b2Body *);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    b2AABB  <a class="code" href="classWorldBuilder.html#ab3f86540ffb4137aeadb9c540360f898">makeRobotSensor</a>(b2Body* <span class="keyword">const</span> robotBody, <span class="keyword">const</span> <a class="code" href="structDisturbance.html">Disturbance</a> *<span class="keyword">const</span> focus)<span class="keyword">const</span>; <span class="comment">//returns bounding box in world coord</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    </div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    std::vector &lt;BodyFeatures&gt;&amp; get_world_objects(){</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="keywordflow">return</span> world_objects;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    }</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">void</span> set_world_objects(<span class="keyword">const</span> std::vector &lt;BodyFeatures&gt;&amp; wo){</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        world_objects=wo;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    }</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordtype">void</span> setSimulationStep(<span class="keywordtype">float</span> f){simulationStep=f;}</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;};</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassBodyFeatures_html"><div class="ttname"><a href="classBodyFeatures.html">BodyFeatures</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:45</div></div>
 <div class="ttc" id="aclassConfigurator_html"><div class="ttname"><a href="classConfigurator.html">Configurator</a></div><div class="ttdef"><b>Definition:</b> configurator.h:17</div></div>
 <div class="ttc" id="aclassTask_html"><div class="ttname"><a href="classTask.html">Task</a></div><div class="ttdoc">A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...</div><div class="ttdef"><b>Definition:</b> task.h:45</div></div>
@@ -167,7 +167,9 @@ $(function() {
 <div class="ttc" id="aclassWorldBuilder_html_a295f092345f4b62721428e073c3e47f2"><div class="ttname"><a href="classWorldBuilder.html#a295f092345f4b62721428e073c3e47f2">WorldBuilder::kmeans_clusters</a></div><div class="ttdeci">std::vector&lt; std::vector&lt; cv::Point2f &gt; &gt; kmeans_clusters(std::vector&lt; cv::Point2f &gt;, std::vector&lt; cv::Point2f &gt; &amp;)</div><div class="ttdoc">Clusters points using k-means algorithm.</div><div class="ttdef"><b>Definition:</b> worldbuilder.cpp:58</div></div>
 <div class="ttc" id="aclassWorldBuilder_html_a73b2748701310d051e86b6698748f8ba"><div class="ttname"><a href="classWorldBuilder.html#a73b2748701310d051e86b6698748f8ba">WorldBuilder::processData</a></div><div class="ttdeci">std::vector&lt; BodyFeatures &gt; processData(const CoordinateContainer &amp;, const b2Transform &amp;)</div><div class="ttdoc">returns a bounding box encompassing all points provided</div><div class="ttdef"><b>Definition:</b> worldbuilder.cpp:93</div></div>
 <div class="ttc" id="aclassWorldBuilder_html_a774e1fbfc14b4d3f69bf165f779594a5"><div class="ttname"><a href="classWorldBuilder.html#a774e1fbfc14b4d3f69bf165f779594a5">WorldBuilder::object_filtering_box</a></div><div class="ttdeci">b2PolygonShape object_filtering_box(float halfWindowWidth, float boxLength, b2Transform start, Direction d)</div><div class="ttdoc">Makes a box.</div><div class="ttdef"><b>Definition:</b> worldbuilder.cpp:41</div></div>
-<div class="ttc" id="aclassWorldBuilder_html_aa8fced331769ea18a04d9ad547b301a0"><div class="ttname"><a href="classWorldBuilder.html#aa8fced331769ea18a04d9ad547b301a0">WorldBuilder::buildWorld</a></div><div class="ttdeci">void buildWorld(b2World &amp;, b2Transform, Direction, Disturbance disturbance=Disturbance(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task *task=NULL)</div><div class="ttdoc">Creates bodies (objects) in the box2d world.</div><div class="ttdef"><b>Definition:</b> worldbuilder.cpp:223</div></div>
+<div class="ttc" id="aclassWorldBuilder_html_a99075db67b8e3664aa10bd83d17ec48c"><div class="ttname"><a href="classWorldBuilder.html#a99075db67b8e3664aa10bd83d17ec48c">WorldBuilder::makeBody</a></div><div class="ttdeci">b2Body * makeBody(b2World &amp;w, const BodyFeatures &amp;features)</div><div class="ttdoc">Creates a body in the box2d world, and if the features represent a disturbance to which the attention...</div><div class="ttdef"><b>Definition:</b> worldbuilder.cpp:126</div></div>
+<div class="ttc" id="aclassWorldBuilder_html_aa8fced331769ea18a04d9ad547b301a0"><div class="ttname"><a href="classWorldBuilder.html#aa8fced331769ea18a04d9ad547b301a0">WorldBuilder::buildWorld</a></div><div class="ttdeci">void buildWorld(b2World &amp;, b2Transform, Direction, Disturbance disturbance=Disturbance(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task *task=NULL)</div><div class="ttdoc">Creates bodies (objects) in the box2d world.</div><div class="ttdef"><b>Definition:</b> worldbuilder.cpp:209</div></div>
+<div class="ttc" id="aclassWorldBuilder_html_ab3f86540ffb4137aeadb9c540360f898"><div class="ttname"><a href="classWorldBuilder.html#ab3f86540ffb4137aeadb9c540360f898">WorldBuilder::makeRobotSensor</a></div><div class="ttdeci">b2AABB makeRobotSensor(b2Body *const robotBody, const Disturbance *const focus) const</div><div class="ttdoc">Makes the robot attention window, i.e. a distal sensor which is comprised between the extremes of the...</div><div class="ttdef"><b>Definition:</b> worldbuilder.cpp:297</div></div>
 <div class="ttc" id="astructDisturbance_html"><div class="ttname"><a href="structDisturbance.html">Disturbance</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:112</div></div>
 <div class="ttc" id="astructPointf_html"><div class="ttname"><a href="structPointf.html">Pointf</a></div><div class="ttdoc">Wrapper around cv::Point2f for customisation purposes.</div><div class="ttdef"><b>Definition:</b> sensor.h:12</div></div>
 <div class="ttc" id="astructWorldBuilder_1_1CompareCluster_html"><div class="ttname"><a href="structWorldBuilder_1_1CompareCluster.html">WorldBuilder::CompareCluster</a></div><div class="ttdef"><b>Definition:</b> worldbuilder.h:15</div></div>

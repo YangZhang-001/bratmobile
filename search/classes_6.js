@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['goalchanger_196',['GoalChanger',['../structGoalChanger.html',1,'']]]
+  ['goalchanger_215',['GoalChanger',['../structGoalChanger.html',1,'']]]
 ];

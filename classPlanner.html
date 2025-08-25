@@ -63,7 +63,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classPlanner-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Planner Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
@@ -85,133 +84,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aae39b978d83cd3e6a41ee85eb672384c"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlanner.html#aae39b978d83cd3e6a41ee85eb672384c">plan</a> (TransitionSystem &amp;g, vertexDescriptor src, <a class="el" href="classExecutionInfo.html">ExecutionInfo</a> &amp;info, bool *finished)=0</td></tr>
 <tr class="memdesc:aae39b978d83cd3e6a41ee85eb672384c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements custom algorithm to search transition system for a plan.  <a href="classPlanner.html#aae39b978d83cd3e6a41ee85eb672384c">More...</a><br /></td></tr>
 <tr class="separator:aae39b978d83cd3e6a41ee85eb672384c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:aa94060b9c65f37c129860a236e10edd5"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlanner.html#aa94060b9c65f37c129860a236e10edd5">evaluationFunction</a> (<a class="el" href="structEndedResult.html">EndedResult</a> er, const vertexDescriptor &amp;v, std::vector&lt; vertexDescriptor &gt; &amp;p)</td></tr>
-<tr class="memdesc:aa94060b9c65f37c129860a236e10edd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">calculates cumulative cost phi, add discount factor if in plan  <a href="classPlanner.html#aa94060b9c65f37c129860a236e10edd5">More...</a><br /></td></tr>
-<tr class="separator:aa94060b9c65f37c129860a236e10edd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4087e146d998f56464bf42b969db3d3e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structEndedResult.html">EndedResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlanner.html#a4087e146d998f56464bf42b969db3d3e">estimateCost</a> (const <a class="el" href="structState.html">State</a> &amp;state, b2Transform start, Direction d, <a class="el" href="classTask.html">Task</a> &amp;_goal)</td></tr>
-<tr class="memdesc:a4087e146d998f56464bf42b969db3d3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a breakdown of the cost function into its components: past cost (gamma): the position relative to an obstacle, if present future cost heuristic (chi): the position relative to a goal, if present, and whether the <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>.  <a href="classPlanner.html#a4087e146d998f56464bf42b969db3d3e">More...</a><br /></td></tr>
-<tr class="separator:a4087e146d998f56464bf42b969db3d3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Searches the transition system and extracts a plan. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4087e146d998f56464bf42b969db3d3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4087e146d998f56464bf42b969db3d3e">&#9670;&nbsp;</a></span>estimateCost()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structEndedResult.html">EndedResult</a> Planner::estimateCost </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structState.html">State</a> &amp;&#160;</td>
-          <td class="paramname"><em>state</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">b2Transform&#160;</td>
-          <td class="paramname"><em>start</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Direction&#160;</td>
-          <td class="paramname"><em>d</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
-          <td class="paramname"><em>_goal</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Provides a breakdown of the cost function into its components: past cost (gamma): the position relative to an obstacle, if present future cost heuristic (chi): the position relative to a goal, if present, and whether the <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">_goal</td><td>has ended</td></tr>
-    <tr><td class="paramname">state</td><td>the current state </td></tr>
-    <tr><td class="paramname">start</td><td>where the task started from </td></tr>
-    <tr><td class="paramname">d</td><td>task direction </td></tr>
-    <tr><td class="paramname">_goal</td><td>the overaraching goal </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structEndedResult.html" title="Provides information on whether a Task has ended and with what heuristic -estimated- cost (chi) and p...">EndedResult</a> </dd></dl>
-
-</div>
-</div>
-<a id="aa94060b9c65f37c129860a236e10edd5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa94060b9c65f37c129860a236e10edd5">&#9670;&nbsp;</a></span>evaluationFunction()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float Planner::evaluationFunction </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structEndedResult.html">EndedResult</a>&#160;</td>
-          <td class="paramname"><em>er</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const vertexDescriptor &amp;&#160;</td>
-          <td class="paramname"><em>v</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::vector&lt; vertexDescriptor &gt; &amp;&#160;</td>
-          <td class="paramname"><em>p</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>calculates cumulative cost phi, add discount factor if in plan </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">er</td><td>contains information on whether a <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> has ended and with that cumulative cost (phi) </td></tr>
-    <tr><td class="paramname">v</td><td>the vertex that the <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> corresponds to </td></tr>
-    <tr><td class="paramname">p</td><td>the plan </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>float </dd></dl>
-
-</div>
-</div>
 <a id="aae39b978d83cd3e6a41ee85eb672384c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aae39b978d83cd3e6a41ee85eb672384c">&#9670;&nbsp;</a></span>plan()</h2>
 
@@ -274,9 +150,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/<a class="el" href="planner_8h_source.html">planner.h</a></li>
-<li>src/planner.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

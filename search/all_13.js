@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['viableedge_167',['ViableEdge',['../structViableEdge.html',1,'']]],
-  ['visited_168',['visited',['../structState.html#a17a6bc302f149d4fb244fd0b4235370e',1,'State']]],
-  ['visitedorvisitingedge_169',['visitedOrVisitingEdge',['../classAttentiveConfigurator.html#a0b45e306ab668482a60c7bc8c664a011',1,'AttentiveConfigurator']]]
+  ['update_5fbundle_179',['update_bundle',['../classThresholdLearner.html#aee48e167c67fcf0f47097512b66c5157',1,'ThresholdLearner']]],
+  ['update_5fgraph_180',['update_graph',['../classConfigurator.html#a12e02ba69e205acb0789c6a26d999061',1,'Configurator']]]
 ];

@@ -91,9 +91,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae1faf769c88dcb6249b556053aa76c7f"><td class="memItemLeft" align="right" valign="top"><a id="ae1faf769c88dcb6249b556053aa76c7f"></a>
 std::pair&lt; CoordinateContainer, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>salientPoints</b> (b2Transform, const CoordinateContainer &amp;, std::pair&lt; <a class="el" href="structPointf.html">Pointf</a>, <a class="el" href="structPointf.html">Pointf</a> &gt;)</td></tr>
 <tr class="separator:ae1faf769c88dcb6249b556053aa76c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4dcd78c1660db22058ac6b4ac87ebcd5"><td class="memItemLeft" align="right" valign="top"><a id="a4dcd78c1660db22058ac6b4ac87ebcd5"></a>
-b2Body *&#160;</td><td class="memItemRight" valign="bottom"><b>makeBody</b> (b2World &amp;, <a class="el" href="classBodyFeatures.html">BodyFeatures</a>)</td></tr>
-<tr class="separator:a4dcd78c1660db22058ac6b4ac87ebcd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99075db67b8e3664aa10bd83d17ec48c"><td class="memItemLeft" align="right" valign="top">b2Body *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWorldBuilder.html#a99075db67b8e3664aa10bd83d17ec48c">makeBody</a> (b2World &amp;w, const <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &amp;features)</td></tr>
+<tr class="memdesc:a99075db67b8e3664aa10bd83d17ec48c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a body in the box2d world, and if the features represent a disturbance to which the attention window needs to be assigned, a flag is assigned to the body user data.  <a href="classWorldBuilder.html#a99075db67b8e3664aa10bd83d17ec48c">More...</a><br /></td></tr>
+<tr class="separator:a99075db67b8e3664aa10bd83d17ec48c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73b2748701310d051e86b6698748f8ba"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWorldBuilder.html#a73b2748701310d051e86b6698748f8ba">processData</a> (const CoordinateContainer &amp;, const b2Transform &amp;)</td></tr>
 <tr class="memdesc:a73b2748701310d051e86b6698748f8ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns a bounding box encompassing all points provided  <a href="classWorldBuilder.html#a73b2748701310d051e86b6698748f8ba">More...</a><br /></td></tr>
 <tr class="separator:a73b2748701310d051e86b6698748f8ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,9 +145,9 @@ b2Body *&#160;</td><td class="memItemRight" valign="bottom"><b>get_robot</b> (b2
 <tr class="memitem:aa143e3ca52cda150ce89f74abc628f1f"><td class="memItemLeft" align="right" valign="top"><a id="aa143e3ca52cda150ce89f74abc628f1f"></a>
 b2Fixture *&#160;</td><td class="memItemRight" valign="bottom"><b>get_chassis</b> (b2Body *)</td></tr>
 <tr class="separator:aa143e3ca52cda150ce89f74abc628f1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89deb65c067b7c85ee85b6f71b5c9796"><td class="memItemLeft" align="right" valign="top"><a id="a89deb65c067b7c85ee85b6f71b5c9796"></a>
-b2AABB&#160;</td><td class="memItemRight" valign="bottom"><b>makeRobotSensor</b> (b2Body *, <a class="el" href="structDisturbance.html">Disturbance</a> *goal)</td></tr>
-<tr class="separator:a89deb65c067b7c85ee85b6f71b5c9796"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3f86540ffb4137aeadb9c540360f898"><td class="memItemLeft" align="right" valign="top">b2AABB&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWorldBuilder.html#ab3f86540ffb4137aeadb9c540360f898">makeRobotSensor</a> (b2Body *const robotBody, const <a class="el" href="structDisturbance.html">Disturbance</a> *const focus) const</td></tr>
+<tr class="memdesc:ab3f86540ffb4137aeadb9c540360f898"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the robot attention window, i.e. a distal sensor which is comprised between the extremes of the robot body and the disturbance.  <a href="classWorldBuilder.html#ab3f86540ffb4137aeadb9c540360f898">More...</a><br /></td></tr>
+<tr class="separator:ab3f86540ffb4137aeadb9c540360f898"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae93e17f31d13080d60e93659398f401e"><td class="memItemLeft" align="right" valign="top"><a id="ae93e17f31d13080d60e93659398f401e"></a>
 std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_world_objects</b> ()</td></tr>
 <tr class="separator:ae93e17f31d13080d60e93659398f401e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -280,6 +280,82 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Configurator</b></td
 
 <p>Clusters points using k-means algorithm. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::vector &lt;std::vector&lt;cv::Point2f&gt;&gt; </dd></dl>
+
+</div>
+</div>
+<a id="a99075db67b8e3664aa10bd83d17ec48c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99075db67b8e3664aa10bd83d17ec48c">&#9670;&nbsp;</a></span>makeBody()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">b2Body * WorldBuilder::makeBody </td>
+          <td>(</td>
+          <td class="paramtype">b2World &amp;&#160;</td>
+          <td class="paramname"><em>w</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &amp;&#160;</td>
+          <td class="paramname"><em>features</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a body in the box2d world, and if the features represent a disturbance to which the attention window needs to be assigned, a flag is assigned to the body user data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">w</td><td>the box2d world </td></tr>
+    <tr><td class="paramname">features</td><td>features of the body to be created </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>* b2Body* </dd></dl>
+
+</div>
+</div>
+<a id="ab3f86540ffb4137aeadb9c540360f898"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3f86540ffb4137aeadb9c540360f898">&#9670;&nbsp;</a></span>makeRobotSensor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">b2AABB WorldBuilder::makeRobotSensor </td>
+          <td>(</td>
+          <td class="paramtype">b2Body *const&#160;</td>
+          <td class="paramname"><em>robotBody</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structDisturbance.html">Disturbance</a> *const&#160;</td>
+          <td class="paramname"><em>focus</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Makes the robot attention window, i.e. a distal sensor which is comprised between the extremes of the robot body and the disturbance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">robotBody</td><td></td></tr>
+    <tr><td class="paramname">focus</td><td>a disturbance representing the focus of the attention window </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>b2AABB </dd></dl>
 
 </div>
 </div>
