@@ -6,9 +6,11 @@
 class AffordanceSetter{
     AffordanceIndex affordance=NONE;
     public:
-    AffordanceSetter()=default;
-    AffordanceSetter(const char * text){
-        init(text);
+    AffordanceSetter(){
+        std::cout<<"ENTER AFFORDANCE, CAPITALISED:"<<std::endl;
+        std::string str;
+        std::cin >>str;
+        init(str.c_str());
     }
     
     void init(const char * text){
@@ -30,9 +32,11 @@ class DirectionSetter{
     protected:
     Direction direction=DEFAULT;
     public:
-    DirectionSetter()=default;
-    DirectionSetter(const char * text){
-        init(text);
+    DirectionSetter(){
+        std::cout<<"ENTER DIRECTION, CAPITALISED:"<<std::endl;
+        std::string str;
+        std::cin >>str;
+        init(str.c_str());
     }
     void init(const char* text){
 	if (text== "LEFT") direction= LEFT;
@@ -76,7 +80,7 @@ class UserInputConfigurator: public ReactiveConfigurator{
                 currentTask=Task(disturbance, directionSetter->getDirection(), b2Transform_zero, true);
                if (directionSetter->getDirection()==DEFAULT){
                     if (affordanceSetter->getAffIndex()==AVOID){
-                    currentTask=Task(Disturbance(PURSUE, b2Vec2(1.0, 0), UNDEFINED));
+                    currentTask=Task(Disturbance(PURSUE, b2Vec2(1.0, 0)), UNDEFINED);
                     }
                     else if (affordanceSetter->getAffIndex()==PURSUE){
                         currentTask.setEndCriteria(Distance(0.07)); //go 7cm close to the obstacle
