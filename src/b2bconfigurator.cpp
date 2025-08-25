@@ -144,7 +144,7 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		//visitedOrVisitingEdge(out, transitionSystem, currentVertex);
 		Disturbance CVDi=clearvoyance.query(v);
 		bool notClearVoyance=visitedEdgeCount(out)<minimumEdgesForClearvoyance(g[v].direction);
-		if ((visited.first||out.empty())){ //if edges have not been expanded OR if they were expanded in previous iteration
+		if ((visited.first &&notClearVoyance)||out.empty()){ //if edges have not been expanded OR if they were expanded in previous iteration
 			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
 				if (attentionWindowOverlaps(Di, g[v], world, controlGoal.get_disturbance_ptr())){
@@ -345,7 +345,7 @@ bool B2BConfigurator::ClearVoyance::add(vertexDescriptor v, const Disturbance &d
 		lookaheads.emplace_back(ClearVoyance::DisturbanceLookahead(v, d));
 		return true;
 	}
-	else {
+	else if (std::find_if(vIt->disturbances.begin(), vIt->disturbances.end(), [&](const Disturbance & dd){return dd==d;})!=vIt->disturbances.end()){
 		vIt->disturbances.push_back(d); //update disturbance
 		return true;
 	}
