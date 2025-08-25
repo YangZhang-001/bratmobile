@@ -10,7 +10,11 @@ class AffordanceSetter{
         std::cout<<"ENTER AFFORDANCE, CAPITALISED:"<<std::endl;
         std::string str;
         std::cin >>str;
-        init(str.c_str());
+        init(str);
+    }
+
+    AffordanceSetter(std::string str){
+        init(str);
     }
     
     void init(std::string text){
@@ -35,7 +39,13 @@ class DirectionSetter{
         std::cout<<"ENTER DIRECTION, CAPITALISED:"<<std::endl;
         std::string str;
         std::cin >>str;
-        init(str.c_str());
+        std::cin.ignore();   // eat the leftover '\n'
+        std::cin.get();
+        init(str);
+    }
+
+    DirectionSetter(std::string str){
+        init(str);
     }
     void init(std::string text){
 	if (text== "LEFT") direction= LEFT;
@@ -44,6 +54,7 @@ class DirectionSetter{
 	else{
         std::cout<<"WHAT?? VALID DIRECTION PLEASE"<<std::endl;
         std::cin >>text;
+        std::cin.ignore();   // eat the leftover '\n'
         return init(text);
     }
     }
@@ -55,17 +66,18 @@ class DirectionSetter{
 
 
 
-class UserInputConfigurator: public ReactiveConfigurator{
+class UserInputConfigurator: public virtual Configurator{
     protected:
     DirectionSetter *directionSetter=NULL;
     AffordanceSetter *affordanceSetter=NULL;
 
 
-    void explore_plan(b2World &world){
+    void explore_plan(b2World &world)override{
         if (worldBuilder.get_world_objects().size()==0){
             std::cout<<"ADD AN OBSTACLE PLEASE!"<<std::endl;
             return;
         }
+        std::cout<<iteration<<std::endl;
         if (iteration<=1){
             simResult result;            
             Disturbance disturbance;
@@ -86,6 +98,8 @@ class UserInputConfigurator: public ReactiveConfigurator{
             currentTask.set_change(true);
             transitionSystem[e.first].step=20;
             transitionSystem[e.first].it_observed=iteration;
+            debug::print_pose(transitionSystem[v1].Di.pose(), "Di:");
+            debug::print_pose(transitionSystem[v1].Dn.pose(), "Dn:");
             m_plan={v1};
         }
         
@@ -93,7 +107,7 @@ class UserInputConfigurator: public ReactiveConfigurator{
     public:
     UserInputConfigurator()=delete;
 
-    UserInputConfigurator(DirectionSetter * ds, AffordanceSetter * as): ReactiveConfigurator(){
+    UserInputConfigurator(DirectionSetter * ds, AffordanceSetter * as): Configurator(){
         directionSetter=ds;
         affordanceSetter=as;
     }
@@ -110,6 +124,7 @@ class OneTaskController: public Wise_Controller{
     OneTaskController()=default;
 
     void next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan)override{
+        Wise_Controller::next_task(currentTask, controlGoal, g, current_vertices, plan);
         if (currentTask.is_over() && currentTask.getAction().getLWheelSpeed()!=0 && currentTask.getAction().getRWheelSpeed()!=0){
             currentTask=Task(Disturbance(), STOP);
             currentTask.getAction().setLWheelSpeed(0);
@@ -134,6 +149,7 @@ int main(int argc, char** argv) {
 	Motor_Out controlInterface;
     AffordanceSetter as;
     DirectionSetter ds;
+    std::cout<<as.getAffIndex()<<", "<<ds.getDirection()<<std::endl;
     UserInputConfigurator configurator(&ds, &as);
     Disturbance goal(PURSUE, b2Vec2(1,0));
     Task controlGoal(goal, UNDEFINED);
@@ -156,7 +172,8 @@ int main(int argc, char** argv) {
 	configurator.start();
 	lidar.start();
 	motors.start();
-	getchar();
+	do{
+    }while(!getchar());
 	configurator.stop();
 	motors.stop();
 	lidar.stop();
