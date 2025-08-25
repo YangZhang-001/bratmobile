@@ -12,20 +12,15 @@ class AffordanceSetter{
     }
     
     void init(const char * text){
-	switch (text){
-		case "AVOID":
-			affordance= AVOID;break;
-		case "PURSUE":
-			affordance= PURSUE;break;
-		case "NONE":
-			affordance= NONE;break;
-        default:
-            std::cout<<"WHAT?? VALID AFFORDANCE PLEASE"<<std::endl;
-            std::string str;
-            std::cin >>str;
-            return init(str.c_str());
-            break;
-	    }
+	if (text== "AVOID") affordance= AVOID;
+	else if (text=="PURSUE") affordance= PURSUE;
+	else if (text== "NONE") affordance= NONE;
+    else{
+        std::cout<<"WHAT?? VALID AFFORDANCE PLEASE"<<std::endl;
+        std::string str;
+        std::cin >>str;
+        return init(str.c_str()); 
+        }    
     }
 
     AffordanceIndex getAffIndex(){return affordance;}
@@ -39,21 +34,16 @@ class DirectionSetter{
     DirectionSetter(const char * text){
         init(text);
     }
-    void init(const * char text){
-	switch (text){
-		case "LEFT":
-			direction= LEFT;break;
-		case "RIGHT":
-			direction= RIGHT;break;
-		case "DEFAULT":
-			direction= DEFAULT;break;
-	    }
-        default:
-            std::cout<<"WHAT?? VALID DIRECTION PLEASE"<<std::endl;
-            std::string str;
-            std::cin >>str;
-            return init(str.c_str());
-            break;
+    void init(const char* text){
+	if (text== "LEFT") direction= LEFT;
+	else if (text=="RIGHT") direction= RIGHT;
+	else if (text== "DEFAULT") direction= DEFAULT;
+	else{
+        std::cout<<"WHAT?? VALID DIRECTION PLEASE"<<std::endl;
+        std::string str;
+        std::cin >>str;
+        return init(str.c_str());
+    }
     }
 
     Direction getDirection(){
@@ -86,7 +76,7 @@ class UserInputConfigurator: public ReactiveConfigurator{
                 currentTask=Task(disturbance, directionSetter->getDirection(), b2Transform_zero, true);
                if (directionSetter->getDirection()==DEFAULT){
                     if (affordanceSetter->getAffIndex()==AVOID){
-                    currentTask=Task(Disturbance(PURSUE, b2Vec(1.0, 0), UNDEFINED));
+                    currentTask=Task(Disturbance(PURSUE, b2Vec2(1.0, 0), UNDEFINED));
                     }
                     else if (affordanceSetter->getAffIndex()==PURSUE){
                         currentTask.setEndCriteria(Distance(0.07)); //go 7cm close to the obstacle
