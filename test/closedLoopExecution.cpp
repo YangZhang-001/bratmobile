@@ -109,9 +109,14 @@ class UserInputConfigurator: public virtual Configurator{
             }
             else{
                 transitionSystem[v1].Di=disturbance;
-                b2Transform newGoal=b2Mul(b2Transform(b2Vec2(.5, 0), b2Rot(0)), disturbance.pose());
-                controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED);
-                init(controlGoal);
+                if (transitionSystem[v1].direction==DEFAULT){
+                    float howFarShift=.5;
+                    if (disturbance.pose().p.y<0) howFarShift=-howFarShift;
+                    b2Transform newGoal;
+                    newGoal.p=b2Vec2(howFarShift, 0)+disturbance.pose().p;
+                    controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED);
+                    init(controlGoal);
+                }
             }
             currentTask.set_change(true);
             transitionSystem[e.first].step=20;
