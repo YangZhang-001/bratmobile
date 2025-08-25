@@ -140,10 +140,11 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 	if (!g[v].Dn.isValid() ){
 		//std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
-		//std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);	
+		std::pair <bool,edgeDescriptor> visited= gt::visitedEdge(in,g, v);	
 		//visitedOrVisitingEdge(out, transitionSystem, currentVertex);
 		Disturbance CVDi=clearvoyance.query(v);
-		if (visitedEdgeCount(out)<minimumEdgesForClearvoyance(g[v].direction) ||out.empty()){ //if edges have not been expanded OR if they were expanded in previous iteration
+		//visitedEdgeCount(out)<minimumEdgesForClearvoyance(g[v].direction)
+		if (visited.first ||out.empty()){ //if edges have not been expanded OR if they were expanded in previous iteration
 			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
 				if (attentionWindowOverlaps(Di, g[v], world, controlGoal.get_disturbance_ptr())){

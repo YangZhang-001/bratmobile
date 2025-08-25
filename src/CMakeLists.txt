@@ -10,6 +10,8 @@ file(GLOB HEAD "*.h")
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+
 find_package(OpenCV REQUIRED)
 
 find_package(box2d REQUIRED)
