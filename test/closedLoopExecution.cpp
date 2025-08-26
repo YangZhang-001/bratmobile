@@ -1,8 +1,4 @@
-#include "custom_robot.h"
-#include "../src/fastdds/publisher.cpp"
-
-#undef PLANNING
-#define PLANNING false
+#include "../custom_robot.h"
 
 class AffordanceSetter{
     AffordanceIndex affordance=NONE;
@@ -150,43 +146,39 @@ class OneTaskController: public Wise_Controller{
 
 };
 
-class QtTracker:public ClosedLoop_Tracker{
-    protected:
-    ObjectPackagePublisher mypub;
-    public:
-    QtTracker(){ClosedLoop_Tracker()}
+// class QtTracker:public ClosedLoop_Tracker{
+//     protected:
+//     ObjectPackagePublisher mypub;
+//     public:
+//     QtTracker(){ClosedLoop_Tracker()}
 
-    ObjectPackage getObjectPackage(const Disturbance & Di, const Disturbance & goal, const ){
-        if (window_area()>(ROBOT_HALFLENGTH*2)*(ROBOT_HALFWIDTH*2)){
-            b2AABB attention_windowAABB;
-            b2AABB attention_windowAABB.upperBound=b2Vec2(b2Transform_inf.p);
-            b2AABB attention_windowAABB.lowerBound=b2Vec2(b2Transform_inf.p);
-            attention_window.ComputeAABB(&attention_windowAABB, b2Transform_zero, 0);
-            object.robot_high_x(attention_windowAABB.upperBound.x);
-            object.robot_high_y(attention_windowAABB.upperBound.y);
-            object.robot_low_x(attention_windowAABB.lowerBound.x);
-            object.robot_low_y(attention_windowAABB.lowerBound.y);
-        }
-        //Di init (fake)
-        if (Di.getAffIndex()!=NONE){
-            object.Di_high_x(std::max_element(Di.vertices().begin(), Di.vertices().end(), CompareX));
-            object.Di_high_y(std::max_element(Di.vertices().begin(), Di.vertices().end(), CompareY));
-            object.Di_low_x(std::min_element(Di.vertices().begin(), Di.vertices().end(), CompareX));
-            object.Di_low_y(std::min_element(Di.vertices().begin(), Di.vertices().end(), CompareY));            
-        }
-        if (goal.getAffIndex()!=NONE){
-            object.goal_high_x(std::max_element(goal.vertices().begin(), goal.vertices().end(), CompareX));
-            object.goal_high_y(std::max_element(goal.vertices().begin(), goal.vertices().end(), CompareY));
-            object.goal_low_x(std::min_element(goal.vertices().begin(), goal.vertices().end(), CompareX));
-            object.goal_low_y(std::min_element(goal.vertices().begin(), goal.vertices().end(), CompareY));            
-        }
+//     ObjectPackage getObjectPackage(const Disturbance & Di, const Disturbance & goal, const ){
+//         if (window_area()>(ROBOT_HALFLENGTH*2)*(ROBOT_HALFWIDTH*2)){
+//             b2AABB attention_windowAABB;
+//             b2AABB attention_windowAABB.upperBound=b2Vec2(b2Transform_inf.p);
+//             b2AABB attention_windowAABB.lowerBound=b2Vec2(b2Transform_inf.p);
+//             attention_window.ComputeAABB(&attention_windowAABB, b2Transform_zero, 0);
+//             object.robot_high_x(attention_windowAABB.upperBound.x);
+//             object.robot_high_y(attention_windowAABB.upperBound.y);
+//             object.robot_low_x(attention_windowAABB.lowerBound.x);
+//             object.robot_low_y(attention_windowAABB.lowerBound.y);
+//         }
+//         //Di init (fake)
+//         if (Di.getAffIndex()!=NONE){
+//             object.Di_high_x(std::max_element(Di.vertices().begin(), Di.vertices().end(), CompareX));
+//             object.Di_high_y(std::max_element(Di.vertices().begin(), Di.vertices().end(), CompareY));
+//             object.Di_low_x(std::min_element(Di.vertices().begin(), Di.vertices().end(), CompareX));
+//             object.Di_low_y(std::min_element(Di.vertices().begin(), Di.vertices().end(), CompareY));            
+//         }
+//         if (goal.getAffIndex()!=NONE){
+//             object.goal_high_x(std::max_element(goal.vertices().begin(), goal.vertices().end(), CompareX));
+//             object.goal_high_y(std::max_element(goal.vertices().begin(), goal.vertices().end(), CompareY));
+//             object.goal_low_x(std::min_element(goal.vertices().begin(), goal.vertices().end(), CompareX));
+//             object.goal_low_y(std::min_element(goal.vertices().begin(), goal.vertices().end(), CompareY));            
+//         }
 
-
-    }
-
-
-
-};
+//     }
+// };
 
 // Disturbance set_target(int& run, b2Transform start){
 // 	Disturbance result;
@@ -208,7 +200,7 @@ int main(int argc, char** argv) {
     Disturbance goal(PURSUE, goalPos);
     Task controlGoal(goal, UNDEFINED);
     configurator.init(controlGoal);
-	QTracker tracker;
+	ClosedLoop_Tracker tracker;
 	configurator.register_tracker(&tracker);
 	OneTaskController rc;
 	configurator.register_controller(&rc);

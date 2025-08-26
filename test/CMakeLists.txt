@@ -18,7 +18,7 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
 	# target_link_libraries(closed_loop_task box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio)
 	# target_link_libraries(test_tracking box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio)
 	add_executable(closedLoopExecution closedLoopExecution.cpp)
-	target_link_libraries(closedLoopExecution box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio fastcdr fastrtps ObjectPackage)
+	target_link_libraries(closedLoopExecution box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio)
 
 	message("build test cases")
 else()
