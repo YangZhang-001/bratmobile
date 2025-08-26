@@ -168,16 +168,19 @@ class QtTracker:public ClosedLoop_Tracker{
             object.robot_low_y(attention_windowAABB.lowerBound.y);
         }
         //Di init (fake)
+        if (Di.getAffIndex()!=NONE){
+            object.Di_high_x(std::max_element(Di.vertices().begin(), Di.vertices().end(), CompareX));
+            object.Di_high_y(std::max_element(Di.vertices().begin(), Di.vertices().end(), CompareY));
+            object.Di_low_x(std::min_element(Di.vertices().begin(), Di.vertices().end(), CompareX));
+            object.Di_low_y(std::min_element(Di.vertices().begin(), Di.vertices().end(), CompareY));            
+        }
+        if (goal.getAffIndex()!=NONE){
+            object.goal_high_x(std::max_element(goal.vertices().begin(), goal.vertices().end(), CompareX));
+            object.goal_high_y(std::max_element(goal.vertices().begin(), goal.vertices().end(), CompareY));
+            object.goal_low_x(std::min_element(goal.vertices().begin(), goal.vertices().end(), CompareX));
+            object.goal_low_y(std::min_element(goal.vertices().begin(), goal.vertices().end(), CompareY));            
+        }
 
-        object.Di_high_x();
-        object.Di_high_y(-0.05);
-        object.Di_low_x(0.40);
-        object.Di_low_y(0.05);
-        //Di init (fake)
-        object.goal_high_x(1.01);
-        object.goal_high_y(0.01);
-        object.goal_low_x(1.00);
-        object.goal_low_y(0.0);
 
     }
 
@@ -205,7 +208,7 @@ int main(int argc, char** argv) {
     Disturbance goal(PURSUE, goalPos);
     Task controlGoal(goal, UNDEFINED);
     configurator.init(controlGoal);
-	ClosedLoop_Tracker tracker;
+	QTracker tracker;
 	configurator.register_tracker(&tracker);
 	OneTaskController rc;
 	configurator.register_controller(&rc);
