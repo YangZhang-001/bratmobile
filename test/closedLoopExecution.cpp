@@ -1,144 +1,4 @@
 #include "../custom_robot.h"
-#include "ObjectPackagePubSubTypes.h"
-#include <fastdds/dds/domain/DomainParticipant.hpp>
-#include <fastdds/dds/domain/DomainParticipantFactory.hpp>
-#include <fastdds/dds/publisher/DataWriter.hpp>
-#include <fastdds/dds/publisher/DataWriterListener.hpp>
-#include <fastdds/dds/publisher/Publisher.hpp>
-#include <fastdds/dds/topic/TypeSupport.hpp>
-
-#ifndef PUBLISHER_CPP
-#define PUBLISHER_CPP
-
-class ObjectPackagePublisher
-{
-private:
-
-    DomainParticipant* participant_ = nullptr;
-
-    Publisher* publisher_ = nullptr;
-
-    Topic* topic_ = nullptr;
-
-    DataWriter* writer_ = nullptr;
-
-    TypeSupport type_;
-
-    class PubListener : public DataWriterListener
-    {
-    public:
-
-        PubListener()
-            : matched_(0)
-        {
-        }
-
-        ~PubListener() override
-        {
-        }
-
-        void on_publication_matched(
-                DataWriter*,
-                const PublicationMatchedStatus& info) override
-        {
-            if (info.current_count_change == 1)
-            {
-                matched_ = info.total_count;
-                std::cout << "Publisher matched." << std::endl;
-            }
-            else if (info.current_count_change == -1)
-            {
-                matched_ = info.total_count;
-                std::cout << "Publisher unmatched." << std::endl;
-            }
-            else
-            {
-                std::cout << info.current_count_change
-                        << " is not a valid value for PublicationMatchedStatus current count change." << std::endl;
-            }
-        }
-
-        std::atomic_int matched_;
-
-    } listener_;
-
-public:
-
-    ObjectPackagePublisher() : type_(new ObjectPackagePubSubType()) {}
-
-    virtual ~ObjectPackagePublisher()
-    {
-        if (writer_ != nullptr)
-        {
-            publisher_->delete_datawriter(writer_);
-        }
-        if (publisher_ != nullptr)
-        {
-            participant_->delete_publisher(publisher_);
-        }
-        if (topic_ != nullptr)
-        {
-            participant_->delete_topic(topic_);
-        }
-        DomainParticipantFactory::get_instance()->delete_participant(participant_);
-    }
-
-    //!Initialize the publisher
-    bool init()
-    {
-        DomainParticipantQos participantQos;
-        participantQos.name("Participant_publisher");
-        participant_ = DomainParticipantFactory::get_instance()->create_participant(0, participantQos);
-
-        if (participant_ == nullptr)
-        {
-            return false;
-        }
-
-        // Register the Type
-        type_.register_type(participant_);
-
-        // Create the publications Topic
-	// !! Important that this matches with the name of message defined in ObjectPackage.idl !!
-        topic_ = participant_->create_topic("ObjectPackageTopic", "ObjectPackage", TOPIC_QOS_DEFAULT);
-
-        if (topic_ == nullptr)
-        {
-            return false;
-        }
-
-        // Create the Publisher
-        publisher_ = participant_->create_publisher(PUBLISHER_QOS_DEFAULT, nullptr);
-
-        if (publisher_ == nullptr)
-        {
-            return false;
-        }
-
-        // Create the DataWriter
-        writer_ = publisher_->create_datawriter(topic_, DATAWRITER_QOS_DEFAULT, &listener_);
-
-        if (writer_ == nullptr)
-        {
-            return false;
-        }
-        return true;
-    }
-
-    //!Send a publication
-    bool publish(ObjectPackage& object)
-    {
-        if (listener_.matched_ > 0)
-        {
-            writer_->write(&object);
-            return true;
-        }
-        return false;
-    }
-
-};
-#endif
-
 
 class AffordanceSetter{
     AffordanceIndex affordance=NONE;
@@ -202,54 +62,6 @@ class DirectionSetter{
 };
 
 
-class QtTracker:public ClosedLoop_Tracker{
-    protected:
-    Disturbance Di=Disturbance();
-    ObjectPackagePublisher mypub;
-    public:
-    void setDisturbance(const Disturbance&d){
-        Di=d;
-    }
-
-    void on_new_reading(Task *goal)override{
-        ClosedLoop_Tracker::on_new_reading(goal);
-        if (!mypub.publish(object)){
-            throw "cannot publish!";
-        }
-
-    }
-        
-
-
-    ObjectPackage getObjectPackage(const Disturbance & goal){
-        ObjectPackage object;
-        if (window_area()>(ROBOT_HALFLENGTH*2)*(ROBOT_HALFWIDTH*2)){
-            b2AABB attention_windowAABB;
-            b2AABB attention_windowAABB.upperBound=b2Vec2(b2Transform_inf.p);
-            b2AABB attention_windowAABB.lowerBound=b2Vec2(b2Transform_inf.p);
-            attention_window.ComputeAABB(&attention_windowAABB, b2Transform_zero, 0);
-            object.robot_high_x(attention_windowAABB.upperBound.x);
-            object.robot_high_y(attention_windowAABB.upperBound.y);
-            object.robot_low_x(attention_windowAABB.lowerBound.x);
-            object.robot_low_y(attention_windowAABB.lowerBound.y);
-        }
-        //Di init (fake)
-        if (Di.getAffIndex()!=NONE){
-            object.Di_high_x(std::max_element(Di.vertices().begin(), Di.vertices().end(), CompareX));
-            object.Di_high_y(std::max_element(Di.vertices().begin(), Di.vertices().end(), CompareY));
-            object.Di_low_x(std::min_element(Di.vertices().begin(), Di.vertices().end(), CompareX));
-            object.Di_low_y(std::min_element(Di.vertices().begin(), Di.vertices().end(), CompareY));            
-        }
-        if (goal.getAffIndex()!=NONE){
-            object.goal_high_x(std::max_element(goal.vertices().begin(), goal.vertices().end(), CompareX));
-            object.goal_high_y(std::max_element(goal.vertices().begin(), goal.vertices().end(), CompareY));
-            object.goal_low_x(std::min_element(goal.vertices().begin(), goal.vertices().end(), CompareX));
-            object.goal_low_y(std::min_element(goal.vertices().begin(), goal.vertices().end(), CompareY));            
-        }
-        return object;
-    }
-};
-
 
 class UserInputConfigurator: public virtual Configurator{
     protected:
@@ -300,18 +112,10 @@ class UserInputConfigurator: public virtual Configurator{
             debug::print_pose(transitionSystem[v1].Dn.pose(), "Dn:");
             m_plan={v1};
         }
-        trackerInterface.getData(transitionSystem[v1].Di);
         
     }
 
-    struct TrackerInterface{
-        TrackerInterface()=default;
-        QtTracker tracker;
 
-        void getData(const Disturbance& Di){
-            tracker.setDisturbance(Di);
-        }
-    }trackerInterface;
     public:
     UserInputConfigurator()=delete;
 
@@ -325,10 +129,6 @@ class UserInputConfigurator: public virtual Configurator{
         affordanceSetter=NULL;
     }
     public:
-    void init(Task _task){
-        Configurator::init(_task);
-        register_tracker(&trackerInterface.tracker);
-    }
 };
 
 class OneTaskController: public Wise_Controller{
@@ -368,7 +168,9 @@ int main(int argc, char** argv) {
     UserInputConfigurator configurator(&ds, &as);
     b2Vec2 goalPos(1,0);
     Disturbance goal(PURSUE, goalPos);
+    ClosedLoop_Tracker tracker;
     Task controlGoal(goal, UNDEFINED);
+    configurator.register_tracker(&tracker);
     configurator.init(controlGoal);
 	OneTaskController rc;
 	configurator.register_controller(&rc);
