@@ -33,7 +33,7 @@ Qt packages
 
 ## Usage
 
-In one terminal window, run `./subscriber`. If running the demo, run `./publisher` in another terminal window. Otherwise, run any demo program from `../../bratmobile` directory.
+In one terminal window (e.g. a laptop ssh'd into the Raspberry Pi), run `./subscriber`. If running the demo, run `./publisher` in another terminal window (Rasbperry Pi). Otherwise, run any demo program from `../../bratmobile` directory.
 
 
 ## Credits

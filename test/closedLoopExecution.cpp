@@ -1,4 +1,5 @@
 #include "custom_robot.h"
+#include "../src/fastdds/publisher.h"
 
 #undef PLANNING
 #define PLANNING false
@@ -71,19 +72,6 @@ class UserInputConfigurator: public virtual Configurator{
     DirectionSetter *directionSetter=NULL;
     AffordanceSetter *affordanceSetter=NULL;
 
-    // void init(Task _task)override{
-    //     if (!directionSetter){
-    //         throw "no direction setter!";
-    //     }
-    //     if (!affordanceSetter){
-    //         throw "no affordance setter";
-    //     }
-    //     if (directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==AVOID){
-            
-    //     }
-    // }
-
-
     void explore_plan(b2World &world)override{
         if (worldBuilder.get_world_objects().size()==0){
             std::cout<<"ADD AN OBSTACLE PLEASE!"<<std::endl;
@@ -111,8 +99,11 @@ class UserInputConfigurator: public virtual Configurator{
                 transitionSystem[v1].Di=disturbance;
                 if (transitionSystem[v1].direction==DEFAULT){
                     float howFarShift=.5;
-                    if (disturbance.pose().p.y<0) howFarShift=-howFarShift;
-                    b2Transform newGoab=b2Transform_zero;
+                    if (disturbance.pose().p.y<0) {
+                        howFarShift=-howFarShift;
+                        std::cout<<"how far shift "<<howFarShift<<std::endl;
+                    }
+                    b2Transform newGoal=b2Transform_zero;
                     newGoal.p=b2Vec2(0, howFarShift)+disturbance.pose().p;
                     controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED);
                     init(controlGoal);
@@ -156,8 +147,43 @@ class OneTaskController: public Wise_Controller{
             currentTask.set_change(false);
         }
     }
+
 };
 
+class QtTracker:public ClosedLoop_Tracker{
+    protected:
+    ObjectPackagePublisher mypub;
+    public:
+    QtTracker(){ClosedLoop_Tracker()}
+
+    ObjectPackage getObjectPackage(const Disturbance & Di, const Disturbance & goal, const ){
+        if (window_area()>(ROBOT_HALFLENGTH*2)*(ROBOT_HALFWIDTH*2)){
+            b2AABB attention_windowAABB;
+            b2AABB attention_windowAABB.upperBound=b2Vec2(b2Transform_inf.p);
+            b2AABB attention_windowAABB.lowerBound=b2Vec2(b2Transform_inf.p);
+            attention_window.ComputeAABB(&attention_windowAABB, b2Transform_zero, 0);
+            object.robot_high_x(attention_windowAABB.upperBound.x);
+            object.robot_high_y(attention_windowAABB.upperBound.y);
+            object.robot_low_x(attention_windowAABB.lowerBound.x);
+            object.robot_low_y(attention_windowAABB.lowerBound.y);
+        }
+        //Di init (fake)
+
+        object.Di_high_x();
+        object.Di_high_y(-0.05);
+        object.Di_low_x(0.40);
+        object.Di_low_y(0.05);
+        //Di init (fake)
+        object.goal_high_x(1.01);
+        object.goal_high_y(0.01);
+        object.goal_low_x(1.00);
+        object.goal_low_y(0.0);
+
+    }
+
+
+
+};
 
 // Disturbance set_target(int& run, b2Transform start){
 // 	Disturbance result;

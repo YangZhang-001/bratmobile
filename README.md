@@ -69,7 +69,7 @@ For Qt/FastDDS setup, see readme in `src/fastdds`
 ## Build
 ```
 cd bratmobile
-cmake .  #if you want to build the fastdds directory use option -DBUILD_FASTDDS=ON
+cmake .  #if you want to build the fastdds directory use option -D BUILD_FASTDDS=ON
 make
 sudo make install
 ```

@@ -20,7 +20,7 @@ find_package(box2d REQUIRED)
 
 add_library(brat ${SRC} ${HEAD})
 
-add_subdirectory(fastdds)
+#add_subdirectory(fastdds)
 
 if(box2d_FOUND)
         target_link_libraries(brat box2d ${OpenCV_LIBS} pthread)

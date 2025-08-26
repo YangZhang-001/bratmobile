@@ -43,10 +43,6 @@ private:
 		
 	}
 
-<<<<<<< HEAD
-	static std::vector <b2Vec2> get_vertices(){ //returns vertices in local frame
-		std::vector <b2Vec2>result ={b2Vec2(-ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, -ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), b2Vec2(ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, -ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), b2Vec2(-ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), b2Vec2(ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y) };
-=======
 	b2Body* body(){return m_body;} 
 
 	b2PolygonShape box(){return m_box;}
@@ -58,7 +54,6 @@ private:
 									b2Vec2(ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, -ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), 
 									b2Vec2(-ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), 
 									b2Vec2(ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y) };
->>>>>>> closing_loop_tracker
 		return result;
 	}
 
