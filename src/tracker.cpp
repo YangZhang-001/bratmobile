@@ -140,6 +140,7 @@ void ClosedLoop_Tracker::on_new_reading(Task * goal){
     printf("new reading!\n");
     float area=0;
     if(!goal){
+        std::cout<<"no goal!"<<std::endl;
         return;
     }
     try{

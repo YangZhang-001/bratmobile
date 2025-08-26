@@ -112,10 +112,12 @@ class UserInputConfigurator: public virtual Configurator{
                 if (transitionSystem[v1].direction==DEFAULT){
                     float howFarShift=.5;
                     if (disturbance.pose().p.y<0) howFarShift=-howFarShift;
+                    std::cout<<"howfar="<<howFarShift<<std::endl;
                     b2Transform newGoal;
                     newGoal.p=b2Vec2(howFarShift, 0)+disturbance.pose().p;
                     controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED);
                     init(controlGoal);
+                    register_tracker(tracker);
                 }
             }
             currentTask.set_change(true);
@@ -148,13 +150,13 @@ class OneTaskController: public Wise_Controller{
 
     void next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan)override{
         Wise_Controller::next_task(currentTask, controlGoal, g, current_vertices, plan);
-        if (currentTask.is_over() && currentTask.getAction().getLWheelSpeed()!=0 && currentTask.getAction().getRWheelSpeed()!=0){
-            std::cout<<"terminating!"<<std::endl;
-            currentTask=Task(Disturbance(), STOP);
-            currentTask.getAction().setLWheelSpeed(0);
-            currentTask.getAction().setRWheelSpeed(0);
-            currentTask.set_change(false);
-        }
+        // if (currentTask.is_over() && currentTask.getAction().getLWheelSpeed()!=0 && currentTask.getAction().getRWheelSpeed()!=0){
+        //     std::cout<<"terminating!"<<std::endl;
+        //     currentTask=Task(Disturbance(), STOP);
+        //     currentTask.getAction().setLWheelSpeed(0);
+        //     currentTask.getAction().setRWheelSpeed(0);
+        //     currentTask.set_change(false);
+        // }
     }
 };
 
