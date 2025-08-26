@@ -149,6 +149,22 @@ class OneTaskController: public Wise_Controller{
 
 };
 
+class DebugTracker: public ClosedLoop_Tracker{
+    void printWindow(){
+        b2AABB aabb;
+        attention_window.ComputeAABB(&aabb, b2Transform_zero, 0);
+        std::cout<<"upperbound="<<aabb.upperBound.x<<", "<<aabb.upperBound.y<<std::endl;
+        std::cout<<"lowerbound="<<aabb.lowerBound.x<<", "<<aabb.lowerBound.y<<std::endl;
+
+    }
+public:
+void on_new_reading(Task * goal){
+    ClosedLoop_Tracker::on_new_reading(goal);
+    printWindow();
+}
+}
+
+
 
 // Disturbance set_target(int& run, b2Transform start){
 // 	Disturbance result;
