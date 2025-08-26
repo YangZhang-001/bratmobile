@@ -112,8 +112,8 @@ class UserInputConfigurator: public virtual Configurator{
                 if (transitionSystem[v1].direction==DEFAULT){
                     float howFarShift=.5;
                     if (disturbance.pose().p.y<0) howFarShift=-howFarShift;
-                    b2Transform newGoal;
-                    newGoal.p=b2Vec2(howFarShift, 0)+disturbance.pose().p;
+                    b2Transform newGoab=b2Transform_zero;
+                    newGoal.p=b2Vec2(0, howFarShift)+disturbance.pose().p;
                     controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED);
                     init(controlGoal);
                 }

@@ -48,16 +48,13 @@ The indoor robot is equipped with
 * Boost
 * XOrg
 * LibGLU1
-* Fastcdr
-* Fastrtpts
-* Fastddsgen
-* FastDDS tools
-* Qt5 (if you'd like to add debug mode for real-time control, see `src/fastdds`)
 * Gtest
 
-`sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev libfastcdr-dev libfastrtps-dev fastddsgen fastdds-tools`
+`sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev`
 
-### Compile from source
+For Qt/FastDDS setup, see readme in `src/fastdds`
+
+### Libraries to compile from source
 
 * [LIDAR API](https://github.com/berndporr/rplidar_rpi)
 * [Motors API](https://github.com/berndporr/alphabot)
@@ -72,7 +69,7 @@ The indoor robot is equipped with
 ## Build
 ```
 cd bratmobile
-cmake .
+cmake .  #if you want to build the fastdds directory use option -DBUILD_FASTDDS=ON
 make
 sudo make install
 ```
