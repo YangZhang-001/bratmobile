@@ -1,14 +1,75 @@
-name: ci
 
-on: [push]
+name: ci
+on: 
+  push:
+    paths:
+      - 'src/*'
+      - 'test/unit_test/*'
+      - '.github/workflows/ci.yml'
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+      - name: Install dependencies
+        run : |
+          sudo apt-get update
+          sudo apt-get install -y g++ cmake libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev
+      - name : Install Box2D v2.4.1
+        shell: bash
+        run : |
+          cd ..
+          git clone https://github.com/glafratta/box2d.git
+          cd box2d
+          cmake .
+          sudo make install
+          cd ../bratmobile
+      - name : Install CppTimer
+        shell: bash
+        run : |
+          cd ..
+          git clone https://github.com/berndporr/cppTimer.git
+          cd cppTimer
+          cmake . && make
+          sudo make install
+          cd ../bratmobile
       - name : Build
         shell: bash
-        run : cmake
-      - name : Test
-        run: ctest
+        run : sh build.sh
+      - name : Test    
+        timeout-minutes: 5
+        run: |
+            cd test/unit_test
+            ctest & ctest --rerun-failed --output-on-failure
+      - name : Push to data repo 
+        if : ${{ success()}}
+        env: 
+            TARGET_REPO: ${{secrets.DATA_REP0_NAME}}
+            SSH_PRIVATE_KEY: ${{secrets.DATA_PUSH_SSH_KEY}}
+        run:  | 
+            mkdir -p ~/.ssh
+            echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+            chmod 600 ~/.ssh/id_rsa
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            git clone "$TARGET_REPO"
+            cd data_stats
+            cp ../test/unit_test/benchmark* . -r
+            echo "copied"
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add benchmark*/FirstPlan*/*
+            git add benchmark*/Recycle*/*
+            git add benchmark*/CheckPlan*/*
+            git add benchmark*/CheckNoisyPlan*/*
+            git add benchmark*/BoxedIn*/*
+            git commit -m "Update data from tests"
+            git push origin main
+            
+
+
+
+
+
+

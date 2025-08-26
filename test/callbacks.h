@@ -3,6 +3,7 @@
 #include "CppTimer.h"
 #include <thread>
 #include "test_essentials.h"
+#include <string>
 
 void printGraph(TransitionSystem& g){ //for calling in GDB
     boost::print_graph(g);
@@ -23,7 +24,6 @@ struct Remember{
 	TransitionSystem *g;
 }remember;
 
-Visited visited;
 
 template <typename Predicate> 
 void printEdges(TransitionSystem& g, Predicate p){
@@ -59,23 +59,25 @@ float print_belowP(TransitionSystem& g, float p){
     return ct/g.m_vertices.size();
 }
 
-void getVisited(TransitionSystem& g, vertexDescriptor cv){
-    auto es = boost::edges(g);
-    float ct=0;
-    for (auto ei=es.first; ei!=es.second;ei++){
-        if ((g[(*ei).m_source].visited()|| (*ei).m_source==0 || (*ei).m_source==cv)& g[(*ei).m_target].visited()){
-            ct++;
-            printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
-        }
-    }
-}
+// void getVisited(TransitionSystem& g, vertexDescriptor cv){
+//     auto es = boost::edges(g);
+//     float ct=0;
+//     for (auto ei=es.first; ei!=es.second;ei++){
+//         if ((g[(*ei).m_source].visited()|| (*ei).m_source==0 || (*ei).m_source==cv)& g[(*ei).m_target].visited()){
+//             ct++;
+//             printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
+//         }
+//     }
+// }
 
 class DataInterface {
-public:
 int iteration = 0;
-LIDAR_In * ci;
+LIDAR_In * ci=NULL;
 
-char * folder;
+std::string folder;
+public:
+
+    DataInterface(){}
     DataInterface(LIDAR_In * _ci): ci(_ci){}
 
 	bool newScanAvail(){ //uncomment sections to write x and y to files		
@@ -84,12 +86,13 @@ char * folder;
 		ci->data2fp.clear();
 		char filePath[256];
         char folderName[256];
-        sprintf(folderName,"%s", folder);
+        sprintf(folderName,"%s", folder.c_str());
         if (folderName != NULL){
             sprintf(filePath, "%smap%04d.dat", folderName, iteration);
             printf("%s\n", filePath);
             FILE *f;
             if (!(f=fopen(filePath, "r"))){
+                throw "can't open file!";
                 if (iteration>1){
                     iteration=1;
                 }
@@ -117,10 +120,39 @@ char * folder;
         ci->setReady(1);
         ci->iteration++;
         return true;
-		
-
-
 	}
+
+    void set_folder(std::string str){
+        folder=str;
+    }
+
+    int get_iteration(){
+        return iteration;}
+        
+    void set_iteration(int i){
+        iteration=i;
+    }
+
+    void registerInterface(LIDAR_In *i){
+        ci=i;
+    }
+
+    bool has_interface(){
+        return ci!=NULL;
+    }
+
+    void reset(){
+        folder.clear();
+        ci=NULL;
+    }
+
+    bool hasFolder(){
+        return folder.size()>0;
+    }
+    
+    const std::string getFolder() const {
+        return folder;
+    }
 };
 
 class StepCallback{

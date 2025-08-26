@@ -46,15 +46,13 @@ class Bundle;
 class BodyFeatures{
     public:
     b2Transform pose {b2Transform(b2Vec2(0,0), b2Rot(0))} ;
-   // b2Transform pose_local=pose;
     float halfLength=MIN_BODY_DIMENSION;//x
     float halfWidth=MIN_BODY_DIMENSION; //y
     float shift=0.0f;
     b2BodyType bodyType = b2_dynamicBody;
 
     b2Shape::Type shape = b2Shape::e_polygon;
-    //std::vector<b2Vec2> vertices;
-    bool attention=false;
+    bool attention=false; //attention is used to indicate that the disturbance is the initial disturbance of a task and is being tracked by the robot using the attention window
 
     BodyFeatures(){}
 
@@ -114,7 +112,7 @@ class BodyFeatures{
 
 struct Disturbance{ 
 
-private:
+protected:
 friend class ControlInterface;
 friend struct StateMatcher;
     AffordanceIndex affordanceIndex = NONE; //not using the enum because in the future we might want to add more affordances
@@ -194,7 +192,7 @@ public:
         bf.pose.p.Set(x, y);
     }
     
-    b2Vec2 getPosition(){
+    b2Vec2 getPosition()const{
         return bf.pose.p;
     }
 
@@ -265,11 +263,11 @@ public:
 
     bool operator==(const Disturbance & d)const;
 
-}; //sub action f
+}; 
 
 
 struct simResult{
-    enum resultType {successful =0, crashed =1, safeForNow=2}; //successful means no collisions, finished means target reached, for later
+    enum resultType {successful =0, crashed =1, safeForNow=2}; //successful =0, crashed =1, safeForNow=2
     resultType resultCode= resultType::successful;
     Disturbance collision;
     //bool valid = 0;

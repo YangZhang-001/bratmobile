@@ -1,35 +1,37 @@
 #include "tracker.h"
 
 b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects){
-    b2Transform result=get_transform(t, pts, t.get_disturbance(), objects);
-    math::applyAffineTrans(-result, t.disturbance);
-    t.motorStep--;
-    if (t.motorStep<1){
-        t.change=true;
+    b2Transform result=get_transform(t, pts, t.get_disturbance_ptr(), objects);
+    math::MulT(-deltaTransform, *t.get_disturbance_ptr());
+    t.setMotorStep(t.getMotorStep()-1);
+    if (t.getMotorStep()<1){
+        t.set_change(true);
     }
+    deltaTransform=b2Mul(deltaTransform, result);
     return result;
 }
 
 b2Transform ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects){
-    b2Transform result=get_transform(t, pts, t.get_disturbance(), objects);
+    b2Transform result=get_transform(t, pts, t.get_disturbance_ptr(), objects);
 	bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
-	if(t.motorStep==0 || ended){
-		t.change=1;
+	if(t.getMotorStep()==0 || ended){
+		t.set_change(true);
 	}    
+    deltaTransform=b2Mul(deltaTransform, result);
     return result;
 }
 
 
 cv::Rect2f ClosedLoop_Tracker::real_world_focus(const Task * t){
     std::vector <cv::Point2f> vertices;
-    if (t->disturbance.getAffIndex()==NONE){
+    if (t->get_disturbance().getAffIndex()==NONE){
         return cv::Rect2f(0, 0, 0, 0);
     }
     cv::Point2f bl; //bottom left (documentation CV says top left but not true)
-    float max_dimension=std::max(t->disturbance.bf.width(), t->disturbance.bf.length());
+    float max_dimension=std::max(t->get_disturbance().bf.width(), t->get_disturbance().bf.length());
     max_dimension+=0.02;    
-    bl.x=t->disturbance.pose().p.x-(max_dimension/2);
-    bl.y=t->disturbance.pose().p.y-(max_dimension/2);
+    bl.x=t->get_disturbance().pose().p.x-(max_dimension/2);
+    bl.y=t->get_disturbance().pose().p.y-(max_dimension/2);
     cv::Rect2f focus(bl.x, bl.y, max_dimension, max_dimension);
     return focus; //upright bounding rectangle: increases area represented
 }
@@ -39,33 +41,33 @@ b2Transform ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateCo
     if (observed_disturbance==NULL){
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
-    if (t.disturbance.getAffIndex()==NONE || t.disturbance.bf.is_point()|| (t.action.getLWheelSpeed()==0 && t.action.getRWheelSpeed()==0)){
-        if (t.disturbance.getAffIndex()==NONE){
-            throw std::invalid_argument("no disturbance!");    
+    if (t.get_disturbance().getAffIndex()==NONE || t.get_disturbance().bf.is_point()|| (t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
+        if (t.get_disturbance().getAffIndex()==NONE){
+            std::cerr<<"no disturbance!"<<std::endl;    
         }
-        if (t.disturbance.bf.is_point()){
+        if (t.get_disturbance().bf.is_point()){
             printf("petite disturbance!");    
         }
-        if ((t.action.getLWheelSpeed()==0 && t.action.getRWheelSpeed()==0)){
-            throw std::invalid_argument("not moving!");    
+        if ((t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
+            std::cerr<<("not moving!")<<std::endl;    
         }
-        return t.action.getTransform(LIDAR_SAMPLING_RATE);
+        return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
     }
-    BodyFeatures predicted_bf=t.disturbance.bf;
-    predicted_bf.pose+=t.action.getTransform(LIDAR_SAMPLING_RATE); //future to sub with MM Kalman
-    auto new_d_it =find_disturbance(objects, predicted_bf, t.action.getTransform(LIDAR_SAMPLING_RATE));
+    BodyFeatures predicted_bf=t.get_disturbance().bf;
+    predicted_bf.pose+=t.getAction().getTransform(LIDAR_SAMPLING_RATE); //future to sub with MM Kalman
+    auto new_d_it =find_disturbance(objects, predicted_bf, t.getAction().getTransform(LIDAR_SAMPLING_RATE));
   //  printf("objects: %i\n", objects.size());
     if (new_d_it==objects.end()){
         printf("not found!");
         observed_disturbance->set_affordance(NONE); //this will tell the task that D is null, so it can end!
-        return t.action.getTransform(LIDAR_SAMPLING_RATE);
+        return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
     }
     if ((*new_d_it).is_point()){
         throw std::invalid_argument("for some reason it's tiny!");    
     }
     BodyFeatures new_d=*new_d_it;
     b2Transform result=b2Transform_zero;
-    calc_transform(result, new_d.pose, t.disturbance.pose());
+    calc_transform(result, new_d.pose, t.get_disturbance().pose());
     observed_disturbance->bf=new_d; //this modifies task t, do not move!
     return -result;
 }
@@ -130,7 +132,8 @@ void ClosedLoop_Tracker::on_new_task(Task *task){
     if (!task){
         throw "no task!";
     }
-    tracked_disturbance=*task->get_disturbance();
+    tracked_disturbance=task->get_disturbance();
+    deltaTransform=b2Transform_zero;
 }
 
 void ClosedLoop_Tracker::on_new_reading(Task * goal){
@@ -140,7 +143,7 @@ void ClosedLoop_Tracker::on_new_reading(Task * goal){
         return;
     }
     try{
-        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance());
+        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance_ptr());
         if (area=window_area(); area<(ROBOT_HALFLENGTH*2)*(ROBOT_HALFWIDTH*2)){
             throw area;
         }

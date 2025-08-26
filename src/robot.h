@@ -11,33 +11,54 @@
 #include "const.h"
 
 
-
-
+/**
+ * @brief Robot class for Box2D simulation.
+ * 
+ */
 class Robot {
 private: 
 	b2FixtureDef fixtureDef;
-public:
-	b2Vec2 velocity = {0,0};
-	b2Body* body;
-	b2BodyDef bodyDef;
+	b2Body* m_body=NULL;
+	b2PolygonShape m_box;
+	public:
+
+	/**
+	 * @brief This creates a robot object but it's uninitialised!
+	 * 
+	 */
+	Robot() = default;
 
 	Robot(b2World * world) {
-		bodyDef.type = b2_dynamicBody;
-		bodyDef.position.Set(0.0f, 0.0f);
-		body = world->CreateBody(&bodyDef);
+		b2BodyDef m_bodyDef;
+		m_bodyDef.type = b2_dynamicBody;
+		m_bodyDef.position.Set(0.0f, 0.0f);
+		m_body = world->CreateBody(&m_bodyDef);
 		//body->GetUserData().pointer = reinterpret_cast<uintptr_t>(this);
-		body->GetUserData().pointer=reinterpret_cast<uintptr_t>(ROBOT_FLAG);
+		m_body->GetUserData().pointer=reinterpret_cast<uintptr_t>(ROBOT_FLAG);
 		b2Vec2 center(ROBOT_BOX_OFFSET_X, ROBOT_BOX_OFFSET_Y);
-		b2PolygonShape box;
-		box.SetAsBox(ROBOT_HALFWIDTH, ROBOT_HALFLENGTH, center, ROBOT_BOX_OFFSET_ANGLE);
-		fixtureDef.shape = &box;
+		m_box.SetAsBox(ROBOT_HALFWIDTH, ROBOT_HALFLENGTH, center, ROBOT_BOX_OFFSET_ANGLE);
+		fixtureDef.shape = &m_box;
 		fixtureDef.friction =0;
-		body->CreateFixture(&fixtureDef);
+		m_body->CreateFixture(&fixtureDef);
 		
 	}
 
+<<<<<<< HEAD
 	static std::vector <b2Vec2> get_vertices(){ //returns vertices in local frame
 		std::vector <b2Vec2>result ={b2Vec2(-ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, -ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), b2Vec2(ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, -ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), b2Vec2(-ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), b2Vec2(ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y) };
+=======
+	b2Body* body(){return m_body;} 
+
+	b2PolygonShape box(){return m_box;}
+/**
+ * @brief Returns vertices in local frame. Order: bl, br, tl, tr 
+ */
+	static std::vector <b2Vec2> get_vertices(){ 
+		std::vector <b2Vec2>result ={b2Vec2(-ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, -ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), 
+									b2Vec2(ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, -ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), 
+									b2Vec2(-ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), 
+									b2Vec2(ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y) };
+>>>>>>> closing_loop_tracker
 		return result;
 	}
 

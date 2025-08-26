@@ -11,7 +11,7 @@
 class Controller{
     protected:
     Disturbance disturbance_q; //disturbance being counteracted as in the cognitive map
-    b2Transform _to_goal=b2Transform_zero;    
+    b2Transform _D_to_goal=b2Transform_zero;    
     /**
      * @brief Get the current vertex 
      * 
@@ -45,7 +45,7 @@ class Controller{
      * @param distance the distance travelled in a task, default is robot length
      * @return int 
      */
-    int motor_step(Task::Action a, float distance=0.27);
+    static int motor_step(Task::Action a, float distance=0.27);
 
     /**
      * @brief Returns the disturbance being counteracted as in the cognitive map
@@ -58,9 +58,16 @@ class Controller{
         disturbance_q=d;
     }
 
-    b2Transform to_goal(){
-        return _to_goal;
+    /**
+     * @brief returns the distance between the disturbance_q and the goal
+     * this is used to maintain constant ratios during tracking
+     * 
+     * @return b2Transform 
+     */
+    b2Transform disturbance_to_goal(){
+        return _D_to_goal;
     }
+
 };
 
 /**
@@ -109,7 +116,7 @@ class Reactive_Controller : public Controller{
 
 	Reactive_Controller()=default;
 
-    void next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan);
+    virtual void next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan);
 
 
 };

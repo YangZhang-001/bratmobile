@@ -1,0 +1,26 @@
+#include "test_classes.h"
+
+TEST_F(HighLevelTestBase, TaskToExecNoChangeVertices){
+    wc.task_to_execute(configurator->get_plan(), configurator->get_ts(), 0, configurator->getGoal(), configurator->getTask(), configurator->get_current_vertices());
+    EXPECT_TRUE(configurator->get_current_vertices().empty());
+}
+
+
+TEST_F(HighLevelTestBase, NextTaskChangeVerticesEmpty){
+    wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(),configurator->get_plan_nConst());
+    EXPECT_TRUE(configurator->get_current_vertices().empty());
+}
+
+TEST_F(HighLevelTestBase, NextTaskChangeVerticesPlan){
+    configurator->make_module(MOVING_VERTEX);
+    configurator->set_plan({2, 3});
+    wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(),configurator->get_plan_nConst());
+    EXPECT_EQ(configurator->get_current_vertices(), std::vector<vertexDescriptor>({2}));
+}
+
+TEST_F(HighLevelTestBase, NextTaskChangeVerticesDummy){
+    configurator->dummy_vertex(MOVING_VERTEX);
+    wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(),configurator->get_plan_nConst());
+    EXPECT_TRUE(configurator->get_current_vertices().empty());
+
+}

@@ -3,13 +3,14 @@
 #include "sensor.h"
 
 class WorldBuilder{
+    protected:
     int iteration=0;
     char bodyFile[100];
     float simulationStep=BOX2DRANGE;
     int bodies=0;
-
+    std::vector <BodyFeatures> world_objects;    
+    friend class Configurator;
     public:
-    std::vector <BodyFeatures> world_objects;
     enum CLUSTERING{BOX=0, KMEANS=1, PARTITION=2}; //BOX: bounding box around points
         struct CompareCluster{
         CompareCluster()=default;
@@ -24,9 +25,23 @@ class WorldBuilder{
     };
 
     std::pair <CoordinateContainer, bool> salientPoints(b2Transform, const CoordinateContainer &, std::pair <Pointf, Pointf>); //gets points from the raw data that are relevant to the task based on bounding boxes
-                                                                                                                                        //std::pair<points, obstaclestillthere>
-    b2Body* makeBody(b2World&, BodyFeatures);
+                             
+    /**
+     * @brief Creates a body in the box2d world, and if the features represent a disturbance to which the attention window needs to
+     * be assigned, a flag is assigned to the body user data
+     * 
+     * @param w the box2d world
+     * @param features features of the body to be created
+     * @return * b2Body* 
+     */
+    b2Body* makeBody(b2World& w, const BodyFeatures& features);
 
+
+    /**
+     * @brief returns a bounding box encompassing all points provided
+     * 
+     * @return std::vector <BodyFeatures> 
+     */
     std::vector <BodyFeatures> processData(const CoordinateContainer&, const b2Transform&);
 
     std::vector <BodyFeatures> cluster_data(const CoordinateContainer &, const b2Transform&, CLUSTERING clustering=PARTITION);
@@ -98,9 +113,25 @@ class WorldBuilder{
 
     b2Fixture * get_chassis(b2Body *);
 
-    b2AABB  makeRobotSensor(b2Body*, Disturbance *goal); //returns bounding box in world coord
+    /**
+     * @brief Makes the robot attention window, i.e. a distal sensor which is comprised between the extremes of the robot body and the disturbance
+     *  
+     * @param robotBody 
+     * @param focus a disturbance representing the focus of the attention window 
+     * @return b2AABB 
+     */
+    b2AABB  makeRobotSensor(b2Body* const robotBody, const Disturbance *const focus)const; //returns bounding box in world coord
     
 
+    std::vector <BodyFeatures>& get_world_objects(){
+        return world_objects;
+    }
+
+    void set_world_objects(const std::vector <BodyFeatures>& wo){
+        world_objects=wo;
+    }
+
+    void setSimulationStep(float f){simulationStep=f;}
 
 };
 #endif

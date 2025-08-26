@@ -9,8 +9,7 @@ class Configurator;
  * @brief Wrapper around cv::Point2f for customisation purposes
  * 
  */
-class Pointf: public cv::Point2f{
-	public: 
+struct Pointf: public cv::Point2f{
 
 	Pointf(){}
 
