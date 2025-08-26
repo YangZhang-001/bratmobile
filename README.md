@@ -48,13 +48,14 @@ The indoor robot is equipped with
 * Boost
 * XOrg
 * LibGLU1
-<<<<<<< HEAD
+* Fastcdr
+* Fastrtpts
+* Fastddsgen
+* FastDDS tools
 * Qt5 (if you'd like to add debug mode for real-time control, see `src/fastdds`)
-=======
 * Gtest
->>>>>>> closing_loop_tracker
 
-`sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev`
+`sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev libfastcdr-dev libfastrtps-dev fastddsgen fastdds-tools`
 
 ### Compile from source
 
