@@ -35,3 +35,10 @@ target_link_libraries(window Qt5::Widgets fastcdr fastrtps ObjectPackage)
 add_executable(qt_window qt_main.cpp window.h window.cpp )
 target_link_libraries(qt_window  PRIVATE Qt5::Widgets Qt5::Core fastcdr fastrtps ObjectPackage)
 target_link_libraries(qt_window PRIVATE qwt-qt5)
+
+
+install(TARGETS ObjectPackage 
+	EXPORT ObjectPackage-targets 
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
