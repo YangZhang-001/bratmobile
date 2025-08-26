@@ -1,5 +1,5 @@
 #include "custom_robot.h"
-#include "../src/fastdds/publisher.h"
+#include "../src/fastdds/publisher.cpp"
 
 #undef PLANNING
 #define PLANNING false
