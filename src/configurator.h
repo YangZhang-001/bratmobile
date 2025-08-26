@@ -167,7 +167,9 @@ void register_controller(Controller * controller){
 Controller* get_controller(){
 	return task_controller;
 }
-
+/**
+* @brief registers and initialises the tracker to the goal
+*/
 void register_tracker(Tracker * _tracker){
 	if (!_tracker){return;}
 	tracker=_tracker;

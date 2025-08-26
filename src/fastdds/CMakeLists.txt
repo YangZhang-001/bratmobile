@@ -36,9 +36,8 @@ add_executable(qt_window qt_main.cpp window.h window.cpp )
 target_link_libraries(qt_window  PRIVATE Qt5::Widgets Qt5::Core fastcdr fastrtps ObjectPackage)
 target_link_libraries(qt_window PRIVATE qwt-qt5)
 
+#Qt attention debug
+add_executable(closedLoopExecution closedLoopExecution.cpp)
+target_link_libraries(closedLoopExecution box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio)
+target_link_libraries(closedLoopExecution fastcdr fastrtps ObjectPackage)
 
-install(TARGETS ObjectPackage 
-	EXPORT ObjectPackage-targets 
-	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

@@ -109,8 +109,15 @@ class DeadReckoner: public Tracker{
  * 
  */
 class ClosedLoop_Tracker:public Tracker{
+    protected:
     Disturbance tracked_disturbance; //disturbance to be tracked as at task start, kept in memory when task is changed
     b2PolygonShape attention_window; //a box drawn at the beginning of task which bounds the robot and the goal
+    
+     /**
+    * @brief gets the area of the attention window (for debugging)
+    */
+    float window_area();
+
     public:
 
     ClosedLoop_Tracker(){}
@@ -165,7 +172,7 @@ class ClosedLoop_Tracker:public Tracker{
      * 
      * @param goal the goal
      */
-    void on_new_reading(Task * goal=NULL);
+    virtual void on_new_reading(Task * goal=NULL);
 
     void set_attention(b2PolygonShape ps){
         attention_window=ps;
@@ -176,12 +183,7 @@ class ClosedLoop_Tracker:public Tracker{
 
     }
 
-    private:
 
-    /**
-    * @brief gets the area of the attention window (for debugging)
-    */
-    float window_area();
 
 
 };

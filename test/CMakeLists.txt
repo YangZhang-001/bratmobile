@@ -10,6 +10,9 @@ find_package(PkgConfig)
 
 find_package(Threads)
 
+find_package(fastcdr REQUIRED)
+find_package(fastrtps REQUIRED)
+
 include(CTest)
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
@@ -18,7 +21,8 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
 	# target_link_libraries(closed_loop_task box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio)
 	# target_link_libraries(test_tracking box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio)
 	add_executable(closedLoopExecution closedLoopExecution.cpp)
-	target_link_libraries(closedLoopExecution box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio fastcdr fastrtps ObjectPackage)
+	target_include_directories(closedLoopExecution	PRIVATE /usr/include)
+	target_link_libraries(closedLoopExecution box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio ${fastcdr_LIBS} ${fastrtps_LIBS} ObjectPackage)
 
 	message("build test cases")
 else()
