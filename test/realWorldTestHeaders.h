@@ -166,8 +166,8 @@ class DebugTracker: public ClosedLoop_Tracker{
 
     }
 public:
-void on_new_reading(Task * goal){
-    ClosedLoop_Tracker::on_new_reading(goal);
+void on_new_reading(const Task & goal, const Task & currentTask){
+    ClosedLoop_Tracker::on_new_reading(goal, currentTask);
     printWindow();
 }
 };

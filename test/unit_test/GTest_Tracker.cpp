@@ -1,5 +1,6 @@
+#include "test_classes.h"
 #include <gtest/gtest.h>
-#include "realWorldTestHeaders.h"
+#include "../realWorldTestHeaders.h"
 
 class TestInputConfigurator: public UserInputConfigurator{
     public:
@@ -9,8 +10,8 @@ class TestInputConfigurator: public UserInputConfigurator{
     AffordanceIndex goalAffordance(){return currentTask.get_disturbance().getAffIndex();}
     void set_world_objects(std::vector<BodyFeatures> bfs){worldBuilder.set_world_objects(bfs);};
 
-    Task * const getGoal(){return &controlGoal;}
-    Task * const getTask(){return &currentTask;}
+    Task& getGoal(){return controlGoal;}
+    Task & getTask(){return currentTask;}
     void setRunning (bool r){running=r;}
 
     void run(){
@@ -29,7 +30,7 @@ class TestInputConfigurator: public UserInputConfigurator{
         adjust_goal_expectation();
         estimate_current_vertex();
         printf("current v=%i\n", currentVertex);
-        tracker->on_new_reading(&controlGoal);
+        tracker->on_new_reading(controlGoal, currentTask);
         ci->setReady(true);
 
     }
@@ -98,12 +99,12 @@ TEST_P(TestEnvironment, AttentionWindow){
     configurator.change_task();
     configurator.adjust_goal_expectation();
     configurator.estimate_current_vertex();
-    tracker.on_new_reading(configurator.getGoal());
+    tracker.on_new_reading(configurator.getGoal(), configurator.getTask());
     EXPECT_EQ(tracker.get_tracked_disturbance()->pose().p.x,configurator.getDi().pose().p.x);
     EXPECT_EQ(tracker.get_tracked_disturbance()->pose().p.y,configurator.getDi().pose().p.y);
     EXPECT_EQ(tracker.get_tracked_disturbance()->pose().q.GetAngle(),configurator.getDi().pose().q.GetAngle());
     EXPECT_EQ(configurator.goalAffordance(), affSolution);
-    if (configurator.getDi().getAffIndex()==PURSUE){
+    if (configurator.getDi().getAffIndex()==){
         EXPECT_TRUE(overlaps(tracker.getAttentionWindow(), tracker.get_tracked_disturbance()));
     }
     EXPECT_EQ(configurator.getDi().bf.pose.p.x,bf.pose.p.x);
@@ -127,13 +128,13 @@ TEST_P(TestEnvironment, Execution){
     do {
         // configurator.Spawner(); //
         configurator.run();
-        b2Transform newPose=InvMul(configurator.getTask()->getAction().getTransform(LIDAR_SAMPLING_RATE), bf.pose);
+        b2Transform newPose=InvMul(configurator.getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), bf.pose);
         lidarIn.data2fp={Pointf(newPose.p.x, newPose.p.y)};
         bf.pose=newPose;
         // configurator.change_task();
         // configurator.adjust_goal_expectation();
         // configurator.estimate_current_vertex();
-    }while (configurator.getTask()->is_over());
+    }while (configurator.getTask().is_over());
 
 }
 
@@ -141,4 +142,4 @@ TEST_P(TestEnvironment, Execution){
 INSTANTIATE_TEST_CASE_P(Inputs, TestEnvironment, ::testing::Combine(
     ::testing::Values(PURSUE, AVOID),
     ::testing::Values(DEFAULT, LEFT, RIGHT)
-));
+));                                                                                        //      a_ob  r_ob  a_go    r_go     Configurator::getGoalDisturbance()

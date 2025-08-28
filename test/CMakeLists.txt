@@ -24,17 +24,17 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
 	target_link_libraries(closedLoopExecution box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio)
 	message("build test cases")
 else()
-	#add_subdirectory(simulations)
-	find_package(GTest CONFIG REQUIRED)
+	# #add_subdirectory(simulations)
+	# find_package(GTest CONFIG REQUIRED)
 
-	include(CTest)
-	include(FetchContent)
+	# include(CTest)
+	# include(FetchContent)
 
-	include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
-	include(GoogleTest)
-	add_executable(execution_unit execution_unit.cpp)
-	target_link_libraries(execution_unit gtest gtest_main)
-	target_link_libraries(execution_unit brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+	# include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
+	# include(GoogleTest)
+	# add_executable(execution_unit execution_unit.cpp)
+	# target_link_libraries(execution_unit gtest gtest_main)
+	# target_link_libraries(execution_unit brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 	gtest_discover_tests(execution_unit)
 
