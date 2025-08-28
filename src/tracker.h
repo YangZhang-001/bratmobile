@@ -7,6 +7,7 @@
  */
 class Tracker{
     protected:
+    friend Configurator;
     ThresholdLearner *learner=NULL;
     b2Transform deltaTransform=b2Transform_zero;
     public:
@@ -48,7 +49,7 @@ class Tracker{
      * 
      * @param t the task
      */
-    virtual void on_new_task(Task *task=NULL)=0;
+    virtual void on_new_task(const Task &task)=0;
 
     /**
      * @brief Called every time asensor reading is available
@@ -95,7 +96,7 @@ class DeadReckoner: public Tracker{
     
     b2Transform track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects);
 
-    void on_new_task(Task *task=NULL){} //does nothing
+    void on_new_task(const Task &task){} //does nothing
 
     void on_new_reading(Task * task=NULL){};
 
@@ -165,14 +166,14 @@ class ClosedLoop_Tracker:public Tracker{
      * 
      * @param task the new task
      */
-    void on_new_task(Task *task=NULL);
+    void on_new_task(const Task& task);
 
     /**
      * @brief Updates the attention window at each sensor reading
      * 
      * @param goal the goal
      */
-    virtual void on_new_reading(Task * goal=NULL);
+    virtual void on_new_reading(const Task & goal, const Task &currentTask);
 
     void set_attention(b2PolygonShape ps){
         attention_window=ps;

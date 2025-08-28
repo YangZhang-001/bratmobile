@@ -128,23 +128,24 @@ std::vector <BodyFeatures>::iterator ClosedLoop_Tracker::find_disturbance( std::
     return result;
 }
 
-void ClosedLoop_Tracker::on_new_task(Task *task){
-    if (!task){
-        throw "no task!";
-    }
-    tracked_disturbance=task->get_disturbance();
+void ClosedLoop_Tracker::on_new_task(const Task & task){
+    tracked_disturbance=task.get_disturbance();
     deltaTransform=b2Transform_zero;
 }
 
-void ClosedLoop_Tracker::on_new_reading(Task * goal){
+void ClosedLoop_Tracker::on_new_reading(const Task & goal, const Task & currentTask){
     printf("new reading!\n");
     float area=0;
-    if(!goal){
-        std::cout<<"no goal!"<<std::endl;
-        return;
+    // if(goal){
+    //     std::cout<<"no goal!"<<std::endl;
+    //     return;
+    // }
+    Disturbance goalD=goal.get_disturbance();
+    if (currentTask.get_disturbance().getAffIndex()==PURSUE && goal.get_disturbance().getAffIndex()){
+        goalD=Disturbance();
     }
     try{
-        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance_ptr());
+        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goalD);
         if (area=window_area(); area<(ROBOT_HALFLENGTH*2)*(ROBOT_HALFWIDTH*2)){
             throw area;
         }

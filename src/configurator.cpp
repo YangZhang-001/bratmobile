@@ -175,6 +175,7 @@ void Configurator::run(Configurator * c){
 			c->ci=NULL;
 			c->control=NULL;
 			printf("ci not started\n");
+			c->running=false;
 		}		
 		if (c->ci->isReady()){
 			c->ci->setReady(false);
@@ -194,7 +195,7 @@ void Configurator::run(Configurator * c){
 			c->adjust_goal_expectation();
 			c->estimate_current_vertex();
 			printf("current v=%i\n", c->currentVertex);
-			c->tracker->on_new_reading(&c->controlGoal);
+			c->tracker->on_new_reading(c->controlGoal, c->currentTask);
 			}
 
 	}
@@ -264,7 +265,7 @@ void Configurator::change_task(){
 	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
 	//transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
-	tracker->on_new_task(&currentTask);
+	tracker->on_new_task(currentTask);
 	if (control){
 		control->reset();
 		control->getData(currentTask.action);
