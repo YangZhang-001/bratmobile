@@ -75,6 +75,8 @@ void addIteration(int i=1){
 	iteration+=i;
 }
 
+void assignDisturbanceToTask(const Disturbance & d, Task & t);
+
 
 void dummy_vertex(vertexDescriptor src);
 
@@ -140,11 +142,11 @@ static void run(Configurator *);
 void change_task();
 
 /**
- * @brieF updates the cognitive map by applying a 2D transform
+ * @brieF updates the cognitive map and goal by applying a 2D transform, and sets current task Di to the observed disturbance in the tracking result
 *@param g the cognitive map
-*@param _deltaPose the transform to apply
+*@param tr the tracking result
 */
-void update_graph(TransitionSystem& g, const b2Transform & _deltaPose);
+void update_graph(TransitionSystem& g, const TrackingResult & tr);
 
 //round angle to a divisor of PI/2
 /**

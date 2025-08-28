@@ -13,6 +13,7 @@ void Configurator::Mul(const b2Transform&B , Task &task){
 }
 
 
+
 void Configurator::init(Task _task){
 	controlGoal=_task;
 	currentTask=_task;
@@ -185,7 +186,7 @@ void Configurator::run(Configurator * c){
 			if (c->getIteration()>1){
 				trackingResult= c->tracker->track((c->currentTask),c->ci->data2fp, c->worldBuilder.get_world_objects());
 			}
-			c->update_graph(c->transitionSystem, trackingResult.displacement);
+			c->update_graph(c->transitionSystem, trackingResult);
 			if (c->goal_changer!=NULL){
 				if (( c->currentTask.is_over()& c->transitionSystem[c->currentVertex].direction!=STOP && c->m_plan.empty() && c->getIteration()>1)){
 					c->goal_changer->change_goal(&c->controlGoal);
@@ -276,9 +277,10 @@ void Configurator::change_task(){
 	return;
 }
 
-void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPose){
-	math::MulT(_deltaPose, g);
-	Configurator::MulT(_deltaPose, controlGoal);
+void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
+	math::MulT(tr.displacement, g);
+	Configurator::MulT(tr.displacement, controlGoal);
+	currentTask.disturbance=tr.observed_disturbance;
 }
 
 

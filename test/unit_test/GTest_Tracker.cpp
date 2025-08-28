@@ -21,7 +21,7 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
 		if (getIteration()>1){
 			trackingResult= tracker->track((currentTask),ci->data2fp, worldBuilder.get_world_objects());
 		}
-        update_graph(transitionSystem, trackingResult.displacement);
+        update_graph(transitionSystem, trackingResult);
         if (goal_changer!=NULL){
             if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
                 goal_changer->change_goal(&controlGoal);
