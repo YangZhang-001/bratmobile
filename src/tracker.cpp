@@ -7,7 +7,7 @@ b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, std::ve
     if (t.getMotorStep()<1){
         t.set_change(true);
     }
-    deltaTransform=b2Mul(deltaTransform, result);
+    deltaTransform=b2Mul(result, deltaTransform);
     return result;
 }
 
@@ -54,7 +54,9 @@ b2Transform ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateCo
         return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
     }
     BodyFeatures predicted_bf=t.get_disturbance().bf;
-    predicted_bf.pose+=t.getAction().getTransform(LIDAR_SAMPLING_RATE); //future to sub with MM Kalman
+    predicted_bf.pose=b2Mul(t.getAction().getTransform(LIDAR_SAMPLING_RATE), predicted_bf.pose);
+    // =t.get_disturbance().bf;
+    // predicted_bf.pose+=t.getAction().getTransform(LIDAR_SAMPLING_RATE); //future to sub with MM Kalman
     auto new_d_it =find_disturbance(objects, predicted_bf, t.getAction().getTransform(LIDAR_SAMPLING_RATE));
   //  printf("objects: %i\n", objects.size());
     if (new_d_it==objects.end()){
