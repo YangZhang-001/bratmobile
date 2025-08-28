@@ -56,7 +56,7 @@ class Tracker{
      * 
      * @param task 
      */
-    virtual void on_new_reading(Task * task=NULL)=0;
+    virtual void on_new_reading(const Task & goal, const Task &currentTask)=0;
 
     virtual void init(Task * goal)=0;
 
@@ -98,7 +98,7 @@ class DeadReckoner: public Tracker{
 
     void on_new_task(const Task &task){} //does nothing
 
-    void on_new_reading(Task * task=NULL){};
+    void on_new_reading(const Task & goal, const Task &currentTask){};
 
     void init(Task * goal){}
 
@@ -179,8 +179,8 @@ class ClosedLoop_Tracker:public Tracker{
         attention_window=ps;
     }
 
-    void init(Task * goal){
-        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance_ptr());
+    void init(const Task & goal){
+        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal.get_disturbance());
 
     }
 

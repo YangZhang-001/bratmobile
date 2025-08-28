@@ -120,7 +120,7 @@ class WorldBuilder{
      * @param focus a disturbance representing the focus of the attention window 
      * @return b2AABB 
      */
-    b2AABB  makeRobotSensor(b2Body* const robotBody, const Disturbance *const focus)const; //returns bounding box in world coord
+    b2AABB  makeRobotSensor(b2Body* const robotBody, const Disturbance & focus)const; //returns bounding box in world coord
     
 
     std::vector <BodyFeatures>& get_world_objects(){
