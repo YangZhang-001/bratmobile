@@ -1,5 +1,10 @@
 #include "sensor.h"
 
+struct TrackingResult{
+    b2Transform displacement; //estimated displacement
+    Disturbance observed_disturbance; //the disturbance as observed at the current time step
+};
+
 /**
  * @brief Tracking interface: Bridge between the real world and the simulation. Is used for tracking execution of tasks
  * and using lived experience to modify the state-matching threshold
@@ -30,8 +35,7 @@ class Tracker{
     * @param pts point cloud
     * @param objects world objects as extracted in worldbuilder
     */
-    virtual b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, const std::vector <BodyFeatures> & objects)=0; 
-
+    virtual TrackingResult get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
     /**
      * @brief Tracks task execution
      * 
@@ -41,7 +45,7 @@ class Tracker{
     * @param objects world objects as extracted in worldbuilder
      * @return b2Transform that the robot has moved by, can use for updating cognitive map and control
      */
-    virtual b2Transform track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)=0;
+    virtual TrackingResult track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)=0;
     //void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);                
 
     /**
@@ -88,13 +92,9 @@ class Tracker{
  */
 class DeadReckoner: public Tracker{
     public:
-    DeadReckoner(){}
-
-    b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, const std::vector <BodyFeatures> & objects){
-        return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
-    }     
+    DeadReckoner(){}   
     
-    b2Transform track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
+    TrackingResult track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
 
     void on_new_task(const Task &task){} //does nothing
 
@@ -128,16 +128,17 @@ class ClosedLoop_Tracker:public Tracker{
     // }
 
     /**
-    * @brief returns 2d transformation matrix between one scan and the next based on the displacement of disturbance Di for a task
+    * @brief returns 2d transformation matrix between one scan and the next based on the displacement of disturbance Di for a task +
+    * the disturbance as observed (this is to update the noisy measurement)
     *
     * @param t the current task
     * @param pts lidar reading
     * @param observed_disturbance disturbance Di for task t
     * @param objects objects in the world (stored in worldbuilder)
     */
-    b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, const std::vector <BodyFeatures> & objects);    
+    TrackingResult get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);    
     
-    b2Transform track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
+    TrackingResult track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
 
     /**
     * @brief returns an upright rectangle which represents a focus of attention for finding points corresponding to input task's disturbance

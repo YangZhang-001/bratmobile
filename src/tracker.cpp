@@ -1,23 +1,31 @@
 #include "tracker.h"
 
-b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
-    b2Transform result=get_transform(t, pts, t.get_disturbance_ptr(), objects);
+TrackingResult Tracker::get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
+    TrackingResult result;
+    result.displacement= t.getAction().getTransform(LIDAR_SAMPLING_RATE);
+    result.observed_disturbance=t.get_disturbance();
+    result.observed_disturbance.setPose(b2Mul(result.displacement, t.get_disturbance().pose()));
+    return result;
+}
+
+TrackingResult DeadReckoner::track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
+    TrackingResult result=get_transform(t, pts, objects);
     math::MulT(-deltaTransform, *t.get_disturbance_ptr());
     t.setMotorStep(t.getMotorStep()-1);
     if (t.getMotorStep()<1){
         t.set_change(true);
     }
-    deltaTransform=b2Mul(result, deltaTransform);
+    deltaTransform=b2Mul(result.displacement, deltaTransform);
     return result;
 }
 
-b2Transform ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
-    b2Transform result=get_transform(t, pts, t.get_disturbance_ptr(), objects);
+TrackingResult ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
+    TrackingResult result=get_transform(t, pts, t.get_disturbance_ptr(), objects);
 	bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
 	if(t.getMotorStep()==0 || ended){
 		t.set_change(true);
 	}    
-    deltaTransform=b2Mul(result, deltaTransform);
+    deltaTransform=b2Mul(result.displacement, deltaTransform);
     return result;
 }
 
@@ -37,10 +45,8 @@ cv::Rect2f ClosedLoop_Tracker::real_world_focus(const Task * t){
 }
 
 
-b2Transform ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateContainer & pts, Disturbance * observed_disturbance, const std::vector <BodyFeatures> & objects){
-    if (observed_disturbance==NULL){
-        throw std::invalid_argument("disturbance pointer cannot be null!");
-    }
+TrackingResult ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateContainer & pts, const std::vector <BodyFeatures> & objects){
+    TrackingResult result=Tracker::get_transform(t, pts, objects);
     if (t.get_disturbance().getAffIndex()==NONE || t.get_disturbance().bf.is_point()|| (t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
         if (t.get_disturbance().getAffIndex()==NONE){
             std::cerr<<"no disturbance!"<<std::endl;    
@@ -51,27 +57,26 @@ b2Transform ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateCo
         if ((t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
             std::cerr<<("not moving!")<<std::endl;    
         }
-        return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
+        //return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
+        return result;
     }
-    BodyFeatures predicted_bf=t.get_disturbance().bf;
-    predicted_bf.pose=b2Mul(t.getAction().getTransform(LIDAR_SAMPLING_RATE), predicted_bf.pose);
-    // =t.get_disturbance().bf;
-    // predicted_bf.pose+=t.getAction().getTransform(LIDAR_SAMPLING_RATE); //future to sub with MM Kalman
-    auto new_d_it =find_disturbance(objects, predicted_bf, t.getAction().getTransform(LIDAR_SAMPLING_RATE));
-  //  printf("objects: %i\n", objects.size());
+    // BodyFeatures predicted_bf=t.get_disturbance().bf;
+    // predicted_bf.pose=b2Mul(t.getAction().getTransform(LIDAR_SAMPLING_RATE), predicted_bf.pose);
+    auto new_d_it =find_disturbance(objects, result.observed_disturbance.bodyFeatures(), t.getAction().getTransform(LIDAR_SAMPLING_RATE));
     if (new_d_it==objects.end()){
         printf("not found!");
-        observed_disturbance->set_affordance(NONE); //this will tell the task that D is null, so it can end!
-        return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
+        result.observed_disturbance.set_affordance(NONE); //this will tell the task that D is null, so it can end!
+        return result;
     }
     if ((*new_d_it).is_point()){
         throw std::invalid_argument("for some reason it's tiny!");    
     }
     BodyFeatures new_d=*new_d_it;
-    b2Transform result=b2Transform_zero;
-    calc_transform(result, new_d.pose, t.get_disturbance().pose());
-    observed_disturbance->bf=new_d; //this modifies task t, do not move!
-    return -result;
+    result.displacement=b2Transform_zero;
+    calc_transform(result.displacement, new_d.pose, t.get_disturbance().pose());
+    result.observed_disturbance.bf=new_d; //this modifies task t, do not move!
+    result.displacement=-result.displacement;
+    return result;
 }
 
 void Tracker::make_log(){
