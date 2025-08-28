@@ -951,7 +951,7 @@ void HighLevelTestBase::trackFor(int iteration){
     if (configurator->getIteration()>1){
         TrackingResult trackingResult= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
         //EXPECT_FALSE(deltaPose==b2Transform_zero);
-        configurator->update_graph(configurator->get_ts(), trackingResult.displacement);
+        configurator->update_graph(configurator->get_ts(), trackingResult);
     }
     configurator->change_task();
     configurator->estimate_current_vertex();    
