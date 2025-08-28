@@ -28,9 +28,7 @@ class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceInde
     void SetUp() override {
         as= AffordanceSetter(std::get<0>(GetParam()));
         ds= DirectionSetter(std::get<1>(GetParam()));
-        if (std::get<1>(GetParam())==DEFAULT){
-            affSolution=PURSUE;
-        }
+        affSolution= std::get<0>(GetParam());
     }
 
     BodyFeatures makeBF(TestInputConfigurator &configurator){
@@ -54,8 +52,8 @@ class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceInde
                 bf.pose.p.y=distance;
                 
             }
-            else if (std::get<1>(GetParam())==LEFT){
-                bf.pose.p.y=distance;
+            else if (std::get<1>(GetParam())==RIGHT){
+                bf.pose.p.y=-distance;
             }
         }
         configurator.set_world_objects(std::vector<BodyFeatures>{bf});
@@ -84,17 +82,12 @@ TEST_P(TestEnvironment, AttentionWindow){
     EXPECT_EQ(tracker.get_tracked_disturbance()->pose().q.GetAngle(),configurator.getDi().pose().q.GetAngle());
 
     EXPECT_EQ(configurator.goalAffordance(), affSolution);
-    if (affSolution==PURSUE){
+    if (configurator.getDi().getAffIndex()==PURSUE){
         EXPECT_TRUE(overlaps(tracker.getAttentionWindow(), tracker.get_tracked_disturbance()));
     }
-    if (affSolution==AVOID&& std::get<1>(GetParam())==DEFAULT){
-        EXPECT_EQ(configurator.getDi().bf.pose.p.x,goal.pose().p.x);
-        EXPECT_EQ(configurator.getDi().bf.pose.p.y,goal.pose().p.y);
-    }
-    else{
-        EXPECT_EQ(configurator.getDi().bf.pose.p.x,bf.pose.p.x);
-        EXPECT_EQ(configurator.getDi().bf.pose.p.y,bf.pose.p.y);
-    }
+    EXPECT_EQ(configurator.getDi().bf.pose.p.x,bf.pose.p.x);
+    EXPECT_EQ(configurator.getDi().bf.pose.p.y,bf.pose.p.y);
+  //  }
 
 }
 

@@ -56,11 +56,11 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
 		Disturbance Di;
 		vertexDescriptor currentVertex=get_current_vertex(current_vertices);
 		if (g[p[0]].Di==g[currentVertex].Di){
-			Di=currentTask.get_disturbance();
+			Di=currentTask.get_disturbance();  //set disturbance where it already is (has been tracked before)
 		}
 		else{
 			Di=g[p[0]].Di;
-            Di.bf.pose=g[p[0]].start_from_Di();
+            Di.bf.pose=g[p[0]].start_from_Di(); //set disturbance where it is EXPECTED to be (to generate error signal)
 		}
 		t=Task(Di, g[p[0]].direction, b2Transform_zero, true);
 		// t.endCriteria.angle.set(atan2(end_from_Di.p.y, end_from_Di.p.x));

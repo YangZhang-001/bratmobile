@@ -94,10 +94,10 @@ float Disturbance::getAngle(b2Transform t){ //gets the angle of an Disturbance w
 // }
 
 bool Disturbance::operator==(const Disturbance & d)const{
-    bool _pose=bf.pose.p==d.bf.pose.p && bf.pose.q.GetAngle()==d.bf.pose.q.GetAngle();
-    bool dim=bf.halfLength==d.bf.halfLength && bf.halfWidth==d.bf.halfWidth;
+    bool _pose=(bf.pose.p==d.bf.pose.p) && (bf.pose.q.GetAngle()==d.bf.pose.q.GetAngle());
+    bool dim=(bf.halfLength==d.bf.halfLength) && (bf.halfWidth==d.bf.halfWidth);
     bool aff=affordanceIndex==d.affordanceIndex;
-    return pose && dim && aff;
+    return _pose && dim && aff;
 }
 
 std::vector <b2Vec2> GetLocalPoints( std::vector <b2Vec2> pts, const b2Body * body){
