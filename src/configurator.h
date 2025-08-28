@@ -173,7 +173,7 @@ Controller* get_controller(){
 void register_tracker(Tracker * _tracker){
 	if (!_tracker){return;}
 	tracker=_tracker;
-	tracker->init(&controlGoal);
+	tracker->init(controlGoal);
 }
 
 Tracker * get_tracker()const {

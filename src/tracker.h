@@ -58,7 +58,7 @@ class Tracker{
      */
     virtual void on_new_reading(const Task & goal, const Task &currentTask)=0;
 
-    virtual void init(Task * goal)=0;
+    virtual void init(const Task & goal)=0;
 
 
     /**
@@ -100,7 +100,7 @@ class DeadReckoner: public Tracker{
 
     void on_new_reading(const Task & goal, const Task &currentTask){};
 
-    void init(Task * goal){}
+    void init(const Task & goal){}
 
 
 };
@@ -173,7 +173,7 @@ class ClosedLoop_Tracker:public Tracker{
      * 
      * @param goal the goal
      */
-    virtual void on_new_reading(const Task & goal, const Task &currentTask);
+    void on_new_reading(const Task & goal, const Task &currentTask);
 
     void set_attention(b2PolygonShape ps){
         attention_window=ps;
