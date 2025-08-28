@@ -259,7 +259,7 @@ public:
 
     std::vector <b2Vec2> vertices()const; //global vertices
 
-    bool operator==(const Disturbance & d);
+   // bool operator==(const Disturbance & d);
 
     bool operator==(const Disturbance & d)const;
 

@@ -168,30 +168,14 @@ void Configurator::registerInterface(LIDAR_In * _ci, Motor_Out * _control){
 
 void Configurator::run(Configurator * c){
 	while (c->running){
+		if (!c->areInterfacesSetUp(c)){
+			c->running=false;
+		}
 		if (c->ci->stop){
 			c->ci=NULL;
 			c->control=NULL;
 			printf("ci not started\n");
-		}
-		if (c->ci == NULL){
-			printf("null pointer to lidar input\n");
-			c->running=0;
-			return;
-		}
-		if (c->control == NULL){
-			printf("null pointer to motor output\n");
-			c->running=0;
-			return;
-		}
-		if (c == NULL){
-			printf("null pointer to configurator\n");
-			c->running=0;
-			return;
-		}
-		if (c->task_controller==NULL){
-			c->running=0;
-			throw std::invalid_argument("no task controller, please set!");
-		}
+		}		
 		if (c->ci->isReady()){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
@@ -281,8 +265,13 @@ void Configurator::change_task(){
 	//transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
 	tracker->on_new_task(&currentTask);
-	control->reset();
-	control->getData(currentTask.action);
+	if (control){
+		control->reset();
+		control->getData(currentTask.action);
+	}
+	else{
+		std::cerr<<("no motor interface found");
+	}
 	return;
 }
 
@@ -312,6 +301,32 @@ void Configurator::adjust_goal_expectation(){
 
 }
 
+bool Configurator::areInterfacesSetUp(Configurator * c){
+	if (c == NULL){
+		std::cerr<<"null pointer to configurator";
+		return false;
+	}	
+	if (c->ci == NULL){
+		std::cerr<<"null pointer to lidar input";
+		return false;
+	}
+	if (c->control == NULL){
+		std::cerr<<"null pointer to motor output";
+		return false;
+	}
+	if (c->task_controller==NULL){
+		std::cerr<<"no task controller, please set!";
+		return false;
+	}
+	if (!c->tracker){
+		std::cerr<<"no tracker!";
+		return false;
+	}
+	return true;
+
+}
+
+
 
 void ReactiveConfigurator::explore_plan(b2World &world){
 	if (transitionSystem.m_vertices.size()==1 && iteration<=1){
@@ -335,3 +350,5 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 		printf("crashed\n");
 	}
 }
+
+
