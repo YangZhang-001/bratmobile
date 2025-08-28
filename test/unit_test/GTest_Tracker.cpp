@@ -2,8 +2,9 @@
 #include <gtest/gtest.h>
 #include "../realWorldTestHeaders.h"
 
-class TestInputConfigurator: public UserInputConfigurator{
+class TestInputConfigurator: public virtual UserInputConfigurator{
     public:
+    friend class TestEnvironment;
     TestInputConfigurator(DirectionSetter *ds, AffordanceSetter *as): UserInputConfigurator(ds, as){}
     CoordinateContainer & getData2fp(){return data2fp;};
     const Disturbance & getDi(){return currentTask.get_disturbance();}
@@ -40,8 +41,6 @@ class TestTracker: public ClosedLoop_Tracker{
     public:
     b2PolygonShape getAttentionWindow(){return attention_window;}
 };
-
-
 
 class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceIndex, Direction>>{
     public:
@@ -86,6 +85,8 @@ class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceInde
     }
 };
 
+
+
 TEST_P(TestEnvironment, AttentionWindow){
     TestTracker tracker;
     OneTaskController controller;
@@ -104,7 +105,7 @@ TEST_P(TestEnvironment, AttentionWindow){
     EXPECT_EQ(tracker.get_tracked_disturbance()->pose().p.y,configurator.getDi().pose().p.y);
     EXPECT_EQ(tracker.get_tracked_disturbance()->pose().q.GetAngle(),configurator.getDi().pose().q.GetAngle());
     EXPECT_EQ(configurator.goalAffordance(), affSolution);
-    if (configurator.getDi().getAffIndex()==){
+    if (std::get<0>(GetParam())==AVOID){
         EXPECT_TRUE(overlaps(tracker.getAttentionWindow(), tracker.get_tracked_disturbance()));
     }
     EXPECT_EQ(configurator.getDi().bf.pose.p.x,bf.pose.p.x);
@@ -125,16 +126,22 @@ TEST_P(TestEnvironment, Execution){
     Motor_Out motor;
     configurator.registerInterface(&lidarIn, &motor);
     lidarIn.data2fp=configurator.getData2fp();
+    int steps=0;
     do {
-        // configurator.Spawner(); //
         configurator.run();
         b2Transform newPose=InvMul(configurator.getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), bf.pose);
         lidarIn.data2fp={Pointf(newPose.p.x, newPose.p.y)};
+        float lengthDifference =newPose.p.Length()-bf.pose.p.Length();
+        if (std::get<0>(GetParam())==AVOID){
+            EXPECT_GE(lengthDifference,0);
+        }
+        else{
+            EXPECT_LE(lengthDifference,0);
+        }
         bf.pose=newPose;
-        // configurator.change_task();
-        // configurator.adjust_goal_expectation();
-        // configurator.estimate_current_vertex();
-    }while (configurator.getTask().is_over());
+        steps++;
+    }while (!configurator.getTask().is_over());
+    EXPECT_GT(steps, 1); //should take more than one step to complete task
 
 }
 

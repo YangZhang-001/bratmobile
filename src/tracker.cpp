@@ -150,7 +150,7 @@ void ClosedLoop_Tracker::on_new_reading(const Task & goal, const Task & currentT
             throw area;
         }
     }
-    catch (int the_area){
+    catch (float the_area){
         std::cerr<< "no attention! area: "<<the_area<<std::endl;
     }
 }

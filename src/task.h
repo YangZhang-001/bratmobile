@@ -109,6 +109,11 @@ void setVelocities(const float & l,const float &r){
         return velocity;
     }
 
+    /**
+     * @brief Gets the ROBOT's displacement in the world frame after dt seconds
+     * 
+     * @param dt delta time (in seconds)
+     */
     b2Transform getTransform(const float &dt=1)const{ //dt integrates
     return b2Transform(getLinearVelocity(dt), b2Rot(getOmega(dt)));
 }
