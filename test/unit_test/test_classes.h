@@ -949,9 +949,9 @@ std::pair<std::string, std::string> ReactToNoiseTest::carveScenario(std::string 
 void HighLevelTestBase::trackFor(int iteration){
     for (int i=0;i<iteration-1; i++){ //simulate execution
     if (configurator->getIteration()>1){
-        b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
+        TrackingResult trackingResult= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
         //EXPECT_FALSE(deltaPose==b2Transform_zero);
-        configurator->update_graph(configurator->get_ts(), deltaPose);
+        configurator->update_graph(configurator->get_ts(), trackingResult.displacement);
     }
     configurator->change_task();
     configurator->estimate_current_vertex();    

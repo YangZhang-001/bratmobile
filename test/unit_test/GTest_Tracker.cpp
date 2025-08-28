@@ -17,11 +17,11 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
 
     void run(){
         Spawner();
-		b2Transform deltaPose=b2Transform_zero;
+		TrackingResult trackingResult(currentTask.get_disturbance());
 		if (getIteration()>1){
-			deltaPose= tracker->track((currentTask),ci->data2fp, worldBuilder.get_world_objects());
+			trackingResult= tracker->track((currentTask),ci->data2fp, worldBuilder.get_world_objects());
 		}
-        update_graph(transitionSystem, deltaPose);
+        update_graph(transitionSystem, trackingResult.displacement);
         if (goal_changer!=NULL){
             if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
                 goal_changer->change_goal(&controlGoal);
