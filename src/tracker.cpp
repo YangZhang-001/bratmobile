@@ -4,7 +4,7 @@ TrackingResult Tracker::get_transform(const Task &t, const CoordinateContainer &
     TrackingResult result;
     result.displacement= t.getAction().getTransform(LIDAR_SAMPLING_RATE);
     result.observed_disturbance=t.get_disturbance();
-    result.observed_disturbance.setPose(b2Mul(result.displacement, t.get_disturbance().pose()));
+    result.observed_disturbance.setPose(b2Mul(-result.displacement, t.get_disturbance().pose()));
     return result;
 }
 
