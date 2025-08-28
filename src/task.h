@@ -288,7 +288,7 @@ EndedResult checkEnded(const State& n, Direction dir=UNDEFINED, bool relax=false
  * @return true 
  * @return false 
  */
-bool checkEnded( const b2PolygonShape &box, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL );
+bool checkEnded(const b2PolygonShape &box, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL );
 
 Task(){
     start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));

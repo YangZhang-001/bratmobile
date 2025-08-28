@@ -210,7 +210,7 @@ TEST_F(ConfiguratorTest, UpdateGraph){
     transitionSystem[1].Dn=Dn;
     transitionSystem[1].direction=DEFAULT;
     //currentTask=Task(Dn, DEFAULT, b2Transform_zero, true);
-    TrackingResult tr(currentTask.get_disturbance());
+    TrackingResult tr(Dn);
     tr.displacement=b2Transform(b2Vec2(.5, .27), b2Rot(M_PI_4));
     update_graph(transitionSystem, tr);
     EXPECT_FALSE(transitionSystem[1].Di.pose()==Di.pose());

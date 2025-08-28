@@ -68,6 +68,8 @@ class Tracker{
 
     virtual void init(const Task & goal)=0;
 
+    virtual bool hasTaskEnded(Task & t);
+
 
     /**
     * @brief opens file where all the data is dumped
@@ -188,6 +190,9 @@ class ClosedLoop_Tracker:public Tracker{
         attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal.get_disturbance());
 
     }
+
+    virtual bool hasTaskEnded(Task & t);
+
 
 
 

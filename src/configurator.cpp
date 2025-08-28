@@ -281,6 +281,9 @@ void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
 	math::MulT(tr.displacement, g);
 	Configurator::MulT(tr.displacement, controlGoal);
 	currentTask.disturbance=tr.observed_disturbance;
+	if (tracker->hasTaskEnded(currentTask)){
+		currentTask.change=true;
+	}
 }
 
 

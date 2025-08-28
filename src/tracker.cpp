@@ -8,23 +8,32 @@ TrackingResult Tracker::get_transform(const Task &t, const CoordinateContainer &
     return result;
 }
 
+bool Tracker::hasTaskEnded(Task & t){
+    return t.getMotorStep()<1;
+}
+
+bool ClosedLoop_Tracker::hasTaskEnded(Task & t){
+    bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
+    return t.getMotorStep()==0 || ended;
+}
+
 TrackingResult DeadReckoner::track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result=get_transform(t, pts, objects);
-    math::MulT(-deltaTransform, *t.get_disturbance_ptr());
-    t.setMotorStep(t.getMotorStep()-1);
-    if (t.getMotorStep()<1){
-        t.set_change(true);
-    }
+    //math::MulT(-deltaTransform, *t.get_disturbance_ptr());
+    t.setMotorStep(t.getMotorStep()-1); //this should go in the controller
+    // if (t.getMotorStep()<1){
+    //     t.set_change(true);
+    // }
     deltaTransform=b2Mul(result.displacement, deltaTransform);
     return result;
 }
 
 TrackingResult ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result=get_transform(t, pts, objects);
-	bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
-	if(t.getMotorStep()==0 || ended){
-		t.set_change(true);
-	}    
+	// bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
+	// if(t.getMotorStep()==0 || ended){
+	// 	t.set_change(true);
+	// }    
     deltaTransform=b2Mul(result.displacement, deltaTransform);
     return result;
 }
