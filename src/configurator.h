@@ -223,7 +223,7 @@ static void Mul(const b2Transform& B, Task &task);
  */
 virtual Robot makeRobot(b2World& world, const b2Transform & start);
 
-Disturbance * getGoalDisturbance(){return &controlGoal.disturbance;}
+//Disturbance * getGoalDisturbance(){return &controlGoal.disturbance;}
 
 bool areInterfacesSetUp(Configurator * c=NULL);
 };

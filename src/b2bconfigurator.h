@@ -75,7 +75,7 @@ protected:
      * @param world box2d world
      * @param focus disturbance to keep in focus to make the attetnion window (e.g. goal)
      */
-    bool attentionWindowOverlaps(const Disturbance & Di, const State & q, b2World & world, const Disturbance *const focus );
+    bool attentionWindowOverlaps(const Disturbance & Di, const State & q, b2World & world, const Disturbance & focus );
 
     /**
      * @brief Counts the number of visited edges
@@ -164,7 +164,7 @@ virtual simResult simulate(Task t, b2World & world, vertexDescriptor v0);
  * @param focus disturbance focus of attention (used for making the sensor)
  * @return Robot 
  */
-virtual Robot makeRobot( b2World & world, const b2Transform& start, Disturbance * focus);
+virtual Robot makeRobot( b2World & world, const b2Transform& start, const Disturbance & focus);
 /**
  * @brief Stores disturbance lookaheads for alternative DEFAULT tasks (where the disturbance is backpropagated)
  * 
