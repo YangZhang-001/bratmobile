@@ -30,7 +30,7 @@ class Tracker{
     * @param pts point cloud
     * @param objects world objects as extracted in worldbuilder
     */
-    virtual b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects)=0; 
+    virtual b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, const std::vector <BodyFeatures> & objects)=0; 
 
     /**
      * @brief Tracks task execution
@@ -41,7 +41,7 @@ class Tracker{
     * @param objects world objects as extracted in worldbuilder
      * @return b2Transform that the robot has moved by, can use for updating cognitive map and control
      */
-    virtual b2Transform track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects)=0;
+    virtual b2Transform track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)=0;
     //void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);                
 
     /**
@@ -90,11 +90,11 @@ class DeadReckoner: public Tracker{
     public:
     DeadReckoner(){}
 
-    b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects){
+    b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, const std::vector <BodyFeatures> & objects){
         return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
     }     
     
-    b2Transform track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects);
+    b2Transform track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
 
     void on_new_task(const Task &task){} //does nothing
 
@@ -135,9 +135,9 @@ class ClosedLoop_Tracker:public Tracker{
     * @param observed_disturbance disturbance Di for task t
     * @param objects objects in the world (stored in worldbuilder)
     */
-    b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects);    
+    b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, const std::vector <BodyFeatures> & objects);    
     
-    b2Transform track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects);
+    b2Transform track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
 
     /**
     * @brief returns an upright rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
@@ -159,7 +159,7 @@ class ClosedLoop_Tracker:public Tracker{
     * @param dist disturbance to be tracked
     * @param t the estimated instantaneous 2d transform associated to the currently executed task
     */
-    std::vector <BodyFeatures>::iterator find_disturbance(std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, float * _least_square=NULL);
+    std::vector <BodyFeatures>::iterator find_disturbance(std::vector <BodyFeatures> objects, const BodyFeatures & dist, b2Transform t, float * _least_square=NULL);
 
     /**
      * @brief Uses the goal to reset tracked disturbance at each task

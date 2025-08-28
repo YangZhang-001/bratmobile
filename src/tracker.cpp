@@ -1,6 +1,6 @@
 #include "tracker.h"
 
-b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects){
+b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     b2Transform result=get_transform(t, pts, t.get_disturbance_ptr(), objects);
     math::MulT(-deltaTransform, *t.get_disturbance_ptr());
     t.setMotorStep(t.getMotorStep()-1);
@@ -11,7 +11,7 @@ b2Transform DeadReckoner::track(Task &t, const CoordinateContainer &pts, std::ve
     return result;
 }
 
-b2Transform ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects){
+b2Transform ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     b2Transform result=get_transform(t, pts, t.get_disturbance_ptr(), objects);
 	bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
 	if(t.getMotorStep()==0 || ended){
@@ -37,7 +37,7 @@ cv::Rect2f ClosedLoop_Tracker::real_world_focus(const Task * t){
 }
 
 
-b2Transform ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateContainer & pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects){
+b2Transform ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateContainer & pts, Disturbance * observed_disturbance, const std::vector <BodyFeatures> & objects){
     if (observed_disturbance==NULL){
         throw std::invalid_argument("disturbance pointer cannot be null!");
     }
@@ -82,9 +82,9 @@ void Tracker::make_log(){
     fclose(f);
 }
 
-std::vector <BodyFeatures>::iterator ClosedLoop_Tracker::find_disturbance( std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, float * _least_square){
+std::vector <BodyFeatures>::iterator ClosedLoop_Tracker::find_disturbance( std::vector <BodyFeatures> objects, const BodyFeatures & dist, b2Transform t, float * _least_square){
     float least_square=10000;
-    std::vector <BodyFeatures>::iterator result =objects.end();
+   std::vector <BodyFeatures>::iterator result =objects.end();
     try{
         for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
         Bundle distance;

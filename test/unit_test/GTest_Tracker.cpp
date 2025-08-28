@@ -38,6 +38,11 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
 };
 
 class TestTracker: public ClosedLoop_Tracker{
+    
+    // void SetUp()override{}
+
+    // void TearDown()override{}
+
     public:
     b2PolygonShape getAttentionWindow(){return attention_window;}
 };
@@ -85,7 +90,12 @@ class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceInde
     }
 };
 
+// TEST_F(TestTracker, Track){
+//     CoordinateContainer cc={Pointf(0.4, 0)};
+//     tracked_disturbance=Disturbance(AVOID, b2Vec2(0.4,0));
+//     Task task(tracked_disturbance, LEFT);
 
+// }
 
 TEST_P(TestEnvironment, AttentionWindow){
     TestTracker tracker;
