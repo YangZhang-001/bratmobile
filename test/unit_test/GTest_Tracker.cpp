@@ -40,6 +40,8 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
 class TestTracker: public ClosedLoop_Tracker{
     public:
     b2PolygonShape getAttentionWindow(){return attention_window;}
+
+
 };
 
 class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceIndex, Direction>>{
@@ -112,6 +114,8 @@ TEST_P(TestEnvironment, AttentionWindow){
     EXPECT_EQ(configurator.getDi().bf.pose.p.y,bf.pose.p.y);
   //  }
 }
+
+TEST_
 
 TEST_P(TestEnvironment, Execution){
     TestTracker tracker;

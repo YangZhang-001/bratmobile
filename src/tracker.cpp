@@ -17,7 +17,7 @@ b2Transform ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, s
 	if(t.getMotorStep()==0 || ended){
 		t.set_change(true);
 	}    
-    deltaTransform=b2Mul(deltaTransform, result);
+    deltaTransform=b2Mul(result, deltaTransform);
     return result;
 }
 
