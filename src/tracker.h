@@ -1,8 +1,12 @@
 #include "sensor.h"
 
 struct TrackingResult{
-    b2Transform displacement; //estimated displacement
+    b2Transform displacement=b2Transform_zero; //estimated displacement
     Disturbance observed_disturbance; //the disturbance as observed at the current time step
+
+    TrackingResult()=default;
+
+    TrackingResult(const Disturbance& d, const b2Transform & tr=b2Transform_zero): displacement(tr), observed_disturbance(d){}
 };
 
 /**

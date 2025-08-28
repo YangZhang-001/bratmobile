@@ -181,11 +181,11 @@ void Configurator::run(Configurator * c){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
-			b2Transform deltaPose=b2Transform_zero;
+			TrackingResult trackingResult(c->currentTask.get_disturbance());
 			if (c->getIteration()>1){
-				deltaPose= c->tracker->track((c->currentTask),c->ci->data2fp, c->worldBuilder.get_world_objects());
+				trackingResult= c->tracker->track((c->currentTask),c->ci->data2fp, c->worldBuilder.get_world_objects());
 			}
-			c->update_graph(c->transitionSystem, deltaPose);
+			c->update_graph(c->transitionSystem, trackingResult.displacement);
 			if (c->goal_changer!=NULL){
 				if (( c->currentTask.is_over()& c->transitionSystem[c->currentVertex].direction!=STOP && c->m_plan.empty() && c->getIteration()>1)){
 					c->goal_changer->change_goal(&c->controlGoal);
