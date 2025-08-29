@@ -1,6 +1,6 @@
 #include "disturbance.h"
 
-bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t){
+bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t)const{
     float hypothenuse_square= pow(bf.pose.p.Length(), 2); //assumes robot-centric perspective
     float adj_side_square=pow(bf.pose.p.Length()*t.q.c, 2);
     float distance_adjust= sqrt(hypothenuse_square-adj_side_square);

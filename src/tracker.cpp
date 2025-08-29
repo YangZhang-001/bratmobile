@@ -71,7 +71,7 @@ TrackingResult ClosedLoop_Tracker::get_transform(const Task & t, const Coordinat
     }
     // BodyFeatures predicted_bf=t.get_disturbance().bf;
     // predicted_bf.pose=b2Mul(t.getAction().getTransform(LIDAR_SAMPLING_RATE), predicted_bf.pose);
-    auto new_d_it =find_disturbance(objects, result.observed_disturbance.bodyFeatures(), t.getAction().getTransform(LIDAR_SAMPLING_RATE));
+    auto new_d_it =find_disturbance(objects.cbegin(), objects.cend(), result.observed_disturbance.bodyFeatures(), t.getAction().getTransform(LIDAR_SAMPLING_RATE));
     if (new_d_it==objects.end()){
         printf("not found!");
         result.observed_disturbance.set_affordance(NONE); //this will tell the task that D is null, so it can end!
@@ -80,10 +80,12 @@ TrackingResult ClosedLoop_Tracker::get_transform(const Task & t, const Coordinat
     if ((*new_d_it).is_point()){
         throw std::invalid_argument("for some reason it's tiny!");    
     }
-    BodyFeatures new_d=*new_d_it;
-    result.displacement=b2Transform_zero;
-    calc_transform(result.displacement, new_d.pose, t.get_disturbance().pose());
-    result.observed_disturbance.bf=new_d; //this modifies task t, do not move!
+    //BodyFeatures new_d=*new_d_it;
+   // result.displacement=b2Transform_zero;
+    result.observed_disturbance=*new_d_it;
+    correctAngle(result.observed_disturbance.bf, t.get_disturbance().bodyFeatures());
+    calc_transform(result.displacement, result.observed_disturbance.pose(), t.get_disturbance().pose());
+    //result.observed_disturbance.bf=new_d; //this modifies task t, do not move!
     result.displacement=-result.displacement;
     return result;
 }
@@ -96,52 +98,54 @@ void Tracker::make_log(){
     fclose(f);
 }
 
-std::vector <BodyFeatures>::iterator ClosedLoop_Tracker::find_disturbance( std::vector <BodyFeatures> objects, const BodyFeatures & dist, b2Transform t, float * _least_square){
+std::vector <BodyFeatures>::const_iterator ClosedLoop_Tracker::find_disturbance( std::vector <BodyFeatures>::const_iterator objects_begin, std::vector <BodyFeatures>::const_iterator objects_end, const BodyFeatures & dist, b2Transform t, float * _least_square){
     float least_square=10000;
-   std::vector <BodyFeatures>::iterator result =objects.end();
-    try{
-        for (std::vector <BodyFeatures>::iterator it=objects.begin(); it!=objects.end(); it++){
-        Bundle distance;
-        bool match =(*it).match(dist, &distance, t);
-        if (float ss=distance.sum_squares()<least_square){
-            least_square=ss;
-            if (match){ //thresholding
-                result = it;
-            }
-            else if(Disturbance d(*it); overlaps(attention_window, &d)){
-                result=it;
-                //adjust threshold
-                Bundle error=threshold.for_Di()-distance;
-                if (learner){
-                    printf("but it's still there!");
-                    learner->Di_tune(error, threshold.for_Di());
-                    threshold.set_Di(learner->update_bundle(error, threshold.for_Di()));    
-                }
-                printf("DISTANCE! x=%f \ty%f\ttheta=%f\tw=%f\tl%f\t", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
-            }
+   std::vector <BodyFeatures>::const_iterator result =objects_end;
+    //for (std::vector <BodyFeatures>::iterator it=objects_begin; it!=objects.end(); it++){
+    while (objects_begin!=objects_end){
+    Bundle distance;
+    bool match =(*objects_begin).match(dist, &distance, t);
+    if (float ss=distance.sum_squares()<least_square){
+        least_square=ss;
+        if (match){ //thresholding
+            result = objects_begin;
         }
-
-        }
-        if (objects.empty()){
-            throw (0);
-        }    
-    }    
-    catch (int area){
-        std::cerr<<"no objects!"<<std::endl;
-    }
-
-    if (result!=objects.end()){
-        if (fabs((*result).pose.q.GetAngle()-dist.pose.q.GetAngle())>(3*M_PI_4)){
-            if (dist.pose.q.GetAngle()>0){
-                (*result).pose.q.Set((*result).pose.q.GetAngle()-M_PI);
+        else if(Disturbance d(*objects_begin); overlaps(attention_window, &d)){
+            result=objects_begin;
+            //adjust threshold
+            Bundle error=threshold.for_Di()-distance;
+            if (learner){
+                printf("but it's still there!");
+                learner->Di_tune(error, threshold.for_Di());
+                threshold.set_Di(learner->update_bundle(error, threshold.for_Di()));    
             }
-            else if (dist.pose.q.GetAngle()<0){
-                (*result).pose.q.Set((*result).pose.q.GetAngle()+M_PI);
-            }
+            printf("overlaps but theres error! DISTANCE! x=%f \ty%f\ttheta=%f\tw=%f\tl%f\t", distance.get_x(), distance.get_y(), distance.get_angle(),distance.get_width(), distance.get_length());
         }
     }
+    objects_begin++;
+    }  
     log_thresholds();
     return result;
+}
+
+void ClosedLoop_Tracker::correctAngle(BodyFeatures & found, const BodyFeatures & dist){
+    if (fabs(found.pose.q.GetAngle()-dist.pose.q.GetAngle())>(3*M_PI_4)){
+        if (dist.pose.q.GetAngle()>0){
+            found.pose.q.Set(found.pose.q.GetAngle()-M_PI);
+        }
+        else if (dist.pose.q.GetAngle()<0){
+            found.pose.q.Set(found.pose.q.GetAngle()+M_PI);
+        }
+    }
+
+        //     if (dist.pose.q.GetAngle()>0){
+        //     found.pose.q= b2Mul(b2Rot(-M_PI),found.pose.q);
+        // }
+        // else if (dist.pose.q.GetAngle()<0){
+        //     found.pose.q =b2Mul(b2Rot(M_PI),found.pose.q);
+        // }
+
+
 }
 
 void ClosedLoop_Tracker::on_new_task(const Task & task){
