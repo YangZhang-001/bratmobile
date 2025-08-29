@@ -56,17 +56,17 @@ cv::Rect2f ClosedLoop_Tracker::real_world_focus(const Task * t){
 
 TrackingResult ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateContainer & pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result=Tracker::get_transform(t, pts, objects);
-    if (t.get_disturbance().getAffIndex()==NONE || t.get_disturbance().bf.is_point()|| (t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
+    if (t.get_disturbance().getAffIndex()==NONE || (t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
         if (t.get_disturbance().getAffIndex()==NONE){
             std::cerr<<"no disturbance!"<<std::endl;    
-        }
-        if (t.get_disturbance().bf.is_point()){
-            printf("petite disturbance!");    
         }
         if ((t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
             std::cerr<<("not moving!")<<std::endl;    
         }
-        //return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
+        return result;
+    }
+    if (t.get_disturbance().bf.is_point()&& t.get_disturbance().getAffIndex()==PURSUE){
+        std::cerr<<"disturbance is imagined"<<std::endl;  
         return result;
     }
     // BodyFeatures predicted_bf=t.get_disturbance().bf;
@@ -154,7 +154,7 @@ void ClosedLoop_Tracker::on_new_task(const Task & task){
 }
 
 void ClosedLoop_Tracker::on_new_reading(const Task & goal, const Task & currentTask){
-    printf("new reading!\n");
+    //printf("new reading!\n");
     float area=0;
     // if(goal){
     //     std::cout<<"no goal!"<<std::endl;

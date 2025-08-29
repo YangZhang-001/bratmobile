@@ -44,7 +44,8 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
 		return t;
 	}	
 	end_it--;
-	b2Transform start_to_end= g[p[0]].start - g[p[end_it]].endPose;
+	//b2Transform start_to_end= g[p[0]].start - g[p[end_it]].endPose;
+	b2Transform start_to_end= b2MulT(g[p[0]].start, g[p[end_it]].endPose);
 	if (Disturbance Dn= g[p[0]].Dn; Dn.getAffIndex()==AVOID && g[p[0]].direction==DEFAULT){
 		Dn.set_affordance(PURSUE);
 		t=Task(Dn, g[p[0]].direction, b2Transform_zero, true);

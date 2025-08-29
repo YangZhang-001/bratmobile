@@ -408,7 +408,7 @@ protected:
 
 bool isTurnFinished(const b2Transform & robotTransform, Direction dir);
 
-
+bool isMoving();
 
 };
 

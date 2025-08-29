@@ -83,7 +83,6 @@ class UserInputConfigurator: public virtual Configurator{
         if (worldBuilder.get_world_objects().size()>1){
             throw "TOO MANY OBSTACLES!!";
         }
-        std::cout<<iteration<<std::endl;
         if (iteration<=1){
             simResult result;            
             Disturbance disturbance;
@@ -105,13 +104,14 @@ class UserInputConfigurator: public virtual Configurator{
                 if (transitionSystem[v1].direction==DEFAULT){
                     float howFarShift=.5;
                     if (disturbance.pose().p.y<0) howFarShift=-howFarShift;
-                    std::cout<<"howfar="<<howFarShift<<std::endl;
-                    b2Transform newGoal;
+                   // std::cout<<"howfar="<<howFarShift<<std::endl;
+                    b2Transform newGoal; //goal in line with the obstacle
                     newGoal.p=b2Vec2(0, howFarShift)+disturbance.pose().p;
-                    debug::print_pose(newGoal, "newgoal");
-                    controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED);
+                   // debug::print_pose(newGoal, "newgoal");
+                    controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED); //set goal
+                    transitionSystem[v1].endPose.p.x=.2; //let's say it moved 20 cm
                     init(controlGoal);
-                    register_tracker(tracker);
+                    register_tracker(tracker); //make tracker to track the new goal
                 }
                 if (affordanceSetter->getAffIndex()==PURSUE){
                     //set pose for turns in pursuit of a disturbance
