@@ -93,6 +93,7 @@ class UserInputConfigurator: public virtual Configurator{
             auto e=boost::add_edge(currentVertex, v1, transitionSystem);
             transitionSystem[v1].direction=directionSetter->getDirection();
             if(affordanceSetter->getAffIndex()==PURSUE && transitionSystem[v1].direction==DEFAULT){
+                //set distance for how close to come to an obstacle
                 disturbance.set_affordance(AVOID);
                 transitionSystem[v1].Dn=disturbance;
                 transitionSystem[v1].Di=controlGoal.get_disturbance();
@@ -111,6 +112,15 @@ class UserInputConfigurator: public virtual Configurator{
                     controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED);
                     init(controlGoal);
                     register_tracker(tracker);
+                }
+                if (affordanceSetter->getAffIndex()==PURSUE){
+                    //set pose for turns in pursuit of a disturbance
+                    if (transitionSystem[v1].direction==LEFT ){
+                        transitionSystem[v1].endPose.q.Set(M_PI_2);
+                    }
+                    else if (transitionSystem[v1].direction==RIGHT){
+                        transitionSystem[v1].endPose.q.Set(-M_PI_2);
+                    }
                 }
             }
             currentTask.set_change(true);

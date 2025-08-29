@@ -321,7 +321,8 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 	}
 	else if (dist_obs->getAffIndex()==PURSUE){ // && direction==DEFAULT
 		b2Transform fromDi=from_Di(&b2Transform_zero);
-		Angle a(fromDi.q.GetAngle());
+		//Angle a(fromDi.q.GetAngle());
+		Angle a(atan(fromDi.p.y/fromDi.p.x));
 		Distance d(fromDi.p.x);
 		result=endCriteria_met(a, d);
 	}
@@ -392,7 +393,8 @@ bool Task::endCriteria_met(Angle & a, Distance & d){
 	bool result=false;
 	switch (affordance){
 		case PURSUE:
-			result= d<=endCriteria.distance && a<=endCriteria.angle; break;
+			Angle approxEndAngle(endCriteria.angle.get()+M_PI/HZ);
+			result= d<=endCriteria.distance && a<=approxEndAngle; break;
 		default:
 			result= d>=endCriteria.distance && a>=endCriteria.angle; break;
 	}
