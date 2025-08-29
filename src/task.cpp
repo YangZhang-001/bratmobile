@@ -391,10 +391,11 @@ return result;
 
 bool Task::endCriteria_met(Angle & a, Distance & d){
 	bool result=false;
+	Angle approxEndAngle(endCriteria.angle.get()+M_PI/HZ);
 	switch (affordance){
 		case PURSUE:
-			Angle approxEndAngle(endCriteria.angle.get()+M_PI/HZ);
-			result= d<=endCriteria.distance && a<=approxEndAngle; break;
+			result= d<=endCriteria.distance && a<=approxEndAngle; 
+			break;
 		default:
 			result= d>=endCriteria.distance && a>=endCriteria.angle; break;
 	}
