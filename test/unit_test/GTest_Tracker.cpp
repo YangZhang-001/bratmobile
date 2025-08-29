@@ -45,6 +45,12 @@ class TestTracker: public ClosedLoop_Tracker{
 
     public:
     b2PolygonShape getAttentionWindow(){return attention_window;}
+
+    b2AABB getAttentionAABB(){
+        b2AABB aabb;
+        attention_window.ComputeAABB(&aabb, b2Transform_zero, 0);
+        return aabb;
+    }
 };
 
 class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceIndex, Direction>>{

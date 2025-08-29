@@ -102,9 +102,9 @@ class DeadReckoner: public Tracker{
     
     TrackingResult track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
 
-    void on_new_task(const Task &task){} //does nothing
+    void on_new_task(const Task &task)override{} //does nothing
 
-    void on_new_reading(const Task & goal, const Task &currentTask){};
+    virtual void on_new_reading(const Task & goal, const Task &currentTask)override{};
 
     void init(const Task & goal){}
 
@@ -179,14 +179,14 @@ class ClosedLoop_Tracker:public Tracker{
      * 
      * @param task the new task
      */
-    void on_new_task(const Task& task);
+    void on_new_task(const Task& task)override;
 
     /**
      * @brief Updates the attention window at each sensor reading
      * 
      * @param goal the goal
      */
-    void on_new_reading(const Task & goal, const Task &currentTask);
+    virtual void on_new_reading(const Task & goal, const Task &currentTask)override;
 
     void set_attention(b2PolygonShape ps){
         attention_window=ps;
