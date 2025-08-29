@@ -125,11 +125,11 @@ struct State{
 
 	b2Transform travel_transform();
 
-	bool isTurning(){
+	bool isTurning()const{
 		return direction==LEFT || direction==RIGHT;
 	}
 
-	bool isGoingStraight(){
+	bool isGoingStraight()const{
 		return direction==DEFAULT || direction==STOP;
 	}
 };

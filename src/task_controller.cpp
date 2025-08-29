@@ -63,7 +63,10 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
             Di.bf.pose=g[p[0]].start_from_Di(); //set disturbance where it is EXPECTED to be (to generate error signal)
 		}
 		t=Task(Di, g[p[0]].direction, b2Transform_zero, true);
-		// t.endCriteria.angle.set(atan2(end_from_Di.p.y, end_from_Di.p.x));
+		if (Di.getAffIndex()==PURSUE && g[p[0]].isTurning()){
+			Angle angle(atan(g[p[0]].end_from_Di().p.y/ g[p[0]].end_from_Di().p.x));
+			t.setEndCriteria(angle);
+		}
         disturbance_q=g[p[0]].Di; 	
     }
 	vertexDescriptor plan_end=p[p.size()-1];
