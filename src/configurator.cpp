@@ -182,11 +182,11 @@ void Configurator::run(Configurator * c){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
-			TrackingResult trackingResult(c->currentTask.get_disturbance());
 			if (c->getIteration()>1){
+				TrackingResult trackingResult(c->currentTask.get_disturbance());
 				trackingResult= c->tracker->track((c->currentTask),c->ci->data2fp, c->worldBuilder.get_world_objects());
+				c->update_graph(c->transitionSystem, trackingResult);
 			}
-			c->update_graph(c->transitionSystem, trackingResult);
 			if (c->goal_changer!=NULL){
 				if (( c->currentTask.is_over()& c->transitionSystem[c->currentVertex].direction!=STOP && c->m_plan.empty() && c->getIteration()>1)){
 					c->goal_changer->change_goal(&c->controlGoal);
