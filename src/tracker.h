@@ -142,7 +142,7 @@ class ClosedLoop_Tracker:public Tracker{
     * @param observed_disturbance disturbance Di for task t
     * @param objects objects in the world (stored in worldbuilder)
     */
-    TrackingResult get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);    
+    TrackingResult get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)override;    
     
     TrackingResult track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
 

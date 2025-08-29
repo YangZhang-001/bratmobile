@@ -152,9 +152,10 @@ TEST_P(TestEnvironment, Execution){
         }
         bf.pose=newPose;
         steps++;
+        if (steps>50)break;
     }while (!configurator.getTask().is_over());
     EXPECT_GT(steps, 1); //should take more than one step to complete task
-
+    EXPECT_TRUE(configurator.getTask().is_over());
 }
 
 
