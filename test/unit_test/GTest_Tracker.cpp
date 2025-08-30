@@ -33,7 +33,7 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
         adjust_goal_expectation();
         estimate_current_vertex();
         printf("current v=%i\n", currentVertex);
-        //tracker->on_new_reading(controlGoal, currentTask);
+       // tracker->on_new_reading(controlGoal, currentTask);
         ci->setReady(true);
     }
     friend class TestEnvironment;
@@ -48,7 +48,7 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
         task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
         //transitionSystem[movingEdge].step=currentTask.getMotorStep();
         std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
-        tracker->on_new_task(controlGoal);
+        tracker->on_new_task(currentTask);
         tracker->on_new_reading(controlGoal, currentTask);
         if (control){
             control->reset();

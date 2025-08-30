@@ -150,12 +150,23 @@ void ClosedLoop_Tracker::correctAngle(BodyFeatures & found, const BodyFeatures &
 
 }
 
-void ClosedLoop_Tracker::on_new_task(const Task & task){
+void ClosedLoop_Tracker::on_new_task(const Task &task, const Task & goal){
     tracked_disturbance=task.get_disturbance();
     deltaTransform=b2Transform_zero;
+    makeAttentionWindow(goal, task);
 }
 
-void ClosedLoop_Tracker::on_new_reading(const Task & goal, const Task & currentTask){
+//void ClosedLoop_Tracker::on_new_reading(const Task & goal, const Task & currentTask){}
+
+float ClosedLoop_Tracker::window_area(){
+    b2AABB aabb;
+    attention_window.ComputeAABB(&aabb, b2Transform_zero, 0);
+    float base= fabs(aabb.upperBound.x-aabb.lowerBound.x);
+    float height =fabs(aabb.upperBound.y-aabb.lowerBound.y);
+    return base*height;
+}
+
+void ClosedLoop_Tracker::makeAttentionWindow(const Task &goal, const Task & currentTask){
     //printf("new reading!\n");
     float area=0;
     // if(goal){
@@ -175,13 +186,5 @@ void ClosedLoop_Tracker::on_new_reading(const Task & goal, const Task & currentT
     catch (float the_area){
         std::cerr<< "no attention! area: "<<the_area<<std::endl;
     }
-}
 
-float ClosedLoop_Tracker::window_area(){
-    b2AABB aabb;
-    attention_window.ComputeAABB(&aabb, b2Transform_zero, 0);
-    float base= fabs(aabb.upperBound.x-aabb.lowerBound.x);
-    float height =fabs(aabb.upperBound.y-aabb.lowerBound.y);
-    return base*height;
 }
-
