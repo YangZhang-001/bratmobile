@@ -33,12 +33,12 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
         adjust_goal_expectation();
         estimate_current_vertex();
         printf("current v=%i\n", currentVertex);
-        tracker->on_new_reading(controlGoal, currentTask);
+        //tracker->on_new_reading(controlGoal, currentTask);
         ci->setReady(true);
     }
     friend class TestEnvironment;
 
-    void TestInputConfigurator::change_task()override{
+    void change_task()override{
         if (!currentTask.is_over()){
             return;
         }
@@ -48,10 +48,11 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
         task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
         //transitionSystem[movingEdge].step=currentTask.getMotorStep();
         std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
-        tracker->on_new_task(goal, currentTask);
+        tracker->on_new_task(controlGoal);
+        tracker->on_new_reading(controlGoal, currentTask);
         if (control){
             control->reset();
-            control->getData(currentTask.action);
+            control->getData(currentTask.getAction());
         }
         else{
             std::cerr<<("no motor interface found");
@@ -75,12 +76,12 @@ class TestTracker: public ClosedLoop_Tracker{
         return &tracked_disturbance;
     }
 
-    void on_new_task(const Task & goal, const Task &currentTask){
-        ClosedLoop_Tracker::on_new_task(currentTask);
-        ClosedLoop_Tracker::on_new_reading(goal, currentTask);
-    }
-    void on_new_reading(const Task & goal, const Task &currentTask)override{
-    }
+    // void on_new_task(const Task & goal, const Task &currentTask){
+    //     ClosedLoop_Tracker::on_new_task(currentTask);
+    //     ClosedLoop_Tracker::on_new_reading(goal, currentTask);
+    // }
+    // void on_new_reading(const Task & goal, const Task &currentTask)override{
+    // }
 
 
 };
