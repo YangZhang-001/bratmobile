@@ -38,6 +38,26 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
     }
     friend class TestEnvironment;
 
+    void TestInputConfigurator::change_task()override{
+        if (!currentTask.is_over()){
+            return;
+        }
+        if (task_controller==NULL){
+            throw std::invalid_argument("no controller, please add!");
+        }
+        task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
+        //transitionSystem[movingEdge].step=currentTask.getMotorStep();
+        std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
+        tracker->on_new_task(goal, currentTask);
+        if (control){
+            control->reset();
+            control->getData(currentTask.action);
+        }
+        else{
+            std::cerr<<("no motor interface found");
+        }
+        return;
+    }
 };
 
 class TestTracker: public ClosedLoop_Tracker{
@@ -55,6 +75,10 @@ class TestTracker: public ClosedLoop_Tracker{
         return &tracked_disturbance;
     }
 
+    void on_new_task(const Task & goal, const Task &currentTask){
+        ClosedLoop_Tracker::on_new_task(currentTask);
+        ClosedLoop_Tracker::on_new_reading(goal, currentTask);
+    }
     void on_new_reading(const Task & goal, const Task &currentTask)override{
     }
 

@@ -139,7 +139,7 @@ static void run(Configurator *);
 /**
  * @brief changes tasks executing on the robot
  */
-void change_task();
+virtual void change_task();
 
 /**
  * @brieF updates the cognitive map and goal by applying a 2D transform, and sets current task Di to the observed disturbance in the tracking result
