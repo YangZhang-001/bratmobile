@@ -72,6 +72,8 @@ char* debug::print_pose(const b2Transform& p, char* msg){
 	char str[256];
 	sprintf(str,"x=%f, y=%f, theta=%f", p.p.x, p.p.y, p.q.GetAngle());
 	printf("%s\n", str);
+	return str;
+	
 }
 
 void debug::print_matrix(const cv::Mat & m){
