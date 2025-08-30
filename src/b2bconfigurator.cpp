@@ -337,18 +337,20 @@ void B2BConfigurator::addOptionsInHindsight(vertexDescriptor v, vertexDescriptor
 }
 
 bool B2BConfigurator::ClearVoyance::add(vertexDescriptor v, const Disturbance &d){
+	bool result=false;
 	if (d.getAffIndex()==NONE){
-		return false;
+		return result;
 	}
 	auto vIt=std::find_if(lookaheads.begin(), lookaheads.end(), [&](const DisturbanceLookahead & dl){return dl.source==v;});
 	if (vIt==lookaheads.end()){
 		lookaheads.emplace_back(ClearVoyance::DisturbanceLookahead(v, d));
-		return true;
+		result=true;
 	}
 	else if (std::find_if(vIt->disturbances.begin(), vIt->disturbances.end(), [&](const Disturbance & dd){return dd==d;})!=vIt->disturbances.end()){
 		vIt->disturbances.push_back(d); //update disturbance
-		return true;
+		result=true;
 	}
+	return result;
 
 }
 
