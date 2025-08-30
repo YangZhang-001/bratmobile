@@ -30,7 +30,7 @@ bool overlaps(b2Body * robot, const Disturbance *const);
  * @param robot_pose the 2d transform representing the pose of the body that the box belongs to
  * @return true if the box overlaps with the disturbance OR if the box has zero radius, OR if the disturbance is null OR if the disturbance is not an obstacle
  */
-bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& robot_pose=b2Transform_zero);
+bool overlaps(const b2PolygonShape& box, const Disturbance * const d, const b2Transform& robot_pose=b2Transform_zero);
 
 /**
  * @brief deletes all bodies in the box2d @param world

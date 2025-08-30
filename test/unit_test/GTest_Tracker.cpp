@@ -49,17 +49,23 @@ class TestTracker: public ClosedLoop_Tracker{
     public:
     b2PolygonShape getAttentionWindow(){return attention_window;}
 
-    b2AABB getAttentionAABB(){
-        b2AABB aabb;
-        attention_window.ComputeAABB(&aabb, b2Transform_zero, 0);
-        return aabb;
-    }
+    b2AABB getAttentionAABB();
 
-     Disturbance * get_tracked_disturbance(){
+    Disturbance * get_tracked_disturbance(){
         return &tracked_disturbance;
     }
 
+    void on_new_reading(const Task & goal, const Task &currentTask)override{
+    }
+
+
 };
+
+b2AABB TestTracker::getAttentionAABB(){
+    b2AABB aabb;
+    attention_window.ComputeAABB(&aabb, b2Transform_zero, 0);
+    return aabb;
+}
 
 class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceIndex, Direction>>{
     public:
@@ -162,7 +168,7 @@ TEST_P(TestEnvironment, Execution){
         configurator.run();
         b2Transform newPose=InvMul(configurator.getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), bf.pose);
         lidarIn.data2fp={Pointf(newPose.p.x, newPose.p.y)};
-        float lengthDifference =newPose.p.Length()-bf.pose.p.Length();
+        //float lengthDifference =newPose.p.Length()-bf.pose.p.Length();
         // if (std::get<0>(GetParam())==AVOID){
         //     EXPECT_GE(lengthDifference,0);
         // }

@@ -1,6 +1,6 @@
 #include "task.h"
 
-b2Fixture * GetSensor(b2Body * body){
+b2Fixture * GetSensor( b2Body * body){
 	for (b2Fixture * f=body->GetFixtureList(); f;f=f->GetNext()){
 		if (f->IsSensor()){
 			return f;
@@ -33,7 +33,7 @@ bool overlaps(b2Body * robot, const Disturbance *const disturbance){
 	return b2TestOverlap(sensor->GetShape(), 0, &d_shape, 0,robot_pose, d_pose);
 }
 
-bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& robot_pose){
+bool overlaps(const b2PolygonShape& box, const Disturbance * const d, const b2Transform& robot_pose){
 	bool result=true;
 	if (!box.m_radius || NULL==d ){
 		return result;
@@ -43,8 +43,6 @@ bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& rob
 	}
 	b2PolygonShape d_shape;
 	d_shape.SetAsBox(d->bf.halfWidth, d->bf.halfLength, b2Vec2(0,0), 0);
-	b2AABB aabb;
-	d_shape.ComputeAABB(&aabb, d->bf.pose, 0);
 	return b2TestOverlap(&box, 0, &d_shape, 0,robot_pose, d->bf.pose);
 
 }
