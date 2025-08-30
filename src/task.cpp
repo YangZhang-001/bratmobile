@@ -424,3 +424,7 @@ bool Task::isTurnFinished(const b2Transform & robotTransform, Direction dir){
 	bool finishedRight=(round(robotAngle*100)/100)<=(round(angleR*100)/100);//+(action.getOmega()*HZ)/2;
 	return finishedLeft || finishedRight;
 }
+
+bool Task::isMoving(){
+	return action.getLWheelSpeed()!=0 || action.getRWheelSpeed()!=0;
+}

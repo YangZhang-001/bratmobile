@@ -228,6 +228,23 @@ virtual Robot makeRobot(b2World& world, const b2Transform & start);
 //Disturbance * getGoalDisturbance(){return &controlGoal.disturbance;}
 
 bool areInterfacesSetUp(Configurator * c=NULL);
+
+/**
+ * @brief Assigns body features to the disturbance of a task (NOTE: affordance and validity of the disturbance will remain the same)
+ * 
+ * @param t the task
+ * @param bf body features
+ */
+void assignBodyFeatures(Task & t, const BodyFeatures & bf);
+
+/**
+ * @brief Assigns dimensions to the disturbance of a task (NOTE: pose, affordance and validity of the disturbance will remain the same)
+ * 
+ * @param t the task
+ * @param halfLength 
+ * @param halfWidth 
+ */
+void assignDimensions(Task & t, float halfLength, float halfWidth);
 };
 
 /**

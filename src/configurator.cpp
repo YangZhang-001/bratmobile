@@ -336,6 +336,16 @@ bool Configurator::areInterfacesSetUp(Configurator * c){
 
 }
 
+void Configurator::assignBodyFeatures(Task & t, const BodyFeatures & bf){
+	t.disturbance.bf=bf;
+}
+
+void Configurator::assignDimensions(Task & t, float halfLength, float halfWidth){
+	BodyFeatures bf=t.get_disturbance().bf;
+	bf.halfLength=halfLength;
+	bf.halfWidth=halfWidth;
+	assignBodyFeatures(t, bf);
+}
 
 
 void ReactiveConfigurator::explore_plan(b2World &world){

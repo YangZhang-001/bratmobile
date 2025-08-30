@@ -3,6 +3,7 @@
 #include "../realWorldTestHeaders.h"
 
 class TestInputConfigurator: public virtual UserInputConfigurator{
+    BodyFeatures initial_bf;
     public:
     friend class TestEnvironment;
     TestInputConfigurator(DirectionSetter *ds, AffordanceSetter *as): UserInputConfigurator(ds, as){}
@@ -27,13 +28,13 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
                 goal_changer->change_goal(&controlGoal);
             }					
         }
-        change_task();		
+        change_task();	
+        Configurator::assignDimensions(currentTask, initial_bf.halfLength, initial_bf.halfWidth);
         adjust_goal_expectation();
         estimate_current_vertex();
         printf("current v=%i\n", currentVertex);
         tracker->on_new_reading(controlGoal, currentTask);
         ci->setReady(true);
-
     }
 };
 
@@ -51,6 +52,7 @@ class TestTracker: public ClosedLoop_Tracker{
         attention_window.ComputeAABB(&aabb, b2Transform_zero, 0);
         return aabb;
     }
+
 };
 
 class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceIndex, Direction>>{
@@ -132,10 +134,10 @@ TEST_P(TestEnvironment, AttentionWindow){
 
 
 TEST_P(TestEnvironment, Execution){
-    TestTracker tracker;
     OneTaskController controller;
     TestInputConfigurator configurator(&ds, &as);
     BodyFeatures bf =makeBF(configurator);
+    TestTracker tracker(bf);
     configurator.register_tracker(&tracker);
     configurator.register_controller(&controller);
     Disturbance goal(PURSUE, b2Vec2(1,0));

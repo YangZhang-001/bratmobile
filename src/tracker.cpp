@@ -17,10 +17,12 @@ bool ClosedLoop_Tracker::hasTaskEnded(Task & t){
     return t.getMotorStep()==0 || ended;
 }
 
-TrackingResult DeadReckoner::track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
+TrackingResult DeadReckoner::track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result=get_transform(t, pts, objects);
     //math::MulT(-deltaTransform, *t.get_disturbance_ptr());
-    t.setMotorStep(t.getMotorStep()-1); //this should go in the controller
+    
+    //t.setMotorStep(t.getMotorStep()-1); //this should go in the controller
+    
     // if (t.getMotorStep()<1){
     //     t.set_change(true);
     // }
@@ -28,7 +30,7 @@ TrackingResult DeadReckoner::track(Task &t, const CoordinateContainer &pts, cons
     return result;
 }
 
-TrackingResult ClosedLoop_Tracker::track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
+TrackingResult ClosedLoop_Tracker::track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result=get_transform(t, pts, objects);
 	// bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
 	// if(t.getMotorStep()==0 || ended){
@@ -60,13 +62,13 @@ TrackingResult ClosedLoop_Tracker::get_transform(const Task & t, const Coordinat
         if (t.get_disturbance().getAffIndex()==NONE){
             std::cerr<<"no disturbance!"<<std::endl;    
         }
+        if (t.get_disturbance().bf.is_point()){
+            printf("petite disturbance!");    
+        }
         if ((t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
             std::cerr<<("not moving!")<<std::endl;    
         }
-        return result;
-    }
-    if (t.get_disturbance().bf.is_point()&& t.get_disturbance().getAffIndex()==PURSUE){
-        std::cerr<<"disturbance is imagined"<<std::endl;  
+        //return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
         return result;
     }
     // BodyFeatures predicted_bf=t.get_disturbance().bf;

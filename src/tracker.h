@@ -49,7 +49,7 @@ class Tracker{
     * @param objects world objects as extracted in worldbuilder
      * @return b2Transform that the robot has moved by, can use for updating cognitive map and control
      */
-    virtual TrackingResult track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)=0;
+    virtual TrackingResult track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)=0;
     //void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);                
 
     /**
@@ -100,7 +100,7 @@ class DeadReckoner: public Tracker{
     public:
     DeadReckoner(){}   
     
-    TrackingResult track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
+    TrackingResult track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
 
     void on_new_task(const Task &task)override{} //does nothing
 
@@ -144,20 +144,20 @@ class ClosedLoop_Tracker:public Tracker{
     */
     TrackingResult get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)override;    
     
-    TrackingResult track(Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
+    TrackingResult track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
 
     /**
     * @brief returns an upright rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
     */
     cv::Rect2f real_world_focus(const Task * );
 
-    Disturbance * get_tracked_disturbance(){
-        return &tracked_disturbance;
-    }
+    // Disturbance * get_tracked_disturbance(){
+    //     return &tracked_disturbance;
+    // }
 
-    void set_tracked_disturbance(const Disturbance & d){
-        tracked_disturbance=d;
-    }
+    // void set_tracked_disturbance(const Disturbance & d){
+    //     tracked_disturbance=d;
+    // }
 
     /**
     * @brief Get disturbance to be tracked among the worldbuilder objects
