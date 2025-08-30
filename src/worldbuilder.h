@@ -99,6 +99,7 @@ class WorldBuilder{
 
     int add_body_count(){
         bodies++;
+        return bodies;
     }
 
     void resetBodies(){
