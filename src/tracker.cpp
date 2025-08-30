@@ -58,7 +58,7 @@ cv::Rect2f ClosedLoop_Tracker::real_world_focus(const Task * t){
 
 TrackingResult ClosedLoop_Tracker::get_transform(const Task & t, const CoordinateContainer & pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result=Tracker::get_transform(t, pts, objects);
-    if (t.get_disturbance().getAffIndex()==NONE || (t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
+    if (t.get_disturbance().getAffIndex()==NONE || t.get_disturbance().bf.is_point()|| (t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
         if (t.get_disturbance().getAffIndex()==NONE){
             std::cerr<<"no disturbance!"<<std::endl;    
         }

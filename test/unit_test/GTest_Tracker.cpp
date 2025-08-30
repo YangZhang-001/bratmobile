@@ -1,11 +1,11 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
 #include "../realWorldTestHeaders.h"
+class TestEnvironment;
 
 class TestInputConfigurator: public virtual UserInputConfigurator{
     BodyFeatures initial_bf;
     public:
-    friend class TestEnvironment;
     TestInputConfigurator(DirectionSetter *ds, AffordanceSetter *as): UserInputConfigurator(ds, as){}
     CoordinateContainer & getData2fp(){return data2fp;};
     const Disturbance & getDi(){return currentTask.get_disturbance();}
@@ -29,13 +29,15 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
             }					
         }
         change_task();	
-        Configurator::assignDimensions(currentTask, initial_bf.halfLength, initial_bf.halfWidth);
+        //Configurator::assignDimensions(currentTask, initial_bf.halfLength, initial_bf.halfWidth);
         adjust_goal_expectation();
         estimate_current_vertex();
         printf("current v=%i\n", currentVertex);
         tracker->on_new_reading(controlGoal, currentTask);
         ci->setReady(true);
     }
+    friend class TestEnvironment;
+
 };
 
 class TestTracker: public ClosedLoop_Tracker{
@@ -51,6 +53,10 @@ class TestTracker: public ClosedLoop_Tracker{
         b2AABB aabb;
         attention_window.ComputeAABB(&aabb, b2Transform_zero, 0);
         return aabb;
+    }
+
+     Disturbance * get_tracked_disturbance(){
+        return &tracked_disturbance;
     }
 
 };
@@ -96,6 +102,10 @@ class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceInde
         configurator.getData2fp().emplace(Pointf(bf.pose.p.x, bf.pose.p.y));
         return bf;
     }
+
+    void setConfiguratorBF(TestInputConfigurator &configurator, BodyFeatures bf){
+        configurator.initial_bf=bf;
+    }
 };
 
 // TEST_F(TestTracker, Track){
@@ -137,7 +147,8 @@ TEST_P(TestEnvironment, Execution){
     OneTaskController controller;
     TestInputConfigurator configurator(&ds, &as);
     BodyFeatures bf =makeBF(configurator);
-    TestTracker tracker(bf);
+    TestTracker tracker;
+    setConfiguratorBF(configurator, bf);
     configurator.register_tracker(&tracker);
     configurator.register_controller(&controller);
     Disturbance goal(PURSUE, b2Vec2(1,0));

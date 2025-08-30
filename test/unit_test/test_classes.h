@@ -551,6 +551,11 @@ class ReactToNoiseTest: public HighLevelTestBase, public ::testing::WithParamInt
 class CLTrackerTest:public ClosedLoop_Tracker{
     public:
     void setDeltaTransform(b2Transform t){deltaTransform=t;}
+    
+    void set_tracked_disturbance(const Disturbance & d){
+        tracked_disturbance=d;
+    }
+
 };
 
 /**

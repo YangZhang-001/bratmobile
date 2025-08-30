@@ -151,14 +151,6 @@ class ClosedLoop_Tracker:public Tracker{
     */
     cv::Rect2f real_world_focus(const Task * );
 
-    // Disturbance * get_tracked_disturbance(){
-    //     return &tracked_disturbance;
-    // }
-
-    // void set_tracked_disturbance(const Disturbance & d){
-    //     tracked_disturbance=d;
-    // }
-
     /**
     * @brief Get disturbance to be tracked among the worldbuilder objects
     * 
