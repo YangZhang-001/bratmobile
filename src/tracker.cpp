@@ -167,7 +167,6 @@ float ClosedLoop_Tracker::window_area(){
 }
 
 void ClosedLoop_Tracker::makeAttentionWindow(const Task &goal, const Task & currentTask){
-    //printf("new reading!\n");
     float area=0;
     // if(goal){
     //     std::cout<<"no goal!"<<std::endl;

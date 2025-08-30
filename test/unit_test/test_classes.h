@@ -277,7 +277,8 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
     static Disturbance generateGoal();
 
         /**
-     * @brief Creates a vertex whose state starts and end at the origin. Not visited by default
+     * @brief Creates a vertex whose state starts and end at the origin. Not visited by default.
+     * DOES NOT set pose
      * 
      * @param v0 
      * @return edgeDescriptor 

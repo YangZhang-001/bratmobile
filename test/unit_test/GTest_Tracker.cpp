@@ -29,37 +29,38 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
             }					
         }
         change_task();	
-        //Configurator::assignDimensions(currentTask, initial_bf.halfLength, initial_bf.halfWidth);
         adjust_goal_expectation();
         estimate_current_vertex();
         printf("current v=%i\n", currentVertex);
-       // tracker->on_new_reading(controlGoal, currentTask);
         ci->setReady(true);
     }
     friend class TestEnvironment;
 
-    void change_task()override{
-        if (!currentTask.is_over()){
-            return;
-        }
-        if (task_controller==NULL){
-            throw std::invalid_argument("no controller, please add!");
-        }
-        task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
-        //transitionSystem[movingEdge].step=currentTask.getMotorStep();
-        std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
-        tracker->on_new_task(currentTask);
-        tracker->on_new_reading(controlGoal, currentTask);
-        if (control){
-            control->reset();
-            control->getData(currentTask.getAction());
-        }
-        else{
-            std::cerr<<("no motor interface found");
-        }
-        return;
-    }
+    // void change_task()override{
+    //     if (!currentTask.is_over()){
+    //         return;
+    //     }
+    //     if (task_controller==NULL){
+    //         throw std::invalid_argument("no controller, please add!");
+    //     }
+    //     task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
+    //     //transitionSystem[movingEdge].step=currentTask.getMotorStep();
+    //     std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
+    //     tracker->on_new_task(currentTask, controlGoal);
+    //     //tracker->on_new_reading(controlGoal, currentTask);
+    //     if (control){
+    //         control->reset();
+    //         control->getData(currentTask.getAction());
+    //     }
+    //     else{
+    //         std::cerr<<("no motor interface found");
+    //     }
+    //     return;
+    // }
+
 };
+
+class TestInputConfiguratorFixture: public TestInputConfigurator{};
 
 class TestTracker: public ClosedLoop_Tracker{
     
@@ -74,6 +75,10 @@ class TestTracker: public ClosedLoop_Tracker{
 
     Disturbance * get_tracked_disturbance(){
         return &tracked_disturbance;
+    }
+
+    void makeAttentionWindow(const Task &goal, const Task & currentTask){
+        ClosedLoop_Tracker::makeAttentionWindow(goal, currentTask);
     }
 
     // void on_new_task(const Task & goal, const Task &currentTask){
@@ -193,13 +198,6 @@ TEST_P(TestEnvironment, Execution){
         configurator.run();
         b2Transform newPose=InvMul(configurator.getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), bf.pose);
         lidarIn.data2fp={Pointf(newPose.p.x, newPose.p.y)};
-        //float lengthDifference =newPose.p.Length()-bf.pose.p.Length();
-        // if (std::get<0>(GetParam())==AVOID){
-        //     EXPECT_GE(lengthDifference,0);
-        // }
-        // else{
-        //     EXPECT_LE(lengthDifference,0);
-        // }
         bf.pose=newPose;
         steps++;
         if (steps>50)break;
@@ -208,6 +206,52 @@ TEST_P(TestEnvironment, Execution){
     EXPECT_TRUE(configurator.getTask().is_over());
 }
 
+// /**
+//  * @brief Tests how the system adapts to noise in task execution (e.g. if the turn is not perfectly 90 degrees)
+//  * 
+//  */
+// TEST_F(TestInputConfiguratorFixture, NoiseTest){
+//     TestTracker tracker;
+//     TestInputConfigurator::register_tracker(&tracker);
+//     TestInputConfigurator::init(DebugConfigurator::generateGoalTask());
+//     data2fp= (CoordinateContainer{Pointf(0.4,0.01), Pointf(0.4, 0), Pointf(0.4,-0.01)});
+//     worldBuilder.getFeatures(data2fp, b2Transform_zero);
+//     Disturbance obstacle(worldBuilder.get_world_objects()[0]);
+//     obstacle.validate();
+//     auto e1=make_successful(MOVING_VERTEX, LEFT);
+//     auto e2=make_successful(e1.m_target, DEFAULT);
+//     vertex_set_Di(e1.m_target, obstacle);
+//     vertex_set_Di(e2.m_target, obstacle);
+//     get_ts()[e1.m_target].endPose.q.Set(M_PI_2);
+//     get_ts()[e2.m_target].start= vertex_get_endPose(e1.m_target);
+//     get_ts()[e2.m_target].endPose=b2Mul(b2Transform(b2Vec2(0.4,0), b2Rot(0)), get_ts()[e2.m_target].start);
+//     b2Transform deltaTransform=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*7));
+//     obstacle.bf.pose=b2Mul(deltaTransform, obstacle.bf.pose);
+//     set_plan({e1.m_target, e2.m_target});
+//     do {
+//         TrackingResult trackingResult(currentTask.get_disturbance());
+//         trackingResult= tracker.track((currentTask),ci->data2fp, worldBuilder.get_world_objects());
+//         update_graph(transitionSystem, trackingResult);
+//         if (goal_changer!=NULL){
+//             if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
+//                 goal_changer->change_goal(&controlGoal);
+//             }					
+//         }
+//         change_task();	
+//         adjust_goal_expectation();
+//         estimate_current_vertex();
+//         printf("current v=%i\n", currentVertex);
+//         ci->setReady(true);
+
+//         // configurator.run();
+//         // b2Transform newPose=InvMul(configurator.getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), bf.pose);
+//         // lidarIn.data2fp={Pointf(newPose.p.x, newPose.p.y)};
+//         // bf.pose=newPose;
+//         steps++;
+//         if (steps>50)break;
+//     }while (!configurator.getTask().is_over());
+
+// }
 
 INSTANTIATE_TEST_CASE_P(Inputs, TestEnvironment, ::testing::Combine(
     ::testing::Values(PURSUE, AVOID),
