@@ -38,11 +38,11 @@ class TestInputConfigurator: public UserInputConfigurator{
 
     void MulPoints(b2Transform t){
         CoordinateContainer result;
-        for (auto it=data2fp.begin(); it!=data2fp.end(); it++){
-            b2Vec2 v=b2Mul(t, b2Vec2(it->x, it->y));
-            result.emplace(Pointf(v.x, v.y));
+        float angle=t.q.GetAngle();
+        cv::Mat transform[3]=(cv::Mat_<float>(3,3)<<std::cos(angle), -std::sin(angle), 0,
+                                                    std::sin(angle, std::cos(angle, 0,
+                                                    0              , 0            , 1)));
 
-        }
         data2fp=result;
     }
     friend class TestEnvironment;
@@ -50,7 +50,8 @@ class TestInputConfigurator: public UserInputConfigurator{
 
 };
 
-class TestInputConfiguratorFixture: public TestInputConfigurator, public ::testing::Test{
+class TestInputConfiguratorFixture:public virtual TestInputConfigurator, public ::testing::Test{
+    public:
     TestInputConfiguratorFixture(){}
 };
 
@@ -188,10 +189,16 @@ TEST_P(TestEnvironment, Execution){
  */
 TEST_F(TestInputConfiguratorFixture, NoiseTest){
     TestTracker tracker;
+    Wise_Controller wc;
+    Motor_Out motor;
+    control=&motor;
     register_tracker(&tracker);
+    register_controller(&wc);
     init(DebugConfigurator::generateGoalTask());
     data2fp= (CoordinateContainer{Pointf(0.4,0.01), Pointf(0.4, 0), Pointf(0.4,-0.01)});
-    worldBuilder.getFeatures(data2fp, b2Transform_zero);
+    EXPECT_GT(data2fp.size(), 1); //should take more than one step to complete task
+    worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
+    EXPECT_GT(world_objects().size(),0);
     Disturbance obstacle(worldBuilder.get_world_objects()[0]);
     obstacle.validate();
     auto e1=make_successful(MOVING_VERTEX, LEFT);
@@ -205,20 +212,24 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     trackingResult.displacement=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*7));
     //obstacle.bf.pose=b2Mul(trackingResult.displacement, obstacle.bf.pose);
     set_plan({e1.m_target, e2.m_target});
+    int steps=0;
     do {
-        MulPoints(trackingResult.displacement);
+        //MulPoints(trackingResult.displacement);
+        cv::m
+        worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
         trackingResult= tracker.track((currentTask),data2fp, worldBuilder.get_world_objects());
         update_graph(transitionSystem, trackingResult);
         change_task();	
         adjust_goal_expectation();
         estimate_current_vertex();
-        ci->setReady(true);
         steps++;
         if (steps>50)break;
-    }while (!configurator.getTask().is_over());
+    }while (!currentTask.is_over());
     EXPECT_LT(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2);
     EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
     EXPECT_NEAR(currentTask.from_Di().q.GetAngle(), -M_PI_2, 0.01);
+    EXPECT_GT(steps, 1); //should take more than one step to complete task
+
 
 }
 

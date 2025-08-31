@@ -44,11 +44,24 @@ class WorldBuilder{
      */
     std::vector <BodyFeatures> processData(const CoordinateContainer&, const b2Transform&);
 
-    std::vector <BodyFeatures> cluster_data(const CoordinateContainer &, const b2Transform&, CLUSTERING clustering=PARTITION);
+    /**
+     * @brief Cluster point cloud data using a custom algorithm
+     * @param pts point cloud
+     * @param start start robot transform
+     * @param clustering the clustering algorithm
+     * return a vector of bodyfeatures
+     */
+    std::vector <BodyFeatures> cluster_data(const CoordinateContainer &pts, const b2Transform& start, CLUSTERING clustering=PARTITION);
 
     bool checkDisturbance(Pointf, bool&,Task * curr =NULL, float range=0.025);
 
-    std::vector <BodyFeatures> getFeatures(const CoordinateContainer &, b2Transform, CLUSTERING clustering=PARTITION);
+    /**
+     * @brief clusters point clouds into objects and returns a vector of body features
+     * @param current point cloud
+     * @param start robot position
+     * @param partition algorithm used for partition
+     */
+    std::vector <BodyFeatures> getFeatures(const CoordinateContainer &current, b2Transform start, CLUSTERING clustering=PARTITION);
 
     /**
      * @brief Creates bodies (objects) in the box2d world

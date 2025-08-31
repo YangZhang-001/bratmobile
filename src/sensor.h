@@ -169,6 +169,7 @@ std::set<T> vec2set(std::vector<T> vec){
 }
 
 /**
+ * @file
  * @brief Given points, makes rotated bounding box
  * 
  * @param nb points

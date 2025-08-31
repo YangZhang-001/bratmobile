@@ -1,6 +1,6 @@
 #ifndef REAL_TEST_H
 #define REAL_TEST_H
-#include "attentive.h"
+#include "unit_test/test_classes.h"
 
 
 class AffordanceSetter{
@@ -70,7 +70,7 @@ class DirectionSetter{
 
 
 
-class UserInputConfigurator: public virtual Configurator{
+class UserInputConfigurator: public virtual DebugConfigurator{
     protected:
     DirectionSetter *directionSetter=NULL;
     AffordanceSetter *affordanceSetter=NULL;
@@ -137,7 +137,7 @@ class UserInputConfigurator: public virtual Configurator{
     public:
 
     UserInputConfigurator(){}
-    UserInputConfigurator(DirectionSetter * ds, AffordanceSetter * as): Configurator(){
+    UserInputConfigurator(DirectionSetter * ds, AffordanceSetter * as): DebugConfigurator(){
         directionSetter=ds;
         affordanceSetter=as;
     }
