@@ -37,13 +37,21 @@ class TestInputConfigurator: public UserInputConfigurator{
     }
 
     void MulPoints(b2Transform t){
-        CoordinateContainer result;
+        std::Mat data;
+        for (auto p:data2fp){
+            data.push_back(cv::Point2f(p.x, p.y));
+        }
+        std::Mat result=cv::Mat::zeros(data.rows, data.cols, data.type());
+        data=set2vec2f(data2fp);
         float angle=t.q.GetAngle();
-        cv::Mat transform[3]=(cv::Mat_<float>(3,3)<<std::cos(angle), -std::sin(angle), 0,
-                                                    std::sin(angle, std::cos(angle, 0,
-                                                    0              , 0            , 1)));
-
-        data2fp=result;
+        cv::Mat transform=(cv::Mat_<float>(3,3)<<std::cos(angle), -std::sin(angle), 0,
+                                                    std::sin(angle), std::cos(angle), 0,
+                                                    0              , 0            , 1);
+        cv::warpAffine(data, result, transform, data.size());
+        data2fp.clear();
+        for (auto &p:result){
+            data2fp.emplace(Pointf(p.x, p.y));
+        }
     }
     friend class TestEnvironment;
 
@@ -215,7 +223,6 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     int steps=0;
     do {
         //MulPoints(trackingResult.displacement);
-        cv::m
         worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
         trackingResult= tracker.track((currentTask),data2fp, worldBuilder.get_world_objects());
         update_graph(transitionSystem, trackingResult);
