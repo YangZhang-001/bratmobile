@@ -3,9 +3,10 @@
 #include "../realWorldTestHeaders.h"
 class TestEnvironment;
 
-class TestInputConfigurator: public virtual UserInputConfigurator{
+class TestInputConfigurator: public UserInputConfigurator{
     BodyFeatures initial_bf;
     public:
+    TestInputConfigurator(){}
     TestInputConfigurator(DirectionSetter *ds, AffordanceSetter *as): UserInputConfigurator(ds, as){}
     CoordinateContainer & getData2fp(){return data2fp;};
     const Disturbance & getDi(){return currentTask.get_disturbance();}
@@ -34,39 +35,26 @@ class TestInputConfigurator: public virtual UserInputConfigurator{
         printf("current v=%i\n", currentVertex);
         ci->setReady(true);
     }
+
+    void MulPoints(b2Transform t){
+        CoordinateContainer result;
+        for (auto it=data2fp.begin(); it!=data2fp.end(); it++){
+            b2Vec2 v=b2Mul(t, b2Vec2(it->x, it->y));
+            result.emplace(Pointf(v.x, v.y));
+
+        }
+        data2fp=result;
+    }
     friend class TestEnvironment;
 
-    // void change_task()override{
-    //     if (!currentTask.is_over()){
-    //         return;
-    //     }
-    //     if (task_controller==NULL){
-    //         throw std::invalid_argument("no controller, please add!");
-    //     }
-    //     task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
-    //     //transitionSystem[movingEdge].step=currentTask.getMotorStep();
-    //     std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
-    //     tracker->on_new_task(currentTask, controlGoal);
-    //     //tracker->on_new_reading(controlGoal, currentTask);
-    //     if (control){
-    //         control->reset();
-    //         control->getData(currentTask.getAction());
-    //     }
-    //     else{
-    //         std::cerr<<("no motor interface found");
-    //     }
-    //     return;
-    // }
 
 };
 
-class TestInputConfiguratorFixture: public TestInputConfigurator{};
+class TestInputConfiguratorFixture: public TestInputConfigurator, public ::testing::Test{
+    TestInputConfiguratorFixture(){}
+};
 
 class TestTracker: public ClosedLoop_Tracker{
-    
-    // void SetUp()override{}
-
-    // void TearDown()override{}
 
     public:
     b2PolygonShape getAttentionWindow(){return attention_window;}
@@ -81,12 +69,6 @@ class TestTracker: public ClosedLoop_Tracker{
         ClosedLoop_Tracker::makeAttentionWindow(goal, currentTask);
     }
 
-    // void on_new_task(const Task & goal, const Task &currentTask){
-    //     ClosedLoop_Tracker::on_new_task(currentTask);
-    //     ClosedLoop_Tracker::on_new_reading(goal, currentTask);
-    // }
-    // void on_new_reading(const Task & goal, const Task &currentTask)override{
-    // }
 
 
 };
@@ -144,12 +126,6 @@ class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceInde
     }
 };
 
-// TEST_F(TestTracker, Track){
-//     CoordinateContainer cc={Pointf(0.4, 0)};
-//     tracked_disturbance=Disturbance(AVOID, b2Vec2(0.4,0));
-//     Task task(tracked_disturbance, LEFT);
-
-// }
 
 TEST_P(TestEnvironment, AttentionWindow){
     TestTracker tracker;
@@ -206,52 +182,45 @@ TEST_P(TestEnvironment, Execution){
     EXPECT_TRUE(configurator.getTask().is_over());
 }
 
-// /**
-//  * @brief Tests how the system adapts to noise in task execution (e.g. if the turn is not perfectly 90 degrees)
-//  * 
-//  */
-// TEST_F(TestInputConfiguratorFixture, NoiseTest){
-//     TestTracker tracker;
-//     TestInputConfigurator::register_tracker(&tracker);
-//     TestInputConfigurator::init(DebugConfigurator::generateGoalTask());
-//     data2fp= (CoordinateContainer{Pointf(0.4,0.01), Pointf(0.4, 0), Pointf(0.4,-0.01)});
-//     worldBuilder.getFeatures(data2fp, b2Transform_zero);
-//     Disturbance obstacle(worldBuilder.get_world_objects()[0]);
-//     obstacle.validate();
-//     auto e1=make_successful(MOVING_VERTEX, LEFT);
-//     auto e2=make_successful(e1.m_target, DEFAULT);
-//     vertex_set_Di(e1.m_target, obstacle);
-//     vertex_set_Di(e2.m_target, obstacle);
-//     get_ts()[e1.m_target].endPose.q.Set(M_PI_2);
-//     get_ts()[e2.m_target].start= vertex_get_endPose(e1.m_target);
-//     get_ts()[e2.m_target].endPose=b2Mul(b2Transform(b2Vec2(0.4,0), b2Rot(0)), get_ts()[e2.m_target].start);
-//     b2Transform deltaTransform=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*7));
-//     obstacle.bf.pose=b2Mul(deltaTransform, obstacle.bf.pose);
-//     set_plan({e1.m_target, e2.m_target});
-//     do {
-//         TrackingResult trackingResult(currentTask.get_disturbance());
-//         trackingResult= tracker.track((currentTask),ci->data2fp, worldBuilder.get_world_objects());
-//         update_graph(transitionSystem, trackingResult);
-//         if (goal_changer!=NULL){
-//             if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
-//                 goal_changer->change_goal(&controlGoal);
-//             }					
-//         }
-//         change_task();	
-//         adjust_goal_expectation();
-//         estimate_current_vertex();
-//         printf("current v=%i\n", currentVertex);
-//         ci->setReady(true);
+/**
+ * @brief Tests how the system adapts to noise in task execution (e.g. if the turn is not perfectly 90 degrees)
+ * 
+ */
+TEST_F(TestInputConfiguratorFixture, NoiseTest){
+    TestTracker tracker;
+    register_tracker(&tracker);
+    init(DebugConfigurator::generateGoalTask());
+    data2fp= (CoordinateContainer{Pointf(0.4,0.01), Pointf(0.4, 0), Pointf(0.4,-0.01)});
+    worldBuilder.getFeatures(data2fp, b2Transform_zero);
+    Disturbance obstacle(worldBuilder.get_world_objects()[0]);
+    obstacle.validate();
+    auto e1=make_successful(MOVING_VERTEX, LEFT);
+    auto e2=make_successful(e1.m_target, DEFAULT);
+    transitionSystem[e1.m_target].Di=obstacle;
+    transitionSystem[e2.m_target].Di=obstacle;
+    transitionSystem[e1.m_target].endPose.q.Set(M_PI_2);
+    transitionSystem[e2.m_target].start= vertex_get_endPose(e1.m_target);
+    transitionSystem[e2.m_target].endPose=b2Mul(b2Transform(b2Vec2(0.4,0), b2Rot(0)), get_ts()[e2.m_target].start);
+    TrackingResult trackingResult(currentTask.get_disturbance());
+    trackingResult.displacement=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*7));
+    //obstacle.bf.pose=b2Mul(trackingResult.displacement, obstacle.bf.pose);
+    set_plan({e1.m_target, e2.m_target});
+    do {
+        MulPoints(trackingResult.displacement);
+        trackingResult= tracker.track((currentTask),data2fp, worldBuilder.get_world_objects());
+        update_graph(transitionSystem, trackingResult);
+        change_task();	
+        adjust_goal_expectation();
+        estimate_current_vertex();
+        ci->setReady(true);
+        steps++;
+        if (steps>50)break;
+    }while (!configurator.getTask().is_over());
+    EXPECT_LT(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2);
+    EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
+    EXPECT_NEAR(currentTask.from_Di().q.GetAngle(), -M_PI_2, 0.01);
 
-//         // configurator.run();
-//         // b2Transform newPose=InvMul(configurator.getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), bf.pose);
-//         // lidarIn.data2fp={Pointf(newPose.p.x, newPose.p.y)};
-//         // bf.pose=newPose;
-//         steps++;
-//         if (steps>50)break;
-//     }while (!configurator.getTask().is_over());
-
-// }
+}
 
 INSTANTIATE_TEST_CASE_P(Inputs, TestEnvironment, ::testing::Combine(
     ::testing::Values(PURSUE, AVOID),

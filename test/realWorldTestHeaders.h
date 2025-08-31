@@ -135,8 +135,8 @@ class UserInputConfigurator: public virtual Configurator{
 
 
     public:
-    UserInputConfigurator()=delete;
 
+    UserInputConfigurator(){}
     UserInputConfigurator(DirectionSetter * ds, AffordanceSetter * as): Configurator(){
         directionSetter=ds;
         affordanceSetter=as;
