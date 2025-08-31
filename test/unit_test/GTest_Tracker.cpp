@@ -215,10 +215,10 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     do {
         MulPoints(trackingResult.displacement);
         worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
-        if (iteration>1){
+        // if (iteration>1){
             trackingResult= tracker.track((currentTask),data2fp, worldBuilder.get_world_objects());
             update_graph(transitionSystem, trackingResult);
-        }
+//        }
         change_task();	
         adjust_goal_expectation();
         estimate_current_vertex();
