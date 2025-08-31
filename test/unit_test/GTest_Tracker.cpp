@@ -38,21 +38,12 @@ class TestInputConfigurator: public UserInputConfigurator{
     }
 
     void MulPoints(b2Transform t){
-        cv::Mat data;
+        CoordinateContainer data;
         for (auto p:data2fp){
-            data.push_back(cv::Point2f(p.x, p.y));
+            b2Vec2 v=b2Mul(t,b2Vec2(p.x, p.y));
+            data.emplace(Pointf(v.x, v.y));
         }
-        cv::Mat result=cv::Mat::zeros(data.rows, data.cols, data.type());
-        cv::Mat transform=(cv::Mat_<double>(2,3)<<t.q.c, -t.q.s, 0,
-                                                    t.q.s, t.q.c, 0);
-        cv::warpAffine(data, result, transform, data.size());
-        data2fp.clear();
-        for (int i=0; i<result.rows; i++){
-            const cv::Point2f * Mi=result.ptr<cv::Point2f>(i);
-            for (int j=0; j<result.cols; j++){
-                data2fp.emplace(Pointf(Mi[j].x, Mi[j].y));
-            }
-        }
+        data2fp=data;
     }
 
 
@@ -203,7 +194,7 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     register_tracker(&tracker);
     register_controller(&wc);
     init(DebugConfigurator::generateGoalTask());
-    data2fp= (CoordinateContainer{Pointf(0.4,0.01), Pointf(0.4, 0), Pointf(0.4,-0.01)});
+    data2fp= (CoordinateContainer{Pointf(0.4,0.01), Pointf(0.4, 0), Pointf(0.4,-0.01), Pointf(0.4,-0.02), Pointf(0.4,0.02)});
     EXPECT_GT(data2fp.size(), 1); //should take more than one step to complete task
     worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
     EXPECT_GT(world_objects().size(),0);
@@ -217,7 +208,7 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     transitionSystem[e2.m_target].start= vertex_get_endPose(e1.m_target);
     transitionSystem[e2.m_target].endPose=b2Mul(b2Transform(b2Vec2(0.4,0), b2Rot(0)), get_ts()[e2.m_target].start);
     TrackingResult trackingResult(currentTask.get_disturbance());
-    trackingResult.displacement=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*7));
+    trackingResult.displacement=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*10));
     //obstacle.bf.pose=b2Mul(trackingResult.displacement, obstacle.bf.pose);
     set_plan({e1.m_target, e2.m_target});
     int steps=0;
@@ -232,6 +223,7 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
         adjust_goal_expectation();
         estimate_current_vertex();
         steps++;
+        iteration++;
        if (steps>50)break;
     }while (!currentTask.is_over());
     EXPECT_LT(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2);
