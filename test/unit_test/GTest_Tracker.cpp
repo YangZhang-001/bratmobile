@@ -37,11 +37,11 @@ class TestInputConfigurator: public UserInputConfigurator{
     }
 
     void MulPoints(b2Transform t){
-        std::Mat data;
+        cv::Mat data;
         for (auto p:data2fp){
             data.push_back(cv::Point2f(p.x, p.y));
         }
-        std::Mat result=cv::Mat::zeros(data.rows, data.cols, data.type());
+        cv::Mat result=cv::Mat::zeros(data.rows, data.cols, data.type());
         data=set2vec2f(data2fp);
         float angle=t.q.GetAngle();
         cv::Mat transform=(cv::Mat_<float>(3,3)<<std::cos(angle), -std::sin(angle), 0,
