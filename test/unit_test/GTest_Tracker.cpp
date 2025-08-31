@@ -6,6 +6,7 @@ class TestEnvironment;
 class TestInputConfigurator: public UserInputConfigurator{
     BodyFeatures initial_bf;
     public:
+    friend class TestEnvironment;
     TestInputConfigurator(){}
     TestInputConfigurator(DirectionSetter *ds, AffordanceSetter *as): UserInputConfigurator(ds, as){}
     CoordinateContainer & getData2fp(){return data2fp;};
@@ -42,18 +43,17 @@ class TestInputConfigurator: public UserInputConfigurator{
             data.push_back(cv::Point2f(p.x, p.y));
         }
         cv::Mat result=cv::Mat::zeros(data.rows, data.cols, data.type());
-        data=set2vec2f(data2fp);
-        float angle=t.q.GetAngle();
-        cv::Mat transform=(cv::Mat_<float>(3,3)<<std::cos(angle), -std::sin(angle), 0,
-                                                    std::sin(angle), std::cos(angle), 0,
-                                                    0              , 0            , 1);
+        cv::Mat transform=(cv::Mat_<double>(2,3)<<t.q.c, -t.q.s, 0,
+                                                    t.q.s, t.q.c, 0);
         cv::warpAffine(data, result, transform, data.size());
         data2fp.clear();
-        for (auto &p:result){
-            data2fp.emplace(Pointf(p.x, p.y));
+        for (int i=0; i<result.rows; i++){
+            const cv::Point2f * Mi=result.ptr<cv::Point2f>(i);
+            for (int j=0; j<result.cols; j++){
+                data2fp.emplace(Pointf(Mi[j].x, Mi[j].y));
+            }
         }
     }
-    friend class TestEnvironment;
 
 
 };
@@ -222,15 +222,17 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     set_plan({e1.m_target, e2.m_target});
     int steps=0;
     do {
-        //MulPoints(trackingResult.displacement);
+        MulPoints(trackingResult.displacement);
         worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
-        trackingResult= tracker.track((currentTask),data2fp, worldBuilder.get_world_objects());
-        update_graph(transitionSystem, trackingResult);
+        if (iteration>1){
+            trackingResult= tracker.track((currentTask),data2fp, worldBuilder.get_world_objects());
+            update_graph(transitionSystem, trackingResult);
+        }
         change_task();	
         adjust_goal_expectation();
         estimate_current_vertex();
         steps++;
-        if (steps>50)break;
+       if (steps>50)break;
     }while (!currentTask.is_over());
     EXPECT_LT(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2);
     EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
