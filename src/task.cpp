@@ -324,7 +324,7 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		Distance d(fromDi.p.x);
 		result=endCriteria_met(a, d);
 		std::cout<<"the disturbance is " <<fromDi.p.x <<"m away! And I want it to be "<<endCriteria.distance.get_signed()<<"m away"<<std::endl;
-		std::cout<<"end result="<<result<< "angle valid "<<endCriteria.angle.isValid()<<std::endl;
+		std::cout<<"end result="<<result<< "angle valid "<<endCriteria.angle.isValid()<<"dist valid:"<<endCriteria.distance.isValid()<<std::endl;
 	}
 	else if (dist_obs->getAffIndex()==AVOID ){ //|| action.getOmega()!=0
 		if (box.m_radius==0 || action.getOmega()!=0){ //means that there is no goal 
@@ -387,12 +387,17 @@ return result;
 bool Task::endCriteria_met(Angle & a, Distance & d){
 	bool result=false;
 	Angle approxEndAngle(endCriteria.angle.get()+M_PI_4/HZ);
+	if (action.getOmega()==0){
+		approxEndAngle.setValid(false);
+	}
 	switch (affordance){
 		case PURSUE:
 			result= d<=endCriteria.distance && a<approxEndAngle; 
+			std::cout<<"d less than distance "<< (d<=endCriteria.distance) <<", angle??"<<(a<approxEndAngle)<<std::endl;
 			break;
 		default:
-			result= d>=endCriteria.distance && a>=endCriteria.angle; break;
+			result= d>=endCriteria.distance && a>=endCriteria.angle; 
+			break;
 	}
 	return result;
 }
