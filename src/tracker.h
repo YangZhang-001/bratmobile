@@ -158,7 +158,7 @@ class ClosedLoop_Tracker:public Tracker{
     * @param dist disturbance to be tracked
     * @param t the estimated instantaneous 2d transform associated to the currently executed task
     */
-    std::vector <BodyFeatures>::const_iterator find_disturbance(std::vector <BodyFeatures>::const_iterator objects_begin, std::vector <BodyFeatures>::const_iterator objects_end, const BodyFeatures & dist, b2Transform t, float * _least_square=NULL);
+    virtual std::vector <BodyFeatures>::const_iterator find_disturbance(std::vector <BodyFeatures>::const_iterator objects_begin, std::vector <BodyFeatures>::const_iterator objects_end, const BodyFeatures & dist, b2Transform t, float * _least_square=NULL);
 
     /**
      * @brief Sets angle to be smallest possible increment compared to dist
