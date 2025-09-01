@@ -322,8 +322,9 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		//Angle a(fromDi.q.GetAngle());
 		Angle a(atan(fromDi.p.y/fromDi.p.x));
 		Distance d(fromDi.p.x);
-		std::cout<<"the disturbance is " <<fromDi.p.x <<"m away! And I want it to be "<<endCriteria.distance.get_signed()<<"m away"<<std::endl;
 		result=endCriteria_met(a, d);
+		std::cout<<"the disturbance is " <<fromDi.p.x <<"m away! And I want it to be "<<endCriteria.distance.get_signed()<<"m away"<<std::endl;
+		std::cout<<"end result="<<result<< "angle valid "<<endCriteria.angle.isValid()<<std::endl;
 	}
 	else if (dist_obs->getAffIndex()==AVOID ){ //|| action.getOmega()!=0
 		if (box.m_radius==0 || action.getOmega()!=0){ //means that there is no goal 
@@ -333,11 +334,6 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 			Angle a(fabs(inst_transform.q.GetAngle())+fabs(action.getTransform(LIDAR_SAMPLING_RATE/2).q.GetAngle())); //avoid turning too much!
 			float _distance=std::max(inst_transform.p.Length(), start.p.Length());
 			Distance d(fabs(_distance));
-			result=endCriteria_met(a, d);
-			if (result){
-				printf("end criteria met!\t");
-			}
-			printf("angle=%f\n", a.get());
 		}
 		else{
 			result=!overlaps(box, &disturbance, robot_pose);
@@ -393,7 +389,7 @@ bool Task::endCriteria_met(Angle & a, Distance & d){
 	Angle approxEndAngle(endCriteria.angle.get()+M_PI_4/HZ);
 	switch (affordance){
 		case PURSUE:
-			result= d.get()<=endCriteria.distance.get() && a<approxEndAngle; 
+			result= d<=endCriteria.distance && a<approxEndAngle; 
 			break;
 		default:
 			result= d>=endCriteria.distance && a>=endCriteria.angle; break;
