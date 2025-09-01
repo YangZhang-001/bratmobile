@@ -14,19 +14,21 @@ int Controller::motor_step(Task::Action a, float distance){
 	    return abs(result);
 }
 
-void Wise_Controller::next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
-if (plan.empty()){
+Task Wise_Controller::next_task(const Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
+	Task result=currentTask;
+	if (plan.empty()){
 	//printf("I DON'T KNOW WHAT TO DO NOW\n");
-	currentTask=Task(controlGoal.get_disturbance(), UNDEFINED);
-	currentTask.getAction().setLWheelSpeed(0);
-	currentTask.getAction().setRWheelSpeed(0);
-	currentTask.set_change(true);
-	return;
+	result=Task(controlGoal.get_disturbance(), UNDEFINED);
+	result.getAction().setLWheelSpeed(0);
+	result.getAction().setRWheelSpeed(0);
+	result.set_change(true);
+	return result;
 }
 int i=to_task_end(g, plan);
-currentTask = task_to_execute(plan, g, i, controlGoal, currentTask,current_vertices);	
+result = task_to_execute(plan, g, i, controlGoal, currentTask,current_vertices);	
 current_vertices=std::vector(plan.begin(), plan.begin()+i);
 plan.erase(plan.begin(), plan.begin()+i);
+return result;
 }
 
 int Wise_Controller::to_task_end(const TransitionSystem& g, std::vector<vertexDescriptor>& plan){
@@ -71,7 +73,10 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
         disturbance_q=g[p[0]].Di; 	
     }
 	vertexDescriptor plan_end=p[p.size()-1];
-	_D_to_goal=b2MulT(disturbance_q.pose() , g[plan_end].Di.pose()); //assumes that the last step in the plan reaches the goal
+	// _D_to_goal=b2MulT(disturbance_q.pose() , g[plan_end].Di.pose()); //assumes that the last step in the plan reaches the goal
+	if (controlGoal.get_disturbance().getAffIndex()!=NONE){
+		_D_to_goal=b2MulT(disturbance_q.pose() , controlGoal.get_disturbance().pose()); //assumes that the last step in the plan reaches the goal
+	}
 	t.setMotorStep(motor_step(t.getAction(), start_to_end.p.Length()));
 	// printf("new disturbance x=%f \t y=%f \t %theta=%f\n", t.get_disturbance().pose().p.x, t.get_disturbance().pose().p.y, t.get_disturbance().pose().q.GetAngle() );
 	// printf("goal x=%f \t y=%f \t %theta=%f\n", g[plan_end].Di.pose().p.x, g[plan_end].Di.pose().p.y, g[plan_end].Di.pose().q.GetAngle() );
@@ -80,16 +85,18 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
 }
 
 
-void Reactive_Controller::next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
+Task Reactive_Controller::next_task(const Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
+	Task result=currentTask;
 	vertexDescriptor currentVertex=get_current_vertex(current_vertices);
 	if (g[currentVertex].Dn.isValid()){
 		printf("avoid!");
-		currentTask= Task(g[currentVertex].Dn, DEFAULT); //reactive
+		result= Task(g[currentVertex].Dn, DEFAULT); //reactive
 	}
 	else{
-		currentTask = Task(controlGoal.get_disturbance(), DEFAULT); //reactive
+		result = Task(controlGoal.get_disturbance(), DEFAULT); //reactive
 	}
-	currentTask.setMotorStep(motor_step(currentTask.getAction()));
-	printf("changed to %f\n", currentTask.getAction().getOmega());
+	result.setMotorStep(motor_step(currentTask.getAction()));
+	printf("changed to %f\n", result.getAction().getOmega());
+	return result;
 
 }

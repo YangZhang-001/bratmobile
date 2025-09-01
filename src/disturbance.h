@@ -1,6 +1,7 @@
 #ifndef DISTURBANCE_H
 #include "robot.h"
 #include "threshold.h"
+#include "box2d_helpers.h"
 #include <algorithm>
 #include <stdexcept>
 #include <opencv2/core.hpp>

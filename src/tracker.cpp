@@ -32,10 +32,6 @@ TrackingResult DeadReckoner::track(const Task &t, const CoordinateContainer &pts
 
 TrackingResult ClosedLoop_Tracker::track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result=get_transform(t, pts, objects);
-	// bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
-	// if(t.getMotorStep()==0 || ended){
-	// 	t.set_change(true);
-	// }    
     deltaTransform=b2Mul(result.displacement, deltaTransform);
     return result;
 }

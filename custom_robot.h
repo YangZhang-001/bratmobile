@@ -62,16 +62,14 @@ public:
 };
 
 class MotorCallback :public AlphaBot::StepCallback { //every 100ms the callback updates the plan
-    float L=0;
+protected:
+	float L=0;
 	float R=0;
+	Motor_Out * mio;
 public:
-int ogStep=0;
-Motor_Out * mio;
-int run=0;
 
-MotorCallback(Motor_Out *_mio): mio(_mio){
-}
-void step( AlphaBot &motors){
+MotorCallback(Motor_Out *_mio): mio(_mio){}
+virtual void step( AlphaBot &motors){
 	if (mio==NULL){
 		throw ("mio null\n");
 	}

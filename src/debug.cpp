@@ -47,6 +47,9 @@ void Logger::init(const char * new_folder, const char * _dir, const char * custo
 		std::string customfile=new_path +customName;
 		file_dateTime(customfile.c_str(), fileName);
 		f = fopen(fileName, "w");
+		if (!f){
+			std::cerr<<"cannot open file "<<fileName<<std::endl;
+		}
 }
 
 const char * Logger::getSystemArchitecture(){
