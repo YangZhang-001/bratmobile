@@ -208,12 +208,12 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     transitionSystem[e2.m_target].start= vertex_get_endPose(e1.m_target);
     transitionSystem[e2.m_target].endPose=b2Mul(b2Transform(b2Vec2(0.4,0), b2Rot(0)), get_ts()[e2.m_target].start);
     TrackingResult trackingResult(currentTask.get_disturbance());
-    trackingResult.displacement=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*10));
+    b2Transform deltaPose=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*10));
     //obstacle.bf.pose=b2Mul(trackingResult.displacement, obstacle.bf.pose);
     set_plan({e1.m_target, e2.m_target});
     int steps=0;
     do {
-        MulPoints(trackingResult.displacement);
+        MulPoints(trackingResult.deltaPose);
         worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
         // if (iteration>1){
             trackingResult= tracker.track((currentTask),data2fp, worldBuilder.get_world_objects());
@@ -224,6 +224,7 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
         estimate_current_vertex();
         steps++;
         iteration++;
+        deltaPose=-currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
        if (steps>50)break;
     }while (!currentTask.is_over());
     EXPECT_LT(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2);

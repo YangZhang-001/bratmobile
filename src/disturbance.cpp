@@ -10,13 +10,13 @@ bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t)
     float diff_w=halfWidth-bf.halfWidth;
     float diff_l=halfLength-bf.halfLength;
     bool match_x=fabs(diff_x)<D_POSE_MARGIN+ fabs(t.q.s*distance_adjust);
-    /bool match_y=fabs(diff_y)<D_POSE_MARGIN+fabs(t.q.c*distance_adjust);
+    bool match_y=fabs(diff_y)<D_POSE_MARGIN+fabs(t.q.c*distance_adjust);
     bool match_w=fabs(diff_w)<D_DIMENSIONS_MARGIN;
     bool match_h=fabs(diff_l)<D_DIMENSIONS_MARGIN;
     if (bundle!=NULL){
         *bundle=Bundle(diff_x, diff_y, 0, diff_w, diff_l);
     }
-    bool match_distance=fabs(diff_transform)<D_POSE_MARGIN;
+    //bool match_distance=fabs(diff_transform)<D_POSE_MARGIN;
     return match_x && match_y && match_w && match_h;
    // return match_w && match_h && match_distance;
 }
