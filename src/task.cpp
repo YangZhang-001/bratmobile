@@ -322,7 +322,7 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		//Angle a(fromDi.q.GetAngle());
 		Angle a(atan(fromDi.p.y/fromDi.p.x));
 		Distance d(fromDi.p.x);
-		std::cout<<"the disturbance is " <<fromDi.p.x <<"m away!"<<std::endl;
+		std::cout<<"the disturbance is " <<fromDi.p.x <<"m away! And I want it to be "<<endCriteria.distance.get_signed()<<"m away"<<std::endl;
 		result=endCriteria_met(a, d);
 	}
 	else if (dist_obs->getAffIndex()==AVOID ){ //|| action.getOmega()!=0
@@ -393,7 +393,7 @@ bool Task::endCriteria_met(Angle & a, Distance & d){
 	Angle approxEndAngle(endCriteria.angle.get()+M_PI_4/HZ);
 	switch (affordance){
 		case PURSUE:
-			result= d<=endCriteria.distance && a<approxEndAngle; 
+			result= d.get()<=endCriteria.distance.get() && a<approxEndAngle; 
 			break;
 		default:
 			result= d>=endCriteria.distance && a>=endCriteria.angle; break;
