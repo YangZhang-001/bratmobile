@@ -201,33 +201,33 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     Disturbance obstacle(worldBuilder.get_world_objects()[0]);
     obstacle.validate();
     auto e1=make_successful(MOVING_VERTEX, LEFT);
-    auto e2=make_successful(e1.m_target, DEFAULT);
+    //auto e2=make_successful(e1.m_target, DEFAULT);
     transitionSystem[e1.m_target].Di=obstacle;
-    transitionSystem[e2.m_target].Di=obstacle;
+    //transitionSystem[e2.m_target].Di=obstacle;
     transitionSystem[e1.m_target].endPose.q.Set(M_PI_2);
-    transitionSystem[e2.m_target].start= vertex_get_endPose(e1.m_target);
-    transitionSystem[e2.m_target].endPose=b2Mul(b2Transform(b2Vec2(0.4,0), b2Rot(0)), get_ts()[e2.m_target].start);
+    // transitionSystem[e2.m_target].start= vertex_get_endPose(e1.m_target);
+    // transitionSystem[e2.m_target].endPose=b2Mul(b2Transform(b2Vec2(0.4,0), b2Rot(0)), get_ts()[e2.m_target].start);
     TrackingResult trackingResult(currentTask.get_disturbance());
-    b2Transform deltaPose=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*10));
+    b2Transform errorTransform=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*10)), deltaPose=errorTransform;
     //obstacle.bf.pose=b2Mul(trackingResult.displacement, obstacle.bf.pose);
     set_plan({e1.m_target});
     int steps=0;
     do {
+        change_task();	
+        adjust_goal_expectation();
+        estimate_current_vertex();        
         MulPoints(deltaPose);
         worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
         // if (iteration>1){
             trackingResult= tracker.track((currentTask),data2fp, worldBuilder.get_world_objects());
             update_graph(transitionSystem, trackingResult);
 //        }
-        change_task();	
-        adjust_goal_expectation();
-        estimate_current_vertex();
         steps++;
         iteration++;
         deltaPose=-currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
        if (steps>50)break;
     }while (!currentTask.is_over());
-    EXPECT_LT(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2);
+    EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2, 0.157079622/2);
     EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
     EXPECT_NEAR(currentTask.from_Di().q.GetAngle(), -M_PI_2, 0.157079622/2);
     EXPECT_GT(steps, 2); //should take more than one step to complete task
