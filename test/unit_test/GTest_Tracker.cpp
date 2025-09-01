@@ -1,6 +1,7 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
 #include "../realWorldTestHeaders.h"
+#include "stdio.h"
 class TestEnvironment;
 
 class TestInputConfigurator: public UserInputConfigurator{
@@ -49,9 +50,28 @@ class TestInputConfigurator: public UserInputConfigurator{
 
 };
 
-class TestInputConfiguratorFixture:public virtual TestInputConfigurator, public ::testing::Test{
+class TestInputConfiguratorFixture:public virtual TestInputConfigurator, public ::testing::TestWithParam<std::tuple<Direction, float>>{
     public:
     TestInputConfiguratorFixture(){}
+
+    Logger makeLogger(){
+        //std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
+        std::string testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
+        std::string valueParam=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+        if (testCaseDir[testCaseDir.size()-3]=='/'){
+            testCaseDir.pop_back();
+            testCaseDir.pop_back();
+            testCaseDir.pop_back();
+            
+        }
+        if (valueParam[1]=='0'){
+            valueParam="/LEFT";
+        }
+        else if (valueParam[1]=='1'){
+            testCaseDir+=valueParam="/RIGHT";
+        }
+        return Logger(testCaseDir.c_str(), ".", valueParam.c_str());
+    }
 };
 
 class TestTracker: public ClosedLoop_Tracker{
@@ -186,7 +206,8 @@ TEST_P(TestEnvironment, Execution){
  * @brief Tests how the system adapts to noise in task execution (e.g. if the turn is not perfectly 90 degrees)
  * 
  */
-TEST_F(TestInputConfiguratorFixture, NoiseTest){
+TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
+    Logger logger=makeLogger();
     TestTracker tracker;
     Wise_Controller wc;
     Motor_Out motor;
@@ -200,15 +221,19 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     EXPECT_GT(world_objects().size(),0);
     Disturbance obstacle(worldBuilder.get_world_objects()[0]);
     obstacle.validate();
-    auto e1=make_successful(MOVING_VERTEX, LEFT);
+    auto e1=make_successful(MOVING_VERTEX, std::get<0>(GetParam()));
+    float targetAngle(M_PI_2);
     //auto e2=make_successful(e1.m_target, DEFAULT);
     transitionSystem[e1.m_target].Di=obstacle;
     //transitionSystem[e2.m_target].Di=obstacle;
-    transitionSystem[e1.m_target].endPose.q.Set(M_PI_2);
+    if (std::get<0>(GetParam())==RIGHT){
+        targetAngle=-targetAngle;
+    }
+    transitionSystem[e1.m_target].endPose.q.Set(targetAngle);
     // transitionSystem[e2.m_target].start= vertex_get_endPose(e1.m_target);
     // transitionSystem[e2.m_target].endPose=b2Mul(b2Transform(b2Vec2(0.4,0), b2Rot(0)), get_ts()[e2.m_target].start);
     TrackingResult trackingResult(currentTask.get_disturbance());
-    b2Transform errorTransform=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*10)), deltaPose=errorTransform;
+    b2Transform errorTransform=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*std::get<1>(GetParam()))), deltaPose=errorTransform;
     //obstacle.bf.pose=b2Mul(trackingResult.displacement, obstacle.bf.pose);
     set_plan({e1.m_target});
     int steps=0;
@@ -229,10 +254,12 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     }while (!currentTask.is_over());
     EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2, 0.157079622/2);
     EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
-    EXPECT_NEAR(currentTask.from_Di().q.GetAngle(), -M_PI_2, 0.157079622/2);
-    EXPECT_GT(steps, 2); //should take more than one step to complete task
-
+    EXPECT_NEAR(currentTask.from_Di().q.GetAngle(), -targetAngle, 0.157079622/2);
+    EXPECT_GT(steps, 1); //should take more than one step to complete task
+	logger.log("%f\t%f\n", std::get<1>(GetParam()), tracker.getDeltaTransform().q.GetAngle());
 }
+
+INSTANTIATE_TEST_CASE_P(Noise, TestInputConfiguratorFixture, ::testing::Combine(testing::Values(LEFT, RIGHT), ::testing::Range(-90.0f,90.0f)));
 
 INSTANTIATE_TEST_CASE_P(Inputs, TestEnvironment, ::testing::Combine(
     ::testing::Values(PURSUE, AVOID),
