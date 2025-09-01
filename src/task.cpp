@@ -322,7 +322,7 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		//Angle a(fromDi.q.GetAngle());
 		Angle a(atan(fromDi.p.y/fromDi.p.x));
 		Distance d(fromDi.p.x);
-		std::cout<<"the disturbance is " <<from_Di.p.x <<"m away!"<<std::endl;
+		std::cout<<"the disturbance is " <<fromDi.p.x <<"m away!"<<std::endl;
 		result=endCriteria_met(a, d);
 	}
 	else if (dist_obs->getAffIndex()==AVOID ){ //|| action.getOmega()!=0
