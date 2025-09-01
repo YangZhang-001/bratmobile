@@ -17,6 +17,7 @@ bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t)
         *bundle=Bundle(diff_x, diff_y, 0, diff_w, diff_l);
     }
     //return match_x && match_y && match_w && match_h;
+    return match_w && match_h && match_distance;
 }
 
 std::vector <b2Vec2> BodyFeatures::vertices()const{
