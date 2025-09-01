@@ -64,9 +64,14 @@ add_executable(GTest_Task GTest_Task.cpp)
 target_link_libraries(GTest_Task gtest gtest_main)
 target_link_libraries(GTest_Task  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
-add_executable(GTest_Controller GTest_Controller)
+add_executable(GTest_Controller GTest_Controller.cpp)
 target_link_libraries(GTest_Controller gtest gtest_main)
 target_link_libraries(GTest_Controller  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+add_executable(GTest_Tracker GTest_Tracker.cpp)
+target_link_libraries(GTest_Tracker gtest gtest_main)
+target_link_libraries(GTest_Tracker  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
 
 
 add_library(test_classes test_classes.h ../test_essentials.h ../callbacks.h)
@@ -93,6 +98,7 @@ gtest_discover_tests(GTest_Matcher)
 gtest_discover_tests(GTest_Graph)
 gtest_discover_tests(GTest_Planner)
 gtest_discover_tests(GTest_Task)
+gtest_discover_tests(GTest_Tracker)
 
 
 # INCLUDE_DIRECTORIES("/usr/local/include/")

@@ -20,11 +20,18 @@ std::string Logger::file_dateTime(const char* custom, char name[80], const char 
 }
 
 bool Logger::log(const char * format, ...){
-	va_list args;
-	va_start(args, format);
-	vfprintf(f, format, args);
-	va_end(args);
-	fflush(f);
+	try{
+		va_list args;
+		va_start(args, format);
+		vfprintf(f, format, args);
+		va_end(args);
+		fflush(f);
+		return true;
+	}
+	catch(std::exception &e){
+		return false;
+	}
+
 }
 
 void Logger::init(const char * new_folder, const char * _dir, const char * customName){
@@ -72,6 +79,8 @@ char* debug::print_pose(const b2Transform& p, char* msg){
 	char str[256];
 	sprintf(str,"x=%f, y=%f, theta=%f", p.p.x, p.p.y, p.q.GetAngle());
 	printf("%s\n", str);
+	return str;
+	
 }
 
 void debug::print_matrix(const cv::Mat & m){

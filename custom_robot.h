@@ -1,4 +1,3 @@
-#include "attentive.h"
 //#include "libcam2opencv.h"
 #include "a1lidarrpi.h"
 #include "alphabot.h"

@@ -294,14 +294,14 @@ b2Fixture * WorldBuilder::get_chassis(b2Body * r){
 
 }
 
-b2AABB WorldBuilder::makeRobotSensor(b2Body* const robotBody, const Disturbance *const goal)const{
+b2AABB WorldBuilder::makeRobotSensor(b2Body* const robotBody, const Disturbance & focus)const{
 	b2AABB result;
-    if (!goal->isValid()){
+    if (!focus.isValid()){
         return result;
     }
 	b2PolygonShape * poly_robo=(b2PolygonShape*)robotBody->GetFixtureList()->GetShape();
     std::vector <b2Vec2> robot_vertices=arrayToVec(poly_robo->m_vertices, poly_robo->m_count);
-    b2PolygonShape shape=sensor_box(robot_vertices,  robotBody->GetTransform(), goal);
+    b2PolygonShape shape=sensor_box(robot_vertices,  robotBody->GetTransform(), focus);
     b2Vec2 local_robot=robotBody->GetLocalPoint(robotBody->GetPosition());
 	b2FixtureDef fixtureDef;
 	fixtureDef.isSensor=true;

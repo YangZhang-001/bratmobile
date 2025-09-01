@@ -1,6 +1,6 @@
 #include "task.h"
 
-b2Fixture * GetSensor(b2Body * body){
+b2Fixture * GetSensor( b2Body * body){
 	for (b2Fixture * f=body->GetFixtureList(); f;f=f->GetNext()){
 		if (f->IsSensor()){
 			return f;
@@ -33,7 +33,7 @@ bool overlaps(b2Body * robot, const Disturbance *const disturbance){
 	return b2TestOverlap(sensor->GetShape(), 0, &d_shape, 0,robot_pose, d_pose);
 }
 
-bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& robot_pose){
+bool overlaps(const b2PolygonShape& box, const Disturbance * const d, const b2Transform& robot_pose){
 	bool result=true;
 	if (!box.m_radius || NULL==d ){
 		return result;
@@ -43,8 +43,6 @@ bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& rob
 	}
 	b2PolygonShape d_shape;
 	d_shape.SetAsBox(d->bf.halfWidth, d->bf.halfLength, b2Vec2(0,0), 0);
-	b2AABB aabb;
-	d_shape.ComputeAABB(&aabb, d->bf.pose, 0);
 	return b2TestOverlap(&box, 0, &d_shape, 0,robot_pose, d->bf.pose);
 
 }
@@ -321,7 +319,8 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 	}
 	else if (dist_obs->getAffIndex()==PURSUE){ // && direction==DEFAULT
 		b2Transform fromDi=from_Di(&b2Transform_zero);
-		Angle a(fromDi.q.GetAngle());
+		//Angle a(fromDi.q.GetAngle());
+		Angle a(atan(fromDi.p.y/fromDi.p.x));
 		Distance d(fromDi.p.x);
 		result=endCriteria_met(a, d);
 	}
@@ -390,9 +389,11 @@ return result;
 
 bool Task::endCriteria_met(Angle & a, Distance & d){
 	bool result=false;
+	Angle approxEndAngle(endCriteria.angle.get()+M_PI_4/HZ);
 	switch (affordance){
 		case PURSUE:
-			result= d<=endCriteria.distance && a<=endCriteria.angle; break;
+			result= d<=endCriteria.distance && a<approxEndAngle; 
+			break;
 		default:
 			result= d>=endCriteria.distance && a>=endCriteria.angle; break;
 	}
@@ -420,4 +421,8 @@ bool Task::isTurnFinished(const b2Transform & robotTransform, Direction dir){
 	bool finishedLeft=(round(robotAngle*100)/100)>=(round(angleL*100)/100);//-(action.getOmega()*HZ)/2;
 	bool finishedRight=(round(robotAngle*100)/100)<=(round(angleR*100)/100);//+(action.getOmega()*HZ)/2;
 	return finishedLeft || finishedRight;
+}
+
+bool Task::isMoving(){
+	return action.getLWheelSpeed()!=0 || action.getRWheelSpeed()!=0;
 }

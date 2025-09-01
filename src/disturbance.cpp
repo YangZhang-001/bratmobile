@@ -1,6 +1,6 @@
 #include "disturbance.h"
 
-bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t){
+bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t)const{
     float hypothenuse_square= pow(bf.pose.p.Length(), 2); //assumes robot-centric perspective
     float adj_side_square=pow(bf.pose.p.Length()*t.q.c, 2);
     float distance_adjust= sqrt(hypothenuse_square-adj_side_square);
@@ -87,16 +87,17 @@ float Disturbance::getAngle(b2Transform t){ //gets the angle of an Disturbance w
 // }
 
 
-bool Disturbance::operator==(const Disturbance & d){
-    bool _pose=bf.pose.p==d.bf.pose.p && bf.pose.q.GetAngle()==d.bf.pose.q.GetAngle();
-    bool dim=halfLength()==d.bf.halfLength && halfWidth()==d.bf.halfWidth;
-    bool aff=affordanceIndex==d.affordanceIndex;
-}
+// bool Disturbance::operator==(const Disturbance & d){
+//     bool _pose=bf.pose.p==d.bf.pose.p && bf.pose.q.GetAngle()==d.bf.pose.q.GetAngle();
+//     bool dim=halfLength()==d.bf.halfLength && halfWidth()==d.bf.halfWidth;
+//     bool aff=affordanceIndex==d.affordanceIndex;
+// }
 
 bool Disturbance::operator==(const Disturbance & d)const{
-    bool _pose=bf.pose.p==d.bf.pose.p && bf.pose.q.GetAngle()==d.bf.pose.q.GetAngle();
-    bool dim=bf.halfLength==d.bf.halfLength && bf.halfWidth==d.bf.halfWidth;
+    bool _pose=(bf.pose.p==d.bf.pose.p) && (bf.pose.q.GetAngle()==d.bf.pose.q.GetAngle());
+    bool dim=(bf.halfLength==d.bf.halfLength) && (bf.halfWidth==d.bf.halfWidth);
     bool aff=affordanceIndex==d.affordanceIndex;
+    return _pose && dim && aff;
 }
 
 std::vector <b2Vec2> GetLocalPoints( std::vector <b2Vec2> pts, const b2Body * body){

@@ -205,13 +205,14 @@ TEST_F(ConfiguratorTest, GetDisturbance180Turn){
 TEST_F(ConfiguratorTest, UpdateGraph){
     Disturbance Di(PURSUE, b2Vec2(0.81, 0.23)), Dn(AVOID, b2Vec2(0.22, 0)), goal(PURSUE, b2Vec2(1.0, 0));
     init(Task(goal, UNDEFINED));
-    b2Transform deltaPose(b2Vec2(.5, .27), b2Rot(M_PI_4));
     dummy_vertex(MOVING_VERTEX);
     transitionSystem[1].Di=Di;
     transitionSystem[1].Dn=Dn;
     transitionSystem[1].direction=DEFAULT;
-    currentTask=Task(Dn, DEFAULT, b2Transform_zero, true);
-    update_graph(transitionSystem, deltaPose);
+    //currentTask=Task(Dn, DEFAULT, b2Transform_zero, true);
+    TrackingResult tr(Dn);
+    tr.displacement=b2Transform(b2Vec2(.5, .27), b2Rot(M_PI_4));
+    update_graph(transitionSystem, tr);
     EXPECT_FALSE(transitionSystem[1].Di.pose()==Di.pose());
     EXPECT_FALSE(transitionSystem[1].Dn.pose()==Dn.pose());
     EXPECT_FALSE(controlGoal.get_disturbance().pose()==goal.pose());
@@ -404,7 +405,8 @@ TEST_P(ConfiguratorTest2DT, adjustGoal){
     Disturbance obstacle(PURSUE, b2Vec2(0.45, 0), 0); //robot is driving towards an obstacle before it avoids it
     init(goal);
     currentTask=Task(obstacle, DEFAULT, b2Transform_zero,true);
-    b2Transform deltaPose=GetParam();
+    TrackingResult tr(currentTask.get_disturbance());
+    tr.displacement=GetParam();
     ConfiguratorTest::Manual_WiseController controller;
     register_controller(&controller);
     controller.set_disturbance(obstacle);
@@ -413,8 +415,8 @@ TEST_P(ConfiguratorTest2DT, adjustGoal){
     vertex_set_options(0, std::vector<Direction>(DEFAULT));
     add_vertex_now(MOVING_VERTEX, v1, goal.get_disturbance());
     m_plan={v1};
-    math::MulT(deltaPose, deltaPose);
-    update_graph(transitionSystem, deltaPose);
+    math::MulT(tr.displacement, tr.displacement);
+    update_graph(transitionSystem, tr);
     b2Transform expected =b2MulT(controller.get_disturbance().pose(), transitionSystem[plan_end()].Di.pose()); //position of goal wrt current disturbance
     /**/
     adjust_goal_expectation(); //what we're actually testing

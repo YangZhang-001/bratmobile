@@ -1,5 +1,14 @@
 #include "sensor.h"
 
+struct TrackingResult{
+    b2Transform displacement=b2Transform_zero; //estimated displacement
+    Disturbance observed_disturbance; //the disturbance as observed at the current time step
+
+    TrackingResult()=default;
+
+    TrackingResult(const Disturbance& d, const b2Transform & tr=b2Transform_zero): displacement(tr), observed_disturbance(d){}
+};
+
 /**
  * @brief Tracking interface: Bridge between the real world and the simulation. Is used for tracking execution of tasks
  * and using lived experience to modify the state-matching threshold
@@ -7,6 +16,7 @@
  */
 class Tracker{
     protected:
+    friend Configurator;
     ThresholdLearner *learner=NULL;
     b2Transform deltaTransform=b2Transform_zero;
     public:
@@ -29,8 +39,7 @@ class Tracker{
     * @param pts point cloud
     * @param objects world objects as extracted in worldbuilder
     */
-    virtual b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects)=0; 
-
+    virtual TrackingResult get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
     /**
      * @brief Tracks task execution
      * 
@@ -40,7 +49,7 @@ class Tracker{
     * @param objects world objects as extracted in worldbuilder
      * @return b2Transform that the robot has moved by, can use for updating cognitive map and control
      */
-    virtual b2Transform track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects)=0;
+    virtual TrackingResult track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)=0;
     //void adjust_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);                
 
     /**
@@ -48,16 +57,18 @@ class Tracker{
      * 
      * @param t the task
      */
-    virtual void on_new_task(Task *task=NULL)=0;
+    virtual void on_new_task(const Task &task, const Task & goal)=0;
 
     /**
      * @brief Called every time asensor reading is available
      * 
      * @param task 
      */
-    virtual void on_new_reading(Task * task=NULL)=0;
+    virtual void on_new_reading(const Task & goal, const Task &currentTask)=0;
 
-    virtual void init(Task * goal)=0;
+    virtual void init(const Task & goal)=0;
+
+    virtual bool hasTaskEnded(Task & t);
 
 
     /**
@@ -87,19 +98,15 @@ class Tracker{
  */
 class DeadReckoner: public Tracker{
     public:
-    DeadReckoner(){}
-
-    b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects){
-        return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
-    }     
+    DeadReckoner(){}   
     
-    b2Transform track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects);
+    TrackingResult track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
 
-    void on_new_task(Task *task=NULL){} //does nothing
+    void on_new_task(const Task &task, const Task & goal)override{} //does nothing
 
-    void on_new_reading(Task * task=NULL){};
+    virtual void on_new_reading(const Task & goal, const Task &currentTask)override{};
 
-    void init(Task * goal){}
+    void init(const Task & goal){}
 
 
 };
@@ -127,29 +134,22 @@ class ClosedLoop_Tracker:public Tracker{
     // }
 
     /**
-    * @brief returns 2d transformation matrix between one scan and the next based on the displacement of disturbance Di for a task
+    * @brief returns 2d transformation matrix between one scan and the next based on the displacement of disturbance Di for a task +
+    * the disturbance as observed (this is to update the noisy measurement)
     *
     * @param t the current task
     * @param pts lidar reading
     * @param observed_disturbance disturbance Di for task t
     * @param objects objects in the world (stored in worldbuilder)
     */
-    b2Transform get_transform(const Task &t, const CoordinateContainer &pts, Disturbance * observed_disturbance, std::vector <BodyFeatures> & objects);    
+    TrackingResult get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)override;    
     
-    b2Transform track(Task &t, const CoordinateContainer &pts, std::vector <BodyFeatures> & objects);
+    TrackingResult track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
 
     /**
     * @brief returns an upright rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
     */
     cv::Rect2f real_world_focus(const Task * );
-
-    Disturbance * get_tracked_disturbance(){
-        return &tracked_disturbance;
-    }
-
-    void set_tracked_disturbance(const Disturbance & d){
-        tracked_disturbance=d;
-    }
 
     /**
     * @brief Get disturbance to be tracked among the worldbuilder objects
@@ -158,30 +158,43 @@ class ClosedLoop_Tracker:public Tracker{
     * @param dist disturbance to be tracked
     * @param t the estimated instantaneous 2d transform associated to the currently executed task
     */
-    std::vector <BodyFeatures>::iterator find_disturbance(std::vector <BodyFeatures> & objects, const BodyFeatures & dist, b2Transform t, float * _least_square=NULL);
+    std::vector <BodyFeatures>::const_iterator find_disturbance(std::vector <BodyFeatures>::const_iterator objects_begin, std::vector <BodyFeatures>::const_iterator objects_end, const BodyFeatures & dist, b2Transform t, float * _least_square=NULL);
 
+    /**
+     * @brief Sets angle to be smallest possible increment compared to dist
+     * @param found the found disturbance
+     * @param dist the disturbance to be tracked
+     */
+    void correctAngle(BodyFeatures & found, const BodyFeatures & dist);
     /**
      * @brief Uses the goal to reset tracked disturbance at each task
      * 
      * @param task the new task
+     * @param goal the goal
      */
-    void on_new_task(Task *task=NULL);
+    void on_new_task(const Task &task, const Task & goal)override;
+
+
+    virtual void on_new_reading(const Task & goal, const Task &currentTask)override{}
+
+    void set_attention(b2PolygonShape ps){
+        attention_window=ps;
+    }
+
+    void init(const Task & goal){
+        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal.get_disturbance());
+
+    }
+
+    virtual bool hasTaskEnded(Task & t);
 
     /**
      * @brief Updates the attention window at each sensor reading
      * 
      * @param goal the goal
      */
-    virtual void on_new_reading(Task * goal=NULL);
+    void makeAttentionWindow(const Task &goal, const Task & currentTask);
 
-    void set_attention(b2PolygonShape ps){
-        attention_window=ps;
-    }
-
-    void init(Task * goal){
-        attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal->get_disturbance_ptr());
-
-    }
 
 
 

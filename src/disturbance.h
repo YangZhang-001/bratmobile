@@ -82,7 +82,7 @@ class BodyFeatures{
     * @param v pointer to float, scalar representing difference between features
     * @param t estimated 2d transform (matching against an expected disturbance)
     */
-    bool match(const BodyFeatures&, Bundle * bundle=NULL, b2Transform t=b2Transform_zero);
+    bool match(const BodyFeatures&, Bundle * bundle=NULL, b2Transform t=b2Transform_zero)const;
 
     float width()const{
         return halfWidth*2;
@@ -259,7 +259,7 @@ public:
 
     std::vector <b2Vec2> vertices()const; //global vertices
 
-    bool operator==(const Disturbance & d);
+   // bool operator==(const Disturbance & d);
 
     bool operator==(const Disturbance & d)const;
 
