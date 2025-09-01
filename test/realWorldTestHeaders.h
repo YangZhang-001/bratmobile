@@ -81,7 +81,7 @@ class UserInputConfigurator: public virtual DebugConfigurator{
             return;
         }
         if (worldBuilder.get_world_objects().size()>1){
-            throw "TOO MANY OBSTACLES!!";
+            std::cout<<"TOO MANY OBSTACLES!!"<<std::endl;
         }
         if (iteration<=1){
             simResult result;            
@@ -133,6 +133,13 @@ class UserInputConfigurator: public virtual DebugConfigurator{
         
     }
 
+    void change_task()override{
+        // std::cout<<"change task"<<std::endl;
+        DebugConfigurator::change_task();
+        // std::cout<<"after change task"<<std::endl;
+
+
+    }
 
     public:
 
@@ -156,13 +163,13 @@ class OneTaskController: public Wise_Controller{
 
     void next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan)override{
         Wise_Controller::next_task(currentTask, controlGoal, g, current_vertices, plan);
-        // if (currentTask.is_over() && currentTask.getAction().getLWheelSpeed()!=0 && currentTask.getAction().getRWheelSpeed()!=0){
-        //     std::cout<<"terminating!"<<std::endl;
-        //     currentTask=Task(Disturbance(), STOP);
-        //     currentTask.getAction().setLWheelSpeed(0);
-        //     currentTask.getAction().setRWheelSpeed(0);
-        //     currentTask.set_change(false);
-        // }
+        if (currentTask.is_over() && currentTask.getAction().getLWheelSpeed()!=0 && currentTask.getAction().getRWheelSpeed()!=0){
+            std::cout<<"terminating!"<<std::endl;
+            currentTask=Task(Disturbance(), STOP);
+            currentTask.getAction().setLWheelSpeed(0);
+            currentTask.getAction().setRWheelSpeed(0);
+            currentTask.set_change(false);
+        }
     }
 
 };

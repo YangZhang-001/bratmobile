@@ -1,6 +1,6 @@
 #include "realWorldTestHeaders.h"
 #include "../custom_robot.h"
-
+#include "attentive.h"
 
 // Disturbance set_target(int& run, b2Transform start){
 // 	Disturbance result;
@@ -30,8 +30,6 @@ int main(int argc, char** argv) {
 		configuratorInterface.debugOn=atoi(argv[2]);
 	}
 	configurator.setSimulationStep(.5);
-	//printf("current vertices size=%i\n", configurator.current_vertices.size());
-
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
 	MotorCallback cb(&controlInterface);
