@@ -96,7 +96,7 @@ class UserInputConfigurator: public virtual DebugConfigurator{
                 disturbance.set_affordance(AVOID);
                 transitionSystem[v1].Dn=disturbance;
                 transitionSystem[v1].Di=controlGoal.get_disturbance();
-                transitionSystem[v1].endPose.p.x=disturbance.pose().p.x-0.07;
+                transitionSystem[v1].endPose.p.x=disturbance.pose().p.x-0.14;
             }
             else{
                 disturbance.set_affordance(affordanceSetter->getAffIndex());
