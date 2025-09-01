@@ -210,10 +210,10 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     TrackingResult trackingResult(currentTask.get_disturbance());
     b2Transform deltaPose=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*10));
     //obstacle.bf.pose=b2Mul(trackingResult.displacement, obstacle.bf.pose);
-    set_plan({e1.m_target, e2.m_target});
+    set_plan({e1.m_target});
     int steps=0;
     do {
-        MulPoints(trackingResult.deltaPose);
+        MulPoints(deltaPose);
         worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
         // if (iteration>1){
             trackingResult= tracker.track((currentTask),data2fp, worldBuilder.get_world_objects());
