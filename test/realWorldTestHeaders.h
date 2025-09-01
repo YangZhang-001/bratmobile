@@ -174,15 +174,6 @@ class DebugTracker: public ClosedLoop_Tracker{
         std::cout<<"lowerbound="<<aabb.lowerBound.x<<", "<<aabb.lowerBound.y<<std::endl;
 
     }
-public:
-// void on_new_reading(const Task & goal, const Task & currentTask){
-//     ClosedLoop_Tracker::on_new_reading(goal, currentTask);
-//     printWindow();
-// }
-std::vector <BodyFeatures>::const_iterator find_disturbance( std::vector <BodyFeatures>::const_iterator objects_begin, std::vector <BodyFeatures>::const_iterator objects_end, const BodyFeatures & dist, b2Transform t, float * _least_square)override{
-    debug::print_pose(dist.pose, "expected D pose: ");
-    return ClosedLoop_Tracker::find_disturbance( objects_begin, objects_end, dist, t, _least_square);
-}
 
 
 

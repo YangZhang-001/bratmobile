@@ -1,15 +1,15 @@
 #include "disturbance.h"
 
 bool BodyFeatures::match(const BodyFeatures& bf, Bundle * bundle, b2Transform t)const{
-    // float hypothenuse_square= pow(bf.pose.p.Length(), 2); //assumes robot-centric perspective
-    // float adj_side_square=pow(bf.pose.p.Length()*t.q.c, 2);
-    // float distance_adjust= sqrt(hypothenuse_square-adj_side_square);
+    float hypothenuse_square= pow(bf.pose.p.Length(), 2); //assumes robot-centric perspective
+    float adj_side_square=pow(bf.pose.p.Length()*t.q.c, 2);
+    float distance_adjust= sqrt(hypothenuse_square-adj_side_square);
     float diff_x=pose.p.x -bf.pose.p.x;//-t.q.s*distance_adjust
     float diff_y=pose.p.y-bf.pose.p.y; //+t.q.c*distance_adjust
     float diff_w=halfWidth-bf.halfWidth;
     float diff_l=halfLength-bf.halfLength;
-    // bool match_x=fabs(diff_x)<D_POSE_MARGIN+ fabs(t.q.s*distance_adjust);
-    // bool match_y=fabs(diff_y)<D_POSE_MARGIN+fabs(t.q.c*distance_adjust);
+    bool match_x=fabs(diff_x)<D_POSE_MARGIN+ fabs(t.q.s*distance_adjust);
+    bool match_y=fabs(diff_y)<D_POSE_MARGIN+fabs(t.q.c*distance_adjust);
     bool match_distance=pose.p.Length()-bf.pose.p.Length()<D_POSE_MARGIN;
     bool match_w=fabs(diff_w)<D_DIMENSIONS_MARGIN;
     bool match_h=fabs(diff_l)<D_DIMENSIONS_MARGIN;

@@ -68,11 +68,8 @@ TrackingResult ClosedLoop_Tracker::get_transform(const Task & t, const Coordinat
         if ((t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
             std::cerr<<("not moving!")<<std::endl;    
         }
-        //return t.getAction().getTransform(LIDAR_SAMPLING_RATE);
         return result;
     }
-    // BodyFeatures predicted_bf=t.get_disturbance().bf;
-    // predicted_bf.pose=b2Mul(t.getAction().getTransform(LIDAR_SAMPLING_RATE), predicted_bf.pose);
     auto new_d_it =find_disturbance(objects.cbegin(), objects.cend(), result.observed_disturbance.bodyFeatures(), t.getAction().getTransform(LIDAR_SAMPLING_RATE));
     if (new_d_it==objects.end()){
         printf("not found!");
@@ -82,12 +79,9 @@ TrackingResult ClosedLoop_Tracker::get_transform(const Task & t, const Coordinat
     if ((*new_d_it).is_point()){
         throw std::invalid_argument("for some reason it's tiny!");    
     }
-    //BodyFeatures new_d=*new_d_it;
-   // result.displacement=b2Transform_zero;
     result.observed_disturbance=*new_d_it;
     correctAngle(result.observed_disturbance.bf, t.get_disturbance().bodyFeatures());
     calc_transform(result.displacement, result.observed_disturbance.pose(), t.get_disturbance().pose());
-    //result.observed_disturbance.bf=new_d; //this modifies task t, do not move!
     result.displacement=-result.displacement;
     return result;
 }
