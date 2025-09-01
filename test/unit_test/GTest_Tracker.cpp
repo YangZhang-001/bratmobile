@@ -50,7 +50,8 @@ class TestInputConfigurator: public UserInputConfigurator{
 
 };
 
-class TestInputConfiguratorFixture:public virtual TestInputConfigurator, public ::testing::TestWithParam<std::tuple<Direction, float>>{
+class TestInputConfiguratorFixture:public virtual TestInputConfigurator, public ::testing::Environment, public ::testing::TestWithParam<std::tuple<Direction, float>>{
+    Logger logger=makeLogger();
     public:
     TestInputConfiguratorFixture(){}
 
@@ -207,7 +208,6 @@ TEST_P(TestEnvironment, Execution){
  * 
  */
 TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
-    Logger logger=makeLogger();
     TestTracker tracker;
     Wise_Controller wc;
     Motor_Out motor;

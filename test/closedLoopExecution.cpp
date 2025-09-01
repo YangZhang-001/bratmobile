@@ -2,13 +2,6 @@
 #include "../custom_robot.h"
 
 
-// Disturbance set_target(int& run, b2Transform start){
-// 	Disturbance result;
-// 	return result;
-// }
-#undef DEBUG
-#define DEBUG true
-
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
