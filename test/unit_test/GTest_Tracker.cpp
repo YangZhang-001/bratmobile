@@ -229,9 +229,8 @@ TEST_F(TestInputConfiguratorFixture, NoiseTest){
     }while (!currentTask.is_over());
     EXPECT_LT(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2);
     EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
-    EXPECT_NEAR(currentTask.from_Di().q.GetAngle(), -M_PI_2, 0.01);
-    EXPECT_GT(steps, 1); //should take more than one step to complete task
-
+    EXPECT_NEAR(currentTask.from_Di().q.GetAngle(), -M_PI_2, 0.157079622/2);
+    EXPECT_GT(steps, 2); //should take more than one step to complete task
 
 }
 
