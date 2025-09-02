@@ -33,7 +33,7 @@ class UserInputDR:public UserInputConfigurator{
         disturbance.validate();
         Task task(disturbance, ds->getDirection(), b2Transform_zero, true);
         b2World world;
-        worldBuilder.buildWorld(world, task.start, task.getDirection(), disturbance);
+        worldBuilder.buildWorld(world, task.start, task.get_direction(), disturbance);
         if(ds->getDirection()==PURSUE && as->getAffIndex()){
             task.setEndCriteria(Distance(0.14));
         }
@@ -57,12 +57,12 @@ class OpenLoopController:public Controller{
         //printf("I DON'T KNOW WHAT TO DO NOW\n");
 	        return stopTask(controlGoal);
         }   
-        currentTask=Task(g[plan[0]].direction, Disturbance(), b2Trasform_zero, true);
+        currentTask=Task(g[plan[0]].direction, Disturbance(), b2Transform_zero, true);
         auto e=boost::edge(0, plan[0], g);
         currentTask.setMotorStep(g[e.first].step);
         return currentTask;
     }
-}
+};
 
 int main(int argc, char** argv) {
 	A1Lidar lidar;
