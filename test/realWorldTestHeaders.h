@@ -190,7 +190,9 @@ class UserInputDR:public UserInputConfigurator{
     UserInputDR(DirectionSetter * ds, AffordanceSetter * as): UserInputConfigurator(ds, as){}
     void getTaskFromInput(){
         Disturbance disturbance;
-        (worldBuilder.get_world_objects()[0]).attention=true;
+        if (directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==AVOID){
+            (worldBuilder.get_world_objects()[0]).attention=true;
+        }
         disturbance.bf=worldBuilder.get_world_objects()[0];
         disturbance.set_affordance(affordanceSetter->getAffIndex());
         disturbance.validate();
@@ -200,6 +202,7 @@ class UserInputDR:public UserInputConfigurator{
         if(directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==PURSUE){
             task.setEndCriteria(Distance(0.14));
         }
+        std::cout<<"goal valid "<<controlGoal.disturbance.getAffIndex()<<" pose x="<<controlGoal.disturbance.pose().p.x<<" y="<<controlGoal.disturbance.pose().p.y<<std::endl;
         simResult sr=simulate(task, world);
         std::cout<<"simulated!"<<sr.step<<" steps"<<std::endl;
         vertexDescriptor v1=boost::add_vertex(transitionSystem);

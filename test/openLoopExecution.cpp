@@ -22,10 +22,11 @@ class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
     }
 
     void step(AlphaBot& motors)override{
-        float R_adjust=R*1.3;
-        float L_adjust=L*1.3;
-        motors.setRightWheelSpeed(R_adjust); //temporary fix because motors on despacito are the wrong way around
-        motors.setLeftWheelSpeed(L_adjust);
+        // float R_adjust=R*1.3;
+        // float L_adjust=L*1.3;
+        // motors.setRightWheelSpeed(R_adjust); //temporary fix because motors on despacito are the wrong way around
+        // motors.setLeftWheelSpeed(L_adjust);
+        MotorCallback::step(motors);
         if (L!=0 && R!=0){
             motorStep--;
             std::cout<<"one down"<<std::endl;
