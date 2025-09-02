@@ -1,6 +1,31 @@
 #include "../custom_robot.h"
 #include "realWorldTestHeaders.h"
+/**
+ * Tracks and executes tasks using deadreckoning
+ */
+class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
+    int motorStep=0;
+    public:
+    OpenLooper():MotorCallback(this){
+        
+    }
 
+    void on_new_task(const Task &task, const Task & goal){
+        motorStep=task.getMotorStep();
+        deltaTransform=b2Transform_zero;
+    }
+
+    void step(AlphaBot& motors)override{
+        MotorCallback::step(motors);
+        if (MotorCallback::L!=0 && MotorCallback::R!=0){
+            motorStep--;
+        }
+        if (motorStep==0){
+            MotorCallback::L=0;
+            MotorCallback::R=0;
+        }
+    }
+};
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
