@@ -19,14 +19,14 @@ Task Controller::stopTask(const Task& controlGoal){
 	currentTask.getAction().setLWheelSpeed(0);
 	currentTask.getAction().setRWheelSpeed(0);
 	currentTask.set_change(true);
-	return curren
+	return currentTask;
 }
 
 
 Task Wise_Controller::next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
 	if (plan.empty()){
 	//printf("I DON'T KNOW WHAT TO DO NOW\n");
-	return stopTask();
+	return stopTask(controlGoal);
 	}
 	int i=to_task_end(g, plan);
 	currentTask = task_to_execute(plan, g, i, controlGoal, currentTask,current_vertices);	
@@ -76,9 +76,9 @@ Task Wise_Controller::task_to_execute(const std::vector<vertexDescriptor>&p, con
 				t.setEndCriteria(angle);
 			}
 			else if(!g[p[0]].isTurning()){
-				Distance distance(g[p[0]].end_from_Di().p.x){
-					t.setEndCriteria(distance);
-				}
+				Distance distance(g[p[0]].end_from_Di().p.x);
+				t.setEndCriteria(distance);
+				
 			}
 		}
         disturbance_q=g[p[0]].Di; 	

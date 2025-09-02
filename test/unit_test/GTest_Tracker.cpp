@@ -53,8 +53,7 @@ class TestInputConfigurator: public UserInputConfigurator{
 
 };
 
-class TestInputConfiguratorFixture:public virtual TestInputConfigurator, public ::testing::Environment, public ::testing::TestWithParam<std::tuple<Direction, float>>{
-    Logger logger=makeLogger();
+class TestInputConfiguratorFixture:public virtual TestInputConfigurator, public ::testing::TestWithParam<std::tuple<Direction, float>>{
     public:
     TestInputConfiguratorFixture(){}
 
@@ -74,7 +73,7 @@ class TestInputConfiguratorFixture:public virtual TestInputConfigurator, public 
         else if (valueParam[1]=='1'){
             testCaseDir+=valueParam="/RIGHT";
         }
-        return Logger(testCaseDir.c_str(), ".", valueParam.c_str());
+        return Logger(testCaseDir.c_str(), ".", valueParam.c_str(), false);
     }
 };
 
@@ -211,6 +210,7 @@ TEST_P(TestEnvironment, Execution){
  * 
  */
 TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
+    Logger=makeLogger();
     TestTracker tracker;
     Wise_Controller wc;
     Motor_Out motor;

@@ -1,6 +1,6 @@
  #include "debug.h"
 
-std::string Logger::file_dateTime(const char* custom, char name[80], const char * addOn){
+std::string Logger::file_dateTime(const char* custom, char name[80]){
 	time_t now =time(0);
 	tm *ltm = localtime(&now);
 	int y,m,d, h, min;
@@ -34,7 +34,7 @@ bool Logger::log(const char * format, ...){
 
 }
 
-void Logger::init(const char * new_folder, const char * _dir, const char * customName){
+void Logger::init(const char * new_folder, const char * _dir, const char * customName, bool dateOn){
 		std::string dirName=_dir;
 		if (!opendir(dirName.c_str())){
 			mkdir(dirName.c_str(), 0777);
@@ -45,8 +45,10 @@ void Logger::init(const char * new_folder, const char * _dir, const char * custo
 			mkdir(new_path.c_str(), 0777); //""
 		}
 		std::string customfile=new_path +customName;
-		file_dateTime(customfile.c_str(), fileName);
-		f = fopen(fileName, "w");
+		if (dateOn){
+			file_dateTime(customfile.c_str(), fileName);
+		}
+		f = fopen(fileName, 'a');
 		if (!f){
 			std::cerr<<"cannot open file "<<fileName<<std::endl;
 		}

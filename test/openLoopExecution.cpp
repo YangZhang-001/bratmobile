@@ -50,7 +50,7 @@ class OpenLoopController:public Controller{
     Task next_task(const Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
         if (plan.empty()){
         //printf("I DON'T KNOW WHAT TO DO NOW\n");
-        return stopTask();
+	        return stopTask(controlGoal);
         }   
 
         Task result(g[plan[0]].direction, Disturbance(), b2Trasform_zero, true);
