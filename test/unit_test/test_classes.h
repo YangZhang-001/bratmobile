@@ -198,8 +198,9 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
      */
     BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth);
 
-
-    
+    void setTask(const Task& t){
+        currentTask=t;
+    }
 
     vertexDescriptor get_current_vertex(){
         return currentVertex;
