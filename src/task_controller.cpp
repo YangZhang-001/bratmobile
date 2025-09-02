@@ -14,20 +14,25 @@ int Controller::motor_step(Task::Action a, float distance){
 	    return abs(result);
 }
 
-Task Wise_Controller::next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
-	if (plan.empty()){
-	//printf("I DON'T KNOW WHAT TO DO NOW\n");
-	currentTask=Task(controlGoal.get_disturbance(), UNDEFINED);
+Task Controller::stopTask(const Task& controlGoal){
+	Task currentTask(controlGoal.get_disturbance(), UNDEFINED);
 	currentTask.getAction().setLWheelSpeed(0);
 	currentTask.getAction().setRWheelSpeed(0);
 	currentTask.set_change(true);
-	return currentTask;
+	return curren
 }
-int i=to_task_end(g, plan);
-currentTask = task_to_execute(plan, g, i, controlGoal, currentTask,current_vertices);	
-current_vertices=std::vector(plan.begin(), plan.begin()+i);
-plan.erase(plan.begin(), plan.begin()+i);
-return currentTask;
+
+
+Task Wise_Controller::next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
+	if (plan.empty()){
+	//printf("I DON'T KNOW WHAT TO DO NOW\n");
+	return stopTask();
+	}
+	int i=to_task_end(g, plan);
+	currentTask = task_to_execute(plan, g, i, controlGoal, currentTask,current_vertices);	
+	current_vertices=std::vector(plan.begin(), plan.begin()+i);
+	plan.erase(plan.begin(), plan.begin()+i);
+	return currentTask;
 }
 
 int Wise_Controller::to_task_end(const TransitionSystem& g, std::vector<vertexDescriptor>& plan){

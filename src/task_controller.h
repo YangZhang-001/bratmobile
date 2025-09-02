@@ -23,6 +23,7 @@ class Controller{
         }
         return 0;
     }
+    Task stopTask(const Task& controlGoal);
     public:
 
     Controller()=default;
