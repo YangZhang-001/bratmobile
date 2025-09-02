@@ -4,6 +4,9 @@
 #include "stdio.h"
 class TestEnvironment;
 
+/**
+ * Tests for tracking unit tests
+ */
 class TestInputConfigurator: public UserInputConfigurator{
     BodyFeatures initial_bf;
     public:

@@ -36,7 +36,7 @@ class Controller{
      * @param current_vertices a container with the cognitive map vertices representing the current Task (more than one if Task has been split)
      * @param plan the plan
      */
-    virtual Task next_task(const Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector <vertexDescriptor> & plan)=0;
+    virtual Task next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector <vertexDescriptor> & plan)=0;
 
     /**
      * @brief Assigns fixed duration (in amount of motor callbacks)
@@ -79,7 +79,7 @@ class Wise_Controller: public Controller{
 
 	Wise_Controller()=default;
 
-    Task next_task(const Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan);
+    Task next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan);
 
     /**
      * @brief returns last vertex of the task starting at plan[0]
@@ -116,7 +116,7 @@ class Reactive_Controller : public Controller{
 
 	Reactive_Controller()=default;
 
-    virtual Task next_task(const Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan);
+    virtual Task next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan);
 
 
 };
