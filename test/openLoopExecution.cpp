@@ -12,17 +12,18 @@ class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
 
     void on_new_task(const Task &task, const Task & goal){
         motorStep=task.getMotorStep();
+        std::cout<<"motorStep="<<motorStep<<std::endl;
         deltaTransform=b2Transform_zero;
     }
 
     void step(AlphaBot& motors)override{
         MotorCallback::step(motors);
-        if (MotorCallback::L!=0 && MotorCallback::R!=0){
+        if (L!=0 && R!=0){
             motorStep--;
         }
         if (motorStep==0){
-            MotorCallback::L=0;
-            MotorCallback::R=0;
+            motors.setLeftWheelSpeed(0);
+            motors.setRightWheelSpeed(0);
         }
     }
 };

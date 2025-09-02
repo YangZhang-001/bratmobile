@@ -64,8 +64,6 @@ public:
 
 class MotorCallback :public AlphaBot::StepCallback { //every 100ms the callback updates the plan
 protected:
-	float L=0;
-	float R=0;
 	Motor_Out * mio;
 public:
 
