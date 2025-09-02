@@ -384,7 +384,7 @@ void setMotorStep(int i){
     motorStep=i;
 }
 
-int & getMotorStep(){return motorStep;}
+int getMotorStep()const{return motorStep;}
 
 b2Transform getStart(){
     return start;
