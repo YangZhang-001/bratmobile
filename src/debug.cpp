@@ -48,9 +48,10 @@ void Logger::init(const char * new_folder, const char * _dir, const char * custo
 		if (dateOn){
 			file_dateTime(customfile.c_str(), fileName);
 		}
-		f = fopen(fileName, 'a');
+		f = fopen(fileName, "a+");
 		if (!f){
 			std::cerr<<"cannot open file "<<fileName<<std::endl;
+			throw;
 		}
 }
 

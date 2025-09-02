@@ -158,8 +158,8 @@ class OneTaskController: public Wise_Controller{
     public:
     OneTaskController()=default;
 
-    void next_task(Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan)override{
-        Wise_Controller::next_task(currentTask, controlGoal, g, current_vertices, plan);
+    Task next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan)override{
+        currentTask= Wise_Controller::next_task(currentTask, controlGoal, g, current_vertices, plan);
         if (currentTask.is_over() && currentTask.getAction().getLWheelSpeed()!=0 && currentTask.getAction().getRWheelSpeed()!=0){
             std::cout<<"terminating!"<<std::endl;
             currentTask=Task(Disturbance(), STOP);
@@ -167,6 +167,7 @@ class OneTaskController: public Wise_Controller{
             currentTask.getAction().setRWheelSpeed(0);
             currentTask.set_change(false);
         }
+        return currentTask;
     }
 
 };
