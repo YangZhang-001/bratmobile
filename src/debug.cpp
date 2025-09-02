@@ -48,11 +48,11 @@ void Logger::init(const char * new_folder, const char * _dir, const char * custo
 		if (dateOn){
 			file_dateTime(customfile.c_str(), fileName);
 		}
-		try{
-			f = fopen(fileName, "a+");
-			if (!f)throw f;
+		else{
+			sprintf(fileName, "%s.txt",customfile.c_str());
 		}
-		catch(FILE * _f){
+		f = fopen(fileName, "a+");
+		if (!f){
 			f=fopen(fileName, "w+");
 		}
 		if (!f){

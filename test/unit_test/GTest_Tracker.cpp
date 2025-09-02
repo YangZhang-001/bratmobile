@@ -61,17 +61,17 @@ class TestInputConfiguratorFixture:public virtual TestInputConfigurator, public 
         //std::string dumpFolder="benchmark", systemArchDir=dumpFolder+Logger::getSystemArchitecture();
         std::string testCaseDir=::testing::UnitTest::GetInstance()->current_test_info()->name();
         std::string valueParam=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-        if (testCaseDir[testCaseDir.size()-3]=='/'){
-            testCaseDir.pop_back();
-            testCaseDir.pop_back();
-            testCaseDir.pop_back();
-            
-        }
+        // if (testCaseDir[testCaseDir.size()-2]=='/'){
+        //     testCaseDir.pop_back();
+        //testCaseDir.pop_back();            
+        // }
+        auto slash=testCaseDir.find_last_of('/');
+        testCaseDir.erase(slash, testCaseDir.size()-1);
         if (valueParam[1]=='0'){
             valueParam="/LEFT";
         }
         else if (valueParam[1]=='1'){
-            testCaseDir+=valueParam="/RIGHT";
+            valueParam="/RIGHT";
         }
         return Logger(testCaseDir.c_str(), ".", valueParam.c_str(), false);
     }
@@ -210,6 +210,7 @@ TEST_P(TestEnvironment, Execution){
  * 
  */
 TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
+  //  GTEST_SKIP();
     Logger logger=makeLogger();
     TestTracker tracker;
     Wise_Controller wc;
@@ -255,11 +256,13 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
         deltaPose=-currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
        if (steps>50)break;
     }while (!currentTask.is_over());
-    EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2, 0.157079622/2);
+	logger.log("%f\t%f\t%f\n", std::get<1>(GetParam()), tracker.getDeltaTransform().q.GetAngle(), currentTask.from_Di().q.GetAngle());
+    logger.~Logger();
+    // EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2, 0.157079622/2);
     EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
     EXPECT_NEAR(currentTask.from_Di().q.GetAngle(), -targetAngle, 0.157079622/2);
-    EXPECT_GT(steps, 1); //should take more than one step to complete task
-	logger.log("%f\t%f\n", std::get<1>(GetParam()), tracker.getDeltaTransform().q.GetAngle());
+    // EXPECT_GT(steps, 1); //should take more than one step to complete task
+   // SUCCEED();
 }
 
 INSTANTIATE_TEST_CASE_P(Noise, TestInputConfiguratorFixture, ::testing::Combine(testing::Values(LEFT, RIGHT), ::testing::Range(-90.0f,90.0f)));

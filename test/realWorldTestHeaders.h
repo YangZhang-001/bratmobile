@@ -107,18 +107,8 @@ class UserInputConfigurator: public virtual DebugConfigurator{
             disturbance.set_affordance(affordanceSetter->getAffIndex());
             transitionSystem[v1].Di=disturbance;
             if (transitionSystem[v1].direction==DEFAULT){
-                // float howFarShift=.5;
-                // if (disturbance.pose().p.y<0) howFarShift=-howFarShift;
-                // // std::cout<<"howfar="<<howFarShift<<std::endl;
-                // b2Transform newGoal; //goal in line with the obstacle
-                // newGoal.p=b2Vec2(0, howFarShift)+disturbance.pose().p;
-                // // debug::print_pose(newGoal, "newgoal");
-                // controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED); //set goal
-                // transitionSystem[v1].endPose.p.x=.2; //let's say it moved 20 cm
-                // init(controlGoal);
-                // register_tracker(tracker); //make tracker to track the new goal
                 assignNewGoal(disturbance);
-                transitionSystem[v1].endPose.p.x=.2; //let's say it moved 20 cm
+                transitionSystem[v1].endPose.p.x=.02; //let's say it moved 20 cm
 
             }
             if (affordanceSetter->getAffIndex()==PURSUE){
@@ -132,7 +122,7 @@ class UserInputConfigurator: public virtual DebugConfigurator{
             }
         }
         currentTask.set_change(true);
-        transitionSystem[e.first].step=20;
+        transitionSystem[e.first].step=1;
         transitionSystem[e.first].it_observed=iteration;
         debug::print_pose(transitionSystem[v1].Di.pose(), "Di:");
         debug::print_pose(transitionSystem[v1].Dn.pose(), "Dn:");
