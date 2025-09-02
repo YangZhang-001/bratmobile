@@ -189,7 +189,7 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
     }
 
     const std::vector <Direction>& vertex_get_options(vertexDescriptor v){
-        transitionSystem[v].options;
+        return transitionSystem[v].options;
     }
 
     /**
@@ -1138,6 +1138,7 @@ int ConfiguratorTestTransitionMatrix::expectedOptions(Direction dir, simResult::
     else if (o==simResult::crashed){
         return 0;
     }
+    return 0;
 }
 
 void ConfiguratorTestTransitionMatrix::planIsDirection(Direction direction){
