@@ -202,7 +202,7 @@ class UserInputDR:public UserInputConfigurator{
         if(directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==PURSUE){
             task.setEndCriteria(Distance(0.14));
         }
-        std::cout<<"goal valid "<<controlGoal.get_disturbance().getAffIndex()<<" pose x="<<controlGoal.get_disturbance().pose().p.x<<" y="<<controlGoal..get_disturbance().p.y<<std::endl;
+        std::cout<<"goal valid "<<controlGoal.get_disturbance().getAffIndex()<<" pose x="<<controlGoal.get_disturbance().pose().p.x<<" y="<<controlGoal.get_disturbance().p.y<<std::endl;
         simResult sr=simulate(task, world);
         std::cout<<"simulated!"<<sr.step<<" steps"<<std::endl;
         vertexDescriptor v1=boost::add_vertex(transitionSystem);
