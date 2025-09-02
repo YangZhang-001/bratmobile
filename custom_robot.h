@@ -1,4 +1,5 @@
-//#include "libcam2opencv.h"
+#ifndef CUSTOM_INTERFACES
+#define CUSTOM_INTERFACES
 #include "a1lidarrpi.h"
 #include "alphabot.h"
 #include "attentive.h"
@@ -69,7 +70,7 @@ protected:
 public:
 
 MotorCallback(Motor_Out *_mio): mio(_mio){}
-virtual void step( AlphaBot &motors){
+void step( AlphaBot &motors){
 	if (mio==NULL){
 		throw ("mio null\n");
 	}
@@ -79,5 +80,32 @@ virtual void step( AlphaBot &motors){
 }
 };
 
+/**
+ * Tracks and executes tasks using deadreckoning
+ */
+class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
+    int motorStep=0;
+    public:
+    OpenLooper():MotorCallback(this){
+        
+    }
+
+    void on_new_task(const Task &task, const Task & goal){
+        motorStep=task.getMotorStep();
+        deltaTransform=b2Transform_zero;
+    }
+
+    void step(AlphaBot& motors)override{
+        MotorCallback::step(motors);
+        if (MotorCallback::L!=0 && MotorCallback::R!=0){
+            motorStep--;
+        }
+        if (motorStep==0){
+            MotorCallback::L=0;
+            MotorCallback::R=0;
+        }
+    }
+};
+#endif
 
 

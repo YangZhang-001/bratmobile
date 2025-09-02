@@ -182,21 +182,21 @@ class DebugTracker: public ClosedLoop_Tracker{
     }
 
 
-
-
 };
 
 
 class UserInputDR:public UserInputConfigurator{
+    public:
+    UserInputDR(DirectionSetter * ds, AffordanceSetter * as): UserInputConfigurator(ds, as){}
     void getTaskFromInput(){
         Disturbance disturbance;
         disturbance.bf=worldBuilder.get_world_objects()[0];
-        disturbance.set_affordance(as->getAffIndex());
+        disturbance.set_affordance(affordanceSetter->getAffIndex());
         disturbance.validate();
-        Task task(disturbance, ds->getDirection(), b2Transform_zero, true);
+        Task task(disturbance, directionSetter->getDirection(), b2Transform_zero, true);
         b2World world(GRAVITY);
         worldBuilder.buildWorld(world, b2Transform_zero, task.get_direction(), disturbance);
-        if(ds->getDirection()==PURSUE && as->getAffIndex()){
+        if(directionSetter->getDirection()==PURSUE && affordanceSetter->getAffIndex()){
             task.setEndCriteria(Distance(0.14));
         }
         simResult sr=simulate(task, world);
@@ -209,9 +209,6 @@ class UserInputDR:public UserInputConfigurator{
         currentTask.set_change(true);
         transitionSystem[e.first].it_observed=iteration;
     }
-    public:
-    UserInputDR(DirectionSetter * ds, AffordanceSetter * as): UserInputConfigurator(ds, as){}
-
 };
 
 class OpenLoopController:public Controller{
