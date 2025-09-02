@@ -53,7 +53,7 @@ void Logger::init(const char * new_folder, const char * _dir, const char * custo
 			if (!f)throw f;
 		}
 		catch(FILE * _f){
-			f=fopen(fileName "w+")
+			f=fopen(fileName, "w+");
 		}
 		if (!f){
 			std::cerr<<"cannot open file "<<fileName<<std::endl;
