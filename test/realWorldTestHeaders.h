@@ -107,16 +107,17 @@ class UserInputConfigurator: public virtual DebugConfigurator{
             disturbance.set_affordance(affordanceSetter->getAffIndex());
             transitionSystem[v1].Di=disturbance;
             if (transitionSystem[v1].direction==DEFAULT){
-                float howFarShift=.5;
-                if (disturbance.pose().p.y<0) howFarShift=-howFarShift;
-                // std::cout<<"howfar="<<howFarShift<<std::endl;
-                b2Transform newGoal; //goal in line with the obstacle
-                newGoal.p=b2Vec2(0, howFarShift)+disturbance.pose().p;
-                // debug::print_pose(newGoal, "newgoal");
-                controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED); //set goal
-                transitionSystem[v1].endPose.p.x=.2; //let's say it moved 20 cm
-                init(controlGoal);
-                register_tracker(tracker); //make tracker to track the new goal
+                // float howFarShift=.5;
+                // if (disturbance.pose().p.y<0) howFarShift=-howFarShift;
+                // // std::cout<<"howfar="<<howFarShift<<std::endl;
+                // b2Transform newGoal; //goal in line with the obstacle
+                // newGoal.p=b2Vec2(0, howFarShift)+disturbance.pose().p;
+                // // debug::print_pose(newGoal, "newgoal");
+                // controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED); //set goal
+                // transitionSystem[v1].endPose.p.x=.2; //let's say it moved 20 cm
+                // init(controlGoal);
+                // register_tracker(tracker); //make tracker to track the new goal
+                assignNewGoal(disturbance);
             }
             if (affordanceSetter->getAffIndex()==PURSUE){
                 //set pose for turns in pursuit of a disturbance
@@ -134,6 +135,20 @@ class UserInputConfigurator: public virtual DebugConfigurator{
         debug::print_pose(transitionSystem[v1].Di.pose(), "Di:");
         debug::print_pose(transitionSystem[v1].Dn.pose(), "Dn:");
         m_plan={v1};
+
+    }
+
+    void assignNewGoal(Disturbance &disturbance){
+        float howFarShift=.5;
+        if (disturbance.pose().p.y<0) howFarShift=-howFarShift;
+        // std::cout<<"howfar="<<howFarShift<<std::endl;
+        b2Transform newGoal; //goal in line with the obstacle
+        newGoal.p=b2Vec2(0, howFarShift)+disturbance.pose().p;
+        // debug::print_pose(newGoal, "newgoal");
+        controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED); //set goal
+        transitionSystem[v1].endPose.p.x=.2; //let's say it moved 20 cm
+        init(controlGoal);
+        register_tracker(tracker); //make tracker to track the new goal
 
     }
 
@@ -191,17 +206,21 @@ class UserInputDR:public UserInputConfigurator{
     void getTaskFromInput(){
         Disturbance disturbance;
         if (directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==AVOID){
-            (worldBuilder.get_world_objects()[0]).attention=true;
+            (worldBuilder.get_world_objects()[0]).attention=true;   
         }
         disturbance.bf=worldBuilder.get_world_objects()[0];
         disturbance.set_affordance(affordanceSetter->getAffIndex());
         disturbance.validate();
+        if (directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==AVOID){
+            assignNewGoal(disturbance);    
+        }
         Task task(disturbance, directionSetter->getDirection(), b2Transform_zero, true);
         b2World world(GRAVITY);
         worldBuilder.buildWorld(world, b2Transform_zero, task.get_direction(), disturbance);
         if(directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==PURSUE){
             task.setEndCriteria(Distance(0.14));
         }
+
         std::cout<<"goal valid "<<controlGoal.get_disturbance().getAffIndex()<<" pose x="<<controlGoal.get_disturbance().pose().p.x<<" y="<<controlGoal.get_disturbance().pose().p.y<<std::endl;
         simResult sr=simulate(task, world);
         std::cout<<"simulated!"<<sr.step<<" steps"<<std::endl;
