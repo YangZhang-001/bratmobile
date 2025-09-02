@@ -52,13 +52,12 @@ class UserInputDR:public UserInputConfigurator{
 };
 
 class OpenLoopController:public Controller{
-    Task next_task(const Task & currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
+    Task next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
         if (plan.empty()){
         //printf("I DON'T KNOW WHAT TO DO NOW\n");
 	        return stopTask(controlGoal);
         }   
-
-        Task result(g[plan[0]].direction, Disturbance(), b2Trasform_zero, true);
+        currentTask=Task(g[plan[0]].direction, Disturbance(), b2Trasform_zero, true);
         auto e=boost::edge(0, plan[0], g);
         currentTask.setMotorStep(g[e.first].step);
         return currentTask;
