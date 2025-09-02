@@ -190,13 +190,14 @@ class UserInputDR:public UserInputConfigurator{
     UserInputDR(DirectionSetter * ds, AffordanceSetter * as): UserInputConfigurator(ds, as){}
     void getTaskFromInput(){
         Disturbance disturbance;
+        worldBuilder.get_world_objects[0].attention=true;
         disturbance.bf=worldBuilder.get_world_objects()[0];
         disturbance.set_affordance(affordanceSetter->getAffIndex());
         disturbance.validate();
         Task task(disturbance, directionSetter->getDirection(), b2Transform_zero, true);
         b2World world(GRAVITY);
         worldBuilder.buildWorld(world, b2Transform_zero, task.get_direction(), disturbance);
-        if(directionSetter->getDirection()==PURSUE && affordanceSetter->getAffIndex()){
+        if(directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==PURSUE){
             task.setEndCriteria(Distance(0.14));
         }
         simResult sr=simulate(task, world);
@@ -214,12 +215,16 @@ class UserInputDR:public UserInputConfigurator{
 class OpenLoopController:public Controller{
     Task next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
         if (plan.empty()){
-        //printf("I DON'T KNOW WHAT TO DO NOW\n");
-	        return stopTask(controlGoal);
-        }   
+            return stopTask(controlGoal);
+        }
         currentTask=Task(Disturbance(), g[plan[0]].direction, b2Transform_zero, true);
         auto e=boost::edge(0, plan[0], g);
         currentTask.setMotorStep(g[e.first].step);
+        plan.erase(plan.begin());
+        if (currentTask.is_over()&& currentTask.getAction().getLWheelSpeed()!=0 && currentTask.getAction().getRWheelSpeed()!=0){
+        //printf("I DON'T KNOW WHAT TO DO NOW\n");
+	        return stopTask(controlGoal);
+        }   
         return currentTask;
     }
 };

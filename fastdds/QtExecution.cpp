@@ -262,7 +262,8 @@ class UserInputConfigurator: public virtual Configurator{
             return;
         }
         if (worldBuilder.get_world_objects().size()>1){
-            throw "TOO MANY OBSTACLES!!";
+            std::cout<<"TOO MANY OBSTACLES!!";
+            return;
         }
         std::cout<<iteration<<std::endl;
         if (iteration<=1){

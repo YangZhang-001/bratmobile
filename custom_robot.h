@@ -68,9 +68,9 @@ protected:
 public:
 
 MotorCallback(Motor_Out *_mio): mio(_mio){}
-void step( AlphaBot &motors){
+virtual void step( AlphaBot &motors){
 	if (mio==NULL){
-		throw ("mio null\n");
+		std::cout<<("no motor out interface");
 	}
     motors.setRightWheelSpeed(mio->get_R()); //temporary fix because motors on despacito are the wrong way around
     motors.setLeftWheelSpeed(mio->get_L());

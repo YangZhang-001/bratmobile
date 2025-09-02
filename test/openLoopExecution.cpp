@@ -16,12 +16,24 @@ class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
         deltaTransform=b2Transform_zero;
     }
 
+    bool hasTaskEnded(Task & t)override{
+        return motorStep<=0;
+        
+    }
+
     void step(AlphaBot& motors)override{
-        MotorCallback::step(motors);
+        float R_adjust=R*1.3;
+        float L_adjust=L*1.3;
+        motors.setRightWheelSpeed(R_adjust); //temporary fix because motors on despacito are the wrong way around
+        motors.setLeftWheelSpeed(L_adjust);
         if (L!=0 && R!=0){
             motorStep--;
+            std::cout<<"one down"<<std::endl;
+            std::cout<<"motorStep="<<motorStep<<std::endl;
         }
         if (motorStep==0){
+            L=0;
+            R=0;
             motors.setLeftWheelSpeed(0);
             motors.setRightWheelSpeed(0);
         }
@@ -31,7 +43,6 @@ int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
 	LIDAR_In configuratorInterface;
-	// Motor_Out controlInterface;
     OpenLooper openLooper;
     AffordanceSetter as;
     DirectionSetter ds;
@@ -39,7 +50,6 @@ int main(int argc, char** argv) {
     UserInputDR configurator(&ds, &as);
     b2Vec2 goalPos(1,0);
     Disturbance goal(PURSUE, goalPos);
-    // ClosedLoop_Tracker tracker;
     Task controlGoal(goal, UNDEFINED);
     configurator.register_tracker(&openLooper);
     configurator.init(controlGoal);
@@ -49,11 +59,8 @@ int main(int argc, char** argv) {
 		configuratorInterface.debugOn=atoi(argv[2]);
 	}
 	configurator.setSimulationStep(.5);
-	//printf("current vertices size=%i\n", configurator.current_vertices.size());
-
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &openLooper);
-	// MotorCallback cb(&openLooper);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&openLooper);
 	configurator.start();
