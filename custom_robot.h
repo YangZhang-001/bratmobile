@@ -1,4 +1,5 @@
-//#include "libcam2opencv.h"
+#ifndef CUSTOM_INTERFACES
+#define CUSTOM_INTERFACES
 #include "a1lidarrpi.h"
 #include "alphabot.h"
 #include "attentive.h"
@@ -63,13 +64,11 @@ public:
 
 class MotorCallback :public AlphaBot::StepCallback { //every 100ms the callback updates the plan
 protected:
-	float L=0;
-	float R=0;
 	Motor_Out * mio;
 public:
 
 MotorCallback(Motor_Out *_mio): mio(_mio){}
-virtual void step( AlphaBot &motors){
+void step( AlphaBot &motors){
 	if (mio==NULL){
 		throw ("mio null\n");
 	}
@@ -79,5 +78,6 @@ virtual void step( AlphaBot &motors){
 }
 };
 
+#endif
 
 
