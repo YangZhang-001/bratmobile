@@ -52,10 +52,9 @@ class OpenLoopController:public Controller{
         //printf("I DON'T KNOW WHAT TO DO NOW\n");
 	        return stopTask(controlGoal);
         }   
-
-        Task result(g[plan[0]].direction, Disturbance(), b2Trasform_zero, true);
+        Task result =Task(g[plan[0]].direction, Disturbance(), b2Trasform_zero, true);
         auto e=boost::edge(0, plan[0], g);
-        currentTask.setMotorStep(g[e.first].step);
+        result.setMotorStep(g[e.first].step);
         return currentTask;
     }
 }
