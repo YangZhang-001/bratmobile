@@ -190,7 +190,7 @@ class UserInputDR:public UserInputConfigurator{
     UserInputDR(DirectionSetter * ds, AffordanceSetter * as): UserInputConfigurator(ds, as){}
     void getTaskFromInput(){
         Disturbance disturbance;
-        worldBuilder.get_world_objects[0].attention=true;
+        (worldBuilder.get_world_objects()[0]).attention=true;
         disturbance.bf=worldBuilder.get_world_objects()[0];
         disturbance.set_affordance(affordanceSetter->getAffIndex());
         disturbance.validate();
