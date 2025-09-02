@@ -18,6 +18,10 @@ class OpenLooper: public DeadReckoner, public Motor_Out, public MotorCallback{
         if (L!=0 && R!=0){
             motorStep--;
         }
+        if (motorStep==0){
+            L=0;
+            R=0;
+        }
     }
 };
 
@@ -34,6 +38,7 @@ class UserInputDR:public UserInputConfigurator{
             task.setEndCriteria(Distance(0.14));
         }
         simResult sr=simulate(task, world);
+        std::cout<<"simulated!"<<sr.step<<" steps"<<std::endl;
         vertexDescriptor v1=boost::add_vertex(transitionSystem);
         auto e=boost::add_edge(currentVertex, v1, transitionSystem);
         transitionSystem[v1].direction=directionSetter->getDirection();
@@ -69,14 +74,14 @@ int main(int argc, char** argv) {
     AffordanceSetter as;
     DirectionSetter ds;
     std::cout<<as.getAffIndex()<<", "<<ds.getDirection()<<std::endl;
-    UserInputConfigurator configurator(&ds, &as);
+    UserInputDR configurator(&ds, &as);
     b2Vec2 goalPos(1,0);
     Disturbance goal(PURSUE, goalPos);
     // ClosedLoop_Tracker tracker;
     Task controlGoal(goal, UNDEFINED);
     configurator.register_tracker(&openLooper);
     configurator.init(controlGoal);
-	OneTaskController rc;
+	OpenLoopController rc;
 	configurator.register_controller(&rc);
 	if (argc>2){
 		configuratorInterface.debugOn=atoi(argv[2]);
