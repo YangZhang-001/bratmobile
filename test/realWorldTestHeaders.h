@@ -118,6 +118,8 @@ class UserInputConfigurator: public virtual DebugConfigurator{
                 // init(controlGoal);
                 // register_tracker(tracker); //make tracker to track the new goal
                 assignNewGoal(disturbance);
+                transitionSystem[v1].endPose.p.x=.2; //let's say it moved 20 cm
+
             }
             if (affordanceSetter->getAffIndex()==PURSUE){
                 //set pose for turns in pursuit of a disturbance
@@ -146,7 +148,6 @@ class UserInputConfigurator: public virtual DebugConfigurator{
         newGoal.p=b2Vec2(0, howFarShift)+disturbance.pose().p;
         // debug::print_pose(newGoal, "newgoal");
         controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED); //set goal
-        transitionSystem[v1].endPose.p.x=.2; //let's say it moved 20 cm
         init(controlGoal);
         register_tracker(tracker); //make tracker to track the new goal
 
