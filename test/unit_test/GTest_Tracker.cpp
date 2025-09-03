@@ -50,6 +50,17 @@ class TestInputConfigurator: public UserInputConfigurator{
         data2fp=data;
     }
 
+    void cvMulPoints(b2Transform t){
+        cv::Mat affine=cv::getRotationMatrix2D(cv::Point2f(0,0), double(t.q.GetAngle()),double(1));
+        // affine.at<double>(0, 2) = 0.4*t.q.s; 
+        // affine.at<double>(1, 2) = 0.4*t.q.c; 
+        std::vector<cv::Point2f> result;
+        cv::transform(set2vec2f(data2fp), result, affine);
+        data2fp.clear();
+        for (auto p:result){
+            data2fp.emplace(Pointf(p.x, p.y));
+        }
+    }
 
 };
 
@@ -227,40 +238,37 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
     obstacle.validate();
     auto e1=make_successful(MOVING_VERTEX, std::get<0>(GetParam()));
     float targetAngle(M_PI_2);
-    //auto e2=make_successful(e1.m_target, DEFAULT);
     transitionSystem[e1.m_target].Di=obstacle;
-    //transitionSystem[e2.m_target].Di=obstacle;
     if (std::get<0>(GetParam())==RIGHT){
         targetAngle=-targetAngle;
     }
     transitionSystem[e1.m_target].endPose.q.Set(targetAngle);
-    // transitionSystem[e2.m_target].start= vertex_get_endPose(e1.m_target);
-    // transitionSystem[e2.m_target].endPose=b2Mul(b2Transform(b2Vec2(0.4,0), b2Rot(0)), get_ts()[e2.m_target].start);
     TrackingResult trackingResult(currentTask.get_disturbance());
-    b2Transform errorTransform=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*std::get<1>(GetParam()))), deltaPose=errorTransform;
-    //obstacle.bf.pose=b2Mul(trackingResult.displacement, obstacle.bf.pose);
+    float angleError=std::get<1>(GetParam());
+    b2Transform errorTransform=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*angleError)), deltaPose=errorTransform;
     set_plan({e1.m_target});
     int steps=0;
     do {
-        change_task();	
+        change_task();
         adjust_goal_expectation();
         estimate_current_vertex();        
         MulPoints(deltaPose);
+        deltaPose=-currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
         worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
-        // if (iteration>1){
             trackingResult= tracker.track((currentTask),data2fp, worldBuilder.get_world_objects());
             update_graph(transitionSystem, trackingResult);
-//        }
         steps++;
         iteration++;
-        deltaPose=-currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
        if (steps>50)break;
     }while (!currentTask.is_over());
-	logger.log("%f\t%f\t%f\n", std::get<1>(GetParam()), tracker.getDeltaTransform().q.GetAngle(), currentTask.from_Di().q.GetAngle());
+    b2Transform travelled_transform= tracker.getDeltaTransform();
+	logger.log("%f\t%f\t%f\t%f\n", angleError, travelled_transform.q.GetAngle(), currentTask.from_Di(&b2Transform_zero, tracker.get_tracked_disturbance()).q.GetAngle(), b2Mul(errorTransform, travelled_transform).q.GetAngle());
     logger.~Logger();
-    // EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2, 0.157079622/2);
+    EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2, 0.157079622/2);
     EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
-    EXPECT_NEAR(currentTask.from_Di().q.GetAngle(), -targetAngle, 0.157079622/2);
+    EXPECT_NEAR(currentTask.from_Di().q.c, std::cos(-targetAngle), std::cos(0.157079622/2));
+    EXPECT_NEAR(currentTask.from_Di().q.s, std::sin(-targetAngle), std::sin(0.157079622/2));
+
     // EXPECT_GT(steps, 1); //should take more than one step to complete task
    // SUCCEED();
 }
