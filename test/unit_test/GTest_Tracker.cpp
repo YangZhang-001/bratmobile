@@ -247,7 +247,7 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
     float angleError=std::get<1>(GetParam());
     b2Transform errorTransform=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*angleError)), deltaPose=errorTransform;
     set_plan({e1.m_target});
-    int steps=0;
+    int steps=-1;
     do {
         change_task();
         adjust_goal_expectation();
@@ -262,7 +262,7 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
        if (steps>50)break;
     }while (!currentTask.is_over());
     b2Transform travelled_transform= tracker.getDeltaTransform();
-	logger.log("%f\t%f\t%f\t%f\n", angleError, travelled_transform.q.GetAngle(), currentTask.from_Di(&b2Transform_zero, tracker.get_tracked_disturbance()).q.GetAngle(), b2Mul(errorTransform, travelled_transform).q.GetAngle());
+	logger.log("%f\t%f\t%f\t%f\n", angleError, travelled_transform.q.GetAngle(), currentTask.from_Di().q.GetAngle(), b2Mul(errorTransform, travelled_transform).q.GetAngle());
     logger.~Logger();
     EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2, 0.157079622/2);
     EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
@@ -273,7 +273,7 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
    // SUCCEED();
 }
 
-INSTANTIATE_TEST_CASE_P(Noise, TestInputConfiguratorFixture, ::testing::Combine(testing::Values(LEFT, RIGHT), ::testing::Range(-90.0f,90.0f)));
+INSTANTIATE_TEST_CASE_P(Noise, TestInputConfiguratorFixture, ::testing::Combine(testing::Values(LEFT, RIGHT), ::testing::Range(-90.0f,91.0f)));
 
 INSTANTIATE_TEST_CASE_P(Inputs, TestEnvironment, ::testing::Combine(
     ::testing::Values(PURSUE, AVOID),
