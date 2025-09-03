@@ -34,7 +34,7 @@ class Logger{
 	 * @param dateOn whether to add today's date and time to file name
 	 */
 	Logger(const char * new_folder, const char * _dir="/tmp", const char * customName="/stats", bool dateOn=true){
-		init(new_folder, _dir, customName);
+		init(new_folder, _dir, customName, dateOn);
 	}
 
 	~Logger(){
@@ -75,7 +75,7 @@ class Logger{
 	/**
 	 * @see Logger
 	 */
-	void init(const char * new_folder, const  char * _dir=NULL, const char * customName="/stats", bool dateOn=true);
+	void init(const char * new_folder, const  char * _dir=NULL, const char * customName="/stats", bool dateOn=false);
 
 
 };
