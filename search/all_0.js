@@ -16,6 +16,8 @@ var searchData=
   ['angle_13',['Angle',['../classAngle.html',1,'']]],
   ['applytransitionmatrix_14',['applyTransitionMatrix',['../classAttentiveConfigurator.html#aeadbc03a330beab575b122d04f74fc7e',1,'AttentiveConfigurator']]],
   ['approximate_5fangle_15',['approximate_angle',['../classConfigurator.html#a2984dc129d74fd6877cc833cebcad015',1,'Configurator']]],
-  ['attentionwindowoverlaps_16',['attentionWindowOverlaps',['../classB2BConfigurator.html#acfecff8f003ec52f0cd2ad55a0145ecd',1,'B2BConfigurator']]],
-  ['attentiveconfigurator_17',['AttentiveConfigurator',['../classAttentiveConfigurator.html',1,'']]]
+  ['assignbodyfeatures_16',['assignBodyFeatures',['../classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62',1,'Configurator']]],
+  ['assigndimensions_17',['assignDimensions',['../classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0',1,'Configurator']]],
+  ['attentionwindowoverlaps_18',['attentionWindowOverlaps',['../classB2BConfigurator.html#afe27e346eff5da11235a3bcf296a8a29',1,'B2BConfigurator']]],
+  ['attentiveconfigurator_19',['AttentiveConfigurator',['../classAttentiveConfigurator.html',1,'']]]
 ];

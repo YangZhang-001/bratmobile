@@ -89,8 +89,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setVelocities</b> (co
 <tr class="memitem:a7eba20d161f2aa5054cd961bbae665aa"><td class="memItemLeft" align="right" valign="top"><a id="a7eba20d161f2aa5054cd961bbae665aa"></a>
 b2Vec2&#160;</td><td class="memItemRight" valign="bottom"><b>getLinearVelocity</b> (const float &amp;dt=1) const</td></tr>
 <tr class="separator:a7eba20d161f2aa5054cd961bbae665aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5b1d694c736f6353aa317d1e40aabc7"><td class="memItemLeft" align="right" valign="top"><a id="ae5b1d694c736f6353aa317d1e40aabc7"></a>
-b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>getTransform</b> (const float &amp;dt=1) const</td></tr>
+<tr class="memitem:ae5b1d694c736f6353aa317d1e40aabc7"><td class="memItemLeft" align="right" valign="top">b2Transform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTask_1_1Action.html#ae5b1d694c736f6353aa317d1e40aabc7">getTransform</a> (const float &amp;dt=1) const</td></tr>
+<tr class="memdesc:ae5b1d694c736f6353aa317d1e40aabc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the ROBOT's displacement in the world frame after dt seconds.  <a href="structTask_1_1Action.html#ae5b1d694c736f6353aa317d1e40aabc7">More...</a><br /></td></tr>
 <tr class="separator:ae5b1d694c736f6353aa317d1e40aabc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acae9f40a1a2956c6c7f809e14738d3ad"><td class="memItemLeft" align="right" valign="top"><a id="acae9f40a1a2956c6c7f809e14738d3ad"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>getRWheelSpeed</b> () const</td></tr>
@@ -171,6 +171,40 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setLinearSpeed</b> (c
   <table class="params">
     <tr><td class="paramname">l</td><td>left wheel speed (normalised) </td></tr>
     <tr><td class="paramname">r</td><td>right wheen speed (normalised) * </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae5b1d694c736f6353aa317d1e40aabc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5b1d694c736f6353aa317d1e40aabc7">&#9670;&nbsp;</a></span>getTransform()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">b2Transform Task::Action::getTransform </td>
+          <td>(</td>
+          <td class="paramtype">const float &amp;&#160;</td>
+          <td class="paramname"><em>dt</em> = <code>1</code></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the ROBOT's displacement in the world frame after dt seconds. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dt</td><td>delta time (in seconds) </td></tr>
   </table>
   </dd>
 </dl>

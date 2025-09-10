@@ -159,11 +159,11 @@ $(function() {
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    b2Transform travel_transform();</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">bool</span> isTurning(){</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">bool</span> isTurning()<span class="keyword">const</span>{</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;        <span class="keywordflow">return</span> direction==LEFT || direction==RIGHT;</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    }</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordtype">bool</span> isGoingStraight(){</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordtype">bool</span> isGoingStraight()<span class="keyword">const</span>{</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="keywordflow">return</span> direction==DEFAULT || direction==STOP;</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    }</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;};</div>
@@ -485,7 +485,7 @@ $(function() {
 <div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;<span class="keyword">typedef</span> std::pair&lt;StateMatcher::MATCH_TYPE, vertexDescriptor&gt; VertexMatch;</div>
 <div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160; </div>
 <div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassBodyFeatures_html"><div class="ttname"><a href="classBodyFeatures.html">BodyFeatures</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:45</div></div>
+<div class="ttc" id="aclassBodyFeatures_html"><div class="ttname"><a href="classBodyFeatures.html">BodyFeatures</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:47</div></div>
 <div class="ttc" id="aclassBundle_html"><div class="ttname"><a href="classBundle.html">Bundle</a></div><div class="ttdef"><b>Definition:</b> threshold.h:10</div></div>
 <div class="ttc" id="aclassStateMatcher_html"><div class="ttname"><a href="classStateMatcher.html">StateMatcher</a></div><div class="ttdef"><b>Definition:</b> graphTools.h:452</div></div>
 <div class="ttc" id="aclassTask_html"><div class="ttname"><a href="classTask.html">Task</a></div><div class="ttdoc">A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...</div><div class="ttdef"><b>Definition:</b> task.h:45</div></div>
@@ -494,7 +494,7 @@ $(function() {
 <div class="ttc" id="aclassThreshold_html_a7e0114839efbb93b78b6f8e196003bd1"><div class="ttname"><a href="classThreshold.html#a7e0114839efbb93b78b6f8e196003bd1">Threshold::for_Di</a></div><div class="ttdeci">Bundle for_Di() const</div><div class="ttdoc">Returns a bundle of thresholds for the initial disturbance.</div><div class="ttdef"><b>Definition:</b> threshold.h:114</div></div>
 <div class="ttc" id="astructCompareValue_html"><div class="ttname"><a href="structCompareValue.html">CompareValue</a></div><div class="ttdoc">Compares the last float in a tuple.</div><div class="ttdef"><b>Definition:</b> graphTools.h:28</div></div>
 <div class="ttc" id="astructConnected_html"><div class="ttname"><a href="structConnected.html">Connected</a></div><div class="ttdoc">Predicate: gives info on whether a vertex has connections or is a singleton.</div><div class="ttdef"><b>Definition:</b> graphTools.h:268</div></div>
-<div class="ttc" id="astructDisturbance_html"><div class="ttname"><a href="structDisturbance.html">Disturbance</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:112</div></div>
+<div class="ttc" id="astructDisturbance_html"><div class="ttname"><a href="structDisturbance.html">Disturbance</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:114</div></div>
 <div class="ttc" id="astructEdge_html"><div class="ttname"><a href="structEdge.html">Edge</a></div><div class="ttdoc">Edges connecting states in the transition system.</div><div class="ttdef"><b>Definition:</b> graphTools.h:40</div></div>
 <div class="ttc" id="astructEdge_html_a0d2ab2b62015835205f5728d24e4ad8c"><div class="ttname"><a href="structEdge.html#a0d2ab2b62015835205f5728d24e4ad8c">Edge::enableOverride</a></div><div class="ttdeci">bool enableOverride()</div><div class="ttdoc">If this edge has zero steps, it sets override to true.</div><div class="ttdef"><b>Definition:</b> graphTools.cpp:41</div></div>
 <div class="ttc" id="astructInPlan_html"><div class="ttname"><a href="structInPlan.html">InPlan</a></div><div class="ttdef"><b>Definition:</b> graphTools.h:372</div></div>
@@ -521,7 +521,7 @@ $(function() {
 <div class="ttc" id="astructViableEdge_html"><div class="ttname"><a href="structViableEdge.html">ViableEdge</a></div><div class="ttdoc">Predicate: gives info on whether an edge is worth keeping. Namely, the edge is either not a self-edge...</div><div class="ttdef"><b>Definition:</b> graphTools.h:409</div></div>
 <div class="ttc" id="astructis__not__v_html"><div class="ttname"><a href="structis__not__v.html">is_not_v</a></div><div class="ttdoc">Used as a predicate, gives info on whether a vertex is the current vertex.</div><div class="ttdef"><b>Definition:</b> graphTools.h:247</div></div>
 <div class="ttc" id="astructis__not__v_html_a1f0cdbafec6ffd9402c9d5eecf6f48ba"><div class="ttname"><a href="structis__not__v.html#a1f0cdbafec6ffd9402c9d5eecf6f48ba">is_not_v::is_not_v</a></div><div class="ttdeci">is_not_v(vertexDescriptor _cv)</div><div class="ttdoc">Constructor assigns current vertex.</div><div class="ttdef"><b>Definition:</b> graphTools.h:254</div></div>
-<div class="ttc" id="astructsimResult_html"><div class="ttname"><a href="structsimResult.html">simResult</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:268</div></div>
+<div class="ttc" id="astructsimResult_html"><div class="ttname"><a href="structsimResult.html">simResult</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:270</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

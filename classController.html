@@ -89,9 +89,9 @@ Collaboration diagram for Controller:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a12c47368c19b96d28a72696e129a8027"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classController.html#a12c47368c19b96d28a72696e129a8027">next_task</a> (<a class="el" href="classTask.html">Task</a> &amp;currentTask, const <a class="el" href="classTask.html">Task</a> &amp;controlGoal, const TransitionSystem &amp;g, std::vector&lt; vertexDescriptor &gt; &amp;current_vertices, std::vector&lt; vertexDescriptor &gt; &amp;plan)=0</td></tr>
-<tr class="memdesc:a12c47368c19b96d28a72696e129a8027"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual function used to choose the next task.  <a href="classController.html#a12c47368c19b96d28a72696e129a8027">More...</a><br /></td></tr>
-<tr class="separator:a12c47368c19b96d28a72696e129a8027"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab044fbc020e6d27071fddeb2b19cc666"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classTask.html">Task</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classController.html#ab044fbc020e6d27071fddeb2b19cc666">next_task</a> (<a class="el" href="classTask.html">Task</a> currentTask, const <a class="el" href="classTask.html">Task</a> &amp;controlGoal, const TransitionSystem &amp;g, std::vector&lt; vertexDescriptor &gt; &amp;current_vertices, std::vector&lt; vertexDescriptor &gt; &amp;plan)=0</td></tr>
+<tr class="memdesc:ab044fbc020e6d27071fddeb2b19cc666"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual function used to choose the next task.  <a href="classController.html#ab044fbc020e6d27071fddeb2b19cc666">More...</a><br /></td></tr>
+<tr class="separator:ab044fbc020e6d27071fddeb2b19cc666"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbfd7ff4cf0f13b3cdff9c8cb1ea1929"><td class="memItemLeft" align="right" valign="top"><a id="adbfd7ff4cf0f13b3cdff9c8cb1ea1929"></a>
 <a class="el" href="structDisturbance.html">Disturbance</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classController.html#adbfd7ff4cf0f13b3cdff9c8cb1ea1929">get_disturbance</a> ()</td></tr>
 <tr class="memdesc:adbfd7ff4cf0f13b3cdff9c8cb1ea1929"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the disturbance being counteracted as in the cognitive map. <br /></td></tr>
@@ -114,6 +114,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a5d22609770b042f667d352c041319915"><td class="memItemLeft" align="right" valign="top">vertexDescriptor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classController.html#a5d22609770b042f667d352c041319915">get_current_vertex</a> (const std::vector&lt; vertexDescriptor &gt; &amp;cv)</td></tr>
 <tr class="memdesc:a5d22609770b042f667d352c041319915"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current vertex.  <a href="classController.html#a5d22609770b042f667d352c041319915">More...</a><br /></td></tr>
 <tr class="separator:a5d22609770b042f667d352c041319915"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a886344ad1e64a98f9ff73324cc19e082"><td class="memItemLeft" align="right" valign="top"><a id="a886344ad1e64a98f9ff73324cc19e082"></a>
+<a class="el" href="classTask.html">Task</a>&#160;</td><td class="memItemRight" valign="bottom"><b>stopTask</b> (const <a class="el" href="classTask.html">Task</a> &amp;controlGoal)</td></tr>
+<tr class="separator:a886344ad1e64a98f9ff73324cc19e082"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -235,8 +238,8 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>_D_to_goal</b>
 
 </div>
 </div>
-<a id="a12c47368c19b96d28a72696e129a8027"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12c47368c19b96d28a72696e129a8027">&#9670;&nbsp;</a></span>next_task()</h2>
+<a id="ab044fbc020e6d27071fddeb2b19cc666"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab044fbc020e6d27071fddeb2b19cc666">&#9670;&nbsp;</a></span>next_task()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -245,9 +248,9 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>_D_to_goal</b>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void Controller::next_task </td>
+          <td class="memname">virtual <a class="el" href="classTask.html">Task</a> Controller::next_task </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classTask.html">Task</a>&#160;</td>
           <td class="paramname"><em>currentTask</em>, </td>
         </tr>
         <tr>
@@ -299,7 +302,7 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>_D_to_goal</b>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classReactive__Controller.html#ac4632cf82f250773bdb8a61a991ee8b6">Reactive_Controller</a>, and <a class="el" href="classWise__Controller.html#a0593eb69a276d620e5ac5e0449811916">Wise_Controller</a>.</p>
+<p>Implemented in <a class="el" href="classReactive__Controller.html#aece03f6eeda6f8149a5469017c4be752">Reactive_Controller</a>, and <a class="el" href="classWise__Controller.html#a3934aeea7024608e56e54557e7c901d4">Wise_Controller</a>.</p>
 
 </div>
 </div>

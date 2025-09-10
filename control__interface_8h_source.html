@@ -98,7 +98,7 @@ $(function() {
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">bool</span> debugOn=0;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">int</span> iteration=0;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">bool</span> stop=0;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    CoordinateContainer data2fp;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> data2fp;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;};</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
 <div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classMotor__Out.html">   42</a></span>&#160;<span class="keyword">class </span><a class="code" href="classMotor__Out.html">Motor_Out</a>:<span class="keyword">public</span> <a class="code" href="classIOInterface.html">IOInterface</a> { </div>
@@ -153,7 +153,7 @@ $(function() {
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
 <div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="structGoalChanger.html">  119</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structGoalChanger.html">GoalChanger</a>{</div>
-<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="structGoalChanger.html#ad4511b7c08a44da34edd2842bed7cf88">  124</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="structGoalChanger.html#ad4511b7c08a44da34edd2842bed7cf88">change_goal</a>(<a class="code" href="classTask.html">Task</a> * t);</div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="structGoalChanger.html#ab68649df6c693ce06ea01912d2d5bcd2">  124</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classTask.html">Task</a> <a class="code" href="structGoalChanger.html#ab68649df6c693ce06ea01912d2d5bcd2">change_goal</a>(<span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> &amp; t)=0;</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;};</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassConfigurator_html"><div class="ttname"><a href="classConfigurator.html">Configurator</a></div><div class="ttdef"><b>Definition:</b> configurator.h:17</div></div>
@@ -164,8 +164,9 @@ $(function() {
 <div class="ttc" id="aclassMotor__Out_html_ad8c4a2c3d8d83a4efe498d0b83458199"><div class="ttname"><a href="classMotor__Out.html#ad8c4a2c3d8d83a4efe498d0b83458199">Motor_Out::PID</a></div><div class="ttdeci">void PID(float e)</div><div class="ttdoc">Implements a PID controller.</div><div class="ttdef"><b>Definition:</b> control_interface.cpp:18</div></div>
 <div class="ttc" id="aclassMotor__Out_html_ae63aff1ab8d0a7217ebd522a3e858a8c"><div class="ttname"><a href="classMotor__Out.html#ae63aff1ab8d0a7217ebd522a3e858a8c">Motor_Out::adjust_gain</a></div><div class="ttdeci">void adjust_gain(float angle_D, b2Transform observed, float *y_D=NULL)</div><div class="ttdoc">Adjusts L/R wheel gain, implements a PID controller with option to turn it into cascaded controller.</div><div class="ttdef"><b>Definition:</b> control_interface.cpp:3</div></div>
 <div class="ttc" id="aclassTask_html"><div class="ttname"><a href="classTask.html">Task</a></div><div class="ttdoc">A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...</div><div class="ttdef"><b>Definition:</b> task.h:45</div></div>
+<div class="ttc" id="asensor_8h_html_a17aa500d7fd9def31a6a11868d2375bd"><div class="ttname"><a href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a></div><div class="ttdeci">std::set&lt; Pointf &gt; CoordinateContainer</div><div class="ttdoc">container for LIDAR coordinates</div><div class="ttdef"><b>Definition:</b> sensor.h:61</div></div>
 <div class="ttc" id="astructGoalChanger_html"><div class="ttname"><a href="structGoalChanger.html">GoalChanger</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:119</div></div>
-<div class="ttc" id="astructGoalChanger_html_ad4511b7c08a44da34edd2842bed7cf88"><div class="ttname"><a href="structGoalChanger.html#ad4511b7c08a44da34edd2842bed7cf88">GoalChanger::change_goal</a></div><div class="ttdeci">virtual void change_goal(Task *t)</div></div>
+<div class="ttc" id="astructGoalChanger_html_ab68649df6c693ce06ea01912d2d5bcd2"><div class="ttname"><a href="structGoalChanger.html#ab68649df6c693ce06ea01912d2d5bcd2">GoalChanger::change_goal</a></div><div class="ttdeci">virtual Task change_goal(const Task &amp;t)=0</div></div>
 <div class="ttc" id="astructTask_1_1Action_html"><div class="ttname"><a href="structTask_1_1Action.html">Task::Action</a></div><div class="ttdoc">The motor instructions generated by the control strategy used in this tasks.</div><div class="ttdef"><b>Definition:</b> task.h:63</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

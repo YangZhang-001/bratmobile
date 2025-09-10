@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['viableedge_181',['ViableEdge',['../structViableEdge.html',1,'']]],
-  ['visited_182',['visited',['../structState.html#a17a6bc302f149d4fb244fd0b4235370e',1,'State']]],
-  ['visiteddirectionspushback_183',['visitedDirectionsPushBack',['../classAttentiveConfigurator.html#aab3fe860def48c012abc496ee8d47653',1,'AttentiveConfigurator']]],
-  ['visitededgecount_184',['visitedEdgeCount',['../classB2BConfigurator.html#aa8fadd018717fa3872cad5a470fc1fdd',1,'B2BConfigurator']]]
+  ['vec2set_200',['vec2set',['../sensor_8h.html#ace3e373f847cccf64f0571523174e641',1,'sensor.h']]],
+  ['viableedge_201',['ViableEdge',['../structViableEdge.html',1,'']]],
+  ['visited_202',['visited',['../structState.html#a17a6bc302f149d4fb244fd0b4235370e',1,'State']]],
+  ['visiteddirectionspushback_203',['visitedDirectionsPushBack',['../classAttentiveConfigurator.html#aab3fe860def48c012abc496ee8d47653',1,'AttentiveConfigurator']]],
+  ['visitededgecount_204',['visitedEdgeCount',['../classB2BConfigurator.html#aa8fadd018717fa3872cad5a470fc1fdd',1,'B2BConfigurator']]]
 ];

@@ -86,9 +86,9 @@ Collaboration diagram for Wise_Controller:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0593eb69a276d620e5ac5e0449811916"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWise__Controller.html#a0593eb69a276d620e5ac5e0449811916">next_task</a> (<a class="el" href="classTask.html">Task</a> &amp;currentTask, const <a class="el" href="classTask.html">Task</a> &amp;controlGoal, const TransitionSystem &amp;g, std::vector&lt; vertexDescriptor &gt; &amp;current_vertices, std::vector&lt; vertexDescriptor &gt; &amp;plan)</td></tr>
-<tr class="memdesc:a0593eb69a276d620e5ac5e0449811916"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual function used to choose the next task.  <a href="classWise__Controller.html#a0593eb69a276d620e5ac5e0449811916">More...</a><br /></td></tr>
-<tr class="separator:a0593eb69a276d620e5ac5e0449811916"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3934aeea7024608e56e54557e7c901d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTask.html">Task</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWise__Controller.html#a3934aeea7024608e56e54557e7c901d4">next_task</a> (<a class="el" href="classTask.html">Task</a> currentTask, const <a class="el" href="classTask.html">Task</a> &amp;controlGoal, const TransitionSystem &amp;g, std::vector&lt; vertexDescriptor &gt; &amp;current_vertices, std::vector&lt; vertexDescriptor &gt; &amp;plan)</td></tr>
+<tr class="memdesc:a3934aeea7024608e56e54557e7c901d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual function used to choose the next task.  <a href="classWise__Controller.html#a3934aeea7024608e56e54557e7c901d4">More...</a><br /></td></tr>
+<tr class="separator:a3934aeea7024608e56e54557e7c901d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab66c87e49e757ae2202bfa39277a2850"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWise__Controller.html#ab66c87e49e757ae2202bfa39277a2850">to_task_end</a> (const TransitionSystem &amp;g, std::vector&lt; vertexDescriptor &gt; &amp;plan)</td></tr>
 <tr class="memdesc:ab66c87e49e757ae2202bfa39277a2850"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns last vertex of the task starting at plan[0]  <a href="classWise__Controller.html#ab66c87e49e757ae2202bfa39277a2850">More...</a><br /></td></tr>
 <tr class="separator:ab66c87e49e757ae2202bfa39277a2850"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,6 +117,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a5d22609770b042f667d352c041319915 inherit pro_methods_classController"><td class="memItemLeft" align="right" valign="top">vertexDescriptor&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classController.html#a5d22609770b042f667d352c041319915">get_current_vertex</a> (const std::vector&lt; vertexDescriptor &gt; &amp;cv)</td></tr>
 <tr class="memdesc:a5d22609770b042f667d352c041319915 inherit pro_methods_classController"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current vertex.  <a href="classController.html#a5d22609770b042f667d352c041319915">More...</a><br /></td></tr>
 <tr class="separator:a5d22609770b042f667d352c041319915 inherit pro_methods_classController"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a886344ad1e64a98f9ff73324cc19e082 inherit pro_methods_classController"><td class="memItemLeft" align="right" valign="top"><a id="a886344ad1e64a98f9ff73324cc19e082"></a>
+<a class="el" href="classTask.html">Task</a>&#160;</td><td class="memItemRight" valign="bottom"><b>stopTask</b> (const <a class="el" href="classTask.html">Task</a> &amp;controlGoal)</td></tr>
+<tr class="separator:a886344ad1e64a98f9ff73324cc19e082 inherit pro_methods_classController"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classController"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classController')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classController.html">Controller</a></td></tr>
 <tr class="memitem:ad236944fccd56041982cb044393afa49 inherit pro_attribs_classController"><td class="memItemLeft" align="right" valign="top"><a id="ad236944fccd56041982cb044393afa49"></a>
 <a class="el" href="structDisturbance.html">Disturbance</a>&#160;</td><td class="memItemRight" valign="bottom"><b>disturbance_q</b></td></tr>
@@ -128,8 +131,8 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>_D_to_goal</b>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Chooses tasks based on a plan. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a0593eb69a276d620e5ac5e0449811916"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0593eb69a276d620e5ac5e0449811916">&#9670;&nbsp;</a></span>next_task()</h2>
+<a id="a3934aeea7024608e56e54557e7c901d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3934aeea7024608e56e54557e7c901d4">&#9670;&nbsp;</a></span>next_task()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -138,9 +141,9 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>_D_to_goal</b>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Wise_Controller::next_task </td>
+          <td class="memname"><a class="el" href="classTask.html">Task</a> Wise_Controller::next_task </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classTask.html">Task</a>&#160;</td>
           <td class="paramname"><em>currentTask</em>, </td>
         </tr>
         <tr>
@@ -192,7 +195,7 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>_D_to_goal</b>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classController.html#a12c47368c19b96d28a72696e129a8027">Controller</a>.</p>
+<p>Implements <a class="el" href="classController.html#ab044fbc020e6d27071fddeb2b19cc666">Controller</a>.</p>
 
 </div>
 </div>

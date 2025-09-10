@@ -75,6 +75,7 @@ Features:</h2>
 <li>Mapless navigation: robot is ready to go as is, no need for global sensors</li>
 <li>Causal reasoning on the naive robot</li>
 <li>Plans represents set of instructions, not trajectories: no solvers required, completely closed-loop and object oriented</li>
+<li>Debug and navigation visualisation interface which transmits goal, obstacle and attention window coordinates to Qt using fastDDS</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md1"></a>
 Work in progress</h2>
@@ -111,8 +112,9 @@ Development packages</h3>
 <li>Gtest</li>
 </ul>
 <p><code>sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev</code></p>
+<p>For Qt/FastDDS setup, see readme in <code>src/fastdds</code></p>
 <h3><a class="anchor" id="autotoc_md7"></a>
-Compile from source</h3>
+Libraries to compile from source</h3>
 <ul>
 <li><a href="https://github.com/berndporr/rplidar_rpi">LIDAR API</a></li>
 <li><a href="https://github.com/berndporr/alphabot">Motors API</a></li>
@@ -125,7 +127,7 @@ Clone</h2>
 <h2><a class="anchor" id="autotoc_md9"></a>
 Build</h2>
 <div class="fragment"><div class="line">cd bratmobile</div>
-<div class="line">cmake .</div>
+<div class="line">cmake .  #if you want to build the fastdds directory use option -D BUILD_FASTDDS=ON</div>
 <div class="line">make</div>
 <div class="line">sudo make install</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>

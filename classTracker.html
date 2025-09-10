@@ -98,20 +98,23 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>register_learner</b> 
 <tr class="memitem:a0a04ad85f12977662b6047b03c3d98d9"><td class="memItemLeft" align="right" valign="top"><a id="a0a04ad85f12977662b6047b03c3d98d9"></a>
 b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>getDeltaTransform</b> ()</td></tr>
 <tr class="separator:a0a04ad85f12977662b6047b03c3d98d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37d73d09fc03a2fda37990b6abdbe0b8"><td class="memItemLeft" align="right" valign="top">virtual b2Transform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a37d73d09fc03a2fda37990b6abdbe0b8">get_transform</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const CoordinateContainer &amp;pts, <a class="el" href="structDisturbance.html">Disturbance</a> *observed_disturbance, std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)=0</td></tr>
-<tr class="separator:a37d73d09fc03a2fda37990b6abdbe0b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a329af121a8bd768bc7cbafc15ea12cfb"><td class="memItemLeft" align="right" valign="top">virtual b2Transform&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a329af121a8bd768bc7cbafc15ea12cfb">track</a> (<a class="el" href="classTask.html">Task</a> &amp;t, const CoordinateContainer &amp;pts, std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)=0</td></tr>
-<tr class="memdesc:a329af121a8bd768bc7cbafc15ea12cfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tracks task execution.  <a href="classTracker.html#a329af121a8bd768bc7cbafc15ea12cfb">More...</a><br /></td></tr>
-<tr class="separator:a329af121a8bd768bc7cbafc15ea12cfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a127e94da954f48f78c827cbcc28cfd86"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a127e94da954f48f78c827cbcc28cfd86">on_new_task</a> (<a class="el" href="classTask.html">Task</a> *task=NULL)=0</td></tr>
-<tr class="memdesc:a127e94da954f48f78c827cbcc28cfd86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every time a new task is created.  <a href="classTracker.html#a127e94da954f48f78c827cbcc28cfd86">More...</a><br /></td></tr>
-<tr class="separator:a127e94da954f48f78c827cbcc28cfd86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a181a3106e0809c0ba3911c0fcc2317d7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a181a3106e0809c0ba3911c0fcc2317d7">on_new_reading</a> (<a class="el" href="classTask.html">Task</a> *task=NULL)=0</td></tr>
-<tr class="memdesc:a181a3106e0809c0ba3911c0fcc2317d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every time asensor reading is available.  <a href="classTracker.html#a181a3106e0809c0ba3911c0fcc2317d7">More...</a><br /></td></tr>
-<tr class="separator:a181a3106e0809c0ba3911c0fcc2317d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e8b66b2dcc8a5da768f49b2dff54ae3"><td class="memItemLeft" align="right" valign="top"><a id="a4e8b66b2dcc8a5da768f49b2dff54ae3"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (<a class="el" href="classTask.html">Task</a> *goal)=0</td></tr>
-<tr class="separator:a4e8b66b2dcc8a5da768f49b2dff54ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90e8d9625ba92f85944e70b238466165"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structTrackingResult.html">TrackingResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a90e8d9625ba92f85944e70b238466165">get_transform</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;pts, const std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)</td></tr>
+<tr class="separator:a90e8d9625ba92f85944e70b238466165"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9c90616de5c49aba70114668bb3bd2a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structTrackingResult.html">TrackingResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#ac9c90616de5c49aba70114668bb3bd2a">track</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;pts, const std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)=0</td></tr>
+<tr class="memdesc:ac9c90616de5c49aba70114668bb3bd2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tracks task execution.  <a href="classTracker.html#ac9c90616de5c49aba70114668bb3bd2a">More...</a><br /></td></tr>
+<tr class="separator:ac9c90616de5c49aba70114668bb3bd2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac34ec880b21e2d5464229fd881bf074a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#ac34ec880b21e2d5464229fd881bf074a">on_new_task</a> (const <a class="el" href="classTask.html">Task</a> &amp;task, const <a class="el" href="classTask.html">Task</a> &amp;goal)=0</td></tr>
+<tr class="memdesc:ac34ec880b21e2d5464229fd881bf074a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every time a new task is created.  <a href="classTracker.html#ac34ec880b21e2d5464229fd881bf074a">More...</a><br /></td></tr>
+<tr class="separator:ac34ec880b21e2d5464229fd881bf074a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83e32d2d4ecfcb05c22f7362a6156cd0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a83e32d2d4ecfcb05c22f7362a6156cd0">on_new_reading</a> (const <a class="el" href="classTask.html">Task</a> &amp;goal, const <a class="el" href="classTask.html">Task</a> &amp;currentTask)=0</td></tr>
+<tr class="memdesc:a83e32d2d4ecfcb05c22f7362a6156cd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every time asensor reading is available.  <a href="classTracker.html#a83e32d2d4ecfcb05c22f7362a6156cd0">More...</a><br /></td></tr>
+<tr class="separator:a83e32d2d4ecfcb05c22f7362a6156cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a963d8b51be65c2e2d040dc5c98cd537e"><td class="memItemLeft" align="right" valign="top"><a id="a963d8b51be65c2e2d040dc5c98cd537e"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (const <a class="el" href="classTask.html">Task</a> &amp;goal)=0</td></tr>
+<tr class="separator:a963d8b51be65c2e2d040dc5c98cd537e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad95887d00d902e2d47e7d7ebaee0c12b"><td class="memItemLeft" align="right" valign="top"><a id="ad95887d00d902e2d47e7d7ebaee0c12b"></a>
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasTaskEnded</b> (<a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
+<tr class="separator:ad95887d00d902e2d47e7d7ebaee0c12b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2037e2ed2bb6ac7b0c9cf341d2b946a1"><td class="memItemLeft" align="right" valign="top"><a id="a2037e2ed2bb6ac7b0c9cf341d2b946a1"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a2037e2ed2bb6ac7b0c9cf341d2b946a1">make_log</a> ()</td></tr>
 <tr class="memdesc:a2037e2ed2bb6ac7b0c9cf341d2b946a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">opens file where all the data is dumped <br /></td></tr>
@@ -131,6 +134,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>log_thresholds</b> ()
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
+<tr class="memitem:a151b735358fe759c68d9584cae3b7442"><td class="memItemLeft" align="right" valign="top"><a id="a151b735358fe759c68d9584cae3b7442"></a>
+friend&#160;</td><td class="memItemRight" valign="bottom"><b>Configurator</b></td></tr>
+<tr class="separator:a151b735358fe759c68d9584cae3b7442"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77658990eb39bf1e66c79c1e8664598a"><td class="memItemLeft" align="right" valign="top"><a id="a77658990eb39bf1e66c79c1e8664598a"></a>
 <a class="el" href="classThresholdLearner.html">ThresholdLearner</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>learner</b> =NULL</td></tr>
 <tr class="separator:a77658990eb39bf1e66c79c1e8664598a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,8 +147,8 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tracking interface: Bridge between the real world and the simulation. Is used for tracking execution of tasks and using lived experience to modify the state-matching threshold. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a37d73d09fc03a2fda37990b6abdbe0b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37d73d09fc03a2fda37990b6abdbe0b8">&#9670;&nbsp;</a></span>get_transform()</h2>
+<a id="a90e8d9625ba92f85944e70b238466165"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90e8d9625ba92f85944e70b238466165">&#9670;&nbsp;</a></span>get_transform()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -151,7 +157,7 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual b2Transform Tracker::get_transform </td>
+          <td class="memname"><a class="el" href="structTrackingResult.html">TrackingResult</a> Tracker::get_transform </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
           <td class="paramname"><em>t</em>, </td>
@@ -159,19 +165,13 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const CoordinateContainer &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;&#160;</td>
           <td class="paramname"><em>pts</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structDisturbance.html">Disturbance</a> *&#160;</td>
-          <td class="paramname"><em>observed_disturbance</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>objects</em>&#160;</td>
         </tr>
         <tr>
@@ -182,7 +182,7 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -195,12 +195,12 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classClosedLoop__Tracker.html#a64d130992fcd1ab648d967270f2db96f">ClosedLoop_Tracker</a>, and <a class="el" href="classDeadReckoner.html#a972753196687a831565d90285b2820cd">DeadReckoner</a>.</p>
+<p>Reimplemented in <a class="el" href="classClosedLoop__Tracker.html#a081797ff55bde511ddd91861b9d33cf8">ClosedLoop_Tracker</a>.</p>
 
 </div>
 </div>
-<a id="a181a3106e0809c0ba3911c0fcc2317d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a181a3106e0809c0ba3911c0fcc2317d7">&#9670;&nbsp;</a></span>on_new_reading()</h2>
+<a id="a83e32d2d4ecfcb05c22f7362a6156cd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83e32d2d4ecfcb05c22f7362a6156cd0">&#9670;&nbsp;</a></span>on_new_reading()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -211,9 +211,19 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
         <tr>
           <td class="memname">virtual void Tracker::on_new_reading </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classTask.html">Task</a> *&#160;</td>
-          <td class="paramname"><em>task</em> = <code>NULL</code></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
+          <td class="paramname"><em>goal</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
+          <td class="paramname"><em>currentTask</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -231,12 +241,12 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classDeadReckoner.html#a3dfc08c7bc63d10f787a95696ba10ed3">DeadReckoner</a>, and <a class="el" href="classClosedLoop__Tracker.html#aa4be1a2016835b29518c21fecb811836">ClosedLoop_Tracker</a>.</p>
+<p>Implemented in <a class="el" href="classClosedLoop__Tracker.html#a264e4b686c748eb344eb5948304e7e69">ClosedLoop_Tracker</a>, and <a class="el" href="classDeadReckoner.html#ac61dbacd8573197288e51d286dbb348f">DeadReckoner</a>.</p>
 
 </div>
 </div>
-<a id="a127e94da954f48f78c827cbcc28cfd86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a127e94da954f48f78c827cbcc28cfd86">&#9670;&nbsp;</a></span>on_new_task()</h2>
+<a id="ac34ec880b21e2d5464229fd881bf074a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac34ec880b21e2d5464229fd881bf074a">&#9670;&nbsp;</a></span>on_new_task()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -247,9 +257,19 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
         <tr>
           <td class="memname">virtual void Tracker::on_new_task </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classTask.html">Task</a> *&#160;</td>
-          <td class="paramname"><em>task</em> = <code>NULL</code></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
+          <td class="paramname"><em>task</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
+          <td class="paramname"><em>goal</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -267,12 +287,12 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classClosedLoop__Tracker.html#ade73eb0fbfe72bb9be6c0608a452fb0d">ClosedLoop_Tracker</a>, and <a class="el" href="classDeadReckoner.html#a7bd1259d7ba405c9c986405b8b752057">DeadReckoner</a>.</p>
+<p>Implemented in <a class="el" href="classClosedLoop__Tracker.html#a1bcdb862c821934bc49f1f1a47ec24c6">ClosedLoop_Tracker</a>, and <a class="el" href="classDeadReckoner.html#a45400b96466b3ce8b14d6220755f3da8">DeadReckoner</a>.</p>
 
 </div>
 </div>
-<a id="a329af121a8bd768bc7cbafc15ea12cfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a329af121a8bd768bc7cbafc15ea12cfb">&#9670;&nbsp;</a></span>track()</h2>
+<a id="ac9c90616de5c49aba70114668bb3bd2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9c90616de5c49aba70114668bb3bd2a">&#9670;&nbsp;</a></span>track()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -281,21 +301,21 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual b2Transform Tracker::track </td>
+          <td class="memname">virtual <a class="el" href="structTrackingResult.html">TrackingResult</a> Tracker::track </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
           <td class="paramname"><em>t</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const CoordinateContainer &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;&#160;</td>
           <td class="paramname"><em>pts</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>objects</em>&#160;</td>
         </tr>
         <tr>
@@ -323,7 +343,7 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>b2Transform that the robot has moved by, can use for updating cognitive map and control </dd></dl>
 
-<p>Implemented in <a class="el" href="classClosedLoop__Tracker.html#a8da478e81fe9fe85af8760bd94c066e4">ClosedLoop_Tracker</a>, and <a class="el" href="classDeadReckoner.html#aeb06e35b7912d1822ab3aaa917cfa741">DeadReckoner</a>.</p>
+<p>Implemented in <a class="el" href="classClosedLoop__Tracker.html#ac0ffa535e917abf6d0db26a3f1408606">ClosedLoop_Tracker</a>, and <a class="el" href="classDeadReckoner.html#a22296cd5a531ba14296a7e6b7ee7a8fd">DeadReckoner</a>.</p>
 
 </div>
 </div>
