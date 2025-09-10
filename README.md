@@ -17,7 +17,7 @@ The purpose of this library is to showcase a framework for multi-step ahead plan
 
 * Closed-loop Task execution with goal-directed behaviour (driving towards target)
 
-* Debugging plan checking and recycling
+* Debugging plan checking and recycling (real-world settings, see issues)
 
 * Adaptive thresholding of acceptable noise in state observations
 
