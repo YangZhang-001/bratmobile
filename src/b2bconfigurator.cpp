@@ -97,7 +97,7 @@ void B2BConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, st
 // 	return result;
 // }
 
-bool B2BConfigurator::attentionWindowOverlaps(const Disturbance & Di,const State & q, b2World & world, const Disturbance *const focus){
+bool B2BConfigurator::attentionWindowOverlaps(const Disturbance & Di,const State & q, b2World & world, const Disturbance & focus){
 	Task task(Di, DEFAULT, q.endPose, true);
 	Robot robot(&world);
 	robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
@@ -147,7 +147,7 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		if ((visited.first)||out.empty()){ //if edges have not been expanded OR if they were expanded in previous iteration
 			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
-				if (attentionWindowOverlaps(Di, g[v], world, controlGoal.get_disturbance_ptr())){
+				if (attentionWindowOverlaps(Di, g[v], world, controlGoal.get_disturbance())){
 					Di.bf.pose=b2Mul(invmul, Di.bf.pose); //DISTURBANCE FORWARD PROP
 					return Di;
 				}
@@ -309,7 +309,7 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 		worldBuilder.makeBody(w, maybeFocus.bf); //add hindsight disturbance to the world even if it doesn't overlap with the task scope
 		clearvoyance.pop(v);
 	}
-	Robot robot=makeRobot(w, t.getStart(), &focus);
+	Robot robot=makeRobot(w, t.getStart(), focus);
 	worldBuilder.add_body_count();
 	simulatedTasks++;
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
@@ -319,7 +319,7 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 	return result;
 }
 
-Robot B2BConfigurator::makeRobot( b2World & world, const b2Transform& start, Disturbance * focus){
+Robot B2BConfigurator::makeRobot( b2World & world, const b2Transform& start, const Disturbance & focus){
 	Robot robot=Configurator::makeRobot(world, start);
 	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), focus);
 	return robot;
@@ -337,18 +337,20 @@ void B2BConfigurator::addOptionsInHindsight(vertexDescriptor v, vertexDescriptor
 }
 
 bool B2BConfigurator::ClearVoyance::add(vertexDescriptor v, const Disturbance &d){
+	bool result=false;
 	if (d.getAffIndex()==NONE){
-		return false;
+		return result;
 	}
 	auto vIt=std::find_if(lookaheads.begin(), lookaheads.end(), [&](const DisturbanceLookahead & dl){return dl.source==v;});
 	if (vIt==lookaheads.end()){
 		lookaheads.emplace_back(ClearVoyance::DisturbanceLookahead(v, d));
-		return true;
+		result=true;
 	}
 	else if (std::find_if(vIt->disturbances.begin(), vIt->disturbances.end(), [&](const Disturbance & dd){return dd==d;})!=vIt->disturbances.end()){
 		vIt->disturbances.push_back(d); //update disturbance
-		return true;
+		result=true;
 	}
+	return result;
 
 }
 

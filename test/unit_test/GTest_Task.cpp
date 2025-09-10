@@ -80,7 +80,7 @@ TEST_P(TaskTestEndCriteria, TaskHasFixedEndCriteria){
     Direction _direction=GetParam();    
     EndCriteria ec= taskInit(Disturbance(AVOID, b2Vec2(0.5,0), 0), _direction); //tracked d
     std::vector<BodyFeatures> objects({disturbance.bf});
-    ClosedLoop_Tracker tracker;
+    CLTrackerTest tracker;
     tracker.set_tracked_disturbance(disturbance);
     math::MulT(-(action.getTransform(LIDAR_SAMPLING_RATE)), disturbance);
     Pointf point(disturbance.getPosition().x, disturbance.getPosition().y);

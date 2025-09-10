@@ -29,6 +29,7 @@ bool debug_draw(b2Vec2 * sensor_v, std::vector <b2Vec2> d ){
                     
     fclose(f_s);
     fclose(f_d);
+    return 1;
 }
  
 template <typename T>
@@ -40,6 +41,7 @@ bool debug_draw(std::vector <T> d , char* tag){
         fprintf(f_d, "%f\t%f\n",  d_v.x, d_v.y);            
     }
     fclose(f_d);
+    return 1;
 }
 
 bool debug_draw(b2World & w, int file){
@@ -76,6 +78,7 @@ bool debug_draw(b2World & w, int file){
     fclose(f_v);
     fclose(f_s);
     fclose(f_d);
+    return 1;
 }
 
 

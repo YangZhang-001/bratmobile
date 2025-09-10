@@ -1,3 +1,6 @@
+#ifndef BRAT_MATH_H
+#define BRAT_MATH_H
+
 #include "task.h"
 
 namespace math {
@@ -31,3 +34,4 @@ namespace math {
 void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev);
 
 bool isTurning(Direction);
+#endif

@@ -1,4 +1,5 @@
 #include "test_classes.h"
+#include "b2bconfigurator.h"
 TEST_F(DebugB2BTest, PreExplore){
     init();
     iteration++;

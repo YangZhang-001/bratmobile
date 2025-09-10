@@ -1,6 +1,6 @@
  #include "debug.h"
 
-std::string Logger::file_dateTime(const char* custom, char name[80], const char * addOn){
+std::string Logger::file_dateTime(const char* custom, char name[80]){
 	time_t now =time(0);
 	tm *ltm = localtime(&now);
 	int y,m,d, h, min;
@@ -20,14 +20,21 @@ std::string Logger::file_dateTime(const char* custom, char name[80], const char 
 }
 
 bool Logger::log(const char * format, ...){
-	va_list args;
-	va_start(args, format);
-	vfprintf(f, format, args);
-	va_end(args);
-	fflush(f);
+	try{
+		va_list args;
+		va_start(args, format);
+		vfprintf(f, format, args);
+		va_end(args);
+		fflush(f);
+		return true;
+	}
+	catch(std::exception &e){
+		return false;
+	}
+
 }
 
-void Logger::init(const char * new_folder, const char * _dir, const char * customName){
+void Logger::init(const char * new_folder, const char * _dir, const char * customName, bool dateOn){
 		std::string dirName=_dir;
 		if (!opendir(dirName.c_str())){
 			mkdir(dirName.c_str(), 0777);
@@ -38,8 +45,20 @@ void Logger::init(const char * new_folder, const char * _dir, const char * custo
 			mkdir(new_path.c_str(), 0777); //""
 		}
 		std::string customfile=new_path +customName;
-		file_dateTime(customfile.c_str(), fileName);
-		f = fopen(fileName, "w");
+		if (dateOn){
+			file_dateTime(customfile.c_str(), fileName);
+		}
+		else{
+			sprintf(fileName, "%s.txt",customfile.c_str());
+		}
+		f = fopen(fileName, "a+");
+		if (!f){
+			f=fopen(fileName, "w+");
+		}
+		if (!f){
+			std::cerr<<"cannot open file "<<fileName<<std::endl;
+			throw;
+		}
 }
 
 const char * Logger::getSystemArchitecture(){
@@ -72,6 +91,8 @@ char* debug::print_pose(const b2Transform& p, char* msg){
 	char str[256];
 	sprintf(str,"x=%f, y=%f, theta=%f", p.p.x, p.p.y, p.q.GetAngle());
 	printf("%s\n", str);
+	return str;
+	
 }
 
 void debug::print_matrix(const cv::Mat & m){

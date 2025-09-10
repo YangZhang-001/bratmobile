@@ -31,9 +31,10 @@ class Logger{
 	 * @param new_folder folder where files will be dumped (no / at the end)
 	 * @param _dir directory containing new_folder
 	 * @param customName file prefix (/ must be at the beginning)
+	 * @param dateOn whether to add today's date and time to file name
 	 */
-	Logger(const char * new_folder, const char * _dir="/tmp", const char * customName="/stats"){
-		init(new_folder, _dir, customName);
+	Logger(const char * new_folder, const char * _dir="/tmp", const char * customName="/stats", bool dateOn=true){
+		init(new_folder, _dir, customName, dateOn);
 	}
 
 	~Logger(){
@@ -64,14 +65,17 @@ class Logger{
 	protected:
 
 	/**
-	 * @brief Creates filename name in format customdmy_hm.txt
+	 * @brief Creates filename with today's date and time, name in format customdmy_hm.txt
 	 * 
 	 * @param custom custom
 	 * @param name empty char array
 	 */
-	std::string file_dateTime(const char* custom, char name[80], const char * addOn=NULL);
+	std::string file_dateTime(const char* custom, char name[80]);
 
-	void init(const char * new_folder, const  char * _dir=NULL, const char * customName="/stats");
+	/**
+	 * @see Logger
+	 */
+	void init(const char * new_folder, const  char * _dir=NULL, const char * customName="/stats", bool dateOn=false);
 
 
 };

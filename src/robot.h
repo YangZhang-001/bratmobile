@@ -9,7 +9,7 @@
 #include<vector>
 #include <map>
 #include "const.h"
-#include <opencv2/core.hpp>
+
 
 /**
  * @brief Robot class for Box2D simulation.
@@ -55,6 +55,14 @@ private:
 									b2Vec2(-ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y), 
 									b2Vec2(ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y) };
 		return result;
+	}
+
+	static b2Vec2 bl(){
+		return b2Vec2(-ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, -ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y);	
+	}
+
+	static b2Vec2 tr(){
+		return b2Vec2(ROBOT_HALFWIDTH+ROBOT_BOX_OFFSET_X, ROBOT_HALFLENGTH+ROBOT_BOX_OFFSET_Y);	
 	}
 
 };
