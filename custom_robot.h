@@ -84,7 +84,7 @@ virtual void step( AlphaBot &motors){
 class TentativeConfigurator: public AttentiveConfigurator{
 	void explore_plan(b2World & world){
 		if (iteration<=1){
-			AttentiveConfigurator::explore_plan();
+			AttentiveConfigurator::explore_plan(world);
 		}
 	}
 };
