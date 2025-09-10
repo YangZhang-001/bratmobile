@@ -12,11 +12,10 @@ Disturbance set_target(int& run, b2Transform start){
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
-    Task controlGoal;
 	LIDAR_In configuratorInterface;
 	Motor_Out controlInterface;
 	HorizonStarPlanner planner;
-    AttentiveConfigurator configurator(controlGoal);
+    AttentiveConfigurator configurator;
 	ClosedLoop_Tracker tracker;
 	configurator.register_tracker(&tracker);	
 	configurator.register_planner(&planner);
@@ -28,7 +27,7 @@ int main(int argc, char** argv) {
 	if (argc>1){
 		#define DEBUG atoi(argv[1])
 		//configuratorInterface.debugOn = atoi(argv[1]);
-	}	configurator.setSimulationStep(.27);
+	}	configurator.setSimulationStep(.5);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &controlInterface);
 	MotorCallback cb(&controlInterface);

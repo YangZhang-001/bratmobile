@@ -48,7 +48,7 @@ void Configurator::dummy_vertex(vertexDescriptor src){
 bool Configurator::Spawner(){ 
 	iteration++; //iteration set in getVelocity
 	worldBuilder.add_iteration();
-
+	simulatedTasks=0;
 	//BENCHMARK + FIND TRUE SAMPLING RATE
 	auto now =std::chrono::high_resolution_clock::now();
 
