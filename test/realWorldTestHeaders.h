@@ -109,7 +109,10 @@ class UserInputConfigurator: public virtual DebugConfigurator{
             if (transitionSystem[v1].direction==DEFAULT){
                 assignNewGoal(disturbance);
                 transitionSystem[v1].endPose.p.x=.02; //let's say it moved 20 cm
-
+                Task task(disturbance, directionSetter->getDirection(), b2Transform_zero, true);
+                b2World world(GRAVITY);
+                simResult sr=simulate(task, world);
+                std::cout<<"steps from simulation:"<<sr.step<<std::endl;
             }
             if (affordanceSetter->getAffIndex()==PURSUE){
                 //set pose for turns in pursuit of a disturbance
