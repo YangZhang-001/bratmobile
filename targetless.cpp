@@ -1,13 +1,12 @@
 #include "custom_robot.h"
 
-Disturbance set_target(int& run, b2Transform start){
-	Disturbance result;
-	if (run%2==0){
-		result=Disturbance(PURSUE, start.p, start.q.GetAngle());
-		run++;
+class NoGoal:public GoalChanger{
+
+	Task change_goal(const Task & task){
+		return Task();
 	}
-	return result;
-}
+
+};
 
 int main(int argc, char** argv) {
 	A1Lidar lidar;
@@ -17,8 +16,10 @@ int main(int argc, char** argv) {
 	HorizonStarPlanner planner;
     AttentiveConfigurator configurator;
 	ClosedLoop_Tracker tracker;
+	NoGoal goalChanger;
 	configurator.register_tracker(&tracker);	
 	configurator.register_planner(&planner);
+	configurator.register_goalChanger(&goalChanger);
 	Wise_Controller wc;
 	configurator.register_controller(&wc);
 	char name[60];

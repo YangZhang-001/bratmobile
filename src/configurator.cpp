@@ -189,7 +189,7 @@ void Configurator::run(Configurator * c){
 			}
 			if (c->goal_changer!=NULL){
 				if (( c->currentTask.is_over()& c->transitionSystem[c->currentVertex].direction!=STOP && c->m_plan.empty() && c->getIteration()>1)){
-					c->goal_changer->change_goal(&c->controlGoal);
+					controlGoal=c->goal_changer->change_goal(c->controlGoal);
 				}					
 			}
 			c->change_task();		

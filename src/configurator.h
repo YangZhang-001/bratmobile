@@ -203,6 +203,10 @@ void register_logger(Logger * l){
 	logger=l;
 }
 
+void register_goalChanger(GoalChanger * gc){
+	goal_changer=gc;
+}
+
 /**
  * @brief Matrix multiply by transpose
  * 
