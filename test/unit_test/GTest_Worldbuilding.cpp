@@ -137,8 +137,4 @@ TEST_P(ThirdPartyWB, CornerHarris){
 
 }
 
-
-
-
-
 INSTANTIATE_TEST_CASE_P(cds_sizes, ThirdPartyWB, ::testing::Values(10, 50, 100));

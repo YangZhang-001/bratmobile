@@ -61,7 +61,7 @@ class WorldBuilder{
      * @param start robot position
      * @param partition algorithm used for partition
      */
-    std::vector <BodyFeatures> getFeatures(const CoordinateContainer &current, b2Transform start, CLUSTERING clustering=PARTITION);
+    virtual std::vector <BodyFeatures> getFeatures(const CoordinateContainer &current, b2Transform start, CLUSTERING clustering=PARTITION);
 
     /**
      * @brief Creates bodies (objects) in the box2d world
@@ -71,7 +71,7 @@ class WorldBuilder{
      * @param clustering 
      * @param task 
      */
-    void buildWorld(b2World&,b2Transform, Direction,  Disturbance disturbance=Disturbance(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task * task=NULL);
+    virtual void buildWorld(b2World&,b2Transform, Direction,  Disturbance disturbance=Disturbance(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task * task=NULL);
 
     //returns top and bottom of rotated rectangle (not side-specific)
     std::pair <Pointf, Pointf> bounds(Direction, b2Transform t, float boxLength, float halfWindowWidth,std::vector <Pointf> *_bounds=NULL); //returns bottom and top of bounding box
