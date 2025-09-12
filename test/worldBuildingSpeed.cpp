@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
         Logger logger = Logger("WorldBuilderSpeedTest", ".", fileName.c_str(), false);
         for (float remaining=1/HZ; remaining<=10.f; remaining+=1/HZ){
             Task t;
-            b2World world= b2World(GRAVITY);
+            b2World world(GRAVITY);
             auto start = std::chrono::high_resolution_clock::now();
             wb->buildWorld(world, b2Transform_zero, DEFAULT, t.get_disturbance());
             int bodyCount=world.GetBodyCount();
