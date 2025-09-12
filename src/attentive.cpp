@@ -52,7 +52,7 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 				Task task(Di, DEFAULT, g[v].endPose, true);
 				Robot robot(&world);
 				robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
-				b2AABB box =worldBuilder.makeRobotSensor(robot.body(), controlGoal.get_disturbance_ptr());
+				b2AABB box =worldBuilder.makeRobotSensor(robot.body(), controlGoal.get_disturbance());
 				b2Fixture *sensor =GetSensor(robot.body());
 				bool overlap=overlaps(robot.body(), &Di) && sensor;
 				world_cleanup(world);
@@ -822,7 +822,7 @@ return result;
 
 Robot AttentiveConfigurator::makeRobot(b2World & world, const b2Transform & start){
 	Robot robot=Configurator::makeRobot(world, start);
-	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), Configurator::getGoalDisturbance());
+	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), controlGoal.get_disturbance()); //Configurator::getGoalDisturbance()
 	return robot;
 }
 

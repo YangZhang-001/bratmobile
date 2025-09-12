@@ -1,7 +1,8 @@
-#include "attentive.h"
-//#include "libcam2opencv.h"
+#ifndef CUSTOM_INTERFACES
+#define CUSTOM_INTERFACES
 #include "a1lidarrpi.h"
 #include "alphabot.h"
+#include "attentive.h"
 //#include "Iir.h"
 //#include "CppTimer.h"
 #include <stdio.h>
@@ -62,18 +63,14 @@ public:
 };
 
 class MotorCallback :public AlphaBot::StepCallback { //every 100ms the callback updates the plan
-    float L=0;
-	float R=0;
+protected:
+	Motor_Out * mio;
 public:
-int ogStep=0;
-Motor_Out * mio;
-int run=0;
 
-MotorCallback(Motor_Out *_mio): mio(_mio){
-}
-void step( AlphaBot &motors){
+MotorCallback(Motor_Out *_mio): mio(_mio){}
+virtual void step( AlphaBot &motors){
 	if (mio==NULL){
-		throw ("mio null\n");
+		std::cout<<("no motor out interface");
 	}
     motors.setRightWheelSpeed(mio->get_R()); //temporary fix because motors on despacito are the wrong way around
     motors.setLeftWheelSpeed(mio->get_L());
@@ -81,5 +78,6 @@ void step( AlphaBot &motors){
 }
 };
 
+#endif
 
 

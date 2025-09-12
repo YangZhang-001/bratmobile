@@ -345,7 +345,7 @@ TEST_P(HighLevelTest, Recycle){
     configurator->set_current_v(last_v); //simulate plan finished
     configurator->getTask().set_change(true);
     configurator->set_plan({});
-    wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(), finished_plan);
+    configurator->setTask(wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(), finished_plan));
     configurator->getTask().set_change(true);
     EXPECT_EQ(configurator->getTask().get_direction(), configurator->vertex_get_direction(last_v));
     EXPECT_TRUE(configurator->getTask().get_disturbance()==configurator->vertex_get_Di(last_v));

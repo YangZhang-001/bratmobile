@@ -30,7 +30,7 @@ bool overlaps(b2Body * robot, const Disturbance *const);
  * @param robot_pose the 2d transform representing the pose of the body that the box belongs to
  * @return true if the box overlaps with the disturbance OR if the box has zero radius, OR if the disturbance is null OR if the disturbance is not an obstacle
  */
-bool overlaps(const b2PolygonShape& box, Disturbance * d, const b2Transform& robot_pose=b2Transform_zero);
+bool overlaps(const b2PolygonShape& box, const Disturbance * const d, const b2Transform& robot_pose=b2Transform_zero);
 
 /**
  * @brief deletes all bodies in the box2d @param world
@@ -109,6 +109,11 @@ void setVelocities(const float & l,const float &r){
         return velocity;
     }
 
+    /**
+     * @brief Gets the ROBOT's displacement in the world frame after dt seconds
+     * 
+     * @param dt delta time (in seconds)
+     */
     b2Transform getTransform(const float &dt=1)const{ //dt integrates
     return b2Transform(getLinearVelocity(dt), b2Rot(getOmega(dt)));
 }
@@ -283,7 +288,7 @@ EndedResult checkEnded(const State& n, Direction dir=UNDEFINED, bool relax=false
  * @return true 
  * @return false 
  */
-bool checkEnded( const b2PolygonShape &box, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL );
+bool checkEnded(const b2PolygonShape &box, const b2Transform& robot_pose=b2Transform_zero, Disturbance * dist_obs=NULL );
 
 Task(){
     start = b2Transform(b2Vec2(0.0, 0.0), b2Rot(0));
@@ -379,7 +384,7 @@ void setMotorStep(int i){
     motorStep=i;
 }
 
-int & getMotorStep(){return motorStep;}
+int getMotorStep()const{return motorStep;}
 
 b2Transform getStart(){
     return start;
@@ -403,7 +408,7 @@ protected:
 
 bool isTurnFinished(const b2Transform & robotTransform, Direction dir);
 
-
+bool isMoving();
 
 };
 

@@ -1,6 +1,6 @@
 #ifndef SENSOR_H
 #define SENSOR_H
-#include "CloCK_math.h"
+#include "brat_math.h"
 
 class ConfiguratorInterface;
 class Configurator;
@@ -169,6 +169,7 @@ std::set<T> vec2set(std::vector<T> vec){
 }
 
 /**
+ * @file
  * @brief Given points, makes rotated bounding box
  * 
  * @param nb points
@@ -177,12 +178,12 @@ std::set<T> vec2set(std::vector<T> vec){
 std::pair <bool, BodyFeatures> bounding_rotated_box(std::vector <cv::Point2f>nb);
 
 template <typename Pt>
-static b2PolygonShape sensor_box(const std::vector <Pt> &all_points_pt, b2Transform robot_pose, const Disturbance * dist){
+static b2PolygonShape sensor_box(const std::vector <Pt> &all_points_pt, b2Transform robot_pose, const Disturbance & dist){
 	b2PolygonShape shape;
 	b2Vec2 centroid(2.0, 2.0), center=centroid, center_local=b2Vec2_zero;
 	float halfHeight=0, halfWidth=0;
-	if (dist->isValid()){
-	std::vector <b2Vec2>  d_vertices=dist->vertices(); 
+	if (dist.isValid()){
+	std::vector <b2Vec2>  d_vertices=dist.vertices(); 
 	std::vector <cv::Point2f> all_points=cast_Point2f(all_points_pt);
 	for (b2Vec2 p: d_vertices){
 		p=b2MulT(robot_pose, p); //get local point

@@ -189,7 +189,7 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
     }
 
     const std::vector <Direction>& vertex_get_options(vertexDescriptor v){
-        transitionSystem[v].options;
+        return transitionSystem[v].options;
     }
 
     /**
@@ -198,8 +198,9 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
      */
     BodyFeatures bodyFeatures(float x, float y, float q, float hlength, float hwidth);
 
-
-    
+    void setTask(const Task& t){
+        currentTask=t;
+    }
 
     vertexDescriptor get_current_vertex(){
         return currentVertex;
@@ -277,7 +278,8 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
     static Disturbance generateGoal();
 
         /**
-     * @brief Creates a vertex whose state starts and end at the origin. Not visited by default
+     * @brief Creates a vertex whose state starts and end at the origin. Not visited by default.
+     * DOES NOT set pose
      * 
      * @param v0 
      * @return edgeDescriptor 
@@ -551,6 +553,11 @@ class ReactToNoiseTest: public HighLevelTestBase, public ::testing::WithParamInt
 class CLTrackerTest:public ClosedLoop_Tracker{
     public:
     void setDeltaTransform(b2Transform t){deltaTransform=t;}
+    
+    void set_tracked_disturbance(const Disturbance & d){
+        tracked_disturbance=d;
+    }
+
 };
 
 /**
@@ -581,7 +588,14 @@ protected:
 
     void set_Dn(std::vector<vertexDescriptor> vec, const Disturbance& Dn);
 
-
+    // void SetUp()override{
+    //     ClosedLoop_Tracker * clt=new ClosedLoop_Tracker;
+    //     register_tracker(clt);
+    // }
+    // void TearDown()override{
+    //     delete tracker;
+    //     transitionSystem=TransitionSystem(1);
+    // }
 
 };
 
@@ -949,9 +963,9 @@ std::pair<std::string, std::string> ReactToNoiseTest::carveScenario(std::string 
 void HighLevelTestBase::trackFor(int iteration){
     for (int i=0;i<iteration-1; i++){ //simulate execution
     if (configurator->getIteration()>1){
-        b2Transform deltaPose= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
+        TrackingResult trackingResult= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
         //EXPECT_FALSE(deltaPose==b2Transform_zero);
-        configurator->update_graph(configurator->get_ts(), deltaPose);
+        configurator->update_graph(configurator->get_ts(), trackingResult);
     }
     configurator->change_task();
     configurator->estimate_current_vertex();    
@@ -1124,6 +1138,7 @@ int ConfiguratorTestTransitionMatrix::expectedOptions(Direction dir, simResult::
     else if (o==simResult::crashed){
         return 0;
     }
+    return 0;
 }
 
 void ConfiguratorTestTransitionMatrix::planIsDirection(Direction direction){

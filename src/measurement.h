@@ -52,6 +52,12 @@ public:
      * @brief Compares signed values
      */
     bool operator==(Measurement& m2);
+
+    /**
+     * @brief Gets error between this and another measurement, normalised by the maximum error value error can take
+     * 
+     * @return float 
+     */
     float getStandardError(Measurement, float); //relative standard error
 
 };

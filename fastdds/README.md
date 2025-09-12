@@ -1,0 +1,41 @@
+# Robot -> fastDDS -> Qt
+
+For transmitting data to a Qt interface which draws what the robot "sees". These data can be customised but in this setup they are the coordinates of the upper/lower bounds of robot, goal and initial disturbance (Di).
+
+## Prerequisites
+
+Fast CDR
+
+`sudo apt-get install libfastcdr-dev`
+
+Fast RTPS
+
+`sudo apt-get install libfastrtps-dev`
+
+Fast DDS tools
+
+`sudo apt-get install fastddsgen fastdds-tools`
+
+Qt packages
+
+` sudo apt-get install qtdeclarative5-dev-tools qt5-qmake qt5-qmake-bin qtbase5-dev qtbase5-dev-tools libqwt-qt5-dev`
+
+[CppTimer](https://github.com/berndporr/cppTimer) (only for running the demo)
+
+## Generating fastDDS files
+
+`fastddsgen ObjectPackage.idl`
+
+## Build
+
+`cmake .`
+`make`
+
+## Usage
+
+In one terminal window (e.g. a laptop ssh'd into the Raspberry Pi), run `./subscriber`. If running the demo, run `./publisher` in another terminal window (Rasbperry Pi). Otherwise, run any demo program from `../../bratmobile` directory.
+
+
+## Credits
+
+Based on Bernd Porr's [demo](https://github.com/berndporr/fastdds_demo).

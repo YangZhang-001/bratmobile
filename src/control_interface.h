@@ -121,6 +121,6 @@ struct GoalChanger{
 	* Customizable, for changing goals.
 	* @param  control goal pointer
 	*/
-	virtual void change_goal(Task * t);
+	virtual Task change_goal(const Task & t)=0;
 };
 #endif

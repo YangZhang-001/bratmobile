@@ -75,6 +75,8 @@ void addIteration(int i=1){
 	iteration+=i;
 }
 
+void assignDisturbanceToTask(const Disturbance & d, Task & t);
+
 
 void dummy_vertex(vertexDescriptor src);
 
@@ -137,14 +139,14 @@ static void run(Configurator *);
 /**
  * @brief changes tasks executing on the robot
  */
-void change_task();
+virtual void change_task();
 
 /**
- * @brieF updates the cognitive map by applying a 2D transform
+ * @brieF updates the cognitive map and goal by applying a 2D transform, and sets current task Di to the observed disturbance in the tracking result
 *@param g the cognitive map
-*@param _deltaPose the transform to apply
+*@param tr the tracking result
 */
-void update_graph(TransitionSystem& g, const b2Transform & _deltaPose);
+void update_graph(TransitionSystem& g, const TrackingResult & tr);
 
 //round angle to a divisor of PI/2
 /**
@@ -167,11 +169,13 @@ void register_controller(Controller * controller){
 Controller* get_controller(){
 	return task_controller;
 }
-
+/**
+* @brief registers and initialises the tracker to the goal
+*/
 void register_tracker(Tracker * _tracker){
 	if (!_tracker){return;}
 	tracker=_tracker;
-	tracker->init(&controlGoal);
+	tracker->init(controlGoal);
 }
 
 Tracker * get_tracker()const {
@@ -199,6 +203,10 @@ void register_logger(Logger * l){
 	logger=l;
 }
 
+void register_goalChanger(GoalChanger * gc){
+	goal_changer=gc;
+}
+
 /**
  * @brief Matrix multiply by transpose
  * 
@@ -221,8 +229,26 @@ static void Mul(const b2Transform& B, Task &task);
  */
 virtual Robot makeRobot(b2World& world, const b2Transform & start);
 
-Disturbance * getGoalDisturbance(){return &controlGoal.disturbance;}
+//Disturbance * getGoalDisturbance(){return &controlGoal.disturbance;}
 
+bool areInterfacesSetUp(Configurator * c=NULL);
+
+/**
+ * @brief Assigns body features to the disturbance of a task (NOTE: affordance and validity of the disturbance will remain the same)
+ * 
+ * @param t the task
+ * @param bf body features
+ */
+void assignBodyFeatures(Task & t, const BodyFeatures & bf);
+
+/**
+ * @brief Assigns dimensions to the disturbance of a task (NOTE: pose, affordance and validity of the disturbance will remain the same)
+ * 
+ * @param t the task
+ * @param halfLength 
+ * @param halfWidth 
+ */
+void assignDimensions(Task & t, float halfLength, float halfWidth);
 };
 
 /**

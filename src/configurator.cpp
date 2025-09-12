@@ -13,6 +13,7 @@ void Configurator::Mul(const b2Transform&B , Task &task){
 }
 
 
+
 void Configurator::init(Task _task){
 	controlGoal=_task;
 	currentTask=_task;
@@ -47,7 +48,7 @@ void Configurator::dummy_vertex(vertexDescriptor src){
 bool Configurator::Spawner(){ 
 	iteration++; //iteration set in getVelocity
 	worldBuilder.add_iteration();
-
+	simulatedTasks=0;
 	//BENCHMARK + FIND TRUE SAMPLING RATE
 	auto now =std::chrono::high_resolution_clock::now();
 
@@ -168,49 +169,34 @@ void Configurator::registerInterface(LIDAR_In * _ci, Motor_Out * _control){
 
 void Configurator::run(Configurator * c){
 	while (c->running){
+		if (!c->areInterfacesSetUp(c)){
+			c->running=false;
+		}
 		if (c->ci->stop){
 			c->ci=NULL;
 			c->control=NULL;
 			printf("ci not started\n");
-		}
-		if (c->ci == NULL){
-			printf("null pointer to lidar input\n");
-			c->running=0;
-			return;
-		}
-		if (c->control == NULL){
-			printf("null pointer to motor output\n");
-			c->running=0;
-			return;
-		}
-		if (c == NULL){
-			printf("null pointer to configurator\n");
-			c->running=0;
-			return;
-		}
-		if (c->task_controller==NULL){
-			c->running=0;
-			throw std::invalid_argument("no task controller, please set!");
-		}
+			c->running=false;
+		}		
 		if (c->ci->isReady()){
 			c->ci->setReady(false);
 			c->data2fp= CoordinateContainer(c->ci->data2fp);
 			c->Spawner();
-			b2Transform deltaPose=b2Transform_zero;
 			if (c->getIteration()>1){
-				deltaPose= c->tracker->track((c->currentTask),c->ci->data2fp, c->worldBuilder.get_world_objects());
+				TrackingResult trackingResult(c->currentTask.get_disturbance());
+				trackingResult= c->tracker->track((c->currentTask),c->ci->data2fp, c->worldBuilder.get_world_objects());
+				c->update_graph(c->transitionSystem, trackingResult);
 			}
-			c->update_graph(c->transitionSystem, deltaPose);
 			if (c->goal_changer!=NULL){
 				if (( c->currentTask.is_over()& c->transitionSystem[c->currentVertex].direction!=STOP && c->m_plan.empty() && c->getIteration()>1)){
-					c->goal_changer->change_goal(&c->controlGoal);
+					c->controlGoal=c->goal_changer->change_goal(c->controlGoal);
 				}					
 			}
 			c->change_task();		
 			c->adjust_goal_expectation();
 			c->estimate_current_vertex();
 			printf("current v=%i\n", c->currentVertex);
-			c->tracker->on_new_reading(&c->controlGoal);
+			//c->tracker->on_new_reading(c->controlGoal, c->currentTask);
 			}
 
 	}
@@ -277,18 +263,31 @@ void Configurator::change_task(){
 	if (task_controller==NULL){
 		throw std::invalid_argument("no controller, please add!");
 	}
-	task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
+	currentTask=task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
 	//transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
-	tracker->on_new_task(&currentTask);
-	control->reset();
-	control->getData(currentTask.action);
+	tracker->on_new_task(currentTask, controlGoal);
+	if (control){
+		control->reset();
+		control->getData(currentTask.action);
+	}
+	else{
+		std::cerr<<("no motor interface found");
+	}
 	return;
 }
 
-void Configurator::update_graph(TransitionSystem&g, const b2Transform & _deltaPose){
-	math::MulT(_deltaPose, g);
-	Configurator::MulT(_deltaPose, controlGoal);
+void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
+	math::MulT(tr.displacement, g);
+	Configurator::MulT(tr.displacement, controlGoal);
+	currentTask.disturbance=tr.observed_disturbance;
+	if (!tracker){
+		std::cout <<"tracker uninitialised!";
+		return;
+	}
+	if (tracker->hasTaskEnded(currentTask)){
+		currentTask.change=true;
+	}
 }
 
 
@@ -310,6 +309,42 @@ void Configurator::adjust_goal_expectation(){
 		printf("distance after adjusting %f\n", controlGoal.disturbance.pose().p.Length());
 	}
 
+}
+
+bool Configurator::areInterfacesSetUp(Configurator * c){
+	if (c == NULL){
+		std::cerr<<"null pointer to configurator";
+		return false;
+	}	
+	if (c->ci == NULL){
+		std::cerr<<"null pointer to lidar input";
+		return false;
+	}
+	if (c->control == NULL){
+		std::cerr<<"null pointer to motor output";
+		return false;
+	}
+	if (c->task_controller==NULL){
+		std::cerr<<"no task controller, please set!";
+		return false;
+	}
+	if (!c->tracker){
+		std::cerr<<"no tracker!";
+		return false;
+	}
+	return true;
+
+}
+
+void Configurator::assignBodyFeatures(Task & t, const BodyFeatures & bf){
+	t.disturbance.bf=bf;
+}
+
+void Configurator::assignDimensions(Task & t, float halfLength, float halfWidth){
+	BodyFeatures bf=t.get_disturbance().bf;
+	bf.halfLength=halfLength;
+	bf.halfWidth=halfWidth;
+	assignBodyFeatures(t, bf);
 }
 
 
@@ -335,3 +370,5 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 		printf("crashed\n");
 	}
 }
+
+

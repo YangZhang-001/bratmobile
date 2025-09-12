@@ -44,11 +44,24 @@ class WorldBuilder{
      */
     std::vector <BodyFeatures> processData(const CoordinateContainer&, const b2Transform&);
 
-    std::vector <BodyFeatures> cluster_data(const CoordinateContainer &, const b2Transform&, CLUSTERING clustering=PARTITION);
+    /**
+     * @brief Cluster point cloud data using a custom algorithm
+     * @param pts point cloud
+     * @param start start robot transform
+     * @param clustering the clustering algorithm
+     * return a vector of bodyfeatures
+     */
+    std::vector <BodyFeatures> cluster_data(const CoordinateContainer &pts, const b2Transform& start, CLUSTERING clustering=PARTITION);
 
     bool checkDisturbance(Pointf, bool&,Task * curr =NULL, float range=0.025);
 
-    std::vector <BodyFeatures> getFeatures(const CoordinateContainer &, b2Transform, CLUSTERING clustering=PARTITION);
+    /**
+     * @brief clusters point clouds into objects and returns a vector of body features
+     * @param current point cloud
+     * @param start robot position
+     * @param partition algorithm used for partition
+     */
+    virtual std::vector <BodyFeatures> getFeatures(const CoordinateContainer &current, b2Transform start, CLUSTERING clustering=PARTITION);
 
     /**
      * @brief Creates bodies (objects) in the box2d world
@@ -58,7 +71,7 @@ class WorldBuilder{
      * @param clustering 
      * @param task 
      */
-    void buildWorld(b2World&,b2Transform, Direction,  Disturbance disturbance=Disturbance(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task * task=NULL);
+    virtual void buildWorld(b2World&,b2Transform, Direction,  Disturbance disturbance=Disturbance(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, Task * task=NULL);
 
     //returns top and bottom of rotated rectangle (not side-specific)
     std::pair <Pointf, Pointf> bounds(Direction, b2Transform t, float boxLength, float halfWindowWidth,std::vector <Pointf> *_bounds=NULL); //returns bottom and top of bounding box
@@ -97,7 +110,7 @@ class WorldBuilder{
         return bodies;
     }
 
-    int add_body_count(){
+    void add_body_count(){
         bodies++;
     }
 
@@ -120,7 +133,7 @@ class WorldBuilder{
      * @param focus a disturbance representing the focus of the attention window 
      * @return b2AABB 
      */
-    b2AABB  makeRobotSensor(b2Body* const robotBody, const Disturbance *const focus)const; //returns bounding box in world coord
+    b2AABB  makeRobotSensor(b2Body* const robotBody, const Disturbance & focus)const; //returns bounding box in world coord
     
 
     std::vector <BodyFeatures>& get_world_objects(){

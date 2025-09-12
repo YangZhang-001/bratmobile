@@ -13,6 +13,8 @@ The purpose of this library is to showcase a framework for multi-step ahead plan
 
 * Plans represents set of instructions, not trajectories: no solvers required, completely closed-loop and object oriented
 
+* Debug and navigation visualisation interface which transmits goal, obstacle and attention window coordinates to Qt using fastDDS
+
 ## Work in progress
 
 * Closed-loop Task execution with goal-directed behaviour (driving towards target)
@@ -50,7 +52,9 @@ The indoor robot is equipped with
 
 `sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev`
 
-### Compile from source
+For Qt/FastDDS setup, see readme in `src/fastdds`
+
+### Libraries to compile from source
 
 * [LIDAR API](https://github.com/berndporr/rplidar_rpi)
 * [Motors API](https://github.com/berndporr/alphabot)
@@ -65,7 +69,7 @@ The indoor robot is equipped with
 ## Build
 ```
 cd bratmobile
-cmake .
+cmake .  #if you want to build the fastdds directory use option -D BUILD_FASTDDS=ON
 make
 sudo make install
 ```
