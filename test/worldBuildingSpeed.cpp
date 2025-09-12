@@ -83,19 +83,22 @@ int main(int argc, char **argv) {
     std::vector <std::string> names={"WorldBuilder", "WorldPointBuilder", "EverythingBuilder", "EveryOtherFeatureBuilder", "EveryOtherPointBuilder"};
     int ct=0;
     for (WorldBuilder *wb: builders){
+        auto start = std::chrono::high_resolution_clock::now();
         wb->set_world_objects(wb->getFeatures(data, b2Transform_zero, WorldBuilder::PARTITION));
         std::string fileName=std::string("/")+names[ct];
         Logger logger = Logger("WorldBuilderSpeedTest", ".", fileName.c_str(), false);
+        auto end = std::chrono::high_resolution_clock::now();
+        float buildTime=std::chrono::duration<float, std::milli>(end-start).count()/1000;
         for (float remaining=1/HZ; remaining<=10.f; remaining+=1/HZ){
             Task t;
             b2World world(GRAVITY);
-            auto start = std::chrono::high_resolution_clock::now();
+            start = std::chrono::high_resolution_clock::now();
             wb->buildWorld(world, b2Transform_zero, DEFAULT, t.get_disturbance());
             int bodyCount=world.GetBodyCount();
             Robot robot(&world);
             simResult result=t.bumping_that(world, 0, robot.body(), remaining);
-            auto end = std::chrono::high_resolution_clock::now();
-            logger.log("%f\t%i\t%i\t%i\n", std::chrono::duration<float, std::milli>(end-start).count()/1000, wb->get_world_objects().size(), bodyCount, data.size());
+            end = std::chrono::high_resolution_clock::now();
+            logger.log("%f\t%i\t%i\t%i\t\n", std::chrono::duration<float, std::milli>(end-start).count()/1000, wb->get_world_objects().size(), bodyCount, data.size(), buildTime);
             if (result.resultCode==simResult::crashed){
                 break; //no need to simulate till it crashes
             }
