@@ -78,6 +78,23 @@ virtual void step( AlphaBot &motors){
 }
 };
 
+/**
+	@brief executes plans in open loop, doesn't check plan or recycle
+*/
+class TentativeConfigurator: public AttentiveConfigurator{
+
+	void explore_plan(b2World & world){
+		if (iteration<=1){
+			AttentiveConfigurator::explore_plan(world);
+		}
+	}
+	public:
+
+	TentativeConfigurator(): AttentiveConfigurator(){}
+
+	TentativeConfigurator(const Task & goal): AttentiveConfigurator(goal){}
+};
+
 #endif
 
 
