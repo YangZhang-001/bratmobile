@@ -8,7 +8,7 @@
  */
 class WorldPointBuilder: public virtual WorldBuilder{
     protected:
-    std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering){
+    virtual std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
     std::vector <BodyFeatures> features;
     for (const auto & p: current){
         features.push_back(BodyFeatures(b2Transform(b2Vec2(p.x, p.y), b2Rot(0))));
@@ -19,12 +19,12 @@ class WorldPointBuilder: public virtual WorldBuilder{
 };
 
 /**
- * @brief Builds all points for each task
+ * @brief Builds all points for each task 
  * 
  */
 class EverythingBuilder: public virtual WorldPointBuilder{
     protected:
-    void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
+    virtual void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
         for (const BodyFeatures & bf: world_objects){
             makeBody(w, bf);
         }
@@ -37,12 +37,13 @@ class EverythingBuilder: public virtual WorldPointBuilder{
  */
 class EveryOtherFeatureBuilder: public WorldPointBuilder{
     protected:
-    std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering){
+    std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
     std::vector <BodyFeatures> features;
     bool toggle=true;
     for (const auto & p: current){
-        if (!toggle)continue;
-        features.push_back(BodyFeatures(b2Transform(b2Vec2(p.x, p.y), b2Rot(0))));
+        if (toggle){
+            features.push_back(BodyFeatures(b2Transform(b2Vec2(p.x, p.y), b2Rot(0))));
+        }
         toggle=!toggle;
     }
     return features;
@@ -52,9 +53,13 @@ class EveryOtherFeatureBuilder: public WorldPointBuilder{
 /**
  * @brief Makes a feature for every other point and builds all points
  */
-class EveryOtherPointBuilder: public virtual WorldPointBuilder, public virtual EverythingBuilder{
+class EveryOtherPointBuilder: public virtual EveryOtherFeatureBuilder, public virtual EverythingBuilder{
     protected:
-    void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
+    std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
+        return EveryOtherFeatureBuilder::getFeatures(current, start, clustering);
+    }
+
+    void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
         EverythingBuilder::buildWorld(w, start, d, disturbance, halfWindowWidth, clustering, task);
     }
 };
@@ -80,7 +85,7 @@ int main(int argc, char **argv) {
     for (WorldBuilder *wb: builders){
         wb->set_world_objects(wb->getFeatures(data, b2Transform_zero, WorldBuilder::PARTITION));
         std::string fileName=std::string("/")+names[ct];
-        Logger * logger = new Logger("WorldBuilderSpeedTest", ".", fileName.c_str(), false);
+        Logger logger = Logger("WorldBuilderSpeedTest", ".", fileName.c_str(), false);
         for (float remaining=1/HZ; remaining<=10.f; remaining+=1/HZ){
             Task t;
             b2World world= b2World(GRAVITY);
@@ -90,9 +95,8 @@ int main(int argc, char **argv) {
             Robot robot(&world);
             t.bumping_that(world, 0, robot.body(), remaining);
             auto end = std::chrono::high_resolution_clock::now();
-            logger->log("%s\t%f\t%f\t%i\t%i\n", names[ct].c_str(), remaining, std::chrono::duration<float, std::milli>(end-start).count(), wb->get_world_objects().size(), bodyCount);
-        }   
-    delete logger;
+            logger.log("%s\t%f\t%f\t%i\t%i\t%i\n", names[ct].c_str(), remaining, std::chrono::duration<float, std::milli>(end-start).count()/1000, wb->get_world_objects().size(), bodyCount, data.size());
+        }
     std::cout<<"Tested "<<names[ct]<<std::endl;
     ct++;
 
@@ -100,6 +104,7 @@ int main(int argc, char **argv) {
     //cleanup
     for (WorldBuilder *wb: builders){
         delete wb;
+        wb=NULL;
     }
 
 }
