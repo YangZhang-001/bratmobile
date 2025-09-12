@@ -5,59 +5,59 @@
 #include "test_essentials.h"
 #include <string>
 
-void printGraph(TransitionSystem& g){ //for calling in GDB
-    boost::print_graph(g);
-}
+// void printGraph(TransitionSystem& g){ //for calling in GDB
+//     boost::print_graph(g);
+// }
 
-struct Remember{
-	Remember(){}
-	Remember(TransitionSystem* ts):g(ts){}
+// struct Remember{
+// 	Remember(){}
+// 	Remember(TransitionSystem* ts):g(ts){}
 
-	bool operator()(const edgeDescriptor& e){//const
-		if ((*g)[e].probability<FORGET_THRESHOLD){ //filter signal
-		 	return false;
-		 }
-		return true;
-	}
+// 	bool operator()(const edgeDescriptor& e){//const
+// 		if ((*g)[e].probability<FORGET_THRESHOLD){ //filter signal
+// 		 	return false;
+// 		 }
+// 		return true;
+// 	}
 
-	private: 
-	TransitionSystem *g;
-}remember;
+// 	private: 
+// 	TransitionSystem *g;
+// }remember;
 
 
-template <typename Predicate> 
-void printEdges(TransitionSystem& g, Predicate p){
-    auto es = boost::edges(g);
-    for (auto ei=es.first; ei!=es.second;ei++){
-        if (!p(*ei)){
-            printf("%i->%i, direction=%i,probability=%f, step=%i\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability, g[*ei].step);
-        }
-    }
-}
+// template <typename Predicate> 
+// void printEdges(TransitionSystem& g, Predicate p){
+//     auto es = boost::edges(g);
+//     for (auto ei=es.first; ei!=es.second;ei++){
+//         if (!p(*ei)){
+//             printf("%i->%i, direction=%i,probability=%f, step=%i\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability, g[*ei].step);
+//         }
+//     }
+// }
 
-void printEdges(TransitionSystem& g){
-    auto es = boost::edges(g);
-    for (auto ei=es.first; ei!=es.second;ei++){
-        printf("%i->%i, direction=%i,probability=%f, step=%i\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability, g[*ei].step);
-    }
-}
+// void printEdges(TransitionSystem& g){
+//     auto es = boost::edges(g);
+//     for (auto ei=es.first; ei!=es.second;ei++){
+//         printf("%i->%i, direction=%i,probability=%f, step=%i\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability, g[*ei].step);
+//     }
+// }
 
-void print_forget(TransitionSystem& g){
-    Remember p;
-    printEdges(g, p);
-}
+// void print_forget(TransitionSystem& g){
+//     Remember p;
+//     printEdges(g, p);
+// }
 
-float print_belowP(TransitionSystem& g, float p){
-    auto es = boost::edges(g);
-    float ct=0;
-    for (auto ei=es.first; ei!=es.second;ei++){
-        if (g[*ei].probability<p){
-            ct++;
-            printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
-        }
-    }
-    return ct/g.m_vertices.size();
-}
+// float print_belowP(TransitionSystem& g, float p){
+//     auto es = boost::edges(g);
+//     float ct=0;
+//     for (auto ei=es.first; ei!=es.second;ei++){
+//         if (g[*ei].probability<p){
+//             ct++;
+//             printf("%i->%i, direction=%i,probability=%f\n", (*ei).m_source, (*ei).m_target, g[(*ei).m_target].direction, g[*ei].probability);
+//         }
+//     }
+//     return ct/g.m_vertices.size();
+// }
 
 // void getVisited(TransitionSystem& g, vertexDescriptor cv){
 //     auto es = boost::edges(g);
