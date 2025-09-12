@@ -64,35 +64,42 @@ int main(int argc, char **argv) {
   CoordinateContainer data;
     float x2, y2; //read data from file
         while (file>>x2>>y2){
-            if (b2Vec2(x2, y2).Length()<.5){
+            if (b2Vec2(x2, y2).Length()<1.0){
                 x2 = round(x2*100)/100;
                 y2 = round(y2*100)/100;
+                Pointf  p2(x2,y2);
+                data.insert(p2);
             }
 
-            Pointf  p2(x2,y2);
-            data.insert(p2);
         }
         file.close();
     //make vector of worldbuilders
-    std::vector <WorldBuilder> builders={WorldBuilder(), WorldPointBuilder(), EverythingBuilder(), EveryOtherFeatureBuilder(), EveryOtherPointBuilder()};
+    std::vector <WorldBuilder*> builders={new WorldBuilder(), new WorldPointBuilder(), new EverythingBuilder(), new EveryOtherFeatureBuilder(), new EveryOtherPointBuilder()};
     std::vector <std::string> names={"WorldBuilder", "WorldPointBuilder", "EverythingBuilder", "EveryOtherFeatureBuilder", "EveryOtherPointBuilder"};
-    
-    for (WorldBuilder wb: builders){
-        std::string fileName=std::string("/")+std::string(typeid(wb).name());
-        Logger * logger = new Logger("WorldBuilderSpeedTest", ".", fileName.c_str());
+    int ct=0;
+    for (WorldBuilder *wb: builders){
+        wb->set_world_objects(wb->getFeatures(data, b2Transform_zero, WorldBuilder::PARTITION));
+        std::string fileName=std::string("/")+names[ct];
+        Logger * logger = new Logger("WorldBuilderSpeedTest", ".", fileName.c_str(), false);
         for (float remaining=1/HZ; remaining<=10.f; remaining+=1/HZ){
             Task t;
-            wb.set_world_objects(wb.getFeatures(data, b2Transform_zero, WorldBuilder::PARTITION));
             b2World world= b2World(GRAVITY);
             auto start = std::chrono::high_resolution_clock::now();
-            wb.buildWorld(world, b2Transform_zero, DEFAULT, t.get_disturbance());
-            Robot robot;
+            wb->buildWorld(world, b2Transform_zero, DEFAULT, t.get_disturbance());
+            int bodyCount=world.GetBodyCount();
+            Robot robot(&world);
             t.bumping_that(world, 0, robot.body(), remaining);
             auto end = std::chrono::high_resolution_clock::now();
-            logger->log("%s\t%f\t%f\n", typeid(wb).name(), remaining, std::chrono::duration<float, std::milli>(end-start).count());
+            logger->log("%s\t%f\t%f\t%i\t%i\n", names[ct].c_str(), remaining, std::chrono::duration<float, std::milli>(end-start).count(), wb->get_world_objects().size(), bodyCount);
         }   
     delete logger;
+    std::cout<<"Tested "<<names[ct]<<std::endl;
+    ct++;
+
     }
     //cleanup
+    for (WorldBuilder *wb: builders){
+        delete wb;
+    }
 
 }
