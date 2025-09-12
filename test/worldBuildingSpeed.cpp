@@ -93,9 +93,12 @@ int main(int argc, char **argv) {
             wb->buildWorld(world, b2Transform_zero, DEFAULT, t.get_disturbance());
             int bodyCount=world.GetBodyCount();
             Robot robot(&world);
-            t.bumping_that(world, 0, robot.body(), remaining);
+            simResult result=t.bumping_that(world, 0, robot.body(), remaining);
             auto end = std::chrono::high_resolution_clock::now();
-            logger.log("%s\t%f\t%f\t%i\t%i\t%i\n", names[ct].c_str(), remaining, std::chrono::duration<float, std::milli>(end-start).count()/1000, wb->get_world_objects().size(), bodyCount, data.size());
+            logger.log("%f\t%i\t%i\t%i\n", std::chrono::duration<float, std::milli>(end-start).count()/1000, wb->get_world_objects().size(), bodyCount, data.size());
+            if (result.resultCode==simResult::crashed){
+                break; //no need to simulate till it crashes
+            }
         }
     std::cout<<"Tested "<<names[ct]<<std::endl;
     ct++;
