@@ -103,10 +103,10 @@ std::pair&lt; <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375
 <tr class="memitem:a8190d2fa19e15baeb2953a456c32cae8"><td class="memItemLeft" align="right" valign="top"><a id="a8190d2fa19e15baeb2953a456c32cae8"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkDisturbance</b> (<a class="el" href="structPointf.html">Pointf</a>, bool &amp;, <a class="el" href="classTask.html">Task</a> *curr=NULL, float range=0.025)</td></tr>
 <tr class="separator:a8190d2fa19e15baeb2953a456c32cae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69d61ce1ac9ec3091fc2c9114b43d67e"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWorldBuilder.html#a69d61ce1ac9ec3091fc2c9114b43d67e">getFeatures</a> (const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;current, b2Transform start, CLUSTERING clustering=PARTITION)</td></tr>
+<tr class="memitem:a69d61ce1ac9ec3091fc2c9114b43d67e"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWorldBuilder.html#a69d61ce1ac9ec3091fc2c9114b43d67e">getFeatures</a> (const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;current, b2Transform start, CLUSTERING clustering=PARTITION)</td></tr>
 <tr class="memdesc:a69d61ce1ac9ec3091fc2c9114b43d67e"><td class="mdescLeft">&#160;</td><td class="mdescRight">clusters point clouds into objects and returns a vector of body features  <a href="classWorldBuilder.html#a69d61ce1ac9ec3091fc2c9114b43d67e">More...</a><br /></td></tr>
 <tr class="separator:a69d61ce1ac9ec3091fc2c9114b43d67e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8fced331769ea18a04d9ad547b301a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWorldBuilder.html#aa8fced331769ea18a04d9ad547b301a0">buildWorld</a> (b2World &amp;, b2Transform, Direction, <a class="el" href="structDisturbance.html">Disturbance</a> disturbance=<a class="el" href="structDisturbance.html">Disturbance</a>(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, <a class="el" href="classTask.html">Task</a> *task=NULL)</td></tr>
+<tr class="memitem:aa8fced331769ea18a04d9ad547b301a0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWorldBuilder.html#aa8fced331769ea18a04d9ad547b301a0">buildWorld</a> (b2World &amp;, b2Transform, Direction, <a class="el" href="structDisturbance.html">Disturbance</a> disturbance=<a class="el" href="structDisturbance.html">Disturbance</a>(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, <a class="el" href="classTask.html">Task</a> *task=NULL)</td></tr>
 <tr class="memdesc:aa8fced331769ea18a04d9ad547b301a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates bodies (objects) in the box2d world.  <a href="classWorldBuilder.html#aa8fced331769ea18a04d9ad547b301a0">More...</a><br /></td></tr>
 <tr class="separator:aa8fced331769ea18a04d9ad547b301a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a697297e38a135885d8576d05ceab155e"><td class="memItemLeft" align="right" valign="top"><a id="a697297e38a135885d8576d05ceab155e"></a>
@@ -188,6 +188,9 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Configurator</b></td
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void WorldBuilder::buildWorld </td>
@@ -237,6 +240,11 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Configurator</b></td
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Creates bodies (objects) in the box2d world. </p>
@@ -301,6 +309,9 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Configurator</b></td
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; WorldBuilder::getFeatures </td>
@@ -326,6 +337,11 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Configurator</b></td
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>clusters point clouds into objects and returns a vector of body features </p>
