@@ -31,7 +31,7 @@ class TestInputConfigurator: public UserInputConfigurator{
 		}
         if (goal_changer!=NULL){
             if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
-                goal_changer->change_goal(&controlGoal);
+               controlGoal= goal_changer->change_goal(controlGoal);
             }					
         }
         change_task();	
