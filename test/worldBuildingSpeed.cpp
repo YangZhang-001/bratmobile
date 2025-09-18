@@ -142,8 +142,8 @@ int main(int argc, char **argv) {
     ct++;
     }
     //cleanup
-    // for (WorldBuilder *wb: builders){
-    //     delete wb;
-    // }
+    for (WorldBuilder *wb: builders){
+        delete wb;
+    }
 
 }
