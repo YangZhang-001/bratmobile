@@ -6,7 +6,7 @@
 /**
  * @brief Each point is an object but each time the world is built, only the points in the way of the task are constructed
  */
-class WorldPointBuilder: public virtual WorldBuilder{
+class WorldPointBuilder: public WorldBuilder{
     protected:
     virtual std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
     std::vector <BodyFeatures> features;
@@ -35,7 +35,7 @@ class EverythingBuilder: public virtual WorldPointBuilder{
  * @brief Makes a feature for every other point and builds only those in the way of task
  * 
  */
-class EveryOtherFeatureBuilder: public WorldPointBuilder{
+class EveryOtherFeatureBuilder: public virtual WorldPointBuilder{
     protected:
     std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
     std::vector <BodyFeatures> features;
@@ -69,10 +69,13 @@ class EveryOtherPointBuilder: public virtual EveryOtherFeatureBuilder, public vi
  * 
  */
 class LaserFocus: public virtual WorldBuilder{ //legacy
-    CoordinateContainer m_current;
     protected:
+    CoordinateContainer m_current;
+    public:
     virtual std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
-        m_current=current;
+        for (auto & p: current){
+            m_current.insert(p);
+        }
     }
 
     virtual void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
@@ -80,7 +83,7 @@ class LaserFocus: public virtual WorldBuilder{ //legacy
         std::pair<Pointf, Pointf> bt = bounds(d, start, simulationStep, halfWindowWidth);
         std::pair <CoordinateContainer, bool> salient = salientPoints(start,m_current, bt);
         if (salient.first.empty()){
-            return features;
+            return;
         }
         if (clustering==BOX){
             features =processData(salient.first, start);
@@ -136,12 +139,10 @@ int main(int argc, char **argv) {
         }
     std::cout<<"Tested "<<names[ct]<<std::endl;
     ct++;
-
     }
     //cleanup
     for (WorldBuilder *wb: builders){
         delete wb;
-        wb=NULL;
     }
 
 }
