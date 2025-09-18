@@ -64,6 +64,37 @@ class EveryOtherPointBuilder: public virtual EveryOtherFeatureBuilder, public vi
     }
 };
 
+/**
+ * @brief Gets all points in the way of the task and makes a body which is a bounding upright box around all points
+ * 
+ */
+class LaserFocus: public virtual WorldBuilder{ //legacy
+    CoordinateContainer m_current;
+    protected:
+    virtual std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
+        m_current=current;
+    }
+
+    virtual void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
+        std::vector <BodyFeatures> features;
+        std::pair<Pointf, Pointf> bt = bounds(d, start, simulationStep, halfWindowWidth);
+        std::pair <CoordinateContainer, bool> salient = salientPoints(start,m_current, bt);
+        if (salient.first.empty()){
+            return features;
+        }
+        if (clustering==BOX){
+            features =processData(salient.first, start);
+        }
+        else{
+            features=cluster_data(salient.first, start,clustering);
+        }
+        for (const BodyFeatures & bf: features){
+            makeBody(w, bf);
+        }
+    }
+
+};
+
 int main(int argc, char **argv) {
   std::ifstream file("cds_test.dat");
   CoordinateContainer data;
@@ -79,8 +110,8 @@ int main(int argc, char **argv) {
         }
         file.close();
     //make vector of worldbuilders
-    std::vector <WorldBuilder*> builders={new WorldBuilder(), new WorldPointBuilder(), new EverythingBuilder(), new EveryOtherFeatureBuilder(), new EveryOtherPointBuilder()};
-    std::vector <std::string> names={"WorldBuilder", "WorldPointBuilder", "EverythingBuilder", "EveryOtherFeatureBuilder", "EveryOtherPointBuilder"};
+    std::vector <WorldBuilder*> builders={new WorldBuilder(), new WorldPointBuilder(), new EverythingBuilder(), new EveryOtherFeatureBuilder(), new EveryOtherPointBuilder(), new LaserFocus()};
+    std::vector <std::string> names={"WorldBuilder", "WorldPointBuilder", "EverythingBuilder", "EveryOtherFeatureBuilder", "EveryOtherPointBuilder", "LaserFocus"};
     int ct=0;
     for (WorldBuilder *wb: builders){
         auto start = std::chrono::high_resolution_clock::now();
