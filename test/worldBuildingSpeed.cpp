@@ -72,10 +72,10 @@ class LaserFocus: public virtual WorldBuilder{ //legacy
     protected:
     CoordinateContainer m_current;
     public:
-    virtual std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
-        for (auto & p: current){
-            m_current.insert(p);
-        }
+    std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
+        m_current=current;
+        std::vector <BodyFeatures> features;
+        return features; //no features
     }
 
     virtual void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
         auto start = std::chrono::high_resolution_clock::now();
         wb->set_world_objects(wb->getFeatures(data, b2Transform_zero, WorldBuilder::PARTITION));
         std::string fileName=std::string("/")+names[ct];
-        Logger logger = Logger("WorldBuilderSpeedTest", ".", fileName.c_str(), false);
+        Logger logger("WorldBuilderSpeedTest", ".", fileName.c_str(), false);
         auto end = std::chrono::high_resolution_clock::now();
         float buildTime=std::chrono::duration<float, std::milli>(end-start).count()/1000;
         for (float remaining=1/HZ; remaining<=10.f; remaining+=1/HZ){
@@ -136,13 +136,14 @@ int main(int argc, char **argv) {
             if (result.resultCode==simResult::crashed){
                 break; //no need to simulate till it crashes
             }
+            world_cleanup(world);
         }
     std::cout<<"Tested "<<names[ct]<<std::endl;
     ct++;
     }
     //cleanup
-    for (WorldBuilder *wb: builders){
-        delete wb;
-    }
+    // for (WorldBuilder *wb: builders){
+    //     delete wb;
+    // }
 
 }
