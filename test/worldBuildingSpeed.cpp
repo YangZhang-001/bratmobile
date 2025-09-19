@@ -132,9 +132,9 @@ int main(int argc, char **argv) {
             Robot robot(&world);
             simResult result=t.bumping_that(world, 0, robot.body(), remaining);
             end = std::chrono::high_resolution_clock::now();
-            logger.log("%f\t%i\t%i\t%i\t%f\n", std::chrono::duration<float, std::milli>(end-start).count()/1000, wb->get_world_objects().size(), bodyCount, data.size(), buildTime);
+            logger.log("%f\t%i\t%i\t%i\t%f\t%i\n", std::chrono::duration<float, std::milli>(end-start).count()/1000, wb->get_world_objects().size(), bodyCount, data.size(), buildTime, result.step);
             if (result.resultCode==simResult::crashed){
-                break; //no need to simulate till it crashes
+                //break; //no need to simulate till it crashes
             }
             world_cleanup(world);
         }
