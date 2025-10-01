@@ -397,6 +397,25 @@ AttentiveConfigurator(Task _task){
 }
 
 
+
 };
 
+/*
+ * @brief Configurator that only replans if the current task fails
+ */
+class FocusedConfigurator:virtual public AttentiveConfigurator{
+	protected:
+
+	/**
+	 * @brief If the current vertex is matched, don't allow to check plan further
+	 * 
+	 * @param v 
+	 */
+	void removeExploredTransitions(vertexDescriptor v)override{
+		AttentiveConfigurator::removeExploredTransitions(v);
+		if (v==currentVertex && !m_plan.empty()){
+			transitionSystem[v].options.clear();
+		}
+	}
+};
 #endif

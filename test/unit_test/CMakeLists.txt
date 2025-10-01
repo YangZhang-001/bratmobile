@@ -72,6 +72,9 @@ add_executable(GTest_Tracker GTest_Tracker.cpp)
 target_link_libraries(GTest_Tracker gtest gtest_main)
 target_link_libraries(GTest_Tracker  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
+add_executable(GTest_FocusedConfig GTest_FocusedConfig.cpp)
+target_link_libraries(GTest_FocusedConfig gtest gtest_main)
+target_link_libraries(GTest_FocusedConfig  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 add_library(test_classes test_classes.h ../test_essentials.h ../callbacks.h)
 target_link_libraries(test_classes gtest gtest_main)
@@ -98,6 +101,7 @@ gtest_discover_tests(GTest_Graph)
 gtest_discover_tests(GTest_Planner)
 gtest_discover_tests(GTest_Task)
 gtest_discover_tests(GTest_Tracker)
+gtest_discover_tests(GTest_FocusedConfig)
 
 # INCLUDE_DIRECTORIES("/usr/local/include/")
 # enable_testing()

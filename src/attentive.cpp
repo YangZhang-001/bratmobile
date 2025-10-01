@@ -840,3 +840,4 @@ void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::ve
 	lastAdded=v1;
 
 }
+
