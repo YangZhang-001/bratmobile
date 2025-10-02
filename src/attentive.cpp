@@ -167,6 +167,9 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 		return split;
 	}
 	if (transitionSystem[v].outcome != simResult::crashed){
+		if (src==MOVING_VERTEX){ //allow replanning if current task is going straight but fails!
+			split.emplace(split.begin(), src);
+		}
 		return split;
 	}
 	auto ie=inEdges(src);
