@@ -46,7 +46,8 @@ TEST_F(FCTest, Replan) {
     change_task();
     estimate_current_vertex();
     b2Transform dp=currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
-    math::MulT(dp, transitionSystem);
+    //math::MulT(dp, transitionSystem);
+    update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(), dp));
     data2fp.emplace(Pointf(0.3, 0)); 
     int simTasks=5;
     plan_size++;
