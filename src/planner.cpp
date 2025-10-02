@@ -59,6 +59,7 @@ void HorizonStarPlanner::path2add2(std::vector<std::vector<vertexDescriptor>>::r
 std::vector <vertexDescriptor> HorizonStarPlanner::best_path(const std::vector<std::vector<vertexDescriptor>>& paths, vertexDescriptor goal, vertexDescriptor cv, bool  change, const TransitionSystem& g){
     std::vector <vertexDescriptor> plan;
     float final_phi=10000;
+	auto find_plan=std::find_if(paths.begin(), paths.end(), [goal](const std::vector<vertexDescriptor> & p){return p[p.size()-1]==goal;});
 	for (std::vector<vertexDescriptor> p: paths){
 		vertexDescriptor end_plan= *(p.rbegin().base()-1);
 		//LAMBDA

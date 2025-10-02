@@ -94,7 +94,7 @@ void adjust_rw_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2
  * @param other_matches pointer to a vector of other matches (all of the type defined by @param match_type)
  * @return VertexMatch the best match found and its type
  */
-VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL); //matches to most likely
+virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL); //matches to most likely
 
 /**
  * @brief Constructs transition system using a Box2D simulation combined with an A* graph
@@ -415,6 +415,16 @@ class FocusedConfigurator:virtual public AttentiveConfigurator{
 		AttentiveConfigurator::removeExploredTransitions(v);
 		if (v==currentVertex && !m_plan.empty()){
 			transitionSystem[v].options.clear();
+		}
+	}
+
+	VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override{
+		if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di==transitionSystem[currentVertex].Di && 
+				!m_plan.empty() && s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
+			return VertexMatch(StateMatcher::_TRUE, currentVertex);
+		}
+		else{
+			return AttentiveConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
 		}
 	}
 };

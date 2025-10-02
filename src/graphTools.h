@@ -132,6 +132,7 @@ struct State{
 	bool isGoingStraight()const{
 		return direction==DEFAULT || direction==STOP;
 	}
+
 };
 
 
