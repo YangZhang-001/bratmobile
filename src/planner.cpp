@@ -59,19 +59,22 @@ void HorizonStarPlanner::path2add2(std::vector<std::vector<vertexDescriptor>>::r
 std::vector <vertexDescriptor> HorizonStarPlanner::best_path(const std::vector<std::vector<vertexDescriptor>>& paths, vertexDescriptor goal, vertexDescriptor cv, bool  change, const TransitionSystem& g){
     std::vector <vertexDescriptor> plan;
     float final_phi=10000;
-	auto find_plan=std::find_if(paths.begin(), paths.end(), [goal](const std::vector<vertexDescriptor> & p){return p[p.size()-1]==goal;});
+		//LAMBDA
+	auto skip_first= [](const std::vector<vertexDescriptor> &_plan, const vertexDescriptor & _cv, const TransitionSystem & _g, const bool & _change){
+	bool empty_xor_currentv= (_plan.size()==1 ^ _plan[0]!=_cv);
+	if (empty_xor_currentv && _change){ //&& _plan[0]==_cv
+			return std::vector(_plan.begin()+0, _plan.end());
+		}
+		else{
+			return std::vector((_plan.begin()+1), _plan.end());
+		}
+	}; //END LAMBDA 
+	// if (goal!=TransitionSystem::null_vertex()){
+	// 	auto find_plan=std::find_if(paths.begin(), paths.end(), [goal](const std::vector<vertexDescriptor> & p){return p[p.size()-1]==goal;});
+	// 	plan=*find_plan;
+	// }
 	for (std::vector<vertexDescriptor> p: paths){
 		vertexDescriptor end_plan= *(p.rbegin().base()-1);
-		//LAMBDA
-		auto skip_first= [](const std::vector<vertexDescriptor> &_plan, const vertexDescriptor & _cv, const TransitionSystem & _g, const bool & _change){
-        bool empty_xor_currentv= (_plan.size()==1 ^ _plan[0]!=_cv);
-        if (empty_xor_currentv && _change){ //&& _plan[0]==_cv
-				return std::vector(_plan.begin()+0, _plan.end());
-			}
-			else{
-				return std::vector((_plan.begin()+1), _plan.end());
-			}
-		}; //END LAMBDA 
 		if (end_plan==goal){
 			plan=skip_first(p, cv, g, change);
 			break;
@@ -204,5 +207,8 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 			goal=path_end;
 		}
 	}while(!priorityQueue.empty() && (path_end!=goal && !(_finished)));
-	return best_path(paths, goal, info.currentVertex(), info.currentTask().get_change(), g);
+	if (_finished){
+		return best_path(paths, goal, info.currentVertex(), info.currentTask().get_change(), g);
+	}
+	return std::vector<vertexDescriptor>();
 }

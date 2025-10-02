@@ -19,6 +19,7 @@ TEST_F(ConfiguratorPlannerHybrid,pathToAddTo){
 }
 
 
+
 // TEST_P(ConfiguratorTestPlanner, frontierVertices){
 //     dummy_vertex(MOVING_VERTEX);
 //     make_module(currentVertex);
