@@ -167,14 +167,11 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 		return split;
 	}
 	if (transitionSystem[v].outcome != simResult::crashed){
-		if (src==MOVING_VERTEX){ //allow replanning if current task is going straight but fails!
-			split.emplace(split.begin(), src);
-		}
 		return split;
 	}
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
-	if (!transitionSystem[src].isTurning()&& !ie.empty()){ //! //&& sameIterationEdgeIt!=ie.end()
+	if (!transitionSystem[src].isTurning()&& (!ie.empty()|| src==MOVING_VERTEX)){ //! //&& sameIterationEdgeIt!=ie.end()
 		transitionSystem[src].outcome=simResult::safeForNow;
 		split.insert(split.begin(), src);
 	}
