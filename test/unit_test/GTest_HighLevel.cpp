@@ -94,6 +94,7 @@ TEST_F(ConfiguratorTest, TSCleanup){
     for (int i=1; i<4;i++){
         auto e=boost::add_edge(MOVING_VERTEX, i, transitionSystem);
         transitionSystem[e.first].step=1;
+        transitionSystem[e.first].it_observed=1;
     }
     boost::add_edge(1,1, transitionSystem); //trivial self-edge
     auto e2= boost::add_edge(2,2, transitionSystem); //nontrivial self-edge
