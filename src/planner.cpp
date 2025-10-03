@@ -57,11 +57,11 @@ void HorizonStarPlanner::path2add2(std::vector<std::vector<vertexDescriptor>>::r
 
 
 std::vector <vertexDescriptor> HorizonStarPlanner::best_path(const std::vector<std::vector<vertexDescriptor>>& paths, vertexDescriptor goal, vertexDescriptor cv, bool  change, const TransitionSystem& g){
-    std::vector <vertexDescriptor> plan;
+    std::vector <vertexDescriptor> result;
     float final_phi=10000;
 		//LAMBDA
 	auto skip_first= [](const std::vector<vertexDescriptor> &_plan, const vertexDescriptor & _cv, const TransitionSystem & _g, const bool & _change){
-	bool empty_xor_currentv= (_plan.size()==1 ^ (_plan[0]!=_cv || plan[0]==MOVING_VERTEX));
+	bool empty_xor_currentv= (_plan.size()==1 ^ (_plan[0]!=_cv || _plan[0]==MOVING_VERTEX));
 	if (empty_xor_currentv && _change){ //&& _plan[0]==_cv
 			return std::vector(_plan.begin()+0, _plan.end());
 		}
@@ -76,15 +76,15 @@ std::vector <vertexDescriptor> HorizonStarPlanner::best_path(const std::vector<s
 	for (std::vector<vertexDescriptor> p: paths){
 		vertexDescriptor end_plan= *(p.rbegin().base()-1);
 		if (end_plan==goal){
-			plan=skip_first(p, cv, g, change);
+			result=skip_first(p, cv, g, change);
 			break;
 		}
 		else if (g[end_plan].phi<final_phi){
-			plan=skip_first(p, cv, g, change);
+			result=skip_first(p, cv, g, change);
 			final_phi=g[end_plan].phi;
 		}
 	}
-    return plan;
+    return result;
 }
 
 std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g, ExecutionInfo & info){
