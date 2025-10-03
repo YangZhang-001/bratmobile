@@ -440,8 +440,9 @@ INSTANTIATE_TEST_CASE_P(AdjustGoal,
                                           b2Transform(b2Vec2(0.8, -0.05), b2Rot(-0.45))));
 
 TEST_P(ConfiguratorTest32DT, splitTask){
-    //b2Transform start=std::get<0>(GetParam());
+   // b2Transform start=std::get<0>(GetParam());
     dummy_vertex(MOVING_VERTEX);
+    transitionSystem[currentVertex].start=std::get<0>(GetParam());
     transitionSystem[currentVertex].endPose=std::get<0>(GetParam());
     vertexDescriptor v1=make_v1_crashed(currentVertex, std::get<0>(GetParam()), std::get<1>(GetParam()), std::get<2>(GetParam())).m_target;
     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
