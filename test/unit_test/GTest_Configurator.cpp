@@ -441,11 +441,12 @@ INSTANTIATE_TEST_CASE_P(AdjustGoal,
 
 TEST_P(ConfiguratorTest32DT, splitTask){
     //b2Transform start=std::get<0>(GetParam());
-    transitionSystem[MOVING_VERTEX].endPose=std::get<0>(GetParam());
-    vertexDescriptor v1=make_v1_crashed(MOVING_VERTEX, std::get<0>(GetParam()), std::get<1>(GetParam()), std::get<2>(GetParam())).m_target;
+    dummy_vertex(MOVING_VERTEX);
+    transitionSystem[currentVertex].endPose=std::get<0>(GetParam());
+    vertexDescriptor v1=make_v1_crashed(currentVertex, std::get<0>(GetParam()), std::get<1>(GetParam()), std::get<2>(GetParam())).m_target;
     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
     b2Vec2 endPosition=std::get<1>(GetParam()).p;
-    int expected_splitSize=int(endPosition.Length()/(simulationStep+0.00001))+1;
+    int expected_splitSize=int(endPosition.Length()/(simulationStep+0.00001))+2;
     EXPECT_EQ(split.size(), expected_splitSize);
     int ct=1;
     for (vertexDescriptor v:split){
@@ -585,10 +586,10 @@ TEST_P(ConfiguratorTakeBool, FrontierVertices){
 }
 
 TEST_F(ConfiguratorTest, IncompleteFrontier){
-    make_successful(MOVING_VERTEX);
+    auto es=make_successful(MOVING_VERTEX);
     int solution=1;
-    auto e =make_v1_crashed(MOVING_VERTEX);
-    transitionSystem[e.m_target].direction=LEFT;
+    auto ec =make_v1_crashed(MOVING_VERTEX);
+    transitionSystem[ec.m_target].direction=LEFT;
     ExecutionInfo info=package_info();
     auto vs=boost::vertices(transitionSystem);
     for (auto vi=vs.first; vi!=vs.second; ++vi){
