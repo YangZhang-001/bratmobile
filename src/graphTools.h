@@ -413,7 +413,7 @@ struct ViableEdge{
 
 	bool operator()(const edgeDescriptor & e) const {
 		NotSelfEdge nse(g);
-		bool not_self= nse(e) || e.m_source==e.m_target && (*g)[e].step!=0;
+		bool not_self= nse(e) || e.m_source==e.m_target && (*g)[e].step!=0 && (*g)[e].it_observed>=0;
 		return not_self;
 	}
 	private:
