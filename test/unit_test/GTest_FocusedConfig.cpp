@@ -54,6 +54,7 @@ TEST_F(FCTest, Replan) {
     Spawner(); //should replan
     EXPECT_EQ(m_plan.size(), plan_size);
     EXPECT_EQ(simulatedTasks, simTasks); 
+    EXPECT_TRUE(currentTask.is_over());
 }
 
 INSTANTIATE_TEST_CASE_P(Outcomes, FCTest, ::testing::Bool());

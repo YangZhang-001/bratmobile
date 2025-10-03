@@ -61,7 +61,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::best_path(const std::vector<s
     float final_phi=10000;
 		//LAMBDA
 	auto skip_first= [](const std::vector<vertexDescriptor> &_plan, const vertexDescriptor & _cv, const TransitionSystem & _g, const bool & _change){
-	bool empty_xor_currentv= (_plan.size()==1 ^ (_plan[0]!=_cv || _plan[0]==MOVING_VERTEX));
+	bool empty_xor_currentv= (_plan.size()==1 ^ (_plan[0]!=_cv || plan[0]==MOVING_VERTEX));
 	if (empty_xor_currentv && _change){ //&& _plan[0]==_cv
 			return std::vector(_plan.begin()+0, _plan.end());
 		}
