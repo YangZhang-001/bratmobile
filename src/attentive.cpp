@@ -565,7 +565,7 @@ void AttentiveConfigurator::explore_plan(b2World&world){
         printf("no plan, searchign from %i\n", src);
         bool finished=false;
         ExecutionInfo info=package_info();
-        plan_tmp= planner->plan(transitionSystem, currentVertex,info, &finished); //src
+        plan_tmp= planner->plan(transitionSystem, src,info, &finished); //src
     }
     else{
         printf("recycled plan in explorer:\n");
@@ -584,7 +584,7 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	Task controlGoal_adjusted= controlGoal;
 	//position of task start with respect to goal disturbance (pov)
 //	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
-	shift_start= b2MulT(InvMul(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
+	shift_start= b2Mul(InvMul(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
 	Mul(shift_start, controlGoal_adjusted);
 	if (edge.first.m_source!=v0){
 		boost::remove_edge(edge.first, transitionSystem);
