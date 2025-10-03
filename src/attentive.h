@@ -340,7 +340,7 @@ void correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vert
 void adjustProbability(const edgeDescriptor &e);
 
 /**
- * @brief Clears plan vector, sets current task to change and clears current vertices
+ * @brief Clears plan vector, sets current task to change and clears current vertices.
  * 
  * @param planProv provisional plan as in the explorer
  */

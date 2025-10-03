@@ -799,10 +799,7 @@ void AttentiveConfigurator::abandonPlan(std::vector<vertexDescriptor>& planProv,
 	planProv.clear();
 	currentTask.set_change(true);
 	current_vertices.clear();
-	if (v0==MOVING_VERTEX){
-		auto e=boost::edge(v0, v1, transitionSystem);
-		boost::remove_edge(e.first, transitionSystem);
-	}
+
 
 }
 
