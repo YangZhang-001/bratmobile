@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['log_348',['log',['../classLogger.html#ac358461b9099b93ffd4444c2bef091f3',1,'Logger']]],
-  ['logger_349',['Logger',['../classLogger.html#add0dc84b8d133830f667ab9f43804680',1,'Logger']]]
+  ['log_350',['log',['../classLogger.html#ac358461b9099b93ffd4444c2bef091f3',1,'Logger']]],
+  ['logger_351',['Logger',['../classLogger.html#add0dc84b8d133830f667ab9f43804680',1,'Logger']]]
 ];

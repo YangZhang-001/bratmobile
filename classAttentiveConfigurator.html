@@ -222,7 +222,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>planPriority</b> (Tra
 <tr class="memitem:abb5f4a26cbd31156fcae8065265e0daf"><td class="memItemLeft" align="right" valign="top"><a id="abb5f4a26cbd31156fcae8065265e0daf"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>adjust_rw_task</b> (const vertexDescriptor &amp;, TransitionSystem &amp;, <a class="el" href="classTask.html">Task</a> *, const b2Transform &amp;)</td></tr>
 <tr class="separator:abb5f4a26cbd31156fcae8065265e0daf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01e04aa3f5c5e492cfb5ac22fcc99225"><td class="memItemLeft" align="right" valign="top">VertexMatch&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a01e04aa3f5c5e492cfb5ac22fcc99225">findMatch</a> (<a class="el" href="structState.html">State</a> s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, <a class="el" href="structStateDifference.html">StateDifference</a> *_sd=NULL, std::vector&lt; VertexMatch &gt; *other_matches=NULL)</td></tr>
+<tr class="memitem:a01e04aa3f5c5e492cfb5ac22fcc99225"><td class="memItemLeft" align="right" valign="top">virtual VertexMatch&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a01e04aa3f5c5e492cfb5ac22fcc99225">findMatch</a> (<a class="el" href="structState.html">State</a> s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, <a class="el" href="structStateDifference.html">StateDifference</a> *_sd=NULL, std::vector&lt; VertexMatch &gt; *other_matches=NULL)</td></tr>
 <tr class="memdesc:a01e04aa3f5c5e492cfb5ac22fcc99225"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches transition System for a match to a state provided. Continuous states are matched, with the option to also match the discrete state (the direction)  <a href="classAttentiveConfigurator.html#a01e04aa3f5c5e492cfb5ac22fcc99225">More...</a><br /></td></tr>
 <tr class="separator:a01e04aa3f5c5e492cfb5ac22fcc99225"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6213d0a5ad4e6b697b0e19d062424b6"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#af6213d0a5ad4e6b697b0e19d062424b6">explorer</a> (vertexDescriptor v, TransitionSystem &amp;g, b2World &amp;w)</td></tr>
@@ -1101,7 +1101,7 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1119,6 +1119,8 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>VertexMatch the best match found and its type </dd></dl>
+
+<p>Reimplemented in <a class="el" href="classFocusedConfigurator.html#acd393a24d51d6e5cad2623c35822467c">FocusedConfigurator</a>.</p>
 
 </div>
 </div>
@@ -1831,6 +1833,8 @@ false </dd></dl>
 </dl>
 </li>
 </ul>
+
+<p>Reimplemented in <a class="el" href="classFocusedConfigurator.html#ac1e893abbc337347149fe69c0a829a32">FocusedConfigurator</a>.</p>
 
 </div>
 </div>

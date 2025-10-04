@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['update_5fbundle_198',['update_bundle',['../classThresholdLearner.html#aee48e167c67fcf0f47097512b66c5157',1,'ThresholdLearner']]],
-  ['update_5fgraph_199',['update_graph',['../classConfigurator.html#ae544663f4af4ce845996463972f3de99',1,'Configurator']]]
+  ['update_5fbundle_199',['update_bundle',['../classThresholdLearner.html#aee48e167c67fcf0f47097512b66c5157',1,'ThresholdLearner']]],
+  ['update_5fgraph_200',['update_graph',['../classConfigurator.html#ae544663f4af4ce845996463972f3de99',1,'Configurator']]]
 ];
