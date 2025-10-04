@@ -584,7 +584,7 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	Task controlGoal_adjusted= controlGoal;
 	//position of task start with respect to goal disturbance (pov)
 //	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
-	shift_start= b2Mul(InvMul(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
+	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
 	Mul(shift_start, controlGoal_adjusted);
 	if (edge.first.m_source!=v0){
 		boost::remove_edge(edge.first, transitionSystem);
