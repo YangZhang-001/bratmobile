@@ -899,3 +899,34 @@ INSTANTIATE_TEST_CASE_P(DirectionsAndOutcomes,
                             testing::Values(LEFT, RIGHT), 
                             testing::Values(simResult::successful, simResult::crashed))
                         );
+
+class MovingVertexTest: public ConfiguratorTest{
+
+    void SetUp() override{
+        init(generateGoalTask());
+        auto e=make_successful(MOVING_VERTEX,LEFT);
+        vertex_set_Di(e.m_target, Disturbance(AVOID, b2Vec2(.5,0), 0));
+        m_plan.push_back(e.m_target);
+        register_tracker(new ClosedLoop_Tracker());
+        register_controller(new Wise_Controller());
+        change_task();
+        currentVertex=e.m_target;
+    }
+
+    void TearDown() override{
+        transitionSystem=TransitionSystem(1);
+        delete task_controller;
+        delete tracker;
+    }
+};
+
+TEST_F(MovingVertexTest, DirectionIsDefault){
+    EXPECT_EQ(vertex_get_direction(MOVING_VERTEX), DEFAULT);
+    EXPECT_TRUE(vertex_get_Di(MOVING_VERTEX)== controlGoal.get_disturbance());
+}
+
+TEST_F(MovingVertexTest, DiIsCurrentDi){
+    pre_explore();    
+    EXPECT_EQ(vertex_get_direction(MOVING_VERTEX), DEFAULT);
+    EXPECT_TRUE(vertex_get_Di(MOVING_VERTEX)== currentTask.get_disturbance());
+}
