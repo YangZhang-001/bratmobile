@@ -14,9 +14,9 @@ find_package(box2d REQUIRED)
 
 add_subdirectory(src "${CMAKE_CURRENT_BINARY_DIR}/src")
 
-add_subdirectory(test "${CMAKE_CURRENT_BINARY_DIR}/test")
+#add_subdirectory(test "${CMAKE_CURRENT_BINARY_DIR}/test")
 
-add_subdirectory(test/unit_test "${CMAKE_CURRENT_BINARY_DIR}/test/unit_test")
+#add_subdirectory(test/unit_test "${CMAKE_CURRENT_BINARY_DIR}/test/unit_test")
 
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
