@@ -15,11 +15,13 @@ The purpose of this library is to showcase a framework for multi-step ahead plan
 
 * Debug and navigation visualisation interface which transmits goal, obstacle and attention window coordinates to Qt using fastDDS
 
+* On-the-fly replanning: replans if the current Task has different outcome than expected
+
 ## Work in progress
 
 * Closed-loop Task execution with goal-directed behaviour (driving towards target)
 
-* Debugging plan checking and recycling (real-world settings, see issues)
+* Debugging full plan checking and recycling (real-world settings, see issues)
 
 * Adaptive thresholding of acceptable noise in state observations
 
