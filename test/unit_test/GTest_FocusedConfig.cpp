@@ -1,6 +1,6 @@
 #include "test_classes.h"
 
-class FCTest:virtual public FocusedConfigurator, public testing::TestWithParam<bool> {
+class FCTest:public FocusedConfigurator, public testing::TestWithParam<bool> {
     public:
     void SetUp() override {
         register_tracker(new ClosedLoop_Tracker());
@@ -74,7 +74,38 @@ TEST_F(FCTest, DontReplan) {
     EXPECT_EQ(m_plan.size(), plan_size);
     EXPECT_EQ(simulatedTasks, simTasks); 
     EXPECT_FALSE(currentTask.is_over());
-
 }
 
 INSTANTIATE_TEST_CASE_P(Outcomes, FCTest, ::testing::Bool());
+
+class ExecutionCheckTest: public FCTest, public testing::TestWithParam<std::tuple<b2Vec2, Direction>> {
+    public:
+    void SetUp() override {
+        register_tracker(new ClosedLoop_Tracker());
+        register_planner(new HorizonStarPlanner());
+        register_controller(new Wise_Controller());
+    }
+
+    void TearDown() override {
+        delete tracker;
+        delete planner;
+        delete task_controller;
+        transitionSystem=TransitionSystem(1);
+    }
+
+};
+
+// TEST_P(FCTest, LongRangeAvoid){
+
+//     b2Vec2 ob_pos=std::get<0>(GetParam());
+//     Direction dir=std::get<1>(GetParam());
+//     std::default_random_engine generator;
+//     std::normal_distribution<float> distribution(0.0,0.065); //6.5cm std dev
+//     float x_noise=distribution(generator);
+//     float y_noise=distribution(generator);
+//     data2fp.emplace(Pointf(ob_pos.x+x_noise, ob_pos.y+y_noise)); //noisy observation
+//     Disturbance d;
+//     d.setAffIndex(AVOID);
+//     d.setPosition(Pointf(ob_pos.x, ob_pos.y)); //noise-free prediction
+//     Task t(d, dir, b2Transform_zero, true);
+// }

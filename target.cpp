@@ -6,25 +6,22 @@ int main(int argc, char** argv) {
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
-	Motor_Out controlInterface;
-    TentativeConfigurator configurator(controlGoal);
+	//Motor_Out controlInterface;
+    FocusedConfigurator configurator(controlGoal);
 	HorizonStarPlanner planner;
-	DeadReckoner tracker;
+	OpenLooper tracker;
 	configurator.register_planner(&planner);
 	configurator.register_tracker(&tracker);
 	Wise_Controller wc;
 	configurator.register_controller(&wc);
 	Logger logger( "rt-update-targetless", "/tmp");
 	configurator.register_logger(&logger);
-	if (argc>1){
-		#define DEBUG atoi(argv[1])
-	}
 	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
-	configurator.registerInterface(&configuratorInterface, &controlInterface);
+	configurator.registerInterface(&configuratorInterface, &tracker);
 	MotorCallback cb(&controlInterface);
 	lidar.registerInterface(&dataInterface);
-	motors.registerStepCallback(&cb);
+	motors.registerStepCallback(&tracker);
 	printf("all registered\n");
 	configurator.start();
 	lidar.start();

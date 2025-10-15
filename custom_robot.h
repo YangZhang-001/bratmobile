@@ -95,6 +95,42 @@ class TentativeConfigurator: public AttentiveConfigurator{
 	TentativeConfigurator(const Task & goal): AttentiveConfigurator(goal){}
 };
 
+/**
+ * Tracks and executes tasks using deadreckoning
+ */
+class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
+    int motorStep=0;
+    public:
+    OpenLooper():MotorCallback(this){
+        
+    }
+
+    void on_new_task(const Task &task, const Task & goal){
+        motorStep=task.getMotorStep();
+        std::cout<<"motorStep="<<motorStep<<std::endl;
+        deltaTransform=b2Transform_zero;
+    }
+
+    bool hasTaskEnded(Task & t)override{
+        return motorStep<=0;
+        
+    }
+
+    void step(AlphaBot& motors)override{
+        if (L!=0 && R!=0){
+            motorStep--;
+            std::cout<<"one down"<<std::endl;
+            std::cout<<"motorStep="<<motorStep<<std::endl;
+        }
+        if (motorStep==0){
+            L=0;
+            R=0;
+            motors.setLeftWheelSpeed(0);
+            motors.setRightWheelSpeed(0);
+        }
+    }
+};
+
 #endif
 
 

@@ -8,41 +8,80 @@ class NoGoal:public GoalChanger{
 
 };
 
+// int main(int argc, char** argv) {
+// 	A1Lidar lidar;
+// 	AlphaBot motors;
+// 	LIDAR_In configuratorInterface;
+// 	Motor_Out controlInterface;
+// 	HorizonStarPlanner planner;
+//     TentativeConfigurator configurator;
+// 	ClosedLoop_Tracker tracker;
+// 	NoGoal goalChanger;
+// 	configurator.register_tracker(&tracker);	
+// 	configurator.register_planner(&planner);
+// 	configurator.register_goalChanger(&goalChanger);
+// 	Wise_Controller wc;
+// 	configurator.register_controller(&wc);
+// 	char name[60];
+// 	Logger logger( "rt-update-targetless", "/tmp");
+// 	configurator.register_logger(&logger);
+// 	if (argc>1){
+// 		#define DEBUG atoi(argv[1])
+// 		//configuratorInterface.debugOn = atoi(argv[1]);
+// 	}	configurator.setSimulationStep(.5);
+// 	LidarInterface dataInterface(&configuratorInterface);
+// 	configurator.registerInterface(&configuratorInterface, &controlInterface);
+// 	MotorCallback cb(&controlInterface);
+// 	lidar.registerInterface(&dataInterface);
+// 	motors.registerStepCallback(&cb);
+// 	lidar.start();
+// 	motors.start();
+// 	configurator.start();
+// 	do {
+// 	} while (!getchar());
+// 	configurator.stop();
+// 	motors.stop();
+// 	lidar.stop();
+// 	logger.~Logger();
+// }
+
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
+	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
+    Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
-	Motor_Out controlInterface;
-	HorizonStarPlanner planner;
-    TentativeConfigurator configurator;
-	ClosedLoop_Tracker tracker;
+	//Motor_Out controlInterface;
+    FocusedConfigurator configurator(controlGoal);
 	NoGoal goalChanger;
-	configurator.register_tracker(&tracker);	
-	configurator.register_planner(&planner);
 	configurator.register_goalChanger(&goalChanger);
+	HorizonStarPlanner planner;
+	OpenLooper tracker;
+	configurator.register_planner(&planner);
+	configurator.register_tracker(&tracker);
 	Wise_Controller wc;
 	configurator.register_controller(&wc);
-	char name[60];
 	Logger logger( "rt-update-targetless", "/tmp");
 	configurator.register_logger(&logger);
-	if (argc>1){
-		#define DEBUG atoi(argv[1])
-		//configuratorInterface.debugOn = atoi(argv[1]);
-	}	configurator.setSimulationStep(.5);
+	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
-	configurator.registerInterface(&configuratorInterface, &controlInterface);
+	configurator.registerInterface(&configuratorInterface, &tracker);
 	MotorCallback cb(&controlInterface);
 	lidar.registerInterface(&dataInterface);
-	motors.registerStepCallback(&cb);
+	motors.registerStepCallback(&tracker);
+	printf("all registered\n");
+	configurator.start();
 	lidar.start();
 	motors.start();
-	configurator.start();
-	do {
-	} while (!getchar());
-	configurator.stop();
+	getchar();
 	motors.stop();
+	configurator.stop();
 	lidar.stop();
 	logger.~Logger();
 }
 	
+	
+
+	
+
 	
