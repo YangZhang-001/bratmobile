@@ -47,7 +47,7 @@ void Configurator::dummy_vertex(vertexDescriptor src){
 
 bool Configurator::Spawner(){ 
 	iteration++; //iteration set in getVelocity
-	worldBuilder.add_iteration();
+	worldBuilder->add_iteration();
 	simulatedTasks=0;
 	//BENCHMARK + FIND TRUE SAMPLING RATE
 	auto now =std::chrono::high_resolution_clock::now();
@@ -55,7 +55,7 @@ bool Configurator::Spawner(){
 	//CREATE BOX2D ENVIRONMENT
 	b2World world= b2World(GRAVITY);
 	char name[256];
-	worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero, WorldBuilder::PARTITION));
+	worldBuilder->set_world_objects(worldBuilder->getFeatures(data2fp, b2Transform_zero, WorldBuilder::PARTITION));
 	auto endTime =std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float, std::milli>d_getFeatures= now- endTime; //in seconds
 	float duration_getFeatures=abs(float(d_getFeatures.count())/1000); //express in seconds
@@ -65,9 +65,9 @@ bool Configurator::Spawner(){
 	float duration_withExplore=abs(float(d_withExplore.count())/1000); //express in seconds
 	//FORMAT: vertices	bodies tasks	total_dur	just_worldbuilding
 	if (logger){
-		logger->log("%i\t%i\t%i\t%0.6f\t%0.6f\n", transitionSystem.m_vertices.size(), worldBuilder.bodies, simulatedTasks, duration_withExplore, duration_getFeatures);
+		logger->log("%i\t%i\t%i\t%0.6f\t%0.6f\n", transitionSystem.m_vertices.size(), worldBuilder->bodies, simulatedTasks, duration_withExplore, duration_getFeatures);
 	}
-	worldBuilder.resetBodies();
+	worldBuilder->resetBodies();
 	return 1;
 }
 
@@ -82,7 +82,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	simResult result;
 	float remaining=remainingSimulationTime();
 	Robot robot=makeRobot(w, t.start);
-	worldBuilder.add_body_count();
+	worldBuilder->add_body_count();
 	simulatedTasks++;
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
 	//approximate angle to avoid rounding errors
@@ -184,7 +184,7 @@ void Configurator::run(Configurator * c){
 			c->Spawner();
 			if (c->getIteration()>1){
 				TrackingResult trackingResult(c->currentTask.get_disturbance());
-				trackingResult= c->tracker->track((c->currentTask),c->ci->data2fp, c->worldBuilder.get_world_objects());
+				trackingResult= c->tracker->track((c->currentTask),c->ci->data2fp, c->worldBuilder->get_world_objects());
 				c->update_graph(c->transitionSystem, trackingResult);
 			}
 			if (c->goal_changer!=NULL){
@@ -358,7 +358,7 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 		return;
 	}
 	//adjustStepDistance(currentVertex, transitionSystem, &currentTask, _simulationStep);
-	worldBuilder.buildWorld(world, transitionSystem[MOVING_VERTEX].start, currentTask.get_direction()); //was g[v].endPose
+	worldBuilder->buildWorld(world, transitionSystem[MOVING_VERTEX].start, currentTask.get_direction()); //was g[v].endPose
 	Task t=currentTask;
 	t.H(t.get_disturbance(), t.get_direction(), true);
 	simResult result = simulate(t, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],

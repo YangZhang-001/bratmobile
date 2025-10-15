@@ -76,11 +76,11 @@ class UserInputConfigurator: public virtual DebugConfigurator{
     AffordanceSetter *affordanceSetter=NULL;
 
     void explore_plan(b2World &world)override{
-        if (worldBuilder.get_world_objects().size()==0){
+        if (worldBuilder->get_world_objects().size()==0){
             std::cout<<"ADD AN OBSTACLE PLEASE!"<<std::endl;
             return;
         }
-        if (worldBuilder.get_world_objects().size()>1){
+        if (worldBuilder->get_world_objects().size()>1){
             std::cout<<"TOO MANY OBSTACLES!!"<<std::endl;
         }
         if (iteration<=1){
@@ -91,7 +91,7 @@ class UserInputConfigurator: public virtual DebugConfigurator{
 
     virtual void getTaskFromInput(){
         Disturbance disturbance;
-        disturbance.bf=worldBuilder.get_world_objects()[0];
+        disturbance.bf=worldBuilder->get_world_objects()[0];
         disturbance.validate();
         vertexDescriptor v1=boost::add_vertex(transitionSystem);
         auto e=boost::add_edge(currentVertex, v1, transitionSystem);
@@ -200,9 +200,9 @@ class UserInputDR:public UserInputConfigurator{
     void getTaskFromInput(){
         Disturbance disturbance;
         if (directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==AVOID){
-            (worldBuilder.get_world_objects()[0]).attention=true;   
+            (worldBuilder->get_world_objects()[0]).attention=true;   
         }
-        disturbance.bf=worldBuilder.get_world_objects()[0];
+        disturbance.bf=worldBuilder->get_world_objects()[0];
         disturbance.set_affordance(affordanceSetter->getAffIndex());
         disturbance.validate();
         if (directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==AVOID){
@@ -210,7 +210,7 @@ class UserInputDR:public UserInputConfigurator{
         }
         Task task(disturbance, directionSetter->getDirection(), b2Transform_zero, true);
         b2World world(GRAVITY);
-        worldBuilder.buildWorld(world, b2Transform_zero, task.get_direction(), disturbance);
+        worldBuilder->buildWorld(world, b2Transform_zero, task.get_direction(), disturbance);
         if(directionSetter->getDirection()==DEFAULT && affordanceSetter->getAffIndex()==PURSUE){
             task.setEndCriteria(Distance(0.14));
         }

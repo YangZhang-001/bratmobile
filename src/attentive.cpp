@@ -52,7 +52,7 @@ Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescr
 				Task task(Di, DEFAULT, g[v].endPose, true);
 				Robot robot(&world);
 				robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
-				b2AABB box =worldBuilder.makeRobotSensor(robot.body(), controlGoal.get_disturbance());
+				b2AABB box =worldBuilder->makeRobotSensor(robot.body(), controlGoal.get_disturbance());
 				b2Fixture *sensor =GetSensor(robot.body());
 				bool overlap=overlaps(robot.body(), &Di) && sensor;
 				world_cleanup(world);
@@ -620,7 +620,7 @@ std::pair<State, Edge> AttentiveConfigurator::simulation_setup(b2World& w, Task 
 	t = Task(Di, v0_options[0], start, true);//need to update end crit
 	std::pair <State, Edge> sk(State(start, Di, v0_options[0]), Edge());
 	adjust_simulated_task(v0, t);
-	worldBuilder.buildWorld(w, t.getStart(), t.get_direction(), t.get_disturbance(), 0.15, WorldBuilder::PARTITION); //was g[v].endPose
+	worldBuilder->buildWorld(w, t.getStart(), t.get_direction(), t.get_disturbance(), 0.15, WorldBuilder::PARTITION); //was g[v].endPose
 	return sk;
 }
 
@@ -823,7 +823,7 @@ return result;
 
 Robot AttentiveConfigurator::makeRobot(b2World & world, const b2Transform & start){
 	Robot robot=Configurator::makeRobot(world, start);
-	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), controlGoal.get_disturbance()); //Configurator::getGoalDisturbance()
+	b2AABB sensor_aabb=worldBuilder->makeRobotSensor(robot.body(), controlGoal.get_disturbance()); //Configurator::getGoalDisturbance()
 	return robot;
 }
 

@@ -16,7 +16,7 @@ class TestInputConfigurator: public UserInputConfigurator{
     CoordinateContainer & getData2fp(){return data2fp;};
     const Disturbance & getDi(){return currentTask.get_disturbance();}
     AffordanceIndex goalAffordance(){return currentTask.get_disturbance().getAffIndex();}
-    void set_world_objects(std::vector<BodyFeatures> bfs){worldBuilder.set_world_objects(bfs);};
+    void set_world_objects(std::vector<BodyFeatures> bfs){worldBuilder->set_world_objects(bfs);};
 
     Task& getGoal(){return controlGoal;}
     Task & getTask(){return currentTask;}
@@ -26,7 +26,7 @@ class TestInputConfigurator: public UserInputConfigurator{
         Spawner();
 		if (getIteration()>1){
             TrackingResult trackingResult(currentTask.get_disturbance());
-			trackingResult= tracker->track((currentTask),ci->data2fp, worldBuilder.get_world_objects());
+			trackingResult= tracker->track((currentTask),ci->data2fp, worldBuilder->get_world_objects());
             update_graph(transitionSystem, trackingResult);
 		}
         if (goal_changer!=NULL){
@@ -232,9 +232,9 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
     init(DebugConfigurator::generateGoalTask());
     data2fp= (CoordinateContainer{Pointf(0.4,0.01), Pointf(0.4, 0), Pointf(0.4,-0.01), Pointf(0.4,-0.02), Pointf(0.4,0.02)});
     EXPECT_GT(data2fp.size(), 1); //should take more than one step to complete task
-    worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
+    worldBuilder->set_world_objects(worldBuilder->getFeatures(data2fp, b2Transform_zero));
     EXPECT_GT(world_objects().size(),0);
-    Disturbance obstacle(worldBuilder.get_world_objects()[0]);
+    Disturbance obstacle(worldBuilder->get_world_objects()[0]);
     obstacle.validate();
     auto e1=make_successful(MOVING_VERTEX, std::get<0>(GetParam()));
     float targetAngle(M_PI_2);
@@ -254,8 +254,8 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
         estimate_current_vertex();        
         MulPoints(deltaPose);
         deltaPose=-currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
-        worldBuilder.set_world_objects(worldBuilder.getFeatures(data2fp, b2Transform_zero));
-            trackingResult= tracker.track((currentTask),data2fp, worldBuilder.get_world_objects());
+        worldBuilder->set_world_objects(worldBuilder->getFeatures(data2fp, b2Transform_zero));
+            trackingResult= tracker.track((currentTask),data2fp, worldBuilder->get_world_objects());
             update_graph(transitionSystem, trackingResult);
         steps++;
         iteration++;

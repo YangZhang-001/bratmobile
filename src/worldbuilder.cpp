@@ -310,7 +310,7 @@ b2AABB WorldBuilder::makeRobotSensor(b2Body* const robotBody, const Disturbance 
 }
 
 
-virtual std::vector <BodyFeatures>  WorldPointBuilder::getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering){
+std::vector <BodyFeatures>  WorldPointBuilder::getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering){
 std::vector <BodyFeatures> features;
 for (const auto & p: current){
     features.push_back(BodyFeatures(b2Transform(b2Vec2(p.x, p.y), b2Rot(0))));
@@ -318,7 +318,7 @@ for (const auto & p: current){
 return features;
 }
 
-virtual void EverythingBuilder::buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
+void EverythingBuilder::buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
     for (const BodyFeatures & bf: world_objects){
         makeBody(w, bf);
     }
@@ -342,7 +342,7 @@ std::vector <BodyFeatures> LaserFocus::getFeatures(const CoordinateContainer & c
     return features; //no features
 }
 
-virtual void LaserFocus::buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
+void LaserFocus::buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
     std::vector <BodyFeatures> features;
     std::pair<Pointf, Pointf> bt = bounds(d, start, simulationStep, halfWindowWidth);
     std::pair <CoordinateContainer, bool> salient = salientPoints(start,m_current, bt);

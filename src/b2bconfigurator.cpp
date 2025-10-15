@@ -101,7 +101,7 @@ bool B2BConfigurator::attentionWindowOverlaps(const Disturbance & Di,const State
 	Task task(Di, DEFAULT, q.endPose, true);
 	Robot robot(&world);
 	robot.body()->SetTransform(task.getStart().p, task.getStart().q.GetAngle());
-	b2AABB box =worldBuilder.makeRobotSensor(robot.body(), focus);
+	b2AABB box =worldBuilder->makeRobotSensor(robot.body(), focus);
 	b2Fixture *sensor =GetSensor(robot.body());
 	bool overlap=overlaps(robot.body(), &Di) && sensor;
 	world_cleanup(world);
@@ -306,11 +306,11 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 		maybeFocus.set_affordance(PURSUE);
 		focus=maybeFocus;
 		maybeFocus.bf.attention=true;
-		worldBuilder.makeBody(w, maybeFocus.bf); //add hindsight disturbance to the world even if it doesn't overlap with the task scope
+		worldBuilder->makeBody(w, maybeFocus.bf); //add hindsight disturbance to the world even if it doesn't overlap with the task scope
 		clearvoyance.pop(v);
 	}
 	Robot robot=makeRobot(w, t.getStart(), focus);
-	worldBuilder.add_body_count();
+	worldBuilder->add_body_count();
 	simulatedTasks++;
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
 	//approximate angle to avoid rounding errors
@@ -321,7 +321,7 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 
 Robot B2BConfigurator::makeRobot( b2World & world, const b2Transform& start, const Disturbance & focus){
 	Robot robot=Configurator::makeRobot(world, start);
-	b2AABB sensor_aabb=worldBuilder.makeRobotSensor(robot.body(), focus);
+	b2AABB sensor_aabb=worldBuilder->makeRobotSensor(robot.body(), focus);
 	return robot;
 
 }

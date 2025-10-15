@@ -94,7 +94,7 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
     }
 
     std::vector <BodyFeatures> & world_objects(){
-        return worldBuilder.get_world_objects();
+        return worldBuilder->get_world_objects();
     }
 
     TransitionSystem & get_ts(){
@@ -228,11 +228,11 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
     }
 
     WorldBuilder * get_worldbuilder(){
-        return &worldBuilder;
+        return worldBuilder;
     }
 
     void getFeatures(const CoordinateContainer & cc){
-        worldBuilder.set_world_objects(worldBuilder.getFeatures(cc, b2Transform_zero, WorldBuilder::PARTITION));
+        worldBuilder->set_world_objects(worldBuilder->getFeatures(cc, b2Transform_zero, WorldBuilder::PARTITION));
 
     }
 

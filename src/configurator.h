@@ -33,7 +33,7 @@ protected:
 	Task controlGoal;
 	CoordinateContainer data2fp;
 	TransitionSystem transitionSystem=TransitionSystem(1);
-	WorldBuilder worldBuilder;
+	WorldBuilder *worldBuilder=new WorldBuilder();
 	vertexDescriptor currentVertex=MOVING_VERTEX;
 	edgeDescriptor movingEdge=edgeDescriptor(), currentEdge=movingEdge;
 
@@ -50,6 +50,8 @@ Configurator(Task _task){
 
 virtual ~Configurator(){
 	stop();
+	delete worldBuilder;
+	worldBuilder=NULL;
 }
 
 /**
@@ -249,6 +251,13 @@ void assignBodyFeatures(Task & t, const BodyFeatures & bf);
  * @param halfWidth 
  */
 void assignDimensions(Task & t, float halfLength, float halfWidth);
+
+void register_worldBuilder(WorldBuilder * wb){
+	if (worldBuilder){
+		delete worldBuilder;
+	}
+	worldBuilder=wb;
+}
 };
 
 /**
