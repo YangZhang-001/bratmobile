@@ -8,6 +8,7 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	//Motor_Out controlInterface;
     FocusedConfigurator configurator(controlGoal);
+	configuratorInterface.register_worldBuilder(new LaserFocus());
 	HorizonStarPlanner planner;
 	OpenLooper tracker;
 	configurator.register_planner(&planner);
