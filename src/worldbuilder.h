@@ -147,4 +147,63 @@ class WorldBuilder{
     void setSimulationStep(float f){simulationStep=f;}
 
 };
+
+/**
+ * ALTERNATIVE WORLDBUILDERS
+ */
+
+/**
+ * @brief Each point is an object but each time the world is built, only the points in the way of the task are constructed
+ */
+class WorldPointBuilder: public WorldBuilder{
+    protected:
+    virtual std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override;
+};
+
+/**
+ * @brief Builds all points for each task 
+ * 
+ */
+class EverythingBuilder: public virtual WorldPointBuilder{
+    protected:
+    virtual void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override;
+};
+
+/**
+ * @brief Makes a feature for every other point and builds only those in the way of task
+ * 
+ */
+class EveryOtherFeatureBuilder: public virtual WorldPointBuilder{
+    protected:
+    std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override;
+};
+
+/**
+ * @brief Makes a feature for every other point and builds all points
+ */
+class EveryOtherPointBuilder: public virtual EveryOtherFeatureBuilder, public virtual EverythingBuilder{
+    protected:
+    std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
+        return EveryOtherFeatureBuilder::getFeatures(current, start, clustering);
+    }
+
+    void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
+        EverythingBuilder::buildWorld(w, start, d, disturbance, halfWindowWidth, clustering, task);
+    }
+};
+
+/**
+ * @brief Gets all points in the way of the task and makes a body which is a bounding upright box around all points
+ * 
+ */
+class LaserFocus: public virtual WorldBuilder{ //legacy
+    protected:
+    CoordinateContainer m_current;
+    public:
+    std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override;
+
+    virtual void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override;
+
+};
+
 #endif

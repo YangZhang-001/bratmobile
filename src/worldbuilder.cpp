@@ -1,9 +1,6 @@
 #include "worldbuilder.h"
 
 
-
-
-
 std::pair<Pointf, Pointf> WorldBuilder::bounds(Direction d, b2Transform start, float boxLength, float halfWindowWidth, std::vector <Pointf> *_bounds){
     std::pair <Pointf, Pointf>result;
     std::vector <Pointf> bds;
@@ -313,4 +310,53 @@ b2AABB WorldBuilder::makeRobotSensor(b2Body* const robotBody, const Disturbance 
 }
 
 
+virtual std::vector <BodyFeatures>  WorldPointBuilder::getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering){
+std::vector <BodyFeatures> features;
+for (const auto & p: current){
+    features.push_back(BodyFeatures(b2Transform(b2Vec2(p.x, p.y), b2Rot(0))));
+}
+return features;
+}
+
+virtual void EverythingBuilder::buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task){
+    for (const BodyFeatures & bf: world_objects){
+        makeBody(w, bf);
+    }
+}
+
+std::vector <BodyFeatures> EveryOtherFeatureBuilder::getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering){
+std::vector <BodyFeatures> features;
+bool toggle=true;
+for (const auto & p: current){
+    if (toggle){
+        features.push_back(BodyFeatures(b2Transform(b2Vec2(p.x, p.y), b2Rot(0))));
+    }
+    toggle=!toggle;
+}
+return features;
+}
+
+std::vector <BodyFeatures> LaserFocus::getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering){
+    m_current=current;
+    std::vector <BodyFeatures> features;
+    return features; //no features
+}
+
+virtual void LaserFocus::buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
+    std::vector <BodyFeatures> features;
+    std::pair<Pointf, Pointf> bt = bounds(d, start, simulationStep, halfWindowWidth);
+    std::pair <CoordinateContainer, bool> salient = salientPoints(start,m_current, bt);
+    if (salient.first.empty()){
+        return;
+    }
+    if (clustering==BOX){
+        features =processData(salient.first, start);
+    }
+    else{
+        features=cluster_data(salient.first, start,clustering);
+    }
+    for (const BodyFeatures & bf: features){
+        makeBody(w, bf);
+    }
+}
 

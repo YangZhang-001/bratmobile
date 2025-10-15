@@ -1,102 +1,102 @@
 #include "attentive.h"
-/**
- * Testing simulation times
- */
+// /**
+//  * Testing simulation times
+//  */
 
-/**
- * @brief Each point is an object but each time the world is built, only the points in the way of the task are constructed
- */
-class WorldPointBuilder: public WorldBuilder{
-    protected:
-    virtual std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
-    std::vector <BodyFeatures> features;
-    for (const auto & p: current){
-        features.push_back(BodyFeatures(b2Transform(b2Vec2(p.x, p.y), b2Rot(0))));
-    }
-    return features;
-    }
+// /**
+//  * @brief Each point is an object but each time the world is built, only the points in the way of the task are constructed
+//  */
+// class WorldPointBuilder: public WorldBuilder{
+//     protected:
+//     virtual std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
+//     std::vector <BodyFeatures> features;
+//     for (const auto & p: current){
+//         features.push_back(BodyFeatures(b2Transform(b2Vec2(p.x, p.y), b2Rot(0))));
+//     }
+//     return features;
+//     }
 
-};
+// };
 
-/**
- * @brief Builds all points for each task 
- * 
- */
-class EverythingBuilder: public virtual WorldPointBuilder{
-    protected:
-    virtual void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
-        for (const BodyFeatures & bf: world_objects){
-            makeBody(w, bf);
-        }
-    }
-};
+// /**
+//  * @brief Builds all points for each task 
+//  * 
+//  */
+// class EverythingBuilder: public virtual WorldPointBuilder{
+//     protected:
+//     virtual void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
+//         for (const BodyFeatures & bf: world_objects){
+//             makeBody(w, bf);
+//         }
+//     }
+// };
 
-/**
- * @brief Makes a feature for every other point and builds only those in the way of task
- * 
- */
-class EveryOtherFeatureBuilder: public virtual WorldPointBuilder{
-    protected:
-    std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
-    std::vector <BodyFeatures> features;
-    bool toggle=true;
-    for (const auto & p: current){
-        if (toggle){
-            features.push_back(BodyFeatures(b2Transform(b2Vec2(p.x, p.y), b2Rot(0))));
-        }
-        toggle=!toggle;
-    }
-    return features;
-    }
-};
+// /**
+//  * @brief Makes a feature for every other point and builds only those in the way of task
+//  * 
+//  */
+// class EveryOtherFeatureBuilder: public virtual WorldPointBuilder{
+//     protected:
+//     std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
+//     std::vector <BodyFeatures> features;
+//     bool toggle=true;
+//     for (const auto & p: current){
+//         if (toggle){
+//             features.push_back(BodyFeatures(b2Transform(b2Vec2(p.x, p.y), b2Rot(0))));
+//         }
+//         toggle=!toggle;
+//     }
+//     return features;
+//     }
+// };
 
-/**
- * @brief Makes a feature for every other point and builds all points
- */
-class EveryOtherPointBuilder: public virtual EveryOtherFeatureBuilder, public virtual EverythingBuilder{
-    protected:
-    std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
-        return EveryOtherFeatureBuilder::getFeatures(current, start, clustering);
-    }
+// /**
+//  * @brief Makes a feature for every other point and builds all points
+//  */
+// class EveryOtherPointBuilder: public virtual EveryOtherFeatureBuilder, public virtual EverythingBuilder{
+//     protected:
+//     std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
+//         return EveryOtherFeatureBuilder::getFeatures(current, start, clustering);
+//     }
 
-    void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
-        EverythingBuilder::buildWorld(w, start, d, disturbance, halfWindowWidth, clustering, task);
-    }
-};
+//     void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
+//         EverythingBuilder::buildWorld(w, start, d, disturbance, halfWindowWidth, clustering, task);
+//     }
+// };
 
-/**
- * @brief Gets all points in the way of the task and makes a body which is a bounding upright box around all points
- * 
- */
-class LaserFocus: public virtual WorldBuilder{ //legacy
-    protected:
-    CoordinateContainer m_current;
-    public:
-    std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
-        m_current=current;
-        std::vector <BodyFeatures> features;
-        return features; //no features
-    }
+// /**
+//  * @brief Gets all points in the way of the task and makes a body which is a bounding upright box around all points
+//  * 
+//  */
+// class LaserFocus: public virtual WorldBuilder{ //legacy
+//     protected:
+//     CoordinateContainer m_current;
+//     public:
+//     std::vector <BodyFeatures> getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering)override{
+//         m_current=current;
+//         std::vector <BodyFeatures> features;
+//         return features; //no features
+//     }
 
-    virtual void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
-        std::vector <BodyFeatures> features;
-        std::pair<Pointf, Pointf> bt = bounds(d, start, simulationStep, halfWindowWidth);
-        std::pair <CoordinateContainer, bool> salient = salientPoints(start,m_current, bt);
-        if (salient.first.empty()){
-            return;
-        }
-        if (clustering==BOX){
-            features =processData(salient.first, start);
-        }
-        else{
-            features=cluster_data(salient.first, start,clustering);
-        }
-        for (const BodyFeatures & bf: features){
-            makeBody(w, bf);
-        }
-    }
+//     virtual void buildWorld(b2World & w, b2Transform start, Direction d, Disturbance disturbance, float halfWindowWidth, CLUSTERING clustering, Task * task)override{
+//         std::vector <BodyFeatures> features;
+//         std::pair<Pointf, Pointf> bt = bounds(d, start, simulationStep, halfWindowWidth);
+//         std::pair <CoordinateContainer, bool> salient = salientPoints(start,m_current, bt);
+//         if (salient.first.empty()){
+//             return;
+//         }
+//         if (clustering==BOX){
+//             features =processData(salient.first, start);
+//         }
+//         else{
+//             features=cluster_data(salient.first, start,clustering);
+//         }
+//         for (const BodyFeatures & bf: features){
+//             makeBody(w, bf);
+//         }
+//     }
 
-};
+// };
 
 int main(int argc, char **argv) {
   std::ifstream file("cds_test.dat");
