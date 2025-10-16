@@ -91,7 +91,7 @@ void dummy_vertex(vertexDescriptor src);
  */
 simResult simulate(Task t, b2World & w);
 
-float remainingSimulationTime();
+virtual float remainingSimulationTime(const Task * const t=NULL);
 
 /**
 *@param g the cognitive map
@@ -257,6 +257,20 @@ void register_worldBuilder(WorldBuilder * wb){
 		delete worldBuilder;
 	}
 	worldBuilder=wb;
+}
+
+b2Transform get_start(const Task *const t){
+	if (!t){
+		throw std::invalid_argument("null pointer to task");
+	}
+	return t->start;	
+}
+
+Direction get_direction(const Task *const t){
+	if (!t){
+		throw std::invalid_argument("null pointer to task");
+	}
+	return t->direction;	
 }
 };
 

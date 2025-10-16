@@ -110,9 +110,9 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction,controlGoal);
 				StateDifference sd;
 				std::vector <VertexMatch> other_matches;
-				VertexMatch match=findMatch(sk.first, t.get_direction(), StateMatcher::MATCH_TYPE::ABSTRACT, &sd, &other_matches);		//, closest_match	
+				VertexMatch match=findMatch(sk.first, t.get_direction(), desiredMatch(), &sd, &other_matches);		//, closest_match	
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
-				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
+				if (matcher.match_equal(match.first,desiredMatch())){
 					g[v0].options.erase(g[v0].options.begin());
 					edge=setup_match_edge(match, v0, v1, sk.second, t.get_direction(), false);
 					if (currentTask.is_over()){
@@ -842,3 +842,65 @@ void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::ve
 
 }
 
+void FocusedConfigurator::removeExploredTransitions(vertexDescriptor v){
+	AttentiveConfigurator::removeExploredTransitions(v);
+	if (v==currentVertex && !m_plan.empty()){
+		transitionSystem[v].options.clear();
+	}
+}
+
+VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
+	if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di==transitionSystem[currentVertex].Di && 
+			!m_plan.empty() && s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
+		return VertexMatch(StateMatcher::_TRUE, currentVertex);
+	}
+	else{
+		return AttentiveConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
+	}
+}
+
+Disturbance DiscreteConfigurator::getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start){
+    if (g[v].Dn.isValid()){
+        return g[v].Dn;
+    }else{
+        return controlGoal.get_disturbance();
+    }
+}
+
+Robot DiscreteConfigurator::makeRobot(b2World & world, const b2Transform & start){
+	Robot robot=Configurator::makeRobot(world, start);
+	return robot;
+}
+
+float DiscreteConfigurator::remainingSimulationTime(const Task *const t){
+    if (t && get_start(t)==b2Transform_zero && get_direction(t)==DEFAULT && iteration>1){
+        b2Transform remainingTransform= transitionSystem[currentVertex].endPose;
+        return remainingTransform.p.Length()/t->getAction().getLinearSpeed();
+    }
+    else if (get_direction(t)==DEFAULT){
+        return simulationStep/ t->getAction().getLinearSpeed();
+    }
+    return Configurator::remainingSimulationTime();
+}
+
+VertexMatch DiscreteConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
+	if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di==transitionSystem[currentVertex].Di && 
+			!m_plan.empty() && s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
+		return VertexMatch(StateMatcher::_TRUE, currentVertex);
+	}
+	else{
+		return AttentiveConfigurator::findMatch(s, dir, StateMatcher::_TRUE, _sd, other_matches);
+	}
+}
+
+void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src) {
+	AttentiveConfigurator::transitionMatrix(v, d, src);
+	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
+	srand(unsigned(time(NULL)));
+	bool executingThisTask=( !currentTask.get_change() ||!oe.empty()) && (iteration>1);
+	if (!executingThisTask && !isTurningDirection(temp.get_direction()) && transitionSystem[v].outcome==simResult::successful){
+		Direction dir_to_add=Direction(rand());
+		transitionSystem[v].options.push_back(dir_to_add);
+		TransitionSystem[v].options.push_back(getOppositeDirection(dir_to_add).second);
+	}
+}

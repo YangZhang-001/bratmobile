@@ -364,6 +364,15 @@ class DebugB2BTestVertex:public DebugB2BTest, public testing::WithParamInterface
     
 };
 
+class DebugDiscreteConf: public virtual DebugConfigurator, public virtual DiscreteConfigurator{
+    protected:
+    using DiscreteConfigurator::getDisturbance;
+    using DiscreteConfigurator::makeRobot;
+    using DiscreteConfigurator::remainingSimulationTime;
+    using DiscreteConfigurator::findMatch;
+    
+};
+
 
 class WiseControllerTest: public Wise_Controller, public ::testing::Test{};
 
@@ -510,6 +519,17 @@ class HighLevelTestB2B:  public HighLevelTest{ //Base , public testing::WithPara
 
     virtual void SetUp()override{
        configurator=new DebugB2B;
+       init();
+    }
+};
+
+class HighLevelTestDiscrete:  public HighLevelTest{ //Base , public testing::WithParamInterface<std::tuple<bool, std::string, int>>    
+    public:
+    HighLevelTestDiscrete(){};
+
+
+    virtual void SetUp()override{
+       configurator=new DebugDiscreteConf;
        init();
     }
 };

@@ -78,7 +78,7 @@ void planPriority(TransitionSystem&, vertexDescriptor);
  * @param v source vertex for the task
  * @param t task reference
  */
-void adjust_simulated_task(const vertexDescriptor&v,  Task& t);
+virtual void adjust_simulated_task(const vertexDescriptor&v,  Task& t);
 
 //adjust real-world task
 void adjust_rw_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);
@@ -388,6 +388,9 @@ class EvaluationQueueManager{
  */
 void visitedDirectionsPushBack( vertexDescriptor v, std::vector<Direction> & visitedDirections, Direction direction);
 
+virtual StateMatcher::MATCH_TYPE desiredMatch() {
+	return StateMatcher::MATCH_TYPE::ABSTRACT;
+}
 public:
 
 AttentiveConfigurator(){};
@@ -411,21 +414,28 @@ class FocusedConfigurator:virtual public AttentiveConfigurator{
 	 * 
 	 * @param v 
 	 */
-	void removeExploredTransitions(vertexDescriptor v)override{
-		AttentiveConfigurator::removeExploredTransitions(v);
-		if (v==currentVertex && !m_plan.empty()){
-			transitionSystem[v].options.clear();
-		}
-	}
+	void removeExploredTransitions(vertexDescriptor v)override;
+	
 
-	VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override{
-		if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di==transitionSystem[currentVertex].Di && 
-				!m_plan.empty() && s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
-			return VertexMatch(StateMatcher::_TRUE, currentVertex);
-		}
-		else{
-			return AttentiveConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
-		}
-	}
+	virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override;
+};
+
+class DiscreteConfigurator : public FocusedConfigurator{
+public:
+
+Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start)override;
+
+Robot makeRobot(b2World & w, const b2Transform & start)override;
+
+float remainingSimulationTime(const Task *const t=NULL)override;
+
+VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override;
+
+StateMatcher::MATCH_TYPE desiredMatch() override {
+	return StateMatcher::MATCH_TYPE::_TRUE;
+}
+
+void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src) override;
+
 };
 #endif
