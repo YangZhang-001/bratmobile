@@ -433,7 +433,7 @@ Robot makeRobot(b2World & w, const b2Transform & start)override;
  * @brief Sets a time limit to DEFAULT tasks corresponding to the amount of time estimated
  * to complete a forward move of length simulationStep
  */
-float remainingSimulationTime(const Task *const t);
+float remainingSimulationTime(const Task *const t=NULL)override;
 
 /**
  * @brief In discrete configurator, matches must be exact and

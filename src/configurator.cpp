@@ -80,7 +80,7 @@ Robot Configurator::makeRobot(b2World& world, const b2Transform & start){
 
 simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State src, 
 	simResult result;
-	float remaining=remainingSimulationTime();
+	float remaining=remainingSimulationTime(&t);
 	Robot robot=makeRobot(w, t.start);
 	worldBuilder->add_body_count();
 	simulatedTasks++;
@@ -91,7 +91,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	return result;
 }
 
-float Configurator::remainingSimulationTime(){
+float Configurator::remainingSimulationTime(const Task *const t){
 	float distance=BOX2DRANGE;
 	if (controlGoal.disturbance.isValid()){
 		distance= controlGoal.disturbance.getPosition().Length();
