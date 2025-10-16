@@ -911,3 +911,8 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 		}	
 	}
 }
+
+bool DiscreteConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
+	closed.emplace(v);
+	return true;
+}
