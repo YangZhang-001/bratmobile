@@ -899,7 +899,7 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 	srand(unsigned(time(NULL)));
 	auto oe=gt::outEdges(transitionSystem, v, d);
 	bool executingThisTask=( !currentTask.get_change() ||!oe.empty()) && (iteration>1);
-	if (!executingThisTask && !isTurning(temp.get_direction()) && transitionSystem[v].outcome==simResult::successful){
+	if (d==DEFAULT &&!executingThisTask && !isTurning(temp.get_direction()) && transitionSystem[v].outcome==simResult::successful){
 		int random= rand();
 		if (random%2==0){
 			transitionSystem[v].options.push_back(LEFT);// = {DEFAULT, LEFT, RIGHT};
