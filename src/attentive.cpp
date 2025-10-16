@@ -885,7 +885,7 @@ float DiscreteConfigurator::remainingSimulationTime(const Task *const t){
 
 VertexMatch DiscreteConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
 	if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di==transitionSystem[currentVertex].Di && 
-			!m_plan.empty() && s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
+			!m_plan.empty() && s.outcome==simResult::successful){ //if the state to be matched is the current one, return it
 		return VertexMatch(StateMatcher::_TRUE, currentVertex);
 	}
 	else{
@@ -897,10 +897,11 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 	AttentiveConfigurator::transitionMatrix(v, d, src);
 	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
 	srand(unsigned(time(NULL)));
+	auto oe=gt::outEdges(transitionSystem, v, d);
 	bool executingThisTask=( !currentTask.get_change() ||!oe.empty()) && (iteration>1);
-	if (!executingThisTask && !isTurningDirection(temp.get_direction()) && transitionSystem[v].outcome==simResult::successful){
-		Direction dir_to_add=Direction(rand());
+	if (!executingThisTask && !isTurning(temp.get_direction()) && transitionSystem[v].outcome==simResult::successful){
+		Direction dir_to_add=static_cast<Direction>(rand());
 		transitionSystem[v].options.push_back(dir_to_add);
-		TransitionSystem[v].options.push_back(getOppositeDirection(dir_to_add).second);
+		transitionSystem[v].options.push_back(getOppositeDirection(dir_to_add).second);
 	}
 }

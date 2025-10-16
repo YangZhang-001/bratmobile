@@ -422,19 +422,42 @@ class FocusedConfigurator:virtual public AttentiveConfigurator{
 
 class DiscreteConfigurator : public FocusedConfigurator{
 public:
-
+/**
+ * @brief In discrete configurator, Di is previous state's Dn, or the goal, if null
+ */
 Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start)override;
 
 Robot makeRobot(b2World & w, const b2Transform & start)override;
 
-float remainingSimulationTime(const Task *const t=NULL)override;
+/**
+ * @brief Sets a time limit to DEFAULT tasks corresponding to the amount of time estimated
+ * to complete a forward move of length simulationStep
+ */
+float remainingSimulationTime(const Task *const t);
 
+/**
+ * @brief In discrete configurator, matches must be exact and
+ * no signal to replan if Task is successful
+ * 
+ * @param s state to match
+ * @param dir direction of the task
+ * @param match_type type of desired match
+ * @param _sd pointer to state difference
+ * @param other_matches pointer to other matches
+ * @return VertexMatch 
+ */
 VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override;
 
 StateMatcher::MATCH_TYPE desiredMatch() override {
 	return StateMatcher::MATCH_TYPE::_TRUE;
 }
-
+/**
+ * @brief In discrete configurator, successful DEFAULT tasks can transition to DEFAULT, LEFT, RIGHT
+ * 
+ * @param v vertex of source state
+ * @param d direction of the Task
+ * @param src source vertex of v
+ */
 void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src) override;
 
 };

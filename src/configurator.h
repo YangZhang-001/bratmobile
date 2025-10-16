@@ -91,7 +91,7 @@ void dummy_vertex(vertexDescriptor src);
  */
 simResult simulate(Task t, b2World & w);
 
-virtual float remainingSimulationTime(const Task * const t=NULL);
+float remainingSimulationTime();
 
 /**
 *@param g the cognitive map
