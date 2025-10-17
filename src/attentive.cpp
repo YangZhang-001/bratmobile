@@ -849,7 +849,11 @@ void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::ve
 		}
 	}
 	lastAdded=v1;
+}
 
+void AttentiveConfigurator::enforce_edge(){
+	if (m_plan.empty()){return;}
+	gt::add_edge(MOVING_VERTEX, m_plan[0], transitionSystem, iteration);
 }
 
 void FocusedConfigurator::removeExploredTransitions(vertexDescriptor v){

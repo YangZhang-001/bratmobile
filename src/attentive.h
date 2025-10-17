@@ -378,6 +378,12 @@ class EvaluationQueueManager{
 	void reset(vertexDescriptor v=TransitionSystem::null_vertex()){
 		lastAdded=v;
 	}
+	/**
+	 * @brief Used to make sure that there is always a connection between DUMMY/MOVING to
+	 * the next in plan - useful in sudden changes of plans
+	 */
+	void enforce_edge();
+	}
 };
 
 /**
