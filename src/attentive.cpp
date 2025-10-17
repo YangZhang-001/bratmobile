@@ -883,7 +883,7 @@ float DiscreteConfigurator::remainingSimulationTime(const Task *const t){
 
 VertexMatch DiscreteConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
 	if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && 
-			 && s.outcome==simResult::successful && iteration>1){ //if the state to be matched is the current one, return it
+			 s.outcome==simResult::successful && iteration>1){ //if the state to be matched is the current one, return it
 		return VertexMatch(StateMatcher::_TRUE, currentVertex);
 	}
 	else{
