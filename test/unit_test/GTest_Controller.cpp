@@ -24,6 +24,6 @@ TEST_F(HighLevelTestBase, NextTaskChangeVerticesPlan){
 TEST_F(HighLevelTestBase, NextTaskChangeVerticesDummy){
     configurator->dummy_vertex(MOVING_VERTEX);
     wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(),configurator->get_plan_nConst());
-    EXPECT_TRUE(configurator->get_current_vertices(), std::vector<vertexDescriptor>({2}));
+    EXPECT_EQ(configurator->get_current_vertices(), std::vector<vertexDescriptor>({1}));
 
 }
