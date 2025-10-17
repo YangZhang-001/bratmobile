@@ -16,11 +16,9 @@ class CLTracker: public ClosedLoop_Tracker, public MotorCallback, public Motor_O
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
-	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
-    Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
 	//Motor_Out controlInterface;
-    FocusedConfigurator configurator(controlGoal);
+    FocusedConfigurator configurator;
 	LaserFocus wb;
 	configuratorInterface.register_worldBuilder(&wb);
 	NoGoal goalChanger;
