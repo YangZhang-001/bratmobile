@@ -116,7 +116,8 @@ Task OpenLoopController::next_task(Task currentTask, const Task & controlGoal, c
 		return stopTask(controlGoal);
 	}
 	currentTask=Task(Disturbance(), g[plan[0]].direction, b2Transform_zero, true);
-	auto e=boost::edge(0, plan[0], g);
+	vertexDescriptor currentVertex=get_current_vertex(current_vertices);
+	auto e=boost::edge(currentVertex, plan[0], g);
 	currentTask.setMotorStep(g[e.first].step);
 	plan.erase(plan.begin());
 	if (currentTask.is_over()&& currentTask.getAction().getLWheelSpeed()!=0 && currentTask.getAction().getRWheelSpeed()!=0){
