@@ -86,7 +86,7 @@ TEST_F(ConfiguratorTest, CurrentVertices){
 TEST_F(ConfiguratorTest, CurrentVerticesDummy){
     init();
     dummy_vertex(MOVING_VERTEX);
-    EXPECT_EQ(current_vertices.size(), 0);
+    EXPECT_EQ(current_vertices.size(), 1);
 }
 
 

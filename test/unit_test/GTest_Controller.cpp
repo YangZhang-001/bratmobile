@@ -18,9 +18,12 @@ TEST_F(HighLevelTestBase, NextTaskChangeVerticesPlan){
     EXPECT_EQ(configurator->get_current_vertices(), std::vector<vertexDescriptor>({2}));
 }
 
+/**
+ * Check if current_vertices is dummy vertex after next_task when plan is empty
+ */
 TEST_F(HighLevelTestBase, NextTaskChangeVerticesDummy){
     configurator->dummy_vertex(MOVING_VERTEX);
     wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(),configurator->get_plan_nConst());
-    EXPECT_TRUE(configurator->get_current_vertices().empty());
+    EXPECT_TRUE(configurator->get_current_vertices(), std::vector<vertexDescriptor>({2}));
 
 }

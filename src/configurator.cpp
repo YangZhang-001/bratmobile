@@ -32,6 +32,7 @@ void Configurator::init(Task _task){
 void Configurator::dummy_vertex(vertexDescriptor src){
 	vertexDescriptor prev_current=currentVertex;
 	currentVertex=boost::add_vertex(transitionSystem);
+	current_vertices={currentVertex};
 	gt::fill(simResult(), &transitionSystem[currentVertex]);
 	transitionSystem[currentVertex].nObs++;
 	transitionSystem[currentVertex].Di=controlGoal.disturbance;
