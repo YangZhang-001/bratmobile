@@ -7,7 +7,8 @@ int main(int argc, char** argv) {
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
 	//Motor_Out controlInterface;
-    FocusedConfigurator configurator(controlGoal);
+    FocusedConfigurator configurator
+	configurator.init(controlGoal);
 	HorizonStarPlanner planner;
 	OpenLooper tracker;
 	configurator.register_planner(&planner);
