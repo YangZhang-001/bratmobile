@@ -96,7 +96,7 @@ class TentativeConfigurator: public AttentiveConfigurator{
 };
 
 /**
- * Tracks and executes tasks using deadreckoning
+ * Tracks and executes tasks using deadreckoning. child of DeadReckoner, MotorCallback and Motor_Out
  */
 class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
     int motorStep=0;
