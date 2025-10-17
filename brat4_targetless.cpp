@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 	configurator.register_tracker(&tracker);
 	OpenLoopController wc;
 	configurator.register_controller(&wc);
-	Logger logger( "rt-update-targetless", "/tmp");
+	Logger logger( "brat4-targetless", "/tmp");
 	configurator.register_logger(&logger);
 	configurator.setSimulationStep(.5);
 	LidarInterface dataInterface(&configuratorInterface);
