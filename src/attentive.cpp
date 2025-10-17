@@ -136,7 +136,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					if (iteration>1){
 						std::cout<<"Abandoned plan!, PQ:"<<std::endl;
 						for (auto pq:priorityQueue){
-							std::cout<<p<<" ";
+							std::cout<<pq<<" ";
 						}
 						std::cout<<std::endl;
 						

@@ -378,12 +378,6 @@ class EvaluationQueueManager{
 	void reset(vertexDescriptor v=TransitionSystem::null_vertex()){
 		lastAdded=v;
 	}
-	/**
-	 * @brief Used to make sure that there is always a connection between DUMMY/MOVING to
-	 * the next in plan - useful in sudden changes of plans
-	 */
-	void enforce_edge();
-	}
 };
 
 /**
@@ -397,6 +391,13 @@ void visitedDirectionsPushBack( vertexDescriptor v, std::vector<Direction> & vis
 virtual StateMatcher::MATCH_TYPE desiredMatch() {
 	return StateMatcher::MATCH_TYPE::ABSTRACT;
 }
+
+/**
+ * @brief Used to make sure that there is always a connection between DUMMY/MOVING to
+ * the next in plan - useful in sudden changes of plans
+ */
+void enforce_edge();
+
 public:
 
 AttentiveConfigurator(){};
