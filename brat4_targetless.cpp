@@ -21,6 +21,8 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	//Motor_Out controlInterface;
     FocusedConfigurator configurator(controlGoal);
+	LaserFocus wb;
+	configuratorInterface.register_worldBuilder(&wb);
 	NoGoal goalChanger;
 	configurator.register_goalChanger(&goalChanger);
 	HorizonStarPlanner planner;
@@ -34,7 +36,7 @@ int main(int argc, char** argv) {
 	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &tracker);
-	MotorCallback cb(&controlInterface);
+	MotorCallback cb(&tracker);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&tracker);
 	printf("all registered\n");
