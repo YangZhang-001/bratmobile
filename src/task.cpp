@@ -67,7 +67,7 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 	}
 	float theta = start.q.GetAngle();
 	b2Vec2 instVelocity = {0,0};		
-	for (stepb2d; stepb2d < (HZ*remaining); stepb2d++) {//3 second
+	for (stepb2d; stepb2d < (HZ*remaining); stepb2d++) {
 		instVelocity.x = action.getLinearSpeed()*cos(theta);
 		instVelocity.y = action.getLinearSpeed()*sin(theta);
 		robot->SetLinearVelocity(instVelocity);

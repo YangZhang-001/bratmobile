@@ -860,11 +860,7 @@ VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher:
 }
 
 Disturbance DiscreteConfigurator::getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start){
-    if (g[v].Dn.isValid()){
-        return g[v].Dn;
-    }else{
-        return controlGoal.get_disturbance();
-    }
+    return g[v].Dn;
 }
 
 Robot DiscreteConfigurator::makeRobot(b2World & world, const b2Transform & start){

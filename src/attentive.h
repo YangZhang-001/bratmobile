@@ -222,7 +222,7 @@ std::vector<Direction>::iterator  get_next_option(vertexDescriptor v, vertexDesc
  * @return true 
  * @return false 
  */
-bool recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
+virtual bool recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
 				b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
 				std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction);
 
@@ -459,6 +459,19 @@ StateMatcher::MATCH_TYPE desiredMatch() override {
  * @param src source vertex of v
  */
 void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src) override;
+
+/**
+ * @brief Just adds to closed set
+ */
+bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v)override;
+
+/**
+ * @brief Does not recycle
+ */
+virtual bool recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
+				b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
+				std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction)override{}
+
 
 };
 #endif
