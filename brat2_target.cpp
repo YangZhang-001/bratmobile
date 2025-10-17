@@ -8,7 +8,7 @@ int main(int argc, char** argv) {
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
 	//Motor_Out controlInterface;
-    DiscreteConfigurator configurator
+    DiscreteConfigurator configurator;
 	configurator.init(controlGoal);
 	configurator.register_worldBuilder(new LaserFocus());
 	HorizonStarPlanner planner;
