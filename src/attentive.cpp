@@ -579,7 +579,7 @@ void AttentiveConfigurator::explore_plan(b2World&world){
         printf("recycled plan in explorer:\n");
     }
     m_plan=plan_tmp;
-	enforce_edge();
+	//enforce_edge();
     printPlan(&m_plan);
 }
 
@@ -854,7 +854,11 @@ void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue(std::ve
 
 void AttentiveConfigurator::enforce_edge(){
 	if (m_plan.empty()){return;}
-	gt::add_edge(MOVING_VERTEX, m_plan[0], transitionSystem, iteration);
+	auto edge=gt::add_edge(MOVING_VERTEX, m_plan[0], transitionSystem, iteration);
+	if (edge.second){
+		std::cout<<"enforcing moving edge from "<<MOVING_VERTEX<<" to "<<m_plan[0]<<std::endl;
+		transitionSystem[edge.first].step=gt::distanceToSimStep(transitionSystem[m
+}
 }
 
 void FocusedConfigurator::removeExploredTransitions(vertexDescriptor v){
