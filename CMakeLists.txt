@@ -23,8 +23,18 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   include(GNUInstallDirs)
   add_executable(target custom_robot.h target.cpp)
   add_executable(targetless custom_robot.h targetless.cpp)
+  add_executable(brat2_target custom_robot.h brat2_target.cpp)
+  add_executable(brat2_targetless custom_robot.h brat2_targetless.cpp)
+  add_executable(brat4_target custom_robot.h brat4_target.cpp)
+  add_executable(brat4_targetless custom_robot.h brat4_targetless.cpp)
+
+
   target_link_libraries(target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
   target_link_libraries(targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio)
+  target_link_libraries(brat2_target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
+  target_link_libraries(brat2_targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio)
+  target_link_libraries(brat4_target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
+  target_link_libraries(brat4_targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio)
   add_subdirectory(test)
   message("detected architecture aarch64, building executables")
 else()
