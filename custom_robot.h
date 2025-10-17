@@ -126,9 +126,9 @@ class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
         if (motorStep==0){
             L=0;
             R=0;
-            motors.setLeftWheelSpeed(0);
-            motors.setRightWheelSpeed(0);
         }
+		motors.setLeftWheelSpeed(L);
+        motors.setRightWheelSpeed(R);
     }
 };
 
