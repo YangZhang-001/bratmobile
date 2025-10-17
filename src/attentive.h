@@ -403,9 +403,9 @@ AttentiveConfigurator(Task _task){
 
 };
 
-/*
+/** 
  * @brief Configurator that only replans if the current task fails
- */
+*/
 class FocusedConfigurator:virtual public AttentiveConfigurator{
 	protected:
 
@@ -420,6 +420,10 @@ class FocusedConfigurator:virtual public AttentiveConfigurator{
 	virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override;
 };
 
+/**
+ * @brief Configurator that discretises DEFAULT tasks into fixed-length segments. Basically, this is an implementation of classic A* search
+ * 
+ */
 class DiscreteConfigurator : public FocusedConfigurator{
 public:
 /**
