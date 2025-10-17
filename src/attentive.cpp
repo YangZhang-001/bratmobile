@@ -797,7 +797,7 @@ void AttentiveConfigurator::adjustProbability(const edgeDescriptor &e){
 }
 
 void AttentiveConfigurator::abandonPlan(std::vector<vertexDescriptor>& planProv, vertexDescriptor v0, vertexDescriptor v1){
-	if (transitionSystem.size()>2){
+	if (transitionSystem.m_vertices.size()>2){
 		current_vertices.clear();
 	}
 	planProv.clear();
