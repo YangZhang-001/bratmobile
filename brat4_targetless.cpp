@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 	//Motor_Out controlInterface;
     FocusedConfigurator configurator;
 	LaserFocus wb;
-	configuratorInterface.register_worldBuilder(&wb);
+	configurator.register_worldBuilder(&wb);
 	NoGoal goalChanger;
 	configurator.register_goalChanger(&goalChanger);
 	HorizonStarPlanner planner;

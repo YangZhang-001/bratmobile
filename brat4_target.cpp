@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
     FocusedConfigurator configurator;
 	configurator.init(controlGoal);
 	LaserFocus wb;
-	configuratorInterface.register_worldBuilder(&wb);
+	configurator.register_worldBuilder(&wb);
 	HorizonStarPlanner planner;
 	OpenLooper tracker;
 	configurator.register_planner(&planner);

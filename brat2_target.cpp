@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
 	//Motor_Out controlInterface;
     DiscreteConfigurator configurator
 	configurator.init(controlGoal);
-	configuratorInterface.register_worldBuilder(new LaserFocus());
+	configurator.register_worldBuilder(new LaserFocus());
 	HorizonStarPlanner planner;
 	OpenLooper tracker;
 	configurator.register_planner(&planner);
