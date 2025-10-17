@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	LaserFocus wb;
 	//Motor_Out controlInterface;
-    FocusedConfigurator configurator
+    FocusedConfigurator configurator;
 	NoGoal goalChanger;
 	configurator.register_goalChanger(&goalChanger);
 	HorizonStarPlanner planner;
