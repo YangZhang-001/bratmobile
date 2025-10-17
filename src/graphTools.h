@@ -121,7 +121,7 @@ struct State{
 	 */
 	b2Transform end_from_Di()const;
 
-	float distance();
+	float distance()const;
 
 	b2Transform travel_transform();
 

@@ -29,7 +29,7 @@ b2Transform State::end_from_Di()const{
 	return b2MulT(endPose, Di.pose());
 }
 
-float State::distance(){
+float State::distance()const{
 	return (InvMul(endPose, start)).p.Length();
 }
 
