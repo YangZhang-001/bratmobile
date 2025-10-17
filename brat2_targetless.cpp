@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 	configurator.register_controller(&wc);
 	Logger logger( "rt-update-targetless", "/tmp");
 	configurator.register_logger(&logger);
-	configurator.setSimulationStep(.27);
+	configurator.setSimulationStep(.5);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &tracker);
 	lidar.registerInterface(&dataInterface);
