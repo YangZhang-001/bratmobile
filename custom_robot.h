@@ -96,7 +96,10 @@ class TentativeConfigurator: public AttentiveConfigurator{
 };
 
 /**
- * Tracks and executes tasks using deadreckoning. child of DeadReckoner, MotorCallback and Motor_Out
+ * @brief Tracks and executes tasks using deadreckoning. child of DeadReckoner, MotorCallback and Motor_Out
+ * Tracks execution using dead reckoning, i.e. without LiDAR input. Executes task for a given number of steps
+ * determined upon task simulation. Automatically registers Motor_Out interface to the
+ * MotorCallback, which tracks the number of steps and stops the robot when the task ends.
  */
 class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
     int motorStep=0;

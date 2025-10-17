@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 	AlphaBot motors;
 	LIDAR_In configuratorInterface;
 	//Motor_Out controlInterface;
-    DiscreteConfigurator configurator
+    DiscreteConfigurator configurator;
 	LaserFocus wb;
 	configurator.register_worldBuilder(&wb);
 	NoGoal goalChanger;
