@@ -34,7 +34,6 @@ int main(int argc, char** argv) {
 	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &tracker);
-	MotorCallback cb(&tracker);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&tracker);
 	printf("all registered\n");
