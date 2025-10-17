@@ -123,4 +123,8 @@ class Reactive_Controller : public Controller{
 
 
 };
+
+class OpenLoopController:public Controller{
+    Task next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan);
+};
 #endif
