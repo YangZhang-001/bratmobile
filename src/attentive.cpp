@@ -579,6 +579,7 @@ void AttentiveConfigurator::explore_plan(b2World&world){
         printf("recycled plan in explorer:\n");
     }
     m_plan=plan_tmp;
+	enforce_edge();
     printPlan(&m_plan);
 }
 
