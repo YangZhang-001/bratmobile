@@ -134,7 +134,12 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					edge= add_vertex_now(v0, v1,sk.first.Di, sk.second); //addVertex
 					abandonPlan(plan_prov, v0, v1);
 					if (iteration>1){
-						std::cout<<"Abandoned plan!"<<std::endl;
+						std::cout<<"Abandoned plan!, PQ:"<<std::endl;
+						for (auto pq:priorityQueue){
+							std::cout<<p<<" ";
+						}
+						std::cout<<std::endl;
+						
 					}
 					shift=b2Transform_zero;
 				}
