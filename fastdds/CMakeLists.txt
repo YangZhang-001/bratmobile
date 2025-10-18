@@ -30,14 +30,31 @@ add_executable(subscriber subscriber.cpp print_helpers.h)
 target_link_libraries(subscriber fastcdr fastrtps ObjectPackage)
 
 ##Qt Window
-add_library(window window.h window.cpp)
-target_link_libraries(window Qt5::Widgets fastcdr fastrtps ObjectPackage)
+add_library(brat-gui window.h window.cpp)
+target_link_libraries(brat-gui Qt5::Widgets fastcdr fastrtps ObjectPackage)
 add_executable(qt_window qt_main.cpp window.h window.cpp )
 target_link_libraries(qt_window  PRIVATE Qt5::Widgets Qt5::Core fastcdr fastrtps ObjectPackage)
 target_link_libraries(qt_window PRIVATE qwt-qt5)
 
-#Qt attention debug
-add_executable(closedLoopExecution closedLoopExecution.cpp)
-target_link_libraries(closedLoopExecution box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio)
-target_link_libraries(closedLoopExecution fastcdr fastrtps ObjectPackage)
+#Installation
+set_target_properties(brat-gui PROPERTIES POSITION_INDEPENDENT_CODE TRUE 
+PUBLIC_HEADER "window.h")
+
+install(TARGETS brat-gui 
+	EXPORT brat-gui-targets 
+	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+	PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+
+#Qt attention debug demo
+# add_executable(closedLoopExecution closedLoopExecution.cpp)
+# target_link_libraries(closedLoopExecution box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio)
+# target_link_libraries(closedLoopExecution brat-gui fastcdr fastrtps ObjectPackage)
+add_executable(qt_demo qt_main.cpp window.h window.cpp )
+target_link_libraries(qt_demo PRIVATE Qt5::Widgets Qt5::Core fastcdr fastrtps ObjectPackage)
+target_link_libraries(qt_demo PRIVATE qwt-qt5)
+# target_link_libraries(closedLoopExecution box2d ${OpenCV_LIBS} brat a1lidarrpi alphabot pthread pigpio)
+# target_link_libraries(closedLoopExecution brat-gui fastcdr fastrtps ObjectPackage)
+
 

@@ -30,6 +30,7 @@ class Window : public QWidget, public DataReaderListener{
     class UnpackedObject{
         QPoint m_goal;
         QRect m_attentionWindow;
+        QRect m_Di;
 
         public:
 
@@ -53,6 +54,14 @@ class Window : public QWidget, public DataReaderListener{
         QRect attentionWindow(){
             return m_attentionWindow;
         }
+
+        void set_Di(float hx, float hy, float lx, float ly){
+            m_Di=QRect(QPoint(lx, hy), QPoint(hx, ly));
+        }
+
+        QRect Di(){
+            return m_Di;
+        }
     }unpacked;
 
     public:
@@ -67,8 +76,6 @@ class Window : public QWidget, public DataReaderListener{
      * 
      */
     void start();
-
-
 
 
 };
