@@ -7,7 +7,7 @@ var searchData=
   ['checkended_33',['checkEnded',['../classTask.html#a1a1c3ff485bb643b086ed864b1d1825b',1,'Task::checkEnded(const b2PolygonShape &amp;box, const b2Transform &amp;robot_pose=b2Transform_zero, Disturbance *dist_obs=NULL)'],['../classTask.html#a5a89b3bcfbb09a4924debce3ff374bf4',1,'Task::checkEnded(const State &amp;n, Direction dir=UNDEFINED, bool relax=false, std::pair&lt; bool, b2Transform &gt; use_start=std::pair&lt; bool, b2Transform &gt;(1, b2Transform_zero))'],['../classTask.html#a3e1686b63e4bef0552182364f837ec8c',1,'Task::checkEnded(b2Transform robotTransform=b2Transform_zero, Direction dir=UNDEFINED, bool relax=0, b2Body *robot=NULL, std::pair&lt; bool, b2Transform &gt; use_start=std::pair&lt; bool, b2Transform &gt;(1, b2Transform_zero))']]],
   ['clearvoyance_34',['ClearVoyance',['../classB2BConfigurator_1_1ClearVoyance.html',1,'B2BConfigurator']]],
   ['closedloop_5ftracker_35',['ClosedLoop_Tracker',['../classClosedLoop__Tracker.html',1,'']]],
-  ['closevertex_36',['closeVertex',['../classB2BConfigurator.html#ac17a464516c2c7f19d342d7ce4e0c2a7',1,'B2BConfigurator']]],
+  ['closevertex_36',['closeVertex',['../classDiscreteConfigurator.html#a5b5e0e74d813688bff0bebe0352f84e2',1,'DiscreteConfigurator::closeVertex()'],['../classB2BConfigurator.html#ac17a464516c2c7f19d342d7ce4e0c2a7',1,'B2BConfigurator::closeVertex()']]],
   ['cluster_5fdata_37',['cluster_data',['../classWorldBuilder.html#a9ed07118a0c36df5064ba63b00fc09d2',1,'WorldBuilder']]],
   ['comparecluster_38',['CompareCluster',['../structWorldBuilder_1_1CompareCluster.html',1,'WorldBuilder']]],
   ['comparephi_39',['ComparePhi',['../structComparePhi.html',1,'']]],

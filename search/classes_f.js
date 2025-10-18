@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['task_262',['Task',['../classTask.html',1,'']]],
-  ['threshold_263',['Threshold',['../classThreshold.html',1,'']]],
-  ['thresholdlearner_264',['ThresholdLearner',['../classThresholdLearner.html',1,'']]],
-  ['tracker_265',['Tracker',['../classTracker.html',1,'']]],
-  ['trackingresult_266',['TrackingResult',['../structTrackingResult.html',1,'']]],
-  ['type_3c_20pointf_20_3e_267',['Type&lt; Pointf &gt;',['../structcv_1_1traits_1_1Type_3_01Pointf_01_4.html',1,'cv::traits']]]
+  ['sameiteration_271',['SameIteration',['../structSameIteration.html',1,'']]],
+  ['simresult_272',['simResult',['../structsimResult.html',1,'']]],
+  ['state_273',['State',['../structState.html',1,'']]],
+  ['statedifference_274',['StateDifference',['../structStateDifference.html',1,'']]],
+  ['statematch_275',['StateMatch',['../structStateMatcher_1_1StateMatch.html',1,'StateMatcher']]],
+  ['statematcher_276',['StateMatcher',['../classStateMatcher.html',1,'']]]
 ];

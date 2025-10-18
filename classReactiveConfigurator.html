@@ -115,9 +115,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>dummy_vertex</b> (ver
 <tr class="memitem:af76bd78ed717bafd3d98ec4c8262278c inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structsimResult.html">simResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c">simulate</a> (<a class="el" href="classTask.html">Task</a> t, b2World &amp;w)</td></tr>
 <tr class="memdesc:af76bd78ed717bafd3d98ec4c8262278c inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simulates this task, includes creating the robot object.  <a href="classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c">More...</a><br /></td></tr>
 <tr class="separator:af76bd78ed717bafd3d98ec4c8262278c inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a786510bdcb146292d4aa15beb0e1e275 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a786510bdcb146292d4aa15beb0e1e275"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>remainingSimulationTime</b> ()</td></tr>
-<tr class="separator:a786510bdcb146292d4aa15beb0e1e275 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35102ae5628908238769292043ad30da inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a35102ae5628908238769292043ad30da"></a>
+virtual float&#160;</td><td class="memItemRight" valign="bottom"><b>remainingSimulationTime</b> (const <a class="el" href="classTask.html">Task</a> *const t=NULL)</td></tr>
+<tr class="separator:a35102ae5628908238769292043ad30da inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5909d6f8f82ef074d2b01e8296d635ed inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a5909d6f8f82ef074d2b01e8296d635ed">estimate_current_vertex</a> ()</td></tr>
 <tr class="separator:a5909d6f8f82ef074d2b01e8296d635ed inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1846e9cbdb8941f9ecebe691a1127ac0 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a1846e9cbdb8941f9ecebe691a1127ac0"></a>
@@ -190,6 +190,15 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>areInterfacesSetUp</b
 <tr class="memitem:a63e7270b149180b3cf9b528248afe1d0 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0">assignDimensions</a> (<a class="el" href="classTask.html">Task</a> &amp;t, float halfLength, float halfWidth)</td></tr>
 <tr class="memdesc:a63e7270b149180b3cf9b528248afe1d0 inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns dimensions to the disturbance of a task (NOTE: pose, affordance and validity of the disturbance will remain the same)  <a href="classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0">More...</a><br /></td></tr>
 <tr class="separator:a63e7270b149180b3cf9b528248afe1d0 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01434406731e3b9d7eafb9777fc7216c inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a01434406731e3b9d7eafb9777fc7216c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>register_worldBuilder</b> (<a class="el" href="classWorldBuilder.html">WorldBuilder</a> *wb)</td></tr>
+<tr class="separator:a01434406731e3b9d7eafb9777fc7216c inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab315ecff4a729fa9edf4bd791a84032d inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ab315ecff4a729fa9edf4bd791a84032d"></a>
+b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>get_start</b> (const <a class="el" href="classTask.html">Task</a> *const t)</td></tr>
+<tr class="separator:ab315ecff4a729fa9edf4bd791a84032d inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7787551b24fa53bbb0c57b073fb0036d inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a7787551b24fa53bbb0c57b073fb0036d"></a>
+Direction&#160;</td><td class="memItemRight" valign="bottom"><b>get_direction</b> (const <a class="el" href="classTask.html">Task</a> *const t)</td></tr>
+<tr class="separator:a7787551b24fa53bbb0c57b073fb0036d inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -271,9 +280,9 @@ std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign=
 <tr class="memitem:a12d5a1c8dc4eacd59137eb4ba984dec9 inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a12d5a1c8dc4eacd59137eb4ba984dec9"></a>
 TransitionSystem&#160;</td><td class="memItemRight" valign="bottom"><b>transitionSystem</b> =TransitionSystem(1)</td></tr>
 <tr class="separator:a12d5a1c8dc4eacd59137eb4ba984dec9 inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac8730b8c13bfccfa8e6ddba3adb8aca inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="aac8730b8c13bfccfa8e6ddba3adb8aca"></a>
-<a class="el" href="classWorldBuilder.html">WorldBuilder</a>&#160;</td><td class="memItemRight" valign="bottom"><b>worldBuilder</b></td></tr>
-<tr class="separator:aac8730b8c13bfccfa8e6ddba3adb8aca inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf01237df3c3e28478cf8a163034d1b9 inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="acf01237df3c3e28478cf8a163034d1b9"></a>
+<a class="el" href="classWorldBuilder.html">WorldBuilder</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>worldBuilder</b> =new <a class="el" href="classWorldBuilder.html">WorldBuilder</a>()</td></tr>
+<tr class="separator:acf01237df3c3e28478cf8a163034d1b9 inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee68156f37ea19bca0256ec7f002d07c inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="aee68156f37ea19bca0256ec7f002d07c"></a>
 vertexDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentVertex</b> =MOVING_VERTEX</td></tr>
 <tr class="separator:aee68156f37ea19bca0256ec7f002d07c inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>

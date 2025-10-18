@@ -68,6 +68,11 @@ $(function() {
 <div class="title">FocusedConfigurator Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><a class="el" href="classConfigurator.html">Configurator</a> that only replans if the current task fails.  
+ <a href="classFocusedConfigurator.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="attentive_8h_source.html">attentive.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for FocusedConfigurator:</div>
 <div class="dyncontent">
@@ -84,7 +89,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ac1e893abbc337347149fe69c0a829a32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFocusedConfigurator.html#ac1e893abbc337347149fe69c0a829a32">removeExploredTransitions</a> (vertexDescriptor v) override</td></tr>
 <tr class="memdesc:ac1e893abbc337347149fe69c0a829a32"><td class="mdescLeft">&#160;</td><td class="mdescRight">If the current vertex is matched, don't allow to check plan further.  <a href="classFocusedConfigurator.html#ac1e893abbc337347149fe69c0a829a32">More...</a><br /></td></tr>
 <tr class="separator:ac1e893abbc337347149fe69c0a829a32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd393a24d51d6e5cad2623c35822467c"><td class="memItemLeft" align="right" valign="top">VertexMatch&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFocusedConfigurator.html#acd393a24d51d6e5cad2623c35822467c">findMatch</a> (<a class="el" href="structState.html">State</a> s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, <a class="el" href="structStateDifference.html">StateDifference</a> *_sd=NULL, std::vector&lt; VertexMatch &gt; *other_matches=NULL) override</td></tr>
+<tr class="memitem:acd393a24d51d6e5cad2623c35822467c"><td class="memItemLeft" align="right" valign="top">virtual VertexMatch&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFocusedConfigurator.html#acd393a24d51d6e5cad2623c35822467c">findMatch</a> (<a class="el" href="structState.html">State</a> s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, <a class="el" href="structStateDifference.html">StateDifference</a> *_sd=NULL, std::vector&lt; VertexMatch &gt; *other_matches=NULL) override</td></tr>
 <tr class="memdesc:acd393a24d51d6e5cad2623c35822467c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches transition System for a match to a state provided. Continuous states are matched, with the option to also match the discrete state (the direction)  <a href="classFocusedConfigurator.html#acd393a24d51d6e5cad2623c35822467c">More...</a><br /></td></tr>
 <tr class="separator:acd393a24d51d6e5cad2623c35822467c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classAttentiveConfigurator"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classAttentiveConfigurator')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classAttentiveConfigurator.html">AttentiveConfigurator</a></td></tr>
@@ -106,7 +111,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a580d62685aee883b17666809c143f108 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a580d62685aee883b17666809c143f108"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>planPriority</b> (TransitionSystem &amp;, vertexDescriptor)</td></tr>
 <tr class="separator:a580d62685aee883b17666809c143f108 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4e2352d2b7281e1c81f087b8067d018 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#ac4e2352d2b7281e1c81f087b8067d018">adjust_simulated_task</a> (const vertexDescriptor &amp;v, <a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
+<tr class="memitem:ac4e2352d2b7281e1c81f087b8067d018 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#ac4e2352d2b7281e1c81f087b8067d018">adjust_simulated_task</a> (const vertexDescriptor &amp;v, <a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
 <tr class="memdesc:ac4e2352d2b7281e1c81f087b8067d018 inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>.  <a href="classAttentiveConfigurator.html#ac4e2352d2b7281e1c81f087b8067d018">More...</a><br /></td></tr>
 <tr class="separator:ac4e2352d2b7281e1c81f087b8067d018 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb5f4a26cbd31156fcae8065265e0daf inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="abb5f4a26cbd31156fcae8065265e0daf"></a>
@@ -157,7 +162,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:ab1eb081b77a716b6f72bc61510d245fd inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Direction &gt;::iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#ab1eb081b77a716b6f72bc61510d245fd">get_next_option</a> (vertexDescriptor v, vertexDescriptor src, std::vector&lt; vertexDescriptor &gt; full_plan)</td></tr>
 <tr class="memdesc:ab1eb081b77a716b6f72bc61510d245fd inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an iterator to the next option representing a discrete <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> transition. If v is in the plan, returns the next task in the plan. If this next task is successful, after that option has been simulated it returns iterator to vector end. If not, returns other options.  <a href="classAttentiveConfigurator.html#ab1eb081b77a716b6f72bc61510d245fd">More...</a><br /></td></tr>
 <tr class="separator:ab1eb081b77a716b6f72bc61510d245fd inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4209d12894cf75b285fabfc529c39da0 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a4209d12894cf75b285fabfc529c39da0">recycle_plan</a> (vertexDescriptor v, vertexDescriptor &amp;v0, vertexDescriptor &amp;task_start, StateMatcher::MATCH_TYPE &amp;matchType, b2Transform &amp;shift_start, b2Transform &amp;sk_first_start, std::pair&lt; edgeDescriptor, bool &gt; &amp;edge, std::vector&lt; vertexDescriptor &gt; &amp;plan_prov, Direction t_get_direction)</td></tr>
+<tr class="memitem:a4209d12894cf75b285fabfc529c39da0 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a4209d12894cf75b285fabfc529c39da0">recycle_plan</a> (vertexDescriptor v, vertexDescriptor &amp;v0, vertexDescriptor &amp;task_start, StateMatcher::MATCH_TYPE &amp;matchType, b2Transform &amp;shift_start, b2Transform &amp;sk_first_start, std::pair&lt; edgeDescriptor, bool &gt; &amp;edge, std::vector&lt; vertexDescriptor &gt; &amp;plan_prov, Direction t_get_direction)</td></tr>
 <tr class="memdesc:a4209d12894cf75b285fabfc529c39da0 inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assesses whether a previous plan can be recycled.  <a href="classAttentiveConfigurator.html#a4209d12894cf75b285fabfc529c39da0">More...</a><br /></td></tr>
 <tr class="separator:a4209d12894cf75b285fabfc529c39da0 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a546f17fc837062c95a3900c7b8b21977 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">std::pair&lt; <a class="el" href="structState.html">State</a>, <a class="el" href="structEdge.html">Edge</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a546f17fc837062c95a3900c7b8b21977">simulation_setup</a> (b2World &amp;w, <a class="el" href="classTask.html">Task</a> &amp;t, vertexDescriptor v0, b2Transform shift, b2Transform &amp;start, std::vector&lt; Direction &gt;v0_options)</td></tr>
@@ -205,6 +210,13 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>closeVertex</
 <tr class="memitem:aab3fe860def48c012abc496ee8d47653 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#aab3fe860def48c012abc496ee8d47653">visitedDirectionsPushBack</a> (vertexDescriptor v, std::vector&lt; Direction &gt; &amp;visitedDirections, Direction direction)</td></tr>
 <tr class="memdesc:aab3fe860def48c012abc496ee8d47653 inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pushes directions visited at this iteration (not using phi) to input vector.  <a href="classAttentiveConfigurator.html#aab3fe860def48c012abc496ee8d47653">More...</a><br /></td></tr>
 <tr class="separator:aab3fe860def48c012abc496ee8d47653 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a622f292a088a71a8842ecc7895692025 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a622f292a088a71a8842ecc7895692025"></a>
+virtual StateMatcher::MATCH_TYPE&#160;</td><td class="memItemRight" valign="bottom"><b>desiredMatch</b> ()</td></tr>
+<tr class="separator:a622f292a088a71a8842ecc7895692025 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d57f6b5a51283b6cfc5745f391b7853 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a5d57f6b5a51283b6cfc5745f391b7853"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a5d57f6b5a51283b6cfc5745f391b7853">enforce_edge</a> ()</td></tr>
+<tr class="memdesc:a5d57f6b5a51283b6cfc5745f391b7853 inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to make sure that there is always a connection between DUMMY/MOVING to the next in plan - useful in sudden changes of plans. <br /></td></tr>
+<tr class="separator:a5d57f6b5a51283b6cfc5745f391b7853 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -237,9 +249,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>dummy_vertex</b> (ver
 <tr class="memitem:af76bd78ed717bafd3d98ec4c8262278c inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structsimResult.html">simResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c">simulate</a> (<a class="el" href="classTask.html">Task</a> t, b2World &amp;w)</td></tr>
 <tr class="memdesc:af76bd78ed717bafd3d98ec4c8262278c inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simulates this task, includes creating the robot object.  <a href="classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c">More...</a><br /></td></tr>
 <tr class="separator:af76bd78ed717bafd3d98ec4c8262278c inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a786510bdcb146292d4aa15beb0e1e275 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a786510bdcb146292d4aa15beb0e1e275"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>remainingSimulationTime</b> ()</td></tr>
-<tr class="separator:a786510bdcb146292d4aa15beb0e1e275 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35102ae5628908238769292043ad30da inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a35102ae5628908238769292043ad30da"></a>
+virtual float&#160;</td><td class="memItemRight" valign="bottom"><b>remainingSimulationTime</b> (const <a class="el" href="classTask.html">Task</a> *const t=NULL)</td></tr>
+<tr class="separator:a35102ae5628908238769292043ad30da inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5909d6f8f82ef074d2b01e8296d635ed inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a5909d6f8f82ef074d2b01e8296d635ed">estimate_current_vertex</a> ()</td></tr>
 <tr class="separator:a5909d6f8f82ef074d2b01e8296d635ed inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1846e9cbdb8941f9ecebe691a1127ac0 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a1846e9cbdb8941f9ecebe691a1127ac0"></a>
@@ -309,6 +321,15 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>areInterfacesSetUp</b
 <tr class="memitem:a63e7270b149180b3cf9b528248afe1d0 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0">assignDimensions</a> (<a class="el" href="classTask.html">Task</a> &amp;t, float halfLength, float halfWidth)</td></tr>
 <tr class="memdesc:a63e7270b149180b3cf9b528248afe1d0 inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns dimensions to the disturbance of a task (NOTE: pose, affordance and validity of the disturbance will remain the same)  <a href="classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0">More...</a><br /></td></tr>
 <tr class="separator:a63e7270b149180b3cf9b528248afe1d0 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01434406731e3b9d7eafb9777fc7216c inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a01434406731e3b9d7eafb9777fc7216c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>register_worldBuilder</b> (<a class="el" href="classWorldBuilder.html">WorldBuilder</a> *wb)</td></tr>
+<tr class="separator:a01434406731e3b9d7eafb9777fc7216c inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab315ecff4a729fa9edf4bd791a84032d inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ab315ecff4a729fa9edf4bd791a84032d"></a>
+b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>get_start</b> (const <a class="el" href="classTask.html">Task</a> *const t)</td></tr>
+<tr class="separator:ab315ecff4a729fa9edf4bd791a84032d inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7787551b24fa53bbb0c57b073fb0036d inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a7787551b24fa53bbb0c57b073fb0036d"></a>
+Direction&#160;</td><td class="memItemRight" valign="bottom"><b>get_direction</b> (const <a class="el" href="classTask.html">Task</a> *const t)</td></tr>
+<tr class="separator:a7787551b24fa53bbb0c57b073fb0036d inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classConfigurator"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classConfigurator')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classConfigurator.html">Configurator</a></td></tr>
 <tr class="memitem:a26cced006fc019f9791c44090a08b1c5 inherit pub_static_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a26cced006fc019f9791c44090a08b1c5"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a26cced006fc019f9791c44090a08b1c5">run</a> (<a class="el" href="classConfigurator.html">Configurator</a> *)</td></tr>
@@ -384,9 +405,9 @@ std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign=
 <tr class="memitem:a12d5a1c8dc4eacd59137eb4ba984dec9 inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a12d5a1c8dc4eacd59137eb4ba984dec9"></a>
 TransitionSystem&#160;</td><td class="memItemRight" valign="bottom"><b>transitionSystem</b> =TransitionSystem(1)</td></tr>
 <tr class="separator:a12d5a1c8dc4eacd59137eb4ba984dec9 inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac8730b8c13bfccfa8e6ddba3adb8aca inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="aac8730b8c13bfccfa8e6ddba3adb8aca"></a>
-<a class="el" href="classWorldBuilder.html">WorldBuilder</a>&#160;</td><td class="memItemRight" valign="bottom"><b>worldBuilder</b></td></tr>
-<tr class="separator:aac8730b8c13bfccfa8e6ddba3adb8aca inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf01237df3c3e28478cf8a163034d1b9 inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="acf01237df3c3e28478cf8a163034d1b9"></a>
+<a class="el" href="classWorldBuilder.html">WorldBuilder</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>worldBuilder</b> =new <a class="el" href="classWorldBuilder.html">WorldBuilder</a>()</td></tr>
+<tr class="separator:acf01237df3c3e28478cf8a163034d1b9 inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee68156f37ea19bca0256ec7f002d07c inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="aee68156f37ea19bca0256ec7f002d07c"></a>
 vertexDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentVertex</b> =MOVING_VERTEX</td></tr>
 <tr class="separator:aee68156f37ea19bca0256ec7f002d07c inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -397,7 +418,9 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>movingEdge<
 edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge</b> =movingEdge</td></tr>
 <tr class="separator:a6aafc924b720ef5dfed4d18682ad2f4a inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p><a class="el" href="classConfigurator.html">Configurator</a> that only replans if the current task fails. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="acd393a24d51d6e5cad2623c35822467c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acd393a24d51d6e5cad2623c35822467c">&#9670;&nbsp;</a></span>findMatch()</h2>
 
@@ -445,7 +468,7 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -465,6 +488,8 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
 <dl class="section return"><dt>Returns</dt><dd>VertexMatch the best match found and its type </dd></dl>
 
 <p>Reimplemented from <a class="el" href="classAttentiveConfigurator.html#a01e04aa3f5c5e492cfb5ac22fcc99225">AttentiveConfigurator</a>.</p>
+
+<p>Reimplemented in <a class="el" href="classDiscreteConfigurator.html#a3ccf21d3a9183e30af538a335781f846">DiscreteConfigurator</a>.</p>
 
 </div>
 </div>
@@ -487,7 +512,7 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -504,8 +529,9 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="attentive_8h_source.html">attentive.h</a></li>
+<li>src/attentive.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

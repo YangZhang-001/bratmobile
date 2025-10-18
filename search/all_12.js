@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['task_187',['Task',['../classTask.html',1,'']]],
-  ['task_5fto_5fexecute_188',['task_to_execute',['../classWise__Controller.html#ab161b0479909e1a10af434ef5b7a8c9e',1,'Wise_Controller']]],
-  ['task_5fvertices_189',['task_vertices',['../classAttentiveConfigurator.html#ac94a392af016a60e7d8d684e8a56a172',1,'AttentiveConfigurator']]],
-  ['threshold_190',['Threshold',['../classThreshold.html',1,'']]],
-  ['thresholdlearner_191',['ThresholdLearner',['../classThresholdLearner.html',1,'']]],
-  ['to_5ftask_5fend_192',['to_task_end',['../classWise__Controller.html#ab66c87e49e757ae2202bfa39277a2850',1,'Wise_Controller']]],
-  ['track_193',['track',['../classTracker.html#ac9c90616de5c49aba70114668bb3bd2a',1,'Tracker::track()'],['../classDeadReckoner.html#a22296cd5a531ba14296a7e6b7ee7a8fd',1,'DeadReckoner::track()'],['../classClosedLoop__Tracker.html#ac0ffa535e917abf6d0db26a3f1408606',1,'ClosedLoop_Tracker::track()']]],
-  ['tracker_194',['Tracker',['../classTracker.html',1,'']]],
-  ['trackingresult_195',['TrackingResult',['../structTrackingResult.html',1,'']]],
-  ['transitioninhindsight_196',['transitionInHindsight',['../classB2BConfigurator.html#aefc7ea428d3f5164d8bee7dde8221338',1,'B2BConfigurator']]],
-  ['transitionmatrix_197',['transitionMatrix',['../classAttentiveConfigurator.html#a7a03d7acc9c3b98d1281c0ecce40d6e3',1,'AttentiveConfigurator']]],
-  ['type_3c_20pointf_20_3e_198',['Type&lt; Pointf &gt;',['../structcv_1_1traits_1_1Type_3_01Pointf_01_4.html',1,'cv::traits']]]
+  ['task_195',['Task',['../classTask.html',1,'']]],
+  ['task_5fto_5fexecute_196',['task_to_execute',['../classWise__Controller.html#ab161b0479909e1a10af434ef5b7a8c9e',1,'Wise_Controller']]],
+  ['task_5fvertices_197',['task_vertices',['../classAttentiveConfigurator.html#ac94a392af016a60e7d8d684e8a56a172',1,'AttentiveConfigurator']]],
+  ['threshold_198',['Threshold',['../classThreshold.html',1,'']]],
+  ['thresholdlearner_199',['ThresholdLearner',['../classThresholdLearner.html',1,'']]],
+  ['to_5ftask_5fend_200',['to_task_end',['../classWise__Controller.html#ab66c87e49e757ae2202bfa39277a2850',1,'Wise_Controller']]],
+  ['track_201',['track',['../classTracker.html#ac9c90616de5c49aba70114668bb3bd2a',1,'Tracker::track()'],['../classDeadReckoner.html#a22296cd5a531ba14296a7e6b7ee7a8fd',1,'DeadReckoner::track()'],['../classClosedLoop__Tracker.html#ac0ffa535e917abf6d0db26a3f1408606',1,'ClosedLoop_Tracker::track()']]],
+  ['tracker_202',['Tracker',['../classTracker.html',1,'']]],
+  ['trackingresult_203',['TrackingResult',['../structTrackingResult.html',1,'']]],
+  ['transitioninhindsight_204',['transitionInHindsight',['../classB2BConfigurator.html#aefc7ea428d3f5164d8bee7dde8221338',1,'B2BConfigurator']]],
+  ['transitionmatrix_205',['transitionMatrix',['../classAttentiveConfigurator.html#a7a03d7acc9c3b98d1281c0ecce40d6e3',1,'AttentiveConfigurator::transitionMatrix()'],['../classDiscreteConfigurator.html#a53efa6a7e9de13f7500c817e0645b70a',1,'DiscreteConfigurator::transitionMatrix()']]],
+  ['type_3c_20pointf_20_3e_206',['Type&lt; Pointf &gt;',['../structcv_1_1traits_1_1Type_3_01Pointf_01_4.html',1,'cv::traits']]]
 ];

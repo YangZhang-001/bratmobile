@@ -128,7 +128,10 @@ $(function() {
 : <a class="el" href="classHorizonStarPlanner.html#a4e2246600849cc0f8262cf4d59a79ef7">HorizonStarPlanner</a>
 </li>
 <li>buildWorld()
-: <a class="el" href="classWorldBuilder.html#aa8fced331769ea18a04d9ad547b301a0">WorldBuilder</a>
+: <a class="el" href="classEveryOtherPointBuilder.html#a90ae2a150e94b88de778b7d37ff4fb1c">EveryOtherPointBuilder</a>
+, <a class="el" href="classEverythingBuilder.html#ac249e2be5327faa97dc728558e62349a">EverythingBuilder</a>
+, <a class="el" href="classLaserFocus.html#ad1356b4bff3e41d4ac3b6fd6fd5a4d4e">LaserFocus</a>
+, <a class="el" href="classWorldBuilder.html#aa8fced331769ea18a04d9ad547b301a0">WorldBuilder</a>
 </li>
 <li>bumping_that()
 : <a class="el" href="classTask.html#a84bea294049f83c6a3ebfc00b37b9a47">Task</a>
@@ -151,6 +154,7 @@ $(function() {
 </li>
 <li>closeVertex()
 : <a class="el" href="classB2BConfigurator.html#ac17a464516c2c7f19d342d7ce4e0c2a7">B2BConfigurator</a>
+, <a class="el" href="classDiscreteConfigurator.html#a5b5e0e74d813688bff0bebe0352f84e2">DiscreteConfigurator</a>
 </li>
 <li>cluster_data()
 : <a class="el" href="classWorldBuilder.html#a9ed07118a0c36df5064ba63b00fc09d2">WorldBuilder</a>
@@ -187,6 +191,9 @@ $(function() {
 <li>endCriteria_met()
 : <a class="el" href="classTask.html#a56e66ec44c88634e4cdb448d78b9fb0a">Task</a>
 </li>
+<li>enforce_edge()
+: <a class="el" href="classAttentiveConfigurator.html#a5d57f6b5a51283b6cfc5745f391b7853">AttentiveConfigurator</a>
+</li>
 <li>estimate_current_vertex()
 : <a class="el" href="classConfigurator.html#a5909d6f8f82ef074d2b01e8296d635ed">Configurator</a>
 </li>
@@ -217,6 +224,7 @@ $(function() {
 </li>
 <li>findMatch()
 : <a class="el" href="classAttentiveConfigurator.html#a01e04aa3f5c5e492cfb5ac22fcc99225">AttentiveConfigurator</a>
+, <a class="el" href="classDiscreteConfigurator.html#a3ccf21d3a9183e30af538a335781f846">DiscreteConfigurator</a>
 , <a class="el" href="classFocusedConfigurator.html#acd393a24d51d6e5cad2623c35822467c">FocusedConfigurator</a>
 </li>
 <li>for_Di()
@@ -257,15 +265,20 @@ $(function() {
 <li>getDisturbance()
 : <a class="el" href="classAttentiveConfigurator.html#a61d49e196980b9dc0990aa74dc82c4a5">AttentiveConfigurator</a>
 , <a class="el" href="classB2BConfigurator.html#abaaded92deebdd125e06e3fa82bfa025">B2BConfigurator</a>
+, <a class="el" href="classDiscreteConfigurator.html#ad50e8cd64cc274d8d39704fd16b2487e">DiscreteConfigurator</a>
 </li>
 <li>getEndCriteria()
-: <a class="el" href="classTask.html#adfb957c308924e79da803e19601afbd0">Task</a>
+: <a class="el" href="classTask.html#ae43d082acf552124999ded99f4f89219">Task</a>
 </li>
 <li>getExploredDirections()
 : <a class="el" href="classAttentiveConfigurator.html#ab0092da725ac846eebf8b191e7dc2583">AttentiveConfigurator</a>
 </li>
 <li>getFeatures()
-: <a class="el" href="classWorldBuilder.html#a69d61ce1ac9ec3091fc2c9114b43d67e">WorldBuilder</a>
+: <a class="el" href="classEveryOtherFeatureBuilder.html#a742df0bc9b637069cb69a0b9920d36a6">EveryOtherFeatureBuilder</a>
+, <a class="el" href="classEveryOtherPointBuilder.html#a960d287bc58a94838afce242e038dc8e">EveryOtherPointBuilder</a>
+, <a class="el" href="classLaserFocus.html#a61d7322be27bc256028e35ce4dc55076">LaserFocus</a>
+, <a class="el" href="classWorldBuilder.html#a69d61ce1ac9ec3091fc2c9114b43d67e">WorldBuilder</a>
+, <a class="el" href="classWorldPointBuilder.html#a0da39b8b2f3dc469a3fa6a50a90f1d6f">WorldPointBuilder</a>
 </li>
 <li>getOmega()
 : <a class="el" href="structTask_1_1Action.html#a380ba865561c98173374f50eab19cda0">Task::Action</a>
@@ -345,6 +358,7 @@ $(function() {
 : <a class="el" href="classAttentiveConfigurator.html#a88fbd42d1c2d37bf721bc753f1b2da8a">AttentiveConfigurator</a>
 , <a class="el" href="classB2BConfigurator.html#a0b23d5ead15a36b6734434721b7c1a9a">B2BConfigurator</a>
 , <a class="el" href="classConfigurator.html#a0f3c294493e8a8ce303113e44b73cb71">Configurator</a>
+, <a class="el" href="classDiscreteConfigurator.html#ab77fe673c9be1721a94c73380829f25a">DiscreteConfigurator</a>
 </li>
 <li>makeRobotSensor()
 : <a class="el" href="classWorldBuilder.html#ac44e413b19044999e103396d4cca99c9">WorldBuilder</a>
@@ -462,9 +476,13 @@ $(function() {
 </li>
 <li>recycle_plan()
 : <a class="el" href="classAttentiveConfigurator.html#a4209d12894cf75b285fabfc529c39da0">AttentiveConfigurator</a>
+, <a class="el" href="classDiscreteConfigurator.html#a38f4f213dcf2d5b2f24fbd159eaf0bae">DiscreteConfigurator</a>
 </li>
 <li>register_tracker()
 : <a class="el" href="classConfigurator.html#a0d2faca841880c53b79d35e5184f41f0">Configurator</a>
+</li>
+<li>remainingSimulationTime()
+: <a class="el" href="classDiscreteConfigurator.html#a7b1f64732de8a69975b066190b2532b2">DiscreteConfigurator</a>
 </li>
 <li>removeExploredTransitions()
 : <a class="el" href="classAttentiveConfigurator.html#aaff9aa8999a177a8044fd95ec53b1a28">AttentiveConfigurator</a>
@@ -546,6 +564,7 @@ $(function() {
 </li>
 <li>transitionMatrix()
 : <a class="el" href="classAttentiveConfigurator.html#a7a03d7acc9c3b98d1281c0ecce40d6e3">AttentiveConfigurator</a>
+, <a class="el" href="classDiscreteConfigurator.html#a53efa6a7e9de13f7500c817e0645b70a">DiscreteConfigurator</a>
 </li>
 </ul>
 
