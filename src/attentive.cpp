@@ -862,9 +862,7 @@ VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher:
 			!m_plan.empty() && s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
 		return VertexMatch(StateMatcher::_TRUE, currentVertex);
 	}
-	else{
-		return AttentiveConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
-	}
+	return AttentiveConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
 }
 
 Disturbance DiscreteConfigurator::getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start){
@@ -892,9 +890,7 @@ VertexMatch DiscreteConfigurator::findMatch(State s, Direction dir, StateMatcher
 			 s.outcome==simResult::successful && iteration>1){ //if the state to be matched is the current one, return it
 		return VertexMatch(StateMatcher::_TRUE, currentVertex);
 	}
-	else{
-		return AttentiveConfigurator::findMatch(s, dir, StateMatcher::_TRUE, _sd, other_matches);
-	}
+	return AttentiveConfigurator::findMatch(s, dir, StateMatcher::_TRUE, _sd, other_matches);
 }
 
 void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src) {
