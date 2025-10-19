@@ -8,7 +8,7 @@ void Window::on_data_available(DataReader* reader){
         {
             if (info.valid_data)
             {   
-                unpacked.set_goal(object.goal_low_x()*scale, object.goal_low_y()*scale);
+                //unpacked.set_goal(object.goal_low_x()*scale, object.goal_low_y()*scale);
                 unpacked.set_attention_window(object.robot_high_x()*scale, object.robot_high_y()*scale, object.robot_low_x()*scale, object.robot_low_y()*scale);
                 update();
                 //plot->replot();
@@ -34,6 +34,7 @@ void Window::paintEvent(QPaintEvent *){
 
 Window::Window(){
     update();
+    
     subscriber.registerListener(this);
     setGeometry(m_geometry);
 }
