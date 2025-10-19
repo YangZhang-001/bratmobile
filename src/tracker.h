@@ -194,9 +194,6 @@ class ClosedLoop_Tracker:public Tracker{
      * @param goal the goal
      */
     void makeAttentionWindow(const Task &goal, const Task & currentTask);
-
-
-
-
-
+    
 };
+

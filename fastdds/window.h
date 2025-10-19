@@ -29,8 +29,8 @@ class Window : public QWidget, public DataReaderListener{
      */
     class UnpackedObject{
         QPoint m_goal;
-        QRect m_attentionWindow;
-        QRect m_Di;
+        QRect m_attentionWindow; //should be QPolygon
+        QRect m_Di; //idem
 
         public:
 

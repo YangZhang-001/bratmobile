@@ -177,3 +177,4 @@ void ClosedLoop_Tracker::makeAttentionWindow(const Task &goal, const Task & curr
     }
 
 }
+
