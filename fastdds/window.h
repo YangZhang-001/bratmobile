@@ -15,7 +15,7 @@ class Window : public QWidget, public DataReaderListener{
     
     QRect m_geometry=QRect(-300, -300, 600, 600); //size of Qtwindow in pixel (bl.x, bl.y, w, l)
     QRect logical_rect=QRect(-102, -102, 204, 204); //world coordinate window
-    ObjectPackageSubscriber subscriber;
+    std::vector<ObjectPackageSubscriber*> subscribers; //to one topic!
     const int scale=100;
     QPoint point=QPoint(0, 0);
     QRectF robot=QRectF(-0.18*scale, -0.09*scale, 0.135*2*scale, 0.09*2*scale);
@@ -28,40 +28,18 @@ class Window : public QWidget, public DataReaderListener{
      * 
      */
     class UnpackedObject{
-        QPoint m_goal;
-        QRect m_attentionWindow; //should be QPolygon
-        QRect m_Di; //idem
+        QPolygon m_object; //should be QPolygon
 
         public:
 
-        void set_goal(float x, float y){
-            m_goal.setX(x);
-            m_goal.setY(y);
+        void setObject(ObjectPackage object){
+            m_object.clear();
+            m_object<<QPointF(object.v1_x()* scale, object.v1_y()*scale)
+                    <<QPointF(object.v2_x()*scale, object.v2_y()*scale)
+                    <<QPointF(object.v3_x()*scale, object.v3_y()*scale)
+                    <<QPointF(object.v4_x()*scale, object.v4_y()*scale);
         }
 
-        QPoint goal(){
-            return m_goal;
-        }
-
-        /**
-         * @brief Sets attention window, assumed to always be an upright box
-         * 
-         */
-        void set_attention_window(float hx, float hy, float lx, float ly){
-            m_attentionWindow=QRect(QPoint(lx, hy), QPoint(hx, ly));
-        }
-
-        QRect attentionWindow(){
-            return m_attentionWindow;
-        }
-
-        void set_Di(float hx, float hy, float lx, float ly){
-            m_Di=QRect(QPoint(lx, hy), QPoint(hx, ly));
-        }
-
-        QRect Di(){
-            return m_Di;
-        }
     }unpacked;
 
     public:
@@ -70,6 +48,10 @@ class Window : public QWidget, public DataReaderListener{
 
     virtual void on_subscription_matched( DataReader*, const SubscriptionMatchedStatus& info);
     void on_data_available(DataReader* reader);
+
+    void registerSubscriber(ObjectPackageSubscriber* sub){
+        subscribers.push_back(&sub);
+    }
 
     /**
      * @brief starts subscriber acquisition from publisher

@@ -31,29 +31,17 @@ public:
     void timerEvent() {
 	ObjectPackage object;
     //robot init
-	object.robot_high_x(1);
-    object.robot_high_y(0.09);
-    object.robot_low_x(-0.135-0.045);
-    object.robot_low_y(-0.09);
-    //Di init (fake)
-    object.Di_high_x(0.45);
-    object.Di_high_y(-0.05);
-    object.Di_low_x(0.40);
-    object.Di_low_y(0.05);
-    //Di init (fake)
-    object.goal_high_x(1.01);
-    object.goal_high_y(0.01);
-    object.goal_low_x(1.00);
-    object.goal_low_y(0.0);
+	object.v1_x(1);
+    object.v1_y(0.09);
+    object.v2_x(-0.135-0.045);
+    object.v2_y(-0.09);
+    object.v3_x(1);
+    object.v3_y(-0.09);
+    object.v4_x(-0.135-0.045);
+    object.v4_y(0.09);
+
 	if (mypub.publish(object))
 	{
-        std::cout <<"Package with Robot ";
-        print_bounds(object.robot_low_x(), object.robot_low_y(), object.robot_high_x(), object.robot_high_y());
-        std::cout<<std::endl << "Di ";
-        print_bounds(object.Di_low_x(), object.Di_low_y(), object.Di_high_x(), object.Di_high_y());
-        std::cout<<std::endl << "goal ";
-        print_bounds(object.goal_low_x(), object.goal_low_y(), object.goal_high_x(), object.goal_high_y());
-	    std::cout << " SENT" << std::endl;
 	    samples_sent++;
 	} else {
 	    std::cout << "No messages sent as there is no listener." << std::endl;
