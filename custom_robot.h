@@ -73,7 +73,7 @@ virtual void step( AlphaBot &motors){
 		std::cout<<("no motor out interface");
 	}
     motors.setRightWheelSpeed(mio->get_R()); //temporary fix because motors on despacito are the wrong way around
-    motors.setLeftWheelSpeed(mio->get_L());
+    motors.setLeftWheelSpeed(mio->get_L()*1.15);
 	printf(",R=%f\tL=%f\n",mio->get_R(), mio->get_L());
 }
 };
@@ -127,7 +127,7 @@ class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
             L=0;
             R=0;
         }
-		motors.setLeftWheelSpeed(L);
+		motors.setLeftWheelSpeed(L*1.15);
         motors.setRightWheelSpeed(R);
     }
 };
