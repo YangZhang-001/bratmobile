@@ -912,6 +912,9 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 }
 
 bool DiscreteConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
+	if (v==MOVING_VERTEX){
+		return AttentiveConfigurator::closeVertex(closed, v);
+	}
 	closed.emplace(v);
 	return true;
 }
