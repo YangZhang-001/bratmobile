@@ -145,7 +145,7 @@ std::vector <Direction> getExploredDirections(vertexDescriptor v, const std::vec
 virtual void removeExploredTransitions(vertexDescriptor v);
 
 /**
-*Combines edges K and jump function: represents possible transitions out of a state
+*From Neural Comp paper: combines edges K with guard Psi
 *@param v the vertex to which transitions are being assigned
 *@param d state direction (redundant)
 *@param src source vertex of state
@@ -153,7 +153,7 @@ virtual void removeExploredTransitions(vertexDescriptor v);
 virtual void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src); 
 
 /**
- * @brief Sets permitted transitions out of a state
+ * @brief Sets permitted transitions out of a state, formally combines jump guard J and guard Psi
  * 
  * @param v0 vertex descriptor for source state
  * @param d direction of state (to be removed later)

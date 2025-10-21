@@ -874,9 +874,9 @@ Robot DiscreteConfigurator::makeRobot(b2World & world, const b2Transform & start
 }
 
 float DiscreteConfigurator::remainingSimulationTime(const Task *const t){
-    if (t && get_start(t)==b2Transform_zero && get_direction(t)==DEFAULT && iteration>1){
+    if (t && get_start(t)==b2Transform_zero && get_direction(t)==currentTask.get_direction() && iteration>1){
         b2Transform remainingTransform= transitionSystem[currentVertex].endPose;
-        return remainingTransform.p.Length()/t->getAction().getLinearSpeed();
+        return 	Controller::motor_step(t->getAction(), remainingTransform.p.Length())/MOTOR_CALLBACK;
     }
     else if (get_direction(t)==DEFAULT){
         return simulationStep/ t->getAction().getLinearSpeed();
@@ -928,7 +928,7 @@ void DiscreteConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_
 				if (moving_it!=closed.end()){
 					closed.erase(moving_it);
 					addToPriorityQueue(MOVING_VERTEX, priority_q, closed);
-					applyTransitionMatrix(MOVING_VERTEX, DEFAULT, false, MOVING_VERTEX, plan_prov);
+					applyTransitionMatrix(MOVING_VERTEX, transitionSystem[v].direction, false, MOVING_VERTEX, plan_prov);
 				}
 			}
 		}
