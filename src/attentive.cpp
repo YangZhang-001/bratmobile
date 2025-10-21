@@ -876,7 +876,7 @@ Robot DiscreteConfigurator::makeRobot(b2World & world, const b2Transform & start
 float DiscreteConfigurator::remainingSimulationTime(const Task *const t){
     if (t && get_start(t)==b2Transform_zero && get_direction(t)==currentTask.get_direction() && iteration>1){
         b2Transform remainingTransform= transitionSystem[currentVertex].endPose;
-        return 	Controller::motor_step(t->getAction(), remainingTransform.p.Length())/MOTOR_CALLBACK;
+        return 	Controller::motor_step(t->getAction(), remainingTransform.p.Length())*MOTOR_CALLBACK;
     }
     else if (get_direction(t)==DEFAULT){
         return simulationStep/ t->getAction().getLinearSpeed();
