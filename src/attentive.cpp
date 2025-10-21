@@ -918,7 +918,9 @@ bool DiscreteConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vert
 
 void DiscreteConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){
 	for (vertexDescriptor v:evaluation_q){
-		addToPriorityQueue(v, priority_q, closed);
+		if (!isTurning(transitionSystem[v].direction)){
+			addToPriorityQueue(v, priority_q, closed);
+		}
 	}
 	evaluation_q.clear();
 }

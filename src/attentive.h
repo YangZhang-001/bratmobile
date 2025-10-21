@@ -485,6 +485,9 @@ bool recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & t
 					return false;
 }
 
+// void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle)override;
+
+std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex());
 
 };
 #endif
