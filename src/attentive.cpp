@@ -748,7 +748,7 @@ bool AttentiveConfigurator::closeVertex(std::set<vertexDescriptor> & closed, ver
 	int MAX_OUT=3;
 	if (transitionSystem[v].isTurning()){MAX_OUT=2;}
 	std::vector<Direction> directions={UNDEFINED};
-	if (getExploredDirections(v, directions).size()>=MAX_OUT){
+	if (getExploredDirections(v, directions).size()>=MAX_OUT){ 
 		closed.emplace(v);
 		return true;
 	}
@@ -912,7 +912,7 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 	}
 }
 
-bool DiscreteConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
-	closed.emplace(v);
-	return true;
-}
+// bool DiscreteConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
+// 	closed.emplace(v);
+// 	return true;
+// }

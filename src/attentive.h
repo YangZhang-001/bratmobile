@@ -471,10 +471,10 @@ StateMatcher::MATCH_TYPE desiredMatch() override {
  */
 void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src) override;
 
-/**
- * @brief Just adds to closed set
- */
-bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v)override;
+// /**
+//  * @brief Just adds to closed set
+//  */
+// bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v)override;
 
 /**
  * @brief Does not recycle
