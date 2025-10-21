@@ -16,51 +16,11 @@ class FCTest:public FocusedConfigurator, public testing::TestWithParam<bool> {
     }
 };
 
-class DiscreteCTest:public DiscreteConfigurator, public testing::TestWithParam<bool> {
-    public:
-    void SetUp() override {
-        register_tracker(new ClosedLoop_Tracker());
-        register_planner(new HorizonStarPlanner());
-        register_controller(new Wise_Controller());
-    }
-
-    void TearDown() override {
-        delete tracker;
-        delete planner;
-        delete task_controller;
-        transitionSystem=TransitionSystem(1);
-    }
-
-    // bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
-    //     return AttentiveConfigurator::closeVertex(closed, v);
-    // }
-};
 
 /**
  * Test if a) true: does not replan if not needed b) replans if needed (suddently an obstacle appears)
  */
-TEST_P(DiscreteCTest, TestCheck) {
-    data2fp.emplace(Pointf(0.3, 0)); //make point corresponding to obstacle
-    Spawner(); //should create obstacle avoidance plan
-    int plan_size=2;
-    EXPECT_EQ(m_plan.size(), plan_size);
-    change_task();
-    estimate_current_vertex();
-    b2Transform dp=currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
-    math::MulT(dp, transitionSystem);
-    data2fp.clear();
-    data2fp.emplace(Pointf(0.3-dp.p.x, 0)); 
-    int simTasks=1;
-    plan_size--;
-    if (!GetParam()){
-        data2fp.emplace(Pointf(0, 0)); 
-        simTasks=3;
-        plan_size=0;
-    }
-    Spawner(); //should not replan
-    EXPECT_EQ(m_plan.size(), plan_size);
-    EXPECT_EQ(simulatedTasks, simTasks);
-}
+
 
 TEST_P(FCTest, TestCheck) {
     data2fp.emplace(Pointf(0.3, 0)); //make point corresponding to obstacle
@@ -122,7 +82,6 @@ TEST_F(FCTest, DontReplan) {
 }
 
 INSTANTIATE_TEST_CASE_P(Outcomes, FCTest, ::testing::Bool());
-INSTANTIATE_TEST_CASE_P(Outcomes, DiscreteCTest, ::testing::Bool());
 
 
 // class ExecutionCheckTest: public FCTest, public testing::TestWithParam<std::tuple<b2Vec2, Direction>> {

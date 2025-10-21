@@ -131,11 +131,11 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					}
 				}
 				else{
-					edge= add_vertex_now(v0, v1,sk.first.Di, sk.second); //addVertex
+					edge= add_vertex_now(v0, v1,sk.first.Di, sk.second);
 					abandonPlan(plan_prov, v0, v1);
 					shift=b2Transform_zero;
 				}
-				if(edge.second){
+				if(edge.second){ //edge was added
 					gt::set(edge.first, sk, g, v1==currentVertex, iteration);
 					//adjustProbability(edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
 				}
@@ -243,7 +243,6 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 		}
 	}
 	evaluation_q.clear();
-
 }
 
 void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
@@ -912,7 +911,14 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 	}
 }
 
-// bool DiscreteConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
-// 	closed.emplace(v);
-// 	return true;
-// }
+bool DiscreteConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
+	closed.emplace(v);
+	return true;
+}
+
+void DiscreteConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){
+	for (vertexDescriptor v:evaluation_q){
+		addToPriorityQueue(v, priority_q, closed);
+	}
+	evaluation_q.clear();
+}
