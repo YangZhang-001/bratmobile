@@ -921,14 +921,15 @@ void DiscreteConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_
 		if (!isTurning(transitionSystem[v].direction)){
 			addToPriorityQueue(v, priority_q, closed);
 		}
-	}
-	auto likelyEdge=gt::getMostLikely(transitionSystem, inEdges(v), iteration);
-	if (likelyEdge.first){
-		if (likelyEdge.second.m_source==MOVING_VERTEX && transitionSystem[v].direction==currentTask.get_direction() && transitionSystem[v].outcome==simResult::crashed){
-			auto moving_it=std::find(closed.begin(), closed.end(), MOVING_VERTEX);
-			if (moving_it!=closed.end()){
-				closed.erase(moving_it);
-				addToPriorityQueue(MOVING_VERTEX, priority_q, closed);
+		auto likelyEdge=gt::getMostLikely(transitionSystem, inEdges(v), iteration);
+		if (likelyEdge.first){
+			if (likelyEdge.second.m_source==MOVING_VERTEX && transitionSystem[v].direction==currentTask.get_direction() && transitionSystem[v].outcome==simResult::crashed){
+				auto moving_it=std::find(closed.begin(), closed.end(), MOVING_VERTEX);
+				if (moving_it!=closed.end()){
+					closed.erase(moving_it);
+					addToPriorityQueue(MOVING_VERTEX, priority_q, closed);
+					applyTransitionMatrix(MOVING_VERTEX, DEFAULT, false, MOVING_VERTEX, plan_prov);
+				}
 			}
 		}
 	}
