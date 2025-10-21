@@ -912,9 +912,6 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 }
 
 bool DiscreteConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
-	if (v==MOVING_VERTEX){
-		return AttentiveConfigurator::closeVertex(closed, v);
-	}
 	closed.emplace(v);
 	return true;
 }
@@ -923,6 +920,16 @@ void DiscreteConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_
 	for (vertexDescriptor v:evaluation_q){
 		if (!isTurning(transitionSystem[v].direction)){
 			addToPriorityQueue(v, priority_q, closed);
+		}
+		auto likelyEdge=gt::getMostLikely(transitionSystem, inEdges(split_v), iteration);
+		if (likelyEdge.first){
+			if (likelyEdge.second.m_source==MOVING_VERTEX && transitionSystem[v].direction==currentTask.get_direction() && transitionSystem[v].outcome==simResult::crashed){
+				auto moving_it=std::find(closed.begin(), closed.end(), MOVING_VERTEX);
+				if (moving_it!=closed.end()){
+					closed.erase(moving_it);
+					addToPriorityQueue(MOVING_VERTEX, priority_q, closed);
+				}
+			}
 		}
 	}
 	evaluation_q.clear();
