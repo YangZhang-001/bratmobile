@@ -71,18 +71,23 @@ For Qt/FastDDS setup, see readme in `src/fastdds`
 ## Build
 ```
 cd bratmobile
-cmake .  #if you want to build the fastdds directory use option -D BUILD_FASTDDS=ON
+cmake .  
 make
 sudo make install
 ```
 
 ## Run
 ### Navigation demo (Raspberry Pi)
-* `sudo ./targetless` : this program demonstrates planning over a 1m distance horizon for a control goal that is not a target location but rather an objective to drive straight for the longest time with the least amount of disturbances
-* `sudo ./target`: this program (under construction) demonstrates target seeking behaviour, where the target is imaginary and located at x=1.0m, y=0m.
-Run with options `0 [custom-stepDistance]`: for turning debug options off. In debug mode, LIDAR coordinates, Box2D objects and robot trajectories are dumped into the `/tmp` folder. The stepDistance is the maximum distance covered by a single task, 1.0m by default.
+Demo prefixes:
 
-WARNING! Real-world execution not yet fully debugged so navigation may be unsafe
+* `brat1*` : Multi-step planning without any state processing: the robot simply looks ahead and finds the best Task sequence, entirely disturbance-driven
+* `brat2*` : Multi-step planning with fixed discretisation of Tasks with DEFAULT actions
+* `brat3` : Multi-step planning with fixed-size state split (of states ending in collision) and attention window to guide optimal obstacle avoidance when a goal is present
+
+Demos:
+
+* `sudo ./*targetless` : these programs demonstrates planning over a 1m distance horizon for a control goal that is not a target location but rather an objective to drive straight for the longest time with the least amount of disturbances
+* `sudo ./*target`: these program demonstrates target seeking behaviour, where the target is imaginary and located at x=1.0m, y=0m.
 
 ### Unit tests 
 `ctest`
