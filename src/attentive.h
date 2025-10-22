@@ -496,6 +496,7 @@ std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescripto
 
 bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<bool, edgeDescriptor> ve)override;
 
-
 };
+
+
 #endif

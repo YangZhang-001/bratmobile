@@ -1,0 +1,54 @@
+#include "custom_robot.h"
+
+class NoGoal:public GoalChanger{
+
+	Task change_goal(const Task & task){
+		return Task();
+	}
+
+};
+
+class CLTracker: public ClosedLoop_Tracker, public MotorCallback, public Motor_Out{
+	public:
+	CLTracker():MotorCallback(this){}
+};
+
+int main(int argc, char** argv) {
+	A1Lidar lidar;
+	AlphaBot motors;
+	LIDAR_In configuratorInterface;
+	//Motor_Out controlInterface;
+    FocusedConfigurator configurator;
+	LaserFocus wb;
+	configurator.register_worldBuilder(&wb);
+	NoGoal goalChanger;
+	configurator.register_goalChanger(&goalChanger);
+	HorizonStarPlanner planner;
+	OpenLooper tracker;
+	configurator.register_planner(&planner);
+	configurator.register_tracker(&tracker);
+	OpenLoopController wc;
+	configurator.register_controller(&wc);
+	Logger logger( "brat4-targetless", "/tmp");
+	configurator.register_logger(&logger);
+	configurator.setSimulationStep(BOX2DRANGE);
+	LidarInterface dataInterface(&configuratorInterface);
+	configurator.registerInterface(&configuratorInterface, &tracker);
+	lidar.registerInterface(&dataInterface);
+	motors.registerStepCallback(&tracker);
+	printf("all registered\n");
+	configurator.start();
+	lidar.start();
+	motors.start();
+	getchar();
+	motors.stop();
+	configurator.stop();
+	lidar.stop();
+	logger.~Logger();
+}
+	
+	
+
+	
+
+	
