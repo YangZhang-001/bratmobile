@@ -897,8 +897,8 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
 	srand(unsigned(time(NULL)));
 	auto oe=gt::outEdges(transitionSystem, v, d);
-	//bool executingThisTask= currentTask.get_change();
-	if (!isTurning(d) &&currentTask.get_change() && temp.getAction().getOmega()==0 && transitionSystem[v].outcome==simResult::successful){
+	//bool notChangingDummy= currentTask.get_change();
+	if (!isTurning(d) &&!currentTask.get_change() && temp.getAction().getOmega()==0 && transitionSystem[v].outcome==simResult::successful){
 		int random= rand();
 		if (random%2==0){
 			transitionSystem[v].options.push_back(LEFT);// = {DEFAULT, LEFT, RIGHT};
@@ -939,16 +939,16 @@ void DiscreteConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_
 
 std::vector<Direction> DiscreteConfigurator::partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve){
 	std::vector <Direction> result=AttentiveConfigurator::partiallyExplorativeOptions(ve);
-	if (ve.first){
-		if (!transitionSystem[ve.second.m_target].visited() && transitionSystem[ve.second.m_source].outcome!=simResult::crashed){
-			if (!isTurning(transitionSystem[ve.second.m_target].direction)){
-			result={DEFAULT, LEFT, RIGHT};
-			}
-			else{
-				result={DEFAULT, transitionSystem[ve.second.m_target].direction};
-			}
-		}
-	}
+	// if (ve.first){
+	// 	if (!transitionSystem[ve.second.m_target].visited() && transitionSystem[ve.second.m_source].outcome!=simResult::crashed){
+	// 		if (!isTurning(transitionSystem[ve.second.m_target].direction)){
+	// 		result={DEFAULT, LEFT, RIGHT};
+	// 		}
+	// 		else{
+	// 			result={DEFAULT, transitionSystem[ve.second.m_target].direction};
+	// 		}
+	// 	}
+	// }
 	return result;
 
 }
