@@ -293,6 +293,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	auto oe=gt::outEdges(transitionSystem, v, d);
 	if (( !currentTask.get_change() ||!oe.empty()) && (iteration>1)){
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
+		ve.second.m_source=v;
 		transitionSystem[v].options=partiallyExplorativeOptions(ve);
 	}
 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
@@ -938,16 +939,16 @@ void DiscreteConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_
 
 std::vector<Direction> DiscreteConfigurator::partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve){
 	std::vector <Direction> result=AttentiveConfigurator::partiallyExplorativeOptions(ve);
-	if (ve.first){
-		if (!transitionSystem[ve.second.m_target].visited() && transitionSystem[ve.second.m_source].outcome!=simResult::crashed){
+	// if (ve.first){
+	// 	if (!transitionSystem[ve.second.m_target].visited() && transitionSystem[ve.second.m_source].outcome!=simResult::crashed){
 			if (!isTurning(transitionSystem[ve.second.m_target].direction)){
 			result={DEFAULT, LEFT, RIGHT};
 			}
 			else{
 				result={DEFAULT, transitionSystem[ve.second.m_target].direction};
 			}
-		}
-	}
+	// 	}
+	// }
 	return result;
 
 }
