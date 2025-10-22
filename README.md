@@ -82,7 +82,7 @@ Demo prefixes:
 
 * `brat1*` : Multi-step planning without any state processing: the robot simply looks ahead and finds the best Task sequence, entirely disturbance-driven
 * `brat2*` : Multi-step planning with fixed discretisation of Tasks with DEFAULT actions
-* `brat3` : Multi-step planning with fixed-size state split (of states ending in collision) and attention window to guide optimal obstacle avoidance when a goal is present
+* `brat3*` : Multi-step planning with fixed-size state split (of states ending in collision) and attention window to guide optimal obstacle avoidance when a goal is present
 
 Demos:
 
