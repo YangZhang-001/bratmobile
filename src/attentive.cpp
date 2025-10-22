@@ -293,7 +293,6 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	auto oe=gt::outEdges(transitionSystem, v, d);
 	if (( !currentTask.get_change() ||!oe.empty()) && (iteration>1)){
 		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
-		ve.second.m_source=v;
 		transitionSystem[v].options=partiallyExplorativeOptions(ve);
 	}
 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
@@ -899,7 +898,11 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 	srand(unsigned(time(NULL)));
 	auto oe=gt::outEdges(transitionSystem, v, d);
 	bool executingThisTask=( !currentTask.get_change() ||!oe.empty()) && (iteration>1);
-	if (!isTurning(d) &&!executingThisTask && temp.getAction().getOmega()==0 && transitionSystem[v].outcome==simResult::successful){
+	if (( !currentTask.get_change()) && (iteration>1)){
+		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
+		transitionSystem[v].options=partiallyExplorativeOptions(ve);
+	}
+	else if (!isTurning(d) &&!executingThisTask && temp.getAction().getOmega()==0 && transitionSystem[v].outcome==simResult::successful){
 		int random= rand();
 		if (random%2==0){
 			transitionSystem[v].options.push_back(LEFT);// = {DEFAULT, LEFT, RIGHT};
@@ -910,6 +913,7 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 			transitionSystem[v].options.push_back(LEFT);// = {DEFAULT, LEFT, RIGHT};
 		}	
 	}
+	
 }
 
 bool DiscreteConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
@@ -939,16 +943,16 @@ void DiscreteConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_
 
 std::vector<Direction> DiscreteConfigurator::partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve){
 	std::vector <Direction> result=AttentiveConfigurator::partiallyExplorativeOptions(ve);
-	// if (ve.first){
-	// 	if (!transitionSystem[ve.second.m_target].visited() && transitionSystem[ve.second.m_source].outcome!=simResult::crashed){
+	if (ve.first){
+		if (!transitionSystem[ve.second.m_target].visited() && transitionSystem[ve.second.m_source].outcome!=simResult::crashed){
 			if (!isTurning(transitionSystem[ve.second.m_target].direction)){
 			result={DEFAULT, LEFT, RIGHT};
 			}
 			else{
 				result={DEFAULT, transitionSystem[ve.second.m_target].direction};
 			}
-	// 	}
-	// }
+		}
+	}
 	return result;
 
 }
