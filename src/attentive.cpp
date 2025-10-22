@@ -292,7 +292,7 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	srand(unsigned(time(NULL)));
 	auto oe=gt::outEdges(transitionSystem, v, d);
 	std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
-	if (( !currentTask.get_change() ||!oe.empty()) && (iteration>1) && ve.first){
+	if (shouldPartiallyExplore(oe, ve)){
 		transitionSystem[v].options=partiallyExplorativeOptions(ve);
 	}
 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
@@ -810,9 +810,11 @@ std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::p
 	std::vector <Direction> result;
 	if (ve.first){
 		if(transitionSystem[ve.second.m_target].visited()){
+			//only simulate current task
 			if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
 				return {currentTask.get_direction()};
 			}
+			//preferred task fails: plan evasion maneuvre
 			else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
 			result={DEFAULT, LEFT, RIGHT};
 			erase_from_vector(result, currentTask.get_direction());
@@ -848,6 +850,9 @@ void AttentiveConfigurator::enforce_edge(){
 	auto edge=gt::add_edge(MOVING_VERTEX, m_plan[0], transitionSystem, iteration);
 }
 
+bool AttentiveConfigurator::shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<bool, edgeDescriptor> ve){
+	return ( !currentTask.get_change() ||!oe.empty()) && iteration>1;
+}
 
 void FocusedConfigurator::removeExploredTransitions(vertexDescriptor v){
 	AttentiveConfigurator::removeExploredTransitions(v);
@@ -898,10 +903,11 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 	srand(unsigned(time(NULL)));
 	auto oe=gt::outEdges(transitionSystem, v, d);
 	bool executingThisTask=( !currentTask.get_change()|| !oe.empty()) && (iteration>1) && transitionSystem[v].options.size()>1;
+	//add left/right transitions by default to straight tasks
 	if (!isTurning(d) &&!executingThisTask && temp.getAction().getOmega()==0 && transitionSystem[v].outcome==simResult::successful){
 		int random= rand();
 		if (random%2==0){
-			transitionSystem[v].options.push_back(LEFT);// = {DEFAULT, LEFT, RIGHT};
+			transitionSystem[v].options.push_back(LEFT);
 			transitionSystem[v].options.push_back(RIGHT);
 		}
 		else{
@@ -909,6 +915,12 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 			transitionSystem[v].options.push_back(LEFT);// = {DEFAULT, LEFT, RIGHT};
 		}	
 	}
+	//allow for tasks which have been encountered before and have oe nonempty but not visited
+	//to explore driving in DEFAULT ahead (prevented in AttentiveConfigurator::transitionMatrix)
+	// if (std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
+	// 		executingThisTask && !ve.first){
+	// 			transitionSystem[v].options.emplace(transitionSystem[v].options.begin(), DEFAULT);
+	// 		}
 	
 }
 
@@ -950,5 +962,8 @@ std::vector<Direction> DiscreteConfigurator::partiallyExplorativeOptions(std::pa
 		}
 	}
 	return result;
+}
 
+bool AttentiveConfigurator::shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<bool, edgeDescriptor> ve){
+	return ( !currentTask.get_change() ||!oe.empty()) && iteration>1 && ve.first;
 }

@@ -398,6 +398,11 @@ virtual StateMatcher::MATCH_TYPE desiredMatch() {
  */
 void enforce_edge();
 
+/**
+ * @brief Psi guard: should only current task be simulated?
+ */
+virtual bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<bool, edgeDescriptor> ve);
+
 public:
 
 AttentiveConfigurator(){};
@@ -488,6 +493,8 @@ bool recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & t
 void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle)override;
 
 std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve)override;
+
+bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<bool, edgeDescriptor> ve)override;
 
 
 };
