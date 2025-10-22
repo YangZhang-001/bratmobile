@@ -964,6 +964,6 @@ std::vector<Direction> DiscreteConfigurator::partiallyExplorativeOptions(std::pa
 	return result;
 }
 
-bool AttentiveConfigurator::shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<bool, edgeDescriptor> ve){
+bool DiscreteConfigurator::shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<bool, edgeDescriptor> ve){
 	return ( !currentTask.get_change() ||!oe.empty()) && iteration>1 && ve.first;
 }

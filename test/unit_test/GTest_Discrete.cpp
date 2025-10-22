@@ -64,7 +64,7 @@ TEST_F(DiscreteCTest, Replan) {
     b2Transform dp=currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
     update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(), dp));
     data2fp.emplace(Pointf(0.3, 0)); 
-    int simTasks=5;
+    int simTasks=15;
     plan_size++;
     Spawner(); //should replan
     EXPECT_EQ(m_plan.size(), plan_size);
