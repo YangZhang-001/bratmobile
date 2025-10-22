@@ -291,8 +291,8 @@ void AttentiveConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ve
 	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
 	srand(unsigned(time(NULL)));
 	auto oe=gt::outEdges(transitionSystem, v, d);
-	if (( !currentTask.get_change() ||!oe.empty()) && (iteration>1)){
-		std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
+	std::pair<bool, edgeDescriptor> ve=gt::visitedEdge(oe, transitionSystem, currentVertex);
+	if (( !currentTask.get_change() ||!oe.empty()) && (iteration>1) && ve.first){
 		transitionSystem[v].options=partiallyExplorativeOptions(ve);
 	}
 	else if (transitionSystem[v].outcome == simResult::safeForNow){ //accounts for simulation also being safe for now
