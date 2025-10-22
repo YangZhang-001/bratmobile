@@ -897,7 +897,7 @@ void DiscreteConfigurator::transitionMatrix(vertexDescriptor v, Direction d, ver
 	Task temp(controlGoal.get_disturbance(), DEFAULT, transitionSystem[v].endPose); //reflex to disturbance
 	srand(unsigned(time(NULL)));
 	auto oe=gt::outEdges(transitionSystem, v, d);
-	bool executingThisTask=( !currentTask.get_change()) && (iteration>1);
+	bool executingThisTask=( !currentTask.get_change()&& oe.empty()) && (iteration>1);
 	if (!isTurning(d) &&!executingThisTask && temp.getAction().getOmega()==0 && transitionSystem[v].outcome==simResult::successful){
 		int random= rand();
 		if (random%2==0){
