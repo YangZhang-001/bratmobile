@@ -55,6 +55,7 @@ class DiscreteCTest:public DiscreteConfigurator, public testing::TestWithParam<b
 };
 
 TEST_F(DiscreteCTest, Replan) {
+    setSimulationStep(.5);
     Spawner(); //should create obstacle avoidance plan
     int plan_size=2;
     EXPECT_EQ(m_plan.size(), plan_size);

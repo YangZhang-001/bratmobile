@@ -809,15 +809,15 @@ void AttentiveConfigurator::abandonPlan(std::vector<vertexDescriptor>& planProv,
 std::vector<Direction> AttentiveConfigurator::partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve){
 	std::vector <Direction> result;
 	if (ve.first){
-	if(transitionSystem[ve.second.m_target].visited()){
-		if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
-			return {currentTask.get_direction()};
-		}
-		else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
-		result={DEFAULT, LEFT, RIGHT};
-		erase_from_vector(result, currentTask.get_direction());
-		return result;
-		}
+		if(transitionSystem[ve.second.m_target].visited()){
+			if (transitionSystem[ve.second.m_target].outcome!=simResult::crashed){
+				return {currentTask.get_direction()};
+			}
+			else if (transitionSystem[ve.second.m_target].outcome==simResult::crashed){
+			result={DEFAULT, LEFT, RIGHT};
+			erase_from_vector(result, currentTask.get_direction());
+			return result;
+			}
 	}
 }
 return result;
@@ -934,4 +934,20 @@ void DiscreteConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_
 		}
 	}
 	evaluation_q.clear();
+}
+
+std::vector<Direction> DiscreteConfigurator::partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve){
+	std::vector <Direction> result=AttentiveConfigurator::partiallyExplorativeOptions(ve);
+	if (ve.first){
+		if (!transitionSystem[ve.second.m_target].visited() && transitionSystem[ve.second.m_source].outcome!=simResult::crashed){
+			if (!isTurning(transitionSystem[ve.second.m_target].direction)){
+			result={DEFAULT, LEFT, RIGHT};
+			}
+			else{
+				result={DEFAULT, transitionSystem[ve.second.m_target].direction};
+			}
+		}
+	}
+	return result;
+
 }
