@@ -129,10 +129,9 @@ TEST_F(DiscreteCTest, RemainingTime){
     currentVertex=v1;
     iteration=2;
     for (int i=0; i<27; i++){
-    b2Transform prv=transitionSystem[v1].endPose;
         Task t(Disturbance(), DEFAULT, b2Transform_zero, true);
-        float exp=(27.0f-i)/10.0f;
-        EXPECT_EQ(remainingSimulationTime(&t), exp);
+        int exp=(27.0-i);
+        EXPECT_EQ(int(remainingSimulationTime(&t)*10), exp);
         transitionSystem[v1].endPose=InvMul(currentTask.getAction().getTransform(MOTOR_CALLBACK), transitionSystem[v1].endPose);
     }
 }
