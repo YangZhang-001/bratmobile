@@ -504,7 +504,7 @@ void removeExploredTransitions(vertexDescriptor v)override;
  * @brief Plans by simply looking ahead at the possible Tasks and choosing the best sequence.
  * Does not process states, e.g. with split
  */
-class SimplestConfigurator: public AttentiveConfigurator{
+class SimplestConfigurator: public FocusedConfigurator{
 	int simulationStep=BOX2DRANGE;
 
 	Robot makeRobot(b2World & world, const b2Transform & start){
