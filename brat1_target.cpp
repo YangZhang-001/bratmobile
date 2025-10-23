@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 	configurator.register_tracker(&tracker);
 	OpenLoopController wc;
 	configurator.register_controller(&wc);
-	Logger logger( "brat4-target", "/tmp");
+	Logger logger( "brat1-target", "/tmp");
 	configurator.register_logger(&logger);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &tracker);
