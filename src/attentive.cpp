@@ -856,7 +856,7 @@ bool AttentiveConfigurator::shouldPartiallyExplore(const std::vector<edgeDescrip
 
 void FocusedConfigurator::removeExploredTransitions(vertexDescriptor v){
 	AttentiveConfigurator::removeExploredTransitions(v);
-	if (v==currentVertex && !m_plan.empty()){
+	if (v==currentVertex && (!m_plan.empty()!currentTask.is_over())){
 		transitionSystem[v].options.clear();
 	}
 }
@@ -970,7 +970,7 @@ bool DiscreteConfigurator::shouldPartiallyExplore(const std::vector<edgeDescript
 
 void DiscreteConfigurator::removeExploredTransitions(vertexDescriptor v){
 	AttentiveConfigurator::removeExploredTransitions(v);
-	if (v==currentVertex && !m_plan.empty()){
+	if (v==currentVertex && (!m_plan.empty()|| !currentTask.is_over())){
 		transitionSystem[v].options.clear();
 	}
 }
