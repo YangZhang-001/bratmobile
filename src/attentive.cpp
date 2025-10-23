@@ -967,3 +967,10 @@ std::vector<Direction> DiscreteConfigurator::partiallyExplorativeOptions(std::pa
 bool DiscreteConfigurator::shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<bool, edgeDescriptor> ve){
 	return ( !currentTask.get_change() ||!oe.empty()) && iteration>1 && ve.first;
 }
+
+void DiscreteConfigurator::removeExploredTransitions(vertexDescriptor v){
+	AttentiveConfigurator::removeExploredTransitions(v);
+	if (v==currentVertex && !m_plan.empty()){
+		transitionSystem[v].options.clear();
+	}
+}

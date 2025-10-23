@@ -96,5 +96,46 @@ TEST_P(DiscreteCTest, TestCheck) {
     EXPECT_EQ(simulatedTasks, simTasks);
 }
 
+
+TEST_F(DiscreteCTest, DontReplan) {
+    data2fp.emplace(Pointf(0.5, 0)); //make point corresponding to obstacle
+    Spawner(); //should create obstacle avoidance plan
+    transitionSystem[2].outcome=simResult::safeForNow;
+    m_plan={2};
+    int plan_size=1, simTasks=1;
+    EXPECT_EQ(m_plan.size(), plan_size);
+    change_task();
+    estimate_current_vertex();
+    b2Transform dp=currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
+    update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(), dp));
+    Spawner(); //shouldNT replan
+    plan_size--;
+    EXPECT_EQ(m_plan.size(), plan_size);
+    EXPECT_EQ(simulatedTasks, simTasks); 
+    EXPECT_FALSE(currentTask.is_over());
+}
+/**
+ * @brief checks that simulation time is calculated correctly for current DEFAULT task
+ */
+TEST_F(DiscreteCTest, RemainingTime){
+    dummy_vertex(MOVING_VERTEX);
+    vertexDescriptor v1;
+    transitionSystem[DUMMY].options.push_back(DEFAULT);
+    addVertex(DUMMY, v1);
+    transitionSystem[v1].endPose.p.x=.27;
+    //b2Transform prv=transitionSystem[v1].endPose;
+    m_plan={v1};
+    change_task();
+    currentVertex=v1;
+    iteration=2;
+    for (int i=0; i<27; i++){
+    b2Transform prv=transitionSystem[v1].endPose;
+        Task t(Disturbance(), DEFAULT, b2Transform_zero, true);
+        float exp=(27.0f-i)/10.0f;
+        EXPECT_EQ(remainingSimulationTime(&t), exp);
+        transitionSystem[v1].endPose=InvMul(currentTask.getAction().getTransform(MOTOR_CALLBACK), transitionSystem[v1].endPose);
+    }
+}
+
 INSTANTIATE_TEST_CASE_P(Outcomes, DiscreteCTest, ::testing::Bool());
 

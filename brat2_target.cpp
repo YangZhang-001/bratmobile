@@ -1,7 +1,7 @@
 #include "custom_robot.h"
 
 int main(int argc, char** argv) {
-	std::cout<<"Navigating to Target with Brat4"<<std::endl;
+	std::cout<<"Navigating to Target with Brat2"<<std::endl;
 	A1Lidar lidar;
 	AlphaBot motors;
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
