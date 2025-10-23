@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 	AlphaBot motors;
 	LIDAR_In configuratorInterface;
 	//Motor_Out controlInterface;
-    FocusedConfigurator configurator;
+    SimplestConfigurator configurator;
 	LaserFocus wb;
 	configurator.register_worldBuilder(&wb);
 	NoGoal goalChanger;
@@ -31,7 +31,6 @@ int main(int argc, char** argv) {
 	configurator.register_controller(&wc);
 	Logger logger( "brat4-targetless", "/tmp");
 	configurator.register_logger(&logger);
-	configurator.setSimulationStep(BOX2DRANGE);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &tracker);
 	lidar.registerInterface(&dataInterface);

@@ -7,8 +7,7 @@ int main(int argc, char** argv) {
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
-    FocusedConfigurator configurator;
-	configurator.setSimulationStep(BOX2DRANGE);
+    SimplestConfigurator configurator;
 	configurator.init(controlGoal);
 	LaserFocus wb;
 	configurator.register_worldBuilder(&wb);
@@ -20,7 +19,6 @@ int main(int argc, char** argv) {
 	configurator.register_controller(&wc);
 	Logger logger( "brat4-target", "/tmp");
 	configurator.register_logger(&logger);
-	configurator.setSimulationStep(.27);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &tracker);
 	lidar.registerInterface(&dataInterface);

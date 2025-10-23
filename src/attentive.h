@@ -498,5 +498,19 @@ bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<boo
 
 };
 
+/**
+ * @brief Plans by simply looking ahead at the possible Tasks and choosing the best sequence.
+ * Does not process states, e.g. with split
+ */
+class SimplestConfigurator: public AttentiveConfigurator{
+	int simulationStep=BOX2DRANGE;
 
+	Robot makeRobot(b2World & world, const b2Transform & start){
+		return Configurator::makeRobot(world, start);
+	}
+
+	Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start){
+    	return g[v].Dn;
+	}
+};
 #endif

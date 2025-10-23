@@ -25,6 +25,8 @@ The purpose of this library is to showcase a framework for multi-step ahead plan
 
 * Adaptive thresholding of acceptable noise in state observations
 
+* GUI for custom goal setting
+
 ### Documentation
 
 Available at [https://glafratta.github.io/bratmobile/](https://glafratta.github.io/bratmobile/)
