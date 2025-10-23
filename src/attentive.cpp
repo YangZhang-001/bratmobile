@@ -134,6 +134,9 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					edge= add_vertex_now(v0, v1,sk.first.Di, sk.second);
 					abandonPlan(plan_prov, v0, v1);
 					shift=b2Transform_zero;
+					if (iteration>1){
+						printf("abandoned! outcome is crashed=%i\n", sk.first.outcome==simResult::crashed);
+					}
 				}
 				if(edge.second){ //edge was added
 					gt::set(edge.first, sk, g, v1==currentVertex, iteration);
