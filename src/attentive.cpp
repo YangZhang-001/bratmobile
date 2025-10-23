@@ -136,6 +136,9 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					shift=b2Transform_zero;
 					if (iteration>1){
 						printf("abandoned! outcome is crashed=%i\n", sk.first.outcome==simResult::crashed);
+						if(sk.first.outcome==simResult::crashed){
+							debug::print_pose(sk.first.Dn.bf.pose, "crash site");
+						}
 					}
 				}
 				if(edge.second){ //edge was added
