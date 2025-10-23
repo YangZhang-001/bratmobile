@@ -1,7 +1,7 @@
 #include "custom_robot.h"
 
 int main(int argc, char** argv) {
-	std::cout<<"Navigating to Target with Brat2"<<std::endl;
+	std::cout<<"Navigating to Target with Brat4"<<std::endl;
 	A1Lidar lidar;
 	AlphaBot motors;
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
@@ -10,7 +10,8 @@ int main(int argc, char** argv) {
 	//Motor_Out controlInterface;
     DiscreteConfigurator configurator;
 	configurator.init(controlGoal);
-	configurator.register_worldBuilder(new LaserFocus());
+	LaserFocus wb;
+	configurator.register_worldBuilder(&wb);
 	HorizonStarPlanner planner;
 	OpenLooper tracker;
 	configurator.register_planner(&planner);
