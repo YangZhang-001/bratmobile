@@ -84,6 +84,7 @@ Work in progress</h2>
 <li>Closed-loop <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> execution with goal-directed behaviour (driving towards target)</li>
 <li>Debugging full plan checking and recycling (real-world settings, see issues)</li>
 <li>Adaptive thresholding of acceptable noise in state observations</li>
+<li>GUI for custom goal setting</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md2"></a>
 Documentation</h3>
@@ -128,18 +129,24 @@ Clone</h2>
 <h2><a class="anchor" id="autotoc_md9"></a>
 Build</h2>
 <div class="fragment"><div class="line">cd bratmobile</div>
-<div class="line">cmake .  #if you want to build the fastdds directory use option -D BUILD_FASTDDS=ON</div>
+<div class="line">cmake .  </div>
 <div class="line">make</div>
 <div class="line">sudo make install</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
 Run</h2>
 <h3><a class="anchor" id="autotoc_md11"></a>
 Navigation demo (Raspberry Pi)</h3>
+<p>Demo prefixes:</p>
 <ul>
-<li><code>sudo ./targetless</code> : this program demonstrates planning over a 1m distance horizon for a control goal that is not a target location but rather an objective to drive straight for the longest time with the least amount of disturbances</li>
-<li><code>sudo ./target</code>: this program (under construction) demonstrates target seeking behaviour, where the target is imaginary and located at x=1.0m, y=0m. Run with options <code>0 [custom-stepDistance]</code>: for turning debug options off. In debug mode, LIDAR coordinates, Box2D objects and robot trajectories are dumped into the <code>/tmp</code> folder. The stepDistance is the maximum distance covered by a single task, 1.0m by default.</li>
+<li><code>brat1*</code> : Multi-step planning without any state processing: the robot simply looks ahead and finds the best <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> sequence, entirely disturbance-driven</li>
+<li><code>brat2*</code> : Multi-step planning with fixed discretisation of Tasks with DEFAULT actions</li>
+<li><code>brat3*</code> : Multi-step planning with fixed-size state split (of states ending in collision) and attention window to guide optimal obstacle avoidance when a goal is present</li>
 </ul>
-<p>WARNING! Real-world execution not yet fully debugged so navigation may be unsafe</p>
+<p>Demos:</p>
+<ul>
+<li><code>sudo ./*targetless</code> : these programs demonstrates planning over a 1m distance horizon for a control goal that is not a target location but rather an objective to drive straight for the longest time with the least amount of disturbances</li>
+<li><code>sudo ./*target</code>: these program demonstrates target seeking behaviour, where the target is imaginary and located at x=1.0m, y=0m.</li>
+</ul>
 <h3><a class="anchor" id="autotoc_md12"></a>
 Unit tests</h3>
 <p><code>ctest</code></p>

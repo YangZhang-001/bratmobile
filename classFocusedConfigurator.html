@@ -137,7 +137,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a7a03d7acc9c3b98d1281c0ecce40d6e3 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a7a03d7acc9c3b98d1281c0ecce40d6e3">transitionMatrix</a> (vertexDescriptor v, Direction d, vertexDescriptor src)</td></tr>
 <tr class="separator:a7a03d7acc9c3b98d1281c0ecce40d6e3 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeadbc03a330beab575b122d04f74fc7e inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#aeadbc03a330beab575b122d04f74fc7e">applyTransitionMatrix</a> (vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector&lt; vertexDescriptor &gt; &amp;plan_prov)</td></tr>
-<tr class="memdesc:aeadbc03a330beab575b122d04f74fc7e inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets permitted transitions out of a state.  <a href="classAttentiveConfigurator.html#aeadbc03a330beab575b122d04f74fc7e">More...</a><br /></td></tr>
+<tr class="memdesc:aeadbc03a330beab575b122d04f74fc7e inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets permitted transitions out of a state, formally combines jump guard J and guard Psi.  <a href="classAttentiveConfigurator.html#aeadbc03a330beab575b122d04f74fc7e">More...</a><br /></td></tr>
 <tr class="separator:aeadbc03a330beab575b122d04f74fc7e inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac239560e679e96fbccde100d8f92e543 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#ac239560e679e96fbccde100d8f92e543">addToPriorityQueue</a> (vertexDescriptor v, std::vector&lt; vertexDescriptor &gt; &amp;queue, const std::set&lt; vertexDescriptor &gt; &amp;closed)</td></tr>
 <tr class="memdesc:ac239560e679e96fbccde100d8f92e543 inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds vertexDescriptor to priority queue according to a custom heuristic.  <a href="classAttentiveConfigurator.html#ac239560e679e96fbccde100d8f92e543">More...</a><br /></td></tr>
@@ -217,6 +217,10 @@ virtual StateMatcher::MATCH_TYPE&#160;</td><td class="memItemRight" valign="bott
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a5d57f6b5a51283b6cfc5745f391b7853">enforce_edge</a> ()</td></tr>
 <tr class="memdesc:a5d57f6b5a51283b6cfc5745f391b7853 inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to make sure that there is always a connection between DUMMY/MOVING to the next in plan - useful in sudden changes of plans. <br /></td></tr>
 <tr class="separator:a5d57f6b5a51283b6cfc5745f391b7853 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bacf15d372f4944a3f7f65f30b15492 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a1bacf15d372f4944a3f7f65f30b15492"></a>
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a1bacf15d372f4944a3f7f65f30b15492">shouldPartiallyExplore</a> (const std::vector&lt; edgeDescriptor &gt; &amp;oe, std::pair&lt; bool, edgeDescriptor &gt; ve)</td></tr>
+<tr class="memdesc:a1bacf15d372f4944a3f7f65f30b15492 inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Psi guard: should only current task be simulated? <br /></td></tr>
+<tr class="separator:a1bacf15d372f4944a3f7f65f30b15492 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -526,6 +530,8 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
 </dl>
 
 <p>Reimplemented from <a class="el" href="classAttentiveConfigurator.html#aaff9aa8999a177a8044fd95ec53b1a28">AttentiveConfigurator</a>.</p>
+
+<p>Reimplemented in <a class="el" href="classDiscreteConfigurator.html#aaa5c90d9551541cec5e25cea0515d864">DiscreteConfigurator</a>.</p>
 
 </div>
 </div>

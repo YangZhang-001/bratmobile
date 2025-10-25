@@ -1,7 +1,7 @@
 var searchData=
 [
   ['package_5finfo_147',['package_info',['../classAttentiveConfigurator.html#a63637f301a4a562f03f1ad37794b98bf',1,'AttentiveConfigurator']]],
-  ['partiallyexplorativeoptions_148',['partiallyExplorativeOptions',['../classAttentiveConfigurator.html#ab44bc7a1149a82ebc32c38ca0f95e5f0',1,'AttentiveConfigurator']]],
+  ['partiallyexplorativeoptions_148',['partiallyExplorativeOptions',['../classAttentiveConfigurator.html#ab44bc7a1149a82ebc32c38ca0f95e5f0',1,'AttentiveConfigurator::partiallyExplorativeOptions()'],['../classDiscreteConfigurator.html#aec166b2a007047772119c439498c80a6',1,'DiscreteConfigurator::partiallyExplorativeOptions()']]],
   ['partition_5fclusters_149',['partition_clusters',['../classWorldBuilder.html#a224b89e6744786fdfe6bee3673e90303',1,'WorldBuilder']]],
   ['path2add2_150',['path2add2',['../classHorizonStarPlanner.html#af09006cf441f61897fb5c6953c25efb1',1,'HorizonStarPlanner']]],
   ['pid_151',['PID',['../classMotor__Out.html#ad8c4a2c3d8d83a4efe498d0b83458199',1,'Motor_Out']]],
