@@ -463,16 +463,21 @@ VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatche
 		}
 		condition=matcher.match_equal(m, match_type);
 		if (v!=MOVING_VERTEX && (boost::in_degree(v, transitionSystem)>0 || iteration>1)  &&Tmatch ){ 
-			if (condition){
-				result.first= m;
-				result.second=v;
-				VertexMatchTuple to_add(v, m, sum_tmp);
-				others_set.emplace(to_add);
-			}
-			if (sum_tmp<sum){
+			// if (condition){
+			// 	result.first= m;
+			// 	result.second=v;
+			// 	VertexMatchTuple to_add(v, m, sum_tmp);
+			// 	others_set.emplace(to_add);
+			// }
+			if (sum_tmp<sum || condition){
 				sum=sum_tmp;
 				result.first=m;
 				result.second=v;
+				if (condition){
+					VertexMatchTuple to_add(v, m, sum_tmp);
+					others_set.emplace(to_add);
+
+				}
 				if (NULL!=_sd){
 					*_sd=sd;
 				}
