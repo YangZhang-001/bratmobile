@@ -427,15 +427,6 @@ class FocusedConfigurator:virtual public AttentiveConfigurator{
 	 * @param v 
 	 */
 	void removeExploredTransitions(vertexDescriptor v)override;
-
-		/**
-	 * @brief Does not recycle
-	 */
-	bool recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
-					b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
-					std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction)override{
-						return false;
-	}
 	
 
 	virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override;
