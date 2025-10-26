@@ -18,7 +18,7 @@ Fast DDS tools
 
 Qt packages
 
-` sudo apt-get install qtdeclarative5-dev-tools qt5-qmake qt5-qmake-bin qtbase5-dev qtbase5-dev-tools libqwt-qt5-dev`
+` sudo apt-get install qtdeclarative5-dev-tools qt5-qmake qt5-qmake-bin qtbase5-dev qtbase5-dev-tools libqwt-qt5-dev qt6-base-dev qt6-base-dev-tools qt6-tools-dev`
 
 [CppTimer](https://github.com/berndporr/cppTimer) (only for running the demo)
 

@@ -12,7 +12,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
-find_package(Qt5 COMPONENTS Widgets Core REQUIRED )
+find_package(Qt6 REQUIRED COMPONENTS Widgets Core )
 # Create a library for the message / topic
 add_custom_target(
     objects
@@ -39,9 +39,9 @@ install(TARGETS fastdds-tracker
 
 ##Qt Window
 add_library(brat-gui window.h window.cpp)
-target_link_libraries(brat-gui Qt5::Widgets fastcdr fastrtps ObjectPackage)
+target_link_libraries(brat-gui Qt6::Widgets fastcdr fastrtps ObjectPackage)
 add_executable(qt_window qt_main.cpp window.h window.cpp )
-target_link_libraries(qt_window PRIVATE brat-gui Qt5::Widgets Qt5::Core fastcdr fastrtps ObjectPackage)
-target_link_libraries(qt_window PRIVATE qwt-qt5)
+target_link_libraries(qt_window PRIVATE brat-gui Qt6::Widgets Qt6::Core fastcdr fastrtps ObjectPackage)
+target_link_libraries(qt_window PRIVATE qwt-qt6)
 
 
