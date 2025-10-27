@@ -48,13 +48,7 @@ class RobotSubscriber:public ObjectPackageSubscriber{
     }
 };
 
-class RobotPublisher:public ObjectPackagePublisher{
-    public:
-    void setTopic(std::string str){
-        topic_ = participant_->create_topic(str, "ObjectPackage", TOPIC_QOS_DEFAULT);
 
-    }
-};
 
 class RobotReaderListener:public QObject,public DataReaderListener{
     Q_OBJECT
