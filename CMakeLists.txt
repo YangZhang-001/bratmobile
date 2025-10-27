@@ -23,7 +23,7 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   include(GNUInstallDirs)
   add_executable(target custom_robot.h target.cpp)
   add_executable(targetless custom_robot.h targetless.cpp)
-  add_executable(gui custom_robot.h gui.cpp)
+  add_executable(gui custom_robot.h gui.h gui.cpp)
   target_link_libraries(target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
   target_link_libraries(targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio)
   target_link_libraries(gui ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio fastdds-tracker)
