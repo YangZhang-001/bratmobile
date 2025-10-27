@@ -31,13 +31,13 @@ public:
     void timerEvent() {
 	ObjectPackage object;
     //robot init
-	object.v1_x(1);
+	object.v1_x(1); //tr
     object.v1_y(0.09);
-    object.v2_x(-0.135-0.045);
+    object.v2_x(1); //br
     object.v2_y(-0.09);
-    object.v3_x(1);
+    object.v3_x(-0.135-0.045); //bl
     object.v3_y(-0.09);
-    object.v4_x(-0.135-0.045);
+    object.v4_x(-0.135-0.045); //tl
     object.v4_y(0.09);
 
 	if (mypub.publish(object))
