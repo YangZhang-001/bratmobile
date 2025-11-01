@@ -189,7 +189,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 		priorityQueue.erase(priorityQueue.begin());
 		for (Frontier f: frontier_v){ //add to priority queue
 			//planPriority(g, f.first);
-			addToPriorityQueue(f, priorityQueue, g);
+			addToPriorityQueue(f, priorityQueue, g, closed);
 		}
 		if (!priorityQueue.empty()){
 			src=priorityQueue.begin()->frontier; //lowest phi vertex
