@@ -157,7 +157,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
-}while(g[bestNext].options.size()>0 && !er.ended && simulatedTasks<100);
+}while(g[bestNext].options.size()>0 && !er.ended);
 return plan_prov;
 }
 
@@ -871,8 +871,9 @@ VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher:
 			!m_plan.empty() && s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
 		return VertexMatch(StateMatcher::_TRUE, currentVertex);
 	}
-	else if(!m_plan.empty() && s.Dn.getAffIndex()!=transitionSystem[currentVertex].Dn.getAffIndex()){
-		std::cout<<"Dist index of simualted state:"<<s.Dn.getAffIndex()<<" doesn't match current state's index:"<<transitionSystem[currentVertex].Dn.getAffIndex()<<std::endl;
+	else if(s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di==transitionSystem[currentVertex].Di && 
+	!m_plan.empty() && s.Dn.getAffIndex()!=transitionSystem[currentVertex].Dn.getAffIndex()){
+		printf("Dist index of simulated state:%i doesn't match current state's index:%i\n", s.Dn.getAffIndex(), transitionSystem[currentVertex].Dn.getAffIndex());
 	}
 	return AttentiveConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
 }
