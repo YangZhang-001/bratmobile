@@ -135,7 +135,6 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					abandonPlan(plan_prov, v0, v1);
 					shift=b2Transform_zero;
 					if (iteration>1){
-						printf("abandoned! outcome is crashed=%i\n", sk.first.outcome==simResult::crashed);
 						if(sk.first.outcome==simResult::crashed){
 							debug::print_pose(sk.first.Dn.bf.pose, "crash site");
 						}
@@ -871,6 +870,9 @@ VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher:
 	if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di==transitionSystem[currentVertex].Di && 
 			!m_plan.empty() && s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
 		return VertexMatch(StateMatcher::_TRUE, currentVertex);
+	}
+	else if(!m_plan.empty() && s.Dn.getAffIndex()!=transitionSystem[currentVertex].Dn.getAffIndex()){
+		std::cout<<"Dist index of simualted state:"<<s.Dn.getAffIndex()<<" doesn't match current state's index:"<<transitionSystem[currentVertex].Dn.getAffIndex()<<std::endl;
 	}
 	return AttentiveConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
 }
