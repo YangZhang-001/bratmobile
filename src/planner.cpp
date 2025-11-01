@@ -102,7 +102,7 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 			std::vector <vertexDescriptor>connecting2;
 			NotSelfEdge not_self_edge(&g);
 			do {
-				if ((g[(*ei3).m_target].visited()|| info.been())&& g[(*ei3)].it_observed>=0 &&(not_self_edge(*ei3) || g[*ei3].overrideZeroSteps)){ //(*ei3).m_source!=(*ei3).m_target
+				if ((g[(*ei3).m_target].visited()|| info.been())&& g[(*ei3)].it_observed>=0 &&(not_self_edge(*ei3) || g[*ei3].overrideZeroSteps) ){ //(*ei3).m_source!=(*ei3).m_target
 					if (!g[(*ei3).m_target].visited()){
 						EndedResult er = estimateCost(g[(*ei3).m_target], g[(*ei3).m_source].endPose, g[(*ei3).m_target].direction,info.overarchingGoal());
 						std::vector<vertexDescriptor>_plan=info.plan();
@@ -160,9 +160,10 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 	return result;
 }
 
-void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Frontier>& queue, TransitionSystem &g, vertexDescriptor goal){
+void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Frontier>& queue, TransitionSystem &g, std::vector<vertexDescriptor>& closed, vertexDescriptor goal){
 	for (auto i =queue.begin(); i!=queue.end(); i++){
-		if (g[f.frontier].phi <abs(g[(*i).frontier].phi)){
+		auto it=std::find(closed.begin(), closed.end(), f.frontier)!=closed.end()
+		if (g[f.frontier].phi <abs(g[(*i).frontier].phi)&& it!=closed.end()){
 			queue.insert(i, f);
 			return;
 		}
@@ -178,12 +179,13 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 	std::vector <Frontier> priorityQueue={Frontier(src, std::vector<vertexDescriptor>())};
 
 	int no_out=0;
-	std::vector <vertexDescriptor> add;
+	std::vector <vertexDescriptor> add, closed;
 	std::vector<std::vector<vertexDescriptor>>::reverse_iterator path= paths.rbegin();
 	vertexDescriptor path_end=src, goal=info.goalVertex();
 	auto start_time=std::chrono::high_resolution_clock::now();
 	do{
 		frontier_v=frontierVertices(src, g, info); // get next default tasks (plus non-default connecting tasks)
+		closed.push_back(src);
 		priorityQueue.erase(priorityQueue.begin());
 		for (Frontier f: frontier_v){ //add to priority queue
 			//planPriority(g, f.first);

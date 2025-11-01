@@ -158,6 +158,7 @@ class Planner{
                               q5(RIGHT)---q6(DEFAULT)      ->  maximum depth
  */
 class HorizonStarPlanner:public Planner{
+    std::map<edgeDescriptor, bool> explored_edges; //edges already explored in frontier vertices
 
     /**
      * @brief Finds the best path to add a frontier to (frontier found separately)
