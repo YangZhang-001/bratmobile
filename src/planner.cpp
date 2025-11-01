@@ -152,7 +152,8 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 						}
 					}					
 				}
-				//printf("is stuck, ei3=%i ->%i\n", (*ei).m_source, (*ei).m_target);
+
+				printf("is stuck, ei3=%i ->%i\n", (*ei).m_source, (*ei).m_target);
 			}while (ei3!=es3.second);
 	}
 	}
