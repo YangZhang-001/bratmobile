@@ -135,7 +135,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 					abandonPlan(plan_prov, v0, v1);
 					shift=b2Transform_zero;
 					if (iteration>1){
-						if(sk.first.outcome==simResult::crashed){
+						if(sk.first.outcome==simResult::crashed && v0==MOVING_VERTEX && sk.first.direction==currentTask.get_direction()){
 							debug::print_pose(sk.first.Dn.bf.pose, "crash site");
 						}
 					}
