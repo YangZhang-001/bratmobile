@@ -47,7 +47,6 @@ class ExecutionInfo{
     Task m_overarchingGoal; 
     bool m_been; //has a plan been made to fulfill this overarching goal before?
     std::vector <vertexDescriptor> m_plan;
-    protected:
     friend class Configurator;
 
     void been(bool b){m_been=b;}
@@ -123,8 +122,6 @@ EndedResult estimateCost(const State &state, b2Transform start, Direction d, Tas
  * 
  */
 class Planner{
-    protected:
-
     public:
 
     Planner()=default;
@@ -161,7 +158,6 @@ class Planner{
                               q5(RIGHT)---q6(DEFAULT)      ->  maximum depth
  */
 class HorizonStarPlanner:public Planner{
-    protected:
 
     /**
      * @brief Finds the best path to add a frontier to (frontier found separately)

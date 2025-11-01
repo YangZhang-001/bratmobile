@@ -102,11 +102,7 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 			std::vector <vertexDescriptor>connecting2;
 			NotSelfEdge not_self_edge(&g);
 			do {
-				//g[(*ei3).m_target].visited()
 				if ((g[(*ei3).m_target].visited()|| info.been())&& g[(*ei3)].it_observed>=0 &&(not_self_edge(*ei3) || g[*ei3].overrideZeroSteps)){ //(*ei3).m_source!=(*ei3).m_target
-					if (g[*ei3].overrideZeroSteps){
-						g[*ei3].overrideZeroSteps=false;
-					}
 					if (!g[(*ei3).m_target].visited()){
 						EndedResult er = estimateCost(g[(*ei3).m_target], g[(*ei3).m_source].endPose, g[(*ei3).m_target].direction,info.overarchingGoal());
 						std::vector<vertexDescriptor>_plan=info.plan();
