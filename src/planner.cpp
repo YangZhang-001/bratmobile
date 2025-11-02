@@ -152,7 +152,7 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 					}					
 				}
 
-				printf("is stuck, ei3=%i ->%i\n", (*ei).m_source, (*ei).m_target);
+				// printf("is stuck, ei3=%i ->%i\n", (*ei).m_source, (*ei).m_target);
 			}while (ei3!=es3.second);
 		}
 	}
@@ -160,10 +160,10 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 	return result;
 }
 
-void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Frontier>& queue, TransitionSystem &g, std::vector<vertexDescriptor>& closed, vertexDescriptor goal){
+void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Frontier>& queue, TransitionSystem &g, const std::vector<vertexDescriptor>& closed, vertexDescriptor goal){
 	for (auto i =queue.begin(); i!=queue.end(); i++){
-		auto it=std::find(closed.begin(), closed.end(), f.frontier);
-		if (g[f.frontier].phi <abs(g[(*i).frontier].phi)&& it){
+		std::vector<vertexDescriptor>::const_iterator it=std::find(closed.cbegin(), closed.cend(), f.frontier);
+		if (g[f.frontier].phi <abs(g[(*i).frontier].phi)&& it!=closed.end()){
 			queue.insert(i, f);
 			return;
 		}
@@ -185,7 +185,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 	auto start_time=std::chrono::high_resolution_clock::now();
 	do{
 		frontier_v=frontierVertices(src, g, info); // get next default tasks (plus non-default connecting tasks)
-		closed.push_back(src);
+		//closed.push_back(src);
 		priorityQueue.erase(priorityQueue.begin());
 		for (Frontier f: frontier_v){ //add to priority queue
 			//planPriority(g, f.first);
