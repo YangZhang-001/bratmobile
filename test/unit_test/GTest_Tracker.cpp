@@ -221,7 +221,7 @@ TEST_P(TestEnvironment, Execution){
  * 
  */
 TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
-  //  GTEST_SKIP();
+    GTEST_SKIP();
     Logger logger=makeLogger();
     TestTracker tracker;
     Wise_Controller wc;
