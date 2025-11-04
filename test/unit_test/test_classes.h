@@ -733,12 +733,12 @@ class ConfiguratorTakeBool:public ConfiguratorTest, public testing::WithParamInt
  * 
  */
 class ConfiguratorPlannerHybrid: public ConfiguratorTakeBool, public HorizonStarPlanner, public ::testing::WithParamInterface<std::tuple<int, Direction, simResult::resultType>>{
-    public:
+    protected:
     std::vector<vertexDescriptor> withDirection(Direction d);
 
     void assignOutcome();
 
-    int n_successful(std::vector<vertexDescriptor> vec);    
+    int n_successful(std::vector<vertexDescriptor> vec);
 
 };
 

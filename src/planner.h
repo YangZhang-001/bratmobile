@@ -47,6 +47,7 @@ class ExecutionInfo{
     Task m_overarchingGoal; 
     bool m_been; //has a plan been made to fulfill this overarching goal before?
     std::vector <vertexDescriptor> m_plan;
+    protected:
     friend class Configurator;
 
     void been(bool b){m_been=b;}
@@ -122,6 +123,8 @@ EndedResult estimateCost(const State &state, b2Transform start, Direction d, Tas
  * 
  */
 class Planner{
+    protected:
+
     public:
 
     Planner()=default;
@@ -159,6 +162,7 @@ class Planner{
  */
 class HorizonStarPlanner:public Planner{
     protected:
+
     /**
      * @brief Finds the best path to add a frontier to (frontier found separately)
      * 
@@ -191,7 +195,7 @@ class HorizonStarPlanner:public Planner{
      * @param g the transition system
      * @param goal the vertex where the goal is reach
      */
-    void addToPriorityQueue(const Frontier &f, std::vector<Frontier>& queue, TransitionSystem &g,const  std::vector<vertexDescriptor>& closed, vertexDescriptor goal=TransitionSystem::null_vertex());
+    void addToPriorityQueue(const Frontier &f, std::vector<Frontier>& queue, TransitionSystem &g, vertexDescriptor goal=TransitionSystem::null_vertex());
 
 
 public:
