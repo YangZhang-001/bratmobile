@@ -421,6 +421,15 @@ AttentiveConfigurator(Task _task){
 class FocusedConfigurator:virtual public AttentiveConfigurator{
 	protected:
 
+		/**
+	 * @brief Does not recycle
+	 */
+	bool recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
+					b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
+					std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction)override{
+						return false;
+	}
+
 	/**
 	 * @brief If the current vertex is matched, don't allow to check plan further
 	 * 
