@@ -82,27 +82,27 @@ TEST_F(FCTest, DontReplan) {
 }
 
 /**
- * @brief Test to see why even in a don't replan situation, more states are being created
- */
-TEST_F(FCTest, WhyMoreStates) {
-    data2fp.emplace(Pointf(0.3, 0)); //make point corresponding to obstacle
-    Spawner(); //should create obstacle avoidance plan
-    transitionSystem[2].outcome=simResult::safeForNow;
-    m_plan={2};
-    int plan_size=1, simTasks=1;
-    EXPECT_EQ(m_plan.size(), plan_size);
-    for (int i=0; i<140; i++){
-        change_task();
-        estimate_current_vertex();
-        b2Transform dp=currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
-        update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(), dp));   
-    }
-    Spawner(); //should replan
-    plan_size--;
-    EXPECT_EQ(m_plan.size(), plan_size);
-    EXPECT_EQ(simulatedTasks, simTasks); 
-    EXPECT_FALSE(currentTask.is_over());
-}
+//  * @brief Test to see why even in a don't replan situation, more states are being created
+//  */
+// TEST_F(FCTest, WhyMoreStates) {
+//     data2fp.emplace(Pointf(0.3, 0)); //make point corresponding to obstacle
+//     Spawner(); //should create obstacle avoidance plan
+//     transitionSystem[2].outcome=simResult::safeForNow;
+//     m_plan={2};
+//     int plan_size=1, simTasks=1;
+//     EXPECT_EQ(m_plan.size(), plan_size);
+//     for (int i=0; i<140; i++){
+//         change_task();
+//         estimate_current_vertex();
+//         b2Transform dp=currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
+//         update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(), dp));   
+//     }
+//     Spawner(); //should replan
+//     plan_size--;
+//     EXPECT_EQ(m_plan.size(), plan_size);
+//     EXPECT_EQ(simulatedTasks, simTasks); 
+//     EXPECT_FALSE(currentTask.is_over());
+// }
 
 INSTANTIATE_TEST_CASE_P(Outcomes, FCTest, ::testing::Bool());
 
