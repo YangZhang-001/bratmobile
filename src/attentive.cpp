@@ -272,7 +272,6 @@ void AttentiveConfigurator::visitedDirectionsPushBack( vertexDescriptor v, std::
 		}
 	}
 
-
 }
 
 std::vector <Direction>  AttentiveConfigurator::getExploredDirections(vertexDescriptor v, const std::vector<Direction>& directions){
