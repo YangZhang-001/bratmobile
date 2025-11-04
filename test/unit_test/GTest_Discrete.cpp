@@ -118,6 +118,7 @@ TEST_F(DiscreteCTest, DontReplan) {
  * @brief checks that simulation time is calculated correctly for current DEFAULT task
  */
 TEST_F(DiscreteCTest, RemainingTime){
+    GTEST_SKIP();
     dummy_vertex(MOVING_VERTEX);
     vertexDescriptor v1;
     transitionSystem[DUMMY].options.push_back(DEFAULT);

@@ -161,9 +161,10 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 	return result;
 }
 
-void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Frontier>& queue, TransitionSystem &g, vertexDescriptor goal){
+void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Frontier>& queue, TransitionSystem &g,const  std::vector<vertexDescriptor>&closed, vertexDescriptor goal){
 	for (auto i =queue.begin(); i!=queue.end(); i++){
-		if (g[f.frontier].phi <abs(g[(*i).frontier].phi)){
+		auto it=std::find(closed.begin(), closed.end(), *i);
+		if (g[f.frontier].phi <abs(g[(*i).frontier].phi) && it==closed.end()){
 			queue.insert(i, f);
 			return;
 		}
@@ -173,6 +174,7 @@ void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Front
 
 std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, vertexDescriptor src, ExecutionInfo& info, bool *finished){
 	std::vector<std::vector<vertexDescriptor>> paths;
+	std::vector<vertexDescriptor> closed;
 	paths.push_back(std::vector<vertexDescriptor>()={src});
 	std::vector <Frontier> frontier_v;
 	bool _finished=false;
@@ -186,9 +188,10 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 	do{
 		frontier_v=frontierVertices(src, g, info); // get next default tasks (plus non-default connecting tasks)
 		priorityQueue.erase(priorityQueue.begin());
+		closed.push_back(src);
 		for (Frontier f: frontier_v){ //add to priority queue
 			//planPriority(g, f.first);
-			addToPriorityQueue(f, priorityQueue, g);
+			addToPriorityQueue(f, priorityQueue, g, closed);
 		}
 		if (!priorityQueue.empty()){
 			src=priorityQueue.begin()->frontier; //lowest phi vertex
