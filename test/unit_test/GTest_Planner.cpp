@@ -2,7 +2,7 @@
 
 
 TEST_F(ConfiguratorPlannerHybrid,pathToAddTo){
-    HorizonStarPlanner horizonPlanner;
+    //HorizonStarPlanner horizonPlanner;
     std::vector<vertexDescriptor> avoid={3,5},desiredPlan={1,3,4}, add;
     std::vector<std::vector<vertexDescriptor>> paths;
     paths.emplace_back(std::vector<vertexDescriptor>({14, 1, 3, 4}));
@@ -18,37 +18,23 @@ TEST_F(ConfiguratorPlannerHybrid,pathToAddTo){
     EXPECT_TRUE(boost::edge(*(path->rbegin()), add[0], transitionSystem).second);
 }
 
-
-
-// TEST_P(ConfiguratorTestPlanner, frontierVertices){
-//     dummy_vertex(MOVING_VERTEX);
-//     make_module(currentVertex);
-//     setAllVisited();
-//     assignOutcome();
-//     transitionSystem[currentEdge].overrideZeroSteps=true;
-//     int expected=n_successful(withDirection(DEFAULT));
-//     ExecutionInfo info=package_info();
-//     auto frontier=frontierVertices(MOVING_VERTEX, transitionSystem, info);    
-//     EXPECT_EQ(frontier.size(), expected);
-    
-// }
-
-// INSTANTIATE_TEST_CASE_P(FrontierGalore, ConfiguratorTestPlanner, testing::Combine(::testing::Values(0, 1, 2, 3), 
-//                                                                 ::testing::Values(LEFT, RIGHT, DEFAULT), 
-//                                                                 ::testing::Values(simResult::crashed, simResult::successful, simResult::safeForNow)));
-
-
-
-
-
-// void ConfiguratorPlannerHybrid::assignOutcome(){
-//     Direction direction=std::get<1>(GetParam());
-//     int n_assign=std::get<0>(GetParam());
-//     std::vector<vertexDescriptor> with_direction=withDirection(direction);
-//     simResult::resultType outcome=std::get<2>(GetParam());
-//     for (int i=0; i<with_direction.size(); i++){
-//         if (i<=n_assign){
-//             transitionSystem[with_direction[i]].outcome=outcome;
-//         }
-//     }
-// }
+/**
+ * @brief This test is made to recreate a situation in which the planner gets stuck in 
+ * an endless loop due to a self-edge, recreating error so that it can be fixed
+ */
+TEST_F(ConfiguratorPlannerHybrid, GetUnStuck){
+    init(generateGoalTask());
+    dummy_vertex(MOVING_VERTEX);
+    auto e=make_successful(currentVertex);
+    add_edge_withPoses(e.m_target, e.m_target); //self-edge
+    auto self_edge= boost::edge(e.m_target, e.m_target, transitionSystem).first;
+    transitionSystem[self_edge].step=0;
+    transitionSystem[self_edge].overrideZeroSteps=true;
+    make_module(e.m_target); //vertices 3-7
+    boost::clear_vertex(3, transitionSystem);
+    ExecutionInfo execInfo=package_info();
+    setAllVisited();
+    vertex_set_phi(e.m_target, .0f);
+    auto fv=frontierVertices(e.m_target, transitionSystem, execInfo);
+    EXPECT_NE(fv.size(), 0);
+}
