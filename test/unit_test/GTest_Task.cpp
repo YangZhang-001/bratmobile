@@ -187,7 +187,7 @@ TEST_P(TaskTestTermination, TerminateEarly){
 /**
  * @brief checking if an empty goal would return finished if plan interrupted midway
  */
-TEST_F(TaskTest, CheckEndMidWay){
+TEST_F(TaskTestEndCriteria, CheckEndMidWay){
     start.p.x=-.02;
     b2Transform end(b2Vec2(0.979999, 0), b2Rot(0));
     bool result=checkEnded(end, UNDEFINED, true).ended;
