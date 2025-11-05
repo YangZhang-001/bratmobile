@@ -14,6 +14,15 @@ class FCTest:public FocusedConfigurator, public testing::TestWithParam<bool> {
         delete task_controller;
         transitionSystem=TransitionSystem(1);
     }
+
+    bool has180Turn(std::vector<vertexDescriptor> plan){
+    for (int i=1; i<plan.size(); i++){
+        if (transitionSystem[plan[i]].isTurning() && transitionSystem[plan[i-1]].isTurning()){
+            return true;
+        }
+
+    }
+}
 };
 
 
@@ -82,9 +91,9 @@ TEST_F(FCTest, DontReplan) {
 }
 
 TEST_F(FCTest, TrickyScenario){
-    addIteration()
-    worldBuilder->addIteration();
-    worldbuilder->set_world_objects(CreativeWorldBuilder::makeTricky());
+    init(DebugConfigurator::generateGoalTask());    addIteration();
+    worldBuilder->add_iteration();
+    worldBuilder->set_world_objects(CreativeWorldBuilder::makeTricky());
     b2World world(GRAVITY);
     explore_plan(world);
     EXPECT_GT(m_plan.size(), 0);

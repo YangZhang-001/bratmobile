@@ -38,6 +38,9 @@ bool operator==( EndCriteria &ec1, EndCriteria& ec2){
 }
 
 
+
+
+
 /**
  * @brief Predicate used to decide if an edge has been visited
  * 
