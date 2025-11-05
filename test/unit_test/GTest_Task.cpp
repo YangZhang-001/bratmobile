@@ -184,6 +184,16 @@ TEST_P(TaskTestTermination, TerminateEarly){
     EXPECT_NEAR(robot.body()->GetTransform().q.GetAngle(), angle, M_PI/(2*HZ));
 }
 
+/**
+ * @brief checking if an empty goal would return finished if plan interrupted midway
+ */
+TEST_F(TaskTest, CheckEndMidWay){
+    start.p.x=-.02;
+    b2Transform end(b2Vec2(0.979999, 0), b2Rot(0));
+    bool result=checkEnded(end, UNDEFINED, true).ended;
+    EXPECT_TRUE(result);
+}
+
 INSTANTIATE_TEST_CASE_P(TerminateEarly, TaskTestTermination, ::testing::Combine(testing::Values(LEFT, RIGHT, DEFAULT), ::testing::Values(M_PI_4)));
 INSTANTIATE_TEST_CASE_P(TerminateLate, TaskTestTermination, ::testing::Combine(testing::Values(LEFT, RIGHT, DEFAULT), ::testing::Values(M_PI_4+M_PI_2)));
 
