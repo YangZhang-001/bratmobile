@@ -560,11 +560,11 @@ void AttentiveConfigurator::explore_plan(b2World&world){
         std::vector<vertexDescriptor> _plan=(m_plan);
         debug::graph_file(iteration, transitionSystem, controlGoal.get_disturbance(), _plan, currentVertex);
     }	
-	printf("pre-cleanup src =%i out degree=%i\n", src, boost::out_degree(src, transitionSystem));
+	//printf("pre-cleanup src =%i out degree=%i\n", src, boost::out_degree(src, transitionSystem));
 	ts_cleanup(); //remove self-edge and singleton states
     if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.is_over())){ //currentv not visited means that it wasn't observed ()
         printf("no plan, searchign from %i\n", src);
-		printf("src =%i out degree=%i\n", src, boost::out_degree(src, transitionSystem));
+		// printf("src =%i out degree=%i\n", src, boost::out_degree(src, transitionSystem));
         bool finished=false;
         ExecutionInfo info=package_info();
         plan_tmp= planner->plan(transitionSystem, src,info, &finished); //src
