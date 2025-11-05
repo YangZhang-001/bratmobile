@@ -47,9 +47,12 @@ TEST_P(FCTest, TestCheck) {
     if (!GetParam()){
         data2fp.emplace(Pointf(0, 0)); 
         simTasks=3;
-        plan_size=0;
+        plan_size=1;
     }
     Spawner(); //should not replan
+    if (!GetParam()){
+        EXPECT_EQ(transitionSystem[m_plan[0]].direction, STOP); 
+    }
     EXPECT_EQ(m_plan.size(), plan_size);
     EXPECT_EQ(simulatedTasks, simTasks);
 }
