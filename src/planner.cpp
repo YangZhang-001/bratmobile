@@ -33,7 +33,7 @@ void HorizonStarPlanner::path2add2(std::vector<std::vector<vertexDescriptor>>::r
 				}
 			}
 			else if (edge.second && path_end_rit.base()!=path->rbegin().base()){  //if there is an edge with the end of current path
-				bool found=0;
+				bool found=0; 
 				for (auto _p=paths.rbegin(); _p!=paths.rend(); _p++ ){ // see if theres a path with this beginning and end
 					if (std::vector <vertexDescriptor>(path->begin(), path_end_rit.base())==*_p){
 						path=_p; //switch to this path

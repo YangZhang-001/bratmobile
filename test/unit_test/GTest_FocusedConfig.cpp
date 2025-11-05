@@ -71,6 +71,25 @@ TEST_F(FCTest, Replan) {
     EXPECT_TRUE(currentTask.is_over());
 }
 
+TEST_F(FCTest, ReplanDefault) {
+    setSimulationStep(.5);
+    data2fp.clear();
+    Spawner(); //just go straight ahead
+    int plan_size=1;
+    EXPECT_EQ(m_plan.size(), plan_size);
+    change_task();
+    estimate_current_vertex();
+    b2Transform dp=currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
+    update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(), dp));
+    data2fp.emplace(Pointf(0.8, 0)); //obstacle is far
+    int simTasks=5;
+    plan_size=3;
+    Spawner(); //should replan
+    EXPECT_EQ(m_plan.size(), plan_size);
+    EXPECT_EQ(simulatedTasks, simTasks); 
+    EXPECT_TRUE(currentTask.is_over());
+}
+
 TEST_F(FCTest, DontReplan) {
     data2fp.emplace(Pointf(0.3, 0)); //make point corresponding to obstacle
     Spawner(); //should create obstacle avoidance plan
