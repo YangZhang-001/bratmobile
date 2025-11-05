@@ -81,6 +81,19 @@ TEST_F(FCTest, DontReplan) {
     EXPECT_FALSE(currentTask.is_over());
 }
 
+TEST_F(FCTest, TrickyScenario){
+    addIteration()
+    worldBuilder->addIteration();
+    worldbuilder->set_world_objects(CreativeWorldBuilder::makeTricky());
+    b2World world(GRAVITY);
+    explore_plan(world);
+    EXPECT_GT(m_plan.size(), 0);
+    EXPECT_TRUE(has180Turn(m_plan));
+    bool planned_to_goal=controlGoal.checkEnded(transitionSystem[*(m_plan.end()-1)].endPose).ended;
+    EXPECT_TRUE(planned_to_goal);
+
+}
+
 /**
 //  * @brief Test to see why even in a don't replan situation, more states are being created
 //  */
