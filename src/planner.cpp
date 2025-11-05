@@ -216,7 +216,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 		}
 	}while(!priorityQueue.empty() && (path_end!=goal && !(_finished)));
 	printf("finished: %i, priorityQueue.empty()=%i, path_end==goal %i \n", _finished, priorityQueue.empty(), path_end==goal);
-	printf("goal start end x=%f, y=%f, theta=%f\n", g[path_end].endPose info.overarchingGoal().getStart().p.x,  info.overarchingGoal().getStart().p.y,  info.overarchingGoal().getStart().q.GetAngle() );
+	printf("goal start end x=%f, y=%f, theta=%f\n", info.overarchingGoal().getStart().p.x,  info.overarchingGoal().getStart().p.y,  info.overarchingGoal().getStart().q.GetAngle() );
 	printf("path end x=%f, y=%f, theta=%f\n", g[path_end].endPose.p.x, g[path_end].endPose.p.y,  g[path_end].endPose.q.GetAngle() );
 	if (_finished){
 		return best_path(paths, goal, info.currentVertex(), info.currentTask().get_change(), g);
