@@ -217,6 +217,7 @@ TEST_F(ConfiguratorTest, UpdateGraph){
     EXPECT_FALSE(transitionSystem[1].Dn.pose()==Dn.pose());
     EXPECT_FALSE(controlGoal.get_disturbance().pose()==goal.pose());
     EXPECT_TRUE(currentTask.get_disturbance().pose()==Dn.pose());
+    EXPECT_NE(controlGoal.getStart().p.Length(), 0);
 }
 
 
