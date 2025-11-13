@@ -191,7 +191,7 @@ TEST_F(TaskTestEndCriteria, CheckEndMidWay){
     start.p.x=-.00;
     b2Transform end(b2Vec2(0.979999, 0), b2Rot(0));
     bool result=checkEnded(end, UNDEFINED, true).ended;
-    EXPECT_TRUE(result);
+    EXPECT_FALSE(result); //if doesnt reach box2d range it returns false
 }
 
 INSTANTIATE_TEST_CASE_P(TerminateEarly, TaskTestTermination, ::testing::Combine(testing::Values(LEFT, RIGHT, DEFAULT), ::testing::Values(M_PI_4)));
