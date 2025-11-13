@@ -218,5 +218,8 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 	if (_finished || info.overarchingGoal().getAffIndex()==NONE){
 		return best_path(paths, goal, info.currentVertex(), info.currentTask().get_change(), g);
 	}
+	if (!_finished){
+		return best_path(paths, TransitionSystem::null_vertex(), info.currentVertex(), info.currentTask().get_change(), g);
+	}
 	return std::vector<vertexDescriptor>();
 }
