@@ -34,13 +34,25 @@ void HorizonStarPlanner::path2add2(std::vector<std::vector<vertexDescriptor>>::r
 			}
 			else if (edge.second && path_end_rit.base()!=path->rbegin().base()){  //if there is an edge with the end of current path
 				bool found=0; 
-				for (auto _p=paths.rbegin(); _p!=paths.rend(); _p++ ){ // see if theres a path with this beginning and end
-					if (std::vector <vertexDescriptor>(path->begin(), path_end_rit.base())==*_p){
-						path=_p; //switch to this path
-						found=1;
+				// for (auto _p=paths.rbegin(); _p!=paths.rend(); _p++ ){ // see if theres a path with this beginning and end
+				// 	if (std::vector <vertexDescriptor>(path->begin(), path_end_rit.base())==*_p){
+				// 		path=_p; //switch to this path
+				// 		found=1;
+				// 	}
+				// }
+				struct HasStartStop{
+					vertexDescriptor start=TransitionSystem::null_vertex(), stop=TransitionSystem::null_vertex();
+					HasStartStop(vertexDescriptor _start, vertexDescriptor _stop):start(_start), stop(_stop){}
+					
+					bool operator()(const std::vector<vertexDescriptor>& v){
+						if (v.empty()){return false;}
+						return *v.cbegin()==start && *(v.cend()-1)==stop;
 					}
-				}
-				if (!found){
+				};
+
+				auto _p=std::find_if(paths.begin(), paths.end(), HasStartStop(*path->begin(), *path_end_rit.base()));
+				if (_p!=paths.end()){path=_p}
+				else{
 					//create new empty path
 					paths.emplace_back(std::vector <vertexDescriptor>(path->begin(), path_end_rit.base()));
 					path=paths.rbegin();				
@@ -69,10 +81,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::best_path(const std::vector<s
 			return std::vector((_plan.begin()+1), _plan.end());
 		}
 	}; //END LAMBDA 
-	// if (goal!=TransitionSystem::null_vertex()){
-	// 	auto find_plan=std::find_if(paths.begin(), paths.end(), [goal](const std::vector<vertexDescriptor> & p){return p[p.size()-1]==goal;});
-	// 	plan=*find_plan;
-	// }
+
 	for (std::vector<vertexDescriptor> p: paths){
 		vertexDescriptor end_plan= *(p.rbegin().base()-1);
 		if (end_plan==goal){
