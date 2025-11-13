@@ -50,8 +50,8 @@ void HorizonStarPlanner::path2add2(std::vector<std::vector<vertexDescriptor>>::r
 					}
 				};
 
-				auto _p=std::find_if(paths.begin(), paths.end(), HasStartStop(*path->begin(), *path_end_rit.base()));
-				if (_p!=paths.end()){path=_p}
+				auto _p=std::find_if(paths.rend(), paths.rbegin(), HasStartStop(*path->begin(), *path_end_rit.base()));
+				if (_p!=paths.rbegin()){path=_p;}
 				else{
 					//create new empty path
 					paths.emplace_back(std::vector <vertexDescriptor>(path->begin(), path_end_rit.base()));
