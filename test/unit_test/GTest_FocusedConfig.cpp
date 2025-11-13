@@ -113,7 +113,8 @@ TEST_F(FCTest, DontReplan) {
 }
 
 TEST_F(FCTest, TrickyScenario){
-    init(DebugConfigurator::generateGoalTask());    addIteration();
+    init(DebugConfigurator::generateGoalTask());    
+    addIteration();
     worldBuilder->add_iteration();
     worldBuilder->set_world_objects(CreativeWorldBuilder::makeTricky());
     b2World world(GRAVITY);
@@ -124,6 +125,30 @@ TEST_F(FCTest, TrickyScenario){
     EXPECT_TRUE(planned_to_goal);
 
 }
+
+// TEST_F(FCTest, ReplanNoisy) {
+//     init(DebugConfigurator::generateGoalTask());    
+//     addIteration();
+//     worldBuilder->add_iteration();
+//     worldBuilder->set_world_objects(CreativeWorldBuilder::makeCulDeSac(.1, .1, b2Vec2(.4, 0)));
+//     b2World world(GRAVITY);
+//     explore_plan(world);
+//     int plan_size=1;
+//     EXPECT_EQ(m_plan.size(), plan_size);
+//     change_task();
+//     change_task();
+//     change_task();
+//     b2Transform dp(b2Vec2(0.23, 0.2), b2Rot(0.1));
+//     estimate_current_vertex();
+//     update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(), dp));
+//     data2fp.emplace(Pointf(0.3, 0)); 
+//     int simTasks=5;
+//     plan_size++;
+//     Spawner(); //should replan
+//     EXPECT_EQ(m_plan.size(), plan_size);
+//     EXPECT_EQ(simulatedTasks, simTasks); 
+//     EXPECT_TRUE(currentTask.is_over());
+// }
 
 /**
 //  * @brief Test to see why even in a don't replan situation, more states are being created
