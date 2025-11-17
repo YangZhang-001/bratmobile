@@ -258,11 +258,11 @@ bool DiscreteConfigurator::canPropagate(vertexDescriptor v){
 	return transitionSystem[v].direction==STOP || transitionSystem[v].direction==DEFAULT;
 }
 
-virtual bool AttentiveConfigurator::canReassignOutcome(vertexDescriptor v){
+bool AttentiveConfigurator::canReassignOutcome(vertexDescriptor v){
 	return v==currentVertex;
 }
 
-virtual bool DiscreteConfigurator::canReassignOutcome(vertexDescriptor v){
+bool DiscreteConfigurator::canReassignOutcome(vertexDescriptor v){
 	return transitionSystem[v].isTurning() && transitionSystem[v].Dn.getAffIndex()==NONE;
 }
 
