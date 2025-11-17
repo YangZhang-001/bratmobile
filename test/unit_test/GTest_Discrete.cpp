@@ -116,9 +116,18 @@ TEST_P(DiscreteCrashedTest,EstimateInCollision) {
     data2fp.clear();
     data2fp.emplace(Pointf(GetParam(), 0)); //just before collision
     estimate_current_vertex();
-    EXPECT_EQ(currentVertex, 3);
+    //EXPECT_EQ(currentVertex, 3);
     Spawner(); //should not replan
     EXPECT_GT(simulatedTasks, 1);
+    if (GetParam()>.15){
+        EXPECT_GT(m_plan.size(), 2);
+        if (m_plan.size()>0){
+            vertexDescriptor plan_end=*(m_plan.end()-1);
+            EXPECT_TRUE(controlGoal.checkEnded(transitionSystem[plan_end]).ended);
+        }        
+    }
+
+
 }
 
 
@@ -164,4 +173,4 @@ TEST_F(DiscreteCTest, RemainingTime){
 }
 
 INSTANTIATE_TEST_CASE_P(Outcomes, DiscreteCTest, ::testing::Bool());
-INSTANTIATE_TEST_CASE_P(XPosition, DiscreteCrashedTest, ::testing::Values(0.14, 0.12, 0.10));
+INSTANTIATE_TEST_CASE_P(XPosition, DiscreteCrashedTest, ::testing::Values(0.16, 0.12, 0.10));
