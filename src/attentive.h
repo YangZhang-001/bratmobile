@@ -403,6 +403,14 @@ void enforce_edge();
  */
 virtual bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<bool, edgeDescriptor> ve);
 
+/**
+ * @brief propagates only if the previous vertex @param v is a dummy vertex, 
+ * but can be customised
+ */
+virtual bool canPropagate(vertexDescriptor v){
+	return transitionSystem[v].direction==STOP;
+}
+
 public:
 
 AttentiveConfigurator(){};
@@ -506,6 +514,9 @@ bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<boo
 
 void removeExploredTransitions(vertexDescriptor v)override;
 
+bool canPropagate(vertexDescriptor v)override{
+	return transitionSystem[v].direction==STOP || transitionSystem[v].direction==DEFAULT;
+}
 };
 
 /**

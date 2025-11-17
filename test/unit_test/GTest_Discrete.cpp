@@ -34,7 +34,7 @@ INSTANTIATE_TEST_CASE_P(Target40, HighLevelTestDiscrete, ::testing::Combine( ::t
 
 INSTANTIATE_TEST_CASE_P(Target68, HighLevelTestDiscrete, ::testing::Combine( ::testing::Values(true), ::testing::Values(std::string("../target_68cm/")), ::testing::Values(2, 3, 4, 6, 17, 36)));
 
-class DiscreteCTest:public DiscreteConfigurator, public testing::TestWithParam<bool> {
+class DiscreteConfiguratorTest:public DiscreteConfigurator, public testing::Test {
     public:
     void SetUp() override {
         register_tracker(new ClosedLoop_Tracker());
@@ -54,6 +54,8 @@ class DiscreteCTest:public DiscreteConfigurator, public testing::TestWithParam<b
     // }
 };
 
+class DiscreteCTest:public DiscreteConfiguratorTest, public testing::WithParamInterface<bool>{};
+
 TEST_F(DiscreteCTest, Replan) {
     setSimulationStep(.5);
     Spawner(); //should create obstacle avoidance plan
@@ -71,6 +73,7 @@ TEST_F(DiscreteCTest, Replan) {
     EXPECT_EQ(simulatedTasks, simTasks); 
     EXPECT_TRUE(currentTask.is_over());
 }
+
 
 TEST_P(DiscreteCTest, TestCheck) {
     setSimulationStep(.5);
@@ -98,6 +101,26 @@ TEST_P(DiscreteCTest, TestCheck) {
     EXPECT_EQ(m_plan.size(), plan_size);
     EXPECT_EQ(simulatedTasks, simTasks);
 }
+
+class DiscreteCrashedTest: public DiscreteConfiguratorTest,public testing::WithParamInterface<float>{};
+
+/**
+ * @brief Tests whether robot finding itself in state which collided results in replanning
+ */
+TEST_P(DiscreteCrashedTest,EstimateInCollision) {
+    setSimulationStep(.27);
+    init(DebugConfigurator::generateGoalTask());
+    data2fp.emplace(Pointf(0.5, 0)); //make point corresponding to obstacle
+    Spawner(); //should create obstacle avoidance plan
+    change_task();
+    data2fp.clear();
+    data2fp.emplace(Pointf(GetParam(), 0)); //just before collision
+    estimate_current_vertex();
+    EXPECT_EQ(currentVertex, 3);
+    Spawner(); //should not replan
+    EXPECT_GT(simulatedTasks, 1);
+}
+
 
 
 TEST_F(DiscreteCTest, DontReplan) {
@@ -141,4 +164,4 @@ TEST_F(DiscreteCTest, RemainingTime){
 }
 
 INSTANTIATE_TEST_CASE_P(Outcomes, DiscreteCTest, ::testing::Bool());
-
+INSTANTIATE_TEST_CASE_P(XPosition, DiscreteCrashedTest, ::testing::Values(0.14, 0.12, 0.10));
