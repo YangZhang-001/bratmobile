@@ -178,7 +178,7 @@ void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Front
 		return;
 	}
 	for (auto i =queue.begin(); i!=queue.end(); i++){
-		auto it=std::find(closed.begin(), closed.end(), i->frontier);
+		auto it=std::find(closed.begin(), closed.end(), f.frontier);
 		if (it!=closed.end()){
 			return;
 		}
@@ -205,7 +205,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 	auto start_time=std::chrono::high_resolution_clock::now();
 	do{
 		frontier_v=frontierVertices(src, g, info); // get next default tasks (plus non-default connecting tasks)
-		closed.push_back(src);
+		closed.emplace(src);
 		priorityQueue.erase(priorityQueue.begin());
 		for (Frontier f: frontier_v){ //add to priority queue
 			//planPriority(g, f.first);
