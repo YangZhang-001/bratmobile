@@ -165,7 +165,7 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 					}					
 				}
 
-				printf("is stuck, ei3=%i ->%i\n", (*ei).m_source, (*ei).m_target);
+				//printf("is stuck, ei3=%i ->%i\n", (*ei).m_source, (*ei).m_target);
 			}while (ei3!=es3.second);
 		}
 	}
@@ -176,7 +176,10 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Frontier>& queue, TransitionSystem &g,const  std::vector<vertexDescriptor>&closed, vertexDescriptor goal){
 	for (auto i =queue.begin(); i!=queue.end(); i++){
 		auto it=std::find(closed.begin(), closed.end(), i->frontier);
-		if (g[f.frontier].phi <abs(g[(*i).frontier].phi) && it==closed.end()){
+		if (it!=closed.end()){
+			return;
+		}
+		if (g[f.frontier].phi <abs(g[(*i).frontier].phi)){
 			queue.insert(i, f);
 			return;
 		}
