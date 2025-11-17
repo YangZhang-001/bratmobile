@@ -254,6 +254,9 @@ void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 	if (transitionSystem[v1].outcome == simResult::successful || !boost::edge(v0, v1, transitionSystem).second){
 		return;
 	}
+	if (isTurning(transitionSystem[v1].direction)!=isTurning(transitionSystem[v0].direction)){
+		return;
+	}
 	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
 	if (canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
