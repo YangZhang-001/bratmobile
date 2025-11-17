@@ -126,11 +126,30 @@ TEST_P(DiscreteCrashedTest,EstimateInCollision) {
             EXPECT_TRUE(controlGoal.checkEnded(transitionSystem[plan_end]).ended);
         }        
     }
-
-
 }
 
+class DiscretePropagateTest:public DiscreteConfiguratorTest, public testing::WithParamInterface<Direction>{};
 
+TEST_P(DiscretePropagateTest, Propagate) {
+    Disturbance d(AVOID, b2Vec2(0.5, 0));
+    dummy_vertex(MOVING_VERTEX);
+    auto v1=boost::add_vertex(transitionSystem);
+    auto e1=boost::add_edge(currentVertex, v1, transitionSystem);
+    auto v2=boost::add_vertex(transitionSystem);
+    auto e2=boost::add_edge(v1, v2, transitionSystem);
+    transitionSystem[v1].direction= DEFAULT;
+    transitionSystem[v2].direction= GetParam();
+    transitionSystem[v1].outcome= simResult::successful;
+    transitionSystem[v2].outcome= simResult::crashed;
+    transitionSystem[v2].Dn=d;
+    std::set<vertexDescriptor>closed;
+    propagateD(v2, v1, &closed);
+    EXPECT_EQ(transitionSystem[v1].outcome, simResult::safeForNow);
+    EXPECT_TRUE(transitionSystem[v1].Dn.getAffIndex()==AVOID);
+    EXPECT_TRUE(transitionSystem[currentVertex].Dn.getAffIndex()==AVOID);
+}
+
+INSTANTIATE_TEST_CASE_P(Directions, DiscretePropagateTest, ::testing::Values(DEFAULT, LEFT, RIGHT));
 
 TEST_F(DiscreteCTest, DontReplan) {
     data2fp.emplace(Pointf(0.5, 0)); //make point corresponding to obstacle

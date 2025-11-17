@@ -409,6 +409,8 @@ virtual bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::
  */
 virtual bool canPropagate(vertexDescriptor v);
 
+virtual bool canReassignOutcome(vertexDescriptor v);
+
 public:
 
 AttentiveConfigurator(){};
@@ -513,6 +515,9 @@ bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<boo
 void removeExploredTransitions(vertexDescriptor v)override;
 
 bool canPropagate(vertexDescriptor v)override;
+
+bool canReassignOutcome(vertexDescriptor v) override;
+
 };
 
 /**
