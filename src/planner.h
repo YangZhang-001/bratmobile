@@ -3,6 +3,7 @@
 
 #include "task.h"
 #include "graphTools.h"
+#include <algorithm>
 /** \file */
 
 /**
