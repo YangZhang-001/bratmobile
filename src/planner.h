@@ -20,7 +20,7 @@ struct Frontier{
 
     Frontier(vertexDescriptor _f, const std::vector<vertexDescriptor>&_c):frontier(_f), connecting(_c){}
 
-    bool operator==(const Frontier &f){
+    bool operator==(const Frontier &f)const{
         return frontier==f.frontier && connecting==f.connecting;
     }
 };
