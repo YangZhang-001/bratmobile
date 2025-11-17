@@ -277,7 +277,7 @@ void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 	if (canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
-	if (canReassignOutcome()){
+	if (canReassignOutcome(V0)){
 		transitionSystem[v0].outcome=simResult::safeForNow;
 	}
 	return;
