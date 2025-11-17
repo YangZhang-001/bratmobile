@@ -250,6 +250,14 @@ void AttentiveConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation
 	evaluation_q.clear();
 }
 
+bool AttentiveConfigurator::canPropagate(vertexDescriptor v){
+	return transitionSystem[v].direction==STOP;
+}
+
+bool DiscreteConfigurator::canPropagate(vertexDescriptor v){
+	return transitionSystem[v].direction==STOP || transitionSystem[v].direction==DEFAULT;
+}
+
 void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
 	if (transitionSystem[v1].outcome == simResult::successful || !boost::edge(v0, v1, transitionSystem).second){
 		return;

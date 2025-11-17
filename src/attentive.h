@@ -407,9 +407,7 @@ virtual bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::
  * @brief propagates only if the previous vertex @param v is a dummy vertex, 
  * but can be customised
  */
-bool canPropagate(vertexDescriptor v){
-	return transitionSystem[v].direction==STOP;
-}
+virtual bool canPropagate(vertexDescriptor v);
 
 public:
 
@@ -514,9 +512,7 @@ bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<boo
 
 void removeExploredTransitions(vertexDescriptor v)override;
 
-bool canPropagate(vertexDescriptor v){
-	return transitionSystem[v].direction==STOP || transitionSystem[v].direction==DEFAULT;
-}
+bool canPropagate(vertexDescriptor v)override;
 };
 
 /**
