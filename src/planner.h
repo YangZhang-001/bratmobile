@@ -200,7 +200,7 @@ class HorizonStarPlanner:public Planner{
      * @param g the transition system
      * @param goal the vertex where the goal is reach
      */
-    void addToPriorityQueue(const Frontier &f, std::vector<Frontier>& queue, TransitionSystem &g,const  std::vector<vertexDescriptor>&closed, vertexDescriptor goal=TransitionSystem::null_vertex());
+    void addToPriorityQueue(const Frontier &f, std::vector<Frontier>& queue, TransitionSystem &g,const  std::set<vertexDescriptor>&closed, vertexDescriptor goal=TransitionSystem::null_vertex());
 
 
 public:
