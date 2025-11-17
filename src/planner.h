@@ -19,6 +19,10 @@ struct Frontier{
     Frontier()=default;
 
     Frontier(vertexDescriptor _f, const std::vector<vertexDescriptor>&_c):frontier(_f), connecting(_c){}
+
+    bool operator==(const Frontier &f){
+        return frontier==f.frontier && connecting==f.connecting;
+    }
 };
 
 
