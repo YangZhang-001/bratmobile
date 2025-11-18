@@ -266,12 +266,12 @@ bool DiscreteConfigurator::canReassignOutcome(vertexDescriptor v){
 	return transitionSystem[v].isTurning() && transitionSystem[v].Dn.getAffIndex()==NONE;
 }
 
-void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
+bool AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
 	if (transitionSystem[v1].Dn.getAffIndex() == AVOID || !boost::edge(v0, v1, transitionSystem).second){
-		return;
+		return false; //can't propagate
 	}
 	if (isTurning(transitionSystem[v1].direction)!=isTurning(transitionSystem[v0].direction)){
-		return;
+		return false;
 	}
 	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
 	if (canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE){
@@ -280,7 +280,7 @@ void AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 	if (canReassignOutcome(v0)){
 		transitionSystem[v0].outcome=simResult::safeForNow;
 	}
-	return;
+	return true; //theoretically could continue propagating
 }
 
 void AttentiveConfigurator::visitedDirectionsPushBack( vertexDescriptor v, std::vector<Direction> & visitedDirections, Direction direction){
@@ -1019,4 +1019,25 @@ void SimplestConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_
 		}
 	}
 	evaluation_q.clear();
+}
+
+bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match){
+	while(AttentiveConfigurator::propagateD(v1, v0, closed, match)){
+		v1=v0;
+		auto ve= gt::visitedEdge(inEdges(v1, DEFAULT),transitionSystem, currentVertex);
+		auto dummyEdge=boost::edge(DUMMY, v1, transitionSystem);
+		if (!ve.first && !dummyEdge.second){
+			return false;	
+		}
+		else{
+			struct TrueEdge{
+				bool operator()(const std::pair<bool, edgeDescriptor>& p1, const std::pair<bool, edgeDescriptor> &p2)const{
+					return p1.second<p2.second;
+				}
+			};
+			ve=std::max(ve, std::pair<bool, edgeDescriptor>(dummyEdge.second, dummyEdge.first), TrueEdge());
+		}
+		v0=ve.second.m_source;
+	}
+	return false;
 }

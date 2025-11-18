@@ -61,13 +61,15 @@ virtual std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d
 
 /**
  * @brief Propagate a disturbance backwards to all states representing the same task
- * 
+ *  (max 1)
  * @param v1 final vertex linked to the final sub-state in the task
  * @param v0 source of v1
  * @param closed closed set
  * @param match is v1 a match of any kind to a vertex in the graph
+ * 
+ * @return whether a criteria to continue propagating is met
  */
-void propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE);
+virtual bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE);
 
 //if in plan the vertex gets priority
 void planPriority(TransitionSystem&, vertexDescriptor); 
@@ -517,6 +519,8 @@ void removeExploredTransitions(vertexDescriptor v)override;
 bool canPropagate(vertexDescriptor v)override;
 
 bool canReassignOutcome(vertexDescriptor v) override;
+
+bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE)override;
 
 };
 
