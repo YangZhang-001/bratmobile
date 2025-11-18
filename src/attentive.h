@@ -421,6 +421,8 @@ AttentiveConfigurator(Task _task){
 	init(_task);
 }
 
+virtual ~AttentiveConfigurator(){}
+
 
 
 };
