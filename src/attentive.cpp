@@ -1040,5 +1040,5 @@ bool DiscreteConfigurator::canPropagate(vertexDescriptor v){
 }
 
 bool DiscreteConfigurator::canReassignOutcome(vertexDescriptor v){
-	return !transitionSystem[v].isTurning() && transitionSystem[v].Dn.getAffIndex()==NONE;
+	return !transitionSystem[v].isTurning();
 }
