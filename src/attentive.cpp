@@ -267,7 +267,7 @@ bool DiscreteConfigurator::canReassignOutcome(vertexDescriptor v){
 }
 
 bool AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
-	if (transitionSystem[v1].Dn.getAffIndex() == AVOID || !boost::edge(v0, v1, transitionSystem).second){
+	if (transitionSystem[v1].outcome == simResult::successful || !boost::edge(v0, v1, transitionSystem).second){
 		return false; //can't propagate
 	}
 	if (isTurning(transitionSystem[v1].direction)!=isTurning(transitionSystem[v0].direction)){
