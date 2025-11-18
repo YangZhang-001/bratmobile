@@ -270,7 +270,8 @@ bool AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 	if (canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
-	if (canReassignOutcome(v0)){
+	bool canReassign=canReassignOutcome(v0);
+	if (canReassign){
 		transitionSystem[v0].outcome=simResult::safeForNow;
 	}
 	return true; //theoretically could continue propagating

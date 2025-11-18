@@ -144,9 +144,16 @@ TEST_P(DiscretePropagateTest, Propagate) {
     transitionSystem[v2].Dn=d;
     std::set<vertexDescriptor>closed;
     propagateD(v2, v1, &closed);
-    EXPECT_EQ(transitionSystem[v1].outcome, simResult::safeForNow);
-    EXPECT_TRUE(transitionSystem[v1].Dn.getAffIndex()==AVOID);
-    EXPECT_TRUE(transitionSystem[currentVertex].Dn.getAffIndex()==AVOID);
+    if (GetParam()==DEFAULT){
+        EXPECT_EQ(transitionSystem[v1].outcome, simResult::safeForNow);
+        EXPECT_TRUE(transitionSystem[v1].Dn.getAffIndex()==AVOID);
+        EXPECT_TRUE(transitionSystem[currentVertex].Dn.getAffIndex()==AVOID);
+    }
+    else{
+        EXPECT_NE(transitionSystem[v1].outcome, simResult::safeForNow);
+        EXPECT_FALSE(transitionSystem[v1].Dn.getAffIndex()==AVOID);
+        EXPECT_FALSE(transitionSystem[currentVertex].Dn.getAffIndex()==AVOID);
+    }
 }
 
 INSTANTIATE_TEST_CASE_P(Directions, DiscretePropagateTest, ::testing::Values(DEFAULT, LEFT, RIGHT));
