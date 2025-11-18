@@ -254,16 +254,9 @@ bool AttentiveConfigurator::canPropagate(vertexDescriptor v){
 	return transitionSystem[v].direction==STOP;
 }
 
-bool DiscreteConfigurator::canPropagate(vertexDescriptor v){
-	return transitionSystem[v].direction==STOP || transitionSystem[v].direction==DEFAULT;
-}
 
 bool AttentiveConfigurator::canReassignOutcome(vertexDescriptor v){
 	return v==currentVertex;
-}
-
-bool DiscreteConfigurator::canReassignOutcome(vertexDescriptor v){
-	return transitionSystem[v].isTurning() && transitionSystem[v].Dn.getAffIndex()==NONE;
 }
 
 bool AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
@@ -1040,4 +1033,12 @@ bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, 
 		v0=ve.second.m_source;
 	}
 	return false;
+}
+
+bool DiscreteConfigurator::canPropagate(vertexDescriptor v){
+	return transitionSystem[v].direction==STOP || transitionSystem[v].direction==DEFAULT;
+}
+
+bool DiscreteConfigurator::canReassignOutcome(vertexDescriptor v){
+	return !transitionSystem[v].isTurning() && transitionSystem[v].Dn.getAffIndex()==NONE;
 }
