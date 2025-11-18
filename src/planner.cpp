@@ -2,7 +2,8 @@
 
 float evaluationFunction(EndedResult er,  const vertexDescriptor& v, std::vector<vertexDescriptor>& p){ 
 	float result=(abs(er.estimatedCost)+abs(er.cost))/2;
-	if (auto it=check_vector_for(p, v); it!=p.end()){
+//	if (auto it=check_vector_for(p, v); it!=p.end()){
+	if (std::find(p.cbegin(), p.cend(), v)!=p.end()){
 		result-=0.1;
 	}
 	return result; //normalised to 1

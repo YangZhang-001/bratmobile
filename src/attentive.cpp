@@ -1032,6 +1032,8 @@ bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, 
 			ve=std::max(ve, std::pair<bool, edgeDescriptor>(dummyEdge.second, dummyEdge.first), TrueEdge());
 		}
 		v0=ve.second.m_source;
+		EndedResult er=estimateCost(transitionSystem[v0],transitionSystem[v0].start, transitionSystem[v0].direction, controlGoal);
+		transitionSystem[v0].phi=evaluationFunction(er, v0, m_plan);
 	}
 	return false;
 }
