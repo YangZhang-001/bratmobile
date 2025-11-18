@@ -1021,7 +1021,7 @@ void SimplestConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_
 	evaluation_q.clear();
 }
 
-bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match){
+bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed, StateMatcher::MATCH_TYPE match){
 	while(AttentiveConfigurator::propagateD(v1, v0, closed, match)){
 		v1=v0;
 		auto ve= gt::visitedEdge(inEdges(v1, DEFAULT),transitionSystem, currentVertex);
