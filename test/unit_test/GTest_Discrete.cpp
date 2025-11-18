@@ -197,6 +197,32 @@ TEST_F(DiscreteCTest, RemainingTime){
         transitionSystem[v1].endPose=InvMul(currentTask.getAction().getTransform(MOTOR_CALLBACK), transitionSystem[v1].endPose);
     }
 }
+/**
+ * @brief Test if robot is able to self-correct motion!
+ */
+TEST_F(DiscreteCTest, Correct){
+    setSimulationStep(.5);
+    running=1;
+    b2Vec2 point(0.3, 0);
+    data2fp.emplace(Pointf(point.x, point.y));
+    Spawner();
+    auto this_plan=m_plan;
+    change_task();
+    estimate_current_vertex();
+    data2fp.clear();
+    float angle=3*M_PI_4/2; //75 degrees
+    angle=std::copysign(angle, currentTask.getAction().getOmega());
+    point=b2Mul(b2Rot(angle), point);
+    data2fp.emplace(Pointf(point.x, point.y));
+    update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(),b2Transform(b2Vec2(), b2Rot(angle))));
+    currentTask.set_change(1);
+    Spawner();
+    change_task();
+    estimate_current_vertex();
+    EXPECT_EQ(currentVertex, (*this_plan.begin()));
+    EXPECT_TRUE(transitionSystem[currentVertex].isTurning());
+    
+}
 
 INSTANTIATE_TEST_CASE_P(Outcomes, DiscreteCTest, ::testing::Bool());
 INSTANTIATE_TEST_CASE_P(XPosition, DiscreteCrashedTest, ::testing::Values(0.16, 0.12, 0.10));
