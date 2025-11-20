@@ -430,7 +430,7 @@ virtual ~AttentiveConfigurator()=default;
 /** 
  * @brief Configurator that only replans if the current task fails
 */
-class FocusedConfigurator:virtual public AttentiveConfigurator{
+class FocusedConfigurator: public AttentiveConfigurator{
 	protected:
 
 	StateMatcher::MATCH_TYPE desiredMatch() override {
