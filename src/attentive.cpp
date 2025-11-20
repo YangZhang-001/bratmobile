@@ -263,7 +263,7 @@ bool AttentiveConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0,
 	if (transitionSystem[v1].outcome == simResult::successful || !boost::edge(v0, v1, transitionSystem).second){
 		return false; //can't propagate
 	}
-	if (isTurning(transitionSystem[v1].direction)!=isTurning(transitionSystem[v0].direction)){
+	if (transitionSystem[v1].isTurning()!=transitionSystem[v0].isTurning()){
 		return false;
 	}
 	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
@@ -1017,6 +1017,7 @@ void SimplestConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_
 
 bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed, StateMatcher::MATCH_TYPE match){
 	while(AttentiveConfigurator::propagateD(v1, v0, closed, match)){
+		//potentially find match
 		v1=v0;
 		auto ve= gt::visitedEdge(inEdges(v1, DEFAULT),transitionSystem, currentVertex);
 		auto dummyEdge=boost::edge(DUMMY, v1, transitionSystem);
