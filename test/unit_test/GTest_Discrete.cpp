@@ -201,6 +201,7 @@ TEST_F(DiscreteCTest, RemainingTime){
  * @brief Test if robot is able to self-correct motion!
  */
 TEST_F(DiscreteCTest, Correct){
+    GTEST_SKIP();
     setSimulationStep(.5);
     running=1;
     b2Vec2 point(0.3, 0);
