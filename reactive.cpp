@@ -8,6 +8,7 @@ int main(int argc, char** argv) {
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
 	//Motor_Out controlInterface;
+    ReactiveConfigurator configurator;
 	if (argc>1){
 		configurator.init(controlGoal);
 		configurator.setSimulationStep(.27);
@@ -15,7 +16,6 @@ int main(int argc, char** argv) {
 	else{
 		configurator.setSimulationStep(.5);
 	}
-    ReactiveConfigurator configurator;
 	LaserFocus wb;
 	configurator.register_worldBuilder(&wb);
 	NoPlanner planner;
@@ -35,7 +35,6 @@ int main(int argc, char** argv) {
 	motors.stop();
 	configurator.stop();
 	lidar.stop();
-	logger.~Logger();
 }
 	
 	
