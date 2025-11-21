@@ -381,9 +381,9 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 		transitionSystem[MOVING_VERTEX].direction=DEFAULT;
 		currentTask.getAction().init(transitionSystem[currentVertex].direction);
 	}
-	if (currentTask.getAction().getOmega()!=0 && currentTask.getMotorStep()<(transitionSystem[movingEdge].step)){
-		return;
-	}
+	// if (currentTask.getAction().getOmega()!=0 && currentTask.getMotorStep()<(transitionSystem[movingEdge].step)){
+	// 	return;
+	// }
 	Task t(currentTask.get_disturbance(), currentTask.get_direction(), b2Transform_zero, true);
 //	adjustStepDistance(currentVertex, transitionSystem, &t, _simulationStep);
 	worldBuilder->buildWorld(world, transitionSystem[MOVING_VERTEX].start, currentTask.get_direction()); //was g[v].endPose
