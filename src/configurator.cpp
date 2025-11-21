@@ -364,6 +364,16 @@ void Configurator::adjust_simulated_task(const vertexDescriptor &v, Task & t){
 	}
 }
 
+std::pair <bool, Direction> Configurator::getOppositeDirection(Direction d){
+	std::pair <bool, Direction> result(false, DEFAULT);
+		switch (d){
+		case Direction::LEFT: result.first = true; result.second = RIGHT;break;
+		case Direction::RIGHT: result.first = true; result.second = LEFT;break;
+		default:
+		break;
+	}
+	return result;
+}
 
 void ReactiveConfigurator::explore_plan(b2World &world){
 	if (transitionSystem.m_vertices.size()==1 && iteration<=1){

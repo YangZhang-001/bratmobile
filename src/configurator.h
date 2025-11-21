@@ -160,8 +160,16 @@ void update_graph(TransitionSystem& g, const TrackingResult & tr);
  */
 float approximate_angle(float angle, Direction d, simResult::resultType outcome);
 
-
+/**
+* @brief Uses tracking information to adjust the position of the goal relative to the robot
+*/
 void adjust_goal_expectation();
+
+/**
+ * @return std::pair <bool, Direction>(opposite exists, opposite direction)
+ */
+std::pair <bool, Direction> getOppositeDirection(Direction d);
+
 
 /**
  * @brief If Task @param t corresponds to current Task, change its end criteria so that it is only simulated for the remainder of the end criteria

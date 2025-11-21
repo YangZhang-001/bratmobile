@@ -25,16 +25,7 @@ void AttentiveConfigurator::resetPhi(){
 }
 
 
-std::pair <bool, Direction> AttentiveConfigurator::getOppositeDirection(Direction d){
-	std::pair <bool, Direction> result(false, DEFAULT);
-		switch (d){
-		case Direction::LEFT: result.first = true; result.second = RIGHT;break;
-		case Direction::RIGHT: result.first = true; result.second = LEFT;break;
-		default:
-		break;
-	}
-	return result;
-}
+
 Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
 	b2Transform invmul=InvMul(start,g[v].endPose);
 	if (!g[v].Dn.isValid() ){
