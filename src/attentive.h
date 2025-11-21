@@ -529,24 +529,24 @@ bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescrip
 
 };
 
-/**
- * @brief Plans by simply looking ahead at the possible Tasks and choosing the best sequence.
- * Does not process states, e.g. with split
- */
-class SimplestConfigurator: public FocusedConfigurator{
-	int simulationStep=BOX2DRANGE;
+// /**
+//  * @brief Plans by simply looking ahead at the possible Tasks and choosing the best sequence.
+//  * Does not process states, e.g. with split
+//  */
+// class SimplestConfigurator: public FocusedConfigurator{
+// 	int simulationStep=BOX2DRANGE;
 
-	Robot makeRobot(b2World & world, const b2Transform & start){
-		return Configurator::makeRobot(world, start);
-	}
+// 	Robot makeRobot(b2World & world, const b2Transform & start){
+// 		return Configurator::makeRobot(world, start);
+// 	}
 
-	Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start){
-    	return g[v].Dn;
-	}
+// 	Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start){
+//     	return g[v].Dn;
+// 	}
 
-	void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src=MOVING_VERTEX, vertexDescriptor startRecycle=MOVING_VERTEX);
+// 	void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src=MOVING_VERTEX, vertexDescriptor startRecycle=MOVING_VERTEX);
 
 
 
-};
+// };
 #endif
