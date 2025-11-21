@@ -6,7 +6,7 @@ void Configurator::MulT(const b2Transform& B, Task& task){
 	math::MulT(B, task.disturbance);
 }
 
-void Configurator::_InvMul(const b2Transform& B, Task& task){
+void Configurator::InvMul(const b2Transform& B, Task& task){
 	math::InvMul(B, task.start);
 	math::InvMul(B, task.disturbance);
 }

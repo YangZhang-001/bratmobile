@@ -30,12 +30,12 @@ b2Transform State::end_from_Di()const{
 }
 
 float State::distance()const{
-	return (InvMul(endPose, start)).p.Length();
+	return (b2help::InvMul(endPose, start)).p.Length();
 }
 
 b2Transform State::travel_transform(){
 	//return start-endPose;
-	return InvMul(endPose, start);
+	return b2help::InvMul(endPose, start);
 }
 
 bool Edge::enableOverride(){

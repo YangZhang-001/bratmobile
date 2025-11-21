@@ -136,7 +136,7 @@ int B2BConfigurator::minimumEdgesForClearvoyance(Direction direction){
 
 
 Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
-	b2Transform invmul=InvMul(start,g[v].endPose);
+	b2Transform invmul=b2help::InvMul(start,g[v].endPose);
 	if (!g[v].Dn.isValid() ){
 		std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);

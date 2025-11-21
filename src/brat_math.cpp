@@ -1,4 +1,5 @@
 #include "brat_math.h"
+#include "box2d_helpers.h"
 
 
 void math::MulT(const b2Transform& deltaPose, b2Transform& pose){
@@ -36,7 +37,7 @@ void math::MulT(const b2Transform& deltaPose, Disturbance& d){
 
 //
 void math::InvMul(const b2Transform& deltaPose, b2Transform& pose){
-	pose =InvMul(deltaPose, pose);
+	pose =b2help::InvMul(deltaPose, pose);
 }
 
 void math::InvMul(const b2Transform& deltaPose, State& state){
