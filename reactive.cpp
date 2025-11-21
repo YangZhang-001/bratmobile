@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 	OpenLooper tracker;
 	configurator.register_planner(&planner);
 	configurator.register_tracker(&tracker);
-	Reactive_Controller Controller wc;
+	Reactive_Controller wc;
 	configurator.register_controller(&wc);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &tracker);
