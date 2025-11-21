@@ -6,6 +6,11 @@ void Configurator::MulT(const b2Transform& B, Task& task){
 	math::MulT(B, task.disturbance);
 }
 
+void Configurator::InvMul(const b2Transform& B, Task& task){
+	math::InvMul(B, task.start);
+	math::InvMul(B, task.disturbance);
+}
+
 void Configurator::Mul(const b2Transform&B , Task &task){
 	task.start=b2Mul(B, task.start);
 	task.disturbance.bf.pose=b2Mul(B, task.disturbance.pose());
@@ -279,8 +284,8 @@ void Configurator::change_task(){
 }
 
 void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
-	math::MulT(tr.displacement, g);
-	Configurator::MulT(tr.displacement, controlGoal);
+	math::InvMul(tr.displacement, g);
+	Configurator::InvMul(tr.displacement, controlGoal);
 	debug::print_pose(controlGoal.disturbance.pose(), "goal disturbance after tracking:");
 	currentTask.disturbance=tr.observed_disturbance;
 	if (!tracker){

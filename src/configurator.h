@@ -231,6 +231,14 @@ void register_goalChanger(GoalChanger * gc){
  */
 static void MulT(const b2Transform& B, Task & task);
 
+
+/**
+ * @brief Matrix multiply by transpose
+ * 
+ */
+static void InvMul(const b2Transform& B, Task & task);
+
+
 /**
  * @brief Matrix multiplication
  * 

@@ -13,12 +13,6 @@ void math::MulT(const b2Transform& deltaPose, State& state){
 
 }
 
-// void math::MulT(const b2Transform& deltaPose, Task* task){
-// 	math::MulT(deltaPose, task->getStartRef());
-// 	math::MulT(deltaPose, *task->get_disturbance_ptr());
-// }
-
-
 
 void math::MulT(const b2Transform& deltaPose, TransitionSystem& g){
 	auto vPair =boost::vertices(g);
@@ -38,6 +32,46 @@ void math::MulT(const b2Transform& deltaPose, Disturbance& d){
 		math::MulT(deltaPose, d.bf.pose);
 	}
 }
+
+
+//
+void math::InvMul(const b2Transform& deltaPose, b2Transform& pose){
+	pose =InvMul(deltaPose, pose);
+}
+
+void math::InvMul(const b2Transform& deltaPose, State& state){
+	math::InvMul(deltaPose, state.endPose);
+	math::InvMul(deltaPose, state.start);
+	math::InvMul(deltaPose, state.Dn);
+	math::InvMul(deltaPose, state.Di);
+
+}
+
+
+
+void math::InvMul(const b2Transform& deltaPose, TransitionSystem& g){
+	auto vPair =boost::vertices(g);
+	for (auto vIt= vPair.first; vIt!=vPair.second; ++vIt){ //each node is adjusted in explorer, so now we update
+		if (*vIt!=0){
+			math::InvMul(deltaPose, g[*vIt]);
+		}
+		else{
+			math::InvMul(deltaPose, g[*vIt].Di);
+			math::InvMul(deltaPose, g[*vIt].Dn);
+		}
+	}
+}
+
+void math::InvMul(const b2Transform& deltaPose, Disturbance& d){
+	if (d.getAffIndex()!=NONE){
+		math::InvMul(deltaPose, d.bf.pose);
+	}
+}
+
+
+
+
+
 
 cv::Mat math::cv_affine_matrix33(const b2Transform & t){
 	cv::Point2f p(t.p.x, t.p.y);
