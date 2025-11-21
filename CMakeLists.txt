@@ -36,8 +36,8 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   target_link_libraries(brat2_target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
   target_link_libraries(brat3_targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio)
   target_link_libraries(brat3_target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
-  target_link_libraries(brat1_targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio)
-  target_link_libraries(brat1_target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
+#  target_link_libraries(brat1_targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio)
+ # target_link_libraries(brat1_target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
   
   add_subdirectory(test)
   message("detected architecture aarch64, building executables")
