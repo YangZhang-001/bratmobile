@@ -426,21 +426,6 @@ void AttentiveConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<v
 }
 
 
-void AttentiveConfigurator::adjust_simulated_task(const vertexDescriptor &v, Task & t){
-	std::pair<edgeDescriptor, bool> ep= boost::edge(v, currentVertex, transitionSystem);
-	if(!ep.second){ //no tgt	
-		return; //check until needs to be checked
-	}
-	if (!t.getEndCriteria().angle.isValid()){return;}
-	if (t.get_direction()==DEFAULT){return;}
-	if (t.get_direction()==currentTask.get_direction()){
-		t.getEndCriteria().adjust(-tracker->getDeltaTransform());
-	}
-	else if (t.get_direction()==getOppositeDirection(currentTask.get_direction()).second){
-		t.getEndCriteria().adjust(tracker->getDeltaTransform());
-	}
-}
-
 
 VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
 	VertexMatch result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex()), backup=result;

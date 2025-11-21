@@ -163,6 +163,14 @@ float approximate_angle(float angle, Direction d, simResult::resultType outcome)
 
 void adjust_goal_expectation();
 
+/**
+ * @brief If Task @param t corresponds to current Task, change its end criteria so that it is only simulated for the remainder of the end criteria
+ * 
+ * @param v source vertex for the task
+ * @param t task reference
+ */
+virtual void adjust_simulated_task(const vertexDescriptor&v,  Task& t);
+
 
 void register_controller(Controller * controller){
 	task_controller=controller;

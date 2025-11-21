@@ -421,7 +421,7 @@ AttentiveConfigurator(Task _task){
 	init(_task);
 }
 
-virtual ~AttentiveConfigurator(){}
+virtual ~AttentiveConfigurator()=default;
 
 
 
@@ -430,9 +430,12 @@ virtual ~AttentiveConfigurator(){}
 /** 
  * @brief Configurator that only replans if the current task fails
 */
-class FocusedConfigurator:virtual public AttentiveConfigurator{
+class FocusedConfigurator: public AttentiveConfigurator{
 	protected:
 
+	StateMatcher::MATCH_TYPE desiredMatch() override {
+		return StateMatcher::MATCH_TYPE::_TRUE;
+	}	
 	/**
 	 * @brief If the current vertex is matched, don't allow to check plan further
 	 * 
@@ -518,7 +521,7 @@ bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<boo
 
 void removeExploredTransitions(vertexDescriptor v)override;
 
-bool canPropagate(vertexDescriptor v)override;
+bool canPropagate(vertexDescriptor v) override;
 
 bool canReassignOutcome(vertexDescriptor v) override;
 

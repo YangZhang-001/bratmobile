@@ -349,6 +349,21 @@ void Configurator::assignDimensions(Task & t, float halfLength, float halfWidth)
 	assignBodyFeatures(t, bf);
 }
 
+void Configurator::adjust_simulated_task(const vertexDescriptor &v, Task & t){
+	std::pair<edgeDescriptor, bool> ep= boost::edge(v, currentVertex, transitionSystem);
+	if(!ep.second){ //no tgt	
+		return; //check until needs to be checked
+	}
+	if (!t.getEndCriteria().angle.isValid()){return;}
+	if (t.get_direction()==DEFAULT){return;}
+	if (t.get_direction()==currentTask.get_direction()){
+		t.getEndCriteria().adjust(-tracker->getDeltaTransform());
+	}
+	else if (t.get_direction()==getOppositeDirection(currentTask.get_direction()).second){
+		t.getEndCriteria().adjust(tracker->getDeltaTransform());
+	}
+}
+
 
 void ReactiveConfigurator::explore_plan(b2World &world){
 	if (transitionSystem.m_vertices.size()==1 && iteration<=1){
@@ -359,10 +374,11 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 	if (currentTask.getAction().getOmega()!=0 && currentTask.getMotorStep()<(transitionSystem[movingEdge].step)){
 		return;
 	}
-	//adjustStepDistance(currentVertex, transitionSystem, &currentTask, _simulationStep);
+	Task t(currentTask.get_disturbance(), currentTask.get_direction(), b2Transform_zero, true);
+//	adjustStepDistance(currentVertex, transitionSystem, &t, _simulationStep);
 	worldBuilder->buildWorld(world, transitionSystem[MOVING_VERTEX].start, currentTask.get_direction()); //was g[v].endPose
-	Task t=currentTask;
-	t.H(t.get_disturbance(), t.get_direction(), true);
+	//t.H(t.get_disturbance(), currentTask.get_direction(), true);
+	adjust_simulated_task(currentVertex, t);
 	simResult result = simulate(t, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],
 	gt::fill(result, &transitionSystem[currentVertex], &transitionSystem[currentEdge]);
 	
