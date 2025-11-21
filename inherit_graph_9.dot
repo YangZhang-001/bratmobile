@@ -13,8 +13,6 @@ digraph "Graphical Class Hierarchy"
   Node3 [label="FocusedConfigurator",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classFocusedConfigurator.html",tooltip="Configurator that only replans if the current task fails."];
   Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node4 [label="DiscreteConfigurator",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classDiscreteConfigurator.html",tooltip="Configurator that discretises DEFAULT tasks into fixed-length segments. Basically,..."];
-  Node3 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node5 [label="SimplestConfigurator",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classSimplestConfigurator.html",tooltip="Plans by simply looking ahead at the possible Tasks and choosing the best sequence...."];
-  Node0 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node6 [label="ReactiveConfigurator",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classReactiveConfigurator.html",tooltip="Implements a Braitenberg vehicle: only simulates one Task at a time."];
+  Node0 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="ReactiveConfigurator",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classReactiveConfigurator.html",tooltip="Implements a Braitenberg vehicle: only simulates one Task at a time."];
 }

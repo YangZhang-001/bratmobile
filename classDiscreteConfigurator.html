@@ -127,6 +127,15 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:aaa5c90d9551541cec5e25cea0515d864"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteConfigurator.html#aaa5c90d9551541cec5e25cea0515d864">removeExploredTransitions</a> (vertexDescriptor v) override</td></tr>
 <tr class="memdesc:aaa5c90d9551541cec5e25cea0515d864"><td class="mdescLeft">&#160;</td><td class="mdescRight">If the current vertex is matched, don't allow to check plan further.  <a href="classDiscreteConfigurator.html#aaa5c90d9551541cec5e25cea0515d864">More...</a><br /></td></tr>
 <tr class="separator:aaa5c90d9551541cec5e25cea0515d864"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa106dc46a8d1a98a35d4ef0a0e2f5424"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteConfigurator.html#aa106dc46a8d1a98a35d4ef0a0e2f5424">canPropagate</a> (vertexDescriptor v) override</td></tr>
+<tr class="memdesc:aa106dc46a8d1a98a35d4ef0a0e2f5424"><td class="mdescLeft">&#160;</td><td class="mdescRight">propagates only if the previous vertex  <a href="classDiscreteConfigurator.html#aa106dc46a8d1a98a35d4ef0a0e2f5424">More...</a><br /></td></tr>
+<tr class="separator:aa106dc46a8d1a98a35d4ef0a0e2f5424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b2ea9effa5ec64ba41c045e6265f39d"><td class="memItemLeft" align="right" valign="top"><a id="a8b2ea9effa5ec64ba41c045e6265f39d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>canReassignOutcome</b> (vertexDescriptor v) override</td></tr>
+<tr class="separator:a8b2ea9effa5ec64ba41c045e6265f39d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ea53b8adec244fd4fda39476dd59116"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDiscreteConfigurator.html#a2ea53b8adec244fd4fda39476dd59116">propagateD</a> (vertexDescriptor v1, vertexDescriptor v0, std::set&lt; vertexDescriptor &gt; *closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE) override</td></tr>
+<tr class="memdesc:a2ea53b8adec244fd4fda39476dd59116"><td class="mdescLeft">&#160;</td><td class="mdescRight">Propagate a disturbance backwards to all states representing the same task (max 1)  <a href="classDiscreteConfigurator.html#a2ea53b8adec244fd4fda39476dd59116">More...</a><br /></td></tr>
+<tr class="separator:a2ea53b8adec244fd4fda39476dd59116"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classAttentiveConfigurator"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classAttentiveConfigurator')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classAttentiveConfigurator.html">AttentiveConfigurator</a></td></tr>
 <tr class="memitem:ac67f50ed3d32999513f7407e722d54d4 inherit pub_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ac67f50ed3d32999513f7407e722d54d4"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>AttentiveConfigurator</b> (<a class="el" href="classTask.html">Task</a> _task)</td></tr>
@@ -257,15 +266,12 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 <tr class="memitem:a79980a3078cf0a0cf21ca54f2fe24f6f inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a79980a3078cf0a0cf21ca54f2fe24f6f">splitTask</a> (vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex())</td></tr>
 <tr class="memdesc:a79980a3078cf0a0cf21ca54f2fe24f6f inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Split tasks into sub-states of fixed length.  <a href="classAttentiveConfigurator.html#a79980a3078cf0a0cf21ca54f2fe24f6f">More...</a><br /></td></tr>
 <tr class="separator:a79980a3078cf0a0cf21ca54f2fe24f6f inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1222f646fce034d1c9d009a31c2a2cb9 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a1222f646fce034d1c9d009a31c2a2cb9">propagateD</a> (vertexDescriptor v1, vertexDescriptor v0, std::set&lt; vertexDescriptor &gt; *closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE)</td></tr>
-<tr class="memdesc:a1222f646fce034d1c9d009a31c2a2cb9 inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Propagate a disturbance backwards to all states representing the same task.  <a href="classAttentiveConfigurator.html#a1222f646fce034d1c9d009a31c2a2cb9">More...</a><br /></td></tr>
-<tr class="separator:a1222f646fce034d1c9d009a31c2a2cb9 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a580d62685aee883b17666809c143f108 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a580d62685aee883b17666809c143f108"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>planPriority</b> (TransitionSystem &amp;, vertexDescriptor)</td></tr>
 <tr class="separator:a580d62685aee883b17666809c143f108 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4e2352d2b7281e1c81f087b8067d018 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#ac4e2352d2b7281e1c81f087b8067d018">adjust_simulated_task</a> (const vertexDescriptor &amp;v, <a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
-<tr class="memdesc:ac4e2352d2b7281e1c81f087b8067d018 inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>.  <a href="classAttentiveConfigurator.html#ac4e2352d2b7281e1c81f087b8067d018">More...</a><br /></td></tr>
-<tr class="separator:ac4e2352d2b7281e1c81f087b8067d018 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe478eeb861f94c74f6d6cf4febca9d2 inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#abe478eeb861f94c74f6d6cf4febca9d2">adjust_simulated_task</a> (const vertexDescriptor &amp;v, <a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
+<tr class="memdesc:abe478eeb861f94c74f6d6cf4febca9d2 inherit pro_methods_classAttentiveConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>.  <a href="classAttentiveConfigurator.html#abe478eeb861f94c74f6d6cf4febca9d2">More...</a><br /></td></tr>
+<tr class="separator:abe478eeb861f94c74f6d6cf4febca9d2 inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb5f4a26cbd31156fcae8065265e0daf inherit pro_methods_classAttentiveConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="abb5f4a26cbd31156fcae8065265e0daf"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>adjust_rw_task</b> (const vertexDescriptor &amp;, TransitionSystem &amp;, <a class="el" href="classTask.html">Task</a> *, const b2Transform &amp;)</td></tr>
 <tr class="separator:abb5f4a26cbd31156fcae8065265e0daf inherit pro_methods_classAttentiveConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -505,6 +511,42 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
 
 </div>
 </div>
+<a id="aa106dc46a8d1a98a35d4ef0a0e2f5424"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa106dc46a8d1a98a35d4ef0a0e2f5424">&#9670;&nbsp;</a></span>canPropagate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DiscreteConfigurator::canPropagate </td>
+          <td>(</td>
+          <td class="paramtype">vertexDescriptor&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>propagates only if the previous vertex </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>is a dummy vertex, but can be customised </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented from <a class="el" href="classAttentiveConfigurator.html#a781eb43831bd20f0d99215b4add9e141">AttentiveConfigurator</a>.</p>
+
+</div>
+</div>
 <a id="a3ccf21d3a9183e30af538a335781f846"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3ccf21d3a9183e30af538a335781f846">&#9670;&nbsp;</a></span>findMatch()</h2>
 
@@ -656,6 +698,68 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
 </dl>
 
 <p>Reimplemented from <a class="el" href="classAttentiveConfigurator.html#ab44bc7a1149a82ebc32c38ca0f95e5f0">AttentiveConfigurator</a>.</p>
+
+</div>
+</div>
+<a id="a2ea53b8adec244fd4fda39476dd59116"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ea53b8adec244fd4fda39476dd59116">&#9670;&nbsp;</a></span>propagateD()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DiscreteConfigurator::propagateD </td>
+          <td>(</td>
+          <td class="paramtype">vertexDescriptor&#160;</td>
+          <td class="paramname"><em>v1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">vertexDescriptor&#160;</td>
+          <td class="paramname"><em>v0</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::set&lt; vertexDescriptor &gt; *&#160;</td>
+          <td class="paramname"><em>closed</em> = <code>NULL</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">StateMatcher::MATCH_TYPE&#160;</td>
+          <td class="paramname"><em>match</em> = <code>StateMatcher::_FALSE</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Propagate a disturbance backwards to all states representing the same task (max 1) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v1</td><td>final vertex linked to the final sub-state in the task </td></tr>
+    <tr><td class="paramname">v0</td><td>source of v1 </td></tr>
+    <tr><td class="paramname">closed</td><td>closed set </td></tr>
+    <tr><td class="paramname">match</td><td>is v1 a match of any kind to a vertex in the graph</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>whether a criteria to continue propagating is met </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classAttentiveConfigurator.html#a6a53c2674be7a4e886667508ac824e28">AttentiveConfigurator</a>.</p>
 
 </div>
 </div>

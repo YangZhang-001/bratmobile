@@ -143,6 +143,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a93f9fc1ab8bfb68c5f381341f838bca9"><td class="memItemLeft" align="right" valign="top"><a id="a93f9fc1ab8bfb68c5f381341f838bca9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>adjust_goal_expectation</b> ()</td></tr>
 <tr class="separator:a93f9fc1ab8bfb68c5f381341f838bca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a146e6403431265509070da248f7cb4bf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">adjust_simulated_task</a> (const vertexDescriptor &amp;v, <a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
+<tr class="memdesc:a146e6403431265509070da248f7cb4bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>.  <a href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">More...</a><br /></td></tr>
+<tr class="separator:a146e6403431265509070da248f7cb4bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4f9783ecda5b18a35c9aa41380fc751"><td class="memItemLeft" align="right" valign="top"><a id="af4f9783ecda5b18a35c9aa41380fc751"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>register_controller</b> (<a class="el" href="classController.html">Controller</a> *controller)</td></tr>
 <tr class="separator:af4f9783ecda5b18a35c9aa41380fc751"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -332,6 +335,54 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a146e6403431265509070da248f7cb4bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a146e6403431265509070da248f7cb4bf">&#9670;&nbsp;</a></span>adjust_simulated_task()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Configurator::adjust_simulated_task </td>
+          <td>(</td>
+          <td class="paramtype">const vertexDescriptor &amp;&#160;</td>
+          <td class="paramname"><em>v</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
+          <td class="paramname"><em>t</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>If <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>corresponds to current <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>, change its end criteria so that it is only simulated for the remainder of the end criteria</td></tr>
+    <tr><td class="paramname">v</td><td>source vertex for the task </td></tr>
+    <tr><td class="paramname">t</td><td>task reference </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented in <a class="el" href="classAttentiveConfigurator.html#abe478eeb861f94c74f6d6cf4febca9d2">AttentiveConfigurator</a>.</p>
 
 </div>
 </div>

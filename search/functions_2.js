@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['canpropagate_314',['canPropagate',['../classAttentiveConfigurator.html#a781eb43831bd20f0d99215b4add9e141',1,'AttentiveConfigurator::canPropagate()'],['../classDiscreteConfigurator.html#aa106dc46a8d1a98a35d4ef0a0e2f5424',1,'DiscreteConfigurator::canPropagate()']]],
   ['cast_5fb2vec2_315',['cast_b2Vec2',['../sensor_8h.html#a05f8a240a869f8b2d7dc1846e5e530c1',1,'sensor.h']]],
   ['cast_5fpoint2f_316',['cast_Point2f',['../sensor_8h.html#a206c7eef8d86aae669fa3d740bc1f5a1',1,'sensor.h']]],
   ['change_5fgoal_317',['change_goal',['../structGoalChanger.html#ab68649df6c693ce06ea01912d2d5bcd2',1,'GoalChanger']]],

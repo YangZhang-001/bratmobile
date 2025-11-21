@@ -99,9 +99,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a4e2246600849cc0f8262cf4d59a79ef7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHorizonStarPlanner.html#a4e2246600849cc0f8262cf4d59a79ef7">best_path</a> (const std::vector&lt; std::vector&lt; vertexDescriptor &gt;&gt; &amp;paths, vertexDescriptor goal, vertexDescriptor cv, bool change, const TransitionSystem &amp;g)</td></tr>
 <tr class="memdesc:a4e2246600849cc0f8262cf4d59a79ef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches all paths for best path according to the lowest final cost phi.  <a href="classHorizonStarPlanner.html#a4e2246600849cc0f8262cf4d59a79ef7">More...</a><br /></td></tr>
 <tr class="separator:a4e2246600849cc0f8262cf4d59a79ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a975dab6bf400b75b3649a86b87c5b625"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHorizonStarPlanner.html#a975dab6bf400b75b3649a86b87c5b625">addToPriorityQueue</a> (const <a class="el" href="structFrontier.html">Frontier</a> &amp;f, std::vector&lt; <a class="el" href="structFrontier.html">Frontier</a> &gt; &amp;queue, TransitionSystem &amp;g, vertexDescriptor goal=TransitionSystem::null_vertex())</td></tr>
-<tr class="memdesc:a975dab6bf400b75b3649a86b87c5b625"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds frontier to priority queue.  <a href="classHorizonStarPlanner.html#a975dab6bf400b75b3649a86b87c5b625">More...</a><br /></td></tr>
-<tr class="separator:a975dab6bf400b75b3649a86b87c5b625"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2717288dc5c07d08c570ef1432c8191b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classHorizonStarPlanner.html#a2717288dc5c07d08c570ef1432c8191b">addToPriorityQueue</a> (const <a class="el" href="structFrontier.html">Frontier</a> &amp;f, std::vector&lt; <a class="el" href="structFrontier.html">Frontier</a> &gt; &amp;queue, TransitionSystem &amp;g, const std::set&lt; vertexDescriptor &gt; &amp;closed, vertexDescriptor goal=TransitionSystem::null_vertex())</td></tr>
+<tr class="memdesc:a2717288dc5c07d08c570ef1432c8191b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds frontier to priority queue.  <a href="classHorizonStarPlanner.html#a2717288dc5c07d08c570ef1432c8191b">More...</a><br /></td></tr>
+<tr class="separator:a2717288dc5c07d08c570ef1432c8191b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Performs iterative deepening search over one unit of modular expansion (see below), i.e. search over one branch stops when it reaches a DEFAULT task. Each DEFAULT <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> represents the frontier. The planner expands the search from the frontier with the lowest cost phi (A*-style search), which are logged into a priority queue. </p>
@@ -115,8 +115,8 @@ Protected Member Functions</h2></td></tr>
                       \
                        q5(RIGHT)---q6(DEFAULT)      -&gt;  maximum depth
 </pre> </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a975dab6bf400b75b3649a86b87c5b625"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a975dab6bf400b75b3649a86b87c5b625">&#9670;&nbsp;</a></span>addToPriorityQueue()</h2>
+<a id="a2717288dc5c07d08c570ef1432c8191b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2717288dc5c07d08c570ef1432c8191b">&#9670;&nbsp;</a></span>addToPriorityQueue()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -141,6 +141,12 @@ Protected Member Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">TransitionSystem &amp;&#160;</td>
           <td class="paramname"><em>g</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::set&lt; vertexDescriptor &gt; &amp;&#160;</td>
+          <td class="paramname"><em>closed</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
