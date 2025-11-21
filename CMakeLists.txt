@@ -27,8 +27,8 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   add_executable(brat2_targetless custom_robot.h brat2_targetless.cpp)
   add_executable(brat3_target custom_robot.h brat3_target.cpp)
   add_executable(brat3_targetless custom_robot.h brat3_targetless.cpp)
-  add_executable(brat1_target custom_robot.h brat1_target.cpp)
-  add_executable(brat1_targetless custom_robot.h brat1_targetless.cpp)
+#  add_executable(brat1_target custom_robot.h brat1_target.cpp)
+#  add_executable(brat1_targetless custom_robot.h brat1_targetless.cpp)
 
 
   target_link_libraries(target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
