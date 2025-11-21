@@ -177,7 +177,7 @@ std::pair <bool, Direction> getOppositeDirection(Direction d);
  * @param v source vertex for the task
  * @param t task reference
  */
-virtual void adjust_simulated_task(const vertexDescriptor&v,  Task& t);
+void adjust_simulated_task(const vertexDescriptor&v,  Task& t);
 
 
 void register_controller(Controller * controller){
