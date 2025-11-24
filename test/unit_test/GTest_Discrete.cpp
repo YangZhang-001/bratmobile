@@ -194,7 +194,7 @@ TEST_F(DiscreteCTest, RemainingTime){
         Task t(Disturbance(), DEFAULT, b2Transform_zero, true);
         int exp=(27.0-i);
         EXPECT_EQ(int(remainingSimulationTime(&t)*10), exp);
-        transitionSystem[v1].endPose=InvMul(currentTask.getAction().getTransform(MOTOR_CALLBACK), transitionSystem[v1].endPose);
+        transitionSystem[v1].endPose=b2help::InvMul(currentTask.getAction().getTransform(MOTOR_CALLBACK), transitionSystem[v1].endPose);
     }
 }
 /**

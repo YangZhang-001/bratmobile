@@ -206,7 +206,7 @@ TEST_P(TestEnvironment, Execution){
     int steps=0;
     do {
         configurator.run();
-        b2Transform newPose=InvMul(configurator.getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), bf.pose);
+        b2Transform newPose=b2help::InvMul(configurator.getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), bf.pose);
         lidarIn.data2fp={Pointf(newPose.p.x, newPose.p.y)};
         bf.pose=newPose;
         steps++;
