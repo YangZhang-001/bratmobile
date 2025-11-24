@@ -163,7 +163,7 @@ float approximate_angle(float angle, Direction d, simResult::resultType outcome)
 /**
 * @brief Uses tracking information to adjust the position of the goal relative to the robot
 */
-void adjust_goal_expectation();
+virtual void adjust_goal_expectation();
 
 /**
  * @return std::pair <bool, Direction>(opposite exists, opposite direction)

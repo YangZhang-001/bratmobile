@@ -301,17 +301,9 @@ void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
 void Configurator::adjust_goal_expectation(){
 	if (controlGoal.getAffIndex()==PURSUE && !m_plan.empty()&&task_controller->get_disturbance().getAffIndex()!=NONE){
 		b2Transform from_Di=b2Transform_zero;
-		//if (task_controller->get_disturbance().getAffIndex()==AVOID){
 		from_Di=currentTask.from_Di();
-		//}
-		//b2Transform sum_transform=from_Di+task_controller->to_goal(); //where goal should be
 		b2Transform goal_robotPOV= b2Mul(from_Di,task_controller->disturbance_to_goal()); //position of goal from the robot based on where it should be from Di
 		controlGoal.disturbance.bf.pose=goal_robotPOV;
-		// debug::print_pose(b2MulT(from_Di, sum_transform), "from Di to sum transform:");
-		// debug::print_pose(b2Mul(from_Di,task_controller->to_goal()), "from Di mulT to goal:");
-// 		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
-// //		debug::print_pose(difference, "difference between pose and likely goal pose:");
-// 		math::MulT(difference, &controlGoal);//update goal with ratio info
 		debug::print_pose(controlGoal.disturbance.pose(), "goal after adjusting");
 		printf("distance after adjusting %f\n", controlGoal.disturbance.pose().p.Length());
 	}

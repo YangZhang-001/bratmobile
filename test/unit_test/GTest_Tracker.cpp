@@ -272,10 +272,11 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
     // EXPECT_GT(steps, 1); //should take more than one step to complete task
    // SUCCEED();
 }
+
 /**
- * @brief Test whether the current tracking method is accurate when turning left
+ * @brief Test whether the current invmul method is accurate when turning left
  */
-TEST_P(TestDeadReckoning, GoalTracking){
+TEST_P(TestDeadReckoning, InvMulGoal){
     Task t=DebugConfigurator::generateGoalTask();
     Task::Action a1, a2;
     auto directions=GetParam();
@@ -291,13 +292,40 @@ TEST_P(TestDeadReckoning, GoalTracking){
     float disturbanceAngle=t.get_disturbance().pose().q.GetAngle();
     float t1Angle=t1.q.GetAngle();
     if (std::get<0>(directions)==std::get<1>(directions)){
-        EXPECT_EQ(std::signbit(disturbanceAngle), std::signbit(t1Angle));
+        EXPECT_EQ(std::signbit(disturbanceAngle), std::signbit(-t1Angle));
     }
     else{
         EXPECT_NEAR(disturbanceAngle, 0, M_PI/10);
     }
-    
 }
+
+/**
+ * @brief Test whether the current invmul method is accurate when turning left
+ */
+TEST_P(TestDeadReckoning, InvMulGoal){
+    Task t=DebugConfigurator::generateGoalTask();
+    Task::Action a1, a2;
+    auto directions=GetParam();
+    a1.init(std::get<0>(directions));
+    a2.init(std::get<1>(directions));
+    b2Transform t1=(a1.getTransform(0.1)), t2=a2.getTransform(0.1);
+    for (int i=0; i<20; i++){
+        Configurator::InvMul(t1, t);
+    }
+    for (int i=0; i<20; i++){
+        Configurator::InvMul(t2, t);
+    }
+    float disturbanceAngle=t.get_disturbance().pose().q.GetAngle();
+    float t1Angle=t1.q.GetAngle();
+    if (std::get<0>(directions)==std::get<1>(directions)){
+        EXPECT_EQ(std::signbit(disturbanceAngle), std::signbit(-t1Angle));
+    }
+    else{
+        EXPECT_NEAR(disturbanceAngle, 0, M_PI/10);
+    }
+}
+
+
 
 INSTANTIATE_TEST_CASE_P(Directions, TestDeadReckoning, ::testing::Combine(testing::Values(LEFT, RIGHT), testing::Values(LEFT, RIGHT)));
 
