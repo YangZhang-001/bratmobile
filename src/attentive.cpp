@@ -83,7 +83,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		vertexDescriptor startRecycle=v;
 		bool wasClosed =closeVertex(closed, v);
 		priorityQueue.erase(priorityQueue.begin());
-		er = controlGoal.checkEnded(g[v], t.get_direction());
+		er = controlGoal.checkEnded(g[v], t.get_direction(), true); //check ended with relax
 		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
 		EvaluationQueueManager eqm;
 		for (Direction d: g[v].options){ //add and evaluate all vertices
@@ -970,26 +970,6 @@ void DiscreteConfigurator::removeExploredTransitions(vertexDescriptor v){
 	}
 }
 
-
-// void SimplestConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){
-// 	for (vertexDescriptor v:evaluation_q){
-// 		if (!isTurning(transitionSystem[v].direction)){
-// 			addToPriorityQueue(v, priority_q, closed);
-// 		}
-// 		auto likelyEdge=gt::getMostLikely(transitionSystem, inEdges(v), iteration);
-// 		if (likelyEdge.first){
-// 			if (likelyEdge.second.m_source==MOVING_VERTEX && transitionSystem[v].direction==currentTask.get_direction() && transitionSystem[v].outcome==simResult::crashed){
-// 				auto moving_it=std::find(closed.begin(), closed.end(), MOVING_VERTEX);
-// 				if (moving_it!=closed.end()){
-// 					closed.erase(moving_it);
-// 					addToPriorityQueue(MOVING_VERTEX, priority_q, closed);
-// 					applyTransitionMatrix(MOVING_VERTEX, transitionSystem[v].direction, false, MOVING_VERTEX, plan_prov);
-// 				}
-// 			}
-// 		}
-// 	}
-// 	evaluation_q.clear();
-// }
 
 bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed, StateMatcher::MATCH_TYPE match){
 	while(AttentiveConfigurator::propagateD(v1, v0, closed, match)){
