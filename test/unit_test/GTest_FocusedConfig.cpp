@@ -49,7 +49,7 @@ TEST_F(FCTest, Correct){
     estimate_current_vertex();
     EXPECT_EQ(currentVertex, (*this_plan.begin()));
     EXPECT_TRUE(transitionSystem[currentVertex].isTurning());
-    EXPECT_TRUE(currentTask.getMotorStep()==20);
+    EXPECT_EQ(currentTask.getMotorStep(), 20);
 
 }
 

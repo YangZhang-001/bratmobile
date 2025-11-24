@@ -401,6 +401,10 @@ virtual bool canPropagate(vertexDescriptor v);
 
 virtual bool canReassignOutcome(vertexDescriptor v);
 
+virtual float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex()){
+	return simulationStep;
+}
+
 public:
 
 AttentiveConfigurator(){};
@@ -443,6 +447,9 @@ class FocusedConfigurator: public AttentiveConfigurator{
 	virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override;
 
 	void adjust_goal_expectation()override{}
+
+	virtual float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex())override;
+
 
 };
 
@@ -518,6 +525,9 @@ bool canReassignOutcome(vertexDescriptor v) override;
 
 bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE)override;
 
+float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex()){
+	return AttentiveConfigurator::customSimulationStep();
+}
 };
 
 // /**

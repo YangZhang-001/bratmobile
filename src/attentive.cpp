@@ -165,6 +165,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	if (transitionSystem[v].outcome != simResult::crashed){
 		return split;
 	}
+	float _customStep= transitionSystem[v].distance()/2;
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
 	if (!transitionSystem[src].isTurning()&& (!ie.empty()|| src==MOVING_VERTEX)){ //! //&& sameIterationEdgeIt!=ie.end()
@@ -172,12 +173,12 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 		split.insert(split.begin(), src);
 	}
 	vertexDescriptor v1=v;
-	float nNodes = transitionSystem[v].distance()/simulationStep, og_phi=transitionSystem[v].phi;
+	float nNodes = transitionSystem[v].distance()/_customStep, og_phi=transitionSystem[v].phi;
 	b2Transform endPose = transitionSystem[v].endPose;
 	Task::Action a;
 	a.init(d);
 	b2Transform deltaTransform=b2Transform_zero;
-	deltaTransform.p.x=simulationStep;
+	deltaTransform.p.x=_customStep;
 	while(nNodes>1){
 		State s_tmp=State(transitionSystem[v]);
 		if(nNodes >1){
@@ -862,6 +863,13 @@ VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher:
 		printf("Dist index of simulated state:%i doesn't match current state's index:%i\n", s.Dn.getAffIndex(), transitionSystem[currentVertex].Dn.getAffIndex());
 	}
 	return AttentiveConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
+}
+
+float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex()){
+	if (v!=TransitionSystem::null_vertex()){
+		return transitionSystem[v].distance()/2;
+	}
+	return simulationStep;
 }
 
 Disturbance DiscreteConfigurator::getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start){
