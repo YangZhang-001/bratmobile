@@ -807,6 +807,10 @@ class ConfiguratorEvaluationQueueManagerTest: public ConfiguratorTest, public te
     }
 };
 
+/**
+ * @brief Testing if deadreckonign happens correctly
+ */
+class TestDeadReckoning:public testing::TestWithParam<std::tuple<Direction, Direction>>{};
 
 
 ////////////////////////////////////////////////////////////////////////
