@@ -102,8 +102,6 @@ virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, State
  */
 virtual std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w); //evaluates only after DEFAULT, internal one step lookahead
 
-void adjust_goal_expectation()override{}
-
 /**
  * @brief Resets all vertices evaluation function phi to a default unitialised value of 10
  */
@@ -443,6 +441,9 @@ class FocusedConfigurator: public AttentiveConfigurator{
 	}
 
 	virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override;
+
+	void adjust_goal_expectation()override{}
+
 };
 
 /**
