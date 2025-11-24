@@ -25,6 +25,33 @@ class FCTest:public FocusedConfigurator, public testing::TestWithParam<bool> {
 }
 };
 
+/**
+ * @brief Test if robot is able to self-correct motion!
+ */
+TEST_F(FCTest, Correct){
+    setSimulationStep(.5);
+    running=1;
+    b2Vec2 point(0.3, 0);
+    data2fp.emplace(Pointf(point.x, point.y));
+    Spawner();
+    auto this_plan=m_plan;
+    change_task();
+    estimate_current_vertex();
+    float angle=3*M_PI_4/2; //75 degrees
+    angle=std::copysign(angle, currentTask.getAction().getOmega());
+    data2fp.emplace(Pointf(point.x, point.y));
+    update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(),b2Transform(b2Vec2(), b2Rot(angle))));
+    currentTask.set_change(1);
+    change_task();
+    estimate_current_vertex();
+    Spawner();
+    change_task();
+    estimate_current_vertex();
+    EXPECT_EQ(currentVertex, (*this_plan.begin()));
+    EXPECT_TRUE(transitionSystem[currentVertex].isTurning());
+    EXPECT_TRUE(currentTask.getMotorStep()==20);
+
+}
 
 /**
  * Test if a) true: does not replan if not needed b) replans if needed (suddently an obstacle appears)
