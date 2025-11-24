@@ -422,7 +422,7 @@ class FocusedConfigurator: public AttentiveConfigurator{
 	protected:
 
 	StateMatcher::MATCH_TYPE desiredMatch() override {
-		return StateMatcher::MATCH_TYPE::_ABSTRACT;
+		return StateMatcher::MATCH_TYPE::ABSTRACT;
 	}	
 	/**
 	 * @brief If the current vertex is matched, don't allow to check plan further
