@@ -238,6 +238,11 @@ static void MulT(const b2Transform& B, Task & task);
  */
 static void InvMul(const b2Transform& B, Task & task);
 
+/**
+ * @brief Matrix multiply by transpose
+ * 
+ */
+static void InvMul_(const b2Transform& B, Task & task);
 
 /**
  * @brief Matrix multiplication
