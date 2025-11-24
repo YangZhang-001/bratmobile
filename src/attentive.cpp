@@ -165,7 +165,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	if (transitionSystem[v].outcome != simResult::crashed){
 		return split;
 	}
-	float _customStep= transitionSystem[v].distance()/2;
+	float _customStep= customSimulationStep(v);
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
 	if (!transitionSystem[src].isTurning()&& (!ie.empty()|| src==MOVING_VERTEX)){ //! //&& sameIterationEdgeIt!=ie.end()
@@ -865,9 +865,9 @@ VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher:
 	return AttentiveConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
 }
 
-float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex()){
+float FocusedConfigurator::customSimulationStep(vertexDescriptor v){
 	if (v!=TransitionSystem::null_vertex()){
-		return transitionSystem[v].distance()/2;
+		return std::max(simulationStep, transitionSystem[v].distance()/2);
 	}
 	return simulationStep;
 }
