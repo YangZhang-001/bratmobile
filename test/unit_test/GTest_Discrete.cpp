@@ -216,12 +216,14 @@ TEST_F(DiscreteCTest, Correct){
     currentTask.set_change(1);
     change_task();
     estimate_current_vertex();
+    int ts_size=transitionSystem.m_vertices.size();
     Spawner();
     change_task();
     estimate_current_vertex();
     EXPECT_EQ(currentVertex, (*this_plan.begin()));
     EXPECT_TRUE(transitionSystem[currentVertex].isTurning());
     EXPECT_TRUE(currentTask.getMotorStep()==20);
+    EXPECT_GT(transitionSystem.m_vertices.size(), ts_size);
 }
 
 INSTANTIATE_TEST_CASE_P(Outcomes, DiscreteCTest, ::testing::Bool());
