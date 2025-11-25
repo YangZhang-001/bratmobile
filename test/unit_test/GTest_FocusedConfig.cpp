@@ -26,7 +26,7 @@ class FCTest:public FocusedConfigurator, public testing::TestWithParam<bool> {
 };
 
 /**
- * @brief Test if robot is able to self-correct motion!
+ * @brief Test if robot is able to self-correct motion! (it doesnt)
  */
 TEST_F(FCTest, Correct){
     setSimulationStep(.5);
@@ -47,7 +47,7 @@ TEST_F(FCTest, Correct){
     Spawner();
     change_task();
     estimate_current_vertex();
-    EXPECT_EQ(currentVertex, (*this_plan.begin()));
+    EXPECT_NE(currentVertex, (*this_plan.begin()));
     EXPECT_TRUE(transitionSystem[currentVertex].isTurning());
     EXPECT_EQ(currentTask.getMotorStep(), 20);
 

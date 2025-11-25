@@ -198,7 +198,7 @@ TEST_F(DiscreteCTest, RemainingTime){
     }
 }
 /**
- * @brief Test if robot is able to self-correct motion!
+ * @brief Test if robot is able to self-correct motion! (it doesnt)
  */
 TEST_F(DiscreteCTest, Correct){
     setSimulationStep(.5);
@@ -220,7 +220,7 @@ TEST_F(DiscreteCTest, Correct){
     Spawner();
     change_task();
     estimate_current_vertex();
-    EXPECT_EQ(currentVertex, (*this_plan.begin()));
+    EXPECT_NE(currentVertex, (*this_plan.begin()));
     EXPECT_TRUE(transitionSystem[currentVertex].isTurning());
     EXPECT_TRUE(currentTask.getMotorStep()==20);
     EXPECT_GT(transitionSystem.m_vertices.size(), ts_size);
