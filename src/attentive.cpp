@@ -862,10 +862,10 @@ VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher:
 	!m_plan.empty() && s.Dn.getAffIndex()!=transitionSystem[currentVertex].Dn.getAffIndex()){
 		printf("Dist index of simulated state:%i doesn't match current state's index:%i\n", s.Dn.getAffIndex(), transitionSystem[currentVertex].Dn.getAffIndex());
 	}
-	else if(s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di!=transitionSystem[currentVertex].Di && 
-	!m_plan.empty()){
-		printf("Di of simulated state: doesn't match current state's index\n", s.Dn.getAffIndex(), transitionSystem[currentVertex].Dn.getAffIndex());
-	}
+	// else if(s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di!=transitionSystem[currentVertex].Di && 
+	// !m_plan.empty()){
+	// 	printf("Di of simulated state: doesn't match current state's index\n", s.Dn.getAffIndex(), transitionSystem[currentVertex].Dn.getAffIndex());
+	// }
 	return AttentiveConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
 }
 
