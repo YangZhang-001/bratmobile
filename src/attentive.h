@@ -450,6 +450,9 @@ class FocusedConfigurator: public AttentiveConfigurator{
 
 	virtual float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex())override;
 
+	bool hasPlanFinished(){
+	return m_plan.empty() && currentTask.is_over();
+}
 
 };
 
@@ -529,9 +532,6 @@ float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex()){
 	return AttentiveConfigurator::customSimulationStep();
 }
 
-bool hasPlanFinished(){
-	return m_plan.empty() && currentTask.is_over();
-}
 };
 
 // /**
