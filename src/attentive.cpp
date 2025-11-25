@@ -855,13 +855,15 @@ void FocusedConfigurator::removeExploredTransitions(vertexDescriptor v){
 
 VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
 	if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && //s.Di==transitionSystem[currentVertex].Di && 
-			!m_plan.empty() && s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
+		!hasPlanFinished()&&	
+		//!m_plan.empty() && 
+		s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
 		return VertexMatch(StateMatcher::_TRUE, currentVertex);
 	}
-	else if(s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di==transitionSystem[currentVertex].Di && 
-	!m_plan.empty() && s.Dn.getAffIndex()!=transitionSystem[currentVertex].Dn.getAffIndex()){
-		printf("Dist index of simulated state:%i doesn't match current state's index:%i\n", s.Dn.getAffIndex(), transitionSystem[currentVertex].Dn.getAffIndex());
-	}
+	// else if(s.start==b2Transform_zero && s.direction==currentTask.get_direction() && //s.Di==transitionSystem[currentVertex].Di && 
+	// !m_plan.empty() && s.Dn.getAffIndex()!=transitionSystem[currentVertex].Dn.getAffIndex()){
+	// 	printf("Dist index of simulated state:%i doesn't match current state's index:%i\n", s.Dn.getAffIndex(), transitionSystem[currentVertex].Dn.getAffIndex());
+	// }
 	// else if(s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di!=transitionSystem[currentVertex].Di && 
 	// !m_plan.empty()){
 	// 	printf("Di of simulated state: doesn't match current state's index\n", s.Dn.getAffIndex(), transitionSystem[currentVertex].Dn.getAffIndex());

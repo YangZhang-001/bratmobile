@@ -528,6 +528,10 @@ bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescrip
 float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex()){
 	return AttentiveConfigurator::customSimulationStep();
 }
+
+bool hasPlanFinished(){
+	return m_plan.empty() && currentTask.is_over();
+}
 };
 
 // /**
