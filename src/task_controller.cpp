@@ -112,7 +112,7 @@ Task Reactive_Controller::next_task( Task currentTask, const Task & controlGoal,
 }
 
 Task OpenLoopController::next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
-	if (plan.empty() && currentTask.get_change()){
+	if (plan.empty() && currentTask.getMotorStep()==0){
 		current_vertices={MOVING_VERTEX};
 		return stopTask(controlGoal);
 	}
