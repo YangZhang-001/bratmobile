@@ -374,6 +374,7 @@ std::pair <bool, Direction> Configurator::getOppositeDirection(Direction d){
 
 void ReactiveConfigurator::explore_plan(b2World &world){
 	if (transitionSystem.m_vertices.size()==1 && iteration<=1){
+		dummy_vertex(currentVertex);
 		movingEdge = boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
 		transitionSystem[MOVING_VERTEX].direction=DEFAULT;
 		currentTask.getAction().init(transitionSystem[currentVertex].direction);
@@ -390,7 +391,9 @@ float ReactiveConfigurator::remainingSimulationTime(const Task *const t){
     if (t &&get_direction(t)==currentTask.get_direction() && iteration>1){
         b2Transform remainingTransform= transitionSystem[DUMMY].endPose;
 		debug::print_pose(remainingTransform, "remaining transform");
-        return 	Controller::motor_step(t->getAction(), remainingTransform.p.Length())*MOTOR_CALLBACK;
+        float r_step=Controller::motor_step(t->getAction(), remainingTransform.p.Length())*MOTOR_CALLBACK;
+		printf("sim time=%f and task direction%i", r_step, currentTask.get_direction());
+		return 	r_step;
     }
     else if (get_direction(t)==DEFAULT){
         return simulationStep/ t->getAction().getLinearSpeed();
