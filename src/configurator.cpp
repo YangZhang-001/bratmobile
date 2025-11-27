@@ -390,8 +390,8 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 }
 
 float ReactiveConfigurator::remainingSimulationTime(const Task *const t){
-    if (t && get_start(t)==b2Transform_zero && get_direction(t)==currentTask.get_direction() && iteration>1){
-        b2Transform remainingTransform= transitionSystem[currentVertex].endPose;
+    if (t &&get_direction(t)==currentTask.get_direction() && iteration>1){
+        b2Transform remainingTransform= transitionSystem[DUMMY].endPose;
         return 	Controller::motor_step(t->getAction(), remainingTransform.p.Length())*MOTOR_CALLBACK;
     }
     else if (get_direction(t)==DEFAULT){
