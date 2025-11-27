@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 	if (argc>1){
 		configurator.init(controlGoal);
 		configurator.setSimulationStep(.27);
-		wb.setSimulationStep(.27)
+		wb.setSimulationStep(.27);
 	}
 	else{
 		configurator.setSimulationStep(.5);
