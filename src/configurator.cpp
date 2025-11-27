@@ -384,14 +384,12 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 	simResult result = simulate(t, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],
 	gt::fill(result, &transitionSystem[currentVertex], &transitionSystem[currentEdge]);
 	currentTask.set_change(transitionSystem[currentVertex].outcome!=simResult::successful);
-	if (currentTask.get_change()){
-		printf("crashed\n");
-	}
 }
 
 float ReactiveConfigurator::remainingSimulationTime(const Task *const t){
     if (t &&get_direction(t)==currentTask.get_direction() && iteration>1){
         b2Transform remainingTransform= transitionSystem[DUMMY].endPose;
+		debug::print_pose(remainingTransform, "remaining transform");
         return 	Controller::motor_step(t->getAction(), remainingTransform.p.Length())*MOTOR_CALLBACK;
     }
     else if (get_direction(t)==DEFAULT){
