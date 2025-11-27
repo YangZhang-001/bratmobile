@@ -18,7 +18,7 @@ void math::MulT(const b2Transform& deltaPose, State& state){
 void math::MulT(const b2Transform& deltaPose, TransitionSystem& g){
 	auto vPair =boost::vertices(g);
 	for (auto vIt= vPair.first; vIt!=vPair.second; ++vIt){ //each node is adjusted in explorer, so now we update
-		if (*vIt!=0){
+		if (*vIt!=MOVING_VERTEX){
 			math::MulT(deltaPose, g[*vIt]);
 		}
 		else{
