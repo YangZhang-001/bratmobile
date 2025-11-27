@@ -390,7 +390,7 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 float ReactiveConfigurator::remainingSimulationTime(const Task *const t){
     if (t &&get_direction(t)==currentTask.get_direction() && iteration>1){
         b2Transform remainingTransform= transitionSystem[DUMMY].endPose;
-		debug::print_pose(remainingTransform, "remaining transform");
+	//	debug::print_pose(remainingTransform, "remaining transform");
         float r_step=Controller::motor_step(t->getAction(), remainingTransform.p.Length())*MOTOR_CALLBACK;
 		printf("sim time=%f and task direction%i", r_step, currentTask.get_direction());
 		return 	r_step;
