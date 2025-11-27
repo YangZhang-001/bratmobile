@@ -83,7 +83,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		vertexDescriptor startRecycle=v;
 		bool wasClosed =closeVertex(closed, v);
 		priorityQueue.erase(priorityQueue.begin());
-		er = controlGoal.checkEnded(g[v], t.get_direction()); //check ended with relax
+		er = controlGoal.checkEnded(g[v], t.get_direction(), true); //check ended with relax
 		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
 		EvaluationQueueManager eqm;
 		for (Direction d: g[v].options){ //add and evaluate all vertices
