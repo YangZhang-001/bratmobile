@@ -375,8 +375,9 @@ std::pair <bool, Direction> Configurator::getOppositeDirection(Direction d){
 void ReactiveConfigurator::explore_plan(b2World &world){
 	if (iteration<=1){
 		movingEdge = boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
+		Direction def=DEFAULT;
 		transitionSystem[MOVING_VERTEX].direction=DEFAULT;
-		currentTask.getAction().init(DEFAULT);
+		currentTask.getAction().init(def);
 	}
 	Task t(currentTask.get_disturbance(), currentTask.get_direction(), b2Transform_zero, true);
 	worldBuilder->buildWorld(world, b2Transform_zero, currentTask.get_direction()); //was g[v].endPose
