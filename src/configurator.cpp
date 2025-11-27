@@ -378,22 +378,26 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 		transitionSystem[MOVING_VERTEX].direction=DEFAULT;
 		currentTask.getAction().init(transitionSystem[currentVertex].direction);
 	}
-	// if (currentTask.getAction().getOmega()!=0 && currentTask.getMotorStep()<(transitionSystem[movingEdge].step)){
-	// 	return;
-	// }
 	Task t(currentTask.get_disturbance(), currentTask.get_direction(), b2Transform_zero, true);
-//	adjustStepDistance(currentVertex, transitionSystem, &t, _simulationStep);
 	worldBuilder->buildWorld(world, transitionSystem[MOVING_VERTEX].start, currentTask.get_direction()); //was g[v].endPose
-	//t.H(t.get_disturbance(), currentTask.get_direction(), true);
 	adjust_simulated_task(currentVertex, t);
 	simResult result = simulate(t, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],
 	gt::fill(result, &transitionSystem[currentVertex], &transitionSystem[currentEdge]);
-	
-	//transitionSystem[currentVertex].Dn.set_affordance(as.affordance);
 	currentTask.set_change(transitionSystem[currentVertex].outcome!=simResult::successful);
 	if (currentTask.get_change()){
 		printf("crashed\n");
 	}
+}
+
+float ReactiveConfigurator::remainingSimulationTime(const Task *const t){
+    if (t && get_start(t)==b2Transform_zero && get_direction(t)==currentTask.get_direction() && iteration>1){
+        b2Transform remainingTransform= transitionSystem[currentVertex].endPose;
+        return 	Controller::motor_step(t->getAction(), remainingTransform.p.Length())*MOTOR_CALLBACK;
+    }
+    else if (get_direction(t)==DEFAULT){
+        return simulationStep/ t->getAction().getLinearSpeed();
+    }
+    return Configurator::remainingSimulationTime();
 }
 
 

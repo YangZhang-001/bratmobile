@@ -310,6 +310,9 @@ Direction get_direction(const Task *const t){
 class ReactiveConfigurator:public Configurator{
 	protected:
 	void explore_plan(b2World&)override;
+
+	float remainingSimulationTime(const Task *const t);
+
 	public:
 
 	ReactiveConfigurator(){};
