@@ -69,14 +69,10 @@ $(function() {
 <h2><a class="anchor" id="autotoc_md0"></a>
 Features:</h2>
 <ul>
-<li>Completely on-the-fly, instantaneous construction of an abstract cognitive map of the environment, represented as a tree of tasks</li>
-<li>Hybrid state-space representation with flexible discretization</li>
-<li>Use of an attention window (simulated distal sensor) to define the scope of Tasks</li>
-<li>Mapless navigation: robot is ready to go as is, no need for global sensors</li>
-<li>Causal reasoning on the naive robot</li>
-<li>Plans represents set of instructions, not trajectories: no solvers required, completely closed-loop and object oriented</li>
-<li>Debug and navigation visualisation interface which transmits goal, obstacle and attention window coordinates to Qt using fastDDS</li>
-<li>On-the-fly replanning: replans if the current <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> has different outcome than expected</li>
+<li>Hybrid state-space representation where states are Tasks focused on a specific object</li>
+<li>Mapless navigation: robot is ready to go as is, no need for global maps/SLAM</li>
+<li>Plans are made up of multiple Tasks (object-focused instructions), not trajectories</li>
+<li>On-the-fly replanning</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md1"></a>
 Documentation</h3>
