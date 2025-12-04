@@ -65,7 +65,7 @@ $(function() {
 <div class="title">Bratmobile Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> The purpose of this library is to showcase a framework for multi-step ahead planning using pure input control (see <a href="https://en.wikipedia.org/wiki/Braitenberg_vehicle">Braitenberg vehicles</a>). The navigation problem is broken down into several unique closed-loop input controllers, called Tasks. Each <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> produces a unique control behaviour (go straight, turn left/right 90 degrees) in response to a <a href="https://en.wikipedia.org/wiki/Errors_and_residuals">Disturbance</a> (an obstacle or target), which determines a <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>'s duration. A supervising module, called the <a class="el" href="classConfigurator.html">Configurator</a>, can simulate sequences of Tasks in game engine <a href="https://github.com/glafratta/box2d">Box2D</a>, retain their outcomes in a cognitive map, which can be searched to extract plans. The physics simulation represents the robot's <a href="https://www.harvardlds.org/wp-content/uploads/2017/01/SpelkeKinzler07-1.pdf">Core Knowledge</a> (Spelke, 2007).</p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> The purpose of this library is to showcase a framework for multi-step ahead planning using pure input control (see <a href="https://en.wikipedia.org/wiki/Braitenberg_vehicle">Braitenberg vehicles</a>). The navigation problem is broken down into several unique closed-loop input controllers, called Tasks. Each <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> produces a unique control behaviour (go straight, turn left/right 90 degrees) in response to a <a href="https://en.wikipedia.org/wiki/Errors_and_residuals">Disturbance</a> (an obstacle or target), which determines a <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>'s duration. A supervising module, called the <a class="el" href="classConfigurator.html">Configurator</a>, can simulate sequences of Tasks at runtime in game engine <a href="https://github.com/glafratta/box2d">Box2D</a>, retain their outcomes in a cognitive map, which can be searched to extract plans. The physics simulation represents the robot's <a href="https://www.harvardlds.org/wp-content/uploads/2017/01/SpelkeKinzler07-1.pdf">Core Knowledge</a> (Spelke, 2007).</p>
 <h2><a class="anchor" id="autotoc_md0"></a>
 Features:</h2>
 <ul>
@@ -78,30 +78,22 @@ Features:</h2>
 <li>Debug and navigation visualisation interface which transmits goal, obstacle and attention window coordinates to Qt using fastDDS</li>
 <li>On-the-fly replanning: replans if the current <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> has different outcome than expected</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md1"></a>
-Work in progress</h2>
-<ul>
-<li>Closed-loop <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> execution with goal-directed behaviour (driving towards target)</li>
-<li>Debugging full plan checking and recycling (real-world settings, see issues)</li>
-<li>Adaptive thresholding of acceptable noise in state observations</li>
-<li>GUI for custom goal setting</li>
-</ul>
-<h3><a class="anchor" id="autotoc_md2"></a>
+<h3><a class="anchor" id="autotoc_md1"></a>
 Documentation</h3>
 <p>Available at <a href="https://glafratta.github.io/bratmobile/">https://glafratta.github.io/bratmobile/</a></p>
-<h3><a class="anchor" id="autotoc_md3"></a>
+<h3><a class="anchor" id="autotoc_md2"></a>
 Publications</h3>
 <p>Giulia Lafratta, Bernd Porr, Christopher Chandler, Alice Miller; Closed-Loop Multistep Planning. Neural Computation 2025; 37 (7): 1288–1319. doi: <a href="https://doi.org/10.1162/neco_a_01761">https://doi.org/10.1162/neco_a_01761</a></p>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="autotoc_md3"></a>
 Hardware</h2>
 <p>The indoor robot is equipped with</p><ul>
 <li>Raspberry Pi model 3b+</li>
 <li>360 Parallax Continuous Rotation Servo motors (see <a href="https://github.com/berndporr/alphabot/blob/main/alphabot.cpp">here</a> for wiring)</li>
 <li>A1 SLAMTEC LIDAR (see <a href="https://github.com/berndporr/rplidar_rpi">here</a> for wiring)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md4"></a>
 Prerequisites</h2>
-<h3><a class="anchor" id="autotoc_md6"></a>
+<h3><a class="anchor" id="autotoc_md5"></a>
 Development packages</h3>
 <ul>
 <li>G++ compiler</li>
@@ -115,7 +107,7 @@ Development packages</h3>
 </ul>
 <p><code>sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev</code></p>
 <p>For Qt/FastDDS setup, see readme in <code>src/fastdds</code></p>
-<h3><a class="anchor" id="autotoc_md7"></a>
+<h3><a class="anchor" id="autotoc_md6"></a>
 Libraries to compile from source</h3>
 <ul>
 <li><a href="https://github.com/berndporr/rplidar_rpi">LIDAR API</a></li>
@@ -123,18 +115,18 @@ Libraries to compile from source</h3>
 <li><a href="https://github.com/berndporr/cppTimer">Cpp Timer</a></li>
 <li><a href="https://github.com/glafratta/box2d">Box2D v2.4.1</a> ** if not installed automatically, go to <code>box2d/build</code> and run <code>sudo make install</code></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Clone</h2>
 <p><code>git clone git@github.com:glafratta/bratmobile.git</code></p>
-<h2><a class="anchor" id="autotoc_md9"></a>
+<h2><a class="anchor" id="autotoc_md8"></a>
 Build</h2>
 <div class="fragment"><div class="line">cd bratmobile</div>
 <div class="line">cmake .  </div>
 <div class="line">make</div>
 <div class="line">sudo make install</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
 Run</h2>
-<h3><a class="anchor" id="autotoc_md11"></a>
+<h3><a class="anchor" id="autotoc_md10"></a>
 Navigation demo (Raspberry Pi)</h3>
 <p>Demo prefixes:</p>
 <ul>
@@ -147,7 +139,7 @@ Navigation demo (Raspberry Pi)</h3>
 <li><code>sudo ./*targetless</code> : these programs demonstrates planning over a 1m distance horizon for a control goal that is not a target location but rather an objective to drive straight for the longest time with the least amount of disturbances</li>
 <li><code>sudo ./*target</code>: these program demonstrates target seeking behaviour, where the target is imaginary and located at x=1.0m, y=0m.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md12"></a>
+<h3><a class="anchor" id="autotoc_md11"></a>
 Unit tests</h3>
 <p><code>ctest</code></p>
 <p>run <code>make test</code> </p>
