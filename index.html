@@ -95,18 +95,7 @@ Hardware</h2>
 Prerequisites</h2>
 <h3><a class="anchor" id="autotoc_md5"></a>
 Development packages</h3>
-<ul>
-<li>G++ compiler</li>
-<li>CMake</li>
-<li>PiGPIO library</li>
-<li>OpenCV</li>
-<li>Boost</li>
-<li>XOrg</li>
-<li>LibGLU1</li>
-<li>Gtest</li>
-</ul>
 <p><code>sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev</code></p>
-<p>For Qt/FastDDS setup, see readme in <code>src/fastdds</code></p>
 <h3><a class="anchor" id="autotoc_md6"></a>
 Libraries to compile from source</h3>
 <ul>
@@ -130,7 +119,6 @@ Run</h2>
 Navigation demo (Raspberry Pi)</h3>
 <p>Demo prefixes:</p>
 <ul>
-<li><code>brat1*</code> : Multi-step planning without any state processing: the robot simply looks ahead and finds the best <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> sequence, entirely disturbance-driven</li>
 <li><code>brat2*</code> : Multi-step planning with fixed discretisation of Tasks with DEFAULT actions</li>
 <li><code>brat3*</code> : Multi-step planning with fixed-size state split (of states ending in collision) and attention window to guide optimal obstacle avoidance when a goal is present</li>
 </ul>
