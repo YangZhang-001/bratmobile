@@ -7,7 +7,7 @@
  * The next state to expand will be the one with lowest heuristic cost. 
  * 
  */
-class AttentiveConfigurator:public Configurator{
+class AttentiveConfigurator:public virtual Configurator{
 	protected:
 	StateMatcher matcher;
 /**
@@ -422,7 +422,7 @@ virtual ~AttentiveConfigurator()=default;
 /** 
  * @brief Configurator that only replans if the current task fails
 */
-class FocusedConfigurator: public AttentiveConfigurator{
+class FocusedConfigurator: public virtual AttentiveConfigurator{
 	protected:
 
 	StateMatcher::MATCH_TYPE desiredMatch() override {
@@ -460,7 +460,7 @@ class FocusedConfigurator: public AttentiveConfigurator{
  * @brief Configurator that discretises DEFAULT tasks into fixed-length segments. Basically, this is an implementation of classic A* search
  * 
  */
-class DiscreteConfigurator : public FocusedConfigurator{
+class DiscreteConfigurator : public virtual FocusedConfigurator{
 public:
 /**
  * @brief In discrete configurator, Di is previous state's Dn, or the goal, if null

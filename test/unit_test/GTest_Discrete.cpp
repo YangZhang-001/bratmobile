@@ -1,9 +1,9 @@
 #include "test_classes.h"
+class DiscreteConfPlanTest:public DiscreteConfigurator, public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
+
+};
 
 TEST_P(HighLevelTestDiscrete, FirstPlan){
-    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-    Logger logger=makeLogger(info);
-    configurator->register_logger(&logger);
     Task goal;
     bool hasGoal=std::get<0>(GetParam()), success=false;
     if (hasGoal){
@@ -13,6 +13,7 @@ TEST_P(HighLevelTestDiscrete, FirstPlan){
         configurator->setSimulationStep(0.5);
     }
     configurator->init(goal);
+    configurator->register_worldBuilder(new LaserFocus);
     std::string folder=std::get<1>(GetParam());
     get_plan(folder);
     EXPECT_GT(ci.data2fp.size(),0);
@@ -23,6 +24,7 @@ TEST_P(HighLevelTestDiscrete, FirstPlan){
     else{
         success=configurator->plan_reaches_goal();
     }
+    configurator->register_worldBuilder(NULL);
     EXPECT_GT(configurator->get_plan().size(),1);
     EXPECT_TRUE(success);
 }

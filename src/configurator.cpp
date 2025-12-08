@@ -383,6 +383,7 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 	worldBuilder->buildWorld(world, b2Transform_zero, currentTask.get_direction()); //was g[v].endPose
 	adjust_simulated_task(currentVertex, t);
 	simResult result = simulate(t, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],
+	printf("crashed=%i, step=%i\n", result.resultCode==simResult::crashed, result.step);
 	gt::fill(result, &transitionSystem[currentVertex], &transitionSystem[currentEdge]);
 	currentTask.set_change(transitionSystem[currentVertex].outcome!=simResult::successful);
 }

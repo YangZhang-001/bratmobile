@@ -368,12 +368,55 @@ class DebugB2BTestVertex:public DebugB2BTest, public testing::WithParamInterface
 };
 
 class DebugDiscreteConf: public virtual DebugConfigurator, public virtual DiscreteConfigurator{
-    protected:
-    using DiscreteConfigurator::getDisturbance;
-    using DiscreteConfigurator::makeRobot;
-    using DiscreteConfigurator::remainingSimulationTime;
-    using DiscreteConfigurator::findMatch;
+    Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start)override{
+        return DiscreteConfigurator::getDisturbance(g, v, world, dir, start);
+    }
+
+    Robot makeRobot(b2World & w, const b2Transform & start)override{
+        return DiscreteConfigurator::makeRobot(w, start);
+    }
+
+    float remainingSimulationTime(const Task *const t=NULL)override{
+        return DiscreteConfigurator::remainingSimulationTime(t);
+    }
+
+    VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override{
+        return DiscreteConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
+    }
+
+    void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src) override{
+        return DiscreteConfigurator::transitionMatrix(v, d, src);
+    }
+
+    bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v)override{
+        return DiscreteConfigurator::closeVertex(closed, v);
+    }
+
+    std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve)override{
+        return DiscreteConfigurator::partiallyExplorativeOptions(ve);
+    }
     
+    bool shouldPartiallyExplore(const std::vector<edgeDescriptor>& oe, std::pair<bool, edgeDescriptor> ve)override{
+        return DiscreteConfigurator::shouldPartiallyExplore(oe, ve);
+    }
+
+    void removeExploredTransitions(vertexDescriptor v)override{
+        return DiscreteConfigurator::removeExploredTransitions(v);
+    }
+
+    bool canPropagate(vertexDescriptor v) override{
+        return DiscreteConfigurator::canPropagate(v);
+    }
+
+    bool canReassignOutcome(vertexDescriptor v) override{
+        return DiscreteConfigurator::canReassignOutcome(v);
+    }
+
+    bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE)override{
+        return DiscreteConfigurator::propagateD(v1, v0, closed, match);
+    }
+
+
 };
 
 
@@ -524,6 +567,9 @@ class HighLevelTestB2B:  public HighLevelTest{ //Base , public testing::WithPara
        configurator=new DebugB2B;
        init();
     }
+    virtual void TearDown()override{
+       delete configurator;
+    }
 };
 
 class HighLevelTestDiscrete:  public HighLevelTest{ //Base , public testing::WithParamInterface<std::tuple<bool, std::string, int>>    
@@ -534,6 +580,9 @@ class HighLevelTestDiscrete:  public HighLevelTest{ //Base , public testing::Wit
     virtual void SetUp()override{
        configurator=new DebugDiscreteConf;
        init();
+    }
+    virtual void TearDown()override{
+        delete configurator;
     }
 };
 
