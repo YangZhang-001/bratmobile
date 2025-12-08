@@ -87,6 +87,7 @@ Robot Configurator::makeRobot(b2World& world, const b2Transform & start){
 simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State src, 
 	simResult result;
 	float remaining=remainingSimulationTime(&t);
+	printf("remaining=%f\n", remaining);
 	Robot robot=makeRobot(w, t.start);
 	worldBuilder->add_body_count();
 	simulatedTasks++;
@@ -352,7 +353,8 @@ void Configurator::adjust_simulated_task(const vertexDescriptor &v, Task & t){
 		return; //check until needs to be checked
 	}
 	if (!t.getEndCriteria().angle.isValid()){return;}
-	if (t.get_direction()==DEFAULT){return;}
+	if (t.get_direction()==DEFAULT){
+		return;}
 	if (t.get_direction()==currentTask.get_direction()){
 		t.getEndCriteria().adjust(-tracker->getDeltaTransform());
 	}
