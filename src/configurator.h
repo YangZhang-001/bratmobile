@@ -311,7 +311,7 @@ class ReactiveConfigurator:public Configurator{
 	protected:
 	void explore_plan(b2World&)override;
 
-	float remainingSimulationTime(const Task *const t);
+	float remainingSimulationTime(const Task *const t)override;
 
 	public:
 
