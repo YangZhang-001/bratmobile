@@ -426,7 +426,12 @@ class FocusedConfigurator: public virtual AttentiveConfigurator{
 	protected:
 
 	StateMatcher::MATCH_TYPE desiredMatch() override {
-		return StateMatcher::MATCH_TYPE::ABSTRACT;
+		if (m_plan.empty()){
+			return StateMatcher::MATCH_TYPE::ABSTRACT;
+		}
+		else{
+			return StateMatcher::MATCH_TYPE::_TRUE;
+		}
 	}	
 	/**
 	 * @brief If the current vertex is matched, don't allow to check plan further
