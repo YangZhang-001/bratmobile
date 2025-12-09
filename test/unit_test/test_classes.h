@@ -660,14 +660,6 @@ protected:
 
     void set_Dn(std::vector<vertexDescriptor> vec, const Disturbance& Dn);
 
-    // void SetUp()override{
-    //     ClosedLoop_Tracker * clt=new ClosedLoop_Tracker;
-    //     register_tracker(clt);
-    // }
-    // void TearDown()override{
-    //     delete tracker;
-    //     transitionSystem=TransitionSystem(1);
-    // }
 
 };
 
@@ -861,6 +853,16 @@ class ConfiguratorEvaluationQueueManagerTest: public ConfiguratorTest, public te
  */
 class TestDeadReckoning:public testing::TestWithParam<std::tuple<Direction, Direction>>{};
 
+class ReactiveConfTest: public ReactiveConfigurator, public ::testing::TestWithParam<Direction>{
+    protected:
+    float solution=BOX2DRANGE;
+    void SetUp()override{
+        if (GetParam()==DEFAULT){
+            solution=simulationStep;
+        }
+    }
+
+};
 
 ////////////////////////////////////////////////////////////////////////
 

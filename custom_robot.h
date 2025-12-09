@@ -28,7 +28,6 @@ public:
 			std::cerr<<"null pointer to ci"<<std::endl;
 			return;
 		}
-		//ci->data.clear();
     	ci->setReady(false);
 		ci->data2fp.clear();
 		mapCount++;

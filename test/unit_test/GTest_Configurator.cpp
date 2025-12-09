@@ -931,3 +931,46 @@ TEST_F(MovingVertexTest, DiIsCurrentDi){
     EXPECT_EQ(vertex_get_direction(MOVING_VERTEX), DEFAULT);
     EXPECT_TRUE(vertex_get_Di(MOVING_VERTEX)== currentTask.get_disturbance());
 }
+
+/**
+ * @brief Testing calculation of reamining simulation time in reactive mode
+ */
+TEST_P(ReactiveConfTest, RemainingTime){
+    Task t(Disturbance(), GetParam(), b2Transform_zero, true);
+    solution/=controlGoal.getAction().getLinearSpeed();
+    EXPECT_EQ(remainingSimulationTime(&t), solution);
+}
+
+TEST_P(ReactiveConfTest, Simulate){
+    Task t(Disturbance(), GetParam(), b2Transform_zero, true);
+    b2World world(GRAVITY);
+    worldBuilder->makeBody(world, BodyFeatures(b2Transform(b2Vec2(0.67,0), b2Rot(0))));
+    simResult result=simulate(t, world);
+    if (GetParam()!=DEFAULT){
+        solution=20;
+    }
+    else{
+        solution=27;
+    }
+    EXPECT_EQ(result.step, solution);
+}
+
+TEST_P(ReactiveConfTest, AdjustSimulatedTask){
+    currentTask.set_direction(GetParam());
+    boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem);
+    Task t(Disturbance(), GetParam(), b2Transform_zero, true);
+    CLTrackerTest _tracker;
+    _tracker.setDeltaTransform(t.getAction().getTransform(0.4));
+    register_tracker(&_tracker);
+    EndCriteria ec=t.getEndCriteria();
+    adjust_simulated_task(currentVertex, t);
+    if (GetParam()!=DEFAULT){
+        b2Transform dt=_tracker.getDeltaTransform();
+        ec.angle.set(ec.angle.get_signed()-dt.q.GetAngle());
+    }
+    EXPECT_EQ(t.getEndCriteria().angle.get(), ec.angle.get());
+    EXPECT_EQ(t.getEndCriteria().distance.get(), ec.distance.get());
+
+}
+
+INSTANTIATE_TEST_CASE_P(Directions, ReactiveConfTest, ::testing::Values(DEFAULT, RIGHT, LEFT));

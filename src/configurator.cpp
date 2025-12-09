@@ -356,10 +356,10 @@ void Configurator::adjust_simulated_task(const vertexDescriptor &v, Task & t){
 	if (t.get_direction()==DEFAULT){
 		return;}
 	if (t.get_direction()==currentTask.get_direction()){
-		t.getEndCriteria().adjust(-tracker->getDeltaTransform());
+		t.getEndCriteria().adjust(tracker->getDeltaTransform());
 	}
 	else if (t.get_direction()==getOppositeDirection(currentTask.get_direction()).second){
-		t.getEndCriteria().adjust(tracker->getDeltaTransform());
+		t.getEndCriteria().adjust(-tracker->getDeltaTransform());
 	}
 }
 
@@ -391,16 +391,19 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 }
 
 float ReactiveConfigurator::remainingSimulationTime(const Task *const t){
-    if (t &&get_direction(t)==currentTask.get_direction() && iteration>1){
-        b2Transform remainingTransform= transitionSystem[DUMMY].endPose;
-	//	debug::print_pose(remainingTransform, "remaining transform");
-        float r_step=Controller::motor_step(t->getAction(), remainingTransform.p.Length())*MOTOR_CALLBACK;
-		printf("sim time=%f and task direction%i", r_step, currentTask.get_direction());
-		return 	r_step;
-    }
-    else if (get_direction(t)==DEFAULT){
-        return simulationStep/ t->getAction().getLinearSpeed();
-    }
+    if (!t){
+		throw "no task!";
+	}
+	if (get_direction(t)==DEFAULT){
+    //     b2Transform remainingTransform= transitionSystem[currentVertex].endPose;
+	// //	debug::print_pose(remainingTransform, "remaining transform");
+    	float r_step=Controller::motor_step(t->getAction(),simulationStep)*MOTOR_CALLBACK;
+	// 	printf("sim time=%f and task direction%i", r_step, currentTask.get_direction());
+	 	return 	r_step;
+    // }
+    // else {
+    //     return simulationStep/ t->getAction().getLinearSpeed();
+     }
     return Configurator::remainingSimulationTime();
 }
 
