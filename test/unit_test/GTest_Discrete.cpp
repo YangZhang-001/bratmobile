@@ -13,7 +13,6 @@ TEST_P(HighLevelTestDiscrete, FirstPlan){
         configurator->setSimulationStep(0.5);
     }
     configurator->init(goal);
-    configurator->register_worldBuilder(new LaserFocus);
     std::string folder=std::get<1>(GetParam());
     get_plan(folder);
     EXPECT_GT(ci.data2fp.size(),0);
@@ -24,7 +23,6 @@ TEST_P(HighLevelTestDiscrete, FirstPlan){
     else{
         success=configurator->plan_reaches_goal();
     }
-    configurator->register_worldBuilder(NULL);
     EXPECT_GT(configurator->get_plan().size(),1);
     EXPECT_TRUE(success);
 }
