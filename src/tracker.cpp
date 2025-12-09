@@ -52,7 +52,7 @@ TrackingResult ClosedLoop_Tracker::get_transform(const Task & t, const Coordinat
             std::cerr<<"no disturbance!"<<std::endl;    
         }
         if (t.get_disturbance().bf.is_point()){
-            printf("petite disturbance!");    
+            printf("is a point!");    
         }
         if ((t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
             std::cerr<<("not moving!")<<std::endl;    

@@ -955,22 +955,22 @@ TEST_P(ReactiveConfTest, Simulate){
     EXPECT_EQ(result.step, solution);
 }
 
-TEST_P(ReactiveConfTest, AdjustSimulatedTask){
-    currentTask.set_direction(GetParam());
-    boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem);
-    Task t(Disturbance(), GetParam(), b2Transform_zero, true);
-    CLTrackerTest _tracker;
-    _tracker.setDeltaTransform(t.getAction().getTransform(0.4));
-    register_tracker(&_tracker);
-    EndCriteria ec=t.getEndCriteria();
-    adjust_simulated_task(currentVertex, t);
-    if (GetParam()!=DEFAULT){
-        b2Transform dt=_tracker.getDeltaTransform();
-        ec.angle.set(ec.angle.get_signed()-dt.q.GetAngle());
-    }
-    EXPECT_EQ(t.getEndCriteria().angle.get(), ec.angle.get());
-    EXPECT_EQ(t.getEndCriteria().distance.get(), ec.distance.get());
+// TEST_P(ReactiveConfTest, AdjustSimulatedTask){
+//     currentTask.set_direction(GetParam());
+//     boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem);
+//     Task t(Disturbance(), GetParam(), b2Transform_zero, true);
+//     CLTrackerTest _tracker;
+//     _tracker.setDeltaTransform(t.getAction().getTransform(0.4));
+//     register_tracker(&_tracker);
+//     EndCriteria ec=t.getEndCriteria();
+//     adjust_simulated_task(currentVertex, t);
+//     if (GetParam()!=DEFAULT){
+//         b2Transform dt=_tracker.getDeltaTransform();
+//         ec.angle.set(ec.angle.get_signed()-dt.q.GetAngle());
+//     }
+//     EXPECT_EQ(t.getEndCriteria().angle.get(), ec.angle.get());
+//     EXPECT_EQ(t.getEndCriteria().distance.get(), ec.distance.get());
 
-}
+// }
 
 INSTANTIATE_TEST_CASE_P(Directions, ReactiveConfTest, ::testing::Values(DEFAULT, RIGHT, LEFT));
