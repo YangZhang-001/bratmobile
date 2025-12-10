@@ -105,7 +105,7 @@ Task Reactive_Controller::next_task( Task currentTask, const Task & controlGoal,
 	else{
 		currentTask = Task(controlGoal.get_disturbance(), DEFAULT); //reactive
 	}
-	currentTask.setMotorStep(motor_step(currentTask.getAction()));
+	currentTask.setMotorStep(motor_step(currentTask.getAction(), g[currentVertex].endPose.p.Length()));
 	printf("changed to %f\n", currentTask.getAction().getOmega());
 	return currentTask;
 
