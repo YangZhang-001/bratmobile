@@ -395,7 +395,7 @@ float ReactiveConfigurator::remainingSimulationTime(const Task *const t){
 		throw "no task!";
 	}
 	if (get_direction(t)==DEFAULT){
-    	float r_step=Controller::motor_step(t->getAction(),simulationStep)*MOTOR_CALLBACK;
+    	float r_step=Controller::motor_step(t->getAction(),transitionSystem[currentVertex].endPose.p.Length())*MOTOR_CALLBACK;
 	 	printf("r_step=%i\n", r_step);
 		return 	r_step;
     }
