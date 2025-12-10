@@ -11,11 +11,9 @@ int main(int argc, char** argv) {
     ReactiveConfigurator configurator;
 	LaserFocus wb;
 	configurator.setSimulationStep(.5);
-
 	if (argc>1){
 		configurator.init(controlGoal);
 		configurator.setSimulationStep(.27);
-		wb.
 	}
 	configurator.register_worldBuilder(&wb);
 	NoPlanner planner;
