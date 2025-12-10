@@ -395,15 +395,10 @@ float ReactiveConfigurator::remainingSimulationTime(const Task *const t){
 		throw "no task!";
 	}
 	if (get_direction(t)==DEFAULT){
-    //     b2Transform remainingTransform= transitionSystem[currentVertex].endPose;
-	// //	debug::print_pose(remainingTransform, "remaining transform");
     	float r_step=Controller::motor_step(t->getAction(),simulationStep)*MOTOR_CALLBACK;
-	// 	printf("sim time=%f and task direction%i", r_step, currentTask.get_direction());
-	 	return 	r_step;
-    // }
-    // else {
-    //     return simulationStep/ t->getAction().getLinearSpeed();
-     }
+	 	printf("r_step=%i\n", r_step);
+		return 	r_step;
+    }
     return Configurator::remainingSimulationTime();
 }
 
