@@ -301,7 +301,7 @@ void FocusedConfigurator::removeExploredTransitions( vertexDescriptor v){
 	for (Direction d:options){
 		erase_from_vector(transitionSystem[v].options, d);
 	}
-    if (preventTransition()){
+    if (preventTransition(v)){
 		transitionSystem[v].options.clear();
 	}
 }

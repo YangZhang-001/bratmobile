@@ -2,11 +2,9 @@
 #define FOCUSED_H
 #include "configurator.h"
 
-/**
- * @brief Configurator with long-range planning. It explores transitions out of a state until a DEFAULT Task is reached.
- * The next state to expand will be the one with lowest heuristic cost. 
- * 
- */
+/** 
+ * @brief Configurator that only replans if the current task fails
+*/
 class FocusedConfigurator:public virtual Configurator{
 	protected:
 	StateMatcher matcher;
@@ -147,9 +145,10 @@ std::pair <edgeDescriptor, bool> add_vertex_retro(vertexDescriptor &src, vertexD
 std::vector <Direction> getExploredDirections(vertexDescriptor v, const std::vector<Direction>& directions);
 
 /**
- * Guard Psi
+ * Guard Psi: prevents transitions beyond current vertex if there is a plan in execution
+ * @param v candidate vertex for expansion
  */
-virtual bool preventTransition(){
+virtual bool preventTransition(vertexDescriptor v){
     return v==currentVertex && (!m_plan.empty()||!currentTask.is_over());
 }
 
@@ -220,7 +219,7 @@ void explore_plan(b2World&)override;
 std::vector<Direction>::iterator  get_next_option(vertexDescriptor v, vertexDescriptor src, std::vector<vertexDescriptor> full_plan);
 
 /**
- * @brief Assesses whether a previous plan can be recycled
+ * @brief Does not recycle
  * 
  * @param v source vertex (start of module)
  * @param v0 vertex currently expanded
@@ -427,13 +426,14 @@ virtual bool canReassignOutcome(vertexDescriptor v);
 
 virtual float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex());
 
-void adjust_goal_expectation()override{}
 
 bool hasPlanFinished(){
     return m_plan.empty() && currentTask.is_over();
 }
 
 public:
+
+void adjust_goal_expectation()override{}
 
 FocusedConfigurator(){};
 

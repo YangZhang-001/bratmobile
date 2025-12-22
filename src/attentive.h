@@ -2,22 +2,23 @@
 #define ATTENTIVE_H
 #include "focused.h"
 
-
-/** 
- * @brief Configurator that only replans if the current task fails
-*/
-class FocusedConfigurator: public virtual AttentiveConfigurator{
+/**
+ * @brief Configurator with long-range planning. It explores transitions out of a state until a DEFAULT Task is reached.
+ * The next state to expand will be the one with lowest heuristic cost. 
+ * 
+ */
+class AttentiveConfigurator: public virtual FocusedConfigurator{
 	protected:
 
 	/**
-	 * Guard Psi
+	 * Guard Psi: does not limit expansion to current vertex
 	 */
-	virtual bool preventTransition(){
+	virtual bool preventTransition(vertexDescriptor v){
 		return false;
 	}
 
 	/**
-	* @brief Does not recycle
+	* @brief Find a suitable sequence for execution as a plan in the transition system, if present
 	*/
 	bool recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
 					b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
@@ -79,14 +80,6 @@ void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src) ove
  */
 bool closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v)override;
 
-/**
- * @brief Does not recycle
- */
-bool recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE &matchType, 
-				b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
-				std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction)override{
-					return false;
-}
 
 void backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle)override;
 
@@ -101,7 +94,7 @@ bool canReassignOutcome(vertexDescriptor v) override;
 bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE)override;
 
 float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex()){
-	return AttentiveConfigurator::customSimulationStep();
+	return simulationStep;
 }
 
 };
