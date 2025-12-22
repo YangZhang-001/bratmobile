@@ -115,9 +115,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>dummy_vertex</b> (ver
 <tr class="memitem:af76bd78ed717bafd3d98ec4c8262278c inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structsimResult.html">simResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c">simulate</a> (<a class="el" href="classTask.html">Task</a> t, b2World &amp;w)</td></tr>
 <tr class="memdesc:af76bd78ed717bafd3d98ec4c8262278c inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simulates this task, includes creating the robot object.  <a href="classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c">More...</a><br /></td></tr>
 <tr class="separator:af76bd78ed717bafd3d98ec4c8262278c inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35102ae5628908238769292043ad30da inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a35102ae5628908238769292043ad30da"></a>
-virtual float&#160;</td><td class="memItemRight" valign="bottom"><b>remainingSimulationTime</b> (const <a class="el" href="classTask.html">Task</a> *const t=NULL)</td></tr>
-<tr class="separator:a35102ae5628908238769292043ad30da inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5909d6f8f82ef074d2b01e8296d635ed inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a5909d6f8f82ef074d2b01e8296d635ed">estimate_current_vertex</a> ()</td></tr>
 <tr class="separator:a5909d6f8f82ef074d2b01e8296d635ed inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1846e9cbdb8941f9ecebe691a1127ac0 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a1846e9cbdb8941f9ecebe691a1127ac0"></a>
@@ -145,9 +142,12 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memdesc:a2984dc129d74fd6877cc833cebcad015 inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Approximating angle to divisors of pi/2.  <a href="classConfigurator.html#a2984dc129d74fd6877cc833cebcad015">More...</a><br /></td></tr>
 <tr class="separator:a2984dc129d74fd6877cc833cebcad015 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93f9fc1ab8bfb68c5f381341f838bca9 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a93f9fc1ab8bfb68c5f381341f838bca9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>adjust_goal_expectation</b> ()</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a93f9fc1ab8bfb68c5f381341f838bca9">adjust_goal_expectation</a> ()</td></tr>
+<tr class="memdesc:a93f9fc1ab8bfb68c5f381341f838bca9 inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses tracking information to adjust the position of the goal relative to the robot. <br /></td></tr>
 <tr class="separator:a93f9fc1ab8bfb68c5f381341f838bca9 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a146e6403431265509070da248f7cb4bf inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">adjust_simulated_task</a> (const vertexDescriptor &amp;v, <a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
+<tr class="memitem:a53a3b1d711b087788a602550917a6e61 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, Direction &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a53a3b1d711b087788a602550917a6e61">getOppositeDirection</a> (Direction d)</td></tr>
+<tr class="separator:a53a3b1d711b087788a602550917a6e61 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a146e6403431265509070da248f7cb4bf inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">adjust_simulated_task</a> (const vertexDescriptor &amp;v, <a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
 <tr class="memdesc:a146e6403431265509070da248f7cb4bf inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>.  <a href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">More...</a><br /></td></tr>
 <tr class="separator:a146e6403431265509070da248f7cb4bf inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4f9783ecda5b18a35c9aa41380fc751 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="af4f9783ecda5b18a35c9aa41380fc751"></a>
@@ -209,6 +209,9 @@ Protected Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classReactiveConfigurator.html#ada4480e3a70f328ea66289204933835c">explore_plan</a> (b2World &amp;) override</td></tr>
 <tr class="memdesc:ada4480e3a70f328ea66289204933835c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explores and plan. <br /></td></tr>
 <tr class="separator:ada4480e3a70f328ea66289204933835c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae36f9f48a159befcfff60cd23d450624"><td class="memItemLeft" align="right" valign="top"><a id="ae36f9f48a159befcfff60cd23d450624"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>remainingSimulationTime</b> (const <a class="el" href="classTask.html">Task</a> *const t) override</td></tr>
+<tr class="separator:ae36f9f48a159befcfff60cd23d450624"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -221,6 +224,14 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a704276c74e381175b74317a75d76de71">MulT</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
 <tr class="memdesc:a704276c74e381175b74317a75d76de71 inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
 <tr class="separator:a704276c74e381175b74317a75d76de71 inherit pub_static_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbde85cc7db5800b6cccfa9e98b60534 inherit pub_static_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="adbde85cc7db5800b6cccfa9e98b60534"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#adbde85cc7db5800b6cccfa9e98b60534">InvMul</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:adbde85cc7db5800b6cccfa9e98b60534 inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
+<tr class="separator:adbde85cc7db5800b6cccfa9e98b60534 inherit pub_static_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a681dd37340768f1ade556399d2e2877e inherit pub_static_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a681dd37340768f1ade556399d2e2877e"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a681dd37340768f1ade556399d2e2877e">InvMul_</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:a681dd37340768f1ade556399d2e2877e inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
+<tr class="separator:a681dd37340768f1ade556399d2e2877e inherit pub_static_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa770e198ec1a69f31a661f3642971779 inherit pub_static_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="aa770e198ec1a69f31a661f3642971779"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#aa770e198ec1a69f31a661f3642971779">Mul</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
 <tr class="memdesc:aa770e198ec1a69f31a661f3642971779 inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiplication. <br /></td></tr>

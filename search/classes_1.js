@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['b2bconfigurator_223',['B2BConfigurator',['../classB2BConfigurator.html',1,'']]],
-  ['bodyfeatures_224',['BodyFeatures',['../classBodyFeatures.html',1,'']]],
-  ['bundle_225',['Bundle',['../classBundle.html',1,'']]]
+  ['b2bconfigurator_226',['B2BConfigurator',['../classB2BConfigurator.html',1,'']]],
+  ['bodyfeatures_227',['BodyFeatures',['../classBodyFeatures.html',1,'']]],
+  ['bundle_228',['Bundle',['../classBundle.html',1,'']]]
 ];

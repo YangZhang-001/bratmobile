@@ -11,13 +11,14 @@ var searchData=
   ['addvertex_8',['addVertex',['../classConfigurator.html#a3273045337b602fbbd10a08c90a896bd',1,'Configurator']]],
   ['adjust_9',['adjust',['../structEndCriteria.html#adc8a4424794862389dadec49f71964a4',1,'EndCriteria']]],
   ['adjust_5fgain_10',['adjust_gain',['../classMotor__Out.html#ae63aff1ab8d0a7217ebd522a3e858a8c',1,'Motor_Out']]],
-  ['adjust_5fsimulated_5ftask_11',['adjust_simulated_task',['../classAttentiveConfigurator.html#abe478eeb861f94c74f6d6cf4febca9d2',1,'AttentiveConfigurator::adjust_simulated_task()'],['../classConfigurator.html#a146e6403431265509070da248f7cb4bf',1,'Configurator::adjust_simulated_task()']]],
-  ['adjustprobability_12',['adjustProbability',['../classAttentiveConfigurator.html#ad0124c7f58a276b3530353e595eebb5e',1,'AttentiveConfigurator']]],
-  ['angle_13',['Angle',['../classAngle.html',1,'']]],
-  ['applytransitionmatrix_14',['applyTransitionMatrix',['../classAttentiveConfigurator.html#aeadbc03a330beab575b122d04f74fc7e',1,'AttentiveConfigurator']]],
-  ['approximate_5fangle_15',['approximate_angle',['../classConfigurator.html#a2984dc129d74fd6877cc833cebcad015',1,'Configurator']]],
-  ['assignbodyfeatures_16',['assignBodyFeatures',['../classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62',1,'Configurator']]],
-  ['assigndimensions_17',['assignDimensions',['../classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0',1,'Configurator']]],
-  ['attentionwindowoverlaps_18',['attentionWindowOverlaps',['../classB2BConfigurator.html#afe27e346eff5da11235a3bcf296a8a29',1,'B2BConfigurator']]],
-  ['attentiveconfigurator_19',['AttentiveConfigurator',['../classAttentiveConfigurator.html',1,'']]]
+  ['adjust_5fgoal_5fexpectation_11',['adjust_goal_expectation',['../classFocusedConfigurator.html#a9dbf08eab63df5f98dd1894a7dc638d0',1,'FocusedConfigurator::adjust_goal_expectation()'],['../classConfigurator.html#a93f9fc1ab8bfb68c5f381341f838bca9',1,'Configurator::adjust_goal_expectation()']]],
+  ['adjust_5fsimulated_5ftask_12',['adjust_simulated_task',['../classConfigurator.html#a146e6403431265509070da248f7cb4bf',1,'Configurator']]],
+  ['adjustprobability_13',['adjustProbability',['../classAttentiveConfigurator.html#ad0124c7f58a276b3530353e595eebb5e',1,'AttentiveConfigurator']]],
+  ['angle_14',['Angle',['../classAngle.html',1,'']]],
+  ['applytransitionmatrix_15',['applyTransitionMatrix',['../classAttentiveConfigurator.html#aeadbc03a330beab575b122d04f74fc7e',1,'AttentiveConfigurator']]],
+  ['approximate_5fangle_16',['approximate_angle',['../classConfigurator.html#a2984dc129d74fd6877cc833cebcad015',1,'Configurator']]],
+  ['assignbodyfeatures_17',['assignBodyFeatures',['../classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62',1,'Configurator']]],
+  ['assigndimensions_18',['assignDimensions',['../classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0',1,'Configurator']]],
+  ['attentionwindowoverlaps_19',['attentionWindowOverlaps',['../classB2BConfigurator.html#afe27e346eff5da11235a3bcf296a8a29',1,'B2BConfigurator']]],
+  ['attentiveconfigurator_20',['AttentiveConfigurator',['../classAttentiveConfigurator.html',1,'']]]
 ];

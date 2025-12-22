@@ -153,8 +153,14 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memdesc:a2984dc129d74fd6877cc833cebcad015 inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Approximating angle to divisors of pi/2.  <a href="classConfigurator.html#a2984dc129d74fd6877cc833cebcad015">More...</a><br /></td></tr>
 <tr class="separator:a2984dc129d74fd6877cc833cebcad015 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93f9fc1ab8bfb68c5f381341f838bca9 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a93f9fc1ab8bfb68c5f381341f838bca9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>adjust_goal_expectation</b> ()</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a93f9fc1ab8bfb68c5f381341f838bca9">adjust_goal_expectation</a> ()</td></tr>
+<tr class="memdesc:a93f9fc1ab8bfb68c5f381341f838bca9 inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses tracking information to adjust the position of the goal relative to the robot. <br /></td></tr>
 <tr class="separator:a93f9fc1ab8bfb68c5f381341f838bca9 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53a3b1d711b087788a602550917a6e61 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, Direction &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a53a3b1d711b087788a602550917a6e61">getOppositeDirection</a> (Direction d)</td></tr>
+<tr class="separator:a53a3b1d711b087788a602550917a6e61 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a146e6403431265509070da248f7cb4bf inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">adjust_simulated_task</a> (const vertexDescriptor &amp;v, <a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
+<tr class="memdesc:a146e6403431265509070da248f7cb4bf inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>.  <a href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">More...</a><br /></td></tr>
+<tr class="separator:a146e6403431265509070da248f7cb4bf inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4f9783ecda5b18a35c9aa41380fc751 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="af4f9783ecda5b18a35c9aa41380fc751"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>register_controller</b> (<a class="el" href="classController.html">Controller</a> *controller)</td></tr>
 <tr class="separator:af4f9783ecda5b18a35c9aa41380fc751 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -225,9 +231,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a580d62685aee883b17666809c143f108"><td class="memItemLeft" align="right" valign="top"><a id="a580d62685aee883b17666809c143f108"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>planPriority</b> (TransitionSystem &amp;, vertexDescriptor)</td></tr>
 <tr class="separator:a580d62685aee883b17666809c143f108"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe478eeb861f94c74f6d6cf4febca9d2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#abe478eeb861f94c74f6d6cf4febca9d2">adjust_simulated_task</a> (const vertexDescriptor &amp;v, <a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
-<tr class="memdesc:abe478eeb861f94c74f6d6cf4febca9d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>.  <a href="classAttentiveConfigurator.html#abe478eeb861f94c74f6d6cf4febca9d2">More...</a><br /></td></tr>
-<tr class="separator:abe478eeb861f94c74f6d6cf4febca9d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb5f4a26cbd31156fcae8065265e0daf"><td class="memItemLeft" align="right" valign="top"><a id="abb5f4a26cbd31156fcae8065265e0daf"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>adjust_rw_task</b> (const vertexDescriptor &amp;, TransitionSystem &amp;, <a class="el" href="classTask.html">Task</a> *, const b2Transform &amp;)</td></tr>
 <tr class="separator:abb5f4a26cbd31156fcae8065265e0daf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -237,8 +240,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>adjust_rw_task</b> (c
 <tr class="memitem:af6213d0a5ad4e6b697b0e19d062424b6"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; vertexDescriptor &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#af6213d0a5ad4e6b697b0e19d062424b6">explorer</a> (vertexDescriptor v, TransitionSystem &amp;g, b2World &amp;w)</td></tr>
 <tr class="memdesc:af6213d0a5ad4e6b697b0e19d062424b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs transition system using a Box2D simulation combined with an A* graph expansion algorithm.  <a href="classAttentiveConfigurator.html#af6213d0a5ad4e6b697b0e19d062424b6">More...</a><br /></td></tr>
 <tr class="separator:af6213d0a5ad4e6b697b0e19d062424b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42e79e5977c29fccef0eaffb0e2e58f7"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, Direction &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#a42e79e5977c29fccef0eaffb0e2e58f7">getOppositeDirection</a> (Direction)</td></tr>
-<tr class="separator:a42e79e5977c29fccef0eaffb0e2e58f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae73a19ece7e104bc308a4e55157b6a63"><td class="memItemLeft" align="right" valign="top"><a id="ae73a19ece7e104bc308a4e55157b6a63"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator.html#ae73a19ece7e104bc308a4e55157b6a63">resetPhi</a> ()</td></tr>
 <tr class="memdesc:ae73a19ece7e104bc308a4e55157b6a63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets all vertices evaluation function phi to a default unitialised value of 10. <br /></td></tr>
@@ -346,6 +347,9 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a1411ab03dc2496c3b06e5cfebe839c9c"><td class="memItemLeft" align="right" valign="top"><a id="a1411ab03dc2496c3b06e5cfebe839c9c"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>canReassignOutcome</b> (vertexDescriptor v)</td></tr>
 <tr class="separator:a1411ab03dc2496c3b06e5cfebe839c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8291dd2b8a0d1717173c65805b6f7350"><td class="memItemLeft" align="right" valign="top"><a id="a8291dd2b8a0d1717173c65805b6f7350"></a>
+virtual float&#160;</td><td class="memItemRight" valign="bottom"><b>customSimulationStep</b> (vertexDescriptor v=TransitionSystem::null_vertex())</td></tr>
+<tr class="separator:a8291dd2b8a0d1717173c65805b6f7350"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -434,6 +438,14 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a704276c74e381175b74317a75d76de71">MulT</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
 <tr class="memdesc:a704276c74e381175b74317a75d76de71 inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
 <tr class="separator:a704276c74e381175b74317a75d76de71 inherit pub_static_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbde85cc7db5800b6cccfa9e98b60534 inherit pub_static_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="adbde85cc7db5800b6cccfa9e98b60534"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#adbde85cc7db5800b6cccfa9e98b60534">InvMul</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:adbde85cc7db5800b6cccfa9e98b60534 inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
+<tr class="separator:adbde85cc7db5800b6cccfa9e98b60534 inherit pub_static_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a681dd37340768f1ade556399d2e2877e inherit pub_static_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a681dd37340768f1ade556399d2e2877e"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a681dd37340768f1ade556399d2e2877e">InvMul_</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:a681dd37340768f1ade556399d2e2877e inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
+<tr class="separator:a681dd37340768f1ade556399d2e2877e inherit pub_static_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa770e198ec1a69f31a661f3642971779 inherit pub_static_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="aa770e198ec1a69f31a661f3642971779"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#aa770e198ec1a69f31a661f3642971779">Mul</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
 <tr class="memdesc:aa770e198ec1a69f31a661f3642971779 inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiplication. <br /></td></tr>
@@ -740,54 +752,6 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="abe478eeb861f94c74f6d6cf4febca9d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe478eeb861f94c74f6d6cf4febca9d2">&#9670;&nbsp;</a></span>adjust_simulated_task()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void AttentiveConfigurator::adjust_simulated_task </td>
-          <td>(</td>
-          <td class="paramtype">const vertexDescriptor &amp;&#160;</td>
-          <td class="paramname"><em>v</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
-          <td class="paramname"><em>t</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>If <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">t</td><td>corresponds to current <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>, change its end criteria so that it is only simulated for the remainder of the end criteria</td></tr>
-    <tr><td class="paramname">v</td><td>source vertex for the task </td></tr>
-    <tr><td class="paramname">t</td><td>task reference </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Reimplemented from <a class="el" href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">Configurator</a>.</p>
 
 </div>
 </div>
@@ -1353,33 +1317,6 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 </dl>
 </li>
 </ul>
-
-</div>
-</div>
-<a id="a42e79e5977c29fccef0eaffb0e2e58f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42e79e5977c29fccef0eaffb0e2e58f7">&#9670;&nbsp;</a></span>getOppositeDirection()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::pair&lt; bool, Direction &gt; AttentiveConfigurator::getOppositeDirection </td>
-          <td>(</td>
-          <td class="paramtype">Direction&#160;</td>
-          <td class="paramname"><em>d</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>std::pair &lt;bool, Direction&gt;(opposite exists, opposite direction) </dd></dl>
 
 </div>
 </div>

@@ -141,9 +141,12 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memdesc:a2984dc129d74fd6877cc833cebcad015"><td class="mdescLeft">&#160;</td><td class="mdescRight">Approximating angle to divisors of pi/2.  <a href="classConfigurator.html#a2984dc129d74fd6877cc833cebcad015">More...</a><br /></td></tr>
 <tr class="separator:a2984dc129d74fd6877cc833cebcad015"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93f9fc1ab8bfb68c5f381341f838bca9"><td class="memItemLeft" align="right" valign="top"><a id="a93f9fc1ab8bfb68c5f381341f838bca9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>adjust_goal_expectation</b> ()</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a93f9fc1ab8bfb68c5f381341f838bca9">adjust_goal_expectation</a> ()</td></tr>
+<tr class="memdesc:a93f9fc1ab8bfb68c5f381341f838bca9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses tracking information to adjust the position of the goal relative to the robot. <br /></td></tr>
 <tr class="separator:a93f9fc1ab8bfb68c5f381341f838bca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a146e6403431265509070da248f7cb4bf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">adjust_simulated_task</a> (const vertexDescriptor &amp;v, <a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
+<tr class="memitem:a53a3b1d711b087788a602550917a6e61"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, Direction &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a53a3b1d711b087788a602550917a6e61">getOppositeDirection</a> (Direction d)</td></tr>
+<tr class="separator:a53a3b1d711b087788a602550917a6e61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a146e6403431265509070da248f7cb4bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">adjust_simulated_task</a> (const vertexDescriptor &amp;v, <a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
 <tr class="memdesc:a146e6403431265509070da248f7cb4bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">If <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>.  <a href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">More...</a><br /></td></tr>
 <tr class="separator:a146e6403431265509070da248f7cb4bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4f9783ecda5b18a35c9aa41380fc751"><td class="memItemLeft" align="right" valign="top"><a id="af4f9783ecda5b18a35c9aa41380fc751"></a>
@@ -209,6 +212,14 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hre
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a704276c74e381175b74317a75d76de71">MulT</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
 <tr class="memdesc:a704276c74e381175b74317a75d76de71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
 <tr class="separator:a704276c74e381175b74317a75d76de71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbde85cc7db5800b6cccfa9e98b60534"><td class="memItemLeft" align="right" valign="top"><a id="adbde85cc7db5800b6cccfa9e98b60534"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#adbde85cc7db5800b6cccfa9e98b60534">InvMul</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:adbde85cc7db5800b6cccfa9e98b60534"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
+<tr class="separator:adbde85cc7db5800b6cccfa9e98b60534"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a681dd37340768f1ade556399d2e2877e"><td class="memItemLeft" align="right" valign="top"><a id="a681dd37340768f1ade556399d2e2877e"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a681dd37340768f1ade556399d2e2877e">InvMul_</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:a681dd37340768f1ade556399d2e2877e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
+<tr class="separator:a681dd37340768f1ade556399d2e2877e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa770e198ec1a69f31a661f3642971779"><td class="memItemLeft" align="right" valign="top"><a id="aa770e198ec1a69f31a661f3642971779"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#aa770e198ec1a69f31a661f3642971779">Mul</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
 <tr class="memdesc:aa770e198ec1a69f31a661f3642971779"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiplication. <br /></td></tr>
@@ -343,9 +354,6 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void Configurator::adjust_simulated_task </td>
@@ -365,11 +373,6 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
           <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>If <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a>. </p>
@@ -381,8 +384,6 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
   </table>
   </dd>
 </dl>
-
-<p>Reimplemented in <a class="el" href="classAttentiveConfigurator.html#abe478eeb861f94c74f6d6cf4febca9d2">AttentiveConfigurator</a>.</p>
 
 </div>
 </div>
@@ -532,6 +533,25 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a53a3b1d711b087788a602550917a6e61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53a3b1d711b087788a602550917a6e61">&#9670;&nbsp;</a></span>getOppositeDirection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt; bool, Direction &gt; Configurator::getOppositeDirection </td>
+          <td>(</td>
+          <td class="paramtype">Direction&#160;</td>
+          <td class="paramname"><em>d</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>std::pair &lt;bool, Direction&gt;(opposite exists, opposite direction) </dd></dl>
 
 </div>
 </div>

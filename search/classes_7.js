@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['horizonstarplanner_254',['HorizonStarPlanner',['../classHorizonStarPlanner.html',1,'']]]
+  ['horizonstarplanner_257',['HorizonStarPlanner',['../classHorizonStarPlanner.html',1,'']]]
 ];
