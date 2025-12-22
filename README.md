@@ -1,31 +1,13 @@
-The purpose of this library is to showcase a framework for multi-step ahead planning using pure input control (see [Braitenberg vehicles](https://en.wikipedia.org/wiki/Braitenberg_vehicle)). The navigation problem is broken down into several unique closed-loop input controllers, called Tasks. Each Task produces a unique control behaviour (go straight, turn left/right 90 degrees) in response to a [Disturbance](https://en.wikipedia.org/wiki/Errors_and_residuals) (an obstacle or target), which determines a Task's duration. A supervising module, called the Configurator, can simulate sequences of Tasks  in game engine [Box2D](https://github.com/glafratta/box2d), retain their outcomes in a cognitive map, which can be searched to extract plans. The physics simulation represents the robot's [Core Knowledge](https://www.harvardlds.org/wp-content/uploads/2017/01/SpelkeKinzler07-1.pdf) (Spelke, 2007).
+The purpose of this library is to showcase a framework for multi-step ahead planning using pure input control (see [Braitenberg vehicles](https://en.wikipedia.org/wiki/Braitenberg_vehicle)). The navigation problem is broken down into several unique closed-loop input controllers, called Tasks. Each Task produces a unique control behaviour (go straight, turn left/right 90 degrees) in response to a [Disturbance](https://en.wikipedia.org/wiki/Errors_and_residuals) (an obstacle or target), which determines a Task's duration. A supervising module, called the Configurator, can simulate sequences of Tasks at runtime in game engine [Box2D](https://github.com/glafratta/box2d), retain their outcomes in a cognitive map, which can be searched to extract plans. The physics simulation represents the robot's [Core Knowledge](https://www.harvardlds.org/wp-content/uploads/2017/01/SpelkeKinzler07-1.pdf) (Spelke, 2007).
 
 ## Features:
-* Completely on-the-fly, instantaneous construction of an abstract cognitive map of the environment, represented as a tree of tasks
+* Hybrid state-space representation where states are Tasks focused on a specific object
+  
+* Mapless navigation: robot is ready to go as is, no need for global maps/SLAM
 
-* Hybrid state-space representation with flexible discretization
+* Plans are made up of multiple Tasks (object-focused instructions), not trajectories
 
-* Use of an attention window (simulated distal sensor) to define the scope of Tasks
-
-* Mapless navigation: robot is ready to go as is, no need for global sensors
-
-* Causal reasoning on the naive robot
-
-* Plans represents set of instructions, not trajectories: no solvers required, completely closed-loop and object oriented
-
-* Debug and navigation visualisation interface which transmits goal, obstacle and attention window coordinates to Qt using fastDDS
-
-* On-the-fly replanning: replans if the current Task has different outcome than expected
-
-## Work in progress
-
-* Closed-loop Task execution with goal-directed behaviour (driving towards target)
-
-* Debugging full plan checking and recycling (real-world settings, see issues)
-
-* Adaptive thresholding of acceptable noise in state observations
-
-* GUI for custom goal setting
+* On-the-fly replanning
 
 ### Documentation
 
@@ -45,18 +27,7 @@ The indoor robot is equipped with
 ## Prerequisites
 ### Development packages
 
-* G++ compiler
-* CMake
-* PiGPIO library
-* OpenCV
-* Boost
-* XOrg
-* LibGLU1
-* Gtest
-
 `sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev`
-
-For Qt/FastDDS setup, see readme in `src/fastdds`
 
 ### Libraries to compile from source
 
@@ -82,7 +53,6 @@ sudo make install
 ### Navigation demo (Raspberry Pi)
 Demo prefixes:
 
-* `brat1*` : Multi-step planning without any state processing: the robot simply looks ahead and finds the best Task sequence, entirely disturbance-driven
 * `brat2*` : Multi-step planning with fixed discretisation of Tasks with DEFAULT actions
 * `brat3*` : Multi-step planning with fixed-size state split (of states ending in collision) and attention window to guide optimal obstacle avoidance when a goal is present
 
