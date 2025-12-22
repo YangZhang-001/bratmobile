@@ -191,7 +191,7 @@ std::vector <vertexDescriptor> FocusedConfigurator::splitTask( vertexDescriptor 
 		State s_tmp=State(transitionSystem[v]);
 		if(nNodes >1){
 			s_tmp.endPose=b2Mul(transitionSystem[v].start, deltaTransform);
-			VertexMatch match=findMatch(s_tmp, d);
+			VertexMatch match=hardMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE){
 				first_edge=addEdgeRetrospectively(v, v1, s_tmp, first_edge, d, a.getLinearSpeed());
 			}
@@ -203,7 +203,7 @@ std::vector <vertexDescriptor> FocusedConfigurator::splitTask( vertexDescriptor 
 		}
 		if (nNodes<=1){
 			s_tmp.endPose=endPose;
-			VertexMatch match=findMatch(s_tmp, d);
+			VertexMatch match=hardMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE || match.second==v){
 				transitionSystem[v1].endPose = endPose;
 				transitionSystem[first_edge.first].step= gt::distanceToSimStep(transitionSystem[v1].distance(), a.getLinearSpeed());	

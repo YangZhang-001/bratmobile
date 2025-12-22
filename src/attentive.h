@@ -13,7 +13,7 @@ class AttentiveConfigurator: public virtual FocusedConfigurator{
 	/**
 	 * Guard Psi: does not limit expansion to current vertex
 	 */
-	virtual bool preventTransition(vertexDescriptor v){
+	virtual bool preventTransition(vertexDescriptor v)override{
 		return false;
 	}
 
