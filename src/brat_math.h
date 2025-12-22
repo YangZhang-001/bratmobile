@@ -9,13 +9,17 @@ namespace math {
 
 	void MulT(const b2Transform&, State& );
 
-	//void MulT(const b2Transform& , Task* );
-
 	void MulT(const b2Transform&, TransitionSystem&);
 
 	void MulT(const b2Transform&, Disturbance&);
 
-	// b2Mat33 b2d_affine_matrix33(const b2Transform &); //returns a box2d object
+	void InvMul(const b2Transform& deltaPose, b2Transform& pose);
+
+	void InvMul(const b2Transform&, State& );
+
+	void InvMul(const b2Transform&, TransitionSystem&);
+
+	void InvMul(const b2Transform&, Disturbance&);
 
 	cv::Mat cv_affine_matrix33(const b2Transform &); //returns an opencv object
 

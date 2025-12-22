@@ -6,6 +6,11 @@ void Configurator::MulT(const b2Transform& B, Task& task){
 	math::MulT(B, task.disturbance);
 }
 
+void Configurator::InvMul(const b2Transform& B, Task& task){
+	math::InvMul(B, task.start);
+	math::InvMul(B, task.disturbance);
+}
+
 void Configurator::Mul(const b2Transform&B , Task &task){
 	task.start=b2Mul(B, task.start);
 	task.disturbance.bf.pose=b2Mul(B, task.disturbance.pose());
@@ -82,6 +87,7 @@ Robot Configurator::makeRobot(b2World& world, const b2Transform & start){
 simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State src, 
 	simResult result;
 	float remaining=remainingSimulationTime(&t);
+	printf("remaining=%f\n", remaining);
 	Robot robot=makeRobot(w, t.start);
 	worldBuilder->add_body_count();
 	simulatedTasks++;
@@ -279,8 +285,8 @@ void Configurator::change_task(){
 }
 
 void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
-	math::MulT(tr.displacement, g);
-	Configurator::MulT(tr.displacement, controlGoal);
+	math::InvMul(tr.displacement, g);
+	Configurator::InvMul(tr.displacement, controlGoal);
 	debug::print_pose(controlGoal.disturbance.pose(), "goal disturbance after tracking:");
 	currentTask.disturbance=tr.observed_disturbance;
 	if (!tracker){
@@ -296,17 +302,9 @@ void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
 void Configurator::adjust_goal_expectation(){
 	if (controlGoal.getAffIndex()==PURSUE && !m_plan.empty()&&task_controller->get_disturbance().getAffIndex()!=NONE){
 		b2Transform from_Di=b2Transform_zero;
-		//if (task_controller->get_disturbance().getAffIndex()==AVOID){
 		from_Di=currentTask.from_Di();
-		//}
-		//b2Transform sum_transform=from_Di+task_controller->to_goal(); //where goal should be
 		b2Transform goal_robotPOV= b2Mul(from_Di,task_controller->disturbance_to_goal()); //position of goal from the robot based on where it should be from Di
 		controlGoal.disturbance.bf.pose=goal_robotPOV;
-		// debug::print_pose(b2MulT(from_Di, sum_transform), "from Di to sum transform:");
-		// debug::print_pose(b2Mul(from_Di,task_controller->to_goal()), "from Di mulT to goal:");
-// 		b2Transform difference=controlGoal.disturbance.pose()-sum_transform; //difference in pose
-// //		debug::print_pose(difference, "difference between pose and likely goal pose:");
-// 		math::MulT(difference, &controlGoal);//update goal with ratio info
 		debug::print_pose(controlGoal.disturbance.pose(), "goal after adjusting");
 		printf("distance after adjusting %f\n", controlGoal.disturbance.pose().p.Length());
 	}
@@ -355,38 +353,53 @@ void Configurator::adjust_simulated_task(const vertexDescriptor &v, Task & t){
 		return; //check until needs to be checked
 	}
 	if (!t.getEndCriteria().angle.isValid()){return;}
-	if (t.get_direction()==DEFAULT){return;}
+	if (t.get_direction()==DEFAULT){
+		return;}
 	if (t.get_direction()==currentTask.get_direction()){
-		t.getEndCriteria().adjust(-tracker->getDeltaTransform());
+		t.getEndCriteria().adjust(tracker->getDeltaTransform());
 	}
 	else if (t.get_direction()==getOppositeDirection(currentTask.get_direction()).second){
-		t.getEndCriteria().adjust(tracker->getDeltaTransform());
+		t.getEndCriteria().adjust(-tracker->getDeltaTransform());
 	}
 }
 
+std::pair <bool, Direction> Configurator::getOppositeDirection(Direction d){
+	std::pair <bool, Direction> result(false, DEFAULT);
+		switch (d){
+		case Direction::LEFT: result.first = true; result.second = RIGHT;break;
+		case Direction::RIGHT: result.first = true; result.second = LEFT;break;
+		default:
+		break;
+	}
+	return result;
+}
 
 void ReactiveConfigurator::explore_plan(b2World &world){
-	if (transitionSystem.m_vertices.size()==1 && iteration<=1){
+	if (iteration<=1){
 		movingEdge = boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
+		Direction def=DEFAULT;
 		transitionSystem[MOVING_VERTEX].direction=DEFAULT;
-		currentTask.getAction().init(transitionSystem[currentVertex].direction);
-	}
-	if (currentTask.getAction().getOmega()!=0 && currentTask.getMotorStep()<(transitionSystem[movingEdge].step)){
-		return;
+		currentTask.getAction().init(def);
 	}
 	Task t(currentTask.get_disturbance(), currentTask.get_direction(), b2Transform_zero, true);
-//	adjustStepDistance(currentVertex, transitionSystem, &t, _simulationStep);
-	worldBuilder->buildWorld(world, transitionSystem[MOVING_VERTEX].start, currentTask.get_direction()); //was g[v].endPose
-	//t.H(t.get_disturbance(), currentTask.get_direction(), true);
+	worldBuilder->buildWorld(world, b2Transform_zero, currentTask.get_direction()); //was g[v].endPose
 	adjust_simulated_task(currentVertex, t);
 	simResult result = simulate(t, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],
+	printf("crashed=%i, step=%i\n", result.resultCode==simResult::crashed, result.step);
 	gt::fill(result, &transitionSystem[currentVertex], &transitionSystem[currentEdge]);
-	
-	//transitionSystem[currentVertex].Dn.set_affordance(as.affordance);
 	currentTask.set_change(transitionSystem[currentVertex].outcome!=simResult::successful);
-	if (currentTask.get_change()){
-		printf("crashed\n");
+}
+
+float ReactiveConfigurator::remainingSimulationTime(const Task *const t){
+    if (!t){
+		throw "no task!";
 	}
+	if (get_direction(t)==DEFAULT){
+    	float r_step=Controller::motor_step(t->getAction(),simulationStep)*MOTOR_CALLBACK;
+	 	printf("r_step=%i\n", r_step);
+		return 	r_step;
+    }
+    return Configurator::remainingSimulationTime();
 }
 
 

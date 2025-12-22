@@ -110,7 +110,7 @@ TEST_P(ConfiguratorTestTask, AdjustSimTask){
     transitionSystem[e.m_target].Di=disturbance;
     CLTrackerTest cltracker;
     register_tracker(&cltracker);
-    cltracker.setDeltaTransform(-(action.getTransform(LIDAR_SAMPLING_RATE)));
+    cltracker.setDeltaTransform((action.getTransform(LIDAR_SAMPLING_RATE)));
     adjust_simulated_task(e.m_source, *this);
     EXPECT_TRUE(endCriteria.angle< ec.angle);
     if (GetParam()!=DEFAULT){
@@ -130,7 +130,7 @@ TEST_P(ConfiguratorTestTask, AdjustSimOppositeTask){
     transitionSystem[e.m_target].Di=disturbance;
     CLTrackerTest cltracker;
     register_tracker(&cltracker);
-    cltracker.setDeltaTransform(-(action.getTransform(LIDAR_SAMPLING_RATE)));
+    cltracker.setDeltaTransform((action.getTransform(LIDAR_SAMPLING_RATE)));
     adjust_simulated_task(e.m_source, *this);
     EXPECT_TRUE(ec.angle<endCriteria.angle);
     if (GetParam()!=DEFAULT){

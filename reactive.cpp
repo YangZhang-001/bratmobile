@@ -9,20 +9,18 @@ int main(int argc, char** argv) {
 	LIDAR_In configuratorInterface;
 	//Motor_Out controlInterface;
     ReactiveConfigurator configurator;
+	LaserFocus wb;
+	configurator.setSimulationStep(.5);
 	if (argc>1){
 		configurator.init(controlGoal);
 		configurator.setSimulationStep(.27);
 	}
-	else{
-		configurator.setSimulationStep(.5);
-	}
-	LaserFocus wb;
 	configurator.register_worldBuilder(&wb);
 	NoPlanner planner;
 	OpenLooper tracker;
 	configurator.register_planner(&planner);
 	configurator.register_tracker(&tracker);
-	OpenLoopController wc;
+	Reactive_Controller wc;
 	configurator.register_controller(&wc);
 	LidarInterface dataInterface(&configuratorInterface);
 	configurator.registerInterface(&configuratorInterface, &tracker);

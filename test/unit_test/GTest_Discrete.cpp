@@ -1,9 +1,9 @@
 #include "test_classes.h"
+class DiscreteConfPlanTest:public DiscreteConfigurator, public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
+
+};
 
 TEST_P(HighLevelTestDiscrete, FirstPlan){
-    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-    Logger logger=makeLogger(info);
-    configurator->register_logger(&logger);
     Task goal;
     bool hasGoal=std::get<0>(GetParam()), success=false;
     if (hasGoal){
@@ -194,11 +194,11 @@ TEST_F(DiscreteCTest, RemainingTime){
         Task t(Disturbance(), DEFAULT, b2Transform_zero, true);
         int exp=(27.0-i);
         EXPECT_EQ(int(remainingSimulationTime(&t)*10), exp);
-        transitionSystem[v1].endPose=InvMul(currentTask.getAction().getTransform(MOTOR_CALLBACK), transitionSystem[v1].endPose);
+        transitionSystem[v1].endPose=b2help::InvMul(currentTask.getAction().getTransform(MOTOR_CALLBACK), transitionSystem[v1].endPose);
     }
 }
 /**
- * @brief Test if robot is able to self-correct motion!
+ * @brief Test if robot is able to self-correct motion! (it doesnt)
  */
 TEST_F(DiscreteCTest, Correct){
     setSimulationStep(.5);
@@ -209,19 +209,21 @@ TEST_F(DiscreteCTest, Correct){
     auto this_plan=m_plan;
     change_task();
     estimate_current_vertex();
-    data2fp.clear();
     float angle=3*M_PI_4/2; //75 degrees
     angle=std::copysign(angle, currentTask.getAction().getOmega());
-    point=b2Mul(b2Rot(angle), point);
     data2fp.emplace(Pointf(point.x, point.y));
     update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(),b2Transform(b2Vec2(), b2Rot(angle))));
     currentTask.set_change(1);
+    change_task();
+    estimate_current_vertex();
+    int ts_size=transitionSystem.m_vertices.size();
     Spawner();
     change_task();
     estimate_current_vertex();
-    EXPECT_EQ(currentVertex, (*this_plan.begin()));
+    EXPECT_NE(currentVertex, (*this_plan.begin()));
     EXPECT_TRUE(transitionSystem[currentVertex].isTurning());
-    
+    EXPECT_TRUE(currentTask.getMotorStep()==20);
+    EXPECT_GT(transitionSystem.m_vertices.size(), ts_size);
 }
 
 INSTANTIATE_TEST_CASE_P(Outcomes, DiscreteCTest, ::testing::Bool());

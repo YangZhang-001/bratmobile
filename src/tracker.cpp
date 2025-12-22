@@ -4,7 +4,7 @@ TrackingResult Tracker::get_transform(const Task &t, const CoordinateContainer &
     TrackingResult result;
     result.displacement= t.getAction().getTransform(LIDAR_SAMPLING_RATE);
     result.observed_disturbance=t.get_disturbance();
-    result.observed_disturbance.setPose(b2Mul(-result.displacement, t.get_disturbance().pose()));
+    result.observed_disturbance.setPose(b2help::InvMul(result.displacement, t.get_disturbance().pose()));
     return result;
 }
 
@@ -19,13 +19,6 @@ bool ClosedLoop_Tracker::hasTaskEnded(Task & t){
 
 TrackingResult DeadReckoner::track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result=get_transform(t, pts, objects);
-    //math::MulT(-deltaTransform, *t.get_disturbance_ptr());
-    
-    //t.setMotorStep(t.getMotorStep()-1); //this should go in the controller
-    
-    // if (t.getMotorStep()<1){
-    //     t.set_change(true);
-    // }
     deltaTransform=b2Mul(result.displacement, deltaTransform);
     return result;
 }
@@ -59,7 +52,7 @@ TrackingResult ClosedLoop_Tracker::get_transform(const Task & t, const Coordinat
             std::cerr<<"no disturbance!"<<std::endl;    
         }
         if (t.get_disturbance().bf.is_point()){
-            printf("petite disturbance!");    
+            printf("is a point!");    
         }
         if ((t.getAction().getLWheelSpeed()==0 && t.getAction().getRWheelSpeed()==0)){
             std::cerr<<("not moving!")<<std::endl;    

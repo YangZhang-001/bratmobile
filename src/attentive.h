@@ -7,7 +7,7 @@
  * The next state to expand will be the one with lowest heuristic cost. 
  * 
  */
-class AttentiveConfigurator:public Configurator{
+class AttentiveConfigurator:public virtual Configurator{
 	protected:
 	StateMatcher matcher;
 /**
@@ -74,13 +74,6 @@ virtual bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<verte
 //if in plan the vertex gets priority
 void planPriority(TransitionSystem&, vertexDescriptor); 
 
-/**
- * @brief If Task @param t corresponds to current Task, change its end criteria so that it is only simulated for the remainder of the end criteria
- * 
- * @param v source vertex for the task
- * @param t task reference
- */
-virtual void adjust_simulated_task(const vertexDescriptor&v,  Task& t);
 
 //adjust real-world task
 void adjust_rw_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2Transform &);
@@ -108,11 +101,6 @@ virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, State
  * @return std::vector<vertexDescriptor> a plan, if recycled from previous knowledge
  */
 virtual std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSystem&g, b2World &w); //evaluates only after DEFAULT, internal one step lookahead
-
-/**
- * @return std::pair <bool, Direction>(opposite exists, opposite direction)
- */
-std::pair <bool, Direction> getOppositeDirection(Direction);
 
 /**
  * @brief Resets all vertices evaluation function phi to a default unitialised value of 10
@@ -413,6 +401,10 @@ virtual bool canPropagate(vertexDescriptor v);
 
 virtual bool canReassignOutcome(vertexDescriptor v);
 
+virtual float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex()){
+	return simulationStep;
+}
+
 public:
 
 AttentiveConfigurator(){};
@@ -430,11 +422,11 @@ virtual ~AttentiveConfigurator()=default;
 /** 
  * @brief Configurator that only replans if the current task fails
 */
-class FocusedConfigurator: public AttentiveConfigurator{
+class FocusedConfigurator: public virtual AttentiveConfigurator{
 	protected:
 
 	StateMatcher::MATCH_TYPE desiredMatch() override {
-		return StateMatcher::MATCH_TYPE::_TRUE;
+		return StateMatcher::MATCH_TYPE::ABSTRACT;
 	}	
 	/**
 	 * @brief If the current vertex is matched, don't allow to check plan further
@@ -453,13 +445,22 @@ class FocusedConfigurator: public AttentiveConfigurator{
 	}
 
 	virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override;
+
+	void adjust_goal_expectation()override{}
+
+	virtual float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex())override;
+
+	bool hasPlanFinished(){
+	return m_plan.empty() && currentTask.is_over();
+}
+
 };
 
 /**
  * @brief Configurator that discretises DEFAULT tasks into fixed-length segments. Basically, this is an implementation of classic A* search
  * 
  */
-class DiscreteConfigurator : public FocusedConfigurator{
+class DiscreteConfigurator : public virtual FocusedConfigurator{
 public:
 /**
  * @brief In discrete configurator, Di is previous state's Dn, or the goal, if null
@@ -526,6 +527,10 @@ bool canPropagate(vertexDescriptor v) override;
 bool canReassignOutcome(vertexDescriptor v) override;
 
 bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE)override;
+
+float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex()){
+	return AttentiveConfigurator::customSimulationStep();
+}
 
 };
 

@@ -235,7 +235,7 @@ std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, ve
 		return best_path(paths, goal, info.currentVertex(), info.currentTask().get_change(), g);
 	}
 	if (!_finished){
-		return best_path(paths, TransitionSystem::null_vertex(), info.currentVertex(), info.currentTask().get_change(), g);
+		//return best_path(paths, TransitionSystem::null_vertex(), info.currentVertex(), info.currentTask().get_change(), g);
 	}
 	return std::vector<vertexDescriptor>();
 }

@@ -25,18 +25,9 @@ void AttentiveConfigurator::resetPhi(){
 }
 
 
-std::pair <bool, Direction> AttentiveConfigurator::getOppositeDirection(Direction d){
-	std::pair <bool, Direction> result(false, DEFAULT);
-		switch (d){
-		case Direction::LEFT: result.first = true; result.second = RIGHT;break;
-		case Direction::RIGHT: result.first = true; result.second = LEFT;break;
-		default:
-		break;
-	}
-	return result;
-}
+
 Disturbance AttentiveConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor v, b2World & world, const Direction& dir, const b2Transform& start){
-	b2Transform invmul=InvMul(start,g[v].endPose);
+	b2Transform invmul=b2help::InvMul(start,g[v].endPose);
 	if (!g[v].Dn.isValid() ){
 		std::vector <edgeDescriptor> in=inEdges(v);
 		std::vector <edgeDescriptor> out=gt::outEdges(g, v, UNDEFINED);
@@ -92,7 +83,7 @@ std::vector<vertexDescriptor> AttentiveConfigurator::explorer(vertexDescriptor v
 		vertexDescriptor startRecycle=v;
 		bool wasClosed =closeVertex(closed, v);
 		priorityQueue.erase(priorityQueue.begin());
-		er = controlGoal.checkEnded(g[v], t.get_direction());
+		er = controlGoal.checkEnded(g[v], t.get_direction(), true); //check ended with relax
 		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
 		EvaluationQueueManager eqm;
 		for (Direction d: g[v].options){ //add and evaluate all vertices
@@ -174,6 +165,7 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 	if (transitionSystem[v].outcome != simResult::crashed){
 		return split;
 	}
+	float _customStep= customSimulationStep(v);
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
 	if (!transitionSystem[src].isTurning()&& (!ie.empty()|| src==MOVING_VERTEX)){ //! //&& sameIterationEdgeIt!=ie.end()
@@ -181,12 +173,12 @@ std::vector <vertexDescriptor> AttentiveConfigurator::splitTask( vertexDescripto
 		split.insert(split.begin(), src);
 	}
 	vertexDescriptor v1=v;
-	float nNodes = transitionSystem[v].distance()/simulationStep, og_phi=transitionSystem[v].phi;
+	float nNodes = transitionSystem[v].distance()/_customStep, og_phi=transitionSystem[v].phi;
 	b2Transform endPose = transitionSystem[v].endPose;
 	Task::Action a;
 	a.init(d);
 	b2Transform deltaTransform=b2Transform_zero;
-	deltaTransform.p.x=simulationStep;
+	deltaTransform.p.x=_customStep;
 	while(nNodes>1){
 		State s_tmp=State(transitionSystem[v]);
 		if(nNodes >1){
@@ -867,15 +859,28 @@ void FocusedConfigurator::removeExploredTransitions(vertexDescriptor v){
 }
 
 VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
-	if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di==transitionSystem[currentVertex].Di && 
-			!m_plan.empty() && s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
+	if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && //s.Di==transitionSystem[currentVertex].Di && 
+		!hasPlanFinished()&&	
+		//!m_plan.empty() && 
+		s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
 		return VertexMatch(StateMatcher::_TRUE, currentVertex);
 	}
-	else if(s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di==transitionSystem[currentVertex].Di && 
-	!m_plan.empty() && s.Dn.getAffIndex()!=transitionSystem[currentVertex].Dn.getAffIndex()){
-		printf("Dist index of simulated state:%i doesn't match current state's index:%i\n", s.Dn.getAffIndex(), transitionSystem[currentVertex].Dn.getAffIndex());
-	}
+	// else if(s.start==b2Transform_zero && s.direction==currentTask.get_direction() && //s.Di==transitionSystem[currentVertex].Di && 
+	// !m_plan.empty() && s.Dn.getAffIndex()!=transitionSystem[currentVertex].Dn.getAffIndex()){
+	// 	printf("Dist index of simulated state:%i doesn't match current state's index:%i\n", s.Dn.getAffIndex(), transitionSystem[currentVertex].Dn.getAffIndex());
+	// }
+	// else if(s.start==b2Transform_zero && s.direction==currentTask.get_direction() && s.Di!=transitionSystem[currentVertex].Di && 
+	// !m_plan.empty()){
+	// 	printf("Di of simulated state: doesn't match current state's index\n", s.Dn.getAffIndex(), transitionSystem[currentVertex].Dn.getAffIndex());
+	// }
 	return AttentiveConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
+}
+
+float FocusedConfigurator::customSimulationStep(vertexDescriptor v){
+	if (v!=TransitionSystem::null_vertex()){
+		return std::max(simulationStep, transitionSystem[v].distance()/2);
+	}
+	return simulationStep;
 }
 
 Disturbance DiscreteConfigurator::getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start){
@@ -984,26 +989,6 @@ void DiscreteConfigurator::removeExploredTransitions(vertexDescriptor v){
 	}
 }
 
-
-// void SimplestConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){
-// 	for (vertexDescriptor v:evaluation_q){
-// 		if (!isTurning(transitionSystem[v].direction)){
-// 			addToPriorityQueue(v, priority_q, closed);
-// 		}
-// 		auto likelyEdge=gt::getMostLikely(transitionSystem, inEdges(v), iteration);
-// 		if (likelyEdge.first){
-// 			if (likelyEdge.second.m_source==MOVING_VERTEX && transitionSystem[v].direction==currentTask.get_direction() && transitionSystem[v].outcome==simResult::crashed){
-// 				auto moving_it=std::find(closed.begin(), closed.end(), MOVING_VERTEX);
-// 				if (moving_it!=closed.end()){
-// 					closed.erase(moving_it);
-// 					addToPriorityQueue(MOVING_VERTEX, priority_q, closed);
-// 					applyTransitionMatrix(MOVING_VERTEX, transitionSystem[v].direction, false, MOVING_VERTEX, plan_prov);
-// 				}
-// 			}
-// 		}
-// 	}
-// 	evaluation_q.clear();
-// }
 
 bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed, StateMatcher::MATCH_TYPE match){
 	while(AttentiveConfigurator::propagateD(v1, v0, closed, match)){
