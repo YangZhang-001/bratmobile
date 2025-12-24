@@ -136,10 +136,8 @@ class UserInputConfigurator: public virtual DebugConfigurator{
     void assignNewGoal(Disturbance &disturbance){
         float howFarShift=.5;
         if (disturbance.pose().p.y<0) howFarShift=-howFarShift;
-        // std::cout<<"howfar="<<howFarShift<<std::endl;
         b2Transform newGoal; //goal in line with the obstacle
         newGoal.p=b2Vec2(0, howFarShift)+disturbance.pose().p;
-        // debug::print_pose(newGoal, "newgoal");
         controlGoal=Task(Disturbance(PURSUE, newGoal.p), UNDEFINED); //set goal
         init(controlGoal);
         register_tracker(tracker); //make tracker to track the new goal

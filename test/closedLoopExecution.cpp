@@ -5,8 +5,7 @@
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
-	LIDAR_In configuratorInterface;
-	Motor_Out controlInterface;
+	MotorInterface controlInterface;
     AffordanceSetter as;
     DirectionSetter ds;
     std::cout<<as.getAffIndex()<<", "<<ds.getDirection()<<std::endl;
@@ -23,17 +22,15 @@ int main(int argc, char** argv) {
 		configuratorInterface.debugOn=atoi(argv[2]);
 	}
 	configurator.setSimulationStep(.5);
-	LidarInterface dataInterface(&configuratorInterface);
-	configurator.registerInterface(&configuratorInterface, &controlInterface);
+	LidarInterface dataInterface(&configurator);
+	configurator.registerInterface( &controlInterface);
 	MotorCallback cb(&controlInterface);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);
-	configurator.start();
 	lidar.start();
 	motors.start();
 	do{
     }while(!getchar());
-	configurator.stop();
 	motors.stop();
 	lidar.stop();
 }

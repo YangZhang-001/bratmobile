@@ -16,8 +16,6 @@ class CLTracker: public ClosedLoop_Tracker, public MotorCallback, public Motor_O
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
-	LIDAR_In configuratorInterface;
-	//Motor_Out controlInterface;
     DiscreteConfigurator configurator;
 	LaserFocus wb;
 	configurator.register_worldBuilder(&wb);
@@ -32,17 +30,15 @@ int main(int argc, char** argv) {
 	Logger logger( "brat2-targetless", "/tmp");
 	configurator.register_logger(&logger);
 	configurator.setSimulationStep(.5);
-	LidarInterface dataInterface(&configuratorInterface);
-	configurator.registerInterface(&configuratorInterface, &tracker);
+	LidarInterface dataInterface(&configurator);
+	configurator.registerInterface(&tracker);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&tracker);
 	printf("all registered\n");
-	configurator.start();
 	lidar.start();
 	motors.start();
 	getchar();
 	motors.stop();
-	configurator.stop();
 	lidar.stop();
 	logger.~Logger();
 }

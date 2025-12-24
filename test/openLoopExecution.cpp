@@ -5,7 +5,6 @@
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
-	LIDAR_In configuratorInterface;
     OpenLooper openLooper;
     AffordanceSetter as;
     DirectionSetter ds;
@@ -22,16 +21,14 @@ int main(int argc, char** argv) {
 		configuratorInterface.debugOn=atoi(argv[2]);
 	}
 	configurator.setSimulationStep(.5);
-	LidarInterface dataInterface(&configuratorInterface);
-	configurator.registerInterface(&configuratorInterface, &openLooper);
+	LidarInterface dataInterface(&configurator);
+	configurator.registerInterface(&openLooper);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&openLooper);
-	configurator.start();
 	lidar.start();
 	motors.start();
 	do{
     }while(!getchar());
-	configurator.stop();
 	motors.stop();
 	lidar.stop();
 }
