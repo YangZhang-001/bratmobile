@@ -67,6 +67,8 @@ struct VisitedEdge{
 class DebugConfigurator:public virtual AttentiveConfigurator{
     public:
     friend class HighLevelTestBase;
+    friend class HighLevelInterruptBase;
+
     int n_edges(){return transitionSystem.m_edges.size();}
 
     int n_vertices(){return transitionSystem.m_vertices.size();}
@@ -486,9 +488,8 @@ class HighLevelTestBase: public testing::Test{
     DebugConfigurator * configurator=NULL;
     Wise_Controller wc;
     ClosedLoop_Tracker tracker;
-    LIDAR_In ci;
     DataInterface di;
-    Motor_Out m;
+    MotorInterface m;
     HorizonStarPlanner planner;
     
 
@@ -929,10 +930,10 @@ std::vector <BodyFeatures> CreativeWorldBuilder::makeTrickyTrap(){
 
 
 void HighLevelTestBase::init( const Task& goal){
-    di.registerInterface(&ci);
+    di.registerConfigurator(configurator);
     configurator->register_controller(&wc);
     configurator->register_tracker(&tracker);
-    configurator->registerInterface(&ci, &m);
+    configurator->registerInterface(&m);
     configurator->setSimulationStep(ROBOT_HALFWIDTH*2);
     configurator->register_planner(&planner);
     configurator->init(goal);
@@ -943,17 +944,15 @@ void HighLevelTestBase::init( const Task& goal){
 
 std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, int it){
     di.set_iteration(it);
+    EXPECT_EQ(configurator->n_visitedEdges(), 0);
     if (folder!=SYNTH_DATA_FOLDER){
         di.set_folder(folder);
         di.newScanAvail();        
     }
     else{
         di.reset();
-        ci.data2fp.emplace(Pointf(0.5,0)); //one point
+        configurator->data2fp.emplace(Pointf(0.5,0)); //one point
     }
-    configurator->data2fp= ci.data2fp;
-    EXPECT_EQ(configurator->n_visitedEdges(), 0);
-    configurator->Spawner();
     if (configurator->getIteration()>1){
         int visitedEdges=configurator->n_visitedEdges();
         EXPECT_LT(visitedEdges, configurator->n_edges());
@@ -969,12 +968,11 @@ std::vector<vertexDescriptor> HighLevelInterruptBase::get_InterruptedPlan(std::s
         di.newScanAvail();
     }
     else{
-        b2Vec2 pt2d(ci.data2fp.begin()->x, ci.data2fp.begin()->y);
+        b2Vec2 pt2d(configurator->get_data2fp().begin()->x, configurator->get_data2fp().begin()->y);
         pt2d=b2Mul(configurator->getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), pt2d);
-        ci.data2fp.erase(ci.data2fp.begin());
-        ci.data2fp.emplace(Pointf(pt2d.x, pt2d.y));
+        configurator->data2fp.erase(configurator->data2fp.begin());
+        configurator->data2fp.emplace(Pointf(pt2d.x, pt2d.y));
     }
-    configurator->set_data2fp(ci.data2fp);
     Pointf pf=generateInterruptingPoint(taskOrder);
     if (pt!=NULL){
         *pt=pf;
@@ -1045,7 +1043,7 @@ std::pair<std::string, std::string> ReactToNoiseTest::carveScenario(std::string 
 void HighLevelTestBase::trackFor(int iteration){
     for (int i=0;i<iteration-1; i++){ //simulate execution
     if (configurator->getIteration()>1){
-        TrackingResult trackingResult= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
+        TrackingResult trackingResult= tracker.track(configurator->getTask(), configurator->data2fp, configurator->world_objects() );
         //EXPECT_FALSE(deltaPose==b2Transform_zero);
         configurator->update_graph(configurator->get_ts(), trackingResult);
     }
@@ -1055,17 +1053,17 @@ void HighLevelTestBase::trackFor(int iteration){
     EXPECT_GT(configurator->get_current_vertices().size(), 0);
     EXPECT_NE(configurator->get_current_vertices()[0], 0);
     if (di.hasFolder()){
-        di.newScanAvail();
+
+        di.newScanAvail(false); //do not do plan
     }
     else{
-        b2Vec2 pt(ci.data2fp.begin()->x, ci.data2fp.begin()->y);
+        b2Vec2 pt(configurator->data2fp.begin()->x, configurator->data2fp.begin()->y);
         pt=b2Mul(configurator->getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), pt);
-        ci.data2fp.erase(ci.data2fp.begin());
-        ci.data2fp.emplace(Pointf(pt.x, pt.y));
+        configurator->data2fp.erase(configurator->data2fp.begin());
+        configurator->data2fp.emplace(Pointf(pt.x, pt.y));
     }
-    configurator->getFeatures(ci.data2fp);
+    configurator->getFeatures(configurator->data2fp);
     configurator->preExplore();
-    //VisitedTransitionSystem trackedTS(configurator->get_ts(), VisitedEdge(configurator->get_ts_ptr(), configurator->iteration));
     EXPECT_EQ(configurator->n_visitedEdges(), 0);
     EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
 }

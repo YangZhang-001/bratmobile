@@ -14,11 +14,12 @@ public:
 
     DataInterface(){}
 
-	bool newScanAvail(){ //uncomment sections to write x and y to files		
+	bool newScanAvail(bool doPlan=true){ //uncomment sections to write x and y to files		
         iteration++;
 		char filePath[256];
         char folderName[256];
         sprintf(folderName,"%s", folder.c_str());
+        configurator->clearData();
         if (folderName != NULL){
             sprintf(filePath, "%smap%04d.dat", folderName, iteration);
             printf("%s\n", filePath);
@@ -34,17 +35,19 @@ public:
             }
             std::ifstream file(filePath);
             float x, y;
-            while (file>>x2>>y2){
-                if (b2Vec2(x2, y2).Length()<LIDAR_RANGE){
-                    x = round(x2*100)/100;
-                    y = round(y2*100)/100;
-                    configurator->insertCoordinate(x, y);
+            while (file>>x>>y){
+                if (b2Vec2(x, y).Length()<LIDAR_RANGE){
+                    x = round(x*100)/100;
+                    y = round(y*100)/100;
+                        configurator->insertCoordinate(x, y);
                 }
 
             }
             file.close();
         }
-        configurator->newScanEvent();
+        if (doPlan){
+            configurator->newScanEvent();
+        }
 
         return true;
 	}
@@ -70,7 +73,6 @@ public:
 
     void reset(){
         folder.clear();
-        configurator=NULL;
     }
 
     bool hasFolder(){

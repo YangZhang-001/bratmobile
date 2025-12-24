@@ -15,7 +15,6 @@ TEST_P(HighLevelTestDiscrete, FirstPlan){
     configurator->init(goal);
     std::string folder=std::get<1>(GetParam());
     get_plan(folder);
-    EXPECT_GT(ci.data2fp.size(),0);
     EXPECT_GT(configurator->data_size(),0);
     if (!hasGoal){
         success=configurator->plan_reaches_horizon();

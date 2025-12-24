@@ -143,6 +143,11 @@ void registerInterface(MotorInterface *);
  */
 void newScanEvent();
 
+/**
+ * @brief Clears coordinates
+ */
+void clearData(){data2fp.clear();}
+
 
 /**
  * @brief changes tasks executing on the robot

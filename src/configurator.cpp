@@ -174,39 +174,25 @@ void Configurator::registerInterface(MotorInterface * _control){
 }
 
 void Configurator::newScanEvent(){
-	//while (c->running){
 		if (!areInterfacesSetUp()){
 			return;
 		}
-		// if (c->ci->stop){
-		// 	c->ci=NULL;
-		// 	c->control=NULL;
-		// 	printf("ci not started\n");
-		// 	c->running=false;
-		// }		
-		//if (c->ci->isReady()){
-		//	c->ci->setReady(false);
-			Spawner();
-			if (getIteration()>1){
-				TrackingResult trackingResult(currentTask.get_disturbance());
-				trackingResult= tracker->track((currentTask),data2fp, worldBuilder->get_world_objects());
-				update_graph(transitionSystem, trackingResult);
-			}
-			if (goal_changer!=NULL){
-				if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
-					controlGoal=goal_changer->change_goal(controlGoal);
-				}					
-			}
-			change_task();		
-			adjust_goal_expectation();
-			estimate_current_vertex();
-			//printf("current v=%i\n", currentVertex);
-			//c->tracker->on_new_reading(c->controlGoal, c->currentTask);
-		//	}
-
-	//}
-
+		Spawner();
+		if (getIteration()>1){
+			TrackingResult trackingResult(currentTask.get_disturbance());
+			trackingResult= tracker->track((currentTask),data2fp, worldBuilder->get_world_objects());
+			update_graph(transitionSystem, trackingResult);
+		}
+		if (goal_changer!=NULL){
+			if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
+				controlGoal=goal_changer->change_goal(controlGoal);
+			}					
+		}
+		change_task();		
+		adjust_goal_expectation(); //dubious if this is needed tbh
+		estimate_current_vertex();
 }
+
 float Configurator::approximate_angle(float angle, Direction d, simResult::resultType outcome){
 	float result=angle, decimal=0, integer=0;
 	if ((d==LEFT || d==RIGHT)&& outcome!=simResult::crashed){

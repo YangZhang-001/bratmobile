@@ -40,6 +40,7 @@ public:
 		char name[256];
 		sprintf(name,"/tmp/map%04i.dat", mapCount);
 		printf("%s\n", name);
+		configurator->clearData();
 		if (debugOn){
 			f=fopen(name, "w");
 		}
