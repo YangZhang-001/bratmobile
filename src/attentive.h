@@ -28,6 +28,9 @@ class AttentiveConfigurator: public virtual FocusedConfigurator{
 		return hardMatch(s, dir, match_type, _sd, other_matches);
 	}
 
+	// float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex())override{
+	// 	return simulationStep;
+	// }
 
 };
 
@@ -93,7 +96,7 @@ bool canReassignOutcome(vertexDescriptor v) override;
 
 bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE)override;
 
-float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex()){
+float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex())override{
 	return simulationStep;
 }
 

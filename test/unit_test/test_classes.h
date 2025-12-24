@@ -416,6 +416,10 @@ class DebugDiscreteConf: public virtual DebugConfigurator, public virtual Discre
         return DiscreteConfigurator::propagateD(v1, v0, closed, match);
     }
 
+    float customSimulationStep(vertexDescriptor v)override{
+        return DiscreteConfigurator::customSimulationStep();
+    }
+
 
 };
 
