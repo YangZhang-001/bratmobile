@@ -221,7 +221,7 @@ TEST_P(TestEnvironment, Execution){
  * 
  */
 TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
-    GTEST_SKIP();
+   // GTEST_SKIP();
     Logger logger=makeLogger();
     TestTracker tracker;
     Wise_Controller wc;
@@ -262,6 +262,7 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
        if (steps>50)break;
     }while (!currentTask.is_over());
     b2Transform travelled_transform= tracker.getDeltaTransform();
+                                //test value    //how far robot went            //desired angle                         //travelled time * 
 	logger.log("%f\t%f\t%f\t%f\n", angleError, travelled_transform.q.GetAngle(), currentTask.from_Di().q.GetAngle(), b2Mul(errorTransform, travelled_transform).q.GetAngle());
     logger.~Logger();
     EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2, 0.157079622/2);
