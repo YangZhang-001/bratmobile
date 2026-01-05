@@ -956,6 +956,33 @@ TEST_P(ReactiveConfTest, Simulate){
     EXPECT_EQ(result.step, solution);
 }
 
+TEST_P(LogicalCheckPlanTest, IsPlannedTaskOK){
+    make_module(MOVING_VERTEX);
+    make_module(3);
+    m_plan={2, 3, 6};
+    vertexDescriptor src=std::get<0>(GetParam());
+    State s;
+    s.Dn.set_affordance(std::get<1>(GetParam()));
+    s.direction=std::get<2>(GetParam());
+    if (std::get<3>(GetParam())){
+        EXPECT_TRUE(isPlannedTaskOK(src));
+    }
+    else{
+        EXPECT_FALSE(isPlannedTaskOK(src));
+    }
+}
+
+INSTANTIATE_TEST_CASE_P(PlannedTasks, LogicalCheckPlanTest, ::testing::Values(std::tuple<vertexDescriptor, AffordanceIndex, Direction, bool>(3, 0, DEFAULT, true), 
+                                                                            std::tuple<vertexDescriptor, AffordanceIndex, Direction,bool>(6, 0, DEFAULT,true)));
+
+INSTANTIATE_TEST_CASE_P(PlannedTasksNotOk, LogicalCheckPlanTest, ::testing::Values(std::tuple<vertexDescriptor, AffordanceIndex, Direction, bool>(3, 1, DEFAULT, false), 
+                                                                            std::tuple<vertexDescriptor, AffordanceIndex, Direction,bool>(6, 1, DEFAULT,false)));
+
+
+INSTANTIATE_TEST_CASE_P(UnplannedTasks, LogicalCheckPlanTest, ::testing::Values(std::tuple<vertexDescriptor, AffordanceIndex, Direction,bool>(2, 0, LEFT,false), 
+                                                                            std::tuple<vertexDescriptor, AffordanceIndex,Direction, bool>(5, 0, DEFAULT,false)));
+
+
 // TEST_P(ReactiveConfTest, AdjustSimulatedTask){
 //     currentTask.set_direction(GetParam());
 //     boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem);

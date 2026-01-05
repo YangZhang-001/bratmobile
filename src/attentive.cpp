@@ -55,8 +55,13 @@ bool AttentiveConfigurator::isPlannedTaskOK(vertexDescriptor src){
 		bool srcIsInPlan=srcIt!=m_plan.end();
 		bool srcIsLast=srcIt==(m_plan.end()-1);		
 		vertexDescriptor v1=transitionSystem::null_vertex();
-		if (srcIsInPlan && !srcIsLast){
-			v1=*(srcIt+1);
+		if (srcIsInPlan){
+			if (!srcIsLast){
+				v1=*(srcIt+1);
+			}
+			else{
+				v1=src;
+			}
 			if (s.direction== transitionSystem[v1].direction && s.Dn.getAffIndex()==transitionSystem[v1].Dn.getAffIndex() ){
 				planOK==true;
 			}

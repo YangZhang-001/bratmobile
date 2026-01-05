@@ -358,7 +358,7 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
 
 };
 
-
+class LogicalCheckPlanTest:public DebugConfigurator, public testing::TestWithParam<std::tuple<vertexDescriptor, AffordanceIndex,Direction, bool>>{};
 
 class DebugB2BTest: public virtual DebugB2B, public testing::Test{
 };
