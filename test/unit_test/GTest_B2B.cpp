@@ -403,7 +403,7 @@ TEST_P(HighLevelTestB2B, CheckPlanB2B){
 }
 
 TEST_P(HighLevelTestB2B, RecycleB2B){
-    GTEST_SKIP()
+    GTEST_SKIP();
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
     Logger logger=HighLevelTest::makeLogger(info);
     configurator->register_logger(&logger);
