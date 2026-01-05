@@ -59,10 +59,9 @@ float remainingSimulationTime(const Task *const t=NULL)override;
  * @param dir direction of the task
  * @param match_type type of desired match
  * @param _sd pointer to state difference
- * @param other_matches pointer to other matches
  * @return VertexMatch 
  */
-VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override;
+VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL)override;
 
 StateMatcher::MATCH_TYPE desiredMatch() override {
 	return StateMatcher::MATCH_TYPE::_TRUE;
