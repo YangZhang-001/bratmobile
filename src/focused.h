@@ -102,7 +102,7 @@ virtual VertexMatch hardMatch(State s, Direction dir=Direction::UNDEFINED, State
  * @param other_matches pointer to a vector of other matches (all of the type defined by @param match_type)
  * @return VertexMatch the best match found and its type
  */
-virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL); //matches to most likely
+virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL); //matches to most likely
 
 /**
  * @brief Constructs transition system using a Box2D simulation combined with an A* graph
@@ -261,14 +261,14 @@ std::pair<State, Edge> simulation_setup(b2World& w, Task & t, vertexDescriptor v
  */
 void reassign_direction(vertexDescriptor bestNext, Direction& direction);
 
-/**
- * @brief  if the match is a crashed task
- * 
- * @param match 
- * @param other_matches 
- * @return true if changes match
- */
-bool matchToSafe(VertexMatch &match,const std::vector<VertexMatch> &other_matches=std::vector<VertexMatch>());
+// /**
+//  * @brief  if the match is a crashed task
+//  * 
+//  * @param match 
+//  * @param other_matches 
+//  * @return true if changes match
+//  */
+// bool matchToSafe(VertexMatch &match,const std::vector<VertexMatch> &other_matches=std::vector<VertexMatch>());
 
 /**
  * @brief Given a valid match, sets up the edge with the previous vertex

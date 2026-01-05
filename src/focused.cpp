@@ -108,8 +108,7 @@ std::vector<vertexDescriptor> FocusedConfigurator::explorer(vertexDescriptor v, 
 				sk.second.it_observed=iteration;
 				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction,controlGoal);
 				StateDifference sd;
-				std::vector <VertexMatch> other_matches;
-				VertexMatch match=findMatch(sk.first, t.get_direction(), desiredMatch(), &sd, &other_matches);		//, closest_match	
+				VertexMatch match=findMatch(sk.first, t.get_direction(), desiredMatch(), &sd);		//, closest_match	
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
 				if (matcher.match_equal(match.first,desiredMatch())){
 					g[v0].options.erase(g[v0].options.begin());
@@ -430,7 +429,7 @@ void FocusedConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<ver
 
 
 
-VertexMatch FocusedConfigurator::hardMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
+VertexMatch FocusedConfigurator::hardMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd){
 	VertexMatch result(StateMatcher::MATCH_TYPE::_FALSE, TransitionSystem::null_vertex()), backup=result;
 	auto vs= boost::vertices(transitionSystem);
 	float prob=0, sum=10000;
@@ -490,22 +489,21 @@ VertexMatch FocusedConfigurator::hardMatch(State s, Direction dir, StateMatcher:
 
 		}
 	}
-	if (NULL!=other_matches){
-		for (VertexMatchTuple item:others_set){
-			other_matches->push_back(VertexMatch(std::get<1>(item), std::get<0>(item)));
-		}
-	}
+	// if (NULL!=other_matches){
+	// 	for (VertexMatchTuple item:others_set){
+	// 		other_matches->push_back(VertexMatch(std::get<1>(item), std::get<0>(item)));
+	// 	}
+	// }
 	return result;
 }
 
-VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, std::vector <VertexMatch>*other_matches){
+VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd){
 	if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && //s.Di==transitionSystem[currentVertex].Di && 
 		!hasPlanFinished()&&	
 		s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
 		return VertexMatch(StateMatcher::_TRUE, currentVertex);
 	}
-
-	return hardMatch(s, dir, match_type, _sd, other_matches);
+	return hardMatch(s, dir, match_type, _sd);
 }
 
 
@@ -617,22 +615,22 @@ void FocusedConfigurator::reassign_direction(vertexDescriptor bestNext, Directio
 
 }
 
-bool FocusedConfigurator::matchToSafe(VertexMatch &match,const  std::vector<VertexMatch>& other_matches){
-	bool result=false;
-	if (match.first==StateMatcher::_FALSE){
-		return result;
-	}
-	if (transitionSystem[match.second].outcome!=simResult::crashed){
-		return result;
-	}
-	for (VertexMatch m: other_matches){
-		if (transitionSystem[m.second].outcome!=simResult::crashed){
-			match.second=m.second;
-			return true;
-		}
-	}
-	return result;
-}
+// bool FocusedConfigurator::matchToSafe(VertexMatch &match,const  std::vector<VertexMatch>& other_matches){
+// 	bool result=false;
+// 	if (match.first==StateMatcher::_FALSE){
+// 		return result;
+// 	}
+// 	if (transitionSystem[match.second].outcome!=simResult::crashed){
+// 		return result;
+// 	}
+// 	for (VertexMatch m: other_matches){
+// 		if (transitionSystem[m.second].outcome!=simResult::crashed){
+// 			match.second=m.second;
+// 			return true;
+// 		}
+// 	}
+// 	return result;
+// }
 
 std::pair<edgeDescriptor, bool> FocusedConfigurator::setup_match_edge(VertexMatch &match, vertexDescriptor &v0, vertexDescriptor & v1,const Edge& k, Direction direction, bool changedMatch){
 	v1=match.second; //frontier

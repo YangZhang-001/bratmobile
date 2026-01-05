@@ -24,9 +24,7 @@ class AttentiveConfigurator: public virtual FocusedConfigurator{
 					b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
 					std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction)override;
 
-	virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override{
-		return hardMatch(s, dir, match_type, _sd, other_matches);
-	}
+	virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL)override;
 
 	// float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex())override{
 	// 	return simulationStep;
