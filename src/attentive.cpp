@@ -48,13 +48,13 @@ VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatche
 	return hardMatch(s, dir, match_type, _sd);
 }
 
-bool AttentiveConfigurator::isPlannedTaskOK(vertexDescriptor src){
+bool AttentiveConfigurator::isPlannedTaskOK(vertexDescriptor src, State s){
 	bool planOK=false;	
 	if (src!=TransitionSystem::null_vertex()){
 		auto srcIt=std::find(m_plan.begin(), m_plan.end(), src);
 		bool srcIsInPlan=srcIt!=m_plan.end();
 		bool srcIsLast=srcIt==(m_plan.end()-1);		
-		vertexDescriptor v1=transitionSystem::null_vertex();
+		vertexDescriptor v1=TransitionSystem::null_vertex();
 		if (srcIsInPlan){
 			if (!srcIsLast){
 				v1=*(srcIt+1);
@@ -67,7 +67,7 @@ bool AttentiveConfigurator::isPlannedTaskOK(vertexDescriptor src){
 			}
 		}
 	}
-	return planOK && !hasPlanFinished;
+	return planOK && !hasPlanFinished();
 
 }
 

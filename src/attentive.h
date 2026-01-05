@@ -24,7 +24,9 @@ class AttentiveConfigurator: public virtual FocusedConfigurator{
 					b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge,
 					std::vector<vertexDescriptor> &plan_prov, Direction t_get_direction)override;
 
-	virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULLvertexDescriptor, src=TransitionSystem::null_vertex())override;
+	virtual VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, vertexDescriptorsrc=TransitionSystem::null_vertex())override;
+
+	bool isPlannedTaskOK(vertexDescriptor src, State s);
 
 	// float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex())override{
 	// 	return simulationStep;
@@ -62,8 +64,6 @@ float remainingSimulationTime(const Task *const t=NULL)override;
  * @return VertexMatch 
  */
 VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, vertexDescriptor src=TransitionSystem::null_vertex())override;
-
-bool isPlannedTaskOK(vertexDescriptor src);
 
 StateMatcher::MATCH_TYPE desiredMatch() override {
 	return StateMatcher::MATCH_TYPE::_TRUE;
