@@ -88,7 +88,7 @@ void adjust_rw_task(const vertexDescriptor&, TransitionSystem &, Task*, const b2
  * @param other_matches pointer to a vector of other matches (all of the type defined by @param match_type)
  * @return VertexMatch the best match found and its type
  */
-virtual VertexMatch hardMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL); //matches to most likely
+virtual VertexMatch hardMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL); //matches to most likely
 
 
 /**
