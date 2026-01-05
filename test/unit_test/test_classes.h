@@ -382,8 +382,8 @@ class DebugDiscreteConf: public virtual DebugConfigurator, public virtual Discre
         return DiscreteConfigurator::remainingSimulationTime(t);
     }
 
-    VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override{
-        return DiscreteConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
+    VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL)override{
+        return DiscreteConfigurator::findMatch(s, dir, match_type, _sd);
     }
 
     void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src) override{
