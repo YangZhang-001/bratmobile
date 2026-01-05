@@ -497,7 +497,7 @@ VertexMatch FocusedConfigurator::hardMatch(State s, Direction dir, StateMatcher:
 	return result;
 }
 
-VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd){
+VertexMatch FocusedConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, vertexDescriptor src){
 	if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && //s.Di==transitionSystem[currentVertex].Di && 
 		!hasPlanFinished()&&	
 		s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it

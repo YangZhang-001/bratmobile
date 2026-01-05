@@ -61,7 +61,9 @@ float remainingSimulationTime(const Task *const t=NULL)override;
  * @param _sd pointer to state difference
  * @return VertexMatch 
  */
-VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL)override;
+VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, vertexDescriptor src=TransitionSystem::null_vertex())override;
+
+bool isPlannedTaskOK(vertexDescriptor src);
 
 StateMatcher::MATCH_TYPE desiredMatch() override {
 	return StateMatcher::MATCH_TYPE::_TRUE;

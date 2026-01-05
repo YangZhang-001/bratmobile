@@ -38,14 +38,34 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	return result;
 }
 
-VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd){
-	if (s.start==b2Transform_zero && s.direction==currentTask.get_direction() && //s.Di==transitionSystem[currentVertex].Di && 
-		!hasPlanFinished()&&	
-		s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex()){ //if the state to be matched is the current one, return it
+VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd, vertexDescriptor src){
+	bool currentTaskOK=s.start==b2Transform_zero && s.direction==currentTask.get_direction() && 
+						!hasPlanFinished()&& s.Dn.getAffIndex()==transitionSystem[currentVertex].Dn.getAffIndex(); //this state represent current task
+	if (currentTaskOK){ //if the state to be matched is the current one, return it
 		return VertexMatch(StateMatcher::_TRUE, currentVertex);
 	}
+
 	return hardMatch(s, dir, match_type, _sd);
 }
+
+bool AttentiveConfigurator::isPlannedTaskOK(vertexDescriptor src){
+	bool planOK=false;	
+	if (src!=TransitionSystem::null_vertex()){
+		auto srcIt=std::find(m_plan.begin(), m_plan.end(), src);
+		bool srcIsInPlan=srcIt!=m_plan.end();
+		bool srcIsLast=srcIt==(m_plan.end()-1);		
+		vertexDescriptor v1=transitionSystem::null_vertex();
+		if (srcIsInPlan && !srcIsLast){
+			v1=*(srcIt+1);
+			if (s.direction== transitionSystem[v1].direction && s.Dn.getAffIndex()==transitionSystem[v1].Dn.getAffIndex() ){
+				planOK==true;
+			}
+		}
+	}
+	return planOK && !hasPlanFinished;
+
+}
+
 
 Disturbance DiscreteConfigurator::getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start){
     return g[v].Dn;
