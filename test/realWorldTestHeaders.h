@@ -108,7 +108,7 @@ class UserInputConfigurator: public virtual DebugConfigurator{
             transitionSystem[v1].Di=disturbance;
             if (transitionSystem[v1].direction==DEFAULT){
                 assignNewGoal(disturbance);
-                transitionSystem[v1].endPose.p.x=.02; //let's say it moved 20 cm
+                transitionSystem[v1].endPose.p.x=.2; //let's say it moved 20 cm
                 Task task(disturbance, directionSetter->getDirection(), b2Transform_zero, true);
                 b2World world(GRAVITY);
                 simResult sr=simulate(task, world);
