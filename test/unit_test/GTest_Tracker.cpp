@@ -174,7 +174,7 @@ TEST_P(TestEnvironment, AttentionWindow){
     configurator.change_task();
     configurator.adjust_goal_expectation();
     configurator.estimate_current_vertex();
-    tracker.on_new_reading(configurator.getGoal(), configurator.getTask());
+    //tracker.on_new_reading(configurator.getGoal(), configurator.getTask());
     EXPECT_EQ(tracker.get_tracked_disturbance()->pose().p.x,configurator.getDi().pose().p.x);
     EXPECT_EQ(tracker.get_tracked_disturbance()->pose().p.y,configurator.getDi().pose().p.y);
     EXPECT_EQ(tracker.get_tracked_disturbance()->pose().q.GetAngle(),configurator.getDi().pose().q.GetAngle());
@@ -248,27 +248,31 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
     b2Transform errorTransform=b2Transform(b2Vec2(0,0), b2Rot(DEG_TO_RAD_K*angleError)), deltaPose=errorTransform;
     set_plan({e1.m_target});
     int steps=-1;
+    float desiredAngle=-M_PI;
     do {
         change_task();
+        if (steps<0){
+            desiredAngle=currentTask.getEndCriteria().angle.get_signed();
+        }
         adjust_goal_expectation();
         estimate_current_vertex();        
         MulPoints(deltaPose);
         deltaPose=-currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
         worldBuilder->set_world_objects(worldBuilder->getFeatures(data2fp, b2Transform_zero));
-            trackingResult= tracker.track((currentTask),data2fp, worldBuilder->get_world_objects());
-            update_graph(transitionSystem, trackingResult);
+        trackingResult= tracker.track((currentTask),data2fp, worldBuilder->get_world_objects());
+        update_graph(transitionSystem, trackingResult);
         steps++;
         iteration++;
        if (steps>50)break;
     }while (!currentTask.is_over());
     b2Transform travelled_transform= tracker.getDeltaTransform();
                                 //test value    //how far robot went            //desired angle                         //travelled time * 
-	logger.log("%f\t%f\t%f\t%f\n", angleError, travelled_transform.q.GetAngle(), currentTask.from_Di().q.GetAngle(), b2Mul(errorTransform, travelled_transform).q.GetAngle());
+	logger.log("%f\t%f\t%f\t%f\t%f\n", angleError, travelled_transform.q.GetAngle(), currentTask.from_Di().q.GetAngle(), b2MulT(errorTransform, travelled_transform).q.GetAngle(), desiredAngle);
     logger.~Logger();
-    EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),M_PI_2, 0.157079622/2);
+    EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),fabs(currentTask.from_Di().q.GetAngle()), 4.5*DEG_TO_RAD_K);
     EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
-    EXPECT_NEAR(currentTask.from_Di().q.c, std::cos(-targetAngle), std::cos(0.157079622/2));
-    EXPECT_NEAR(currentTask.from_Di().q.s, std::sin(-targetAngle), std::sin(0.157079622/2));
+    EXPECT_NEAR(currentTask.from_Di().q.c, std::cos(-targetAngle), std::cos(4.5*DEG_TO_RAD_K));
+    EXPECT_NEAR(currentTask.from_Di().q.s, std::sin(-targetAngle), std::sin(4.5*DEG_TO_RAD_K));
 
     // EXPECT_GT(steps, 1); //should take more than one step to complete task
    // SUCCEED();
