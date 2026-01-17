@@ -236,7 +236,7 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
     EXPECT_GT(world_objects().size(),0);
     Disturbance obstacle(worldBuilder->get_world_objects()[0]);
     obstacle.validate();
-    auto e1=make_successful(MOVING_VERTEX, std::get<0>(GetParam()));
+    auto e1=make_successful(MOVING_VERTEX, std::get<0>(GetParam())); //param 0 =direction
     float targetAngle(M_PI_2);
     transitionSystem[e1.m_target].Di=obstacle;
     if (std::get<0>(GetParam())==RIGHT){
