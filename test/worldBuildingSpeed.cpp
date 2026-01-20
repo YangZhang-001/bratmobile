@@ -11,7 +11,6 @@ int main(int argc, char **argv) {
                 Pointf  p2(x2,y2);
                 data.insert(p2);
             }
-
         }
         file.close();
     //make vector of worldbuilders

@@ -266,10 +266,10 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
        if (steps>50)break;
     }while (!currentTask.is_over());
     b2Transform travelled_transform= tracker.getDeltaTransform();
-                                //test value    //how far robot went            //desired angle                         //travelled time * 
-	logger.log("%f\t%f\t%f\t%f\t%f\n", angleError, travelled_transform.q.GetAngle(), currentTask.from_Di().q.GetAngle(), b2MulT(errorTransform, travelled_transform).q.GetAngle(), desiredAngle);
+                                //test value    //how far robot went            //desired angle                         //stop angle 
+	logger.log("%f\t%f\t%f\t%f\t%f\t%i\n", angleError, travelled_transform.q.GetAngle(), currentTask.from_Di().q.GetAngle(), b2Mul(errorTransform, travelled_transform).q.GetAngle(), desiredAngle, steps);
     logger.~Logger();
-    EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),fabs(currentTask.from_Di().q.GetAngle()), 4.5*DEG_TO_RAD_K);
+    EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),fabs(desiredAngle), 4.5*DEG_TO_RAD_K);
     EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
     EXPECT_NEAR(currentTask.from_Di().q.c, std::cos(-targetAngle), std::cos(4.5*DEG_TO_RAD_K));
     EXPECT_NEAR(currentTask.from_Di().q.s, std::sin(-targetAngle), std::sin(4.5*DEG_TO_RAD_K));
@@ -309,7 +309,7 @@ TEST_P(TestDeadReckoning, InvMulGoal){
 
 INSTANTIATE_TEST_CASE_P(Directions, TestDeadReckoning, ::testing::Combine(testing::Values(LEFT, RIGHT), testing::Values(LEFT, RIGHT)));
 
-INSTANTIATE_TEST_CASE_P(Noise, TestInputConfiguratorFixture, ::testing::Combine(testing::Values(LEFT, RIGHT), ::testing::Range(-90.0f,91.0f)));
+INSTANTIATE_TEST_CASE_P(Noise, TestInputConfiguratorFixture, ::testing::Combine(testing::Values(LEFT, RIGHT), ::testing::Range(-91.0f,91.0f, 1.0f)));
 
 INSTANTIATE_TEST_CASE_P(Inputs, TestEnvironment, ::testing::Combine(
     ::testing::Values(PURSUE, AVOID),
