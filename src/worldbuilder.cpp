@@ -5,7 +5,7 @@ std::pair<Pointf, Pointf> WorldBuilder::bounds(Direction d, b2Transform start, f
     std::pair <Pointf, Pointf>result;
     std::vector <Pointf> bds;
     if (d ==LEFT || d==RIGHT){
-        boxLength =ROBOT_HALFLENGTH -ROBOT_BOX_OFFSET_X; //og 16 cm
+        boxLength =ROBOT_HALFWIDTH -ROBOT_BOX_OFFSET_X; //og 16 cm
         result.first =Pointf(start.p.x-boxLength, start.p.y-boxLength);
         result.second =Pointf(start.p.x+boxLength, start.p.y+boxLength);
         bds.push_back(result.first);
