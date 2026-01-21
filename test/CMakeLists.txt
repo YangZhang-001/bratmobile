@@ -25,8 +25,6 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
 endif()
 add_executable(worldBuildingSpeed worldBuildingSpeed.cpp)
 target_link_libraries(worldBuildingSpeed box2d ${OpenCV_LIBS} brat pthread)
-add_executable(testMemoryWB testMemoryWB.cpp)
-target_link_libraries(testMemoryWB box2d ${OpenCV_LIBS} brat pthread)
 
 set(CMAKE_BUILD_TYPE Debug)
 
