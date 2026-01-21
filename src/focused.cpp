@@ -271,7 +271,9 @@ bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, s
 		return false;
 	}
 	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
-	if (canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE){
+	std::vector<vertexDescriptor> tv=task_vertices(v1);
+	bool sameTask=std::find(tv.begin(), tv.end(), v0)!=tv.end();
+	if ((canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE) || sameTask){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
 	bool canReassign=canReassignOutcome(v0);
