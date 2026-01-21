@@ -2,7 +2,9 @@
 
 TrackingResult Tracker::get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result;
-    result.displacement= t.getAction().getTransform(LIDAR_SAMPLING_RATE);
+    if (t.getMotorStep()){
+        result.displacement= t.getAction().getTransform(LIDAR_SAMPLING_RATE);
+    }
     result.observed_disturbance=t.get_disturbance();
     result.observed_disturbance.setPose(b2help::InvMul(result.displacement, t.get_disturbance().pose()));
     return result;
@@ -25,6 +27,10 @@ TrackingResult DeadReckoner::track(const Task &t, const CoordinateContainer &pts
 
 TrackingResult ClosedLoop_Tracker::track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result=get_transform(t, pts, objects);
+    if (!hasReading){
+        tracked_disturbance=result.observed_disturbance;
+        hasReading=true;
+    }
     deltaTransform=b2Mul(result.displacement, deltaTransform);
     return result;
 }
@@ -135,6 +141,7 @@ void ClosedLoop_Tracker::correctAngle(BodyFeatures & found, const BodyFeatures &
 
 void ClosedLoop_Tracker::on_new_task(const Task &task, const Task & goal){
     tracked_disturbance=task.get_disturbance();
+    hasReading=false;
     deltaTransform=b2Transform_zero;
     makeAttentionWindow(goal, task);
 }

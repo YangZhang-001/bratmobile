@@ -59,13 +59,6 @@ class Tracker{
      */
     virtual void on_new_task(const Task &task, const Task & goal)=0;
 
-    /**
-     * @brief Called every time asensor reading is available
-     * 
-     * @param task 
-     */
-    virtual void on_new_reading(const Task & goal, const Task &currentTask)=0;
-
     virtual void init(const Task & goal)=0;
 
     virtual bool hasTaskEnded(Task & t);
@@ -104,8 +97,6 @@ class DeadReckoner: public Tracker{
 
     void on_new_task(const Task &task, const Task & goal)override{} //does nothing
 
-    virtual void on_new_reading(const Task & goal, const Task &currentTask)override{};
-
     void init(const Task & goal){}
 
 
@@ -119,7 +110,7 @@ class ClosedLoop_Tracker:public Tracker{
     protected:
     Disturbance tracked_disturbance; //disturbance to be tracked as at task start, kept in memory when task is changed
     b2PolygonShape attention_window; //a box drawn at the beginning of task which bounds the robot and the goal
-    
+    bool hasReading=false; //has the disturbance's actual position been found with a scan
      /**
     * @brief gets the area of the attention window (for debugging)
     */
@@ -174,8 +165,6 @@ class ClosedLoop_Tracker:public Tracker{
      */
     void on_new_task(const Task &task, const Task & goal)override;
 
-
-    virtual void on_new_reading(const Task & goal, const Task &currentTask)override{}
 
     void set_attention(b2PolygonShape ps){
         attention_window=ps;

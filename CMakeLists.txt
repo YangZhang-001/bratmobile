@@ -38,7 +38,7 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   message("detected architecture aarch64, building executables")
 else()
   add_subdirectory(test/unit_test "${CMAKE_CURRENT_BINARY_DIR}/test/unit_test")
-  add_subdirectory(test/simulations "${CMAKE_CURRENT_BINARY_DIR}/test/simulations")
+  add_subdirectory(test "${CMAKE_CURRENT_BINARY_DIR}/test")
 	message("not building any executable")
 endif()
 
