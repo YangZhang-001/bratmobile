@@ -336,9 +336,7 @@ TEST_P(HighLevelTest, Recycle){
     EXPECT_GE(configurator->get_plan().size(), 1);
     vertexDescriptor second_last_v=configurator->get_plan()[configurator->get_plan().size()-2];
     vertexDescriptor last_v=configurator->get_plan()[configurator->get_plan().size()-1];
-   // if (!std::get<0>(GetParam())){
-        shift=configurator->vertex_get_endPose(last_v);
-    //}
+    shift=configurator->vertex_get_endPose(last_v);
     int vertices_og=configurator->n_vertices();
     configurator->addIteration(100);
     configurator->set_current_v(last_v); //simulate plan finished

@@ -965,10 +965,10 @@ TEST_P(LogicalCheckPlanTest, IsPlannedTaskOK){
     s.Dn.set_affordance(std::get<1>(GetParam()));
     s.direction=std::get<2>(GetParam());
     if (std::get<3>(GetParam())){
-        EXPECT_TRUE(isPlannedTaskOK(src,s));
+        EXPECT_TRUE(isPlannedTaskOK(src,s).first);
     }
     else{
-        EXPECT_FALSE(isPlannedTaskOK(src,s));
+        EXPECT_FALSE(isPlannedTaskOK(src,s).first);
     }
 }
 

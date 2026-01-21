@@ -44,15 +44,14 @@ VertexMatch AttentiveConfigurator::findMatch(State s, Direction dir, StateMatche
 	if (currentTaskOK){ //if the state to be matched is the current one, return it
 		return VertexMatch(StateMatcher::_TRUE, currentVertex);
 	}
-	else if(isPlannedTaskOK(src, s)){
-		return VertexMatch(StateMatcher::_TRUE, currentVertex);
+	else if(std::pair<bool, vertexDescriptor> isOk= isPlannedTaskOK(src, s); isOk.first &&  !hasPlanFinished()){
+		return VertexMatch(StateMatcher::_TRUE, isOk.second);
 	}
-
 	return hardMatch(s, dir, match_type, _sd);
 }
 
 std::pair<bool, vertexDescriptor> AttentiveConfigurator::isPlannedTaskOK(vertexDescriptor src, State s){
-	std::pair<bool, vertexDescriptor>(false, TransitionSystem::null_vertex());	
+	std::pair<bool, vertexDescriptor>result(false, TransitionSystem::null_vertex());	
 	if (src!=TransitionSystem::null_vertex()){
 		auto srcIt=std::find(m_plan.begin(), m_plan.end(), src);
 		bool srcIsInPlan=srcIt!=m_plan.end();
@@ -66,11 +65,12 @@ std::pair<bool, vertexDescriptor> AttentiveConfigurator::isPlannedTaskOK(vertexD
 				v1=src;
 			}
 			if (s.direction== transitionSystem[v1].direction && s.Dn.getAffIndex()==transitionSystem[v1].Dn.getAffIndex() ){
-				result(true, v1);
+				result.first=true;
+				result.second= v1;
 			}
 		}
 	}
-	return planOK && !hasPlanFinished();
+	return result;
 
 }
 
