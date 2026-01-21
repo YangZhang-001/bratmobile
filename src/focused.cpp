@@ -223,6 +223,11 @@ void FocusedConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q
 		Direction direction= transitionSystem[ep.second.m_target].direction;
 		if (split.size()<2){
 			split =splitTask(v, DEFAULT, ep.second.m_source);
+			if (split.size()>1){
+				if (split[split.size()-1]!=v){
+					split.erase(split.begin()+split.size()-1); //hotfix
+				}
+			}
 		}
 		correctQueue(split, module_src, startRecycle, plan_prov.size());
 		for (int i=split.size()-1; i>=0; i--){ //

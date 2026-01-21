@@ -393,22 +393,23 @@ TEST_P(RecycleTest, Transform){
     configurator->setTask(wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(), finished_plan));
     configurator->getTask().set_change(true);
     math::MulT(shift, configurator->get_ts());
-    auto points=set2vec2f(configurator->get_data2fp());
-    std::vector<cv::Point2f> newPoints;
-    cv::Mat transform=(cv::Mat_<double>(2,3)<<b2d_transform.q.c,b2d_transform.q.s,b2d_transform.p.x,
-                                            -b2d_transform.q.s,b2d_transform.q.c,b2d_transform.p.y);
+    auto points=configurator->get_data2fp();
+    CoordinateContainer newPoints;
+    // cv::Mat transform=(cv::Mat_<double>(2,3)<<b2d_transform.q.c,b2d_transform.q.s,b2d_transform.p.x,
+    //                                         -b2d_transform.q.s,b2d_transform.q.c,b2d_transform.p.y);
     configurator->clearData();
-    cv::transform(points, newPoints, transform);
+    // cv::transform(points, newPoints, transform);
     char name[50];
     sprintf(name,"/tmp/transform%s", info);
     FILE *f=fopen(name, "w+");
     CoordinateContainer cc;
-    for (auto p: newPoints){
-        fprintf(f, "%0.3f\t%0.3f\n", p.x, p.y);
-        cc.emplace(Pointf(p.x, p.y));
+    for (auto p: points){
+        b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
+        fprintf(f, "%0.3f\t%0.3f\n", p2d.x, p2d.y);
+        newPoints.emplace(Pointf(p2d.x, p2d.y));
     }
     fclose(f);
-    configurator->set_data2fp(cc);
+    configurator->set_data2fp(newPoints);
     configurator->newScanEvent();
     std::vector<vertexDescriptor> updated_plan=configurator->get_plan(); //map 2
     int vertices_now=configurator->n_vertices();
@@ -417,7 +418,8 @@ TEST_P(RecycleTest, Transform){
     EXPECT_TRUE(planned_to_goal);
 }
 
-INSTANTIATE_TEST_CASE_P(Transforms2D, RecycleTest, testing::Values(b2Transform(b2Vec2(.135,0), b2Rot(.1))));
+INSTANTIATE_TEST_CASE_P(Transforms2D, RecycleTest, testing::Values(b2Transform(b2Vec2(0,0), b2Rot(.1)),
+                                                                   b2Transform(b2Vec2(.13,0), b2Rot(0))));
 
 
 int main(int argc, char** argv){
