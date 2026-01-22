@@ -1,4 +1,4 @@
-#define DEBUG 
+#define DEBUG true
 #include "test_classes.h"
 
 class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<b2Transform>{};
