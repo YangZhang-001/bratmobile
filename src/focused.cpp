@@ -665,9 +665,14 @@ std::vector <vertexDescriptor> FocusedConfigurator::task_vertices( vertexDescrip
 					transitionSystem[_ep.second].it_observed=iteration;
 				}
 				for (edgeDescriptor e: ie){
-					if (transitionSystem[e.m_target].direction==d && e!=ep2.second && 
-						transitionSystem[e.m_source].Di == transitionSystem[_ep.second.m_source].Di &&
-						transitionSystem[e.m_source].Dn == transitionSystem[_ep.second.m_target].Dn){
+					StateDifference sd_srcsrc=StateDifference(transitionSystem[e.m_source], transitionSystem[_ep.second.m_source]);
+					StateDifference sd_srctgt=StateDifference(transitionSystem[e.m_source], transitionSystem[_ep.second.m_target]);
+					if (transitionSystem[e.m_target].direction==d && e!=ep2.second &&
+						matcher.isMatch(sd_srcsrc, tracker->threshold)==StateMatcher::MATCH_TYPE::D_INIT &&
+						//transitionSystem[e.m_source].Di == transitionSystem[_ep.second.m_source].Di &&
+						//transitionSystem[e.m_source].Dn == transitionSystem[_ep.second.m_target].Dn
+						matcher.isMatch(sd_srctgt, tracker->threshold)==StateMatcher::MATCH_TYPE::D_NEW
+						){
 						ep2.second=e;
 						break;
 					}
