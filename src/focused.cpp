@@ -175,7 +175,7 @@ std::vector <vertexDescriptor> FocusedConfigurator::splitTask( vertexDescriptor 
 	float _customStep= customSimulationStep(v);
 	auto ie=inEdges(src);
 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
-	if (!transitionSystem[src].isTurning()&& (!ie.empty()|| src==MOVING_VERTEX)){ //! //&& sameIterationEdgeIt!=ie.end()
+	if (!transitionSystem[src].isTurning()&& (!ie.empty()|| src==MOVING_VERTEX || src==currentVertex)){ //! //&& sameIterationEdgeIt!=ie.end()
 		transitionSystem[src].outcome=simResult::safeForNow;
 		split.insert(split.begin(), src);
 	}
