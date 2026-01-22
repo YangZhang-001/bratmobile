@@ -227,14 +227,14 @@ std::pair <bool,edgeDescriptor>  gt::visitedEdge(const std::vector <edgeDescript
 	std::vector<edgeDescriptor> possible_solutions;
 	for (edgeDescriptor e:es){
 		if ((g[e.m_source].visited() & g[e.m_target].visited()) || e.m_target==DUMMY){ 
-			// result.second=e;
-			// result.first=true;
+			result.second=e;
+			result.first=true;
 			possible_solutions.push_back(result.second);
 			//break;
 			//return result;
 		}
 	}
-	if (!possible_solutions.empty()){
+	if (possible_solutions.size()>1){
 	//pick most recent...
 		struct CompareIteration{
 			TransitionSystem & g;
