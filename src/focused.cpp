@@ -577,10 +577,10 @@ void FocusedConfigurator::explore_plan(b2World&world){
     resetPhi();
 	transitionSystem[MOVING_VERTEX].phi=evaluationFunction(EndedResult(), MOVING_VERTEX, m_plan);
     std::vector <vertexDescriptor> plan_tmp=explorer(src, transitionSystem, world);
-    if (DEBUG){
+    #ifdef DEBUG
         std::vector<vertexDescriptor> _plan=(m_plan);
         debug::graph_file(iteration, transitionSystem, controlGoal.get_disturbance(), _plan, currentVertex);
-    }	
+    #endif	
 	printf("pre-cleanup src =%i out degree=%i\n", src, boost::out_degree(src, transitionSystem));
 	ts_cleanup(); //remove self-edge and singleton states
     if (plan_tmp.empty() && (!transitionSystem[currentVertex].visited() || currentTask.is_over())){ //currentv not visited means that it wasn't observed ()

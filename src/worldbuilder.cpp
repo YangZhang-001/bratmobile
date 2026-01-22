@@ -230,13 +230,13 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
     }
     int _count=world.GetBodyCount();
 	FILE *file;
-	if (DEBUG){
+	#ifdef DEBUG
 		file = fopen(bodyFile, "a+");
 		for (b2Body * b = world.GetBodyList(); b!=NULL; b= b->GetNext()){
 			fprintf(file, "%f\t%f\n", b->GetPosition().x, b->GetPosition().y);
 		}
 		fclose(file);
-	}
+	#endif
 }
 
 bool WorldBuilder::checkDisturbance(Pointf p, bool& obStillThere, Task * curr, float range){

@@ -61,10 +61,10 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 	int _count=_world.GetBodyCount(), stepb2d=0;;
 	_world.SetContactListener(&listener);	
 	FILE * robotPath;
-	if (DEBUG){
+	#ifdef DEBUG
 		sprintf(planFile, "/tmp/robot%04i.txt", iteration);
 		robotPath = fopen(planFile, "a");
-	}
+	#endif
 	float theta = start.q.GetAngle();
 	b2Vec2 instVelocity = {0,0};		
 	for (stepb2d; stepb2d < (HZ*remaining); stepb2d++) {
@@ -73,9 +73,9 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 		robot->SetLinearVelocity(instVelocity);
 		robot->SetAngularVelocity(action.getOmega());
 		robot->SetTransform(robot->GetPosition(), theta);
-		if (DEBUG){
+		#ifdef DEBUG
 			fprintf(robotPath, "%f\t%f\n", robot->GetPosition().x, robot->GetPosition().y); //save predictions/
-		}
+		#endif
 		bool out_x= fabs(robot->GetTransform().p.x)>=(BOX2DRANGE-0.001);
 		bool out_y= fabs(robot->GetTransform().p.y)>=(BOX2DRANGE-0.001);
 		bool out=(out_x || out_y ), overlap=overlaps(robot, &disturbance);
@@ -104,9 +104,9 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 	result.endPose = robot->GetTransform();
 	result.step=stepb2d;
 	world_cleanup(_world);
-	if (DEBUG){
+	#ifdef DEBUG
 		fclose(robotPath);
-	}
+	#endif
 	return result;
 
 }
