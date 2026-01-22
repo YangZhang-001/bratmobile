@@ -164,7 +164,7 @@ std::vector <vertexDescriptor> FocusedConfigurator::splitTask( vertexDescriptor 
 	auto first_edge=boost::edge(src, v, transitionSystem); //assumes exists
 	//if (gt::check_edge_direction(first_edge, transitionSystem, RIGHT)|| gt::check_edge_direction(first_edge, transitionSystem, LEFT)){ //d
 	if (transitionSystem[v].isTurning()){ //d
-		if ((src==MOVING_VERTEX || src==DUMMY )&& transitionSystem[v].outcome==simResult::crashed){
+		if ((src==MOVING_VERTEX || src==currentVertex )&& transitionSystem[v].outcome==simResult::crashed){
 			split.emplace(split.begin(), src);
 		}
 		return split;
@@ -538,7 +538,7 @@ void FocusedConfigurator::shift_states(TransitionSystem & g, const std::vector<v
 	for (const vertexDescriptor &v:p){
 		math::MulT(shift_start, g[v]);
 	}
-	for 
+	
 }
 
 vertexDescriptor FocusedConfigurator::get_explore_start(TransitionSystem & g){
@@ -665,8 +665,6 @@ std::vector <vertexDescriptor> FocusedConfigurator::task_vertices( vertexDescrip
 					transitionSystem[_ep.second].it_observed=iteration;
 				}
 				for (edgeDescriptor e: ie){
-					StateDifference sd_srcsrc=StateDifference(transitionSystem[e.m_source], transitionSystem[_ep.second.m_source]);
-					StateDifference sd_srctgt=StateDifference(transitionSystem[e.m_source], transitionSystem[_ep.second.m_target]);
 					if (transitionSystem[e.m_target].direction==d && //e!=ep2.second &&
 						// transitionSystem[e.m_source].Di == transitionSystem[_ep.second.m_source].Di &&
 						// transitionSystem[e.m_source].Dn == transitionSystem[_ep.second.m_target].Dn
