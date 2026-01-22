@@ -207,7 +207,7 @@ std::vector <vertexDescriptor> FocusedConfigurator::splitTask( vertexDescriptor 
 			if (match.first!=StateMatcher::_TRUE || match.second==v){
 				transitionSystem[v1].endPose = endPose;
 				transitionSystem[first_edge.first].step= gt::distanceToSimStep(transitionSystem[v1].distance(), a.getLinearSpeed());	
-				if (first_edge.second){
+				if (v1==*(split.end()-1)){
 					transitionSystem[v1].outcome=simResult::crashed;	
 				}
 				transitionSystem[v1].phi=og_phi;
