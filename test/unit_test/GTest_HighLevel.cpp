@@ -379,7 +379,7 @@ TEST_P(RecycleTest, Transform){
     b2Transform shift=b2Transform_zero;
     goal=Task(Disturbance(PURSUE, b2Vec2(1.0, 0), 0),DEFAULT);
     configurator->init(goal);
-    std::string folder=std::string("../target_68cm/");
+    std::string folder=std::string("../target_40cm/");
     std::vector<vertexDescriptor> plan= get_plan(folder), finished_plan;
     EXPECT_GE(configurator->get_plan().size(), 1);
     vertexDescriptor second_last_v=configurator->get_plan()[configurator->get_plan().size()-2];
