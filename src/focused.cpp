@@ -272,8 +272,7 @@ bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, s
 	}
 	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
 	std::vector<vertexDescriptor> tv=task_vertices(v1);
-	bool sameTask=std::find(tv.begin(), tv.end(), v0)!=tv.end();
-	if ((canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE) || sameTask){
+	if ((canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE)){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
 	bool canReassign=canReassignOutcome(v0);
@@ -536,6 +535,9 @@ void FocusedConfigurator::ts_cleanup(){
 void FocusedConfigurator::shift_states(TransitionSystem & g, const std::vector<vertexDescriptor>& p, const b2Transform & shift_start){
 	if (p.empty()){
 		return;
+	}
+	for (int i=p.size()-1; i>0;i++){
+		propagateD(p[i], p[i-1], NULL);
 	}
 	for (const vertexDescriptor &v:p){
 		math::MulT(shift_start, g[v]);
