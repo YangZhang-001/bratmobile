@@ -410,6 +410,10 @@ TEST_P(RecycleTest, Transform){
     }
     fclose(f);
     configurator->set_data2fp(newPoints);
+    #ifdef DEBUG
+    #undef DEBUG
+    #define DEBUG true
+    #endif
     configurator->newScanEvent();
     std::vector<vertexDescriptor> updated_plan=configurator->get_plan(); //map 2
     int vertices_now=configurator->n_vertices();

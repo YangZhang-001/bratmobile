@@ -193,11 +193,12 @@ std::vector <vertexDescriptor> FocusedConfigurator::splitTask( vertexDescriptor 
 			VertexMatch match=hardMatch(s_tmp, d);
 			if (match.first!=StateMatcher::_TRUE){
 				first_edge=addEdgeRetrospectively(v, v1, s_tmp, first_edge, d, a.getLinearSpeed());
+				split.push_back(v1); //insert at the end if state has to be created
 			}
 			else{
 				v1=match.second;
+				split.insert(split.end()-2, v1);
 			}
-			split.push_back(v1);
 			nNodes--;
 		}
 		if (nNodes<=1){
