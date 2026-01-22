@@ -81,6 +81,11 @@ target_link_libraries(GTest_Discrete gtest gtest_main)
 target_link_libraries(GTest_Discrete  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
 
+add_executable(GTest_Recycle_Exp GTest_Recycle_Exp.cpp)
+target_link_libraries(GTest_Recycle_Exp gtest gtest_main)
+target_link_libraries(GTest_Recycle_Exp  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
+
+
 add_library(test_classes test_classes.h ../test_essentials.h ../callbacks.h)
 target_link_libraries(test_classes gtest gtest_main)
 target_link_libraries( test_classes brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
@@ -108,6 +113,8 @@ gtest_discover_tests(GTest_Task)
 gtest_discover_tests(GTest_Tracker)
 gtest_discover_tests(GTest_FocusedConfig)
 gtest_discover_tests(GTest_Discrete)
+gtest_discover_tests(GTest_Recycle_Exp)
+
 # INCLUDE_DIRECTORIES("/usr/local/include/")
 # enable_testing()
 
