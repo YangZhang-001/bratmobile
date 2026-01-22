@@ -197,7 +197,7 @@ std::vector <vertexDescriptor> FocusedConfigurator::splitTask( vertexDescriptor 
 			}
 			else{
 				v1=match.second;
-				split.insert(split.end()-2, v1);
+				split.insert(split.end()-1, v1);
 			}
 			nNodes--;
 		}
