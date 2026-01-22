@@ -120,7 +120,7 @@ std::vector<vertexDescriptor> FocusedConfigurator::explorer(vertexDescriptor v, 
 						if (plan_prov.empty()){
 							recycle_plan(startRecycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
 						}
-						if (m_plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
+						if (hasPlanFinished() && g[task_start].options.empty() && g[v].options.empty()){
 							if (startRecycle!=v){
 								task_vs.push_back(startRecycle);
 							}							
@@ -224,8 +224,8 @@ void FocusedConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q
 		if (split.size()<2){
 			split =splitTask(v, DEFAULT, ep.second.m_source);
 			if (split.size()>1){
-				if (*split.begin()!=v){
-					split.erase(split.begin()); //hotfix
+				if (split[split.size()-1]!=v){
+					split.erase(split.begin()+split.size()-1); //hotfix
 				}
 			}
 		}
@@ -271,7 +271,6 @@ bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, s
 		return false;
 	}
 	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
-	std::vector<vertexDescriptor> tv=task_vertices(v1);
 	if ((canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE)){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
@@ -539,6 +538,7 @@ void FocusedConfigurator::shift_states(TransitionSystem & g, const std::vector<v
 	for (const vertexDescriptor &v:p){
 		math::MulT(shift_start, g[v]);
 	}
+	for 
 }
 
 vertexDescriptor FocusedConfigurator::get_explore_start(TransitionSystem & g){
@@ -667,7 +667,7 @@ std::vector <vertexDescriptor> FocusedConfigurator::task_vertices( vertexDescrip
 				for (edgeDescriptor e: ie){
 					StateDifference sd_srcsrc=StateDifference(transitionSystem[e.m_source], transitionSystem[_ep.second.m_source]);
 					StateDifference sd_srctgt=StateDifference(transitionSystem[e.m_source], transitionSystem[_ep.second.m_target]);
-					if (transitionSystem[e.m_target].direction==d && e!=ep2.second &&
+					if (transitionSystem[e.m_target].direction==d && //e!=ep2.second &&
 						// transitionSystem[e.m_source].Di == transitionSystem[_ep.second.m_source].Di &&
 						// transitionSystem[e.m_source].Dn == transitionSystem[_ep.second.m_target].Dn
 						transitionSystem[e.m_source].Di.bf.match( transitionSystem[_ep.second.m_source].Di.bf) &&
