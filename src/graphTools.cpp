@@ -234,19 +234,21 @@ std::pair <bool,edgeDescriptor>  gt::visitedEdge(const std::vector <edgeDescript
 			//return result;
 		}
 	}
+	if (!possible_solutions.empty()){
 	//pick most recent...
-	struct CompareIteration{
-		TransitionSystem & g;
-		public:
-		CompareIteration(TransitionSystem & _g):g(_g){}
-		bool operator()(edgeDescriptor e1, edgeDescriptor e2){
-			return g[e1].it_observed<=g[e2].it_observed;
+		struct CompareIteration{
+			TransitionSystem & g;
+			public:
+			CompareIteration(TransitionSystem & _g):g(_g){}
+			bool operator()(edgeDescriptor e1, edgeDescriptor e2){
+				return g[e1].it_observed<=g[e2].it_observed;
+			}
+		};
+		auto it_recent=std::max_element(possible_solutions.begin(), possible_solutions.end(), CompareIteration(g));
+		if (it_recent!=possible_solutions.end()){
+			result.second=*it_recent;
+			result.first=true;
 		}
-	};
-	auto it_recent=std::max_element(possible_solutions.begin(), possible_solutions.end(), CompareIteration(g));
-	if (it_recent!=possible_solutions.end()){
-		result.second=*it_recent;
-		result.first=true;
 	}
 	return result;
 }
