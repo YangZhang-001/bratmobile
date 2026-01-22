@@ -224,8 +224,8 @@ void FocusedConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q
 		if (split.size()<2){
 			split =splitTask(v, DEFAULT, ep.second.m_source);
 			if (split.size()>1){
-				if (split[split.size()-1]!=v){
-					split.erase(split.begin()+split.size()-1); //hotfix
+				if (*split.begin()!=v){
+					split.erase(split.begin()); //hotfix
 				}
 			}
 		}
@@ -668,11 +668,11 @@ std::vector <vertexDescriptor> FocusedConfigurator::task_vertices( vertexDescrip
 					StateDifference sd_srcsrc=StateDifference(transitionSystem[e.m_source], transitionSystem[_ep.second.m_source]);
 					StateDifference sd_srctgt=StateDifference(transitionSystem[e.m_source], transitionSystem[_ep.second.m_target]);
 					if (transitionSystem[e.m_target].direction==d && e!=ep2.second &&
-						matcher.isMatch(sd_srcsrc, tracker->threshold)==StateMatcher::MATCH_TYPE::D_INIT &&
-						//transitionSystem[e.m_source].Di == transitionSystem[_ep.second.m_source].Di &&
-						//transitionSystem[e.m_source].Dn == transitionSystem[_ep.second.m_target].Dn
-						matcher.isMatch(sd_srctgt, tracker->threshold)==StateMatcher::MATCH_TYPE::D_NEW
-						){
+						// transitionSystem[e.m_source].Di == transitionSystem[_ep.second.m_source].Di &&
+						// transitionSystem[e.m_source].Dn == transitionSystem[_ep.second.m_target].Dn
+						transitionSystem[e.m_source].Di.bf.match( transitionSystem[_ep.second.m_source].Di.bf) &&
+						transitionSystem[e.m_source].Dn.bf.match(transitionSystem[_ep.second.m_target].Dn.bf)
+					){
 						ep2.second=e;
 						break;
 					}
