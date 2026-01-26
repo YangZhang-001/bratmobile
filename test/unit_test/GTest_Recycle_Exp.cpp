@@ -1,5 +1,5 @@
 #include "test_classes.h"
-extern bool DEBUG;
+// extern bool DEBUG;
 
 class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<b2Transform>{};
 

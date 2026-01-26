@@ -72,7 +72,6 @@ const b2Vec2 GRAVITY(0,0);
 
 #define PLANNING true
 #define BENCHMARKING true
-extern bool DEBUG=false;
 
 
 const std::map<Direction, char*> dirmap={{DEFAULT, "DEFAULT"}, {LEFT, "LEFT"}, {RIGHT, "RIGHT"}, {STOP, "STOP"}, {UNDEFINED, "UNDEFINED"}, {BACK, "BACK"}};
