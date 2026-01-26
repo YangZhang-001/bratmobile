@@ -6,6 +6,8 @@ class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<
 
 TEST_P(RecycleTest, Transform){
     char info[20];
+    configurator->unregister_tracker();
+    configurator->register_tracker(new CLAdaptiveTracker());
     b2Transform b2d_transform=GetParam();
     sprintf(info,"%0.3f-%0.3f-%0.3f.txt",b2d_transform.p.x, b2d_transform.p.y, b2d_transform.q.GetAngle() );
     Logger logger("RecycleTests", "\tmp", "recycle");
@@ -52,6 +54,8 @@ TEST_P(RecycleTest, Transform){
     // EXPECT_LE(vertices_now, vertices_og);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     EXPECT_TRUE(planned_to_goal);
+    delete configurator->get_tracker();
+
 }
 
 INSTANTIATE_TEST_CASE_P(Transforms2D, RecycleTest, testing::Values(b2Transform(b2Vec2(0,0), b2Rot(.1)),

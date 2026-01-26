@@ -69,6 +69,13 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
     friend class HighLevelTestBase;
     friend class HighLevelInterruptBase;
 
+    void unregister_tracker(){
+        if (tracker){
+            delete tracker;
+            tracker=NULL;
+        }
+    }
+
     int n_edges(){return transitionSystem.m_edges.size();}
 
     int n_vertices(){return transitionSystem.m_vertices.size();}
@@ -516,6 +523,7 @@ class HighLevelTestBase: public testing::Test{
      * @brief Make logger that dumps in different directories depending on test case and system architecture, only for test fixtures
     */
     virtual Logger makeLogger();
+
 
         /**
      * @brief Make logger that dumps in different directories depending on test case and system architecture

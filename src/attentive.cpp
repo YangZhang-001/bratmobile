@@ -74,9 +74,6 @@ std::pair<bool, vertexDescriptor> AttentiveConfigurator::isPlannedTaskOK(vertexD
 
 }
 
-Threshold AttentiveConfigurator::computeThreshold(const State &s){
-	return Threshold(s.distance()/2, Threshold::FIXED_ANGLE, Threshold::FIXED_DISTPOS, Threshold::FIXED_AFFORDANCE, Threshold::FIXED_DIMENSIONS);
-}
 
 
 

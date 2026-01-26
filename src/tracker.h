@@ -197,7 +197,14 @@ class ClosedLoop_Tracker:public Tracker{
     void makeAttentionWindow(const Task &goal, const Task & currentTask);
 
 
+};
 
+//same as CL Tracker but creates custom threshold based on state
+class CLAdaptiveTracker:public ClosedLoop_Tracker{
 
+    const Threshold& get_threshold(const State &s)override{
+        float distance=std::max(Threshold::FIXED_ENDPOSE, s.distance()/2);
+	    return Threshold(distance, Threshold::FIXED_ANGLE, Threshold::FIXED_DISTPOS, Threshold::FIXED_AFFORDANCE, Threshold::FIXED_DIMENSIONS);
+    }
 
 };

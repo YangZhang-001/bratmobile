@@ -28,7 +28,6 @@ class AttentiveConfigurator: public virtual FocusedConfigurator{
 
 	std::pair<bool, vertexDescriptor> isPlannedTaskOK(vertexDescriptor src, State s);
 
-	Threshold computeThreshold(const State &s);
 
 };
 

@@ -90,11 +90,11 @@ Essentially uses distance calculations and (adaptive) thresholding
 */
 class Threshold{
     public:
-    static const float FIXED_ENDPOSE=0.05;// maximum radius from candidate state's end pose
-    static const float FIXED_ANGLE= M_PI/6; // maximum angle difference
-    static const float FIXED_DISTPOS= 0.065;// maximum difference between disturbance positions
-    static const float FIXED_AFFORDANCE =0; //maximum difference between affordances
-    static const float FIXED_DIMENSIONS=0.03; //maximum differences in disturbance dimensions
+    static constexpr float FIXED_ENDPOSE=0.05;// maximum radius from candidate state's end pose
+    static constexpr float FIXED_ANGLE= M_PI/6; // maximum angle difference
+    static constexpr float FIXED_DISTPOS= 0.065;// maximum difference between disturbance positions
+    static constexpr float FIXED_AFFORDANCE =0; //maximum difference between affordances
+    static constexpr float FIXED_DIMENSIONS=0.03; //maximum differences in disturbance dimensions
 
     Threshold()=default;
 
