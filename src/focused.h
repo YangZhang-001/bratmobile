@@ -7,7 +7,7 @@
 */
 class FocusedConfigurator:public virtual Configurator{
 	protected:
-	StateMatcher matcher;
+	StateMatcher* matcher=new StateMatcher();
 /**
  * @brief Package task/goal execution details into an Execution Info instance
  * 
@@ -441,7 +441,10 @@ FocusedConfigurator(Task _task){
 	init(_task);
 }
 
-virtual ~FocusedConfigurator()=default;
+virtual ~FocusedConfigurator(){
+	delete matcher;
+	matcher=NULL;
+}
 
 
 

@@ -110,7 +110,7 @@ std::vector<vertexDescriptor> FocusedConfigurator::explorer(vertexDescriptor v, 
 				StateDifference sd;
 				VertexMatch match=findMatch(sk.first, t.get_direction(), desiredMatch(), &sd);		//, closest_match	
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
-				if (matcher.match_equal(match.first,desiredMatch())){
+				if (matcher->match_equal(match.first,desiredMatch())){
 					g[v0].options.erase(g[v0].options.begin());
 					edge=setup_match_edge(match, v0, v1, sk.second, t.get_direction(), false);
 					if (currentTask.is_over()){
@@ -461,12 +461,12 @@ VertexMatch FocusedConfigurator::hardMatch(State s, Direction dir, StateMatcher:
 		StateMatcher::MATCH_TYPE m=StateMatcher::_FALSE;
 		float sum_tmp=fabs(sd.get_sum(match_type));
 		try{
-			m=matcher.isMatch(sd, tracker->threshold, s.endPose.p.Length());
+			m=matcher->isMatch(sd, tracker->threshold, s.endPose.p.Length());
 		}
 		catch(std::exception &e){
 			std::cerr<< "check tracker is set up ok! "<<e.what()<<std::endl;
 		}
-		condition=matcher.match_equal(m, match_type);
+		condition=matcher->match_equal(m, match_type);
 		if (v!=MOVING_VERTEX && (boost::in_degree(v, transitionSystem)>0 || iteration>1)  &&Tmatch ){ 
 			// if (condition){
 			// 	result.first= m;
