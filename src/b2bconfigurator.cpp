@@ -250,7 +250,7 @@ std::vector<vertexDescriptor> B2BConfigurator::explorer(vertexDescriptor v, Tran
 				StateDifference sd;
 				VertexMatch match=findMatch(sk.first, t.get_direction(), StateMatcher::MATCH_TYPE::ABSTRACT, &sd);		//, closest_match
 				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
-				if (matcher.match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
+				if (matcher->match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
 					g[v0].options.erase(g[v0].options.begin());
 					edge=setup_match_edge(match, v0, v1, sk.second, t.get_direction(), false);
 					if (currentTask.is_over()){
