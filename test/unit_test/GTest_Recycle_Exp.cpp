@@ -1,10 +1,10 @@
 #include "test_classes.h"
 // extern bool DEBUG;
+const bool DEBUG=true;
 
 class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<b2Transform>{};
 
 TEST_P(RecycleTest, Transform){
-    DEBUG=true;
     char info[20];
     b2Transform b2d_transform=GetParam();
     sprintf(info,"%0.3f-%0.3f-%0.3f.txt",b2d_transform.p.x, b2d_transform.p.y, b2d_transform.q.GetAngle() );

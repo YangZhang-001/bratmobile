@@ -1,5 +1,7 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
+const bool DEBUG=false;
+
 
 TEST_F(HighLevelTest, Init){
     EXPECT_TRUE(configurator->get_motor_interface()!=(NULL));

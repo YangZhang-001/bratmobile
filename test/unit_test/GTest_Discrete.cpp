@@ -1,4 +1,7 @@
 #include "test_classes.h"
+const bool DEBUG=false;
+
+
 class DiscreteConfPlanTest:public DiscreteConfigurator, public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
 
 };

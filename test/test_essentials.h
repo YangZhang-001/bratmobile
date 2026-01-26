@@ -14,6 +14,7 @@
 #include <filesystem>
 #define _USE_MATH_DEFINES
 
+
 bool debug_draw(b2Vec2 * sensor_v, std::vector <b2Vec2> d ){
     char name_v[256], name_s[256], name_d[256];
     sprintf(name_s, "/tmp/debug_sensor_cli.txt");

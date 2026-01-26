@@ -1,4 +1,5 @@
 #include "test_classes.h"
+const bool DEBUG=false;
 
 TEST_F(HighLevelTestBase, TaskToExecNoChangeVertices){
     wc.task_to_execute(configurator->get_plan(), configurator->get_ts(), 0, configurator->getGoal(), configurator->getTask(), configurator->get_current_vertices());

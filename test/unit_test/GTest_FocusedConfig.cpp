@@ -1,4 +1,5 @@
 #include "test_classes.h"
+const bool DEBUG=false;
 
 class FCTest:public FocusedConfigurator, public testing::TestWithParam<bool> {
     public:

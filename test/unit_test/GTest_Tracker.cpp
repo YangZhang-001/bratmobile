@@ -3,6 +3,8 @@
 #include "../realWorldTestHeaders.h"
 #include "stdio.h"
 class TestEnvironment;
+const bool DEBUG=false;
+
 
 /**
  * Tests for tracking unit tests

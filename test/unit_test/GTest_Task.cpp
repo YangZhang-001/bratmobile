@@ -1,4 +1,5 @@
 #include "test_classes.h"
+const bool DEBUG=false;
 
 class TaskTest: public Task{
     protected:

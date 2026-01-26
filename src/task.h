@@ -1,8 +1,9 @@
 #ifndef TASK_H
 #define TASK_H
 #include "measurement.h"
+#pragma once
+extern const bool DEBUG;
 
-extern bool DEBUG;
 /**
  * @brief If the body @param body has an attention window sensor attached to it, it returns the sensor box2d fixture
  */

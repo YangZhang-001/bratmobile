@@ -3,6 +3,7 @@
 #include <thread>
 #include <fstream>
 #include "test_classes.h"
+const bool DEBUG=false;
 
 class LoggerTest: public Logger, public testing::Test{
     public:
