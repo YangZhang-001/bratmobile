@@ -90,21 +90,26 @@ Essentially uses distance calculations and (adaptive) thresholding
 */
 class Threshold{
     public:
+    static const float FIXED_ENDPOSE=0.05;// maximum radius from candidate state's end pose
+    static const float FIXED_ANGLE= M_PI/6; // maximum angle difference
+    static const float FIXED_DISTPOS= 0.065;// maximum difference between disturbance positions
+    static const float FIXED_AFFORDANCE =0; //maximum difference between affordances
+    static const float FIXED_DIMENSIONS=0.03; //maximum differences in disturbance dimensions
 
     Threshold()=default;
 
     Threshold(float e, float a, float d, float aff, float d_dim): 
     endPosition(e), angle(a), dPosition(d), affordance(aff), D_dimensions(d_dim){}
 
-    float for_robot_position(){
+    float for_robot_position()const{
         return endPosition;
     }
 
-    float for_robot_angle(){
+    float for_robot_angle()const{
         return angle;
     }
 
-    float for_affordance(){
+    float for_affordance()const{
         return affordance;
     }
 
@@ -137,12 +142,13 @@ class Threshold{
     }
 
 
+
     private:
-        float endPosition=0.05;// maximum radius from candidate state's end pose
-        float angle= M_PI/6; // maximum angle difference
-        float dPosition= 0.065;// maximum difference between disturbance positions
-        float affordance =0; //maximum difference between affordances
-        float D_dimensions=0.03; //maximum differences in disturbance dimensions
+        float endPosition=FIXED_ENDPOSE;// maximum radius from candidate state's end pose
+        float angle= FIXED_ANGLE; // maximum angle difference
+        float dPosition= FIXED_DISTPOS;// maximum difference between disturbance positions
+        float affordance =FIXED_AFFORDANCE; //maximum difference between affordances
+        float D_dimensions=FIXED_DIMENSIONS; //maximum differences in disturbance dimensions
         Bundle Di=Bundle(dPosition, dPosition, angle, D_dimensions, D_dimensions), Dn=Di;
 };
 

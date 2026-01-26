@@ -28,9 +28,7 @@ class AttentiveConfigurator: public virtual FocusedConfigurator{
 
 	std::pair<bool, vertexDescriptor> isPlannedTaskOK(vertexDescriptor src, State s);
 
-	// float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex())override{
-	// 	return simulationStep;
-	// }
+	Threshold computeThreshold(const State &s);
 
 };
 

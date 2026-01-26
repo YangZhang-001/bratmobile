@@ -505,7 +505,7 @@ class StateMatcher{
 
 			StateMatch() =default;
 
-			StateMatch(const StateDifference& sd, Threshold threshold, float coefficient=1){
+			StateMatch(const StateDifference& sd,const Threshold& threshold, float coefficient=1){
 				position = sd.pose.p.Length()<(threshold.for_robot_position()*coefficient);
 				angle=fabs(sd.pose.q.GetAngle())<threshold.for_robot_angle();
 				Bundle Dn=threshold.for_Dn(), Di=threshold.for_Di();

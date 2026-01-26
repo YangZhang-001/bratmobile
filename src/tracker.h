@@ -19,13 +19,14 @@ class Tracker{
     friend Configurator;
     ThresholdLearner *learner=NULL;
     b2Transform deltaTransform=b2Transform_zero;
-    public:
     Threshold threshold=Threshold();
+
+    public:
 
     Tracker(){}
 
-    Threshold * get_threshold(){
-        return &threshold;
+    virtual const Threshold & get_threshold(const State &s){
+        return threshold;
     }
 
     void register_learner(ThresholdLearner * l){

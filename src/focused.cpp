@@ -461,7 +461,7 @@ VertexMatch FocusedConfigurator::hardMatch(State s, Direction dir, StateMatcher:
 		StateMatcher::MATCH_TYPE m=StateMatcher::_FALSE;
 		float sum_tmp=fabs(sd.get_sum(match_type));
 		try{
-			m=matcher->isMatch(sd, tracker->threshold, s.endPose.p.Length());
+			m=matcher->isMatch(sd, tracker->get_threshold(q), s.endPose.p.Length());
 		}
 		catch(std::exception &e){
 			std::cerr<< "check tracker is set up ok! "<<e.what()<<std::endl;
