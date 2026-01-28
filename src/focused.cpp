@@ -816,9 +816,9 @@ std::vector<Direction> FocusedConfigurator::partiallyExplorativeOptions(std::pai
 return result;
 }
 
-Robot FocusedConfigurator::makeRobot(b2World & world, const b2Transform & start){
-	Robot robot=Configurator::makeRobot(world, start);
-	b2AABB sensor_aabb=worldBuilder->makeRobotSensor(robot.body(), controlGoal.get_disturbance()); //Configurator::getGoalDisturbance()
+Robot FocusedConfigurator::makeRobot(b2World & world, const Task & task){
+	Robot robot=Configurator::makeRobot(world, task);
+	b2AABB sensor_aabb=worldBuilder->makeRobotSensor(robot.body(), task.get_disturbance()); //Configurator::getGoalDisturbance()
 	return robot;
 }
 

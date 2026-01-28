@@ -266,7 +266,7 @@ static void Mul(const b2Transform& B, Task &task);
  * @param taskWithGoal 
  * @return Robot 
  */
-virtual Robot makeRobot(b2World& world, const b2Transform & start);
+virtual Robot makeRobot(b2World& world, const Task & task);
 
 //Disturbance * getGoalDisturbance(){return &controlGoal.disturbance;}
 

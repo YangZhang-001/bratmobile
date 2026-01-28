@@ -77,9 +77,9 @@ bool Configurator::Spawner(){
 	return 1;
 }
 
-Robot Configurator::makeRobot(b2World& world, const b2Transform & start){
+Robot Configurator::makeRobot(b2World& world, const Task & task){
 	Robot robot(&world);
-	robot.body()->SetTransform(start.p, start.q.GetAngle());
+	robot.body()->SetTransform(task.start.p, task.start.q.GetAngle());
 	return robot;
 
 };
@@ -88,7 +88,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	simResult result;
 	float remaining=remainingSimulationTime(&t);
 	printf("remaining=%f\n", remaining);
-	Robot robot=makeRobot(w, t.start);
+	Robot robot=makeRobot(w, t);
 	worldBuilder->add_body_count();
 	simulatedTasks++;
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0

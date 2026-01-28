@@ -367,7 +367,7 @@ void abandonPlan(std::vector<vertexDescriptor>& planProv, vertexDescriptor v0, v
  */
 virtual std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve);
 
-virtual Robot makeRobot(b2World & w, const b2Transform & start);
+virtual Robot makeRobot(b2World & w, const Task & task);
 /**
  * @brief Adds and removes vertices from the evaluation queue
  * 
