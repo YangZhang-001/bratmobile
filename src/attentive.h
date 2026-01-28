@@ -42,7 +42,7 @@ public:
  */
 Disturbance getDisturbance(TransitionSystem&g, vertexDescriptor v, b2World & world, const Direction & dir, const b2Transform& start)override;
 
-Robot makeRobot(b2World & w, const b2Transform & start)override;
+Robot makeRobot(b2World & w, const Task & task)override;
 
 /**
  * @brief Sets a time limit to DEFAULT tasks corresponding to the amount of time estimated

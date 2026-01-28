@@ -81,8 +81,8 @@ Disturbance DiscreteConfigurator::getDisturbance(TransitionSystem&g, vertexDescr
     return g[v].Dn;
 }
 
-Robot DiscreteConfigurator::makeRobot(b2World & world, const b2Transform & start){
-	Robot robot=Configurator::makeRobot(world, start);
+Robot DiscreteConfigurator::makeRobot(b2World & world, const Task & task){
+	Robot robot=Configurator::makeRobot(world, task);
 	return robot;
 }
 
