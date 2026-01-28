@@ -381,8 +381,8 @@ class DebugDiscreteConf: public virtual DebugConfigurator, public virtual Discre
         return DiscreteConfigurator::getDisturbance(g, v, world, dir, start);
     }
 
-    Robot makeRobot(b2World & w, const b2Transform & start)override{
-        return DiscreteConfigurator::makeRobot(w, start);
+    Robot makeRobot(b2World & w, const Task & task)override{
+        return DiscreteConfigurator::makeRobot(w, task);
     }
 
     float remainingSimulationTime(const Task *const t=NULL)override{
@@ -562,8 +562,11 @@ class HighLevelTest: public virtual HighLevelTestBase , public testing::WithPara
     HighLevelTest(){}
 
     bool has180Turn(std::vector<vertexDescriptor> plan){
-        for (int i=1; i<plan.size(); i++){
-            if (configurator->get_ts()[plan[i]].isTurning() && configurator->get_ts()[plan[i-1]].isTurning()){
+        if (plan.empty()){
+            return false;
+        }
+        for (int i=0; i<=plan.size(); i++){
+            if (configurator->get_ts()[plan[i+1]].isTurning() && configurator->get_ts()[plan[i]].isTurning()){
                 return true;
             }
 

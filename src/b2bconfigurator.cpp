@@ -308,7 +308,7 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 		worldBuilder->makeBody(w, maybeFocus.bf); //add hindsight disturbance to the world even if it doesn't overlap with the task scope
 		clearvoyance.pop(v);
 	}
-	Robot robot=makeRobot(w, t.getStart(), focus);
+	Robot robot=makeRobot(w, t);
 	worldBuilder->add_body_count();
 	simulatedTasks++;
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
@@ -318,12 +318,12 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 	return result;
 }
 
-Robot B2BConfigurator::makeRobot( b2World & world, const b2Transform& start, const Disturbance & focus){
-	Robot robot=Configurator::makeRobot(world, start);
-	b2AABB sensor_aabb=worldBuilder->makeRobotSensor(robot.body(), focus);
-	return robot;
+// Robot B2BConfigurator::makeRobot( b2World & world, const Task& task, const Disturbance & focus){
+// 	Robot robot=Configurator::makeRobot(world, task);
+// 	b2AABB sensor_aabb=worldBuilder->makeRobotSensor(robot.body(), task);
+// 	return robot;
 
-}
+// }
 
 
 void B2BConfigurator::addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1, ClearVoyance & clearvoyance){

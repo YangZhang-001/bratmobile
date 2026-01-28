@@ -307,8 +307,12 @@ TEST_F(HighLevelTest, TrickyScenario){
     configurator->explorePlan(world);
     EXPECT_GT(configurator->get_plan().size(), 0);
     EXPECT_TRUE(has180Turn(configurator->get_plan()));
-    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-    EXPECT_TRUE(planned_to_goal);
+    EXPECT_FALSE(configurator->get_plan().empty());
+    if (!configurator->get_plan().empty()){
+        bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+        EXPECT_TRUE(planned_to_goal);        
+    }
+
 }
 
 
