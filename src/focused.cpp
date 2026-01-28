@@ -45,7 +45,7 @@ Disturbance FocusedConfigurator::getDisturbance(TransitionSystem&g,vertexDescrip
 				Disturbance Di= g[v].Di;
 				if (std::pair <bool, edgeDescriptor> visitedDefault=gt::visitedEdge(gt::outEdges(g, v, DEFAULT), g, v); visitedDefault.first && (g[v].isTurning() && isTurning(dir))){
 					if (visitedDefault.first && g[visitedDefault.second.m_target].outcome==simResult::crashed){
-						Di= g[visitedDefault.second.m_target].Dn;
+						return g[visitedDefault.second.m_target].Dn;
 					}
 				} //if the vertex has been visited in the default direction
 				Task task(Di, DEFAULT, g[v].endPose, true);
