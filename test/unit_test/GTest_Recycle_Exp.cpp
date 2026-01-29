@@ -68,7 +68,7 @@ TEST_P(RecycleTest, Transform){
 
 }
 
-INSTANTIATE_TEST_CASE_P(Transforms2D, RecycleTest, testing::Combine(testing::Values(testing::Range(-.4, .2, 0.01),
-                                                                                    testing::Range(-0.05, 0.05, 0.01)),
-                                                                                    testing::Values(-0.1,0, 0.1)));
+INSTANTIATE_TEST_CASE_P(Transforms2D, RecycleTest, ::testing::Combine(testing::Range(-.2f, .4f, 0.01f),
+                                                                    ::testing::Range(-0.05f, 0.05f, 0.01f),
+                                                                    ::testing::Values(-0.1f,0.0f, 0.1f)));
 
