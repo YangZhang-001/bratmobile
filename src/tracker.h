@@ -25,7 +25,7 @@ class Tracker{
 
     Tracker(){}
 
-    virtual const Threshold & get_threshold(const State &s){
+    virtual Threshold get_threshold(const State &s){
         return threshold;
     }
 
@@ -201,8 +201,8 @@ class ClosedLoop_Tracker:public Tracker{
 
 //same as CL Tracker but creates custom threshold based on state
 class CLAdaptiveTracker:public ClosedLoop_Tracker{
-
-    const Threshold& get_threshold(const State &s)override{
+    protected:
+    Threshold get_threshold(const State &s){
         float distance=std::max(Threshold::FIXED_ENDPOSE, s.distance()/2);
 	    return Threshold(distance, Threshold::FIXED_ANGLE, Threshold::FIXED_DISTPOS, Threshold::FIXED_AFFORDANCE, Threshold::FIXED_DIMENSIONS);
     }

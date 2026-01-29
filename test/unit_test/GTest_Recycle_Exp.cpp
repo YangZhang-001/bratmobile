@@ -2,13 +2,24 @@
 // extern bool DEBUG;
 const bool DEBUG=true;
 
-class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<b2Transform>{};
+class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<std::tuple<float, float, float>>{};
+
+class CLAdaptiveTrackerTest: public CLAdaptiveTracker, public ::testing::TestWithParam<float>{};
+
+TEST_P(CLAdaptiveTrackerTest, Threshold){
+    State s;
+    s.endPose.p.x=GetParam();
+    Threshold _threshold=get_threshold(s);
+    EXPECT_NEAR(_threshold.for_robot_position(), GetParam()/2, 0.01);
+}
+
+INSTANTIATE_TEST_CASE_P(Ends, CLAdaptiveTrackerTest, testing::Values(0.5, 0.05));
 
 TEST_P(RecycleTest, Transform){
     char info[20];
-    configurator->unregister_tracker();
-    configurator->register_tracker(new CLAdaptiveTracker());
-    b2Transform b2d_transform=GetParam();
+    CLAdaptiveTracker newTracker;
+    configurator->register_tracker(&newTracker);
+    b2Transform b2d_transform(b2Vec2(std::get<0>(GetParam()),std::get<1>(GetParam())), b2Rot(std::get<2>(GetParam())));
     sprintf(info,"%0.3f-%0.3f-%0.3f.txt",b2d_transform.p.x, b2d_transform.p.y, b2d_transform.q.GetAngle() );
     Logger logger("RecycleTests", "\tmp", "recycle");
     configurator->register_logger(&logger);
@@ -54,10 +65,10 @@ TEST_P(RecycleTest, Transform){
     // EXPECT_LE(vertices_now, vertices_og);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     EXPECT_TRUE(planned_to_goal);
-    delete configurator->get_tracker();
 
 }
 
-INSTANTIATE_TEST_CASE_P(Transforms2D, RecycleTest, testing::Values(b2Transform(b2Vec2(0,0), b2Rot(.1)),
-                                                                   b2Transform(b2Vec2(.13,0), b2Rot(0))));
+INSTANTIATE_TEST_CASE_P(Transforms2D, RecycleTest, testing::Combine(testing::Values(testing::Range(-.4, .2, 0.01),
+                                                                                    testing::Range(-0.05, 0.05, 0.01)),
+                                                                                    testing::Values(-0.1,0, 0.1)));
 

@@ -72,7 +72,6 @@ class DebugConfigurator:public virtual AttentiveConfigurator{
     void unregister_tracker(){
         if (tracker){
             delete tracker;
-            tracker=NULL;
         }
     }
 
