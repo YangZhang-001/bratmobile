@@ -41,11 +41,7 @@ class UnpackedObject{
 };
 
 class RobotSubscriber:public ObjectPackageSubscriber{
-    public:
-    void setTopic(std::string str){
-        topic_ = participant_->create_topic(str, "ObjectPackage", TOPIC_QOS_DEFAULT);
 
-    }
 };
 
 

@@ -14,7 +14,7 @@ find_package(box2d REQUIRED)
 
 add_subdirectory(src "${CMAKE_CURRENT_BINARY_DIR}/src")
 
-option(BUILD_FASTDDS "Building FastDDS directory" OFF)
+option(BUILD_FASTDDS "Building FastDDS directory" ON)
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
  # find_package(iir)
@@ -23,8 +23,8 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   include(GNUInstallDirs)
   #add_executable(target custom_robot.h target.cpp)
   add_executable(targetless custom_robot.h targetless.cpp)
-  add_executable(gui custom_robot.h gui.h gui.cpp fastdds/window.h fastdds/publisher.h fastdds/subscriber.H)
-  t#arget_link_libraries(target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
+  add_executable(gui custom_robot.h gui.h gui.cpp fastdds/window.h fastdds/publisher.h fastdds/subscriber.h)
+  #target_link_libraries(target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
   target_link_libraries(targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio)
   target_link_libraries(gui ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio fastdds-tracker)
 
@@ -32,12 +32,12 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   message("detected architecture aarch64, building executables")
 else()
   add_subdirectory(test/unit_test "${CMAKE_CURRENT_BINARY_DIR}/test/unit_test")
-  add_subdirectory(test/simulations "${CMAKE_CURRENT_BINARY_DIR}/test/simulations")
+  #add_subdirectory(test/simulations "${CMAKE_CURRENT_BINARY_DIR}/test/simulations")
 	message("not building any executable")
 endif()
 
 if(BUILD_FASTDDS)
-  add_subdirectory(src/fastDDS "${CMAKE_CURRENT_BINARY_DIR}/src/fastdds")
+  add_subdirectory(fastDDS "${CMAKE_CURRENT_BINARY_DIR}/src/fastdds")
 endif()
 
 

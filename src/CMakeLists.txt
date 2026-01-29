@@ -24,10 +24,10 @@ add_library(brat ${SRC} ${HEAD})
 
 if(box2d_FOUND)
         target_link_libraries(brat box2d ${OpenCV_LIBS} pthread)
-       message("box2d installed ${BOX2D_LIBS}")
+        message("box2d installed ${BOX2D_LIBS}")
 else()
       set(BOX2D_BIN_DIR ${"/usr/local/lib/aarch64-linux-gnu"})
-       target_link_libraries(HICS ${BOX2D_BIN_DIR}/libbox2d.a ${OpenCV_LIBS} pthread)
+    	target_link_libraries(HICS ${BOX2D_BIN_DIR}/libbox2d.a ${OpenCV_LIBS} pthread)
 	message("BOX2D NOT INSTALLED")
 endif()
 set_target_properties(brat PROPERTIES POSITION_INDEPENDENT_CODE TRUE 

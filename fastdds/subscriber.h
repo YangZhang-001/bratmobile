@@ -120,6 +120,11 @@ public:
     void registerListener(DataReaderListener * dl){
         listener_=dl;
     }
+    //I added this to set topic
+    void setTopic(std::string str){
+        topic_ = participant_->create_topic(str, "ObjectPackage", TOPIC_QOS_DEFAULT);
+
+    }
 
 };
 
