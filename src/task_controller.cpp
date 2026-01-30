@@ -116,7 +116,7 @@ Task OpenLoopController::next_task(Task currentTask, const Task & controlGoal, c
 		current_vertices={MOVING_VERTEX};
 		return stopTask(controlGoal);
 	}
-	currentTask=Task(Disturbance(), g[plan[0]].direction, b2Transform_zero, true);
+	currentTask=Task(g[plan[0]].Di, g[plan[0]].direction, b2Transform_zero, true);
 	vertexDescriptor currentVertex=get_current_vertex(current_vertices);
 	auto e=boost::edge(currentVertex, plan[0], g);
 	current_vertices=std::vector<vertexDescriptor>({plan[0]});
