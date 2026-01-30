@@ -4,20 +4,10 @@
 #include "publisher.h"
 #include "topics.h"
 
-
-/**
-* @brief Publishes Di/Dg to Qt Window for debugging
-*/
-class OLTrackerGUI: public DeadReckoner{
+class TrackerGUI{
+    protected:
     ObjectPackagePublisher DiPub, goalPub, attentionPub;
-
     public:
-    OLTrackerGUI(): DeadReckoner() {
-        if(!DiPub.init(Di_topic)){std::cerr << "Could not init the Di subscriber." << std::endl;}        
-        if(!goalPub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
-
-    }
-
 
     ObjectPackage makeObjectPackage(const std::vector<b2Vec2> &vertices){
         ObjectPackage object;
@@ -30,6 +20,20 @@ class OLTrackerGUI: public DeadReckoner{
         object.v4_x(vertices[3].x); //tl
         object.v4_y(vertices[3].y);
         return object;
+    }
+
+};
+
+/**
+* @brief Publishes Di/Dg to Qt Window for debugging
+*/
+class OLTrackerGUI: public DeadReckoner, public TrackerGUI{
+    ObjectPackagePublisher DiPub, goalPub, attentionPub;
+
+    public:
+    OLTrackerGUI(): DeadReckoner() {
+        if(!DiPub.init(Di_topic)){std::cerr << "Could not init the Di subscriber." << std::endl;}        
+        if(!goalPub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
 
     }
 
@@ -49,7 +53,7 @@ class OLTrackerGUI: public DeadReckoner{
 * @brief Publishes Di/Dg/attention window to Qt window
  */
 
-class CLTrackerGUI: public ClosedLoop_Tracker{
+class CLTrackerGUI: public ClosedLoop_Tracker, public TrackerGUI{
     ObjectPackagePublisher DiPub, goalPub, attentionPub;
 
     public:
@@ -57,21 +61,6 @@ class CLTrackerGUI: public ClosedLoop_Tracker{
         if(!DiPub.init(Di_topic)){std::cerr << "Could not init the Di subscriber." << std::endl;}        
         if(!goalPub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
         if(!attentionPub.init(attention_topic)){std::cerr << "Could not init the attention subscriber." << std::endl;}        
-
-    }
-
-
-    ObjectPackage makeObjectPackage(const std::vector<b2Vec2> &vertices){
-        ObjectPackage object;
-        object.v1_x(vertices[0].x); //tr
-        object.v1_y(vertices[0].y);
-        object.v2_x(vertices[1].x); //br
-        object.v2_y(vertices[1].y);
-        object.v3_x(vertices[2].x); //bl
-        object.v3_y(vertices[2].y);
-        object.v4_x(vertices[3].x); //tl
-        object.v4_y(vertices[3].y);
-        return object;
 
     }
 
