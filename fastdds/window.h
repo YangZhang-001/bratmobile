@@ -88,13 +88,6 @@ class Window : public QWidget{
     ~Window(){}
 
 
-
-    /**
-     * @brief starts subscriber acquisition from publisher
-     * 
-     */
-    void start();
-
     public slots:
 
     void setDi(UnpackedObject _Di){

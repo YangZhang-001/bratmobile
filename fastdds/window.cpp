@@ -66,18 +66,3 @@ Window::Window(){
 
 
 
-void Window::start(){
-    // for (auto subscriber: subscribers){
-    //     if (subscriber==NULL){
-    //         std::cerr<<"no subscriber!"<<std::endl;
-    //         return;
-    //     }
-    //     subscriber->registerListener(this);
-    //     if(!subscriber->init())
-    //     {
-    //     std::cerr << "Could not init the subscriber." << std::endl;
-    //     }        
-    // }
-
-}
-

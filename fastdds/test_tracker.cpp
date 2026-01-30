@@ -3,7 +3,7 @@
 #include "topics.h"
 
 class FakeTracking:public CppTimer{
-    TrackerGUI tracker;
+    CLTrackerGUI tracker;
     Disturbance Dg=Disturbance(PURSUE, b2Vec2(1.0f,0.0f));
     Disturbance Di=Disturbance(AVOID, b2Vec2(.4f, .0f));
     void timerEvent(){
