@@ -10,7 +10,7 @@ class FakeTracking:public CppTimer{
         tracker.on_new_reading(Task(Dg, DEFAULT), Task(Di, DEFAULT));
         // math::MulT(b2Transform(b2Vec2(0.01, 0), b2Rot(0)), Dg);
         // math::MulT(b2Transform(b2Vec2(0.01, 0), b2Rot(0)), Di);
-        printf("boo!\n");
+        
 
     }
 

@@ -50,7 +50,8 @@ private:
             if (info.current_count_change == 1)
             {
                 matched_ = info.total_count;
-                std::cout << "Publisher matched." << std::endl;
+                std::cout << "Publisher matched. " << std::endl;
+
             }
             else if (info.current_count_change == -1)
             {
@@ -90,7 +91,7 @@ public:
     }
 
     //!Initialize the publisher
-    bool init()
+    bool init(std::string __topic="ObjectPackageTopic")
     {
         DomainParticipantQos participantQos;
         participantQos.name("Participant_publisher");
@@ -106,7 +107,7 @@ public:
 
         // Create the publications Topic
 	// !! Important that this matches with the name of message defined in ObjectPackage.idl !!
-        topic_ = participant_->create_topic("ObjectPackageTopic", "ObjectPackage", TOPIC_QOS_DEFAULT);
+        topic_ = participant_->create_topic(__topic, "ObjectPackage", TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -143,8 +144,14 @@ public:
     }
 
     void setTopic(std::string str){
+        topic_=NULL;
         topic_ = participant_->create_topic(str, "ObjectPackage", TOPIC_QOS_DEFAULT);
 
+    }
+
+    void printTopics(){
+        std::cout<<"Topic: "<<writer_->get_topic()->get_name()
+        <<std::endl;
     }
 
     // void registerListener(DataWriterListener * dl){

@@ -3,6 +3,12 @@
 #include "tracker.h"
 #include "publisher.h"
 #include "topics.h"
+//for enabling logs
+#include <pwd.h>
+#include <unistd.h>
+// #include <sys/param.h>
+
+//export FASTDDS_ENVIRONMENT_FILE=fastdds.xml
 
 
 // class RobotPublisher:public ObjectPackagePublisher{
@@ -22,11 +28,11 @@ class TrackerGUI: public ClosedLoop_Tracker{
 
     public:
     TrackerGUI(): ClosedLoop_Tracker() {
-        if(!DiPub.init()){std::cerr << "Could not init the Di subscriber." << std::endl;}        
-        if(!goalPub.init()){std::cerr << "Could not init the goal subscriber." << std::endl;}        
-        if(!attentionPub.init()){std::cerr << "Could not init the attention subscriber." << std::endl;}        
+        if(!DiPub.init(Di_topic)){std::cerr << "Could not init the Di subscriber." << std::endl;}        
+        if(!goalPub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
+        if(!attentionPub.init(attention_topic)){std::cerr << "Could not init the attention subscriber." << std::endl;}        
 
-        assignTopics();
+       // assignTopics();
     }
 
     void assignTopics(){
@@ -73,7 +79,8 @@ class TrackerGUI: public ClosedLoop_Tracker{
         ObjectPackage attentionPack=makeObjectPackage(attentionWindowVertices());
         if(!DiPub.publish(DiPack)) {std::cout<<"did not publish Di\n";}
         if(!goalPub.publish(GoalPack)) {std::cout<<"did not publish goal\n";}
-       if (!attentionPub.publish(attentionPack)){std::cout<<"did not publish attention\n";}
+        if (!attentionPub.publish(attentionPack)){std::cout<<"did not publish attention\n";}
+        DiPub.printTopics();
     }
 
 

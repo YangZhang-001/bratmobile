@@ -75,7 +75,7 @@ public:
     }
 
     //!Initialize the subscriber
-    bool init()
+    bool init(std::string __topic="ObjectPackageTopic")
     {
         DomainParticipantQos participantQos;
         participantQos.name("Participant_subscriber");
@@ -91,7 +91,7 @@ public:
 
         // Create the subscriptions Topic
 	// !! Important that this matches with the name of message defined in ObjectPackage.idl !!
-        topic_ = participant_->create_topic("ObjectPackageTopic", "ObjectPackage", TOPIC_QOS_DEFAULT);
+        topic_ = participant_->create_topic(__topic, "ObjectPackage", TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -122,8 +122,14 @@ public:
     }
     //I added this to set topic
     void setTopic(std::string str){
+        topic_=NULL;
         topic_ = participant_->create_topic(str, "ObjectPackage", TOPIC_QOS_DEFAULT);
 
+    }
+
+    void printTopics(){
+        std::cout<<"Topic: "<<reader_->get_topicdescription()->get_name()
+        <<std::endl;
     }
 
 };
@@ -142,7 +148,7 @@ public:
                 const SubscriptionMatchedStatus& info)        {
             if (info.current_count_change == 1)
             {
-                std::cout << "Subscriber matched." << std::endl;
+                std::cout << "Subscriber matched. " << std::endl;
             }
             else if (info.current_count_change == -1)
             {
@@ -169,6 +175,8 @@ public:
                 }
             }
         }
+
+        
 
     };
 
