@@ -32,14 +32,8 @@ class TrackerGUI: public ClosedLoop_Tracker{
         if(!goalPub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
         if(!attentionPub.init(attention_topic)){std::cerr << "Could not init the attention subscriber." << std::endl;}        
 
-       // assignTopics();
     }
 
-    void assignTopics(){
-        DiPub.setTopic(Di_topic);
-        goalPub.setTopic(Goal_topic);
-        attentionPub.setTopic(attention_topic);
-    }
 
     ObjectPackage makeObjectPackage(const std::vector<b2Vec2> &vertices){
         ObjectPackage object;

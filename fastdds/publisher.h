@@ -143,12 +143,6 @@ public:
         return false;
     }
 
-    void setTopic(std::string str){
-        topic_=NULL;
-        topic_ = participant_->create_topic(str, "ObjectPackage", TOPIC_QOS_DEFAULT);
-
-    }
-
     void printTopics(){
         std::cout<<"Topic: "<<writer_->get_topic()->get_name()
         <<std::endl;

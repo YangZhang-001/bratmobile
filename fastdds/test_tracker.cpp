@@ -8,8 +8,8 @@ class FakeTracking:public CppTimer{
     Disturbance Di=Disturbance(AVOID, b2Vec2(.4f, .0f));
     void timerEvent(){
         tracker.on_new_reading(Task(Dg, DEFAULT), Task(Di, DEFAULT));
-        // math::MulT(b2Transform(b2Vec2(0.01, 0), b2Rot(0)), Dg);
-        // math::MulT(b2Transform(b2Vec2(0.01, 0), b2Rot(0)), Di);
+        math::MulT(b2Transform(b2Vec2(0, 0), b2Rot(0.15)), Dg);
+        math::MulT(b2Transform(b2Vec2(0.0, 0), b2Rot(0.15)), Di);
         
 
     }

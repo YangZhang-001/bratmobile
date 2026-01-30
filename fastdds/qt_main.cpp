@@ -18,9 +18,6 @@ int main(int argc, char *argv[])
 	if(!DiSub.init(Di_topic)){std::cerr << "Could not init the Di subscriber." << std::endl;return -1;}        
 	if(!goalSub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;return -1;}        
 	if(!attentionSub.init(attention_topic)){std::cerr << "Could not init the attention subscriber." << std::endl;return -1;}        
-	// DiSub.setTopic(Di_topic);
-	// goalSub.setTopic(Goal_topic);
-	// attentionSub.setTopic(attention_topic);
 
 
 
