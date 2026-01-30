@@ -64,7 +64,7 @@ class Tracker{
      * 
      * @param t the task
      */
-    virtual void on_new_reading(const Task & goal,const Task &task )=0;
+    virtual void on_new_reading(const Task & goal,const Task &task ){}
 
 
     virtual void init(const Task & goal)=0;
