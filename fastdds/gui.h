@@ -1,6 +1,7 @@
 #ifndef GUI_H
 #define GUI_H
 #include "tracker.h"
+#include "worldbuilder.h"
 #include "publisher.h"
 #include "topics.h"
 
@@ -9,14 +10,21 @@ class TrackerGUI{
     ObjectPackagePublisher DiPub, goalPub, attentionPub;
     public:
 
+    TrackerGUI(): ClosedLoop_Tracker() {
+        if(!DiPub.init(Di_topic)){std::cerr << "Could not init the Di subscriber." << std::endl;}        
+        if(!goalPub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
+        if(!attentionPub.init(attention_topic)){std::cerr << "Could not init the attention subscriber." << std::endl;}        
+
+    }
+
     ObjectPackage makeObjectPackage(const std::vector<b2Vec2> &vertices){
         ObjectPackage object;
         object.v1_x(vertices[0].x); //tr
         object.v1_y(vertices[0].y);
-        object.v2_x(vertices[1].x); //br
-        object.v2_y(vertices[1].y);
-        object.v3_x(vertices[2].x); //bl
-        object.v3_y(vertices[2].y);
+        object.v3_x(vertices[1].x); //br
+        object.v3_y(vertices[1].y);
+        object.v2_x(vertices[2].x); //bl
+        object.v2_y(vertices[2].y);
         object.v4_x(vertices[3].x); //tl
         object.v4_y(vertices[3].y);
         return object;
@@ -32,9 +40,7 @@ class OLTrackerGUI: public DeadReckoner, public TrackerGUI{
 
     public:
     OLTrackerGUI(): DeadReckoner() {
-        if(!DiPub.init(Di_topic)){std::cerr << "Could not init the Di subscriber." << std::endl;}        
-        if(!goalPub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
-
+        TrackerGUI::TrackerGUI();
     }
 
 
@@ -46,6 +52,17 @@ class OLTrackerGUI: public DeadReckoner, public TrackerGUI{
         if(!goalPub.publish(GoalPack)) {std::cout<<"did not publish goal\n";}
     }
 
+    /**
+    @brief gets the obstacle ahead for printing, this is similar to LaserFocus worldbuilding*/
+    TrackingResult get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)override{
+        TrackingResult result=Tracker::get_transform(t, pts, objects);
+        std::pair<Pointf, Pointf> bt = WorldBuilder::bounds(DEFAULT, b2Transform_zero, 1, 0.15);
+        std::pair <CoordinateContainer, bool> salient = WorldBuilder::salientPoints(b2Transform_zero,pts, bt);
+        std::pair<bool,BodyFeatures> looming=bounding_box(salient.first);
+        ObjectPackage loomingPack=makeObjectPackage(Disturbance(looming.second));
+        attentionPub.publish(loomingPack);
+        return result;
+}
 
 };
 
@@ -57,12 +74,11 @@ class CLTrackerGUI: public ClosedLoop_Tracker, public TrackerGUI{
     ObjectPackagePublisher DiPub, goalPub, attentionPub;
 
     public:
-    CLTrackerGUI(): ClosedLoop_Tracker() {
-        if(!DiPub.init(Di_topic)){std::cerr << "Could not init the Di subscriber." << std::endl;}        
-        if(!goalPub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
-        if(!attentionPub.init(attention_topic)){std::cerr << "Could not init the attention subscriber." << std::endl;}        
 
+    CLTrackerGUI(): ClosedLoop_Tracker() {
+        TrackerGUI::TrackerGUI();
     }
+
 
     std::vector<b2Vec2> attentionWindowVertices(){
         std::vector <b2Vec2> result;
