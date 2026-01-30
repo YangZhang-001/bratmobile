@@ -9,6 +9,8 @@ The purpose of this library is to showcase a framework for multi-step ahead plan
 
 * On-the-fly replanning
 
+* `fastdds` folder: provides classes to publish Task data to a Qt window 
+
 ### Documentation
 
 Available at [https://glafratta.github.io/bratmobile/](https://glafratta.github.io/bratmobile/)
