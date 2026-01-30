@@ -35,7 +35,7 @@ class OLTrackerGUI: public DeadReckoner{
 
 
     void on_new_reading(const Task & goal, const Task &currentTask)override{
-        ClosedLoop_Tracker::on_new_reading(goal, currentTask);
+        DeadReckoner::on_new_reading(goal, currentTask);
         ObjectPackage DiPack=makeObjectPackage(currentTask.get_disturbance().bodyFeatures().vertices());
         ObjectPackage GoalPack=makeObjectPackage(goal.get_disturbance().bodyFeatures().vertices());
         if(!DiPub.publish(DiPack)) {std::cout<<"did not publish Di\n";}
