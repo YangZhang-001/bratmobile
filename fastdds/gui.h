@@ -65,6 +65,7 @@ class TrackerGUI: public ClosedLoop_Tracker{
     //     return goal_now.vertices();
     // }
 
+
     void on_new_reading(const Task & goal, const Task &currentTask)override{
         ClosedLoop_Tracker::on_new_reading(goal, currentTask);
         ObjectPackage DiPack=makeObjectPackage(currentTask.get_disturbance().bodyFeatures().vertices());
