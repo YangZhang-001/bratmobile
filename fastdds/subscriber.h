@@ -156,7 +156,7 @@ public:
         }
 
 	// callback
-        void on_data_available(DataReader* reader) override
+        virtual void on_data_available(DataReader* reader) override
         {
             SampleInfo info;
 	    ObjectPackage object;

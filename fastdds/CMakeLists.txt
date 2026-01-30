@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.6)
 
 project(DDSDraw)
 
+find_package(OpenCV REQUIRED)
+find_package(box2d REQUIRED)
 
 set (CMAKE_CXX_STANDARD 17)
 
@@ -40,8 +42,11 @@ install(TARGETS fastdds-tracker
 ##Qt Window
 add_library(brat-gui window.h window.cpp publisher.h subscriber.h)
 target_link_libraries(brat-gui Qt5::Core Qt5::Widgets fastcdr fastrtps ObjectPackage)
-add_executable(qt_window qt_main.cpp window.h window.cpp )
+add_executable(qt_window qt_main.cpp window.h window.cpp topics.h)
 target_link_libraries(qt_window PRIVATE brat-gui Qt5::Widgets Qt5::Core fastcdr fastrtps ObjectPackage)
 target_link_libraries(qt_window PRIVATE qwt-qt5)
 
-
+#TESTS
+add_executable(test_tracker topics.h test_tracker.cpp gui.h publisher.h )
+#target_link_libraries(test_tracker PRIVATE brat-gui Qt5::Widgets Qt5::Core fastcdr fastrtps ObjectPackage)
+target_link_libraries(test_tracker fastcdr fastrtps ObjectPackage brat ${OpenCV_LIBS} box2d )

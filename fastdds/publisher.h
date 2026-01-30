@@ -142,5 +142,15 @@ public:
         return false;
     }
 
+    void setTopic(std::string str){
+        topic_ = participant_->create_topic(str, "ObjectPackage", TOPIC_QOS_DEFAULT);
+
+    }
+
+    // void registerListener(DataWriterListener * dl){
+    //     listener_=dl;
+    // }
+
+
 };
 #endif

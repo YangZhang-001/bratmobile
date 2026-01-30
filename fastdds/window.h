@@ -9,13 +9,9 @@
 #include <QBoxLayout>
 #include <QRectF>
 #include <QPainter>
+#include "topics.h"
 
 const int scale=100;
-
-//TOPICS
-const std::string Di_topic("DiTopic");
-const std::string Goal_topic("GoalTopic");
-const std::string attention_topic("AttentionTopic");
 
 /**
  * @brief Unpacks object composed of fundamental data types and groups the data into Qt objects for painting
@@ -40,22 +36,22 @@ class UnpackedObject{
 
 };
 
-class RobotSubscriber:public ObjectPackageSubscriber{
+// class RobotSubscriber:public ObjectPackageSubscriber{
 
-};
+// };
 
 
 
 class RobotReaderListener:public QObject,public DataReaderListener{
     Q_OBJECT
-    virtual void on_subscription_matched( DataReader*, const SubscriptionMatchedStatus& info);
+    virtual void on_subscription_matched( DataReader*, const SubscriptionMatchedStatus& info)override;
     UnpackedObject unpacked;
 
     public:
 
     explicit RobotReaderListener(QObject * parent=nullptr):QObject(parent){}
 
-    void on_data_available(DataReader* reader);
+    void on_data_available(DataReader* reader)override;
 
     public slots:
 
@@ -73,7 +69,7 @@ class Window : public QWidget{
     Q_OBJECT
     
     QRect m_geometry=QRect(-300, -300, 600, 600); //size of Qtwindow in pixel (bl.x, bl.y, w, l)
-    QRect logical_rect=QRect(-102, -102, 204, 204); //world coordinate window
+    QRect logical_rect=QRect(-120, -120, 240, 240); //world coordinate window
     //std::vector<QtSubscriber*> subscribers; //to one topic!
     QPoint point=QPoint(0, 0);
     QRectF robot=QRectF(-0.18*scale, -0.09*scale, 0.135*2*scale, 0.09*2*scale);

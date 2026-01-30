@@ -1,28 +1,31 @@
-#include "attentive.h"
+#ifndef GUI_H
+#define GUI_H
+#include "tracker.h"
 #include "publisher.h"
-#include "window.h"
+#include "topics.h"
 
-class RobotPublisher:public ObjectPackagePublisher{
-    public:
-    void setTopic(std::string str){
-        topic_ = participant_->create_topic(str, "ObjectPackage", TOPIC_QOS_DEFAULT);
 
-    }
+// class RobotPublisher:public ObjectPackagePublisher{
+//     // public:
 
-    void publish(ObjectPackage object){
-        if (mypub.publish(object)){
-        } else {
-            std::cout << "No messages sent as there is no listener." << std::endl;
-        }
+//     // void publish(ObjectPackage object){
+//     //     if (publish(object)){
+//     //     } else {
+//     //         std::cout << "No messages sent as there is no listener." << std::endl;
+//     //     }
     
-    }
-};
+//     // }
+// };
 
 class TrackerGUI: public ClosedLoop_Tracker{
-    RobotPublisher DiPub, goalPub, attentionPub;
+    ObjectPackagePublisher DiPub, goalPub, attentionPub;
 
     public:
     TrackerGUI(): ClosedLoop_Tracker() {
+        if(!DiPub.init()){std::cerr << "Could not init the Di subscriber." << std::endl;}        
+        if(!goalPub.init()){std::cerr << "Could not init the goal subscriber." << std::endl;}        
+        if(!attentionPub.init()){std::cerr << "Could not init the attention subscriber." << std::endl;}        
+
         assignTopics();
     }
 
@@ -33,7 +36,7 @@ class TrackerGUI: public ClosedLoop_Tracker{
     }
 
     ObjectPackage makeObjectPackage(const std::vector<b2Vec2> &vertices){
-        ObjectPackage op;
+        ObjectPackage object;
         object.v1_x(vertices[0].x); //tr
         object.v1_y(vertices[0].y);
         object.v2_x(vertices[1].x); //br
@@ -42,6 +45,7 @@ class TrackerGUI: public ClosedLoop_Tracker{
         object.v3_y(vertices[2].y);
         object.v4_x(vertices[3].x); //tl
         object.v4_y(vertices[3].y);
+        return object;
 
     }
 
@@ -53,23 +57,24 @@ class TrackerGUI: public ClosedLoop_Tracker{
     return result;
     }
 
-    std::vector <b2Vec2> DiVertices(){
-        return Di_now.vertices();
-    }
+    // std::vector <b2Vec2> DiVertices(){
+    //     return Di_now.vertices();
+    // }
 
-    std::vector<b2Vec2> goalVertices(){
-        return goal_now.vertices();
-    }
+    // std::vector<b2Vec2> goalVertices(){
+    //     return goal_now.vertices();
+    // }
 
     void on_new_reading(const Task & goal, const Task &currentTask)override{
         ClosedLoop_Tracker::on_new_reading(goal, currentTask);
         ObjectPackage DiPack=makeObjectPackage(currentTask.get_disturbance().bodyFeatures().vertices());
         ObjectPackage GoalPack=makeObjectPackage(goal.get_disturbance().bodyFeatures().vertices());
         ObjectPackage attentionPack=makeObjectPackage(attentionWindowVertices());
-        DiPub.publish(DiPack);
-        goalPub.publish(GoalPack);
-        attentionPub.publish(attentionPack);
+        if(!DiPub.publish(DiPack)) {std::cout<<"did not publish Di\n";}
+        if(!goalPub.publish(GoalPack)) {std::cout<<"did not publish goal\n";}
+       if (!attentionPub.publish(attentionPack)){std::cout<<"did not publish attention\n";}
     }
 
 
 };
+#endif

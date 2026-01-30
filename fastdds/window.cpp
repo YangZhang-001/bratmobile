@@ -22,8 +22,11 @@ void RobotReaderListener::notify(){
 
 
 void RobotReaderListener::on_subscription_matched(
-    DataReader*,
+    DataReader* reader,
     const SubscriptionMatchedStatus& info)        {
+        if (reader==NULL){
+            std::cout<<"null reader!"<<std::endl;
+        }
 if (info.current_count_change == 1)
 {
     std::cout << "Subscriber matched." << std::endl;
@@ -41,7 +44,7 @@ else
     
 
 void Window::paintEvent(QPaintEvent *){
-    std::cout<<"painting event!"<<std::endl;
+   // std::cout<<"painting event!"<<std::endl;
     QPainter painter(this);
     painter.setWindow(logical_rect);
     painter.setPen(QPen());
@@ -50,7 +53,7 @@ void Window::paintEvent(QPaintEvent *){
     painter.drawPolygon(goal);
     painter.setPen(QColor("green"));
     painter.drawPolygon(attention);
-    painter.setPen(QColor("cyan"));
+    painter.setPen(QColor("blue"));
     painter.drawRect(robot);
     painter.setPen(QColor("black"));
     painter.drawPolygon(Di);
@@ -76,6 +79,5 @@ void Window::start(){
     //     }        
     // }
 
-    // painter->begin(this);
 }
 
