@@ -44,8 +44,7 @@ class Bundle;
 /**
 * Contains features of disturbances
 */
-class BodyFeatures{
-    public:
+struct BodyFeatures{
     b2Transform pose {b2Transform(b2Vec2(0,0), b2Rot(0))} ;
     float halfLength=MIN_BODY_DIMENSION;//x
     float halfWidth=MIN_BODY_DIMENSION; //y

@@ -1,47 +1,32 @@
 #include "window.h"
 
 
-void Window::on_data_available(DataReader* reader){
+void RobotReaderListener::on_data_available(DataReader* reader){
         SampleInfo info;
         ObjectPackage object;
         if (reader->take_next_sample(&object, &info) == ReturnCode_t::RETCODE_OK)
         {
             if (info.valid_data)
             {   
-                unpacked.set_goal(object.goal_low_x()*scale, object.goal_low_y()*scale);
-                unpacked.set_attention_window(object.robot_high_x()*scale, object.robot_high_y()*scale, object.robot_low_x()*scale, object.robot_low_y()*scale);
-                update();
-                //plot->replot();
-                //paintEvent(NULL);
+                //access     
+                unpacked.set(object);
+                notify();
+
             }
         }
     }
-    
 
-void Window::paintEvent(QPaintEvent *){
-    std::cout<<"painting event!"<<std::endl;
-    QPainter painter(this);
-    painter.setWindow(logical_rect);
-    painter.setPen(QPen());
-    painter.drawPoint(point);
-    painter.setPen(QColor("red"));
-    painter.drawPoint(unpacked.goal());
-    painter.setPen(QColor("green"));
-    painter.drawRect(unpacked.attentionWindow());
-    painter.setPen(QColor("cyan"));
-    painter.drawRect(robot);
-}
-
-Window::Window(){
-    update();
-    subscriber.registerListener(this);
-    setGeometry(m_geometry);
+void RobotReaderListener::notify(){
+    emit newObject(unpacked);
 }
 
 
-void Window::on_subscription_matched(
-    DataReader*,
+void RobotReaderListener::on_subscription_matched(
+    DataReader* reader,
     const SubscriptionMatchedStatus& info)        {
+        if (reader==NULL){
+            std::cout<<"null reader!"<<std::endl;
+        }
 if (info.current_count_change == 1)
 {
     std::cout << "Subscriber matched." << std::endl;
@@ -56,11 +41,32 @@ else
             << " is not a valid value for SubscriptionMatchedStatus current count change" << std::endl;
 }
 }
+    
 
-void Window::start(){
-    if(!subscriber.init())
-    {
-	std::cerr << "Could not init the subscriber." << std::endl;
-    }
-    // painter->begin(this);
+void Window::paintEvent(QPaintEvent *){
+   // std::cout<<"painting event!"<<std::endl;
+    QPainter painter(this);
+    painter.setWindow(logical_rect);
+    painter.setPen(QPen());
+    painter.drawPoint(point);
+    painter.setBrush(QColor("red"));
+    painter.setPen(QColor("black"));
+    painter.drawPolygon(goal);
+    painter.setBrush(QColor(127,127,127, 127));//semi transparent green
+    painter.setPen(QColor("black"));
+    painter.drawPolygon(attention);
+    painter.setBrush(QColor("brown"));
+    painter.setPen(QColor("black"));
+    painter.drawRect(robot);
+    painter.setBrush(QColor("grey"));
+    painter.setPen(QColor("black"));
+    painter.drawPolygon(Di);
 }
+
+Window::Window(){
+    update();
+    setGeometry(m_geometry);
+}
+
+
+

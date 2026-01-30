@@ -59,6 +59,14 @@ class Tracker{
      */
     virtual void on_new_task(const Task &task, const Task & goal)=0;
 
+    /**
+     * @brief Called every time a new reading is available
+     * 
+     * @param t the task
+     */
+    virtual void on_new_reading(const Task & goal,const Task &task )=0;
+
+
     virtual void init(const Task & goal)=0;
 
     virtual bool hasTaskEnded(Task & t);
@@ -183,9 +191,6 @@ class ClosedLoop_Tracker:public Tracker{
      * @param goal the goal
      */
     void makeAttentionWindow(const Task &goal, const Task & currentTask);
-
-
-
-
-
+    
 };
+

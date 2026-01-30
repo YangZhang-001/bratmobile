@@ -75,7 +75,7 @@ public:
     }
 
     //!Initialize the subscriber
-    bool init()
+    bool init(std::string __topic="ObjectPackageTopic")
     {
         DomainParticipantQos participantQos;
         participantQos.name("Participant_subscriber");
@@ -91,7 +91,7 @@ public:
 
         // Create the subscriptions Topic
 	// !! Important that this matches with the name of message defined in ObjectPackage.idl !!
-        topic_ = participant_->create_topic("ObjectPackageTopic", "ObjectPackage", TOPIC_QOS_DEFAULT);
+        topic_ = participant_->create_topic(__topic, "ObjectPackage", TOPIC_QOS_DEFAULT);
 
         if (topic_ == nullptr)
         {
@@ -121,6 +121,11 @@ public:
         listener_=dl;
     }
 
+    void printTopics(){
+        std::cout<<"Topic: "<<reader_->get_topicdescription()->get_name()
+        <<std::endl;
+    }
+
 };
 
     class SubListener : public DataReaderListener
@@ -137,7 +142,7 @@ public:
                 const SubscriptionMatchedStatus& info)        {
             if (info.current_count_change == 1)
             {
-                std::cout << "Subscriber matched." << std::endl;
+                std::cout << "Subscriber matched. " << std::endl;
             }
             else if (info.current_count_change == -1)
             {
@@ -151,23 +156,21 @@ public:
         }
 
 	// callback
-        void on_data_available(DataReader* reader) override
+        virtual void on_data_available(DataReader* reader) override
         {
             SampleInfo info;
 	    ObjectPackage object;
             if (reader->take_next_sample(&object, &info) == ReturnCode_t::RETCODE_OK)
             {
                 if (info.valid_data)
-                {   
-                    std::cout<<"Robot ";
-                    print_bounds(object.robot_low_x(), object.robot_low_y(), object.robot_high_x(), object.robot_high_y());
-                    std::cout<<"Disturbance ";
-                    print_bounds(object.Di_low_x(), object.Di_low_y(), object.Di_high_x(), object.Di_high_y());
-                    std::cout<<"Goal ";
-                    print_bounds(object.goal_low_x(), object.goal_low_y(), object.goal_high_x(), object.goal_high_y());
+                {
+                    std::cout<<"v1 "<< object.v1_x()<<","<<object.v1_y()<<std::endl<<"  v2 "<<object.v2_x()<<","<<object.v2_y();
+                    std::cout<<"  v3 "<<object.v3_x()<<","<<object.v3_y()<<std::endl<<"  v4 "<<object.v4_x()<<","<<object.v4_y()<<std::endl;
                 }
             }
         }
+
+        
 
     };
 

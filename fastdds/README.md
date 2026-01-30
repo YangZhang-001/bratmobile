@@ -18,7 +18,7 @@ Fast DDS tools
 
 Qt packages
 
-` sudo apt-get install qtdeclarative5-dev-tools qt5-qmake qt5-qmake-bin qtbase5-dev qtbase5-dev-tools libqwt-qt5-dev`
+` sudo apt-get install qtdeclarative5-dev-tools qt5-qmake qt5-qmake-bin qtbase5-dev qtbase5-dev-tools libqwt-qt5-dev qt6-base-dev qt6-base-dev-tools qt6-tools-dev`
 
 [CppTimer](https://github.com/berndporr/cppTimer) (only for running the demo)
 
@@ -33,7 +33,8 @@ Qt packages
 
 ## Usage
 
-In one terminal window (e.g. a laptop ssh'd into the Raspberry Pi), run `./subscriber`. If running the demo, run `./publisher` in another terminal window (Rasbperry Pi). Otherwise, run any demo program from `../../bratmobile` directory.
+* Basic demo: In one terminal window, run `./subscriber` and run `./publisher` in another.
+* Qt demo: demonstrates paining the tracked contents of the CL tracker in a Qt window. Run `./test_tracker` in one terminal window and `./qt_window` in another.
 
 
 ## Credits

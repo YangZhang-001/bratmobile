@@ -14,7 +14,7 @@ find_package(box2d REQUIRED)
 
 add_subdirectory(src "${CMAKE_CURRENT_BINARY_DIR}/src")
 
-option(BUILD_FASTDDS "Building FastDDS directory" OFF)
+option(BUILD_FASTDDS "Building FastDDS directory" ON)
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
  # find_package(iir)
@@ -39,11 +39,12 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
 else()
   add_subdirectory(test/unit_test "${CMAKE_CURRENT_BINARY_DIR}/test/unit_test")
   add_subdirectory(test "${CMAKE_CURRENT_BINARY_DIR}/test")
+
 	message("not building any executable")
 endif()
 
 if(BUILD_FASTDDS)
-  add_subdirectory(src/fastDDS "${CMAKE_CURRENT_BINARY_DIR}/src/fastdds")
+  add_subdirectory(fastDDS "${CMAKE_CURRENT_BINARY_DIR}/src/fastdds")
 endif()
 
 
