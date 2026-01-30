@@ -206,7 +206,7 @@ $(function() {
 <div class="line"><a name="l00215"></a><span class="lineno"><a class="line" href="sensor_8h.html#adc715828329f7d18884848069358129e">  215</a></span>&#160;std::pair&lt;bool,BodyFeatures&gt; <a class="code" href="sensor_8h.html#adc715828329f7d18884848069358129e">bounding_box</a>( std::vector &lt;Pt &gt;&amp;nb){<span class="comment">//gets bounding box of points</span></div>
 <div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keywordtype">float</span>  l=(0.0005*2), w=(0.0005*2) ;</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keywordtype">float</span> x_glob=0.0f, y_glob=0.0f;</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    std::pair &lt;bool, BodyFeatures&gt; result(0, <a class="code" href="classBodyFeatures.html">BodyFeatures</a>());</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    std::pair &lt;bool, BodyFeatures&gt; result(0, <a class="code" href="structBodyFeatures.html">BodyFeatures</a>());</div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keywordflow">if</span> (nb.empty()){</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        <span class="keywordflow">return</span> result;</div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    }</div>
@@ -233,7 +233,6 @@ $(function() {
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160; </div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
 <div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassBodyFeatures_html"><div class="ttname"><a href="classBodyFeatures.html">BodyFeatures</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:47</div></div>
 <div class="ttc" id="aclassConfigurator_html"><div class="ttname"><a href="classConfigurator.html">Configurator</a></div><div class="ttdef"><b>Definition:</b> configurator.h:17</div></div>
 <div class="ttc" id="asensor_8h_html_a05f8a240a869f8b2d7dc1846e5e530c1"><div class="ttname"><a href="sensor_8h.html#a05f8a240a869f8b2d7dc1846e5e530c1">cast_b2Vec2</a></div><div class="ttdeci">std::vector&lt; b2Vec2 &gt; cast_b2Vec2(const std::vector&lt; T &gt; &amp;v)</div><div class="ttdoc">Casts a vector of 2d points to a vector of box2d b2Vec2.</div><div class="ttdef"><b>Definition:</b> sensor.h:130</div></div>
 <div class="ttc" id="asensor_8h_html_a14674f2576e9b1ec603faf42f355ea7c"><div class="ttname"><a href="sensor_8h.html#a14674f2576e9b1ec603faf42f355ea7c">getb2Vec2</a></div><div class="ttdeci">b2Vec2 getb2Vec2(cv::Point2f)</div><div class="ttdoc">Gets an opencv point in b2VEc2 format.</div><div class="ttdef"><b>Definition:</b> sensor.cpp:30</div></div>
@@ -245,9 +244,10 @@ $(function() {
 <div class="ttc" id="asensor_8h_html_ace3e373f847cccf64f0571523174e641"><div class="ttname"><a href="sensor_8h.html#ace3e373f847cccf64f0571523174e641">vec2set</a></div><div class="ttdeci">std::set&lt; T &gt; vec2set(std::vector&lt; T &gt; vec)</div><div class="ttdoc">Casts a vector to set.</div><div class="ttdef"><b>Definition:</b> sensor.h:163</div></div>
 <div class="ttc" id="asensor_8h_html_ad5937197f326eacef953ffdc2682996d"><div class="ttname"><a href="sensor_8h.html#ad5937197f326eacef953ffdc2682996d">set2vec</a></div><div class="ttdeci">std::vector&lt; T &gt; set2vec(std::set&lt; T &gt; s)</div><div class="ttdoc">Casts a set to vector.</div><div class="ttdef"><b>Definition:</b> sensor.h:98</div></div>
 <div class="ttc" id="asensor_8h_html_adc715828329f7d18884848069358129e"><div class="ttname"><a href="sensor_8h.html#adc715828329f7d18884848069358129e">bounding_box</a></div><div class="ttdeci">std::pair&lt; bool, BodyFeatures &gt; bounding_box(std::vector&lt; Pt &gt; &amp;nb)</div><div class="ttdoc">Makes an upright bounding box around points.</div><div class="ttdef"><b>Definition:</b> sensor.h:215</div></div>
+<div class="ttc" id="astructBodyFeatures_html"><div class="ttname"><a href="structBodyFeatures.html">BodyFeatures</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:47</div></div>
 <div class="ttc" id="astructCompareX_html"><div class="ttname"><a href="structCompareX.html">CompareX</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:24</div></div>
 <div class="ttc" id="astructCompareY_html"><div class="ttname"><a href="structCompareY.html">CompareY</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:17</div></div>
-<div class="ttc" id="astructDisturbance_html"><div class="ttname"><a href="structDisturbance.html">Disturbance</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:114</div></div>
+<div class="ttc" id="astructDisturbance_html"><div class="ttname"><a href="structDisturbance.html">Disturbance</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:113</div></div>
 <div class="ttc" id="astructPointf_html"><div class="ttname"><a href="structPointf.html">Pointf</a></div><div class="ttdoc">Wrapper around cv::Point2f for customisation purposes.</div><div class="ttdef"><b>Definition:</b> sensor.h:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

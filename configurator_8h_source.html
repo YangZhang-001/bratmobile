@@ -241,7 +241,7 @@ $(function() {
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="keywordtype">bool</span> areInterfacesSetUp(<a class="code" href="classConfigurator.html">Configurator</a> * c=NULL);</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160; </div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62">assignBodyFeatures</a>(<a class="code" href="classTask.html">Task</a> &amp; t, <span class="keyword">const</span> <a class="code" href="classBodyFeatures.html">BodyFeatures</a> &amp; bf);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62">assignBodyFeatures</a>(<a class="code" href="classTask.html">Task</a> &amp; t, <span class="keyword">const</span> <a class="code" href="structBodyFeatures.html">BodyFeatures</a> &amp; bf);</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0">assignDimensions</a>(<a class="code" href="classTask.html">Task</a> &amp; t, <span class="keywordtype">float</span> halfLength, <span class="keywordtype">float</span> halfWidth);</div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160; </div>
@@ -285,7 +285,6 @@ $(function() {
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;};</div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160; </div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="preprocessor"> #endif</span></div>
-<div class="ttc" id="aclassBodyFeatures_html"><div class="ttname"><a href="classBodyFeatures.html">BodyFeatures</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:47</div></div>
 <div class="ttc" id="aclassConfigurator_html"><div class="ttname"><a href="classConfigurator.html">Configurator</a></div><div class="ttdef"><b>Definition:</b> configurator.h:17</div></div>
 <div class="ttc" id="aclassConfigurator_html_a0d2faca841880c53b79d35e5184f41f0"><div class="ttname"><a href="classConfigurator.html#a0d2faca841880c53b79d35e5184f41f0">Configurator::register_tracker</a></div><div class="ttdeci">void register_tracker(Tracker *_tracker)</div><div class="ttdoc">registers and initialises the tracker to the goal</div><div class="ttdef"><b>Definition:</b> configurator.h:193</div></div>
 <div class="ttc" id="aclassConfigurator_html_a0f3c294493e8a8ce303113e44b73cb71"><div class="ttname"><a href="classConfigurator.html#a0f3c294493e8a8ce303113e44b73cb71">Configurator::makeRobot</a></div><div class="ttdeci">virtual Robot makeRobot(b2World &amp;world, const b2Transform &amp;start)</div><div class="ttdoc">Makes the robot object in the world with the given start position and task.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:80</div></div>
@@ -321,11 +320,12 @@ $(function() {
 <div class="ttc" id="aclassWorldBuilder_html"><div class="ttname"><a href="classWorldBuilder.html">WorldBuilder</a></div><div class="ttdef"><b>Definition:</b> worldbuilder.h:5</div></div>
 <div class="ttc" id="aplanner_8h_html"><div class="ttname"><a href="planner_8h.html">planner.h</a></div></div>
 <div class="ttc" id="asensor_8h_html_a17aa500d7fd9def31a6a11868d2375bd"><div class="ttname"><a href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a></div><div class="ttdeci">std::set&lt; Pointf &gt; CoordinateContainer</div><div class="ttdoc">container for LIDAR coordinates</div><div class="ttdef"><b>Definition:</b> sensor.h:61</div></div>
-<div class="ttc" id="astructDisturbance_html"><div class="ttname"><a href="structDisturbance.html">Disturbance</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:114</div></div>
+<div class="ttc" id="astructBodyFeatures_html"><div class="ttname"><a href="structBodyFeatures.html">BodyFeatures</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:47</div></div>
+<div class="ttc" id="astructDisturbance_html"><div class="ttname"><a href="structDisturbance.html">Disturbance</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:113</div></div>
 <div class="ttc" id="astructEdge_html"><div class="ttname"><a href="structEdge.html">Edge</a></div><div class="ttdoc">Edges connecting states in the transition system.</div><div class="ttdef"><b>Definition:</b> graphTools.h:40</div></div>
 <div class="ttc" id="astructGoalChanger_html"><div class="ttname"><a href="structGoalChanger.html">GoalChanger</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:119</div></div>
 <div class="ttc" id="astructTrackingResult_html"><div class="ttname"><a href="structTrackingResult.html">TrackingResult</a></div><div class="ttdef"><b>Definition:</b> tracker.h:3</div></div>
-<div class="ttc" id="astructsimResult_html"><div class="ttname"><a href="structsimResult.html">simResult</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:270</div></div>
+<div class="ttc" id="astructsimResult_html"><div class="ttname"><a href="structsimResult.html">simResult</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:269</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -86,15 +86,12 @@ Collaboration diagram for DeadReckoner:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a22296cd5a531ba14296a7e6b7ee7a8fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structTrackingResult.html">TrackingResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDeadReckoner.html#a22296cd5a531ba14296a7e6b7ee7a8fd">track</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;pts, const std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)</td></tr>
+<tr class="memitem:a22296cd5a531ba14296a7e6b7ee7a8fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structTrackingResult.html">TrackingResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDeadReckoner.html#a22296cd5a531ba14296a7e6b7ee7a8fd">track</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;pts, const std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)</td></tr>
 <tr class="memdesc:a22296cd5a531ba14296a7e6b7ee7a8fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tracks task execution.  <a href="classDeadReckoner.html#a22296cd5a531ba14296a7e6b7ee7a8fd">More...</a><br /></td></tr>
 <tr class="separator:a22296cd5a531ba14296a7e6b7ee7a8fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45400b96466b3ce8b14d6220755f3da8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDeadReckoner.html#a45400b96466b3ce8b14d6220755f3da8">on_new_task</a> (const <a class="el" href="classTask.html">Task</a> &amp;task, const <a class="el" href="classTask.html">Task</a> &amp;goal) override</td></tr>
 <tr class="memdesc:a45400b96466b3ce8b14d6220755f3da8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every time a new task is created.  <a href="classDeadReckoner.html#a45400b96466b3ce8b14d6220755f3da8">More...</a><br /></td></tr>
 <tr class="separator:a45400b96466b3ce8b14d6220755f3da8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac61dbacd8573197288e51d286dbb348f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDeadReckoner.html#ac61dbacd8573197288e51d286dbb348f">on_new_reading</a> (const <a class="el" href="classTask.html">Task</a> &amp;goal, const <a class="el" href="classTask.html">Task</a> &amp;currentTask) override</td></tr>
-<tr class="memdesc:ac61dbacd8573197288e51d286dbb348f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every time asensor reading is available.  <a href="classDeadReckoner.html#ac61dbacd8573197288e51d286dbb348f">More...</a><br /></td></tr>
-<tr class="separator:ac61dbacd8573197288e51d286dbb348f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac35e6b3b2b2f889ba2f3ec1c00479928"><td class="memItemLeft" align="right" valign="top"><a id="ac35e6b3b2b2f889ba2f3ec1c00479928"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> (const <a class="el" href="classTask.html">Task</a> &amp;goal)</td></tr>
 <tr class="separator:ac35e6b3b2b2f889ba2f3ec1c00479928"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -108,8 +105,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>register_learner</b> 
 <tr class="memitem:a0a04ad85f12977662b6047b03c3d98d9 inherit pub_methods_classTracker"><td class="memItemLeft" align="right" valign="top"><a id="a0a04ad85f12977662b6047b03c3d98d9"></a>
 b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>getDeltaTransform</b> ()</td></tr>
 <tr class="separator:a0a04ad85f12977662b6047b03c3d98d9 inherit pub_methods_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90e8d9625ba92f85944e70b238466165 inherit pub_methods_classTracker"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structTrackingResult.html">TrackingResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a90e8d9625ba92f85944e70b238466165">get_transform</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;pts, const std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)</td></tr>
+<tr class="memitem:a90e8d9625ba92f85944e70b238466165 inherit pub_methods_classTracker"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structTrackingResult.html">TrackingResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a90e8d9625ba92f85944e70b238466165">get_transform</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;pts, const std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)</td></tr>
 <tr class="separator:a90e8d9625ba92f85944e70b238466165 inherit pub_methods_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af84a1d1124b9d7e5aadb9e871ea0ab46 inherit pub_methods_classTracker"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#af84a1d1124b9d7e5aadb9e871ea0ab46">on_new_reading</a> (const <a class="el" href="classTask.html">Task</a> &amp;goal, const <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:af84a1d1124b9d7e5aadb9e871ea0ab46 inherit pub_methods_classTracker"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every time a new reading is available.  <a href="classTracker.html#af84a1d1124b9d7e5aadb9e871ea0ab46">More...</a><br /></td></tr>
+<tr class="separator:af84a1d1124b9d7e5aadb9e871ea0ab46 inherit pub_methods_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad95887d00d902e2d47e7d7ebaee0c12b inherit pub_methods_classTracker"><td class="memItemLeft" align="right" valign="top"><a id="ad95887d00d902e2d47e7d7ebaee0c12b"></a>
 virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasTaskEnded</b> (<a class="el" href="classTask.html">Task</a> &amp;t)</td></tr>
 <tr class="separator:ad95887d00d902e2d47e7d7ebaee0c12b inherit pub_methods_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,52 +142,6 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tracks task execution through dead reckoning. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac61dbacd8573197288e51d286dbb348f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac61dbacd8573197288e51d286dbb348f">&#9670;&nbsp;</a></span>on_new_reading()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void DeadReckoner::on_new_reading </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
-          <td class="paramname"><em>goal</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
-          <td class="paramname"><em>currentTask</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Called every time asensor reading is available. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">task</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="classTracker.html#a83e32d2d4ecfcb05c22f7362a6156cd0">Tracker</a>.</p>
-
-</div>
-</div>
 <a id="a45400b96466b3ce8b14d6220755f3da8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a45400b96466b3ce8b14d6220755f3da8">&#9670;&nbsp;</a></span>on_new_task()</h2>
 
@@ -258,7 +212,7 @@ b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>objects</em>&#160;</td>
         </tr>
         <tr>

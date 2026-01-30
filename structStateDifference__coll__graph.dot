@@ -5,5 +5,5 @@ digraph "StateDifference"
   node [fontname="Helvetica",fontsize="10",shape=record];
   Node1 [label="StateDifference",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Contains the differences between the contiuous components of two hybrid states."];
   Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" Di\nDn" ,fontname="Helvetica"];
-  Node2 [label="BodyFeatures",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classBodyFeatures.html",tooltip=" "];
+  Node2 [label="BodyFeatures",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structBodyFeatures.html",tooltip=" "];
 }

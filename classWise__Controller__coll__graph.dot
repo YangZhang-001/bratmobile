@@ -9,5 +9,5 @@ digraph "Wise_Controller"
   Node3 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" disturbance_q" ,fontname="Helvetica"];
   Node3 [label="Disturbance",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structDisturbance.html",tooltip=" "];
   Node4 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" bf" ,fontname="Helvetica"];
-  Node4 [label="BodyFeatures",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classBodyFeatures.html",tooltip=" "];
+  Node4 [label="BodyFeatures",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structBodyFeatures.html",tooltip=" "];
 }

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['object_5ffiltering_5fbox_141',['object_filtering_box',['../classWorldBuilder.html#a774e1fbfc14b4d3f69bf165f779594a5',1,'WorldBuilder']]],
-  ['on_5fnew_5freading_142',['on_new_reading',['../classTracker.html#a83e32d2d4ecfcb05c22f7362a6156cd0',1,'Tracker::on_new_reading()'],['../classDeadReckoner.html#ac61dbacd8573197288e51d286dbb348f',1,'DeadReckoner::on_new_reading()'],['../classClosedLoop__Tracker.html#a264e4b686c748eb344eb5948304e7e69',1,'ClosedLoop_Tracker::on_new_reading()']]],
+  ['on_5fnew_5freading_142',['on_new_reading',['../classTracker.html#af84a1d1124b9d7e5aadb9e871ea0ab46',1,'Tracker']]],
   ['on_5fnew_5ftask_143',['on_new_task',['../classTracker.html#ac34ec880b21e2d5464229fd881bf074a',1,'Tracker::on_new_task()'],['../classDeadReckoner.html#a45400b96466b3ce8b14d6220755f3da8',1,'DeadReckoner::on_new_task()'],['../classClosedLoop__Tracker.html#a1bcdb862c821934bc49f1f1a47ec24c6',1,'ClosedLoop_Tracker::on_new_task()']]],
   ['openloopcontroller_144',['OpenLoopController',['../classOpenLoopController.html',1,'']]],
   ['operator_2a_145',['operator*',['../classBundle.html#a88f36267db977f3056c93b3af590d5bb',1,'Bundle::operator*(const Bundle &amp;b) const'],['../classBundle.html#ac59daf4358cbfcb0e6c5366a9e9b0dad',1,'Bundle::operator*(float) const']]],

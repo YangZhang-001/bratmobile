@@ -88,28 +88,25 @@ Collaboration diagram for ClosedLoop_Tracker:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a081797ff55bde511ddd91861b9d33cf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structTrackingResult.html">TrackingResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClosedLoop__Tracker.html#a081797ff55bde511ddd91861b9d33cf8">get_transform</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;pts, const std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects) override</td></tr>
+<tr class="memitem:a081797ff55bde511ddd91861b9d33cf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structTrackingResult.html">TrackingResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClosedLoop__Tracker.html#a081797ff55bde511ddd91861b9d33cf8">get_transform</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;pts, const std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects) override</td></tr>
 <tr class="memdesc:a081797ff55bde511ddd91861b9d33cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns 2d transformation matrix between one scan and the next based on the displacement of disturbance Di for a task + the disturbance as observed (this is to update the noisy measurement)  <a href="classClosedLoop__Tracker.html#a081797ff55bde511ddd91861b9d33cf8">More...</a><br /></td></tr>
 <tr class="separator:a081797ff55bde511ddd91861b9d33cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0ffa535e917abf6d0db26a3f1408606"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structTrackingResult.html">TrackingResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClosedLoop__Tracker.html#ac0ffa535e917abf6d0db26a3f1408606">track</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;pts, const std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)</td></tr>
+<tr class="memitem:ac0ffa535e917abf6d0db26a3f1408606"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structTrackingResult.html">TrackingResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClosedLoop__Tracker.html#ac0ffa535e917abf6d0db26a3f1408606">track</a> (const <a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;pts, const std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt; &amp;objects)</td></tr>
 <tr class="memdesc:ac0ffa535e917abf6d0db26a3f1408606"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tracks task execution.  <a href="classClosedLoop__Tracker.html#ac0ffa535e917abf6d0db26a3f1408606">More...</a><br /></td></tr>
 <tr class="separator:ac0ffa535e917abf6d0db26a3f1408606"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d68445d0de37127cf356211223cdc35"><td class="memItemLeft" align="right" valign="top"><a id="a6d68445d0de37127cf356211223cdc35"></a>
 cv::Rect2f&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClosedLoop__Tracker.html#a6d68445d0de37127cf356211223cdc35">real_world_focus</a> (const <a class="el" href="classTask.html">Task</a> *)</td></tr>
 <tr class="memdesc:a6d68445d0de37127cf356211223cdc35"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns an upright rectangle which represents a focus of attention for finding points corresponding to input task's disturbance <br /></td></tr>
 <tr class="separator:a6d68445d0de37127cf356211223cdc35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ddd4750aa6b550d1f73b31999d61935"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClosedLoop__Tracker.html#a8ddd4750aa6b550d1f73b31999d61935">find_disturbance</a> (std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator objects_begin, std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator objects_end, const <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &amp;dist, b2Transform t, float *_least_square=NULL)</td></tr>
+<tr class="memitem:a8ddd4750aa6b550d1f73b31999d61935"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClosedLoop__Tracker.html#a8ddd4750aa6b550d1f73b31999d61935">find_disturbance</a> (std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator objects_begin, std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator objects_end, const <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &amp;dist, b2Transform t, float *_least_square=NULL)</td></tr>
 <tr class="memdesc:a8ddd4750aa6b550d1f73b31999d61935"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get disturbance to be tracked among the worldbuilder objects.  <a href="classClosedLoop__Tracker.html#a8ddd4750aa6b550d1f73b31999d61935">More...</a><br /></td></tr>
 <tr class="separator:a8ddd4750aa6b550d1f73b31999d61935"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad53e29d5c51f1c2e633cf446f4299758"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClosedLoop__Tracker.html#ad53e29d5c51f1c2e633cf446f4299758">correctAngle</a> (<a class="el" href="classBodyFeatures.html">BodyFeatures</a> &amp;found, const <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &amp;dist)</td></tr>
+<tr class="memitem:ad53e29d5c51f1c2e633cf446f4299758"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClosedLoop__Tracker.html#ad53e29d5c51f1c2e633cf446f4299758">correctAngle</a> (<a class="el" href="structBodyFeatures.html">BodyFeatures</a> &amp;found, const <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &amp;dist)</td></tr>
 <tr class="memdesc:ad53e29d5c51f1c2e633cf446f4299758"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets angle to be smallest possible increment compared to dist.  <a href="classClosedLoop__Tracker.html#ad53e29d5c51f1c2e633cf446f4299758">More...</a><br /></td></tr>
 <tr class="separator:ad53e29d5c51f1c2e633cf446f4299758"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1bcdb862c821934bc49f1f1a47ec24c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClosedLoop__Tracker.html#a1bcdb862c821934bc49f1f1a47ec24c6">on_new_task</a> (const <a class="el" href="classTask.html">Task</a> &amp;task, const <a class="el" href="classTask.html">Task</a> &amp;goal) override</td></tr>
 <tr class="memdesc:a1bcdb862c821934bc49f1f1a47ec24c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses the goal to reset tracked disturbance at each task.  <a href="classClosedLoop__Tracker.html#a1bcdb862c821934bc49f1f1a47ec24c6">More...</a><br /></td></tr>
 <tr class="separator:a1bcdb862c821934bc49f1f1a47ec24c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a264e4b686c748eb344eb5948304e7e69"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClosedLoop__Tracker.html#a264e4b686c748eb344eb5948304e7e69">on_new_reading</a> (const <a class="el" href="classTask.html">Task</a> &amp;goal, const <a class="el" href="classTask.html">Task</a> &amp;currentTask) override</td></tr>
-<tr class="memdesc:a264e4b686c748eb344eb5948304e7e69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every time asensor reading is available.  <a href="classClosedLoop__Tracker.html#a264e4b686c748eb344eb5948304e7e69">More...</a><br /></td></tr>
-<tr class="separator:a264e4b686c748eb344eb5948304e7e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e47f9f7b2375ab160d944dddbe00cc7"><td class="memItemLeft" align="right" valign="top"><a id="a3e47f9f7b2375ab160d944dddbe00cc7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_attention</b> (b2PolygonShape ps)</td></tr>
 <tr class="separator:a3e47f9f7b2375ab160d944dddbe00cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,6 +129,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>register_learner</b> 
 <tr class="memitem:a0a04ad85f12977662b6047b03c3d98d9 inherit pub_methods_classTracker"><td class="memItemLeft" align="right" valign="top"><a id="a0a04ad85f12977662b6047b03c3d98d9"></a>
 b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>getDeltaTransform</b> ()</td></tr>
 <tr class="separator:a0a04ad85f12977662b6047b03c3d98d9 inherit pub_methods_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af84a1d1124b9d7e5aadb9e871ea0ab46 inherit pub_methods_classTracker"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#af84a1d1124b9d7e5aadb9e871ea0ab46">on_new_reading</a> (const <a class="el" href="classTask.html">Task</a> &amp;goal, const <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:af84a1d1124b9d7e5aadb9e871ea0ab46 inherit pub_methods_classTracker"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every time a new reading is available.  <a href="classTracker.html#af84a1d1124b9d7e5aadb9e871ea0ab46">More...</a><br /></td></tr>
+<tr class="separator:af84a1d1124b9d7e5aadb9e871ea0ab46 inherit pub_methods_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2037e2ed2bb6ac7b0c9cf341d2b946a1 inherit pub_methods_classTracker"><td class="memItemLeft" align="right" valign="top"><a id="a2037e2ed2bb6ac7b0c9cf341d2b946a1"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTracker.html#a2037e2ed2bb6ac7b0c9cf341d2b946a1">make_log</a> ()</td></tr>
 <tr class="memdesc:a2037e2ed2bb6ac7b0c9cf341d2b946a1 inherit pub_methods_classTracker"><td class="mdescLeft">&#160;</td><td class="mdescRight">opens file where all the data is dumped <br /></td></tr>
@@ -156,6 +156,9 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:a00638f55e7835b8caf6ab5b07dd1a325"><td class="memItemLeft" align="right" valign="top"><a id="a00638f55e7835b8caf6ab5b07dd1a325"></a>
 b2PolygonShape&#160;</td><td class="memItemRight" valign="bottom"><b>attention_window</b></td></tr>
 <tr class="separator:a00638f55e7835b8caf6ab5b07dd1a325"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7441f2f937e60ca44cab46d51ac2ec04"><td class="memItemLeft" align="right" valign="top"><a id="a7441f2f937e60ca44cab46d51ac2ec04"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasReading</b> =false</td></tr>
+<tr class="separator:a7441f2f937e60ca44cab46d51ac2ec04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_classTracker"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classTracker')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classTracker.html">Tracker</a></td></tr>
 <tr class="memitem:a151b735358fe759c68d9584cae3b7442 inherit pro_attribs_classTracker"><td class="memItemLeft" align="right" valign="top"><a id="a151b735358fe759c68d9584cae3b7442"></a>
 friend&#160;</td><td class="memItemRight" valign="bottom"><b>Configurator</b></td></tr>
@@ -186,13 +189,13 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void ClosedLoop_Tracker::correctAngle </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classBodyFeatures.html">BodyFeatures</a> &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="structBodyFeatures.html">BodyFeatures</a> &amp;&#160;</td>
           <td class="paramname"><em>found</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &amp;&#160;</td>
           <td class="paramname"><em>dist</em>&#160;</td>
         </tr>
         <tr>
@@ -224,21 +227,21 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator ClosedLoop_Tracker::find_disturbance </td>
+          <td class="memname">std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator ClosedLoop_Tracker::find_disturbance </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator&#160;</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator&#160;</td>
           <td class="paramname"><em>objects_begin</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator&#160;</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt;::const_iterator&#160;</td>
           <td class="paramname"><em>objects_end</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &amp;&#160;</td>
           <td class="paramname"><em>dist</em>, </td>
         </tr>
         <tr>
@@ -302,7 +305,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>objects</em>&#160;</td>
         </tr>
         <tr>
@@ -366,52 +369,6 @@ Additional Inherited Members</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a264e4b686c748eb344eb5948304e7e69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a264e4b686c748eb344eb5948304e7e69">&#9670;&nbsp;</a></span>on_new_reading()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void ClosedLoop_Tracker::on_new_reading </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
-          <td class="paramname"><em>goal</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
-          <td class="paramname"><em>currentTask</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Called every time asensor reading is available. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">task</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Implements <a class="el" href="classTracker.html#a83e32d2d4ecfcb05c22f7362a6156cd0">Tracker</a>.</p>
 
 </div>
 </div>
@@ -486,7 +443,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="classBodyFeatures.html">BodyFeatures</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>objects</em>&#160;</td>
         </tr>
         <tr>
