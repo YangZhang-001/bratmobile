@@ -49,12 +49,15 @@ void Window::paintEvent(QPaintEvent *){
     painter.setWindow(logical_rect);
     painter.setPen(QPen());
     painter.drawPoint(point);
-    painter.setPen(QColor("red"));
+    painter.setBrush(QColor("red"))
+    painter.setPen(QColor("black"));
     painter.drawPolygon(goal);
-    painter.setPen(QColor("green"));
+    painter.setPen(QColor("black"));
     painter.drawPolygon(attention);
-    painter.setPen(QColor("blue"));
+    painter.setBrush(QColor("brown"))
+    painter.setPen(QColor("black"));
     painter.drawRect(robot);
+    painter.setBrush(QColor("grey"))
     painter.setPen(QColor("black"));
     painter.drawPolygon(Di);
 }
