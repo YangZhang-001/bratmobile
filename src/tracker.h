@@ -107,7 +107,7 @@ class DeadReckoner: public Tracker{
 
     void init(const Task & goal){}
 
-    virtual bool hasTaskEnded(const Task & t, const State & s)override;
+    bool hasTaskEnded(Task & t, const State & s);
 
 
 
@@ -186,7 +186,7 @@ class ClosedLoop_Tracker:public Tracker{
 
     }
 
-    virtual bool hasTaskEnded(Task & t, const State & s);
+    bool hasTaskEnded(Task & t, const State & s);
 
     /**
      * @brief Updates the attention window at each sensor reading
