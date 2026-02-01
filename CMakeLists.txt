@@ -44,7 +44,7 @@ else()
 endif()
 
 if(BUILD_FASTDDS)
-  add_subdirectory(fastDDS "${CMAKE_CURRENT_BINARY_DIR}/src/fastdds")
+  add_subdirectory(fastdds "${CMAKE_CURRENT_BINARY_DIR}/fastdds")
 endif()
 
 

@@ -48,5 +48,7 @@ target_link_libraries(qt_window PRIVATE qwt-qt5)
 
 #TESTS
 add_executable(test_tracker topics.h test_tracker.cpp gui.h publisher.h )
-#target_link_libraries(test_tracker PRIVATE brat-gui Qt5::Widgets Qt5::Core fastcdr fastrtps ObjectPackage)
 target_link_libraries(test_tracker fastcdr fastrtps ObjectPackage brat ${OpenCV_LIBS} box2d )
+
+add_executable(test_obstacleQt topics.h test_obstacleQt.cpp gui.h publisher.h )
+target_link_libraries(test_obstacleQt fastcdr fastrtps ObjectPackage brat ${OpenCV_LIBS} box2d )

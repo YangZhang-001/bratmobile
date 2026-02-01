@@ -2,6 +2,7 @@
 #define GUI_H
 #include "tracker.h"
 #include "worldbuilder.h"
+#include "sensor.h"
 #include "publisher.h"
 #include "topics.h"
 
@@ -9,13 +10,6 @@ class TrackerGUI{
     protected:
     ObjectPackagePublisher DiPub, goalPub, attentionPub;
     public:
-
-    TrackerGUI(): ClosedLoop_Tracker() {
-        if(!DiPub.init(Di_topic)){std::cerr << "Could not init the Di subscriber." << std::endl;}        
-        if(!goalPub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
-        if(!attentionPub.init(attention_topic)){std::cerr << "Could not init the attention subscriber." << std::endl;}        
-
-    }
 
     ObjectPackage makeObjectPackage(const std::vector<b2Vec2> &vertices){
         ObjectPackage object;
@@ -40,7 +34,10 @@ class OLTrackerGUI: public DeadReckoner, public TrackerGUI{
 
     public:
     OLTrackerGUI(): DeadReckoner() {
-        TrackerGUI::TrackerGUI();
+        if(!DiPub.init(Di_topic)){std::cerr << "Could not init the Di subscriber." << std::endl;}        
+        if(!goalPub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
+        if(!attentionPub.init(attention_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
+
     }
 
 
@@ -58,9 +55,10 @@ class OLTrackerGUI: public DeadReckoner, public TrackerGUI{
         TrackingResult result=Tracker::get_transform(t, pts, objects);
         std::pair<Pointf, Pointf> bt = WorldBuilder::bounds(DEFAULT, b2Transform_zero, 1, 0.15);
         std::pair <CoordinateContainer, bool> salient = WorldBuilder::salientPoints(b2Transform_zero,pts, bt);
-        std::pair<bool,BodyFeatures> looming=bounding_box(salient.first);
-        ObjectPackage loomingPack=makeObjectPackage(Disturbance(looming.second));
-        attentionPub.publish(loomingPack);
+        auto vec_salient=set2vec(salient.first);
+        std::pair<bool,BodyFeatures> looming=bounding_box(vec_salient);
+        ObjectPackage loomingBody=makeObjectPackage(looming.second.vertices());
+        attentionPub.publish(loomingBody);
         return result;
 }
 
@@ -74,11 +72,12 @@ class CLTrackerGUI: public ClosedLoop_Tracker, public TrackerGUI{
     ObjectPackagePublisher DiPub, goalPub, attentionPub;
 
     public:
-
     CLTrackerGUI(): ClosedLoop_Tracker() {
-        TrackerGUI::TrackerGUI();
-    }
+        if(!DiPub.init(Di_topic)){std::cerr << "Could not init the Di subscriber." << std::endl;}        
+        if(!goalPub.init(Goal_topic)){std::cerr << "Could not init the goal subscriber." << std::endl;}        
+        if(!attentionPub.init(attention_topic)){std::cerr << "Could not init the attention subscriber." << std::endl;}        
 
+    }
 
     std::vector<b2Vec2> attentionWindowVertices(){
         std::vector <b2Vec2> result;
