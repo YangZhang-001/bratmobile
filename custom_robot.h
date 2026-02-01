@@ -111,17 +111,17 @@ class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
         deltaTransform=b2Transform_zero;
     }
 
-    bool hasTaskEnded(Task & t)override{
-        return motorStep<=0;
+    // bool hasTaskEnded(Task & t)override{
+    //     return motorStep<=0;
         
-    }
+    // }
 
     void step(AlphaBot& motors)override{
-        if (L!=0 && R!=0){
-            motorStep--;
-            std::cout<<"one down"<<std::endl;
-            std::cout<<"motorStep="<<motorStep<<std::endl;
-        }
+        // if (L!=0 && R!=0){
+        //     motorStep--;
+        //     std::cout<<"one down"<<std::endl;
+        //     std::cout<<"motorStep="<<motorStep<<std::endl;
+        // }
         if (motorStep==0){
             L=0;
             R=0;

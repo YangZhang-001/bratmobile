@@ -10,11 +10,17 @@ TrackingResult Tracker::get_transform(const Task &t, const CoordinateContainer &
     return result;
 }
 
-bool Tracker::hasTaskEnded(Task & t){
+bool DeadReckoner::hasTaskEnded(const Task & t, const State & s){
+    if (s.isTurning()){
+        s.endPose.q.c>t.getAction().getTransform(LIDAR_SAMPLING_RATE/2).q.c; //closer to zero
+    }
+    else{
+        s.endPose.p.x>=0.01; //within 1cm from expected endPose?
+    }
     return t.getMotorStep()<1;
 }
 
-bool ClosedLoop_Tracker::hasTaskEnded(Task & t){
+bool ClosedLoop_Tracker::hasTaskEnded(const Task & t, const State & s){
     bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
     return t.getMotorStep()==0 || ended;
 }

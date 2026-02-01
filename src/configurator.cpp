@@ -293,7 +293,7 @@ void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
 		std::cout <<"tracker uninitialised!";
 		return;
 	}
-	if (tracker->hasTaskEnded(currentTask)){
+	if (tracker->hasTaskEnded(currentTask, transitionSystem[currentVertex])){
 		currentTask.change=true;
 	}
 }
