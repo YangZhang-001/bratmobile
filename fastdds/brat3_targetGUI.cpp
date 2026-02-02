@@ -5,7 +5,7 @@
 class OpenLooperGUI: public OLTrackerGUI, public MotorCallback, public Motor_Out{
     int motorStep=0;
     public:
-    OpenLooper():MotorCallback(this){}
+    OpenLooperGUI():MotorCallback(this){}
 
     void on_new_task(const Task &task, const Task & goal){
         motorStep=task.getMotorStep();
