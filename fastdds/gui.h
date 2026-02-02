@@ -15,12 +15,12 @@ class TrackerGUI{
         ObjectPackage object;
         object.v1_x(vertices[0].x); //tr
         object.v1_y(vertices[0].y);
-        object.v3_x(vertices[1].x); //br
-        object.v3_y(vertices[1].y);
-        object.v2_x(vertices[2].x); //bl
-        object.v2_y(vertices[2].y);
-        object.v4_x(vertices[3].x); //tl
-        object.v4_y(vertices[3].y);
+        object.v4_x(vertices[1].x); //br
+        object.v4_y(vertices[1].y);
+        object.v3_x(vertices[2].x); //bl
+        object.v3_y(vertices[2].y);
+        object.v2_x(vertices[3].x); //tl
+        object.v2_y(vertices[3].y);
         return object;
     }
 

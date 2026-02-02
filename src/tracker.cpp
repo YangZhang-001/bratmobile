@@ -10,7 +10,6 @@ TrackingResult Tracker::get_transform(const Task &t, const CoordinateContainer &
     return result;
 }
 
-bool Tracker::hasTaskEnded(Task & t){
     return t.getMotorStep()<1;
 }
 
