@@ -1,5 +1,38 @@
 #include "custom_robot.h"
 #include "gui.h"
+
+
+class OpenLooperGUI: public OLTrackerGUI, public MotorCallback, public Motor_Out{
+    int motorStep=0;
+    public:
+    OpenLooper():MotorCallback(this){}
+
+    void on_new_task(const Task &task, const Task & goal){
+        motorStep=task.getMotorStep();
+        std::cout<<"motorStep="<<motorStep<<std::endl;
+        deltaTransform=b2Transform_zero;
+    }
+
+    bool hasTaskEnded(Task & t)override{
+        return motorStep<=0;
+        
+    }
+
+    void step(AlphaBot& motors)override{
+        if (L!=0 && R!=0){
+            motorStep--;
+            std::cout<<"one down"<<std::endl;
+            std::cout<<"motorStep="<<motorStep<<std::endl;
+        }
+        if (motorStep==0){
+            L=0;
+            R=0;
+        }
+		motors.setLeftWheelSpeed(L*1.18);
+        motors.setRightWheelSpeed(R*1.18);
+    }
+};
+
 int main(int argc, char** argv) {
 	std::cout<<"Navigating to Target with Brat2"<<std::endl;
 	A1Lidar lidar;
@@ -13,7 +46,7 @@ int main(int argc, char** argv) {
 	LaserFocus wb;
 	configurator.register_worldBuilder(&wb);
 	HorizonStarPlanner planner;
-	OLTrackerGUI tracker;
+	OpenLooperGUI tracker;
 	configurator.register_planner(&planner);
 	configurator.register_tracker(&tracker);
 	OpenLoopController wc;
