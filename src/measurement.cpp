@@ -1,5 +1,16 @@
 #include "measurement.h"
 
+bool Measurement::operator>(Measurement & m2){
+    bool r = false;
+    if (isValid() & m2.isValid()){
+        r= get()>m2.get();
+    }
+    else{
+        r=true;
+    }
+    return r;
+}
+
 bool Measurement::operator<(Measurement & m2){
     bool r = false;
     if (isValid() & m2.isValid()){
