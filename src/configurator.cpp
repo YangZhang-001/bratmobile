@@ -200,7 +200,7 @@ void Configurator::run(Configurator * c){
 				}					
 			}
 			c->change_task();		
-			c->adjust_goal_expectation();
+			//c->adjust_goal_expectation();
 			c->estimate_current_vertex();
 			printf("current v=%i\n", c->currentVertex);
 			c->tracker->on_new_reading(c->controlGoal, c->currentTask);
