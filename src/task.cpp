@@ -307,6 +307,8 @@ EndedResult Task::checkEnded(const State& n,  Direction dir, bool relax, std::pa
 
 bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,Disturbance *dist_obs ){
 	bool result=false;
+	b2Transform fromDi=from_Di(&b2Transform_zero);
+	Angle a(atan(fromDi.p.y/fromDi.p.x));
 	if (box.m_count<4){
 		printf("no box!\n");
 		return false;
@@ -318,9 +320,6 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		}
 	}
 	else if (dist_obs->getAffIndex()==PURSUE){ // && direction==DEFAULT
-		b2Transform fromDi=from_Di(&b2Transform_zero);
-		//Angle a(fromDi.q.GetAngle());
-		Angle a(atan(fromDi.p.y/fromDi.p.x));
 		Distance d(fromDi.p.x);
 		result=endCriteria_met(a, d);
 	}
@@ -329,7 +328,7 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 			b2Transform fromDi_start=from_Di(&b2Transform_zero, dist_obs); //transform at start of task
 			b2Transform fromDi_now=from_Di(&b2Transform_zero); 
 			b2Transform inst_transform=b2MulT(fromDi_now, fromDi_start); //check how far Di has moved since start
-			Angle a(fromDi_now.q.GetAngle()-(action.getTransform(LIDAR_SAMPLING_RATE/4).q.GetAngle())); //avoid turning too much!
+			//Angle a(fromDi_now.q.GetAngle()-(action.getTransform(LIDAR_SAMPLING_RATE/4).q.GetAngle())); //avoid turning too much!
 			float _distance=std::max(inst_transform.p.Length(), start.p.Length());
 			Distance d(fabs(_distance));
 			result=endCriteria_met(a, d);
@@ -394,7 +393,10 @@ bool Task::endCriteria_met(Angle & a, Distance & d){
 			result= d<=endCriteria.distance && a<approxEndAngle; 
 			break;
 		default:
-			result= d>=endCriteria.distance && a>=endCriteria.angle; 
+			Angle upper_limit(endCriteria.angle.get()+action.getTransform(LIDAR_SAMPLING_RATE/4).q.GetAngle());
+			Angle lower_limit(endCriteria.angle.get()-action.getTransform(LIDAR_SAMPLING_RATE/4).q.GetAngle());
+
+			result= d>=endCriteria.distance && a<upper_limit && a>lower_limit; 
 			break;
 	}
 	return result;
