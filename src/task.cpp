@@ -394,9 +394,7 @@ bool Task::endCriteria_met(Angle & a, Distance & d){
 			result= d<=endCriteria.distance && a<approxEndAngle; 
 			break;
 		default:
-			Angle upper_limit(endCriteria.angle.get()+action.getTransform(LIDAR_SAMPLING_RATE/4).q.GetAngle());
-			Angle lower_limit(endCriteria.angle.get()-action.getTransform(LIDAR_SAMPLING_RATE/4).q.GetAngle());
-			result= d>=endCriteria.distance && (a>=endCriteria.angle); 
+			result= d>=endCriteria.distance && a>=endCriteria.angle; 
 			break;
 	}
 	return result;
