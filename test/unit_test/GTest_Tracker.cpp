@@ -124,6 +124,13 @@ class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceInde
         affSolution= std::get<0>(GetParam());
     }
 
+    /**
+     * @brief Makes a block disturbance .4 m in front of robot. Works off of 
+     * GetParam so GetParam[0] dictates what affordance the disturbance is and
+     * and GetParam[1] dictates what direction the Task is 
+     * (not assigned here but used to determine the pose of the obstace)
+     * 
+     */
     BodyFeatures makeBF(TestInputConfigurator &configurator){
         BodyFeatures bf;
         bf.halfLength=0.05;
@@ -192,7 +199,7 @@ TEST_P(TestEnvironment, AttentionWindow){
 TEST_P(TestEnvironment, Execution){
     OneTaskController controller;
     TestInputConfigurator configurator(&ds, &as);
-    BodyFeatures bf =makeBF(configurator);
+    BodyFeatures bf =makeBF(configurator); //makes 
     TestTracker tracker;
     setConfiguratorBF(configurator, bf);
     configurator.register_tracker(&tracker);
@@ -210,7 +217,7 @@ TEST_P(TestEnvironment, Execution){
         lidarIn.data2fp={Pointf(newPose.p.x, newPose.p.y)};
         bf.pose=newPose;
         steps++;
-        if (steps>50)break;
+        if (steps>60)break;
     }while (!configurator.getTask().is_over());
     EXPECT_GT(steps, 1); //should take more than one step to complete task
     EXPECT_TRUE(configurator.getTask().is_over());
