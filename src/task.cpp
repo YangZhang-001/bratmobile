@@ -327,10 +327,10 @@ bool Task::checkEnded(const b2PolygonShape &box , const b2Transform& robot_pose,
 		if (box.m_radius==0 || action.getOmega()!=0){ //means that there is no goal 
 			b2Transform fromDi_start=from_Di(&b2Transform_zero, dist_obs); //transform at start of task
 			b2Transform fromDi_now=from_Di(&b2Transform_zero); 
-			b2Transform inst_transform=b2help::InvMul(fromDi_start, fromDi_now); //check how far Di has moved since start
+			b2Transform inst_transform=b2help::InvMul(fromDi_now, fromDi_start); //check how far Di has moved since start
 			//Angle a(fromDi_now.q.GetAngle()-(action.getTransform(LIDAR_SAMPLING_RATE/4).q.GetAngle())); //avoid turning too much!
 			//Angle a(atan(fromDi_now.p.y/fromDi_now.p.x)-atan(fromDi_start.p.y/fromDi_start.p.x)); //avoid turning too much!
-			Angle a(inst_transform.q.GetAngle()); //avoid turning too much!
+			Angle a((fromDi_now.q.GetAngle())); //avoid turning too much!
 			float _distance=std::max(inst_transform.p.Length(), start.p.Length());
 			Distance d(fabs(_distance));
 			result=endCriteria_met(a, d);
@@ -395,9 +395,9 @@ bool Task::endCriteria_met(Angle & a, Distance & d){
 			result= d<=endCriteria.distance && a<approxEndAngle; 
 			break;
 		default:
-			Angle upper_limit(endCriteria.angle.get()+action.getTransform(LIDAR_SAMPLING_RATE/4).q.GetAngle());
-			Angle lower_limit(endCriteria.angle.get()-action.getTransform(LIDAR_SAMPLING_RATE/4).q.GetAngle());
-			result= d>=endCriteria.distance && a<upper_limit && a>lower_limit; 
+			Angle upper_limit(endCriteria.angle.get()+fabs(action.getTransform(LIDAR_SAMPLING_RATE/4).q.GetAngle()));
+			Angle lower_limit(endCriteria.angle.get()-fabs(action.getTransform(LIDAR_SAMPLING_RATE/4).q.GetAngle()));
+			result= d>=endCriteria.distance && a<=upper_limit && a>=lower_limit; 
 			break;
 	}
 	return result;
