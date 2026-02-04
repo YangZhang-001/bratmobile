@@ -293,6 +293,8 @@ TEST_F(DebugB2BTest, ClearVoyance){
     transitionSystem[MOVING_VERTEX].Di=Disturbance(bf); //current task was avoiding
     transitionSystem[MOVING_VERTEX].Di.validate();
     transitionSystem[3].Dn=Disturbance(bf2); //obstacle on the left
+    transitionSystem[3].outcome=simResult::crashed; //obstacle on the left
+    transitionSystem[5].outcome=simResult::crashed; //obstacle on the left
     transitionSystem[5].Dn=Disturbance(bf3); //obstacle on the right
     transitionSystem[3].Dn.validate();
     transitionSystem[5].Dn.validate();

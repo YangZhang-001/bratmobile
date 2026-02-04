@@ -284,7 +284,7 @@ bool B2BConfigurator::ClearVoyance::add(vertexDescriptor v, const Disturbance &d
 		lookaheads.emplace_back(ClearVoyance::DisturbanceLookahead(v, d));
 		result=true;
 	}
-	else if (std::find_if(vIt->disturbances.begin(), vIt->disturbances.end(), [&](const Disturbance & dd){return dd==d;})!=vIt->disturbances.end()){
+	else if (std::find_if(vIt->disturbances.begin(), vIt->disturbances.end(), [&](const Disturbance & dd){return !(dd==d);})!=vIt->disturbances.end()){
 		vIt->disturbances.push_back(d); //update disturbance
 		result=true;
 	}
