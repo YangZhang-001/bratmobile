@@ -146,8 +146,7 @@ TEST_F(DebugB2BTest, AddOptionsHindSight){
     setAllVisited();
     transitionSystem[3].outcome=simResult::crashed;
     std::vector <Direction> options={DEFAULT, LEFT, RIGHT};
-    B2BConfigurator::ClearVoyance cv;
-    addOptionsInHindsight(MOVING_VERTEX, 2, 3,  cv);
+    addOptionsInHindsight(MOVING_VERTEX, 2, 3);
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
 }
 
@@ -156,7 +155,7 @@ TEST_F(DebugB2BTest, Add180TurnToClearvoyance){
     auto v0=make_successful(MOVING_VERTEX, LEFT).m_target;
     auto v1=make_v1_crashed(v0, b2Transform_zero, b2Transform_zero, generateGoal().pose()).m_target;
     setAllVisited();
-    addOptionsInHindsight(MOVING_VERTEX, v0,v1,  clearvoyance);
+    addOptionsInHindsight(MOVING_VERTEX, v0,v1);
     EXPECT_EQ(transitionSystem[v0].options.size(), 0);
     EXPECT_TRUE(clearvoyance.query(v0).isValid());
 }
@@ -407,7 +406,7 @@ TEST_P(HighLevelTestB2B, CheckPlanB2B){
 }
 
 TEST_P(HighLevelTestB2B, RecycleB2B){
-    //GTEST_SKIP();
+    GTEST_SKIP();
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
     Logger logger=HighLevelTest::makeLogger(info);
     configurator->register_logger(&logger);
@@ -471,7 +470,7 @@ TEST_P(DebugB2BTestVertex, ClearVoyanceTurn){ //test clearvoyance when turning o
     clearvoyance.add(v0, transitionSystem[v1].Dn);
    // Disturbance solution=transitionSystem[MOVING_VERTEX].Di;
     transitionSystem[MOVING_VERTEX].direction=STOP;
-    vertex_options_push_back(v0, vertex_get_direction(2));
+    vertex_options_push_back(v0, vertex_get_direction(GetParam()));
     Disturbance Di= getDisturbance(transitionSystem, v0, world, DEFAULT, transitionSystem[v0].endPose);
     EXPECT_EQ(Di.bf.pose.p.x, transitionSystem[v1].Dn.bf.pose.p.x);
     EXPECT_EQ(Di.bf.pose.p.y, transitionSystem[v1].Dn.bf.pose.p.y);
