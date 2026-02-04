@@ -466,12 +466,13 @@ TEST_P(DebugB2BTestVertex, ClearVoyanceTurn){ //test clearvoyance when turning o
     transitionSystem[MOVING_VERTEX].Di.validate();
     transitionSystem[v1].Dn=Disturbance(bf2); //obstacle on the left
     transitionSystem[v1].Dn.validate();
+    transitionSystem[v1].outcome=simResult::crashed;
     setAllVisited();
     clearvoyance.add(v0, transitionSystem[v1].Dn);
    // Disturbance solution=transitionSystem[MOVING_VERTEX].Di;
     transitionSystem[MOVING_VERTEX].direction=STOP;
-    vertex_options_push_back(v0, vertex_get_direction(GetParam()));
-    Disturbance Di= getDisturbance(transitionSystem, v0, world, DEFAULT, transitionSystem[v0].endPose);
+    vertex_options_push_back(v0, vertex_get_direction(GetParam())); //add option same turn
+    Disturbance Di= getDisturbance(transitionSystem, v0, world, vertex_get_direction(GetParam()), transitionSystem[v0].endPose);
     EXPECT_EQ(Di.bf.pose.p.x, transitionSystem[v1].Dn.bf.pose.p.x);
     EXPECT_EQ(Di.bf.pose.p.y, transitionSystem[v1].Dn.bf.pose.p.y);
     EXPECT_EQ(Di.bf.pose.q.GetAngle(), transitionSystem[v1].Dn.bf.pose.q.GetAngle());

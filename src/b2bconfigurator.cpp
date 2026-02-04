@@ -148,17 +148,17 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 		if ((visited.first)||out.empty()){ //if edges have not been expanded OR if they were expanded in previous iteration
 			if (g[v].Di.isValid() && g[v].Di.getAffIndex()==AVOID && (g[v].direction!=dir || (g[v].isTurning() && isTurning(dir)))){ //if Di is valid and not the same direction as the vertex || (g[v].isTurning() && isTurning(dir))
 				Disturbance Di= g[v].Di;
-				if (std::pair <bool, edgeDescriptor> visitedDefault=gt::visitedEdge(gt::outEdges(g, v, DEFAULT), g, v); visitedDefault.first && (g[v].isTurning() && isTurning(dir))){
-					if (visitedDefault.first && g[visitedDefault.second.m_target].outcome==simResult::crashed){
-						return g[visitedDefault.second.m_target].Dn;
-					}
-				} //if the vertex has been visited in the default direction
-
 				if (attentionWindowOverlaps(Di, g[v], world, controlGoal.get_disturbance())){
 					Di.bf.pose=b2Mul(invmul, Di.bf.pose); //DISTURBANCE FORWARD PROP
 					return Di;
 				}
 			}
+			if (std::pair <bool, edgeDescriptor> visitedDefault=gt::visitedEdge(gt::outEdges(g, v, DEFAULT), g, v); visitedDefault.first && (g[v].isTurning() && isTurning(dir))){
+				if (visitedDefault.first && g[visitedDefault.second.m_target].outcome==simResult::crashed){
+					return g[visitedDefault.second.m_target].Dn;
+				}
+			} //if the vertex has been visited in the default direction
+
 			//check if Di was eliminated
 			return controlGoal.get_disturbance();
 		} 
