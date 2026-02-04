@@ -261,7 +261,7 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
         if (steps<0){
             desiredAngle=currentTask.getEndCriteria().angle.get_signed();
         }
-        adjust_goal_expectation();
+       // adjust_goal_expectation();
         estimate_current_vertex();        
         MulPoints(deltaPose);
         deltaPose=-currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
@@ -273,8 +273,8 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
        if (steps>50)break;
     }while (!currentTask.is_over());
     b2Transform travelled_transform= tracker.getDeltaTransform();
-                                //test value    //how far robot went            //desired angle                         //stop angle 
-	logger.log("%f\t%f\t%f\t%f\t%f\t%i\n", angleError, travelled_transform.q.GetAngle(), currentTask.from_Di().q.GetAngle(), b2Mul(errorTransform, travelled_transform).q.GetAngle(), desiredAngle, steps);
+                                      //test value    //how far robot went            //desired angle                         //stop angle 
+	logger.log("%f\t%f\t%f\t%f\t%f\t%i\n", angleError, travelled_transform.q.GetAngle(), currentTask.from_Di().q.GetAngle(), b2MulT( travelled_transform, errorTransform).q.GetAngle(), desiredAngle, steps);
     logger.~Logger();
     EXPECT_NEAR(fabs(tracker.getDeltaTransform().q.GetAngle()),fabs(desiredAngle), 4.5*DEG_TO_RAD_K);
     EXPECT_GT(fabs(tracker.getDeltaTransform().q.GetAngle()),0);
