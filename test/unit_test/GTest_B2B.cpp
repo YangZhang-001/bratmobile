@@ -10,10 +10,11 @@ TEST_F(DebugB2BTest, PreExplore){
 }
 
 TEST_F(DebugB2BTest, Explorer){
-    GTEST_SKIP();
+    //GTEST_SKIP();
     register_tracker(new ClosedLoop_Tracker);
     iteration++;
     b2World world(GRAVITY);
+    dummy_vertex(MOVING_VERTEX);
     explorer(MOVING_VERTEX, transitionSystem, world);
     delete tracker;
 }
@@ -126,7 +127,7 @@ TEST(ClearVoyance, Query){
 }
 
 TEST(ClearVoyance, Pop){
-    GTEST_SKIP();
+    //GTEST_SKIP();
     DebugB2BTest::ClearVoyanceTest cv;
     Disturbance d(AVOID), d2(AVOID);
     b2Transform t=b2Transform(b2Vec2(1.0, 0), b2Rot(0));
@@ -282,7 +283,7 @@ TEST_F(B2BTestGetObstacle, AvoidNoGoal){
 }
 
 TEST_F(DebugB2BTest, ClearVoyance){
-    GTEST_SKIP();
+    //GTEST_SKIP();
     init(Task());
     EXPECT_FALSE(controlGoal.get_disturbance().isValid()); //test case health check
     EXPECT_EQ(controlGoal.get_disturbance().getAffIndex(), NONE);
@@ -406,7 +407,7 @@ TEST_P(HighLevelTestB2B, CheckPlanB2B){
 }
 
 TEST_P(HighLevelTestB2B, RecycleB2B){
-    GTEST_SKIP();
+    //GTEST_SKIP();
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
     Logger logger=HighLevelTest::makeLogger(info);
     configurator->register_logger(&logger);
@@ -453,7 +454,7 @@ INSTANTIATE_TEST_CASE_P(Target68, HighLevelTestB2B, ::testing::Combine( ::testin
 
 
 TEST_P(DebugB2BTestVertex, ClearVoyanceTurn){ //test clearvoyance when turning on the spot
-    GTEST_SKIP();
+    //GTEST_SKIP();
     init(Task());
     EXPECT_FALSE(controlGoal.get_disturbance().isValid()); //test case health check
     EXPECT_EQ(controlGoal.get_disturbance().getAffIndex(), NONE);
