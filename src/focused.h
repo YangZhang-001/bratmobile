@@ -393,6 +393,7 @@ class EvaluationQueueManager{
 	}
 };
 
+
 /**
  * @brief Pushes directions visited at this iteration (not using phi) to input vector
  * 
