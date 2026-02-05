@@ -79,7 +79,6 @@ struct State{
 	Direction direction=DEFAULT;
 
 
-	
 	State()=default;
 
 	State(const b2Transform &_start): start(_start){}
@@ -132,6 +131,16 @@ struct State{
 	bool isGoingStraight()const{
 		return direction==DEFAULT || direction==STOP;
 	}
+
+	Task getTask(){
+		return Task(Di, direction, start, true);
+	}
+
+	// float gamma(){
+	// 	Angle a(atan2(end_from_Dn().p.y, end_from_Dn().p.y));
+	// 	Distance d(end_from_Dn().p.Length());
+	// 	return getStanda
+	// }
 
 };
 
