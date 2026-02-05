@@ -175,11 +175,11 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 }
 
 void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Frontier>& queue, TransitionSystem &g,const  std::set<vertexDescriptor>&closed, vertexDescriptor goal){
-	if (auto it_q=std::find(queue.cbegin(), queue.cend(), f); it_q!=queue.end()){
+	auto it_q=std::find(queue.cbegin(), queue.cend(), f);
+	if (it_q!=queue.end()){
 		return;
 	}
-	if (g[*it_q].options.empty()){
-		closed.insert(*it_q);
+	if (auto oe=boost::out_edges(g, *it_q); oe.first==oe.second){
 		return;
 	}
 	for (auto i =queue.begin(); i!=queue.end(); i++){
