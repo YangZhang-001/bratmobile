@@ -132,9 +132,7 @@ struct State{
 		return direction==DEFAULT || direction==STOP;
 	}
 
-	Task getTask(){
-		return Task(Di, direction, start, true);
-	}
+
 
 	// float gamma(){
 	// 	Angle a(atan2(end_from_Dn().p.y, end_from_Dn().p.y));

@@ -262,10 +262,11 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 			r.ended = true;
 		}
 		else if (getAffIndex()==int(InnateAffordances::PURSUE)){
+			a = Angle(atan2(from_Di().p.y, from_Di().p.x));
 			//a = Angle(disturbance.getAngle(robotTransform));
-			b2Transform robotFromDi=b2MulT(robotTransform, disturbance.pose());
-			float _a=atan2(robotFromDi.p.y, robotFromDi.p.x);
-			a = Angle(_a);
+			// b2Transform robotFromDi=b2MulT(robotTransform, disturbance.pose());
+			// float _a=atan2(robotFromDi.p.y, robotFromDi.p.x);
+			// a = Angle(_a);
 			//local level if D
 			if (robot!=NULL){
 				std::vector <b2Vec2> local_vertices=GetLocalPoints(disturbance.vertices(), robot);
