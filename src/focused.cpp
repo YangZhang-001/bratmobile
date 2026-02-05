@@ -306,7 +306,7 @@ void FocusedConfigurator::removeExploredTransitions( vertexDescriptor v){
     if (preventTransition(v)){
 		transitionSystem[v].options.clear();
 	}
-	removePointlessTransitions(v);
+	//removePointlessTransitions(v);
 }
 
 void FocusedConfigurator::removePointlessTransitions(vertexDescriptor v){
