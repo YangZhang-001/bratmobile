@@ -84,7 +84,7 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 			disturbance.invalidate();
 		}
 		if (bool ended=checkEnded(robot->GetTransform(), direction, false, robot).ended; ended || out){ //out
-			b2Transform expectNextStep=b2MulT(robot->GetTransform(), action.getTransform(1/HZ));
+			b2Transform expectNextStep=b2Mul(robot->GetTransform(), action.getTransform(1/HZ));
 			// bool keep_going_out_x=(fabs(robot->GetTransform().p.x+instVelocity.x) >fabs(robot->GetTransform().p.x))&&out_x;
 			// bool keep_going_out_y=(fabs(robot->GetTransform().p.y+instVelocity.y) >fabs(robot->GetTransform().p.y))&&out_y;
 			bool keep_going_out_x=(fabs(expectNextStep.p.x) >fabs(robot->GetTransform().p.x))&&out_x;
