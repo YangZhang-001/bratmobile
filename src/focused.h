@@ -146,7 +146,7 @@ std::vector <Direction> getExploredDirections(vertexDescriptor v, const std::vec
 
 /**
  * Guard Psi: prevents transitions beyond current vertex if there is a plan in execution
- * @param v candidate vertex for expansion
+ * @param v candidate vertex for expansion. Essentially guard Psi
  */
 virtual bool preventTransition(vertexDescriptor v){
     return v==currentVertex && (!m_plan.empty()||!currentTask.is_over());
@@ -154,6 +154,10 @@ virtual bool preventTransition(vertexDescriptor v){
 
 /** * only keeps unexplored transitions out of vertex @param v*/
 virtual void removeExploredTransitions(vertexDescriptor v);
+
+/** * only keeps unexplored transitions out of vertex @param v*/
+void removePointlessTransitions(vertexDescriptor v);
+
 
 /**
 *From Neural Comp paper: combines edges K with guard Psi

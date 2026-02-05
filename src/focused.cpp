@@ -306,6 +306,16 @@ void FocusedConfigurator::removeExploredTransitions( vertexDescriptor v){
     if (preventTransition(v)){
 		transitionSystem[v].options.clear();
 	}
+	removePointlessTransitions(v);
+}
+
+void FocusedConfigurator::removePointlessTransitions(vertexDescriptor v){
+	if(round(transitionSystem[v].endPose.p.Length()*100)/100>=BOX2DRANGE){ 
+		if (auto def_it=std::find(transitionSystem[v].options.begin(), transitionSystem[v].options.end(), DEFAULT); auto!=transitionSystem[v].options.end()){
+			transitionSystem[v].options.erase(def_it);
+		}
+	}
+
 }
 
 void FocusedConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src){
@@ -437,7 +447,7 @@ vertexDescriptor FocusedConfigurator::getNextSrc(const std::vector<vertexDescrip
 	int index=0;
 	vertexDescriptor bestNext=q[index];
 	while (transitionSystem[bestNext].travel_transform()==b2Transform_zero && index<q.size()-1 && 
-	(bestNext!=MOVING_VERTEX&& bestNext!=currentVertex)){
+		transitionSystem[bestNext].endPose.p.x<0){
 		index++;
 		bestNext=q[index];
 	}
