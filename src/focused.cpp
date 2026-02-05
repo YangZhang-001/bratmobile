@@ -450,8 +450,8 @@ vertexDescriptor FocusedConfigurator::getNextSrc(const std::vector<vertexDescrip
 	int index=0;
 	vertexDescriptor bestNext=q[index];
 	while (transitionSystem[bestNext].travel_transform()==b2Transform_zero && index<q.size()-1 && 
-		transitionSystem[bestNext].endPose.p.x<0){
-		index++;
+			(bestNext!=MOVING_VERTEX&& bestNext!=currentVertex)){
+			index++;
 		bestNext=q[index];
 	}
 	return bestNext;
