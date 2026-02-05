@@ -148,7 +148,7 @@ std::vector<vertexDescriptor> FocusedConfigurator::explorer(vertexDescriptor v, 
 		}
 	}
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
-	bestNext=priorityQueue[0];
+	bestNext=getNextSrc(priorityQueue);
 	reassign_direction(bestNext, direction);
 }while(g[bestNext].options.size()>0 && !er.ended);
 return plan_prov;
@@ -413,6 +413,9 @@ void FocusedConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction d
 
 void FocusedConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, const std::set <vertexDescriptor>& closed){
 	if (transitionSystem[v].outcome==simResult::crashed){
+		return;
+	}
+	if (transitionSystem[v].options.empty()){
 		return;
 	}
 	auto found=closed.find(v); 

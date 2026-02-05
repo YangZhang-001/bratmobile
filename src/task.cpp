@@ -267,7 +267,7 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 			if (robot!=NULL){
 				std::vector <b2Vec2> local_vertices=GetLocalPoints(disturbance.vertices(), robot);
 				b2Vec2 pos_local=*(std::min_element(local_vertices.begin(), local_vertices.end(), CompareX()));
-				r.ended=fabs(round(pos_local.x*100)/100)<=((endCriteria.distance.get()-0.001)/2) && start.p.x>0; //-0.001 //was /2
+				r.ended=fabs(round(pos_local.x*100)/100)<=((endCriteria.distance.get()-0.001)/2) && start.p.x>0; //hard coded, start x assumes that if the robot has travelled backwards theeres an obstacle to avoid and doesn't make sense to get back in line with goal
 			}
 			else if (relax){
 				Distance _d(RELAXED_DIST_ERROR_TOLERANCE);
