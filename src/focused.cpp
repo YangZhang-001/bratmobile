@@ -311,6 +311,9 @@ void FocusedConfigurator::removeExploredTransitions( vertexDescriptor v){
 
 void FocusedConfigurator::removePointlessTransitions(vertexDescriptor v){
 	if(round(transitionSystem[v].endPose.p.Length()*100)/100>=BOX2DRANGE){ 
+		if (transitionSystem[v].isTurning()){
+			return;
+		}
 		if (auto def_it=std::find(transitionSystem[v].options.begin(), transitionSystem[v].options.end(), DEFAULT); def_it!=transitionSystem[v].options.end()){
 			transitionSystem[v].options.erase(def_it);
 		}
