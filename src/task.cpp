@@ -262,7 +262,8 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 			r.ended = true;
 		}
 		else if (getAffIndex()==int(InnateAffordances::PURSUE)){
-			a = Angle(disturbance.getAngle(robotTransform));
+			//a = Angle(disturbance.getAngle(robotTransform));
+			a = Angle(atan2(from_Di().p.y, from_Di().p.x));
 			//local level if D
 			if (robot!=NULL){
 				std::vector <b2Vec2> local_vertices=GetLocalPoints(disturbance.vertices(), robot);
