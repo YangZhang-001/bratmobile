@@ -184,7 +184,6 @@ void applyTransitionMatrix(vertexDescriptor v0, Direction d, bool ended, vertexD
  */
 void addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, const std::set <vertexDescriptor>& closed);
 
-vertexDescriptor getNextSrc(const std::vector<vertexDescriptor>& q);
 
 //removes singleton vertices and self-edges
 void ts_cleanup();
