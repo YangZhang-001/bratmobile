@@ -415,9 +415,9 @@ void FocusedConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<ver
 	if (transitionSystem[v].outcome==simResult::crashed){
 		return;
 	}
-	if (transitionSystem[v].options.empty()){
-		return;
-	}
+	// if (transitionSystem[v].options.empty()){
+	// 	return;
+	// }
 	auto found=closed.find(v); 
 	if(found==closed.end()){ //if not in closed
 		for (auto i =queue.begin(); i!=queue.end(); i++){
@@ -436,7 +436,8 @@ void FocusedConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<ver
 vertexDescriptor FocusedConfigurator::getNextSrc(const std::vector<vertexDescriptor>& q){
 	int index=0;
 	vertexDescriptor bestNext=q[index];
-	while (transitionSystem[bestNext].travel_transform()==b2Transform_zero){
+	while (transitionSystem[bestNext].travel_transform()==b2Transform_zero && index<q.size()-1 && 
+	(bestNext!=MOVING_VERTEX|| bestNext!=currentVertex)){
 		index++;
 		bestNext=q[index];
 	}
