@@ -150,7 +150,7 @@ std::vector<vertexDescriptor> FocusedConfigurator::explorer(vertexDescriptor v, 
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
-}while(g[bestNext].options.size()>0 && !er.ended);
+}while( !er.ended); //g[bestNext].options.size()>0 &&
 return plan_prov;
 }
 
