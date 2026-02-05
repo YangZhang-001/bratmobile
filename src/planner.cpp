@@ -179,7 +179,7 @@ void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Front
 	if (it_q!=queue.end()){
 		return;
 	}
-	if (auto oe=boost::out_edges(g, *it_q); oe.first==oe.second){
+	if (auto oe=boost::out_edges(g, (*it_q).frontier); oe.first==oe.second){
 		return;
 	}
 	for (auto i =queue.begin(); i!=queue.end(); i++){
