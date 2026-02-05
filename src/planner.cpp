@@ -179,9 +179,10 @@ void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Front
 	if (it_q!=queue.end()){
 		return;
 	}
-	if (auto oe=boost::out_edges(g, (*it_q).frontier); oe.first==oe.second){
-		return;
-	}
+	// vertexDescriptor frnt_tmp=(*it_q).frontier;
+	// if (auto oe=boost::out_edges(frnt_tmp,g); oe.first==oe.second){
+	// 	return;
+	// }
 	for (auto i =queue.begin(); i!=queue.end(); i++){
 		auto it=std::find(closed.begin(), closed.end(), f.frontier);
 		if (it!=closed.end()){

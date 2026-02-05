@@ -148,7 +148,7 @@ std::vector<vertexDescriptor> FocusedConfigurator::explorer(vertexDescriptor v, 
 		}
 	}
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
-	bestNext=priorityQueue[0];
+	bestNext=getNextSrc(priorityQueue);
 	reassign_direction(bestNext, direction);
 }while(g[bestNext].options.size()>0 && !er.ended); //
 return plan_prov;
@@ -436,7 +436,7 @@ void FocusedConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<ver
 vertexDescriptor FocusedConfigurator::getNextSrc(const std::vector<vertexDescriptor>& q){
 	int index=0;
 	vertexDescriptor bestNext=q[index];
-	while (transitionSystem[bestNext].options.empty()){
+	while (transitionSystem[bestNext].travel_transform()==b2Transform_zero){
 		index++;
 		bestNext=q[index];
 	}
