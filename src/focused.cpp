@@ -433,6 +433,15 @@ void FocusedConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<ver
 	}
 }
 
+vertexDescriptor FocusedConfigurator::getNextSrc(const std::vector<vertexDescriptor>& q){
+	int index=0;
+	vertexDescriptor bestNext=TransitionSystem::null_vertex();
+	while (bestNext=transitionSystem[priorityQueue[index]]; transitionSystem[bestNext]){
+		index++;
+	}
+	return bextNext;
+}
+
 
 
 VertexMatch FocusedConfigurator::hardMatch(State s, Direction dir, StateMatcher::MATCH_TYPE match_type, StateDifference * _sd){
