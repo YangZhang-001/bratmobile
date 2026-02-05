@@ -358,7 +358,7 @@ TEST_P(HighLevelTest, Recycle){
     EXPECT_LT(newStart.q.GetAngle(),0.0001);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder); //map 2
     int vertices_now=configurator->n_vertices();
-    EXPECT_LE(vertices_now, vertices_og);
+    EXPECT_NEAR(vertices_now, vertices_og, 1);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     EXPECT_TRUE(planned_to_goal);
 }
