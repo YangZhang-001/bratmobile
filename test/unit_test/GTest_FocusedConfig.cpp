@@ -27,11 +27,11 @@ class FCTest:public FocusedConfigurator, public testing::TestWithParam<bool> {
 
     }
 }
-};#
+};
 
 TEST_F(FCTest, getNextSrc){
-    make_module(MOVING_VERTEX);
-    std::vector<vertexDescriptor>& q={2, 3};
+    transitionSystem=TransitionSystem(4);
+    std::vector<vertexDescriptor> q={2, 3};
     transitionSystem[3].options={DEFAULT};
     EXPECT_EQ(getNextSrc(q), 3);
 }

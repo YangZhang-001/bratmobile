@@ -178,6 +178,10 @@ void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Front
 	if (auto it_q=std::find(queue.cbegin(), queue.cend(), f); it_q!=queue.end()){
 		return;
 	}
+	if (g[*it_q].options.empty()){
+		closed.insert(*it_q);
+		return;
+	}
 	for (auto i =queue.begin(); i!=queue.end(); i++){
 		auto it=std::find(closed.begin(), closed.end(), f.frontier);
 		if (it!=closed.end()){
