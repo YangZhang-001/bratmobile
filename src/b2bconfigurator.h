@@ -45,16 +45,20 @@ protected:
 
     //std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve) override;
 
-    /**
-     * @brief Doesn't split the task, just returns the vertex of the task at hand; if Task fails or 
-     * it's currently executing, it returns the source vertex for the task aswell
-     * 
-     * @param v vertex of the task
-     * @param d direction of the task that are allowed to split (not used)
-     * @param src source of the task
-     * @return std::vector <vertexDescriptor> 
-     */
-    std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex()) override;
+    // /**
+    //  * @brief Doesn't split the task, just returns the vertex of the task at hand; if Task fails or 
+    //  * it's currently executing, it returns the source vertex for the task aswell
+    //  * 
+    //  * @param v vertex of the task
+    //  * @param d direction of the task that are allowed to split (not used)
+    //  * @param src source of the task
+    //  * @return std::vector <vertexDescriptor> 
+    //  */
+    // std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex()) override;
+
+
+    virtual float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex());
+
 
     /**
      * @brief Same as AttentiveConfigurator::backtrack, but also adds vertex to priority queue if the vertex is in the clearvoyance

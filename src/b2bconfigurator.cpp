@@ -32,25 +32,29 @@ bool B2BConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDes
 // return result;
 // }
 
-std::vector <vertexDescriptor> B2BConfigurator::splitTask(vertexDescriptor v, Direction d, vertexDescriptor src){
-    std::vector <vertexDescriptor> split={v};
-	auto first_edge=boost::edge(src, v, transitionSystem); //assumes exists
-	if (transitionSystem[v].isTurning()){ //d
-		if ((src==MOVING_VERTEX || src==DUMMY )&& transitionSystem[v].outcome==simResult::crashed){
-			split.emplace(split.begin(), src);
-		}
-    	return split;
-	}
-	if (transitionSystem[v].outcome != simResult::crashed){
-		return split;
-	}
-	auto ie=inEdges(src);
-	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
-	if (!transitionSystem[src].isTurning()&& !ie.empty()){ //! //&& sameIterationEdgeIt!=ie.end()
-		transitionSystem[src].outcome=simResult::safeForNow;
-		split.insert(split.begin(), src);
-	}
-	return split;
+// std::vector <vertexDescriptor> B2BConfigurator::splitTask(vertexDescriptor v, Direction d, vertexDescriptor src){
+//     std::vector <vertexDescriptor> split={v};
+// 	auto first_edge=boost::edge(src, v, transitionSystem); //assumes exists
+// 	if (transitionSystem[v].isTurning()){ //d
+// 		if ((src==MOVING_VERTEX || src==DUMMY )&& transitionSystem[v].outcome==simResult::crashed){
+// 			split.emplace(split.begin(), src);
+// 		}
+//     	return split;
+// 	}
+// 	if (transitionSystem[v].outcome != simResult::crashed){
+// 		return split;
+// 	}
+// 	auto ie=inEdges(src);
+// 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
+// 	if (!transitionSystem[src].isTurning()&& !ie.empty()){ //! //&& sameIterationEdgeIt!=ie.end()
+// 		transitionSystem[src].outcome=simResult::safeForNow;
+// 		split.insert(split.begin(), src);
+// 	}
+// 	return split;
+// }
+
+float B2BConfigurator::customSimulationStep(vertexDescriptor v){
+	return BOX2DRANGE;
 }
 
 void B2BConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){

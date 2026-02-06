@@ -179,6 +179,7 @@ TEST_P(DebugB2BTestSplit, splitTask){
     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
     EXPECT_EQ(split.size(), solution);
 }
+
 // TEST_F(DebugB2BTest, splitTaskSuccess){
 //     b2Transform t=b2Transform(b2Vec2(0.6, 0), b2Rot(0));
 //     vertexDescriptor v1=make_successful(MOVING_VERTEX).m_target;
