@@ -919,18 +919,18 @@ std::vector <BodyFeatures> CreativeWorldBuilder::makeCulDeSac(float width, float
 
 }
 
-std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(){
+std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(float dist=0.3){
     BodyFeatures front, Lside, Rside, back;
-    front.pose.p=b2Vec2(0.3, 0);
-    Lside.pose.p=b2Vec2(0, 0.3);
-    Rside.pose.p=b2Vec2(0, -0.3);
+    front.pose.p=b2Vec2(dist, 0);
+    Lside.pose.p=b2Vec2(0, dist);
+    Rside.pose.p=b2Vec2(0, -dist);
     return std::vector <BodyFeatures>({front, Lside, Rside});
 }
 
-std::vector <BodyFeatures> CreativeWorldBuilder::makeTrickyTrap(){
-    std::vector <BodyFeatures> result=CreativeWorldBuilder::makeTricky();
+std::vector <BodyFeatures> CreativeWorldBuilder::makeTrickyTrap(float dist=0.3){
+    std::vector <BodyFeatures> result=CreativeWorldBuilder::makeTricky(dist);
     BodyFeatures trap;
-    trap.pose.p.x=-.3;
+    trap.pose.p.x=-dist;
     result.push_back(trap); //trap
     return result;
 }

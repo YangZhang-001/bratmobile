@@ -314,6 +314,28 @@ TEST_F(HighLevelTest, TrickyScenario){
     }
 }
 
+/**
+ * @brief The robot cannot pass in a small space between two obstacles and goes around
+ * 
+ */
+TEST_F(HighLevelTest, Trapped){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
+    configurator->init(DebugConfigurator::generateGoalTask());
+    configurator->addIteration();
+    configurator->get_worldbuilder()->add_iteration();
+    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTrickyTrap(.4));
+    b2World world(GRAVITY);
+    configurator->explorePlan(world);
+    EXPECT_GT(configurator->get_plan().size(), 0);
+    EXPECT_TRUE(has180Turn(configurator->get_plan()));
+    EXPECT_FALSE(configurator->get_plan().empty());
+    if (!configurator->get_plan().empty()){
+        bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+        EXPECT_TRUE(planned_to_goal);        
+    }
+}
 
 INSTANTIATE_TEST_CASE_P(CulDeSacTurning, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
                                                                            ::testing::Values(std::string("../cul_de_sac/")),

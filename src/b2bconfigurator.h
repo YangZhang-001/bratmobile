@@ -184,7 +184,7 @@ class ClearVoyance{
     public:
     struct DisturbanceLookahead {
         std::vector<Disturbance> disturbances;
-        vertexDescriptor source;
+        vertexDescriptor source; //vertex from which additional DEFAULT Tasks will be explored 
 
         DisturbanceLookahead()=default;
 
