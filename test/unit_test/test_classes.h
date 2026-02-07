@@ -369,6 +369,17 @@ class LogicalCheckPlanTest:public DebugConfigurator, public testing::TestWithPar
 class DebugB2BTest: public virtual DebugB2B, public testing::Test{
 };
 
+
+class DebugB2BOptions: public virtual DebugB2B, public testing::Test{
+
+    void SetUp()override{
+        dummy_vertex(MOVING_VERTEX);
+    }
+    void TearDown()override{
+        transitionSystem=TransitionSystem(1);
+    }
+};
+
 class DebugB2BTestVertex:public DebugB2BTest, public testing::WithParamInterface<vertexDescriptor>{
     public:
     DebugB2BTestVertex(){}

@@ -42,40 +42,40 @@ TEST(FrontierCrashed, predicate180Turn){
 
 
 
-TEST_F(DebugB2BTest, PartiallyExplore0) {
-    dummy_vertex(MOVING_VERTEX);
+TEST_F(DebugB2BOptions, PartiallyExplore0) {
     make_module(MOVING_VERTEX);
     setAllVisited();
     transitionMatrix(currentVertex, DEFAULT, currentVertex);
     EXPECT_EQ(transitionSystem[currentVertex].options.size(), 0);
 }
 
-TEST_F(DebugB2BTest, PartiallyExplore1) {
-    dummy_vertex(MOVING_VERTEX);
+TEST_F(DebugB2BOptions, PartiallyExplore1) {
     make_module(MOVING_VERTEX);
     setAllVisited();
-    transitionSystem[3].outcome=simResult::crashed;
+    transitionSystem[4].outcome=simResult::crashed;
     transitionMatrix(currentVertex, DEFAULT, currentVertex);
     EXPECT_EQ(transitionSystem[currentVertex].options.size(), 1);
+    EXPECT_EQ(transitionSystem[currentVertex].options[0], DEFAULT);
 }
 
-TEST_F(DebugB2BTest, PartiallyExplore2) {
-    dummy_vertex(MOVING_VERTEX);
+TEST_F(DebugB2BOptions, PartiallyExplore2) {
     make_module(MOVING_VERTEX);
     setAllVisited();
-    transitionSystem[3].outcome=simResult::crashed;
-    transitionSystem[5].outcome=simResult::crashed;
+    transitionSystem[4].outcome=simResult::crashed;
+    transitionSystem[6].outcome=simResult::crashed;
     transitionMatrix(currentVertex, DEFAULT, currentVertex);
     EXPECT_EQ(transitionSystem[currentVertex].options.size(), 2);
+    EXPECT_EQ(transitionSystem[currentVertex].options[0], DEFAULT);
+    EXPECT_EQ(transitionSystem[currentVertex].options[1], DEFAULT);
 }
 
-TEST_F(DebugB2BTest, ApplyTransitionInHindsight){
+TEST_F(DebugB2BOptions, ApplyTransitionInHindsight){
     make_module(MOVING_VERTEX);
     setAllVisited();
-    transitionSystem[3].outcome=simResult::crashed;
-    transitionSystem[5].outcome=simResult::crashed;
-    applyTransitionMatrix(MOVING_VERTEX, DEFAULT, false, MOVING_VERTEX, m_plan);
-    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
+    transitionSystem[4].outcome=simResult::crashed;
+    transitionSystem[6].outcome=simResult::crashed;
+    applyTransitionMatrix(currentVertex, DEFAULT, false, currentVertex, m_plan);
+    EXPECT_EQ(transitionSystem[currentVertex].options.size(), 2);
 }
 
 
