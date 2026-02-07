@@ -11,7 +11,6 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
 	Mul(shift_start, controlGoal_adjusted);
 	if (edge.first.m_source!=v0){
-		boost::remove_edge(edge.first, transitionSystem);
 		edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
 	}
 	if (!boost::edge(edge.first.m_source, edge.first.m_target, transitionSystem).second){
