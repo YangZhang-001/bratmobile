@@ -19,34 +19,6 @@ TEST_F(DebugB2BTest, Explorer){
     delete tracker;
 }
 
-// TEST_F(DebugB2BTest, ExplorePlan){
-//     register_tracker(new ClosedLoop_Tracker);
-//     init();
-//     EXPECT_FALSE(tracker==NULL);
-//     b2World world(GRAVITY);
-//     iteration++;
-//     explore_plan(world);
-//     delete tracker;
-// }
-
-// TEST_F(DebugB2BTest, TSCleanup){
-//     B2BConfigurator::init();
-//     transitionSystem=TransitionSystem(5);
-//     for (int i=1; i<4;i++){
-//         auto e=boost::add_edge(MOVING_VERTEX, i, transitionSystem);
-//         transitionSystem[e.first].step=1;
-//     }
-//     boost::add_edge(1,1, transitionSystem); //trivial self-edge
-//     auto e2= boost::add_edge(2,2, transitionSystem); //nontrivial self-edge
-//     transitionSystem[e2.first].step=1;
-//     B2BConfigurator::ts_cleanup();
-//     EXPECT_EQ(transitionSystem.m_vertices.size(), 4);
-//     EXPECT_EQ(boost::out_degree(1, transitionSystem), 0); //out edge deleted
-//     EXPECT_EQ(boost::in_degree(1, transitionSystem), 1);
-//     EXPECT_EQ(boost::out_degree(2, transitionSystem), 1); //edge is preserved
-//     EXPECT_EQ(boost::out_degree(0, transitionSystem), 3);
-// }
-
 TEST(FrontierCrashed, predicate){
     TransitionSystem ts(2);
     ts[1].direction=DEFAULT;
@@ -70,38 +42,38 @@ TEST(FrontierCrashed, predicate180Turn){
 
 
 
-// TEST_F(DebugB2BTest, PartiallyExplore0) {
-//     make_module(MOVING_VERTEX);
-//     setAllVisited();
-//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
-//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 0);
-// }
+TEST_F(DebugB2BTest, PartiallyExplore0) {
+    make_module(MOVING_VERTEX);
+    setAllVisited();
+    transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
+    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 0);
+}
 
-// TEST_F(DebugB2BTest, PartiallyExplore1) {
-//     make_module(MOVING_VERTEX);
-//     setAllVisited();
-//     transitionSystem[3].outcome=simResult::crashed;
-//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
-//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
-// }
+TEST_F(DebugB2BTest, PartiallyExplore1) {
+    make_module(MOVING_VERTEX);
+    setAllVisited();
+    transitionSystem[3].outcome=simResult::crashed;
+    transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
+    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
+}
 
-// TEST_F(DebugB2BTest, PartiallyExplore2) {
-//     make_module(MOVING_VERTEX);
-//     setAllVisited();
-//     transitionSystem[3].outcome=simResult::crashed;
-//     transitionSystem[5].outcome=simResult::crashed;
-//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
-//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
-// }
+TEST_F(DebugB2BTest, PartiallyExplore2) {
+    make_module(MOVING_VERTEX);
+    setAllVisited();
+    transitionSystem[3].outcome=simResult::crashed;
+    transitionSystem[5].outcome=simResult::crashed;
+    transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
+    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
+}
 
-// TEST_F(DebugB2BTest, ApplyTransitionInHindsight){
-//     make_module(MOVING_VERTEX);
-//     setAllVisited();
-//     transitionSystem[3].outcome=simResult::crashed;
-//     transitionSystem[5].outcome=simResult::crashed;
-//     applyTransitionMatrix(MOVING_VERTEX, DEFAULT, false, MOVING_VERTEX, m_plan);
-//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
-// }
+TEST_F(DebugB2BTest, ApplyTransitionInHindsight){
+    make_module(MOVING_VERTEX);
+    setAllVisited();
+    transitionSystem[3].outcome=simResult::crashed;
+    transitionSystem[5].outcome=simResult::crashed;
+    applyTransitionMatrix(MOVING_VERTEX, DEFAULT, false, MOVING_VERTEX, m_plan);
+    EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
+}
 
 
 
