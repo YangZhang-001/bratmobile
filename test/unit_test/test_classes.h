@@ -474,9 +474,9 @@ class CreativeWorldBuilder: public WorldBuilder{
      * 
      * @return std::vector <BodyFeatures> 
      */
-    static std::vector <BodyFeatures> makeTricky();
+    static std::vector <BodyFeatures> makeTricky(float dist =0.3);
 
-    static std::vector <BodyFeatures> makeTrickyTrap();
+    static std::vector <BodyFeatures> makeTrickyTrap(float dist =0.3);
 
     void addObject(const BodyFeatures& bf){world_objects.push_back(bf);}
 };
@@ -919,7 +919,7 @@ std::vector <BodyFeatures> CreativeWorldBuilder::makeCulDeSac(float width, float
 
 }
 
-std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(float dist=0.3){
+std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(float dist){
     BodyFeatures front, Lside, Rside, back;
     front.pose.p=b2Vec2(dist, 0);
     Lside.pose.p=b2Vec2(0, dist);
@@ -927,7 +927,7 @@ std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(float dist=0.3){
     return std::vector <BodyFeatures>({front, Lside, Rside});
 }
 
-std::vector <BodyFeatures> CreativeWorldBuilder::makeTrickyTrap(float dist=0.3){
+std::vector <BodyFeatures> CreativeWorldBuilder::makeTrickyTrap(float dist){
     std::vector <BodyFeatures> result=CreativeWorldBuilder::makeTricky(dist);
     BodyFeatures trap;
     trap.pose.p.x=-dist;
