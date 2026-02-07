@@ -43,6 +43,7 @@ TEST(FrontierCrashed, predicate180Turn){
 
 
 TEST_F(DebugB2BTest, PartiallyExplore0) {
+    dummy_vertex(MOVING_VERTEX);
     make_module(MOVING_VERTEX);
     setAllVisited();
     transitionMatrix(currentVertex, DEFAULT, currentVertex);
@@ -50,6 +51,7 @@ TEST_F(DebugB2BTest, PartiallyExplore0) {
 }
 
 TEST_F(DebugB2BTest, PartiallyExplore1) {
+    dummy_vertex(MOVING_VERTEX);
     make_module(MOVING_VERTEX);
     setAllVisited();
     transitionSystem[3].outcome=simResult::crashed;
@@ -58,6 +60,7 @@ TEST_F(DebugB2BTest, PartiallyExplore1) {
 }
 
 TEST_F(DebugB2BTest, PartiallyExplore2) {
+    dummy_vertex(MOVING_VERTEX);
     make_module(MOVING_VERTEX);
     setAllVisited();
     transitionSystem[3].outcome=simResult::crashed;
