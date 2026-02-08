@@ -879,6 +879,10 @@ class ReactiveConfTest: public ReactiveConfigurator, public ::testing::TestWithP
 
 };
 
+class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<std::tuple<float, float, float>>{};
+
+class CLAdaptiveTrackerTest: public CLAdaptiveTracker, public ::testing::TestWithParam<float>{};
+
 ////////////////////////////////////////////////////////////////////////
 
 int DebugConfigurator::get_vertex_in_degree(vertexDescriptor v){
