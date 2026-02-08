@@ -1,6 +1,8 @@
 #include "test_classes.h"
 const bool DEBUG=true;
 
+class FigureTest: public HighLevelTestBase, public testing::Test{};
+
 /**
  * I am just running these one by one because CBA. Basically delete everything in tmp
  * and run the test you want and it'll print robot paths and lidar readings.
@@ -11,7 +13,7 @@ const bool DEBUG=true;
  * @brief Print noisy LIDAR scan and robot performance in recycling in a similar scenario
  */
 
-TEST_F(RecycleTest, PrintTransform){
+TEST_F(FigureTest, PrintTransform){
     char info[20];
     CLAdaptiveTracker newTracker;
     configurator->register_tracker(&newTracker);

@@ -1,5 +1,6 @@
 #include "test_classes.h"
 const bool DEBUG=false;
+class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<std::tuple<float, float, float>>{};
 
 TEST_P(CLAdaptiveTrackerTest, Threshold){
     State s;
@@ -46,11 +47,11 @@ TEST_P(RecycleTest, Transform){
     // sprintf(name,"/tmp/transform%s", info);
     // FILE *f=fopen(name, "w+");
     // CoordinateContainer cc;
-    // for (auto p: points){
-    //     b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
-    //     fprintf(f, "%0.3f\t%0.3f\n", p2d.x, p2d.y);
-    //     newPoints.emplace(Pointf(p2d.x, p2d.y));
-    // }
+    for (auto p: points){
+        b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
+       // fprintf(f, "%0.3f\t%0.3f\n", p2d.x, p2d.y);
+        newPoints.emplace(Pointf(p2d.x, p2d.y));
+    }
     // fclose(f);
     configurator->set_data2fp(newPoints);
     configurator->newScanEvent();

@@ -369,6 +369,17 @@ class LogicalCheckPlanTest:public DebugConfigurator, public testing::TestWithPar
 class DebugB2BTest: public virtual DebugB2B, public testing::Test{
 };
 
+
+class DebugB2BOptions: public virtual DebugB2B, public testing::Test{
+
+    void SetUp()override{
+        dummy_vertex(MOVING_VERTEX);
+    }
+    void TearDown()override{
+        transitionSystem=TransitionSystem(1);
+    }
+};
+
 class DebugB2BTestVertex:public DebugB2BTest, public testing::WithParamInterface<vertexDescriptor>{
     public:
     DebugB2BTestVertex(){}
@@ -474,9 +485,9 @@ class CreativeWorldBuilder: public WorldBuilder{
      * 
      * @return std::vector <BodyFeatures> 
      */
-    static std::vector <BodyFeatures> makeTricky();
+    static std::vector <BodyFeatures> makeTricky(float dist =0.3);
 
-    static std::vector <BodyFeatures> makeTrickyTrap();
+    static std::vector <BodyFeatures> makeTrickyTrap(float dist =0.3);
 
     void addObject(const BodyFeatures& bf){world_objects.push_back(bf);}
 };
@@ -879,9 +890,10 @@ class ReactiveConfTest: public ReactiveConfigurator, public ::testing::TestWithP
 
 };
 
-class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<std::tuple<float, float, float>>{};
+
 
 class CLAdaptiveTrackerTest: public CLAdaptiveTracker, public ::testing::TestWithParam<float>{};
+
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -923,18 +935,18 @@ std::vector <BodyFeatures> CreativeWorldBuilder::makeCulDeSac(float width, float
 
 }
 
-std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(){
+std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(float dist){
     BodyFeatures front, Lside, Rside, back;
-    front.pose.p=b2Vec2(0.3, 0);
-    Lside.pose.p=b2Vec2(0, 0.3);
-    Rside.pose.p=b2Vec2(0, -0.3);
+    front.pose.p=b2Vec2(dist, 0);
+    Lside.pose.p=b2Vec2(0, dist);
+    Rside.pose.p=b2Vec2(0, -dist);
     return std::vector <BodyFeatures>({front, Lside, Rside});
 }
 
-std::vector <BodyFeatures> CreativeWorldBuilder::makeTrickyTrap(){
-    std::vector <BodyFeatures> result=CreativeWorldBuilder::makeTricky();
+std::vector <BodyFeatures> CreativeWorldBuilder::makeTrickyTrap(float dist){
+    std::vector <BodyFeatures> result=CreativeWorldBuilder::makeTricky(dist);
     BodyFeatures trap;
-    trap.pose.p.x=-.3;
+    trap.pose.p.x=-dist;
     result.push_back(trap); //trap
     return result;
 }
