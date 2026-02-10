@@ -1,7 +1,7 @@
  
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 
-SET(CMAKE_CXX_STANDARD 17)
+project(brat_test LANGUAGES CXX)
 
 find_package(OpenCV REQUIRED)
 
@@ -106,6 +106,7 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64|AMD64") # for x86
     gtest_discover_tests(GTest_FocusedConfig)
     gtest_discover_tests(GTest_Discrete)
 else()
+    enable_testing()
     include(FetchContent)
 
     FetchContent_Declare(
