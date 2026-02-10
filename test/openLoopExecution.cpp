@@ -17,9 +17,6 @@ int main(int argc, char** argv) {
     configurator.init(controlGoal);
 	OpenLoopController rc;
 	configurator.register_controller(&rc);
-	if (argc>2){
-		configuratorInterface.debugOn=atoi(argv[2]);
-	}
 	configurator.setSimulationStep(.5);
 	LidarInterface dataInterface(&configurator);
 	configurator.registerInterface(&openLooper);
