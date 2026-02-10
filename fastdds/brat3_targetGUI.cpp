@@ -8,7 +8,6 @@ class OpenLooperGUI: public OLTrackerGUI, public MotorCallback{
 
     void on_new_task(const Task &task, const Task & goal){
         motorStep=task.getMotorStep();
-        std::cout<<"motorStep="<<motorStep<<std::endl;
         deltaTransform=b2Transform_zero;
     }
 
@@ -20,9 +19,7 @@ class OpenLooperGUI: public OLTrackerGUI, public MotorCallback{
     void step(AlphaBot& motors)override{
         if (L!=0 && R!=0){
             motorStep--;
-            std::cout<<"one down"<<std::endl;
-            std::cout<<"motorStep="<<motorStep<<std::endl;
-        }
+		}
         if (motorStep==0){
             L=0;
             R=0;
