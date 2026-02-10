@@ -35,6 +35,10 @@ public:
         valid = b;
     }
 
+        /**
+     * @brief Compares absolute values
+     */
+    bool operator>(Measurement &);
     /**
      * @brief Compares absolute values
      */

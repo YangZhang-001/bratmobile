@@ -39,7 +39,7 @@ b2PolygonShape WorldBuilder::object_filtering_box(float halfWindowWidth, float b
     b2PolygonShape box;
     b2Vec2 centroid(0,0);
     if (d ==LEFT || d==RIGHT){
-        halfWindowWidth =ROBOT_HALFLENGTH -ROBOT_BOX_OFFSET_X; //og 16 cm
+        halfWindowWidth =ROBOT_HALFWIDTH -ROBOT_BOX_OFFSET_X; //og 16 cm
         boxLength=halfWindowWidth*2;
     }
     else{

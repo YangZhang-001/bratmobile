@@ -87,7 +87,6 @@ Robot Configurator::makeRobot(b2World& world, const Task & task){
 simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State src, 
 	simResult result;
 	float remaining=remainingSimulationTime(&t);
-	printf("remaining=%f\n", remaining);
 	Robot robot=makeRobot(w, t);
 	worldBuilder->add_body_count();
 	simulatedTasks++;
@@ -183,13 +182,14 @@ void Configurator::newScanEvent(){
 			trackingResult= tracker->track((currentTask),data2fp, worldBuilder->get_world_objects());
 			update_graph(transitionSystem, trackingResult);
 		}
+		tracker->on_new_reading(currentTask, controlGoal);
 		if (goal_changer!=NULL){
 			if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
 				controlGoal=goal_changer->change_goal(controlGoal);
 			}					
 		}
 		change_task();		
-		adjust_goal_expectation(); //dubious if this is needed tbh
+		//adjust_goal_expectation(); //dubious if this is needed tbh
 		estimate_current_vertex();
 }
 
@@ -271,7 +271,7 @@ void Configurator::change_task(){
 void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
 	math::InvMul(tr.displacement, g);
 	Configurator::InvMul(tr.displacement, controlGoal);
-	debug::print_pose(controlGoal.disturbance.pose(), "goal disturbance after tracking:");
+	//debug::print_pose(controlGoal.disturbance.pose(), "goal disturbance after tracking:");
 	currentTask.disturbance=tr.observed_disturbance;
 	if (!tracker){
 		std::cout <<"tracker uninitialised!";
