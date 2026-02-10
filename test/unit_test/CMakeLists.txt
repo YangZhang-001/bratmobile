@@ -11,18 +11,18 @@ find_package(PkgConfig)
 
 find_package(Threads)
 
-find_package(GTest CONFIG REQUIRED)
 
-include(CTest)
-include(FetchContent)
-
-include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
-include(GoogleTest)
-message(STATUS "GTest include dirs: ${GTEST_INCLUDE_DIRS}")
 
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64|AMD64") # for x86
+    find_package(GTest CONFIG REQUIRED)
 
+    include(CTest)
+    include(FetchContent)
+
+    include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
+    include(GoogleTest)
+    message(STATUS "GTest include dirs: ${GTEST_INCLUDE_DIRS}")
 
     add_executable(GTest_HighLevel GTest_HighLevel.cpp)
     target_link_libraries(GTest_HighLevel gtest gtest_main)
@@ -105,7 +105,19 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64|AMD64") # for x86
     gtest_discover_tests(GTest_Tracker)
     gtest_discover_tests(GTest_FocusedConfig)
     gtest_discover_tests(GTest_Discrete)
+else()
+    include(FetchContent)
 
+    FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG v1.14.0
+    )
+
+    # This line avoids weird platform defaults
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+    FetchContent_MakeAvailable(googletest)
 endif()
 
 add_executable(GTest_Recycle_Exp GTest_Recycle_Exp.cpp)
