@@ -108,7 +108,6 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64|AMD64") # for x86
     gtest_discover_tests(GTest_Tracker)
     gtest_discover_tests(GTest_FocusedConfig)
     gtest_discover_tests(GTest_Discrete)
-    gtest_discover_tests(GTest_Recycle_Exp)
 else()
     enable_testing()
     include(FetchContent)
@@ -125,11 +124,16 @@ else()
     FetchContent_MakeAvailable(googletest)
 endif()
 
+
+
+
 add_executable(GTest_Recycle_Exp GTest_Recycle_Exp.cpp)
 target_link_libraries(GTest_Recycle_Exp gtest gtest_main)
 target_link_libraries(GTest_Recycle_Exp  brat ${OpenCV_LIBS} box2d rt GTest::gtest_main GTest::gtest pthread)
 
-
+if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64|AMD64") # for x86
+    gtest_discover_tests(GTest_Recycle_Exp)
+endif()
 
 set(CMAKE_BUILD_TYPE Debug)
 

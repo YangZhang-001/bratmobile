@@ -12,13 +12,13 @@ TEST_P(CLAdaptiveTrackerTest, Threshold){
 INSTANTIATE_TEST_CASE_P(Ends, CLAdaptiveTrackerTest, testing::Values(0.5, 0.05));
 
 TEST_P(RecycleTest, Transform){
-    char filename[20];
+    char filename[20], newfolder[20];
     CLAdaptiveTracker newTracker;
     configurator->register_tracker(&newTracker);
     b2Transform b2d_transform(b2Vec2(std::get<0>(GetParam()),std::get<1>(GetParam())), b2Rot(std::get<2>(GetParam())));
     sprintf(filename,"%0.3f-%0.3f-%0.3f",b2d_transform.p.x, b2d_transform.p.y, b2d_transform.q.GetAngle() );
-    
-    Logger logger("RecycleTests/", "benchmarkx"+std::string(Logger::getSystemArchitecture()), filename);
+    sprintf(newfolder,"benchmark%s",Logger::getSystemArchitecture());    
+    Logger logger("RecycleTests/", newfolder, filename);
     configurator->register_logger(&logger);
     Task goal;
     b2Transform shift=b2Transform_zero;
