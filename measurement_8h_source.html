@@ -102,80 +102,82 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        valid = b;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    }</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMeasurement.html#a24389214a63983e3aef4703ea9261fc6">operator&lt;</a>(<a class="code" href="classMeasurement.html">Measurement</a> &amp;);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMeasurement.html#a3aa6850b49123ffb3e076d5482766416">operator&lt;=</a>(<a class="code" href="classMeasurement.html">Measurement</a> &amp;);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMeasurement.html#ab9e9bcb655d45574d49043a4f59b4bfc">operator&gt;=</a>(<a class="code" href="classMeasurement.html">Measurement</a> &amp;);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMeasurement.html#a25836862cc1d436feb499efdd6fe1633">operator==</a>(<a class="code" href="classMeasurement.html">Measurement</a>&amp; m2);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">float</span> <a class="code" href="classMeasurement.html#acfe535591b31a5e45815cbf459926921">getStandardError</a>(<a class="code" href="classMeasurement.html">Measurement</a>, <span class="keywordtype">float</span>); <span class="comment">//relative standard error</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;};</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMeasurement.html#a977422ce5e3e986ecf7dc238e3623fe6">operator&gt;</a>(<a class="code" href="classMeasurement.html">Measurement</a> &amp;);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMeasurement.html#a24389214a63983e3aef4703ea9261fc6">operator&lt;</a>(<a class="code" href="classMeasurement.html">Measurement</a> &amp;);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMeasurement.html#a3aa6850b49123ffb3e076d5482766416">operator&lt;=</a>(<a class="code" href="classMeasurement.html">Measurement</a> &amp;);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMeasurement.html#ab9e9bcb655d45574d49043a4f59b4bfc">operator&gt;=</a>(<a class="code" href="classMeasurement.html">Measurement</a> &amp;);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classMeasurement.html#a25836862cc1d436feb499efdd6fe1633">operator==</a>(<a class="code" href="classMeasurement.html">Measurement</a>&amp; m2);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">float</span> <a class="code" href="classMeasurement.html#acfe535591b31a5e45815cbf459926921">getStandardError</a>(<a class="code" href="classMeasurement.html">Measurement</a>, <span class="keywordtype">float</span>); <span class="comment">//relative standard error</span></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="classAngle.html">   67</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAngle.html">Angle</a>: <span class="keyword">public</span> <a class="code" href="classMeasurement.html">Measurement</a>{</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="code" href="classAngle.html">Angle</a>(){}</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="classAngle.html">Angle</a>(<span class="keywordtype">float</span> f){  </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="comment">//value =round(f*1000)/1000;</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        value = f; <span class="comment">//no rounding</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        valid =1;}</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;};</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="classDistance.html">   76</a></span>&#160;<span class="keyword">class </span><a class="code" href="classDistance.html">Distance</a>: <span class="keyword">public</span> <a class="code" href="classMeasurement.html">Measurement</a>{</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="classDistance.html">Distance</a>(){}</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="classDistance.html">Distance</a>(<span class="keywordtype">float</span> f)</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    {value = round(f*1000)/1000;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    valid =1;}</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;};</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="structEndCriteria.html">   88</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structEndCriteria.html">EndCriteria</a>{</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="classAngle.html">Angle</a> angle;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="classDistance.html">Distance</a> distance;    <span class="comment">//max distance, ideal</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="comment"></span>    <span class="keywordtype">float</span> <a class="code" href="structEndCriteria.html#ae6ae696bbc97acfe8f38d4ec9849fcf3">getStandardError</a>(<a class="code" href="classAngle.html">Angle</a> a, <a class="code" href="classDistance.html">Distance</a> d);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">float</span> <a class="code" href="structEndCriteria.html#ae6ae696bbc97acfe8f38d4ec9849fcf3">getStandardError</a>(<a class="code" href="classAngle.html">Angle</a> a, <a class="code" href="classDistance.html">Distance</a> d, <a class="code" href="structState.html">State</a> n);</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">bool</span> hasEnd();</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">void</span> operator=( <a class="code" href="structEndCriteria.html">EndCriteria</a> ec){</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        angle=ec.angle;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        distance=ec.distance;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    }</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="structEndCriteria.html#adc8a4424794862389dadec49f71964a4">adjust</a>(<span class="keyword">const</span> b2Transform&amp; delta);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;};</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="structEndedResult.html">  122</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structEndedResult.html">EndedResult</a>{</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">bool</span> ended=0;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordtype">float</span> estimatedCost=0; <span class="comment">//dot product of end criteria, heuristic cost</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordtype">float</span> cost=0; <span class="comment">//gamma</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <a class="code" href="structEndedResult.html">EndedResult</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;};</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;};</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="classAngle.html">   71</a></span>&#160;<span class="keyword">class </span><a class="code" href="classAngle.html">Angle</a>: <span class="keyword">public</span> <a class="code" href="classMeasurement.html">Measurement</a>{</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="classAngle.html">Angle</a>(){}</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="classAngle.html">Angle</a>(<span class="keywordtype">float</span> f){  </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="comment">//value =round(f*1000)/1000;</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        value = f; <span class="comment">//no rounding</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        valid =1;}</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;};</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="classDistance.html">   80</a></span>&#160;<span class="keyword">class </span><a class="code" href="classDistance.html">Distance</a>: <span class="keyword">public</span> <a class="code" href="classMeasurement.html">Measurement</a>{</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <a class="code" href="classDistance.html">Distance</a>(){}</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="classDistance.html">Distance</a>(<span class="keywordtype">float</span> f)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    {value = round(f*1000)/1000;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    valid =1;}</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;};</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="structEndCriteria.html">   92</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structEndCriteria.html">EndCriteria</a>{</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <a class="code" href="classAngle.html">Angle</a> angle;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="classDistance.html">Distance</a> distance;    <span class="comment">//max distance, ideal</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment"></span>    <span class="keywordtype">float</span> <a class="code" href="structEndCriteria.html#ae6ae696bbc97acfe8f38d4ec9849fcf3">getStandardError</a>(<a class="code" href="classAngle.html">Angle</a> a, <a class="code" href="classDistance.html">Distance</a> d);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordtype">float</span> <a class="code" href="structEndCriteria.html#ae6ae696bbc97acfe8f38d4ec9849fcf3">getStandardError</a>(<a class="code" href="classAngle.html">Angle</a> a, <a class="code" href="classDistance.html">Distance</a> d, <a class="code" href="structState.html">State</a> n);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">bool</span> hasEnd();</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">void</span> operator=( <a class="code" href="structEndCriteria.html">EndCriteria</a> ec){</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        angle=ec.angle;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        distance=ec.distance;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    }</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="structEndCriteria.html#adc8a4424794862389dadec49f71964a4">adjust</a>(<span class="keyword">const</span> b2Transform&amp; delta);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160; </div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;};</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="structEndedResult.html">  126</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structEndedResult.html">EndedResult</a>{</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordtype">bool</span> ended=0;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">float</span> estimatedCost=0; <span class="comment">//dot product of end criteria, heuristic cost</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordtype">float</span> cost=0; <span class="comment">//gamma</span></div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="keywordtype">float</span> SignedVectorLength(b2Vec2);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <a class="code" href="structEndedResult.html">EndedResult</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassAngle_html"><div class="ttname"><a href="classAngle.html">Angle</a></div><div class="ttdef"><b>Definition:</b> measurement.h:67</div></div>
-<div class="ttc" id="aclassDistance_html"><div class="ttname"><a href="classDistance.html">Distance</a></div><div class="ttdef"><b>Definition:</b> measurement.h:76</div></div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;};</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="keywordtype">float</span> SignedVectorLength(b2Vec2);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassAngle_html"><div class="ttname"><a href="classAngle.html">Angle</a></div><div class="ttdef"><b>Definition:</b> measurement.h:71</div></div>
+<div class="ttc" id="aclassDistance_html"><div class="ttname"><a href="classDistance.html">Distance</a></div><div class="ttdef"><b>Definition:</b> measurement.h:80</div></div>
 <div class="ttc" id="aclassMeasurement_html"><div class="ttname"><a href="classMeasurement.html">Measurement</a></div><div class="ttdoc">A class for a single Task execution info measurement.</div><div class="ttdef"><b>Definition:</b> measurement.h:10</div></div>
-<div class="ttc" id="aclassMeasurement_html_a24389214a63983e3aef4703ea9261fc6"><div class="ttname"><a href="classMeasurement.html#a24389214a63983e3aef4703ea9261fc6">Measurement::operator&lt;</a></div><div class="ttdeci">bool operator&lt;(Measurement &amp;)</div><div class="ttdoc">Compares absolute values.</div><div class="ttdef"><b>Definition:</b> measurement.cpp:3</div></div>
-<div class="ttc" id="aclassMeasurement_html_a25836862cc1d436feb499efdd6fe1633"><div class="ttname"><a href="classMeasurement.html#a25836862cc1d436feb499efdd6fe1633">Measurement::operator==</a></div><div class="ttdeci">bool operator==(Measurement &amp;m2)</div><div class="ttdoc">Compares signed values.</div><div class="ttdef"><b>Definition:</b> measurement.cpp:36</div></div>
-<div class="ttc" id="aclassMeasurement_html_a3aa6850b49123ffb3e076d5482766416"><div class="ttname"><a href="classMeasurement.html#a3aa6850b49123ffb3e076d5482766416">Measurement::operator&lt;=</a></div><div class="ttdeci">bool operator&lt;=(Measurement &amp;)</div><div class="ttdoc">Compares absolute values.</div><div class="ttdef"><b>Definition:</b> measurement.cpp:14</div></div>
-<div class="ttc" id="aclassMeasurement_html_ab9e9bcb655d45574d49043a4f59b4bfc"><div class="ttname"><a href="classMeasurement.html#ab9e9bcb655d45574d49043a4f59b4bfc">Measurement::operator&gt;=</a></div><div class="ttdeci">bool operator&gt;=(Measurement &amp;)</div><div class="ttdoc">Compares absolute values.</div><div class="ttdef"><b>Definition:</b> measurement.cpp:25</div></div>
-<div class="ttc" id="aclassMeasurement_html_acfe535591b31a5e45815cbf459926921"><div class="ttname"><a href="classMeasurement.html#acfe535591b31a5e45815cbf459926921">Measurement::getStandardError</a></div><div class="ttdeci">float getStandardError(Measurement, float)</div><div class="ttdoc">Gets error between this and another measurement, normalised by the maximum error value error can take...</div><div class="ttdef"><b>Definition:</b> measurement.cpp:49</div></div>
+<div class="ttc" id="aclassMeasurement_html_a24389214a63983e3aef4703ea9261fc6"><div class="ttname"><a href="classMeasurement.html#a24389214a63983e3aef4703ea9261fc6">Measurement::operator&lt;</a></div><div class="ttdeci">bool operator&lt;(Measurement &amp;)</div><div class="ttdoc">Compares absolute values.</div><div class="ttdef"><b>Definition:</b> measurement.cpp:14</div></div>
+<div class="ttc" id="aclassMeasurement_html_a25836862cc1d436feb499efdd6fe1633"><div class="ttname"><a href="classMeasurement.html#a25836862cc1d436feb499efdd6fe1633">Measurement::operator==</a></div><div class="ttdeci">bool operator==(Measurement &amp;m2)</div><div class="ttdoc">Compares signed values.</div><div class="ttdef"><b>Definition:</b> measurement.cpp:47</div></div>
+<div class="ttc" id="aclassMeasurement_html_a3aa6850b49123ffb3e076d5482766416"><div class="ttname"><a href="classMeasurement.html#a3aa6850b49123ffb3e076d5482766416">Measurement::operator&lt;=</a></div><div class="ttdeci">bool operator&lt;=(Measurement &amp;)</div><div class="ttdoc">Compares absolute values.</div><div class="ttdef"><b>Definition:</b> measurement.cpp:25</div></div>
+<div class="ttc" id="aclassMeasurement_html_a977422ce5e3e986ecf7dc238e3623fe6"><div class="ttname"><a href="classMeasurement.html#a977422ce5e3e986ecf7dc238e3623fe6">Measurement::operator&gt;</a></div><div class="ttdeci">bool operator&gt;(Measurement &amp;)</div><div class="ttdoc">Compares absolute values.</div><div class="ttdef"><b>Definition:</b> measurement.cpp:3</div></div>
+<div class="ttc" id="aclassMeasurement_html_ab9e9bcb655d45574d49043a4f59b4bfc"><div class="ttname"><a href="classMeasurement.html#ab9e9bcb655d45574d49043a4f59b4bfc">Measurement::operator&gt;=</a></div><div class="ttdeci">bool operator&gt;=(Measurement &amp;)</div><div class="ttdoc">Compares absolute values.</div><div class="ttdef"><b>Definition:</b> measurement.cpp:36</div></div>
+<div class="ttc" id="aclassMeasurement_html_acfe535591b31a5e45815cbf459926921"><div class="ttname"><a href="classMeasurement.html#acfe535591b31a5e45815cbf459926921">Measurement::getStandardError</a></div><div class="ttdeci">float getStandardError(Measurement, float)</div><div class="ttdoc">Gets error between this and another measurement, normalised by the maximum error value error can take...</div><div class="ttdef"><b>Definition:</b> measurement.cpp:60</div></div>
 <div class="ttc" id="aclassTask_html"><div class="ttname"><a href="classTask.html">Task</a></div><div class="ttdoc">A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...</div><div class="ttdef"><b>Definition:</b> task.h:47</div></div>
-<div class="ttc" id="astructEndCriteria_html"><div class="ttname"><a href="structEndCriteria.html">EndCriteria</a></div><div class="ttdoc">Defines the end criteria for a Task, i.e. when it is considered to be finished.</div><div class="ttdef"><b>Definition:</b> measurement.h:88</div></div>
-<div class="ttc" id="astructEndCriteria_html_adc8a4424794862389dadec49f71964a4"><div class="ttname"><a href="structEndCriteria.html#adc8a4424794862389dadec49f71964a4">EndCriteria::adjust</a></div><div class="ttdeci">void adjust(const b2Transform &amp;delta)</div><div class="ttdoc">Ajusts endcriteria based on the delta transform (2D transform representing how much the robot has tra...</div><div class="ttdef"><b>Definition:</b> measurement.cpp:94</div></div>
-<div class="ttc" id="astructEndCriteria_html_ae6ae696bbc97acfe8f38d4ec9849fcf3"><div class="ttname"><a href="structEndCriteria.html#ae6ae696bbc97acfe8f38d4ec9849fcf3">EndCriteria::getStandardError</a></div><div class="ttdeci">float getStandardError(Angle a, Distance d)</div><div class="ttdoc">Calculates normalised cumulative standard error for the given angle and distance.</div><div class="ttdef"><b>Definition:</b> measurement.cpp:62</div></div>
-<div class="ttc" id="astructEndedResult_html"><div class="ttname"><a href="structEndedResult.html">EndedResult</a></div><div class="ttdoc">Provides information on whether a Task has ended and with what heuristic -estimated- cost (chi) and p...</div><div class="ttdef"><b>Definition:</b> measurement.h:122</div></div>
+<div class="ttc" id="astructEndCriteria_html"><div class="ttname"><a href="structEndCriteria.html">EndCriteria</a></div><div class="ttdoc">Defines the end criteria for a Task, i.e. when it is considered to be finished.</div><div class="ttdef"><b>Definition:</b> measurement.h:92</div></div>
+<div class="ttc" id="astructEndCriteria_html_adc8a4424794862389dadec49f71964a4"><div class="ttname"><a href="structEndCriteria.html#adc8a4424794862389dadec49f71964a4">EndCriteria::adjust</a></div><div class="ttdeci">void adjust(const b2Transform &amp;delta)</div><div class="ttdoc">Ajusts endcriteria based on the delta transform (2D transform representing how much the robot has tra...</div><div class="ttdef"><b>Definition:</b> measurement.cpp:105</div></div>
+<div class="ttc" id="astructEndCriteria_html_ae6ae696bbc97acfe8f38d4ec9849fcf3"><div class="ttname"><a href="structEndCriteria.html#ae6ae696bbc97acfe8f38d4ec9849fcf3">EndCriteria::getStandardError</a></div><div class="ttdeci">float getStandardError(Angle a, Distance d)</div><div class="ttdoc">Calculates normalised cumulative standard error for the given angle and distance.</div><div class="ttdef"><b>Definition:</b> measurement.cpp:73</div></div>
+<div class="ttc" id="astructEndedResult_html"><div class="ttname"><a href="structEndedResult.html">EndedResult</a></div><div class="ttdoc">Provides information on whether a Task has ended and with what heuristic -estimated- cost (chi) and p...</div><div class="ttdef"><b>Definition:</b> measurement.h:126</div></div>
 <div class="ttc" id="astructState_html"><div class="ttname"><a href="structState.html">State</a></div><div class="ttdoc">Hybrid states in the transition system.</div><div class="ttdef"><b>Definition:</b> graphTools.h:69</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

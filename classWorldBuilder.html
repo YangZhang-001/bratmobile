@@ -65,6 +65,7 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classWorldBuilder-members.html">List of all members</a>  </div>
@@ -93,9 +94,6 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae1faf769c88dcb6249b556053aa76c7f"><td class="memItemLeft" align="right" valign="top"><a id="ae1faf769c88dcb6249b556053aa76c7f"></a>
-std::pair&lt; <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a>, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>salientPoints</b> (b2Transform, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;, std::pair&lt; <a class="el" href="structPointf.html">Pointf</a>, <a class="el" href="structPointf.html">Pointf</a> &gt;)</td></tr>
-<tr class="separator:ae1faf769c88dcb6249b556053aa76c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99075db67b8e3664aa10bd83d17ec48c"><td class="memItemLeft" align="right" valign="top">b2Body *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWorldBuilder.html#a99075db67b8e3664aa10bd83d17ec48c">makeBody</a> (b2World &amp;w, const <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &amp;features)</td></tr>
 <tr class="memdesc:a99075db67b8e3664aa10bd83d17ec48c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a body in the box2d world, and if the features represent a disturbance to which the attention window needs to be assigned, a flag is assigned to the body user data.  <a href="classWorldBuilder.html#a99075db67b8e3664aa10bd83d17ec48c">More...</a><br /></td></tr>
 <tr class="separator:a99075db67b8e3664aa10bd83d17ec48c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -114,9 +112,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkDisturbance</b> 
 <tr class="memitem:aa8fced331769ea18a04d9ad547b301a0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWorldBuilder.html#aa8fced331769ea18a04d9ad547b301a0">buildWorld</a> (b2World &amp;, b2Transform, Direction, <a class="el" href="structDisturbance.html">Disturbance</a> disturbance=<a class="el" href="structDisturbance.html">Disturbance</a>(), float halfWindowWidth=0.15, CLUSTERING clustering=CLUSTERING::PARTITION, <a class="el" href="classTask.html">Task</a> *task=NULL)</td></tr>
 <tr class="memdesc:aa8fced331769ea18a04d9ad547b301a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates bodies (objects) in the box2d world.  <a href="classWorldBuilder.html#aa8fced331769ea18a04d9ad547b301a0">More...</a><br /></td></tr>
 <tr class="separator:aa8fced331769ea18a04d9ad547b301a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a697297e38a135885d8576d05ceab155e"><td class="memItemLeft" align="right" valign="top"><a id="a697297e38a135885d8576d05ceab155e"></a>
-std::pair&lt; <a class="el" href="structPointf.html">Pointf</a>, <a class="el" href="structPointf.html">Pointf</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>bounds</b> (Direction, b2Transform t, float boxLength, float halfWindowWidth, std::vector&lt; <a class="el" href="structPointf.html">Pointf</a> &gt; *_bounds=NULL)</td></tr>
-<tr class="separator:a697297e38a135885d8576d05ceab155e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a774e1fbfc14b4d3f69bf165f779594a5"><td class="memItemLeft" align="right" valign="top">b2PolygonShape&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWorldBuilder.html#a774e1fbfc14b4d3f69bf165f779594a5">object_filtering_box</a> (float halfWindowWidth, float boxLength, b2Transform start, Direction d)</td></tr>
 <tr class="memdesc:a774e1fbfc14b4d3f69bf165f779594a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes a box.  <a href="classWorldBuilder.html#a774e1fbfc14b4d3f69bf165f779594a5">More...</a><br /></td></tr>
 <tr class="separator:a774e1fbfc14b4d3f69bf165f779594a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,6 +157,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_world_objects</b>
 <tr class="memitem:a2463388843ad98025ca3eaa32c91f1e3"><td class="memItemLeft" align="right" valign="top"><a id="a2463388843ad98025ca3eaa32c91f1e3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setSimulationStep</b> (float f)</td></tr>
 <tr class="separator:a2463388843ad98025ca3eaa32c91f1e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ae1faf769c88dcb6249b556053aa76c7f"><td class="memItemLeft" align="right" valign="top"><a id="ae1faf769c88dcb6249b556053aa76c7f"></a>
+static std::pair&lt; <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a>, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>salientPoints</b> (b2Transform, const <a class="el" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> &amp;, std::pair&lt; <a class="el" href="structPointf.html">Pointf</a>, <a class="el" href="structPointf.html">Pointf</a> &gt;)</td></tr>
+<tr class="separator:ae1faf769c88dcb6249b556053aa76c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a697297e38a135885d8576d05ceab155e"><td class="memItemLeft" align="right" valign="top"><a id="a697297e38a135885d8576d05ceab155e"></a>
+static std::pair&lt; <a class="el" href="structPointf.html">Pointf</a>, <a class="el" href="structPointf.html">Pointf</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>bounds</b> (Direction, b2Transform t, float boxLength, float halfWindowWidth, std::vector&lt; <a class="el" href="structPointf.html">Pointf</a> &gt; *_bounds=NULL)</td></tr>
+<tr class="separator:a697297e38a135885d8576d05ceab155e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>

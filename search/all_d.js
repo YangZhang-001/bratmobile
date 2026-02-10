@@ -8,6 +8,7 @@ var searchData=
   ['operator_3c_148',['operator&lt;',['../classMeasurement.html#a24389214a63983e3aef4703ea9261fc6',1,'Measurement']]],
   ['operator_3c_3d_149',['operator&lt;=',['../classMeasurement.html#a3aa6850b49123ffb3e076d5482766416',1,'Measurement']]],
   ['operator_3d_3d_150',['operator==',['../classMeasurement.html#a25836862cc1d436feb499efdd6fe1633',1,'Measurement']]],
-  ['operator_3e_3d_151',['operator&gt;=',['../classMeasurement.html#ab9e9bcb655d45574d49043a4f59b4bfc',1,'Measurement']]],
-  ['outer_5floop_152',['outer_loop',['../classMotorInterface.html#a02a823fb912854d18be0def2a6f5d718',1,'MotorInterface']]]
+  ['operator_3e_151',['operator&gt;',['../classMeasurement.html#a977422ce5e3e986ecf7dc238e3623fe6',1,'Measurement']]],
+  ['operator_3e_3d_152',['operator&gt;=',['../classMeasurement.html#ab9e9bcb655d45574d49043a4f59b4bfc',1,'Measurement']]],
+  ['outer_5floop_153',['outer_loop',['../classMotorInterface.html#a02a823fb912854d18be0def2a6f5d718',1,'MotorInterface']]]
 ];
