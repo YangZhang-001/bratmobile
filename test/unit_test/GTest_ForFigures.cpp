@@ -1,7 +1,7 @@
 #include "test_classes.h"
 const bool DEBUG=true;
 
-class FigureTest: public HighLevelTestBase, public testing::Test{};
+class FigureTest: public HighLevelTestBase{};
 
 /**
  * I am just running these one by one because CBA. Basically delete everything in tmp

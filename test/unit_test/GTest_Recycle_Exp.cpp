@@ -12,12 +12,13 @@ TEST_P(CLAdaptiveTrackerTest, Threshold){
 INSTANTIATE_TEST_CASE_P(Ends, CLAdaptiveTrackerTest, testing::Values(0.5, 0.05));
 
 TEST_P(RecycleTest, Transform){
-    // char info[20];
+    char filename[20];
     CLAdaptiveTracker newTracker;
     configurator->register_tracker(&newTracker);
     b2Transform b2d_transform(b2Vec2(std::get<0>(GetParam()),std::get<1>(GetParam())), b2Rot(std::get<2>(GetParam())));
-    // sprintf(info,"%0.3f-%0.3f-%0.3f.txt",b2d_transform.p.x, b2d_transform.p.y, b2d_transform.q.GetAngle() );
-    Logger logger("RecycleTests", "\tmp", "recycle");
+    sprintf(filename,"%0.3f-%0.3f-%0.3f",b2d_transform.p.x, b2d_transform.p.y, b2d_transform.q.GetAngle() );
+    
+    Logger logger("RecycleTests/", "benchmarkx86_64", filename);
     configurator->register_logger(&logger);
     Task goal;
     b2Transform shift=b2Transform_zero;
@@ -63,7 +64,8 @@ TEST_P(RecycleTest, Transform){
 
 }
 
-INSTANTIATE_TEST_CASE_P(Transforms2D, RecycleTest, ::testing::Combine(testing::Range(-.2f, .4f, 0.01f),
-                                                                    ::testing::Range(-0.05f, 0.05f, 0.01f),
-                                                                    ::testing::Values(-0.1f,0.1f, 0.1f)));
+INSTANTIATE_TEST_CASE_P(Transforms2D, RecycleTest, ::testing::Combine(testing::Range(-.2f, .4f, 0.05f),
+                                                                    ::testing::Range(-0.05f, 0.1f, 0.05f),
+                                                                    ::testing::Range(-0.1f,0.1f, 0.1f)));
+
 
