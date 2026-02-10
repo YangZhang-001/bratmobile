@@ -8,10 +8,10 @@ class NoGoal:public GoalChanger{
 
 };
 
-class CLTracker: public ClosedLoop_Tracker, public MotorCallback, public Motor_Out{
-	public:
-	CLTracker():MotorCallback(this){}
-};
+// class CLTracker: public ClosedLoop_Tracker, public MotorCallback, public Motor_Out{
+// 	public:
+// 	CLTracker():MotorCallback(this){}
+// };
 
 int main(int argc, char** argv) {
 	A1Lidar lidar;
