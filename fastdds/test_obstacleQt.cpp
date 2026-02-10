@@ -2,7 +2,7 @@
 #include "CppTimer.h"
 #include "topics.h"
 #include <fstream>
-
+const bool DEBUG=false;
 
 void getData(CoordinateContainer & pts){
     std::ifstream file("../test/cul_de_sac/map0001.dat");
