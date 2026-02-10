@@ -47,17 +47,18 @@ void Window::paintEvent(QPaintEvent *){
    // std::cout<<"painting event!"<<std::endl;
     QPainter painter(this);
     painter.setWindow(logical_rect);
-    painter.setPen(QPen());
-    painter.drawPoint(point);
+    // painter.setPen(QPen());
+    // painter.drawPoint(point);
+    painter.setBrush(QColor("brown"));
+    painter.setPen(QColor("black"));
+    painter.drawRect(robot);
     painter.setBrush(QColor("red"));
     painter.setPen(QColor("red"));
     painter.drawPolygon(goal);
     painter.setBrush(QColor(0,127,127, 127));//semi transparent yellow
     painter.setPen(QColor("black"));
     painter.drawPolygon(attention);
-    painter.setBrush(QColor("brown"));
-    painter.setPen(QColor("black"));
-    painter.drawRect(robot);
+
     painter.setBrush(QColor("grey"));
     painter.setPen(QColor("grey"));
     painter.drawPolygon(Di);
