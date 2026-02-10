@@ -29,7 +29,7 @@ public:
 		debugOn=on;
 	}
 
-    LidarInterface(Configurator * _c): configurator(_ci){}
+    LidarInterface(Configurator * _c): configurator(_c){}
 
 	void newScanAvail(float, A1LidarData (&data)[A1Lidar::nDistance]){ //uncomment sections to write x and y to files
 		if (configurator == NULL){
@@ -90,7 +90,7 @@ class TentativeConfigurator: public AttentiveConfigurator{
 
 	TentativeConfigurator(): AttentiveConfigurator(){}
 
-	TentativeConfigurator(const Task & goal): AttentiveConfigurator(goal){}
+	TentativeConfigurator(const Task & goal): FocusedConfigurator(goal){}
 };
 
 /**
