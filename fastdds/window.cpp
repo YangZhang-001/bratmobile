@@ -50,7 +50,7 @@ void Window::paintEvent(QPaintEvent *){
     painter.setPen(QPen());
     painter.drawPoint(point);
     painter.setBrush(QColor("red"));
-    painter.setPen(QColor("black"));
+    painter.setPen(QColor("red"));
     painter.drawPolygon(goal);
     painter.setBrush(QColor(0,127,127, 127));//semi transparent yellow
     painter.setPen(QColor("black"));
