@@ -190,7 +190,7 @@ void Configurator::newScanEvent(){
 			}					
 		}
 		change_task();		
-		adjust_goal_expectation(); //dubious if this is needed tbh
+		//adjust_goal_expectation(); //dubious if this is needed tbh
 		estimate_current_vertex();
 }
 
