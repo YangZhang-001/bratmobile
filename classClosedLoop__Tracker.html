@@ -120,9 +120,9 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasTaskEnded<
 <tr class="memdesc:a327c6d4e09e9c2ff2ae8499ad82c72a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the attention window at each sensor reading.  <a href="classClosedLoop__Tracker.html#a327c6d4e09e9c2ff2ae8499ad82c72a5">More...</a><br /></td></tr>
 <tr class="separator:a327c6d4e09e9c2ff2ae8499ad82c72a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classTracker"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classTracker')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classTracker.html">Tracker</a></td></tr>
-<tr class="memitem:a31690112fd455993913c731603c75c03 inherit pub_methods_classTracker"><td class="memItemLeft" align="right" valign="top"><a id="a31690112fd455993913c731603c75c03"></a>
-<a class="el" href="classThreshold.html">Threshold</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_threshold</b> ()</td></tr>
-<tr class="separator:a31690112fd455993913c731603c75c03 inherit pub_methods_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c15d97b517910c43be9fd597352934e inherit pub_methods_classTracker"><td class="memItemLeft" align="right" valign="top"><a id="a7c15d97b517910c43be9fd597352934e"></a>
+virtual <a class="el" href="classThreshold.html">Threshold</a>&#160;</td><td class="memItemRight" valign="bottom"><b>get_threshold</b> (const <a class="el" href="structState.html">State</a> &amp;s)</td></tr>
+<tr class="separator:a7c15d97b517910c43be9fd597352934e inherit pub_methods_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e553c90eb82848a9093bc9135a49716 inherit pub_methods_classTracker"><td class="memItemLeft" align="right" valign="top"><a id="a1e553c90eb82848a9093bc9135a49716"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>register_learner</b> (<a class="el" href="classThresholdLearner.html">ThresholdLearner</a> *l)</td></tr>
 <tr class="separator:a1e553c90eb82848a9093bc9135a49716 inherit pub_methods_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,13 +169,9 @@ friend&#160;</td><td class="memItemRight" valign="bottom"><b>Configurator</b></t
 <tr class="memitem:a40aa09e7955081b5cd79f7963e5412d8 inherit pro_attribs_classTracker"><td class="memItemLeft" align="right" valign="top"><a id="a40aa09e7955081b5cd79f7963e5412d8"></a>
 b2Transform&#160;</td><td class="memItemRight" valign="bottom"><b>deltaTransform</b> =b2Transform_zero</td></tr>
 <tr class="separator:a40aa09e7955081b5cd79f7963e5412d8 inherit pro_attribs_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_attribs_classTracker"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classTracker')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classTracker.html">Tracker</a></td></tr>
-<tr class="memitem:a71a4f0fd758e329b1642f3f827315222 inherit pub_attribs_classTracker"><td class="memItemLeft" align="right" valign="top"><a id="a71a4f0fd758e329b1642f3f827315222"></a>
+<tr class="memitem:a71a4f0fd758e329b1642f3f827315222 inherit pro_attribs_classTracker"><td class="memItemLeft" align="right" valign="top"><a id="a71a4f0fd758e329b1642f3f827315222"></a>
 <a class="el" href="classThreshold.html">Threshold</a>&#160;</td><td class="memItemRight" valign="bottom"><b>threshold</b> =<a class="el" href="classThreshold.html">Threshold</a>()</td></tr>
-<tr class="separator:a71a4f0fd758e329b1642f3f827315222 inherit pub_attribs_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a71a4f0fd758e329b1642f3f827315222 inherit pro_attribs_classTracker"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tracks task execution by observing changes in tracked disturbance. </p>

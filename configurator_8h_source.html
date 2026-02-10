@@ -91,231 +91,234 @@ $(function() {
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="classTask.html">Task</a> currentTask;</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="classController.html">Controller</a> * task_controller=NULL;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="classTracker.html">Tracker</a> * tracker=NULL;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="classLIDAR__In.html">LIDAR_In</a> * ci=NULL;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <a class="code" href="classMotor__Out.html">Motor_Out</a> * control=NULL;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="classPlanner.html">Planner</a> *planner=NULL;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="classLogger.html">Logger</a> * logger=NULL;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">bool</span> running =0;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    std::thread * LIDAR_thread=NULL;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">float</span> simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    std::chrono::high_resolution_clock::time_point previousTimeScan;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="code" href="structGoalChanger.html">GoalChanger</a> * goal_changer=NULL;    </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    std::vector&lt;vertexDescriptor&gt;m_plan, current_vertices;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="classTask.html">Task</a> controlGoal;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> data2fp;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    TransitionSystem transitionSystem=TransitionSystem(1);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="classWorldBuilder.html">WorldBuilder</a> *worldBuilder=<span class="keyword">new</span> <a class="code" href="classWorldBuilder.html">WorldBuilder</a>();</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    vertexDescriptor currentVertex=MOVING_VERTEX;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    edgeDescriptor movingEdge=edgeDescriptor(), currentEdge=movingEdge;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="code" href="classMotorInterface.html">MotorInterface</a> * control=NULL;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <a class="code" href="classPlanner.html">Planner</a> *planner=NULL;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="classLogger.html">Logger</a> * logger=NULL;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">bool</span> running =0;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    std::thread * LIDAR_thread=NULL;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">float</span> simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    std::chrono::high_resolution_clock::time_point previousTimeScan;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="structGoalChanger.html">GoalChanger</a> * goal_changer=NULL;    </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::vector&lt;vertexDescriptor&gt;m_plan, current_vertices;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="code" href="classTask.html">Task</a> controlGoal;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> data2fp;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    TransitionSystem transitionSystem=TransitionSystem(1);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="classWorldBuilder.html">WorldBuilder</a> *worldBuilder=<span class="keyword">new</span> <a class="code" href="classWorldBuilder.html">WorldBuilder</a>();</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    vertexDescriptor currentVertex=MOVING_VERTEX;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    edgeDescriptor movingEdge=edgeDescriptor(), currentEdge=movingEdge;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="classConfigurator.html">Configurator</a>(){</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">init</a>();</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="classConfigurator.html">Configurator</a>(<a class="code" href="classTask.html">Task</a> _task){</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">init</a>(_task);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">virtual</span> ~<a class="code" href="classConfigurator.html">Configurator</a>(){</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    stop();</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">delete</span> worldBuilder;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    worldBuilder=NULL;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">init</a>(<a class="code" href="classTask.html">Task</a> _task=<a class="code" href="classTask.html">Task</a>());</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classConfigurator.html#a50ba743a0d5b7c141dec30e6a704a43c">Spawner</a>(); </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keywordtype">int</span> getIteration(){</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">return</span> iteration;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keywordtype">void</span> addIteration(<span class="keywordtype">int</span> i=1){</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    iteration+=i;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;}</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keywordtype">void</span> assignDisturbanceToTask(<span class="keyword">const</span> <a class="code" href="structDisturbance.html">Disturbance</a> &amp; d, <a class="code" href="classTask.html">Task</a> &amp; t);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">void</span> dummy_vertex(vertexDescriptor src);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<a class="code" href="classConfigurator.html">Configurator</a>(){</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">init</a>();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<a class="code" href="classConfigurator.html">Configurator</a>(<a class="code" href="classTask.html">Task</a> _task){</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">init</a>(_task);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">virtual</span> ~<a class="code" href="classConfigurator.html">Configurator</a>(){</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">delete</span> worldBuilder;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    worldBuilder=NULL;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classConfigurator.html#acb5a842b3a950b845be89a66ac06ef52">   58</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#acb5a842b3a950b845be89a66ac06ef52">insertCoordinate</a>(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y){</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    data2fp.insert(<a class="code" href="structPointf.html">Pointf</a>(x, y));</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">init</a>(<a class="code" href="classTask.html">Task</a> _task=<a class="code" href="classTask.html">Task</a>());</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classConfigurator.html#a50ba743a0d5b7c141dec30e6a704a43c">Spawner</a>(); </div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keywordtype">int</span> getIteration(){</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordflow">return</span> iteration;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;}</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keywordtype">void</span> addIteration(<span class="keywordtype">int</span> i=1){</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    iteration+=i;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<a class="code" href="structsimResult.html">simResult</a> <a class="code" href="classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c">simulate</a>(<a class="code" href="classTask.html">Task</a> t, b2World &amp; w);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">float</span> remainingSimulationTime(<span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> * <span class="keyword">const</span> t=NULL);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a5909d6f8f82ef074d2b01e8296d635ed">estimate_current_vertex</a>();</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="keywordtype">void</span> printPlan(std::vector &lt;vertexDescriptor&gt;* p=NULL);</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">void</span> assignDisturbanceToTask(<span class="keyword">const</span> <a class="code" href="structDisturbance.html">Disturbance</a> &amp; d, <a class="code" href="classTask.html">Task</a> &amp; t);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="keywordtype">void</span> dummy_vertex(vertexDescriptor src);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<a class="code" href="structsimResult.html">simResult</a> <a class="code" href="classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c">simulate</a>(<a class="code" href="classTask.html">Task</a> t, b2World &amp; w);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">float</span> remainingSimulationTime(<span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> * <span class="keyword">const</span> t=NULL);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a5909d6f8f82ef074d2b01e8296d635ed">estimate_current_vertex</a>();</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;std::pair&lt;edgeDescriptor, bool&gt; <a class="code" href="classConfigurator.html#a3273045337b602fbbd10a08c90a896bd">addVertex</a>(<span class="keyword">const</span> vertexDescriptor &amp; src, vertexDescriptor &amp;v1, <a class="code" href="structEdge.html">Edge</a> edge=<a class="code" href="structEdge.html">Edge</a>(), <span class="keywordtype">bool</span> topDown=0);</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="classConfigurator.html#a7138219c70bada7848b13e93924448e1">  121</a></span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a7138219c70bada7848b13e93924448e1">explore_plan</a>(b2World&amp;)=0;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="comment">//std::vector &lt;vertexDescriptor&gt; back_planner(TransitionSystem&amp;, vertexDescriptor, vertexDescriptor root=0);</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="comment">//starts thread</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="keywordtype">void</span> start(); </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="keywordtype">void</span> printPlan(std::vector &lt;vertexDescriptor&gt;* p=NULL);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;std::pair&lt;edgeDescriptor, bool&gt; <a class="code" href="classConfigurator.html#a3273045337b602fbbd10a08c90a896bd">addVertex</a>(<span class="keyword">const</span> vertexDescriptor &amp; src, vertexDescriptor &amp;v1, <a class="code" href="structEdge.html">Edge</a> edge=<a class="code" href="structEdge.html">Edge</a>(), <span class="keywordtype">bool</span> topDown=0);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="classConfigurator.html#a7138219c70bada7848b13e93924448e1">  126</a></span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a7138219c70bada7848b13e93924448e1">explore_plan</a>(b2World&amp;)=0;</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="comment">//stops thread</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="keywordtype">void</span> stop(); </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="keywordtype">void</span> registerInterface(<a class="code" href="classLIDAR__In.html">LIDAR_In</a> *, <a class="code" href="classMotor__Out.html">Motor_Out</a> *);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="comment">//std::vector &lt;vertexDescriptor&gt; back_planner(TransitionSystem&amp;, vertexDescriptor, vertexDescriptor root=0);</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment">// //starts thread</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment">// void start(); </span></div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a26cced006fc019f9791c44090a08b1c5">run</a>(<a class="code" href="classConfigurator.html">Configurator</a> *);</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#afd6e00cf4faa38476236c7bde59808bd">change_task</a>();</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="comment">// //stops thread</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="comment">// void stop(); </span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="keywordtype">void</span> registerInterface(<a class="code" href="classMotorInterface.html">MotorInterface</a> *);</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a8270706b8752aeb5d983c9b8e3ca2c4b">newScanEvent</a>();</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#ae544663f4af4ce845996463972f3de99">update_graph</a>(TransitionSystem&amp; g, <span class="keyword">const</span> <a class="code" href="structTrackingResult.html">TrackingResult</a> &amp; tr);</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">//round angle to a divisor of PI/2</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="comment"></span><span class="keywordtype">float</span> <a class="code" href="classConfigurator.html#a2984dc129d74fd6877cc833cebcad015">approximate_angle</a>(<span class="keywordtype">float</span> angle, Direction d, simResult::resultType outcome);</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a93f9fc1ab8bfb68c5f381341f838bca9">adjust_goal_expectation</a>();</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;std::pair &lt;bool, Direction&gt; <a class="code" href="classConfigurator.html#a53a3b1d711b087788a602550917a6e61">getOppositeDirection</a>(Direction d);</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
+<div class="line"><a name="l00149"></a><span class="lineno"><a class="line" href="classConfigurator.html#ad7a4c39923f711ceb8a1a636154c4e7f">  149</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#ad7a4c39923f711ceb8a1a636154c4e7f">clearData</a>(){data2fp.clear();}</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#afd6e00cf4faa38476236c7bde59808bd">change_task</a>();</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#ae544663f4af4ce845996463972f3de99">update_graph</a>(TransitionSystem&amp; g, <span class="keyword">const</span> <a class="code" href="structTrackingResult.html">TrackingResult</a> &amp; tr);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="comment">//round angle to a divisor of PI/2</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="comment"></span><span class="keywordtype">float</span> <a class="code" href="classConfigurator.html#a2984dc129d74fd6877cc833cebcad015">approximate_angle</a>(<span class="keywordtype">float</span> angle, Direction d, simResult::resultType outcome);</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">adjust_simulated_task</a>(<span class="keyword">const</span> vertexDescriptor&amp;v,  <a class="code" href="classTask.html">Task</a>&amp; t);</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160; </div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="keywordtype">void</span> register_controller(<a class="code" href="classController.html">Controller</a> * controller){</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    task_controller=controller;</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;}</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160; </div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<a class="code" href="classController.html">Controller</a>* get_controller(){</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    <span class="keywordflow">return</span> task_controller;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;}</div>
-<div class="line"><a name="l00193"></a><span class="lineno"><a class="line" href="classConfigurator.html#a0d2faca841880c53b79d35e5184f41f0">  193</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a0d2faca841880c53b79d35e5184f41f0">register_tracker</a>(<a class="code" href="classTracker.html">Tracker</a> * _tracker){</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    <span class="keywordflow">if</span> (!_tracker){<span class="keywordflow">return</span>;}</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    tracker=_tracker;</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    tracker-&gt;init(controlGoal);</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;}</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<a class="code" href="classTracker.html">Tracker</a> * get_tracker()<span class="keyword">const </span>{</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="keywordflow">return</span> tracker;</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;}</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<a class="code" href="classMotor__Out.html">Motor_Out</a> * get_motor_interface(){</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keywordflow">return</span> control;</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;}</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<a class="code" href="classLIDAR__In.html">LIDAR_In</a> * get_lidar_interface(){</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordflow">return</span> ci;</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;}</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160; </div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="keywordtype">void</span> register_planner(<a class="code" href="classPlanner.html">Planner</a> * _p){</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    planner=_p;</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;}</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<span class="keywordtype">void</span> setSimulationStep(<span class="keywordtype">float</span> f){</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    simulationStep=f;</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;}</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a93f9fc1ab8bfb68c5f381341f838bca9">adjust_goal_expectation</a>();</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160; </div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;std::pair &lt;bool, Direction&gt; <a class="code" href="classConfigurator.html#a53a3b1d711b087788a602550917a6e61">getOppositeDirection</a>(Direction d);</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160; </div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">adjust_simulated_task</a>(<span class="keyword">const</span> vertexDescriptor&amp;v,  <a class="code" href="classTask.html">Task</a>&amp; t);</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160; </div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="keywordtype">void</span> register_controller(<a class="code" href="classController.html">Controller</a> * controller){</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    task_controller=controller;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;}</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160; </div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<a class="code" href="classController.html">Controller</a>* get_controller(){</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <span class="keywordflow">return</span> task_controller;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;}</div>
+<div class="line"><a name="l00204"></a><span class="lineno"><a class="line" href="classConfigurator.html#a0d2faca841880c53b79d35e5184f41f0">  204</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a0d2faca841880c53b79d35e5184f41f0">register_tracker</a>(<a class="code" href="classTracker.html">Tracker</a> * _tracker){</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="keywordflow">if</span> (!_tracker){<span class="keywordflow">return</span>;}</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;    tracker=_tracker;</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    tracker-&gt;init(controlGoal);</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;}</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<a class="code" href="classTracker.html">Tracker</a> * get_tracker()<span class="keyword">const </span>{</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="keywordflow">return</span> tracker;</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;}</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<a class="code" href="classMotorInterface.html">MotorInterface</a> * get_motor_interface(){</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keywordflow">return</span> control;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;}</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="keywordtype">void</span> register_logger(<a class="code" href="classLogger.html">Logger</a> * l){</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    logger=l;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="keywordtype">void</span> register_planner(<a class="code" href="classPlanner.html">Planner</a> * _p){</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    planner=_p;</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;}</div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160; </div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="keywordtype">void</span> register_goalChanger(<a class="code" href="structGoalChanger.html">GoalChanger</a> * gc){</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    goal_changer=gc;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="keywordtype">void</span> setSimulationStep(<span class="keywordtype">float</span> f){</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    simulationStep=f;</div>
 <div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;}</div>
 <div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160; </div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a704276c74e381175b74317a75d76de71">MulT</a>(<span class="keyword">const</span> b2Transform&amp; B, <a class="code" href="classTask.html">Task</a> &amp; task);</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160; </div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#adbde85cc7db5800b6cccfa9e98b60534">InvMul</a>(<span class="keyword">const</span> b2Transform&amp; B, <a class="code" href="classTask.html">Task</a> &amp; task);</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160; </div>
-<div class="line"><a name="l00245"></a><span class="lineno"><a class="line" href="classConfigurator.html#a681dd37340768f1ade556399d2e2877e">  245</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a681dd37340768f1ade556399d2e2877e">InvMul_</a>(<span class="keyword">const</span> b2Transform&amp; B, <a class="code" href="classTask.html">Task</a> &amp; task);</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160; </div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#aa770e198ec1a69f31a661f3642971779">Mul</a>(<span class="keyword">const</span> b2Transform&amp; B, <a class="code" href="classTask.html">Task</a> &amp;task);</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160; </div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;<span class="keyword">virtual</span> <a class="code" href="classRobot.html">Robot</a> <a class="code" href="classConfigurator.html#a0f3c294493e8a8ce303113e44b73cb71">makeRobot</a>(b2World&amp; world, <span class="keyword">const</span> b2Transform &amp; start);</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160; </div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="comment">//Disturbance * getGoalDisturbance(){return &amp;controlGoal.disturbance;}</span></div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="keywordtype">bool</span> areInterfacesSetUp(<a class="code" href="classConfigurator.html">Configurator</a> * c=NULL);</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160; </div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62">assignBodyFeatures</a>(<a class="code" href="classTask.html">Task</a> &amp; t, <span class="keyword">const</span> <a class="code" href="structBodyFeatures.html">BodyFeatures</a> &amp; bf);</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="keywordtype">void</span> register_logger(<a class="code" href="classLogger.html">Logger</a> * l){</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    logger=l;</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;}</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160; </div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="keywordtype">void</span> register_goalChanger(<a class="code" href="structGoalChanger.html">GoalChanger</a> * gc){</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    goal_changer=gc;</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;}</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a704276c74e381175b74317a75d76de71">MulT</a>(<span class="keyword">const</span> b2Transform&amp; B, <a class="code" href="classTask.html">Task</a> &amp; task);</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160; </div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#adbde85cc7db5800b6cccfa9e98b60534">InvMul</a>(<span class="keyword">const</span> b2Transform&amp; B, <a class="code" href="classTask.html">Task</a> &amp; task);</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160; </div>
+<div class="line"><a name="l00253"></a><span class="lineno"><a class="line" href="classConfigurator.html#a681dd37340768f1ade556399d2e2877e">  253</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a681dd37340768f1ade556399d2e2877e">InvMul_</a>(<span class="keyword">const</span> b2Transform&amp; B, <a class="code" href="classTask.html">Task</a> &amp; task);</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#aa770e198ec1a69f31a661f3642971779">Mul</a>(<span class="keyword">const</span> b2Transform&amp; B, <a class="code" href="classTask.html">Task</a> &amp;task);</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="keyword">virtual</span> <a class="code" href="classRobot.html">Robot</a> <a class="code" href="classConfigurator.html#a49f5d376330e656b6abd62c2ee7576fe">makeRobot</a>(b2World&amp; world, <span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> &amp; task);</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160; </div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;<span class="comment">//Disturbance * getGoalDisturbance(){return &amp;controlGoal.disturbance;}</span></div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="keywordtype">bool</span> areInterfacesSetUp();</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0">assignDimensions</a>(<a class="code" href="classTask.html">Task</a> &amp; t, <span class="keywordtype">float</span> halfLength, <span class="keywordtype">float</span> halfWidth);</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160; </div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="keywordtype">void</span> register_worldBuilder(<a class="code" href="classWorldBuilder.html">WorldBuilder</a> * wb){</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <span class="keywordflow">if</span> (worldBuilder){</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        <span class="keyword">delete</span> worldBuilder;</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    }</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    worldBuilder=wb;</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;}</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;b2Transform get_start(<span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> *<span class="keyword">const</span> t){</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;    <span class="keywordflow">if</span> (!t){</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;null pointer to task&quot;</span>);</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    }</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    <span class="keywordflow">return</span> t-&gt;start;    </div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;}</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;Direction get_direction(<span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> *<span class="keyword">const</span> t){</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    <span class="keywordflow">if</span> (!t){</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;null pointer to task&quot;</span>);</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    }</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    <span class="keywordflow">return</span> t-&gt;direction;    </div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;}</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;};</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62">assignBodyFeatures</a>(<a class="code" href="classTask.html">Task</a> &amp; t, <span class="keyword">const</span> <a class="code" href="structBodyFeatures.html">BodyFeatures</a> &amp; bf);</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="keywordtype">void</span> <a class="code" href="classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0">assignDimensions</a>(<a class="code" href="classTask.html">Task</a> &amp; t, <span class="keywordtype">float</span> halfLength, <span class="keywordtype">float</span> halfWidth);</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="keywordtype">void</span> register_worldBuilder(<a class="code" href="classWorldBuilder.html">WorldBuilder</a> * wb){</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;    <span class="keywordflow">if</span> (worldBuilder){</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;        <span class="keyword">delete</span> worldBuilder;</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    }</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    worldBuilder=wb;</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;}</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;b2Transform get_start(<span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> *<span class="keyword">const</span> t){</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;    <span class="keywordflow">if</span> (!t){</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;null pointer to task&quot;</span>);</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    }</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    <span class="keywordflow">return</span> t-&gt;start;    </div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;}</div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
-<div class="line"><a name="l00310"></a><span class="lineno"><a class="line" href="classReactiveConfigurator.html">  310</a></span>&#160;<span class="keyword">class </span><a class="code" href="classReactiveConfigurator.html">ReactiveConfigurator</a>:<span class="keyword">public</span> <a class="code" href="classConfigurator.html">Configurator</a>{</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classReactiveConfigurator.html#ada4480e3a70f328ea66289204933835c">explore_plan</a>(b2World&amp;)<span class="keyword">override</span>;</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;Direction get_direction(<span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> *<span class="keyword">const</span> t){</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;    <span class="keywordflow">if</span> (!t){</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        <span class="keywordflow">throw</span> std::invalid_argument(<span class="stringliteral">&quot;null pointer to task&quot;</span>);</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    }</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <span class="keywordflow">return</span> t-&gt;direction;    </div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;}</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;};</div>
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160; </div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    <span class="keywordtype">float</span> remainingSimulationTime(<span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> *<span class="keyword">const</span> t)<span class="keyword">override</span>;</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160; </div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    <a class="code" href="classReactiveConfigurator.html">ReactiveConfigurator</a>(){};</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160; </div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <a class="code" href="classReactiveConfigurator.html">ReactiveConfigurator</a>(<a class="code" href="classTask.html">Task</a> _task){</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        <a class="code" href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">init</a>(_task);</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;}</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    </div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160; </div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;};</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160; </div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="preprocessor"> #endif</span></div>
+<div class="line"><a name="l00318"></a><span class="lineno"><a class="line" href="classReactiveConfigurator.html">  318</a></span>&#160;<span class="keyword">class </span><a class="code" href="classReactiveConfigurator.html">ReactiveConfigurator</a>:<span class="keyword">public</span> <a class="code" href="classConfigurator.html">Configurator</a>{</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classReactiveConfigurator.html#ada4480e3a70f328ea66289204933835c">explore_plan</a>(b2World&amp;)<span class="keyword">override</span>;</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160; </div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    <span class="keywordtype">float</span> remainingSimulationTime(<span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> *<span class="keyword">const</span> t)<span class="keyword">override</span>;</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160; </div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <a class="code" href="classReactiveConfigurator.html">ReactiveConfigurator</a>(){};</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160; </div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    <a class="code" href="classReactiveConfigurator.html">ReactiveConfigurator</a>(<a class="code" href="classTask.html">Task</a> _task){</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        <a class="code" href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">init</a>(_task);</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;}</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    </div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;};</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="preprocessor"> #endif</span></div>
 <div class="ttc" id="aclassConfigurator_html"><div class="ttname"><a href="classConfigurator.html">Configurator</a></div><div class="ttdef"><b>Definition:</b> configurator.h:17</div></div>
-<div class="ttc" id="aclassConfigurator_html_a0d2faca841880c53b79d35e5184f41f0"><div class="ttname"><a href="classConfigurator.html#a0d2faca841880c53b79d35e5184f41f0">Configurator::register_tracker</a></div><div class="ttdeci">void register_tracker(Tracker *_tracker)</div><div class="ttdoc">registers and initialises the tracker to the goal</div><div class="ttdef"><b>Definition:</b> configurator.h:193</div></div>
-<div class="ttc" id="aclassConfigurator_html_a0f3c294493e8a8ce303113e44b73cb71"><div class="ttname"><a href="classConfigurator.html#a0f3c294493e8a8ce303113e44b73cb71">Configurator::makeRobot</a></div><div class="ttdeci">virtual Robot makeRobot(b2World &amp;world, const b2Transform &amp;start)</div><div class="ttdoc">Makes the robot object in the world with the given start position and task.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:80</div></div>
-<div class="ttc" id="aclassConfigurator_html_a146e6403431265509070da248f7cb4bf"><div class="ttname"><a href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">Configurator::adjust_simulated_task</a></div><div class="ttdeci">void adjust_simulated_task(const vertexDescriptor &amp;v, Task &amp;t)</div><div class="ttdoc">If Task.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:350</div></div>
-<div class="ttc" id="aclassConfigurator_html_a26cced006fc019f9791c44090a08b1c5"><div class="ttname"><a href="classConfigurator.html#a26cced006fc019f9791c44090a08b1c5">Configurator::run</a></div><div class="ttdeci">static void run(Configurator *)</div><div class="ttdoc">Spawns tasks, creates plans, tracks task and controls real-world task switching option to run in thre...</div><div class="ttdef"><b>Definition:</b> configurator.cpp:177</div></div>
-<div class="ttc" id="aclassConfigurator_html_a2984dc129d74fd6877cc833cebcad015"><div class="ttname"><a href="classConfigurator.html#a2984dc129d74fd6877cc833cebcad015">Configurator::approximate_angle</a></div><div class="ttdeci">float approximate_angle(float angle, Direction d, simResult::resultType outcome)</div><div class="ttdoc">Approximating angle to divisors of pi/2.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:212</div></div>
+<div class="ttc" id="aclassConfigurator_html_a0d2faca841880c53b79d35e5184f41f0"><div class="ttname"><a href="classConfigurator.html#a0d2faca841880c53b79d35e5184f41f0">Configurator::register_tracker</a></div><div class="ttdeci">void register_tracker(Tracker *_tracker)</div><div class="ttdoc">registers and initialises the tracker to the goal</div><div class="ttdef"><b>Definition:</b> configurator.h:204</div></div>
+<div class="ttc" id="aclassConfigurator_html_a146e6403431265509070da248f7cb4bf"><div class="ttname"><a href="classConfigurator.html#a146e6403431265509070da248f7cb4bf">Configurator::adjust_simulated_task</a></div><div class="ttdeci">void adjust_simulated_task(const vertexDescriptor &amp;v, Task &amp;t)</div><div class="ttdoc">If Task.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:326</div></div>
+<div class="ttc" id="aclassConfigurator_html_a2984dc129d74fd6877cc833cebcad015"><div class="ttname"><a href="classConfigurator.html#a2984dc129d74fd6877cc833cebcad015">Configurator::approximate_angle</a></div><div class="ttdeci">float approximate_angle(float angle, Direction d, simResult::resultType outcome)</div><div class="ttdoc">Approximating angle to divisors of pi/2.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:196</div></div>
 <div class="ttc" id="aclassConfigurator_html_a3273045337b602fbbd10a08c90a896bd"><div class="ttname"><a href="classConfigurator.html#a3273045337b602fbbd10a08c90a896bd">Configurator::addVertex</a></div><div class="ttdeci">std::pair&lt; edgeDescriptor, bool &gt; addVertex(const vertexDescriptor &amp;src, vertexDescriptor &amp;v1, Edge edge=Edge(), bool topDown=0)</div><div class="ttdoc">Add state to the cognitive map and set next state Task direction and options.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:112</div></div>
-<div class="ttc" id="aclassConfigurator_html_a381e3979db74e9a7c335bcc9750aaa62"><div class="ttname"><a href="classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62">Configurator::assignBodyFeatures</a></div><div class="ttdeci">void assignBodyFeatures(Task &amp;t, const BodyFeatures &amp;bf)</div><div class="ttdoc">Assigns body features to the disturbance of a task (NOTE: affordance and validity of the disturbance ...</div><div class="ttdef"><b>Definition:</b> configurator.cpp:339</div></div>
+<div class="ttc" id="aclassConfigurator_html_a381e3979db74e9a7c335bcc9750aaa62"><div class="ttname"><a href="classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62">Configurator::assignBodyFeatures</a></div><div class="ttdeci">void assignBodyFeatures(Task &amp;t, const BodyFeatures &amp;bf)</div><div class="ttdoc">Assigns body features to the disturbance of a task (NOTE: affordance and validity of the disturbance ...</div><div class="ttdef"><b>Definition:</b> configurator.cpp:315</div></div>
+<div class="ttc" id="aclassConfigurator_html_a49f5d376330e656b6abd62c2ee7576fe"><div class="ttname"><a href="classConfigurator.html#a49f5d376330e656b6abd62c2ee7576fe">Configurator::makeRobot</a></div><div class="ttdeci">virtual Robot makeRobot(b2World &amp;world, const Task &amp;task)</div><div class="ttdoc">Makes the robot object in the world with the given start position and task.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:80</div></div>
 <div class="ttc" id="aclassConfigurator_html_a50ba743a0d5b7c141dec30e6a704a43c"><div class="ttname"><a href="classConfigurator.html#a50ba743a0d5b7c141dec30e6a704a43c">Configurator::Spawner</a></div><div class="ttdeci">virtual bool Spawner()</div><div class="ttdoc">Calls functions to explore the state space and extract a plan.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:54</div></div>
-<div class="ttc" id="aclassConfigurator_html_a53a3b1d711b087788a602550917a6e61"><div class="ttname"><a href="classConfigurator.html#a53a3b1d711b087788a602550917a6e61">Configurator::getOppositeDirection</a></div><div class="ttdeci">std::pair&lt; bool, Direction &gt; getOppositeDirection(Direction d)</div><div class="ttdef"><b>Definition:</b> configurator.cpp:366</div></div>
-<div class="ttc" id="aclassConfigurator_html_a5909d6f8f82ef074d2b01e8296d635ed"><div class="ttname"><a href="classConfigurator.html#a5909d6f8f82ef074d2b01e8296d635ed">Configurator::estimate_current_vertex</a></div><div class="ttdeci">void estimate_current_vertex()</div><div class="ttdef"><b>Definition:</b> configurator.cpp:231</div></div>
-<div class="ttc" id="aclassConfigurator_html_a63e7270b149180b3cf9b528248afe1d0"><div class="ttname"><a href="classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0">Configurator::assignDimensions</a></div><div class="ttdeci">void assignDimensions(Task &amp;t, float halfLength, float halfWidth)</div><div class="ttdoc">Assigns dimensions to the disturbance of a task (NOTE: pose, affordance and validity of the disturban...</div><div class="ttdef"><b>Definition:</b> configurator.cpp:343</div></div>
+<div class="ttc" id="aclassConfigurator_html_a53a3b1d711b087788a602550917a6e61"><div class="ttname"><a href="classConfigurator.html#a53a3b1d711b087788a602550917a6e61">Configurator::getOppositeDirection</a></div><div class="ttdeci">std::pair&lt; bool, Direction &gt; getOppositeDirection(Direction d)</div><div class="ttdef"><b>Definition:</b> configurator.cpp:342</div></div>
+<div class="ttc" id="aclassConfigurator_html_a5909d6f8f82ef074d2b01e8296d635ed"><div class="ttname"><a href="classConfigurator.html#a5909d6f8f82ef074d2b01e8296d635ed">Configurator::estimate_current_vertex</a></div><div class="ttdeci">void estimate_current_vertex()</div><div class="ttdef"><b>Definition:</b> configurator.cpp:215</div></div>
+<div class="ttc" id="aclassConfigurator_html_a63e7270b149180b3cf9b528248afe1d0"><div class="ttname"><a href="classConfigurator.html#a63e7270b149180b3cf9b528248afe1d0">Configurator::assignDimensions</a></div><div class="ttdeci">void assignDimensions(Task &amp;t, float halfLength, float halfWidth)</div><div class="ttdoc">Assigns dimensions to the disturbance of a task (NOTE: pose, affordance and validity of the disturban...</div><div class="ttdef"><b>Definition:</b> configurator.cpp:319</div></div>
 <div class="ttc" id="aclassConfigurator_html_a681dd37340768f1ade556399d2e2877e"><div class="ttname"><a href="classConfigurator.html#a681dd37340768f1ade556399d2e2877e">Configurator::InvMul_</a></div><div class="ttdeci">static void InvMul_(const b2Transform &amp;B, Task &amp;task)</div><div class="ttdoc">Matrix multiply by transpose.</div></div>
 <div class="ttc" id="aclassConfigurator_html_a704276c74e381175b74317a75d76de71"><div class="ttname"><a href="classConfigurator.html#a704276c74e381175b74317a75d76de71">Configurator::MulT</a></div><div class="ttdeci">static void MulT(const b2Transform &amp;B, Task &amp;task)</div><div class="ttdoc">Matrix multiply by transpose.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:4</div></div>
 <div class="ttc" id="aclassConfigurator_html_a7138219c70bada7848b13e93924448e1"><div class="ttname"><a href="classConfigurator.html#a7138219c70bada7848b13e93924448e1">Configurator::explore_plan</a></div><div class="ttdeci">virtual void explore_plan(b2World &amp;)=0</div><div class="ttdoc">Explores and plan.</div></div>
-<div class="ttc" id="aclassConfigurator_html_a93f9fc1ab8bfb68c5f381341f838bca9"><div class="ttname"><a href="classConfigurator.html#a93f9fc1ab8bfb68c5f381341f838bca9">Configurator::adjust_goal_expectation</a></div><div class="ttdeci">virtual void adjust_goal_expectation()</div><div class="ttdoc">Uses tracking information to adjust the position of the goal relative to the robot.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:302</div></div>
+<div class="ttc" id="aclassConfigurator_html_a8270706b8752aeb5d983c9b8e3ca2c4b"><div class="ttname"><a href="classConfigurator.html#a8270706b8752aeb5d983c9b8e3ca2c4b">Configurator::newScanEvent</a></div><div class="ttdeci">void newScanEvent()</div><div class="ttdoc">Spawns tasks, creates plans, tracks task and controls real-world task switching option to run in thre...</div><div class="ttdef"><b>Definition:</b> configurator.cpp:176</div></div>
+<div class="ttc" id="aclassConfigurator_html_a93f9fc1ab8bfb68c5f381341f838bca9"><div class="ttname"><a href="classConfigurator.html#a93f9fc1ab8bfb68c5f381341f838bca9">Configurator::adjust_goal_expectation</a></div><div class="ttdeci">virtual void adjust_goal_expectation()</div><div class="ttdoc">Uses tracking information to adjust the position of the goal relative to the robot.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:286</div></div>
 <div class="ttc" id="aclassConfigurator_html_aa770e198ec1a69f31a661f3642971779"><div class="ttname"><a href="classConfigurator.html#aa770e198ec1a69f31a661f3642971779">Configurator::Mul</a></div><div class="ttdeci">static void Mul(const b2Transform &amp;B, Task &amp;task)</div><div class="ttdoc">Matrix multiplication.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:14</div></div>
+<div class="ttc" id="aclassConfigurator_html_acb5a842b3a950b845be89a66ac06ef52"><div class="ttname"><a href="classConfigurator.html#acb5a842b3a950b845be89a66ac06ef52">Configurator::insertCoordinate</a></div><div class="ttdeci">void insertCoordinate(float x, float y)</div><div class="ttdoc">Inserts one xy coordinate in the coordinate container.</div><div class="ttdef"><b>Definition:</b> configurator.h:58</div></div>
+<div class="ttc" id="aclassConfigurator_html_ad7a4c39923f711ceb8a1a636154c4e7f"><div class="ttname"><a href="classConfigurator.html#ad7a4c39923f711ceb8a1a636154c4e7f">Configurator::clearData</a></div><div class="ttdeci">void clearData()</div><div class="ttdoc">Clears coordinates.</div><div class="ttdef"><b>Definition:</b> configurator.h:149</div></div>
 <div class="ttc" id="aclassConfigurator_html_ad82bdcea089cccd0aa3469d66ba269b0"><div class="ttname"><a href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">Configurator::init</a></div><div class="ttdeci">virtual void init(Task _task=Task())</div><div class="ttdoc">Initialises configurator.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:22</div></div>
 <div class="ttc" id="aclassConfigurator_html_adbde85cc7db5800b6cccfa9e98b60534"><div class="ttname"><a href="classConfigurator.html#adbde85cc7db5800b6cccfa9e98b60534">Configurator::InvMul</a></div><div class="ttdeci">static void InvMul(const b2Transform &amp;B, Task &amp;task)</div><div class="ttdoc">Matrix multiply by transpose.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:9</div></div>
-<div class="ttc" id="aclassConfigurator_html_ae544663f4af4ce845996463972f3de99"><div class="ttname"><a href="classConfigurator.html#ae544663f4af4ce845996463972f3de99">Configurator::update_graph</a></div><div class="ttdeci">void update_graph(TransitionSystem &amp;g, const TrackingResult &amp;tr)</div><div class="ttdef"><b>Definition:</b> configurator.cpp:287</div></div>
+<div class="ttc" id="aclassConfigurator_html_ae544663f4af4ce845996463972f3de99"><div class="ttname"><a href="classConfigurator.html#ae544663f4af4ce845996463972f3de99">Configurator::update_graph</a></div><div class="ttdeci">void update_graph(TransitionSystem &amp;g, const TrackingResult &amp;tr)</div><div class="ttdef"><b>Definition:</b> configurator.cpp:271</div></div>
 <div class="ttc" id="aclassConfigurator_html_af76bd78ed717bafd3d98ec4c8262278c"><div class="ttname"><a href="classConfigurator.html#af76bd78ed717bafd3d98ec4c8262278c">Configurator::simulate</a></div><div class="ttdeci">simResult simulate(Task t, b2World &amp;w)</div><div class="ttdoc">Simulates this task, includes creating the robot object.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:87</div></div>
-<div class="ttc" id="aclassConfigurator_html_afd6e00cf4faa38476236c7bde59808bd"><div class="ttname"><a href="classConfigurator.html#afd6e00cf4faa38476236c7bde59808bd">Configurator::change_task</a></div><div class="ttdeci">virtual void change_task()</div><div class="ttdoc">changes tasks executing on the robot</div><div class="ttdef"><b>Definition:</b> configurator.cpp:266</div></div>
+<div class="ttc" id="aclassConfigurator_html_afd6e00cf4faa38476236c7bde59808bd"><div class="ttname"><a href="classConfigurator.html#afd6e00cf4faa38476236c7bde59808bd">Configurator::change_task</a></div><div class="ttdeci">virtual void change_task()</div><div class="ttdoc">changes tasks executing on the robot</div><div class="ttdef"><b>Definition:</b> configurator.cpp:250</div></div>
 <div class="ttc" id="aclassController_html"><div class="ttname"><a href="classController.html">Controller</a></div><div class="ttdoc">Callback interface class for implementing custom strategies to switch between tasks to be executed.</div><div class="ttdef"><b>Definition:</b> task_controller.h:11</div></div>
-<div class="ttc" id="aclassLIDAR__In_html"><div class="ttname"><a href="classLIDAR__In.html">LIDAR_In</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:31</div></div>
 <div class="ttc" id="aclassLogger_html"><div class="ttname"><a href="classLogger.html">Logger</a></div><div class="ttdoc">Class used to load data from the configurator.</div><div class="ttdef"><b>Definition:</b> debug.h:18</div></div>
-<div class="ttc" id="aclassMotor__Out_html"><div class="ttname"><a href="classMotor__Out.html">Motor_Out</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:42</div></div>
+<div class="ttc" id="aclassMotorInterface_html"><div class="ttname"><a href="classMotorInterface.html">MotorInterface</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:42</div></div>
 <div class="ttc" id="aclassPlanner_html"><div class="ttname"><a href="classPlanner.html">Planner</a></div><div class="ttdoc">Searches the transition system and extracts a plan.</div><div class="ttdef"><b>Definition:</b> planner.h:130</div></div>
-<div class="ttc" id="aclassReactiveConfigurator_html"><div class="ttname"><a href="classReactiveConfigurator.html">ReactiveConfigurator</a></div><div class="ttdoc">Implements a Braitenberg vehicle: only simulates one Task at a time.</div><div class="ttdef"><b>Definition:</b> configurator.h:310</div></div>
-<div class="ttc" id="aclassReactiveConfigurator_html_ada4480e3a70f328ea66289204933835c"><div class="ttname"><a href="classReactiveConfigurator.html#ada4480e3a70f328ea66289204933835c">ReactiveConfigurator::explore_plan</a></div><div class="ttdeci">void explore_plan(b2World &amp;) override</div><div class="ttdoc">Explores and plan.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:377</div></div>
+<div class="ttc" id="aclassReactiveConfigurator_html"><div class="ttname"><a href="classReactiveConfigurator.html">ReactiveConfigurator</a></div><div class="ttdoc">Implements a Braitenberg vehicle: only simulates one Task at a time.</div><div class="ttdef"><b>Definition:</b> configurator.h:318</div></div>
+<div class="ttc" id="aclassReactiveConfigurator_html_ada4480e3a70f328ea66289204933835c"><div class="ttname"><a href="classReactiveConfigurator.html#ada4480e3a70f328ea66289204933835c">ReactiveConfigurator::explore_plan</a></div><div class="ttdeci">void explore_plan(b2World &amp;) override</div><div class="ttdoc">Explores and plan.</div><div class="ttdef"><b>Definition:</b> configurator.cpp:353</div></div>
 <div class="ttc" id="aclassRobot_html"><div class="ttname"><a href="classRobot.html">Robot</a></div><div class="ttdoc">Robot class for Box2D simulation.</div><div class="ttdef"><b>Definition:</b> robot.h:18</div></div>
-<div class="ttc" id="aclassTask_html"><div class="ttname"><a href="classTask.html">Task</a></div><div class="ttdoc">A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...</div><div class="ttdef"><b>Definition:</b> task.h:45</div></div>
+<div class="ttc" id="aclassTask_html"><div class="ttname"><a href="classTask.html">Task</a></div><div class="ttdoc">A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...</div><div class="ttdef"><b>Definition:</b> task.h:47</div></div>
 <div class="ttc" id="aclassTracker_html"><div class="ttname"><a href="classTracker.html">Tracker</a></div><div class="ttdoc">Tracking interface: Bridge between the real world and the simulation. Is used for tracking execution ...</div><div class="ttdef"><b>Definition:</b> tracker.h:17</div></div>
 <div class="ttc" id="aclassWorldBuilder_html"><div class="ttname"><a href="classWorldBuilder.html">WorldBuilder</a></div><div class="ttdef"><b>Definition:</b> worldbuilder.h:5</div></div>
 <div class="ttc" id="aplanner_8h_html"><div class="ttname"><a href="planner_8h.html">planner.h</a></div></div>
@@ -323,7 +326,8 @@ $(function() {
 <div class="ttc" id="astructBodyFeatures_html"><div class="ttname"><a href="structBodyFeatures.html">BodyFeatures</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:47</div></div>
 <div class="ttc" id="astructDisturbance_html"><div class="ttname"><a href="structDisturbance.html">Disturbance</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:113</div></div>
 <div class="ttc" id="astructEdge_html"><div class="ttname"><a href="structEdge.html">Edge</a></div><div class="ttdoc">Edges connecting states in the transition system.</div><div class="ttdef"><b>Definition:</b> graphTools.h:40</div></div>
-<div class="ttc" id="astructGoalChanger_html"><div class="ttname"><a href="structGoalChanger.html">GoalChanger</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:119</div></div>
+<div class="ttc" id="astructGoalChanger_html"><div class="ttname"><a href="structGoalChanger.html">GoalChanger</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:117</div></div>
+<div class="ttc" id="astructPointf_html"><div class="ttname"><a href="structPointf.html">Pointf</a></div><div class="ttdoc">Wrapper around cv::Point2f for customisation purposes.</div><div class="ttdef"><b>Definition:</b> sensor.h:12</div></div>
 <div class="ttc" id="astructTrackingResult_html"><div class="ttname"><a href="structTrackingResult.html">TrackingResult</a></div><div class="ttdef"><b>Definition:</b> tracker.h:3</div></div>
 <div class="ttc" id="astructsimResult_html"><div class="ttname"><a href="structsimResult.html">simResult</a></div><div class="ttdef"><b>Definition:</b> disturbance.h:269</div></div>
 </div><!-- fragment --></div><!-- contents -->

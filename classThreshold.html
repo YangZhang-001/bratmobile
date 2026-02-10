@@ -63,6 +63,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classThreshold-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Threshold Class Reference</div>  </div>
@@ -76,15 +77,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0fbcde842e1abfc76639db568955057b"><td class="memItemLeft" align="right" valign="top"><a id="a0fbcde842e1abfc76639db568955057b"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Threshold</b> (float e, float a, float d, float aff, float d_dim)</td></tr>
 <tr class="separator:a0fbcde842e1abfc76639db568955057b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a579f597715956226f3366a0efabfb579"><td class="memItemLeft" align="right" valign="top"><a id="a579f597715956226f3366a0efabfb579"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>for_robot_position</b> ()</td></tr>
-<tr class="separator:a579f597715956226f3366a0efabfb579"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f91ffcb835081524fda698511cc7f69"><td class="memItemLeft" align="right" valign="top"><a id="a8f91ffcb835081524fda698511cc7f69"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>for_robot_angle</b> ()</td></tr>
-<tr class="separator:a8f91ffcb835081524fda698511cc7f69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06fe1ed8c645fa724b7e575df9ae6c46"><td class="memItemLeft" align="right" valign="top"><a id="a06fe1ed8c645fa724b7e575df9ae6c46"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>for_affordance</b> ()</td></tr>
-<tr class="separator:a06fe1ed8c645fa724b7e575df9ae6c46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a950dd18f59d248c77280a8dc97ef1340"><td class="memItemLeft" align="right" valign="top"><a id="a950dd18f59d248c77280a8dc97ef1340"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>for_robot_position</b> () const</td></tr>
+<tr class="separator:a950dd18f59d248c77280a8dc97ef1340"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a02300933050e1aa631221009a4a743"><td class="memItemLeft" align="right" valign="top"><a id="a2a02300933050e1aa631221009a4a743"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>for_robot_angle</b> () const</td></tr>
+<tr class="separator:a2a02300933050e1aa631221009a4a743"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa11a79682bbac5c5ba9b682946d83d4a"><td class="memItemLeft" align="right" valign="top"><a id="aa11a79682bbac5c5ba9b682946d83d4a"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>for_affordance</b> () const</td></tr>
+<tr class="separator:aa11a79682bbac5c5ba9b682946d83d4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e0114839efbb93b78b6f8e196003bd1"><td class="memItemLeft" align="right" valign="top"><a id="a7e0114839efbb93b78b6f8e196003bd1"></a>
 <a class="el" href="classBundle.html">Bundle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classThreshold.html#a7e0114839efbb93b78b6f8e196003bd1">for_Di</a> () const</td></tr>
 <tr class="memdesc:a7e0114839efbb93b78b6f8e196003bd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a bundle of thresholds for the initial disturbance. <br /></td></tr>
@@ -103,6 +104,24 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_Di</b> (const <a 
 <a class="el" href="classBundle.html">Bundle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classThreshold.html#aef7e2839b18a97b18d740661b6a9c70b">bundle_threshold</a> ()</td></tr>
 <tr class="memdesc:aef7e2839b18a97b18d740661b6a9c70b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a bundle of parameters for disturbance matching. <br /></td></tr>
 <tr class="separator:aef7e2839b18a97b18d740661b6a9c70b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a74aab43b7b161819c27499297338742e"><td class="memItemLeft" align="right" valign="top"><a id="a74aab43b7b161819c27499297338742e"></a>
+static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>FIXED_ENDPOSE</b> =0.05</td></tr>
+<tr class="separator:a74aab43b7b161819c27499297338742e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf5bd03b45c8483975eb2bc274d95b82"><td class="memItemLeft" align="right" valign="top"><a id="aaf5bd03b45c8483975eb2bc274d95b82"></a>
+static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>FIXED_ANGLE</b> = M_PI/6</td></tr>
+<tr class="separator:aaf5bd03b45c8483975eb2bc274d95b82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ff7dc4bbe65adcae2b23804cadf3a4a"><td class="memItemLeft" align="right" valign="top"><a id="a0ff7dc4bbe65adcae2b23804cadf3a4a"></a>
+static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>FIXED_DISTPOS</b> = 0.065</td></tr>
+<tr class="separator:a0ff7dc4bbe65adcae2b23804cadf3a4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf692a476e7df40ec2d2cb09eb85ad4b"><td class="memItemLeft" align="right" valign="top"><a id="adf692a476e7df40ec2d2cb09eb85ad4b"></a>
+static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>FIXED_AFFORDANCE</b> =0</td></tr>
+<tr class="separator:adf692a476e7df40ec2d2cb09eb85ad4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a110afbb8e9b4040608cf9cc5bef96ef3"><td class="memItemLeft" align="right" valign="top"><a id="a110afbb8e9b4040608cf9cc5bef96ef3"></a>
+static constexpr float&#160;</td><td class="memItemRight" valign="bottom"><b>FIXED_DIMENSIONS</b> =0.03</td></tr>
+<tr class="separator:a110afbb8e9b4040608cf9cc5bef96ef3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Error threshold used to match states or components of states /*! Essentially uses distance calculations and (adaptive) thresholding </p>

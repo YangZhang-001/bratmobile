@@ -86,6 +86,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a09b163ce28ae122f0708c2b9f6471a5a"><td class="memItemLeft" align="right" valign="top"><a id="a09b163ce28ae122f0708c2b9f6471a5a"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Configurator</b> (<a class="el" href="classTask.html">Task</a> _task)</td></tr>
 <tr class="separator:a09b163ce28ae122f0708c2b9f6471a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb5a842b3a950b845be89a66ac06ef52"><td class="memItemLeft" align="right" valign="top"><a id="acb5a842b3a950b845be89a66ac06ef52"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#acb5a842b3a950b845be89a66ac06ef52">insertCoordinate</a> (float x, float y)</td></tr>
+<tr class="memdesc:acb5a842b3a950b845be89a66ac06ef52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts one xy coordinate in the coordinate container. <br /></td></tr>
+<tr class="separator:acb5a842b3a950b845be89a66ac06ef52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad82bdcea089cccd0aa3469d66ba269b0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">init</a> (<a class="el" href="classTask.html">Task</a> _task=<a class="el" href="classTask.html">Task</a>())</td></tr>
 <tr class="memdesc:ad82bdcea089cccd0aa3469d66ba269b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises configurator.  <a href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">More...</a><br /></td></tr>
 <tr class="separator:ad82bdcea089cccd0aa3469d66ba269b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -122,15 +126,17 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>printPlan</b> (std::v
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a7138219c70bada7848b13e93924448e1">explore_plan</a> (b2World &amp;)=0</td></tr>
 <tr class="memdesc:a7138219c70bada7848b13e93924448e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Explores and plan. <br /></td></tr>
 <tr class="separator:a7138219c70bada7848b13e93924448e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d7ea2a8707c52dc15ba1e6bbabfc97e"><td class="memItemLeft" align="right" valign="top"><a id="a0d7ea2a8707c52dc15ba1e6bbabfc97e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> ()</td></tr>
-<tr class="separator:a0d7ea2a8707c52dc15ba1e6bbabfc97e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc5dbb8b69dc61529707261b651a10ad"><td class="memItemLeft" align="right" valign="top"><a id="abc5dbb8b69dc61529707261b651a10ad"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>stop</b> ()</td></tr>
-<tr class="separator:abc5dbb8b69dc61529707261b651a10ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdb6a1c6b8185b9a6f9482ae9e2ff0d2"><td class="memItemLeft" align="right" valign="top"><a id="afdb6a1c6b8185b9a6f9482ae9e2ff0d2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>registerInterface</b> (<a class="el" href="classLIDAR__In.html">LIDAR_In</a> *, <a class="el" href="classMotor__Out.html">Motor_Out</a> *)</td></tr>
-<tr class="separator:afdb6a1c6b8185b9a6f9482ae9e2ff0d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28068c4c665d7d18be67b0a1e0b907b2"><td class="memItemLeft" align="right" valign="top"><a id="a28068c4c665d7d18be67b0a1e0b907b2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>registerInterface</b> (<a class="el" href="classMotorInterface.html">MotorInterface</a> *)</td></tr>
+<tr class="separator:a28068c4c665d7d18be67b0a1e0b907b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8270706b8752aeb5d983c9b8e3ca2c4b"><td class="memItemLeft" align="right" valign="top"><a id="a8270706b8752aeb5d983c9b8e3ca2c4b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a8270706b8752aeb5d983c9b8e3ca2c4b">newScanEvent</a> ()</td></tr>
+<tr class="memdesc:a8270706b8752aeb5d983c9b8e3ca2c4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spawns tasks, creates plans, tracks task and controls real-world task switching option to run in thread. Thread can be used if planning time might exceed 200ms (LIDAR sampling rate) but doesn't have to be. <br /></td></tr>
+<tr class="separator:a8270706b8752aeb5d983c9b8e3ca2c4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7a4c39923f711ceb8a1a636154c4e7f"><td class="memItemLeft" align="right" valign="top"><a id="ad7a4c39923f711ceb8a1a636154c4e7f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#ad7a4c39923f711ceb8a1a636154c4e7f">clearData</a> ()</td></tr>
+<tr class="memdesc:ad7a4c39923f711ceb8a1a636154c4e7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears coordinates. <br /></td></tr>
+<tr class="separator:ad7a4c39923f711ceb8a1a636154c4e7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd6e00cf4faa38476236c7bde59808bd"><td class="memItemLeft" align="right" valign="top"><a id="afd6e00cf4faa38476236c7bde59808bd"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#afd6e00cf4faa38476236c7bde59808bd">change_task</a> ()</td></tr>
 <tr class="memdesc:afd6e00cf4faa38476236c7bde59808bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">changes tasks executing on the robot <br /></td></tr>
@@ -162,12 +168,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:af2f7478c70fb47b92b4b37c2f04be555"><td class="memItemLeft" align="right" valign="top"><a id="af2f7478c70fb47b92b4b37c2f04be555"></a>
 <a class="el" href="classTracker.html">Tracker</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_tracker</b> () const</td></tr>
 <tr class="separator:af2f7478c70fb47b92b4b37c2f04be555"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed1f9b7d3ed9c2b322784aef54433e82"><td class="memItemLeft" align="right" valign="top"><a id="aed1f9b7d3ed9c2b322784aef54433e82"></a>
-<a class="el" href="classMotor__Out.html">Motor_Out</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_motor_interface</b> ()</td></tr>
-<tr class="separator:aed1f9b7d3ed9c2b322784aef54433e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4298d421817000152d6601981fec4e1"><td class="memItemLeft" align="right" valign="top"><a id="ac4298d421817000152d6601981fec4e1"></a>
-<a class="el" href="classLIDAR__In.html">LIDAR_In</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_lidar_interface</b> ()</td></tr>
-<tr class="separator:ac4298d421817000152d6601981fec4e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec3c8681f6a930125c1db66a2c15fc8b"><td class="memItemLeft" align="right" valign="top"><a id="aec3c8681f6a930125c1db66a2c15fc8b"></a>
+<a class="el" href="classMotorInterface.html">MotorInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_motor_interface</b> ()</td></tr>
+<tr class="separator:aec3c8681f6a930125c1db66a2c15fc8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59a21bc0a65628a68e98eaf3ed2c3290"><td class="memItemLeft" align="right" valign="top"><a id="a59a21bc0a65628a68e98eaf3ed2c3290"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>register_planner</b> (<a class="el" href="classPlanner.html">Planner</a> *_p)</td></tr>
 <tr class="separator:a59a21bc0a65628a68e98eaf3ed2c3290"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -180,12 +183,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>register_logger</b> (
 <tr class="memitem:a4703af5f5f223621d29d3c030602f0c4"><td class="memItemLeft" align="right" valign="top"><a id="a4703af5f5f223621d29d3c030602f0c4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>register_goalChanger</b> (<a class="el" href="structGoalChanger.html">GoalChanger</a> *gc)</td></tr>
 <tr class="separator:a4703af5f5f223621d29d3c030602f0c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f3c294493e8a8ce303113e44b73cb71"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classRobot.html">Robot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a0f3c294493e8a8ce303113e44b73cb71">makeRobot</a> (b2World &amp;world, const b2Transform &amp;start)</td></tr>
-<tr class="memdesc:a0f3c294493e8a8ce303113e44b73cb71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the robot object in the world with the given start position and task.  <a href="classConfigurator.html#a0f3c294493e8a8ce303113e44b73cb71">More...</a><br /></td></tr>
-<tr class="separator:a0f3c294493e8a8ce303113e44b73cb71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43bb74e52f4ec7e29412824ac4733c00"><td class="memItemLeft" align="right" valign="top"><a id="a43bb74e52f4ec7e29412824ac4733c00"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>areInterfacesSetUp</b> (<a class="el" href="classConfigurator.html">Configurator</a> *c=NULL)</td></tr>
-<tr class="separator:a43bb74e52f4ec7e29412824ac4733c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49f5d376330e656b6abd62c2ee7576fe"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classRobot.html">Robot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a49f5d376330e656b6abd62c2ee7576fe">makeRobot</a> (b2World &amp;world, const <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:a49f5d376330e656b6abd62c2ee7576fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the robot object in the world with the given start position and task.  <a href="classConfigurator.html#a49f5d376330e656b6abd62c2ee7576fe">More...</a><br /></td></tr>
+<tr class="separator:a49f5d376330e656b6abd62c2ee7576fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a064675e09aa2fbf9aec42ff0cb1786e7"><td class="memItemLeft" align="right" valign="top"><a id="a064675e09aa2fbf9aec42ff0cb1786e7"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>areInterfacesSetUp</b> ()</td></tr>
+<tr class="separator:a064675e09aa2fbf9aec42ff0cb1786e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a381e3979db74e9a7c335bcc9750aaa62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62">assignBodyFeatures</a> (<a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &amp;bf)</td></tr>
 <tr class="memdesc:a381e3979db74e9a7c335bcc9750aaa62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns body features to the disturbance of a task (NOTE: affordance and validity of the disturbance will remain the same)  <a href="classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62">More...</a><br /></td></tr>
 <tr class="separator:a381e3979db74e9a7c335bcc9750aaa62"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -204,10 +207,6 @@ Direction&#160;</td><td class="memItemRight" valign="bottom"><b>get_direction</b
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a26cced006fc019f9791c44090a08b1c5"><td class="memItemLeft" align="right" valign="top"><a id="a26cced006fc019f9791c44090a08b1c5"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a26cced006fc019f9791c44090a08b1c5">run</a> (<a class="el" href="classConfigurator.html">Configurator</a> *)</td></tr>
-<tr class="memdesc:a26cced006fc019f9791c44090a08b1c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spawns tasks, creates plans, tracks task and controls real-world task switching option to run in thread. Thread can be used if planning time might exceed 200ms (LIDAR sampling rate) but doesn't have to be. <br /></td></tr>
-<tr class="separator:a26cced006fc019f9791c44090a08b1c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a704276c74e381175b74317a75d76de71"><td class="memItemLeft" align="right" valign="top"><a id="a704276c74e381175b74317a75d76de71"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a704276c74e381175b74317a75d76de71">MulT</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
 <tr class="memdesc:a704276c74e381175b74317a75d76de71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
@@ -242,12 +241,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>simulatedTasks</b> =0<
 <tr class="memitem:addbd99c90997fc8065e7fadc4056e7d5"><td class="memItemLeft" align="right" valign="top"><a id="addbd99c90997fc8065e7fadc4056e7d5"></a>
 <a class="el" href="classTracker.html">Tracker</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>tracker</b> =NULL</td></tr>
 <tr class="separator:addbd99c90997fc8065e7fadc4056e7d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab70dcab6a84051b5f7a406702934dbc3"><td class="memItemLeft" align="right" valign="top"><a id="ab70dcab6a84051b5f7a406702934dbc3"></a>
-<a class="el" href="classLIDAR__In.html">LIDAR_In</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>ci</b> =NULL</td></tr>
-<tr class="separator:ab70dcab6a84051b5f7a406702934dbc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a880864366d865ec22d58ceaa36f106"><td class="memItemLeft" align="right" valign="top"><a id="a6a880864366d865ec22d58ceaa36f106"></a>
-<a class="el" href="classMotor__Out.html">Motor_Out</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>control</b> =NULL</td></tr>
-<tr class="separator:a6a880864366d865ec22d58ceaa36f106"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f744c5bfd8ce6737d6733bdf71cc389"><td class="memItemLeft" align="right" valign="top"><a id="a2f744c5bfd8ce6737d6733bdf71cc389"></a>
+<a class="el" href="classMotorInterface.html">MotorInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>control</b> =NULL</td></tr>
+<tr class="separator:a2f744c5bfd8ce6737d6733bdf71cc389"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab681222c313c76b0548e2e6e9321303e"><td class="memItemLeft" align="right" valign="top"><a id="ab681222c313c76b0548e2e6e9321303e"></a>
 <a class="el" href="classPlanner.html">Planner</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>planner</b> =NULL</td></tr>
 <tr class="separator:ab681222c313c76b0548e2e6e9321303e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -589,8 +585,8 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
 
 </div>
 </div>
-<a id="a0f3c294493e8a8ce303113e44b73cb71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f3c294493e8a8ce303113e44b73cb71">&#9670;&nbsp;</a></span>makeRobot()</h2>
+<a id="a49f5d376330e656b6abd62c2ee7576fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49f5d376330e656b6abd62c2ee7576fe">&#9670;&nbsp;</a></span>makeRobot()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -607,8 +603,8 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const b2Transform &amp;&#160;</td>
-          <td class="paramname"><em>start</em>&#160;</td>
+          <td class="paramtype">const <a class="el" href="classTask.html">Task</a> &amp;&#160;</td>
+          <td class="paramname"><em>task</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -634,7 +630,7 @@ edgeDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>currentEdge
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classRobot.html" title="Robot class for Box2D simulation.">Robot</a> </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classDiscreteConfigurator.html#ab77fe673c9be1721a94c73380829f25a">DiscreteConfigurator</a>, and <a class="el" href="classAttentiveConfigurator.html#a88fbd42d1c2d37bf721bc753f1b2da8a">AttentiveConfigurator</a>.</p>
+<p>Reimplemented in <a class="el" href="classDiscreteConfigurator.html#a1674c07a8cbf1ed42bed04dba429982b">DiscreteConfigurator</a>, and <a class="el" href="classFocusedConfigurator.html#afdd206d2d5857d4cdf83a3a08cc8a54b">FocusedConfigurator</a>.</p>
 
 </div>
 </div>

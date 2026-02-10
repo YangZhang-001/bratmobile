@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Bratmobile: AttentiveConfigurator::EvaluationQueueManager Class Reference</title>
+<title>Bratmobile: FocusedConfigurator::EvaluationQueueManager Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,50 +61,50 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="classAttentiveConfigurator.html">AttentiveConfigurator</a></li><li class="navelem"><a class="el" href="classAttentiveConfigurator_1_1EvaluationQueueManager.html">EvaluationQueueManager</a></li>  </ul>
+<li class="navelem"><a class="el" href="classFocusedConfigurator.html">FocusedConfigurator</a></li><li class="navelem"><a class="el" href="classFocusedConfigurator_1_1EvaluationQueueManager.html">EvaluationQueueManager</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
-<a href="classAttentiveConfigurator_1_1EvaluationQueueManager-members.html">List of all members</a>  </div>
+<a href="classFocusedConfigurator_1_1EvaluationQueueManager-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">AttentiveConfigurator::EvaluationQueueManager Class Reference</div>  </div>
+<div class="title">FocusedConfigurator::EvaluationQueueManager Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p>Adds and removes vertices from the evaluation queue.  
- <a href="classAttentiveConfigurator_1_1EvaluationQueueManager.html#details">More...</a></p>
+ <a href="classFocusedConfigurator_1_1EvaluationQueueManager.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="attentive_8h_source.html">attentive.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="focused_8h_source.html">focused.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:acf19b24c3086da3d62bd3e4a4cbc6700"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttentiveConfigurator_1_1EvaluationQueueManager.html#acf19b24c3086da3d62bd3e4a4cbc6700">addToEvaluationQueue</a> (std::vector&lt; vertexDescriptor &gt; &amp;evaluationQueue, vertexDescriptor v1, TransitionSystem &amp;g, vertexDescriptor v)</td></tr>
-<tr class="memdesc:acf19b24c3086da3d62bd3e4a4cbc6700"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds to evaluation queue: if the vertex represents a successful task, it is added to the end of the queue regardless of direction. If the vertex after lastAdded (representing a connecting vertex) is a successful straight task, lastAdded is removed from the queue.  <a href="classAttentiveConfigurator_1_1EvaluationQueueManager.html#acf19b24c3086da3d62bd3e4a4cbc6700">More...</a><br /></td></tr>
-<tr class="separator:acf19b24c3086da3d62bd3e4a4cbc6700"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a080c95baaea478cf00bccd954eb9f95f"><td class="memItemLeft" align="right" valign="top"><a id="a080c95baaea478cf00bccd954eb9f95f"></a>
+<tr class="memitem:a0f5c77f073a822f17abaf4ab24dd110b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFocusedConfigurator_1_1EvaluationQueueManager.html#a0f5c77f073a822f17abaf4ab24dd110b">addToEvaluationQueue</a> (std::vector&lt; vertexDescriptor &gt; &amp;evaluationQueue, vertexDescriptor v1, TransitionSystem &amp;g, vertexDescriptor v)</td></tr>
+<tr class="memdesc:a0f5c77f073a822f17abaf4ab24dd110b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds to evaluation queue: if the vertex represents a successful task, it is added to the end of the queue regardless of direction. If the vertex after lastAdded (representing a connecting vertex) is a successful straight task, lastAdded is removed from the queue.  <a href="classFocusedConfigurator_1_1EvaluationQueueManager.html#a0f5c77f073a822f17abaf4ab24dd110b">More...</a><br /></td></tr>
+<tr class="separator:a0f5c77f073a822f17abaf4ab24dd110b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ad57a7c8711ee3f89f5fee61cfbe857"><td class="memItemLeft" align="right" valign="top"><a id="a5ad57a7c8711ee3f89f5fee61cfbe857"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> (vertexDescriptor v=TransitionSystem::null_vertex())</td></tr>
-<tr class="separator:a080c95baaea478cf00bccd954eb9f95f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a5ad57a7c8711ee3f89f5fee61cfbe857"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a7ce61cf9b29e4d9cfcbaa8e9e3a81493"><td class="memItemLeft" align="right" valign="top"><a id="a7ce61cf9b29e4d9cfcbaa8e9e3a81493"></a>
+<tr class="memitem:a9ba2eb7fdaed5fd09251f33fb32b72af"><td class="memItemLeft" align="right" valign="top"><a id="a9ba2eb7fdaed5fd09251f33fb32b72af"></a>
 vertexDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>lastAdded</b> =TransitionSystem::null_vertex()</td></tr>
-<tr class="separator:a7ce61cf9b29e4d9cfcbaa8e9e3a81493"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a9ba2eb7fdaed5fd09251f33fb32b72af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Adds and removes vertices from the evaluation queue. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="acf19b24c3086da3d62bd3e4a4cbc6700"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf19b24c3086da3d62bd3e4a4cbc6700">&#9670;&nbsp;</a></span>addToEvaluationQueue()</h2>
+<a id="a0f5c77f073a822f17abaf4ab24dd110b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f5c77f073a822f17abaf4ab24dd110b">&#9670;&nbsp;</a></span>addToEvaluationQueue()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void AttentiveConfigurator::EvaluationQueueManager::addToEvaluationQueue </td>
+          <td class="memname">void FocusedConfigurator::EvaluationQueueManager::addToEvaluationQueue </td>
           <td>(</td>
           <td class="paramtype">std::vector&lt; vertexDescriptor &gt; &amp;&#160;</td>
           <td class="paramname"><em>evaluationQueue</em>, </td>
@@ -149,8 +149,8 @@ vertexDescriptor&#160;</td><td class="memItemRight" valign="bottom"><b>lastAdded
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/<a class="el" href="attentive_8h_source.html">attentive.h</a></li>
-<li>src/attentive.cpp</li>
+<li>src/<a class="el" href="focused_8h_source.html">focused.h</a></li>
+<li>src/focused.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

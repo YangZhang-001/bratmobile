@@ -6,4 +6,6 @@ digraph "ClosedLoop_Tracker"
   Node1 [label="ClosedLoop_Tracker",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Tracks task execution by observing changes in tracked disturbance."];
   Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node2 [label="Tracker",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classTracker.html",tooltip="Tracking interface: Bridge between the real world and the simulation. Is used for tracking execution ..."];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="CLAdaptiveTracker",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classCLAdaptiveTracker.html",tooltip=" "];
 }

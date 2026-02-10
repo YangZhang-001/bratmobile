@@ -94,6 +94,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a09b163ce28ae122f0708c2b9f6471a5a inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a09b163ce28ae122f0708c2b9f6471a5a"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Configurator</b> (<a class="el" href="classTask.html">Task</a> _task)</td></tr>
 <tr class="separator:a09b163ce28ae122f0708c2b9f6471a5a inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb5a842b3a950b845be89a66ac06ef52 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="acb5a842b3a950b845be89a66ac06ef52"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#acb5a842b3a950b845be89a66ac06ef52">insertCoordinate</a> (float x, float y)</td></tr>
+<tr class="memdesc:acb5a842b3a950b845be89a66ac06ef52 inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts one xy coordinate in the coordinate container. <br /></td></tr>
+<tr class="separator:acb5a842b3a950b845be89a66ac06ef52 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad82bdcea089cccd0aa3469d66ba269b0 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">init</a> (<a class="el" href="classTask.html">Task</a> _task=<a class="el" href="classTask.html">Task</a>())</td></tr>
 <tr class="memdesc:ad82bdcea089cccd0aa3469d66ba269b0 inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises configurator.  <a href="classConfigurator.html#ad82bdcea089cccd0aa3469d66ba269b0">More...</a><br /></td></tr>
 <tr class="separator:ad82bdcea089cccd0aa3469d66ba269b0 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -123,15 +127,17 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>printPlan</b> (std::v
 <tr class="memitem:a3273045337b602fbbd10a08c90a896bd inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">std::pair&lt; edgeDescriptor, bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a3273045337b602fbbd10a08c90a896bd">addVertex</a> (const vertexDescriptor &amp;src, vertexDescriptor &amp;v1, <a class="el" href="structEdge.html">Edge</a> edge=<a class="el" href="structEdge.html">Edge</a>(), bool topDown=0)</td></tr>
 <tr class="memdesc:a3273045337b602fbbd10a08c90a896bd inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add state to the cognitive map and set next state <a class="el" href="classTask.html" title="A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...">Task</a> direction and options.  <a href="classConfigurator.html#a3273045337b602fbbd10a08c90a896bd">More...</a><br /></td></tr>
 <tr class="separator:a3273045337b602fbbd10a08c90a896bd inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d7ea2a8707c52dc15ba1e6bbabfc97e inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a0d7ea2a8707c52dc15ba1e6bbabfc97e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> ()</td></tr>
-<tr class="separator:a0d7ea2a8707c52dc15ba1e6bbabfc97e inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc5dbb8b69dc61529707261b651a10ad inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="abc5dbb8b69dc61529707261b651a10ad"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>stop</b> ()</td></tr>
-<tr class="separator:abc5dbb8b69dc61529707261b651a10ad inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdb6a1c6b8185b9a6f9482ae9e2ff0d2 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="afdb6a1c6b8185b9a6f9482ae9e2ff0d2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>registerInterface</b> (<a class="el" href="classLIDAR__In.html">LIDAR_In</a> *, <a class="el" href="classMotor__Out.html">Motor_Out</a> *)</td></tr>
-<tr class="separator:afdb6a1c6b8185b9a6f9482ae9e2ff0d2 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28068c4c665d7d18be67b0a1e0b907b2 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a28068c4c665d7d18be67b0a1e0b907b2"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>registerInterface</b> (<a class="el" href="classMotorInterface.html">MotorInterface</a> *)</td></tr>
+<tr class="separator:a28068c4c665d7d18be67b0a1e0b907b2 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8270706b8752aeb5d983c9b8e3ca2c4b inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a8270706b8752aeb5d983c9b8e3ca2c4b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a8270706b8752aeb5d983c9b8e3ca2c4b">newScanEvent</a> ()</td></tr>
+<tr class="memdesc:a8270706b8752aeb5d983c9b8e3ca2c4b inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spawns tasks, creates plans, tracks task and controls real-world task switching option to run in thread. Thread can be used if planning time might exceed 200ms (LIDAR sampling rate) but doesn't have to be. <br /></td></tr>
+<tr class="separator:a8270706b8752aeb5d983c9b8e3ca2c4b inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7a4c39923f711ceb8a1a636154c4e7f inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ad7a4c39923f711ceb8a1a636154c4e7f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#ad7a4c39923f711ceb8a1a636154c4e7f">clearData</a> ()</td></tr>
+<tr class="memdesc:ad7a4c39923f711ceb8a1a636154c4e7f inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears coordinates. <br /></td></tr>
+<tr class="separator:ad7a4c39923f711ceb8a1a636154c4e7f inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd6e00cf4faa38476236c7bde59808bd inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="afd6e00cf4faa38476236c7bde59808bd"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#afd6e00cf4faa38476236c7bde59808bd">change_task</a> ()</td></tr>
 <tr class="memdesc:afd6e00cf4faa38476236c7bde59808bd inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">changes tasks executing on the robot <br /></td></tr>
@@ -163,12 +169,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:af2f7478c70fb47b92b4b37c2f04be555 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="af2f7478c70fb47b92b4b37c2f04be555"></a>
 <a class="el" href="classTracker.html">Tracker</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_tracker</b> () const</td></tr>
 <tr class="separator:af2f7478c70fb47b92b4b37c2f04be555 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed1f9b7d3ed9c2b322784aef54433e82 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="aed1f9b7d3ed9c2b322784aef54433e82"></a>
-<a class="el" href="classMotor__Out.html">Motor_Out</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_motor_interface</b> ()</td></tr>
-<tr class="separator:aed1f9b7d3ed9c2b322784aef54433e82 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4298d421817000152d6601981fec4e1 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ac4298d421817000152d6601981fec4e1"></a>
-<a class="el" href="classLIDAR__In.html">LIDAR_In</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_lidar_interface</b> ()</td></tr>
-<tr class="separator:ac4298d421817000152d6601981fec4e1 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec3c8681f6a930125c1db66a2c15fc8b inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="aec3c8681f6a930125c1db66a2c15fc8b"></a>
+<a class="el" href="classMotorInterface.html">MotorInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_motor_interface</b> ()</td></tr>
+<tr class="separator:aec3c8681f6a930125c1db66a2c15fc8b inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59a21bc0a65628a68e98eaf3ed2c3290 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a59a21bc0a65628a68e98eaf3ed2c3290"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>register_planner</b> (<a class="el" href="classPlanner.html">Planner</a> *_p)</td></tr>
 <tr class="separator:a59a21bc0a65628a68e98eaf3ed2c3290 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,12 +184,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>register_logger</b> (
 <tr class="memitem:a4703af5f5f223621d29d3c030602f0c4 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a4703af5f5f223621d29d3c030602f0c4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>register_goalChanger</b> (<a class="el" href="structGoalChanger.html">GoalChanger</a> *gc)</td></tr>
 <tr class="separator:a4703af5f5f223621d29d3c030602f0c4 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f3c294493e8a8ce303113e44b73cb71 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classRobot.html">Robot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a0f3c294493e8a8ce303113e44b73cb71">makeRobot</a> (b2World &amp;world, const b2Transform &amp;start)</td></tr>
-<tr class="memdesc:a0f3c294493e8a8ce303113e44b73cb71 inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the robot object in the world with the given start position and task.  <a href="classConfigurator.html#a0f3c294493e8a8ce303113e44b73cb71">More...</a><br /></td></tr>
-<tr class="separator:a0f3c294493e8a8ce303113e44b73cb71 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43bb74e52f4ec7e29412824ac4733c00 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a43bb74e52f4ec7e29412824ac4733c00"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>areInterfacesSetUp</b> (<a class="el" href="classConfigurator.html">Configurator</a> *c=NULL)</td></tr>
-<tr class="separator:a43bb74e52f4ec7e29412824ac4733c00 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49f5d376330e656b6abd62c2ee7576fe inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classRobot.html">Robot</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a49f5d376330e656b6abd62c2ee7576fe">makeRobot</a> (b2World &amp;world, const <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
+<tr class="memdesc:a49f5d376330e656b6abd62c2ee7576fe inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes the robot object in the world with the given start position and task.  <a href="classConfigurator.html#a49f5d376330e656b6abd62c2ee7576fe">More...</a><br /></td></tr>
+<tr class="separator:a49f5d376330e656b6abd62c2ee7576fe inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a064675e09aa2fbf9aec42ff0cb1786e7 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a064675e09aa2fbf9aec42ff0cb1786e7"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>areInterfacesSetUp</b> ()</td></tr>
+<tr class="separator:a064675e09aa2fbf9aec42ff0cb1786e7 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a381e3979db74e9a7c335bcc9750aaa62 inherit pub_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62">assignBodyFeatures</a> (<a class="el" href="classTask.html">Task</a> &amp;t, const <a class="el" href="structBodyFeatures.html">BodyFeatures</a> &amp;bf)</td></tr>
 <tr class="memdesc:a381e3979db74e9a7c335bcc9750aaa62 inherit pub_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns body features to the disturbance of a task (NOTE: affordance and validity of the disturbance will remain the same)  <a href="classConfigurator.html#a381e3979db74e9a7c335bcc9750aaa62">More...</a><br /></td></tr>
 <tr class="separator:a381e3979db74e9a7c335bcc9750aaa62 inherit pub_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,10 +219,6 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>remainingSimulationT
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_static_methods_classConfigurator"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classConfigurator')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classConfigurator.html">Configurator</a></td></tr>
-<tr class="memitem:a26cced006fc019f9791c44090a08b1c5 inherit pub_static_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a26cced006fc019f9791c44090a08b1c5"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a26cced006fc019f9791c44090a08b1c5">run</a> (<a class="el" href="classConfigurator.html">Configurator</a> *)</td></tr>
-<tr class="memdesc:a26cced006fc019f9791c44090a08b1c5 inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Spawns tasks, creates plans, tracks task and controls real-world task switching option to run in thread. Thread can be used if planning time might exceed 200ms (LIDAR sampling rate) but doesn't have to be. <br /></td></tr>
-<tr class="separator:a26cced006fc019f9791c44090a08b1c5 inherit pub_static_methods_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a704276c74e381175b74317a75d76de71 inherit pub_static_methods_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a704276c74e381175b74317a75d76de71"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfigurator.html#a704276c74e381175b74317a75d76de71">MulT</a> (const b2Transform &amp;B, <a class="el" href="classTask.html">Task</a> &amp;task)</td></tr>
 <tr class="memdesc:a704276c74e381175b74317a75d76de71 inherit pub_static_methods_classConfigurator"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix multiply by transpose. <br /></td></tr>
@@ -252,12 +251,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>simulatedTasks</b> =0<
 <tr class="memitem:addbd99c90997fc8065e7fadc4056e7d5 inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="addbd99c90997fc8065e7fadc4056e7d5"></a>
 <a class="el" href="classTracker.html">Tracker</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>tracker</b> =NULL</td></tr>
 <tr class="separator:addbd99c90997fc8065e7fadc4056e7d5 inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab70dcab6a84051b5f7a406702934dbc3 inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ab70dcab6a84051b5f7a406702934dbc3"></a>
-<a class="el" href="classLIDAR__In.html">LIDAR_In</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>ci</b> =NULL</td></tr>
-<tr class="separator:ab70dcab6a84051b5f7a406702934dbc3 inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a880864366d865ec22d58ceaa36f106 inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a6a880864366d865ec22d58ceaa36f106"></a>
-<a class="el" href="classMotor__Out.html">Motor_Out</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>control</b> =NULL</td></tr>
-<tr class="separator:a6a880864366d865ec22d58ceaa36f106 inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f744c5bfd8ce6737d6733bdf71cc389 inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="a2f744c5bfd8ce6737d6733bdf71cc389"></a>
+<a class="el" href="classMotorInterface.html">MotorInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>control</b> =NULL</td></tr>
+<tr class="separator:a2f744c5bfd8ce6737d6733bdf71cc389 inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab681222c313c76b0548e2e6e9321303e inherit pro_attribs_classConfigurator"><td class="memItemLeft" align="right" valign="top"><a id="ab681222c313c76b0548e2e6e9321303e"></a>
 <a class="el" href="classPlanner.html">Planner</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>planner</b> =NULL</td></tr>
 <tr class="separator:ab681222c313c76b0548e2e6e9321303e inherit pro_attribs_classConfigurator"><td class="memSeparator" colspan="2">&#160;</td></tr>

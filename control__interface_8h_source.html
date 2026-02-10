@@ -77,97 +77,92 @@ $(function() {
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">class </span><a class="code" href="classConfigurator.html">Configurator</a>; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="classIOInterface.html">   12</a></span>&#160;<span class="keyword">class </span><a class="code" href="classIOInterface.html">IOInterface</a>{</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">bool</span> ready=<span class="keyword">false</span>;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="classIOInterface.html">IOInterface</a>()=<span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">// class IOInterface{</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">//  protected:</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">//  bool ready=false;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">//  public:</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">//  IOInterface()=default;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">bool</span> isReady(){</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="keywordflow">return</span> ready;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    }</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//  bool isReady(){</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">//      return ready;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">//  }</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> setReady(<span class="keywordtype">bool</span> b){</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        ready=b;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    }</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">//  void setReady(bool b){</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">//      ready=b;</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">//  }</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;};</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// };</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classLIDAR__In.html">   31</a></span>&#160;<span class="keyword">class </span><a class="code" href="classLIDAR__In.html">LIDAR_In</a>:<span class="keyword">public</span> <a class="code" href="classIOInterface.html">IOInterface</a>{ </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">bool</span> debugOn=0;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">int</span> iteration=0;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">bool</span> stop=0;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a> data2fp;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;};</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// class LIDAR_In:public IOInterface{ </span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// public:</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">//  bool debugOn=0;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">//  int iteration=0;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">//  bool stop=0;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">//  CoordinateContainer data2fp;</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// };</span></div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classMotor__Out.html">   42</a></span>&#160;<span class="keyword">class </span><a class="code" href="classMotor__Out.html">Motor_Out</a>:<span class="keyword">public</span> <a class="code" href="classIOInterface.html">IOInterface</a> { </div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classMotorInterface.html">   42</a></span>&#160;<span class="keyword">class </span><a class="code" href="classMotorInterface.html">MotorInterface</a> { </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">float</span> L=0, R=0, L_gain=1.0f, R_gain=1.0f, Kp=0.45, Ki=0.25, Kd=0.2; <span class="comment">//from empirical, Kp should be 1.2</span></div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">float</span> prev_error=0;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">float</span> integral=0;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="classMotor__Out.html">Motor_Out</a>()=<span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="classMotorInterface.html">MotorInterface</a>()=<span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="classMotor__Out.html">Motor_Out</a>(<span class="keywordtype">float</span> kp, <span class="keywordtype">float</span> ki, <span class="keywordtype">float</span> kd):Kp(kp), Ki(ki), Kd(kd){}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="classMotorInterface.html">MotorInterface</a>(<span class="keywordtype">float</span> kp, <span class="keywordtype">float</span> ki, <span class="keywordtype">float</span> kd):Kp(kp), Ki(ki), Kd(kd){}</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">void</span> getData(<span class="keyword">const</span> <a class="code" href="structTask_1_1Action.html">Task::Action</a> &amp;a){</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        setReady(0);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        L=a.getLWheelSpeed();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        R=a.getRWheelSpeed();</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        setReady(1);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">float</span> get_L(){</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">float</span> f=L*L_gain;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordflow">return</span> f;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">float</span> get_R(){</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordtype">float</span> f=R*R_gain;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        <span class="keywordflow">return</span> f;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classMotor__Out.html#ae63aff1ab8d0a7217ebd522a3e858a8c">adjust_gain</a>( <span class="keywordtype">float</span> angle_D, b2Transform observed, <span class="keywordtype">float</span> * y_D=NULL);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classMotor__Out.html#ad8c4a2c3d8d83a4efe498d0b83458199">PID</a>(<span class="keywordtype">float</span> e);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordtype">float</span> <a class="code" href="classMotor__Out.html#a9ac747ab8d83d3936410cb4da04b8872">outer_loop</a>(<span class="keywordtype">float</span> e);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordtype">void</span> reset(){</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        L_gain=1.0f;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        R_gain=1.0f;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        reset_error();</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    }</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordtype">void</span> reset_error(){</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        integral=0;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        prev_error=0;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        L=a.getLWheelSpeed();</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        R=a.getRWheelSpeed();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordtype">float</span> get_L(){</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordtype">float</span> f=L*L_gain;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">return</span> f;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">float</span> get_R(){</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordtype">float</span> f=R*R_gain;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <span class="keywordflow">return</span> f;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    }</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classMotorInterface.html#ad0c22bd965697a1ce1a005682b402140">adjust_gain</a>( <span class="keywordtype">float</span> angle_D, b2Transform observed, <span class="keywordtype">float</span> * y_D=NULL);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classMotorInterface.html#a61e74959e535d5937afb611428c26018">PID</a>(<span class="keywordtype">float</span> e);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordtype">float</span> <a class="code" href="classMotorInterface.html#a02a823fb912854d18be0def2a6f5d718">outer_loop</a>(<span class="keywordtype">float</span> e);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordtype">void</span> reset(){</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        L_gain=1.0f;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        R_gain=1.0f;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        reset_error();</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">void</span> reset_error(){</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        integral=0;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        prev_error=0;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    }</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;};  </div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;};  </div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="structGoalChanger.html">  119</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structGoalChanger.html">GoalChanger</a>{</div>
-<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="structGoalChanger.html#ab68649df6c693ce06ea01912d2d5bcd2">  124</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classTask.html">Task</a> <a class="code" href="structGoalChanger.html#ab68649df6c693ce06ea01912d2d5bcd2">change_goal</a>(<span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> &amp; t)=0;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;};</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="structGoalChanger.html">  117</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structGoalChanger.html">GoalChanger</a>{</div>
+<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="structGoalChanger.html#ab68649df6c693ce06ea01912d2d5bcd2">  122</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classTask.html">Task</a> <a class="code" href="structGoalChanger.html#ab68649df6c693ce06ea01912d2d5bcd2">change_goal</a>(<span class="keyword">const</span> <a class="code" href="classTask.html">Task</a> &amp; t)=0;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;};</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclassConfigurator_html"><div class="ttname"><a href="classConfigurator.html">Configurator</a></div><div class="ttdef"><b>Definition:</b> configurator.h:17</div></div>
-<div class="ttc" id="aclassIOInterface_html"><div class="ttname"><a href="classIOInterface.html">IOInterface</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:12</div></div>
-<div class="ttc" id="aclassLIDAR__In_html"><div class="ttname"><a href="classLIDAR__In.html">LIDAR_In</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:31</div></div>
-<div class="ttc" id="aclassMotor__Out_html"><div class="ttname"><a href="classMotor__Out.html">Motor_Out</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:42</div></div>
-<div class="ttc" id="aclassMotor__Out_html_a9ac747ab8d83d3936410cb4da04b8872"><div class="ttname"><a href="classMotor__Out.html#a9ac747ab8d83d3936410cb4da04b8872">Motor_Out::outer_loop</a></div><div class="ttdeci">float outer_loop(float e)</div><div class="ttdoc">Implements a P controller in the outer loop of the cascade controller.</div><div class="ttdef"><b>Definition:</b> control_interface.cpp:26</div></div>
-<div class="ttc" id="aclassMotor__Out_html_ad8c4a2c3d8d83a4efe498d0b83458199"><div class="ttname"><a href="classMotor__Out.html#ad8c4a2c3d8d83a4efe498d0b83458199">Motor_Out::PID</a></div><div class="ttdeci">void PID(float e)</div><div class="ttdoc">Implements a PID controller.</div><div class="ttdef"><b>Definition:</b> control_interface.cpp:18</div></div>
-<div class="ttc" id="aclassMotor__Out_html_ae63aff1ab8d0a7217ebd522a3e858a8c"><div class="ttname"><a href="classMotor__Out.html#ae63aff1ab8d0a7217ebd522a3e858a8c">Motor_Out::adjust_gain</a></div><div class="ttdeci">void adjust_gain(float angle_D, b2Transform observed, float *y_D=NULL)</div><div class="ttdoc">Adjusts L/R wheel gain, implements a PID controller with option to turn it into cascaded controller.</div><div class="ttdef"><b>Definition:</b> control_interface.cpp:3</div></div>
-<div class="ttc" id="aclassTask_html"><div class="ttname"><a href="classTask.html">Task</a></div><div class="ttdoc">A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...</div><div class="ttdef"><b>Definition:</b> task.h:45</div></div>
-<div class="ttc" id="asensor_8h_html_a17aa500d7fd9def31a6a11868d2375bd"><div class="ttname"><a href="sensor_8h.html#a17aa500d7fd9def31a6a11868d2375bd">CoordinateContainer</a></div><div class="ttdeci">std::set&lt; Pointf &gt; CoordinateContainer</div><div class="ttdoc">container for LIDAR coordinates</div><div class="ttdef"><b>Definition:</b> sensor.h:61</div></div>
-<div class="ttc" id="astructGoalChanger_html"><div class="ttname"><a href="structGoalChanger.html">GoalChanger</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:119</div></div>
+<div class="ttc" id="aclassMotorInterface_html"><div class="ttname"><a href="classMotorInterface.html">MotorInterface</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:42</div></div>
+<div class="ttc" id="aclassMotorInterface_html_a02a823fb912854d18be0def2a6f5d718"><div class="ttname"><a href="classMotorInterface.html#a02a823fb912854d18be0def2a6f5d718">MotorInterface::outer_loop</a></div><div class="ttdeci">float outer_loop(float e)</div><div class="ttdoc">Implements a P controller in the outer loop of the cascade controller.</div><div class="ttdef"><b>Definition:</b> control_interface.cpp:26</div></div>
+<div class="ttc" id="aclassMotorInterface_html_a61e74959e535d5937afb611428c26018"><div class="ttname"><a href="classMotorInterface.html#a61e74959e535d5937afb611428c26018">MotorInterface::PID</a></div><div class="ttdeci">void PID(float e)</div><div class="ttdoc">Implements a PID controller.</div><div class="ttdef"><b>Definition:</b> control_interface.cpp:18</div></div>
+<div class="ttc" id="aclassMotorInterface_html_ad0c22bd965697a1ce1a005682b402140"><div class="ttname"><a href="classMotorInterface.html#ad0c22bd965697a1ce1a005682b402140">MotorInterface::adjust_gain</a></div><div class="ttdeci">void adjust_gain(float angle_D, b2Transform observed, float *y_D=NULL)</div><div class="ttdoc">Adjusts L/R wheel gain, implements a PID controller with option to turn it into cascaded controller.</div><div class="ttdef"><b>Definition:</b> control_interface.cpp:3</div></div>
+<div class="ttc" id="aclassTask_html"><div class="ttname"><a href="classTask.html">Task</a></div><div class="ttdoc">A closed hybrid control loop. It has an initial disturbance representing the continuous state and a d...</div><div class="ttdef"><b>Definition:</b> task.h:47</div></div>
+<div class="ttc" id="astructGoalChanger_html"><div class="ttname"><a href="structGoalChanger.html">GoalChanger</a></div><div class="ttdef"><b>Definition:</b> control_interface.h:117</div></div>
 <div class="ttc" id="astructGoalChanger_html_ab68649df6c693ce06ea01912d2d5bcd2"><div class="ttname"><a href="structGoalChanger.html#ab68649df6c693ce06ea01912d2d5bcd2">GoalChanger::change_goal</a></div><div class="ttdeci">virtual Task change_goal(const Task &amp;t)=0</div></div>
-<div class="ttc" id="astructTask_1_1Action_html"><div class="ttname"><a href="structTask_1_1Action.html">Task::Action</a></div><div class="ttdoc">The motor instructions generated by the control strategy used in this tasks.</div><div class="ttdef"><b>Definition:</b> task.h:63</div></div>
+<div class="ttc" id="astructTask_1_1Action_html"><div class="ttname"><a href="structTask_1_1Action.html">Task::Action</a></div><div class="ttdoc">The motor instructions generated by the control strategy used in this tasks.</div><div class="ttdef"><b>Definition:</b> task.h:65</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

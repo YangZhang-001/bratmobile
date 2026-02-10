@@ -1,0 +1,21 @@
+digraph "CLAdaptiveTracker"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="CLAdaptiveTracker",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="ClosedLoop_Tracker",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classClosedLoop__Tracker.html",tooltip="Tracks task execution by observing changes in tracked disturbance."];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="Tracker",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classTracker.html",tooltip="Tracking interface: Bridge between the real world and the simulation. Is used for tracking execution ..."];
+  Node4 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" threshold" ,fontname="Helvetica"];
+  Node4 [label="Threshold",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classThreshold.html",tooltip=" "];
+  Node5 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" learner" ,fontname="Helvetica"];
+  Node5 [label="ThresholdLearner",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classThresholdLearner.html",tooltip=" "];
+  Node6 -> Node5 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" Di_weights\nDn_weights" ,fontname="Helvetica"];
+  Node6 [label="Bundle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classBundle.html",tooltip=" "];
+  Node7 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" tracked_disturbance" ,fontname="Helvetica"];
+  Node7 [label="Disturbance",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structDisturbance.html",tooltip=" "];
+  Node8 -> Node7 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" bf" ,fontname="Helvetica"];
+  Node8 [label="BodyFeatures",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structBodyFeatures.html",tooltip=" "];
+}

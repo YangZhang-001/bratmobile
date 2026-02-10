@@ -1,7 +1,7 @@
 var searchData=
 [
   ['b2bconfigurator_21',['B2BConfigurator',['../classB2BConfigurator.html',1,'']]],
-  ['backtrack_22',['backtrack',['../classAttentiveConfigurator.html#a460b9c5fdd998becf58cdfc31e2df36d',1,'AttentiveConfigurator::backtrack()'],['../classDiscreteConfigurator.html#ade0cca28021a7d0718058f17a7fe3a24',1,'DiscreteConfigurator::backtrack()'],['../classB2BConfigurator.html#a2a174db427803b8f5e08ebbf72be9ed0',1,'B2BConfigurator::backtrack()']]],
+  ['backtrack_22',['backtrack',['../classDiscreteConfigurator.html#ade0cca28021a7d0718058f17a7fe3a24',1,'DiscreteConfigurator::backtrack()'],['../classB2BConfigurator.html#a2a174db427803b8f5e08ebbf72be9ed0',1,'B2BConfigurator::backtrack()'],['../classFocusedConfigurator.html#a748216eeeb096731fa43ea17ea8d75e7',1,'FocusedConfigurator::backtrack()']]],
   ['best_5fpath_23',['best_path',['../classHorizonStarPlanner.html#a4e2246600849cc0f8262cf4d59a79ef7',1,'HorizonStarPlanner']]],
   ['bodyfeatures_24',['BodyFeatures',['../structBodyFeatures.html',1,'']]],
   ['bounding_5fbox_25',['bounding_box',['../sensor_8h.html#adc715828329f7d18884848069358129e',1,'sensor.h']]],

@@ -4,5 +4,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
   node [fontname="Helvetica",fontsize="10",shape=record];
   rankdir="LR";
-  Node0 [label="EndCriteria",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structEndCriteria.html",tooltip="Defines the end criteria for a Task, i.e. when it is considered to be finished."];
+  Node0 [label="EndedResult",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structEndedResult.html",tooltip="Provides information on whether a Task has ended and with what heuristic -estimated- cost (chi) and p..."];
 }

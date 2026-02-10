@@ -4,9 +4,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
   node [fontname="Helvetica",fontsize="10",shape=record];
   rankdir="LR";
-  Node0 [label="IOInterface",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classIOInterface.html",tooltip=" "];
-  Node0 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node1 [label="LIDAR_In",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classLIDAR__In.html",tooltip=" "];
-  Node0 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node2 [label="Motor_Out",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classMotor__Out.html",tooltip=" "];
+  Node0 [label="is_not_v",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structis__not__v.html",tooltip="Used as a predicate, gives info on whether a vertex is the current vertex."];
 }
