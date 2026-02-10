@@ -24,6 +24,7 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   add_executable(brat2_target custom_robot.h brat2_target.cpp)
   add_executable(brat2_targetless custom_robot.h brat2_targetless.cpp)
   add_executable(brat3_target custom_robot.h brat3_target.cpp)
+  add_executable(brat3_target_wb custom_robot.h brat3_target_wb.cpp)
   add_executable(brat3_targetless custom_robot.h brat3_targetless.cpp)
   add_executable(reactive custom_robot.h reactive.cpp)
 
@@ -32,6 +33,7 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   target_link_libraries(brat2_target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
   target_link_libraries(brat3_targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio)
   target_link_libraries(brat3_target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
+  target_link_libraries(brat3_target_wb ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
   target_link_libraries(reactive ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
   
   add_subdirectory(test)
