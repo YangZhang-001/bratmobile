@@ -57,12 +57,10 @@ int main(int argc, char** argv) {
 	configurator.registerInterface( &tracker);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&tracker);
-	configurator.start();
 	lidar.start();
 	motors.start();
 	getchar();
 	motors.stop();
-	configurator.stop();
 	lidar.stop();
 	logger.~Logger();
 }
