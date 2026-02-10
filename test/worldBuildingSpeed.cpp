@@ -1,4 +1,5 @@
 #include "attentive.h"
+const bool DEBUG=false;
 
 int main(int argc, char **argv) {
   std::ifstream file("cds_test.dat");

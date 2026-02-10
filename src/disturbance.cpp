@@ -97,7 +97,8 @@ float Disturbance::getAngle(b2Transform t){ //gets the angle of an Disturbance w
 // }
 
 bool Disturbance::operator==(const Disturbance & d)const{
-    bool _pose=(bf.pose.p==d.bf.pose.p) && (bf.pose.q.GetAngle()==d.bf.pose.q.GetAngle());
+    bool _position=std::round(bf.pose.p.x*100)/100==std::round(d.bf.pose.p.x*100)/100 && std::round(bf.pose.p.y*100)/100==std::round(d.bf.pose.p.y*100)/100;
+    bool _pose=_position && (bf.pose.q.GetAngle()==d.bf.pose.q.GetAngle());
     bool dim=(bf.halfLength==d.bf.halfLength) && (bf.halfWidth==d.bf.halfWidth);
     bool aff=affordanceIndex==d.affordanceIndex;
     return _pose && dim && aff;

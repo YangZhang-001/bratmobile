@@ -16,7 +16,6 @@ class CLTracker: public ClosedLoop_Tracker, public MotorCallback, public Motor_O
 int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
-	LIDAR_In configuratorInterface;
 	LaserFocus wb;
 	//Motor_Out controlInterface;
     FocusedConfigurator configurator;
@@ -31,8 +30,8 @@ int main(int argc, char** argv) {
 	Logger logger( "rt-update-targetless", "/tmp");
 	configurator.register_logger(&logger);
 	configurator.setSimulationStep(.27);
-	LidarInterface dataInterface(&configuratorInterface);
-	configurator.registerInterface(&configuratorInterface, &tracker);
+	LidarInterface dataInterface(&configurator);
+	configurator.registerInterface( &tracker);
 	MotorCallback cb(&tracker);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&tracker);

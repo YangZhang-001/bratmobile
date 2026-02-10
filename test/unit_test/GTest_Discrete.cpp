@@ -1,4 +1,7 @@
 #include "test_classes.h"
+const bool DEBUG=false;
+
+
 class DiscreteConfPlanTest:public DiscreteConfigurator, public testing::WithParamInterface<std::tuple<bool, std::string, int>>{
 
 };
@@ -15,7 +18,6 @@ TEST_P(HighLevelTestDiscrete, FirstPlan){
     configurator->init(goal);
     std::string folder=std::get<1>(GetParam());
     get_plan(folder);
-    EXPECT_GT(ci.data2fp.size(),0);
     EXPECT_GT(configurator->data_size(),0);
     if (!hasGoal){
         success=configurator->plan_reaches_horizon();

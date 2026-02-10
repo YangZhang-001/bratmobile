@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "test_classes.h"
+const bool DEBUG=false;
 
 class MatcherTest:public StateMatcher, public testing::Test, public testing::WithParamInterface<std::tuple<StateMatcher::MATCH_TYPE, StateMatcher::MATCH_TYPE>>{
     

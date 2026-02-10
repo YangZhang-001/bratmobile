@@ -1,5 +1,5 @@
 #include "test_classes.h"
-
+const bool DEBUG=false;
 
 TEST_F(ConfiguratorPlannerHybrid,pathToAddTo){
     HorizonStarPlanner horizonPlanner;

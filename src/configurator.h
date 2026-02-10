@@ -20,8 +20,7 @@ protected:
 	Task currentTask;
 	Controller * task_controller=NULL;
 	Tracker * tracker=NULL;
-	LIDAR_In * ci=NULL;
-	Motor_Out * control=NULL;
+	MotorInterface * control=NULL;
 	Planner *planner=NULL;
 	Logger * logger=NULL;
 	bool running =0;
@@ -49,9 +48,15 @@ Configurator(Task _task){
 }
 
 virtual ~Configurator(){
-	stop();
 	delete worldBuilder;
 	worldBuilder=NULL;
+}
+
+/**
+ * @brief Inserts one xy coordinate in the coordinate container
+ */
+void insertCoordinate(float x, float y){
+	data2fp.insert(Pointf(x, y));
 }
 
 /**
@@ -122,13 +127,13 @@ virtual void explore_plan(b2World&)=0;
 
 //std::vector <vertexDescriptor> back_planner(TransitionSystem&, vertexDescriptor, vertexDescriptor root=0);
 
-//starts thread
-void start(); 
+// //starts thread
+// void start(); 
 
-//stops thread
-void stop(); 
+// //stops thread
+// void stop(); 
 
-void registerInterface(LIDAR_In *, Motor_Out *);
+void registerInterface(MotorInterface *);
 
 /**
  * @brief Spawns tasks, creates plans, tracks task and controls real-world task switching
@@ -136,7 +141,13 @@ void registerInterface(LIDAR_In *, Motor_Out *);
  * but doesn't have to be
  * 
  */
-static void run(Configurator *);
+void newScanEvent();
+
+/**
+ * @brief Clears coordinates
+ */
+void clearData(){data2fp.clear();}
+
 
 /**
  * @brief changes tasks executing on the robot
@@ -200,13 +211,10 @@ Tracker * get_tracker()const {
 	return tracker;
 }
 
-Motor_Out * get_motor_interface(){
+MotorInterface * get_motor_interface(){
 	return control;
 }
 
-LIDAR_In * get_lidar_interface(){
-	return ci;
-}
 
 
 void register_planner(Planner * _p){
@@ -258,11 +266,11 @@ static void Mul(const b2Transform& B, Task &task);
  * @param taskWithGoal 
  * @return Robot 
  */
-virtual Robot makeRobot(b2World& world, const b2Transform & start);
+virtual Robot makeRobot(b2World& world, const Task & task);
 
 //Disturbance * getGoalDisturbance(){return &controlGoal.disturbance;}
 
-bool areInterfacesSetUp(Configurator * c=NULL);
+bool areInterfacesSetUp();
 
 /**
  * @brief Assigns body features to the disturbance of a task (NOTE: affordance and validity of the disturbance will remain the same)

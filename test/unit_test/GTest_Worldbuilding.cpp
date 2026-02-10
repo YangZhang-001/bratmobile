@@ -1,5 +1,6 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
+const bool DEBUG=false;
 
 TEST(Math, affineTransform){
     Disturbance disturbance(AVOID, b2Vec2(0,0));

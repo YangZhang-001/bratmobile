@@ -21,13 +21,14 @@ class Tracker{
     friend Configurator;
     ThresholdLearner *learner=NULL;
     b2Transform deltaTransform=b2Transform_zero;
-    public:
     Threshold threshold=Threshold();
+
+    public:
 
     Tracker(){}
 
-    Threshold * get_threshold(){
-        return &threshold;
+    virtual Threshold get_threshold(const State &s){
+        return threshold;
     }
 
     void register_learner(ThresholdLearner * l){
@@ -196,4 +197,14 @@ class ClosedLoop_Tracker:public Tracker{
     
 };
 
-#endif
+
+
+//same as CL Tracker but creates custom threshold based on state
+class CLAdaptiveTracker:public ClosedLoop_Tracker{
+    protected:
+    Threshold get_threshold(const State &s){
+        float distance=std::max(Threshold::FIXED_ENDPOSE, s.distance()/2);
+	    return Threshold(distance, Threshold::FIXED_ANGLE, Threshold::FIXED_DISTPOS, Threshold::FIXED_AFFORDANCE, Threshold::FIXED_DIMENSIONS);
+    }
+
+};

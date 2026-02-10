@@ -67,6 +67,14 @@ struct VisitedEdge{
 class DebugConfigurator:public virtual AttentiveConfigurator{
     public:
     friend class HighLevelTestBase;
+    friend class HighLevelInterruptBase;
+
+    void unregister_tracker(){
+        if (tracker){
+            delete tracker;
+        }
+    }
+
     int n_edges(){return transitionSystem.m_edges.size();}
 
     int n_vertices(){return transitionSystem.m_vertices.size();}
@@ -356,9 +364,20 @@ class DebugB2B: public virtual DebugConfigurator, public virtual B2BConfigurator
 
 };
 
-
+class LogicalCheckPlanTest:public DebugConfigurator, public testing::TestWithParam<std::tuple<vertexDescriptor, AffordanceIndex,Direction, bool>>{};
 
 class DebugB2BTest: public virtual DebugB2B, public testing::Test{
+};
+
+
+class DebugB2BOptions: public virtual DebugB2B, public testing::Test{
+
+    void SetUp()override{
+        dummy_vertex(MOVING_VERTEX);
+    }
+    void TearDown()override{
+        transitionSystem=TransitionSystem(1);
+    }
 };
 
 class DebugB2BTestVertex:public DebugB2BTest, public testing::WithParamInterface<vertexDescriptor>{
@@ -372,16 +391,16 @@ class DebugDiscreteConf: public virtual DebugConfigurator, public virtual Discre
         return DiscreteConfigurator::getDisturbance(g, v, world, dir, start);
     }
 
-    Robot makeRobot(b2World & w, const b2Transform & start)override{
-        return DiscreteConfigurator::makeRobot(w, start);
+    Robot makeRobot(b2World & w, const Task & task)override{
+        return DiscreteConfigurator::makeRobot(w, task);
     }
 
     float remainingSimulationTime(const Task *const t=NULL)override{
         return DiscreteConfigurator::remainingSimulationTime(t);
     }
 
-    VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, std::vector <VertexMatch>*other_matches=NULL)override{
-        return DiscreteConfigurator::findMatch(s, dir, match_type, _sd, other_matches);
+    VertexMatch findMatch(State s, Direction dir=Direction::UNDEFINED, StateMatcher::MATCH_TYPE match_type=StateMatcher::_TRUE, StateDifference * _sd=NULL, vertexDescriptor src=TransitionSystem::null_vertex())override{
+        return DiscreteConfigurator::findMatch(s, dir, match_type, _sd);
     }
 
     void transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src) override{
@@ -414,6 +433,10 @@ class DebugDiscreteConf: public virtual DebugConfigurator, public virtual Discre
 
     bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE)override{
         return DiscreteConfigurator::propagateD(v1, v0, closed, match);
+    }
+
+    float customSimulationStep(vertexDescriptor v)override{
+        return DiscreteConfigurator::customSimulationStep();
     }
 
 
@@ -462,9 +485,9 @@ class CreativeWorldBuilder: public WorldBuilder{
      * 
      * @return std::vector <BodyFeatures> 
      */
-    static std::vector <BodyFeatures> makeTricky();
+    static std::vector <BodyFeatures> makeTricky(float dist =0.3);
 
-    static std::vector <BodyFeatures> makeTrickyTrap();
+    static std::vector <BodyFeatures> makeTrickyTrap(float dist =0.3);
 
     void addObject(const BodyFeatures& bf){world_objects.push_back(bf);}
 };
@@ -482,9 +505,8 @@ class HighLevelTestBase: public testing::Test{
     DebugConfigurator * configurator=NULL;
     Wise_Controller wc;
     ClosedLoop_Tracker tracker;
-    LIDAR_In ci;
     DataInterface di;
-    Motor_Out m;
+    MotorInterface m;
     HorizonStarPlanner planner;
     
 
@@ -511,6 +533,7 @@ class HighLevelTestBase: public testing::Test{
      * @brief Make logger that dumps in different directories depending on test case and system architecture, only for test fixtures
     */
     virtual Logger makeLogger();
+
 
         /**
      * @brief Make logger that dumps in different directories depending on test case and system architecture
@@ -549,8 +572,11 @@ class HighLevelTest: public virtual HighLevelTestBase , public testing::WithPara
     HighLevelTest(){}
 
     bool has180Turn(std::vector<vertexDescriptor> plan){
-        for (int i=1; i<plan.size(); i++){
-            if (configurator->get_ts()[plan[i]].isTurning() && configurator->get_ts()[plan[i-1]].isTurning()){
+        if (plan.empty()){
+            return false;
+        }
+        for (int i=0; i<=plan.size(); i++){
+            if (configurator->get_ts()[plan[i+1]].isTurning() && configurator->get_ts()[plan[i]].isTurning()){
                 return true;
             }
 
@@ -864,6 +890,11 @@ class ReactiveConfTest: public ReactiveConfigurator, public ::testing::TestWithP
 
 };
 
+
+
+class CLAdaptiveTrackerTest: public CLAdaptiveTracker, public ::testing::TestWithParam<float>{};
+
+
 ////////////////////////////////////////////////////////////////////////
 
 int DebugConfigurator::get_vertex_in_degree(vertexDescriptor v){
@@ -904,18 +935,18 @@ std::vector <BodyFeatures> CreativeWorldBuilder::makeCulDeSac(float width, float
 
 }
 
-std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(){
+std::vector <BodyFeatures> CreativeWorldBuilder::makeTricky(float dist){
     BodyFeatures front, Lside, Rside, back;
-    front.pose.p=b2Vec2(0.3, 0);
-    Lside.pose.p=b2Vec2(0, 0.3);
-    Rside.pose.p=b2Vec2(0, -0.3);
+    front.pose.p=b2Vec2(dist, 0);
+    Lside.pose.p=b2Vec2(0, dist);
+    Rside.pose.p=b2Vec2(0, -dist);
     return std::vector <BodyFeatures>({front, Lside, Rside});
 }
 
-std::vector <BodyFeatures> CreativeWorldBuilder::makeTrickyTrap(){
-    std::vector <BodyFeatures> result=CreativeWorldBuilder::makeTricky();
+std::vector <BodyFeatures> CreativeWorldBuilder::makeTrickyTrap(float dist){
+    std::vector <BodyFeatures> result=CreativeWorldBuilder::makeTricky(dist);
     BodyFeatures trap;
-    trap.pose.p.x=-.3;
+    trap.pose.p.x=-dist;
     result.push_back(trap); //trap
     return result;
 }
@@ -925,10 +956,10 @@ std::vector <BodyFeatures> CreativeWorldBuilder::makeTrickyTrap(){
 
 
 void HighLevelTestBase::init( const Task& goal){
-    di.registerInterface(&ci);
+    di.registerConfigurator(configurator);
     configurator->register_controller(&wc);
     configurator->register_tracker(&tracker);
-    configurator->registerInterface(&ci, &m);
+    configurator->registerInterface(&m);
     configurator->setSimulationStep(ROBOT_HALFWIDTH*2);
     configurator->register_planner(&planner);
     configurator->init(goal);
@@ -939,17 +970,15 @@ void HighLevelTestBase::init( const Task& goal){
 
 std::vector<vertexDescriptor> HighLevelTestBase::get_plan(std::string folder, int it){
     di.set_iteration(it);
+    EXPECT_EQ(configurator->n_visitedEdges(), 0);
     if (folder!=SYNTH_DATA_FOLDER){
         di.set_folder(folder);
         di.newScanAvail();        
     }
     else{
         di.reset();
-        ci.data2fp.emplace(Pointf(0.5,0)); //one point
+        configurator->data2fp.emplace(Pointf(0.5,0)); //one point
     }
-    configurator->data2fp= ci.data2fp;
-    EXPECT_EQ(configurator->n_visitedEdges(), 0);
-    configurator->Spawner();
     if (configurator->getIteration()>1){
         int visitedEdges=configurator->n_visitedEdges();
         EXPECT_LT(visitedEdges, configurator->n_edges());
@@ -965,12 +994,11 @@ std::vector<vertexDescriptor> HighLevelInterruptBase::get_InterruptedPlan(std::s
         di.newScanAvail();
     }
     else{
-        b2Vec2 pt2d(ci.data2fp.begin()->x, ci.data2fp.begin()->y);
+        b2Vec2 pt2d(configurator->get_data2fp().begin()->x, configurator->get_data2fp().begin()->y);
         pt2d=b2Mul(configurator->getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), pt2d);
-        ci.data2fp.erase(ci.data2fp.begin());
-        ci.data2fp.emplace(Pointf(pt2d.x, pt2d.y));
+        configurator->data2fp.erase(configurator->data2fp.begin());
+        configurator->data2fp.emplace(Pointf(pt2d.x, pt2d.y));
     }
-    configurator->set_data2fp(ci.data2fp);
     Pointf pf=generateInterruptingPoint(taskOrder);
     if (pt!=NULL){
         *pt=pf;
@@ -1041,7 +1069,7 @@ std::pair<std::string, std::string> ReactToNoiseTest::carveScenario(std::string 
 void HighLevelTestBase::trackFor(int iteration){
     for (int i=0;i<iteration-1; i++){ //simulate execution
     if (configurator->getIteration()>1){
-        TrackingResult trackingResult= tracker.track(configurator->getTask(), ci.data2fp, configurator->world_objects() );
+        TrackingResult trackingResult= tracker.track(configurator->getTask(), configurator->data2fp, configurator->world_objects() );
         //EXPECT_FALSE(deltaPose==b2Transform_zero);
         configurator->update_graph(configurator->get_ts(), trackingResult);
     }
@@ -1051,17 +1079,17 @@ void HighLevelTestBase::trackFor(int iteration){
     EXPECT_GT(configurator->get_current_vertices().size(), 0);
     EXPECT_NE(configurator->get_current_vertices()[0], 0);
     if (di.hasFolder()){
-        di.newScanAvail();
+
+        di.newScanAvail(false); //do not do plan
     }
     else{
-        b2Vec2 pt(ci.data2fp.begin()->x, ci.data2fp.begin()->y);
+        b2Vec2 pt(configurator->data2fp.begin()->x, configurator->data2fp.begin()->y);
         pt=b2Mul(configurator->getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), pt);
-        ci.data2fp.erase(ci.data2fp.begin());
-        ci.data2fp.emplace(Pointf(pt.x, pt.y));
+        configurator->data2fp.erase(configurator->data2fp.begin());
+        configurator->data2fp.emplace(Pointf(pt.x, pt.y));
     }
-    configurator->getFeatures(ci.data2fp);
+    configurator->getFeatures(configurator->data2fp);
     configurator->preExplore();
-    //VisitedTransitionSystem trackedTS(configurator->get_ts(), VisitedEdge(configurator->get_ts_ptr(), configurator->iteration));
     EXPECT_EQ(configurator->n_visitedEdges(), 0);
     EXPECT_GT(configurator->get_vertex_out_degree(0), 0);
 }

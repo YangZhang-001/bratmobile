@@ -3,6 +3,8 @@
 #include "../realWorldTestHeaders.h"
 #include "stdio.h"
 class TestEnvironment;
+const bool DEBUG=false;
+
 
 /**
  * Tests for tracking unit tests
@@ -26,7 +28,7 @@ class TestInputConfigurator: public UserInputConfigurator{
         Spawner();
 		if (getIteration()>1){
             TrackingResult trackingResult(currentTask.get_disturbance());
-			trackingResult= tracker->track((currentTask),ci->data2fp, worldBuilder->get_world_objects());
+			trackingResult= tracker->track((currentTask),data2fp, worldBuilder->get_world_objects());
             update_graph(transitionSystem, trackingResult);
 		}
         if (goal_changer!=NULL){
@@ -38,7 +40,6 @@ class TestInputConfigurator: public UserInputConfigurator{
         adjust_goal_expectation();
         estimate_current_vertex();
         printf("current v=%i\n", currentVertex);
-        ci->setReady(true);
     }
 
     void MulPoints(b2Transform t){
@@ -150,7 +151,6 @@ class TestEnvironment: public ::testing::TestWithParam<std::tuple<AffordanceInde
             }
         }
         configurator.set_world_objects(std::vector<BodyFeatures>{bf});
-        LIDAR_In lidarIn;
         configurator.getData2fp().emplace(Pointf(bf.pose.p.x, bf.pose.p.y));
         return bf;
     }
@@ -199,15 +199,13 @@ TEST_P(TestEnvironment, Execution){
     configurator.register_controller(&controller);
     Disturbance goal(PURSUE, b2Vec2(1,0));
     configurator.init(Task(goal, UNDEFINED));
-    LIDAR_In lidarIn;
-    Motor_Out motor;
-    configurator.registerInterface(&lidarIn, &motor);
-    lidarIn.data2fp=configurator.getData2fp();
+    MotorInterface motor;
+    configurator.registerInterface( &motor);
     int steps=0;
     do {
         configurator.run();
         b2Transform newPose=b2help::InvMul(configurator.getTask().getAction().getTransform(LIDAR_SAMPLING_RATE), bf.pose);
-        lidarIn.data2fp={Pointf(newPose.p.x, newPose.p.y)};
+        configurator.set_data2fp({Pointf(newPose.p.x, newPose.p.y)});
         bf.pose=newPose;
         steps++;
         if (steps>50)break;
@@ -225,7 +223,7 @@ TEST_P(TestInputConfiguratorFixture, ExecutionNoise){
     Logger logger=makeLogger();
     TestTracker tracker;
     Wise_Controller wc;
-    Motor_Out motor;
+    MotorInterface motor;
     control=&motor;
     register_tracker(&tracker);
     register_controller(&wc);

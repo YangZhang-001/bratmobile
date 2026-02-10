@@ -1,4 +1,5 @@
 #include "test_classes.h"
+const bool DEBUG=false;
 
 class FCTest:public FocusedConfigurator, public testing::TestWithParam<bool> {
     public:
@@ -16,8 +17,11 @@ class FCTest:public FocusedConfigurator, public testing::TestWithParam<bool> {
     }
 
     bool has180Turn(std::vector<vertexDescriptor> plan){
-    for (int i=1; i<plan.size(); i++){
-        if (transitionSystem[plan[i]].isTurning() && transitionSystem[plan[i-1]].isTurning()){
+    if (plan.empty()){
+        return false;
+    }
+    for (int i=0; i<=plan.size(); i++){
+        if (transitionSystem[plan[i+1]].isTurning() && transitionSystem[plan[i]].isTurning()){
             return true;
         }
 
@@ -148,6 +152,9 @@ TEST_F(FCTest, TrickyScenario){
     explore_plan(world);
     EXPECT_GT(m_plan.size(), 0);
     EXPECT_TRUE(has180Turn(m_plan));
+    if (m_plan.empty()){
+        GTEST_FAIL();
+    }
     bool planned_to_goal=controlGoal.checkEnded(transitionSystem[*(m_plan.end()-1)].endPose).ended;
     EXPECT_TRUE(planned_to_goal);
 

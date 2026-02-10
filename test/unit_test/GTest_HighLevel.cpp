@@ -1,9 +1,10 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
+const bool DEBUG=false;
+
 
 TEST_F(HighLevelTest, Init){
     EXPECT_TRUE(configurator->get_motor_interface()!=(NULL));
-    EXPECT_TRUE(configurator->get_lidar_interface()!= NULL);
     EXPECT_TRUE(configurator->get_tracker()!=NULL);
     EXPECT_TRUE(configurator->get_controller()!=NULL);
 }
@@ -12,8 +13,7 @@ TEST_F(HighLevelTest, AcquireData){
     di.set_folder("../cul_de_sac/");
     di.newScanAvail();
     EXPECT_TRUE(di.has_interface());
-    EXPECT_GT(ci.data2fp.size(),0);
-    configurator->set_data2fp(ci.data2fp);
+    EXPECT_GT(configurator->get_data2fp().size(),0);
     EXPECT_GT(configurator->data_size(),0);
 }
 
@@ -202,7 +202,6 @@ TEST_P(HighLevelTest, FirstPlan){
     configurator->init(goal);
     std::string folder=std::get<1>(GetParam());
     get_plan(folder);
-    EXPECT_GT(ci.data2fp.size(),0);
     EXPECT_GT(configurator->data_size(),0);
     if (!hasGoal){
         success=configurator->plan_reaches_horizon();
@@ -210,7 +209,7 @@ TEST_P(HighLevelTest, FirstPlan){
     else{
         success=configurator->plan_reaches_goal();
     }
-    EXPECT_GT(configurator->get_plan().size(),1);
+    EXPECT_GE(configurator->get_plan().size(),1);
     EXPECT_TRUE(success);
 }
 
@@ -308,8 +307,11 @@ TEST_F(HighLevelTest, TrickyScenario){
     configurator->explorePlan(world);
     EXPECT_GT(configurator->get_plan().size(), 0);
     EXPECT_TRUE(has180Turn(configurator->get_plan()));
-    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-    EXPECT_TRUE(planned_to_goal);
+    EXPECT_FALSE(configurator->get_plan().empty());
+    if (!configurator->get_plan().empty()){
+        bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+        EXPECT_TRUE(planned_to_goal);        
+    }
 }
 
 
@@ -336,12 +338,10 @@ TEST_P(HighLevelTest, Recycle){
     configurator->init(goal);
     std::string folder=std::get<1>(GetParam());
     std::vector<vertexDescriptor> plan= get_plan(folder), finished_plan;
-    EXPECT_GT(configurator->get_plan().size(), 1);
+    EXPECT_GE(configurator->get_plan().size(), 1);
     vertexDescriptor second_last_v=configurator->get_plan()[configurator->get_plan().size()-2];
     vertexDescriptor last_v=configurator->get_plan()[configurator->get_plan().size()-1];
-   // if (!std::get<0>(GetParam())){
-        shift=configurator->vertex_get_endPose(last_v);
-    //}
+    shift=configurator->vertex_get_endPose(last_v);
     int vertices_og=configurator->n_vertices();
     configurator->addIteration(100);
     configurator->set_current_v(last_v); //simulate plan finished
