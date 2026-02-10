@@ -1,12 +1,12 @@
 #include "custom_robot.h"
 
-// class NoGoal:public GoalChanger{
+class NoGoal:public GoalChanger{
 
-// 	Task change_goal(const Task & task){
-// 		return Task();
-// 	}
+	Task change_goal(const Task & task){
+		return Task();
+	}
 
-// };
+};
 
 // class CLTracker: public ClosedLoop_Tracker, public MotorCallback, public Motor_Out{
 // 	public:
