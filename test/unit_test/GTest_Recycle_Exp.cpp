@@ -18,7 +18,7 @@ TEST_P(RecycleTest, Transform){
     b2Transform b2d_transform(b2Vec2(std::get<0>(GetParam()),std::get<1>(GetParam())), b2Rot(std::get<2>(GetParam())));
     sprintf(filename,"%0.3f-%0.3f-%0.3f",b2d_transform.p.x, b2d_transform.p.y, b2d_transform.q.GetAngle() );
     
-    Logger logger("RecycleTests/", "benchmarkx86_64", filename);
+    Logger logger("RecycleTests/", "benchmarkx"+std::string(Logger::getSystemArchitecture()), filename);
     configurator->register_logger(&logger);
     Task goal;
     b2Transform shift=b2Transform_zero;
