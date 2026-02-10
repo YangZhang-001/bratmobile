@@ -2,7 +2,7 @@
 
 TrackingResult Tracker::get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result;
-    if (t.getMotorStep()){
+    if (!hasTaskEnded(t)){
         result.displacement= t.getAction().getTransform(LIDAR_SAMPLING_RATE);
     }
     result.observed_disturbance=t.get_disturbance();

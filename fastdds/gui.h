@@ -53,6 +53,7 @@ class OLTrackerGUI: public DeadReckoner, public TrackerGUI{
     @brief gets the obstacle ahead for printing, this is similar to LaserFocus worldbuilding*/
     TrackingResult get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)override{
         TrackingResult result=Tracker::get_transform(t, pts, objects);
+        
         std::pair<Pointf, Pointf> bt = WorldBuilder::bounds(DEFAULT, b2Transform_zero, 1, 0.15);
         std::pair <CoordinateContainer, bool> salient = WorldBuilder::salientPoints(b2Transform_zero,pts, bt);
         auto vec_salient=set2vec(salient.first);

@@ -59,7 +59,7 @@ void Window::paintEvent(QPaintEvent *){
     painter.setPen(QColor("black"));
     painter.drawRect(robot);
     painter.setBrush(QColor("grey"));
-    painter.setPen(QColor("black"));
+    painter.setPen(QColor("grey"));
     painter.drawPolygon(Di);
 }
 

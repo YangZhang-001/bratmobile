@@ -71,7 +71,7 @@ class Window : public QWidget{
     QRect m_geometry=QRect(-300, -300, 600, 600); //size of Qtwindow in pixel (bl.x, bl.y, w, l)
     QRect logical_rect=QRect(-120, -120, 240, 240); //world coordinate window
     //std::vector<QtSubscriber*> subscribers; //to one topic!
-    QPoint point=QPoint(0, 0);
+    QPoint point=QPoint(-50, -50);
     QRectF robot=QRectF(-0.18*scale, -0.09*scale, 0.135*2*scale, 0.09*2*scale);
     QPolygon Di, goal, attention;
     protected:
