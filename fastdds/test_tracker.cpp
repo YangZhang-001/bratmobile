@@ -1,7 +1,7 @@
 #include "gui.h"
 #include "CppTimer.h"
 #include "topics.h"
-
+const bool DEBUG=false;
 class FakeTracking:public CppTimer{
     CLTrackerGUI tracker;
     Disturbance Dg=Disturbance(PURSUE, b2Vec2(1.0f,0.0f));
