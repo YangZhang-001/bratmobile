@@ -271,7 +271,7 @@ void Configurator::change_task(){
 
 void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
 	math::InvMul(tr.displacement, g);
-	Configurator::InvMul(tr.displacement, controlGoal);
+	Configurator::MulT(tr.displacement, controlGoal);
 	debug::print_pose(controlGoal.disturbance.pose(), "goal disturbance after tracking:");
 	currentTask.disturbance=tr.observed_disturbance;
 	if (!tracker){
