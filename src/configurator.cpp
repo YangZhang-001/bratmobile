@@ -77,9 +77,9 @@ bool Configurator::Spawner(){
 	return 1;
 }
 
-Robot Configurator::makeRobot(b2World& world, const b2Transform & start){
+Robot Configurator::makeRobot(b2World& world, const Task & task){
 	Robot robot(&world);
-	robot.body()->SetTransform(start.p, start.q.GetAngle());
+	robot.body()->SetTransform(task.start.p, task.start.q.GetAngle());
 	return robot;
 
 };
@@ -88,7 +88,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	simResult result;
 	float remaining=remainingSimulationTime(&t);
 	printf("remaining=%f\n", remaining);
-	Robot robot=makeRobot(w, t.start);
+	Robot robot=makeRobot(w, t);
 	worldBuilder->add_body_count();
 	simulatedTasks++;
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
@@ -143,72 +143,56 @@ void Configurator::printPlan(std::vector <vertexDescriptor>* p){
 
 
 
-void Configurator::start(){
-	if (ci == NULL){
-		throw std::invalid_argument("no LIDAR interface found");
-		return;
-	}
-	if (control==NULL){
-		throw std::invalid_argument("no motor interface found");
-		return;
-	}
-	running =1;
-	if (LIDAR_thread!=NULL){ //already running
-		return;
-	}
-	LIDAR_thread= new std::thread(Configurator::run, this);
-}
+// void Configurator::start(){
+// 	if (ci == NULL){
+// 		throw std::invalid_argument("no LIDAR interface found");
+// 		return;
+// 	}
+// 	if (control==NULL){
+// 		throw std::invalid_argument("no motor interface found");
+// 		return;
+// 	}
+// 	running =1;
+// 	if (LIDAR_thread!=NULL){ //already running
+// 		return;
+// 	}
+// 	LIDAR_thread= new std::thread(Configurator::run, this);
+// }
 
-void Configurator::stop(){
-	running =0;
-	if (LIDAR_thread!=NULL){
-		LIDAR_thread->join();
-		delete LIDAR_thread;
-		LIDAR_thread=NULL;
-	}
+// void Configurator::stop(){
+// 	running =0;
+// 	if (LIDAR_thread!=NULL){
+// 		LIDAR_thread->join();
+// 		delete LIDAR_thread;
+// 		LIDAR_thread=NULL;
+// 	}
 
-}
+// }
 
-void Configurator::registerInterface(LIDAR_In * _ci, Motor_Out * _control){
-	ci = _ci;
+void Configurator::registerInterface(MotorInterface * _control){
 	control=_control;
 }
 
-void Configurator::run(Configurator * c){
-	while (c->running){
-		if (!c->areInterfacesSetUp(c)){
-			c->running=false;
+void Configurator::newScanEvent(){
+		if (!areInterfacesSetUp()){
+			return;
 		}
-		if (c->ci->stop){
-			c->ci=NULL;
-			c->control=NULL;
-			printf("ci not started\n");
-			c->running=false;
-		}		
-		if (c->ci->isReady()){
-			c->ci->setReady(false);
-			c->data2fp= CoordinateContainer(c->ci->data2fp);
-			c->Spawner();
-			if (c->getIteration()>1){
-				TrackingResult trackingResult(c->currentTask.get_disturbance());
-				trackingResult= c->tracker->track((c->currentTask),c->ci->data2fp, c->worldBuilder->get_world_objects());
-				c->update_graph(c->transitionSystem, trackingResult);
-			}
-			if (c->goal_changer!=NULL){
-				if (( c->currentTask.is_over()& c->transitionSystem[c->currentVertex].direction!=STOP && c->m_plan.empty() && c->getIteration()>1)){
-					c->controlGoal=c->goal_changer->change_goal(c->controlGoal);
-				}					
-			}
-			c->change_task();		
-			c->adjust_goal_expectation();
-			c->estimate_current_vertex();
-			printf("current v=%i\n", c->currentVertex);
-			c->tracker->on_new_reading(c->controlGoal, c->currentTask);
-			}
-
-	}
-
+		Spawner();
+		if (getIteration()>1){
+			TrackingResult trackingResult(currentTask.get_disturbance());
+			trackingResult= tracker->track((currentTask),data2fp, worldBuilder->get_world_objects());
+			update_graph(transitionSystem, trackingResult);
+		}
+		if (goal_changer!=NULL){
+			if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
+				controlGoal=goal_changer->change_goal(controlGoal);
+			}					
+		}
+		change_task();		
+		adjust_goal_expectation(); //dubious if this is needed tbh
+		estimate_current_vertex();
 }
+
 float Configurator::approximate_angle(float angle, Direction d, simResult::resultType outcome){
 	float result=angle, decimal=0, integer=0;
 	if ((d==LEFT || d==RIGHT)&& outcome!=simResult::crashed){
@@ -311,24 +295,16 @@ void Configurator::adjust_goal_expectation(){
 
 }
 
-bool Configurator::areInterfacesSetUp(Configurator * c){
-	if (c == NULL){
-		std::cerr<<"null pointer to configurator";
-		return false;
-	}	
-	if (c->ci == NULL){
-		std::cerr<<"null pointer to lidar input";
-		return false;
-	}
-	if (c->control == NULL){
+bool Configurator::areInterfacesSetUp(){
+	if (control == NULL){
 		std::cerr<<"null pointer to motor output";
 		return false;
 	}
-	if (c->task_controller==NULL){
+	if (task_controller==NULL){
 		std::cerr<<"no task controller, please set!";
 		return false;
 	}
-	if (!c->tracker){
+	if (!tracker){
 		std::cerr<<"no tracker!";
 		return false;
 	}

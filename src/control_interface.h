@@ -9,52 +9,50 @@ class Configurator;
 /**
 * Input/Output interface for Configurator
 */
-class IOInterface{
-	protected:
-	bool ready=false;
-	public:
-	IOInterface()=default;
+// class IOInterface{
+// 	protected:
+// 	bool ready=false;
+// 	public:
+// 	IOInterface()=default;
 
-	bool isReady(){
-		return ready;
-	}
+// 	bool isReady(){
+// 		return ready;
+// 	}
 
-	void setReady(bool b){
-		ready=b;
-	}
+// 	void setReady(bool b){
+// 		ready=b;
+// 	}
 
-};
+// };
 
 /**
 * Receives LIDAR data
 */
-class LIDAR_In:public IOInterface{ 
-public:
-	bool debugOn=0;
-	int iteration=0;
-	bool stop=0;
-	CoordinateContainer data2fp;
-};
+// class LIDAR_In:public IOInterface{ 
+// public:
+// 	bool debugOn=0;
+// 	int iteration=0;
+// 	bool stop=0;
+// 	CoordinateContainer data2fp;
+// };
 
 /**
 * Output from Configurator to Motors
 */
-class Motor_Out:public IOInterface { 
+class MotorInterface { 
 	protected:
 	float L=0, R=0, L_gain=1.0f, R_gain=1.0f, Kp=0.45, Ki=0.25, Kd=0.2; //from empirical, Kp should be 1.2
 	float prev_error=0;
 	float integral=0;
     public:
 
-	Motor_Out()=default;
+	MotorInterface()=default;
 
-	Motor_Out(float kp, float ki, float kd):Kp(kp), Ki(ki), Kd(kd){}
+	MotorInterface(float kp, float ki, float kd):Kp(kp), Ki(ki), Kd(kd){}
 
 	void getData(const Task::Action &a){
-		setReady(0);
 		L=a.getLWheelSpeed();
 		R=a.getRWheelSpeed();
-		setReady(1);
 	}
 
 	float get_L(){

@@ -6,8 +6,6 @@ int main(int argc, char** argv) {
 	AlphaBot motors;
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
-	LIDAR_In configuratorInterface;
-	//Motor_Out controlInterface;
     ReactiveConfigurator configurator;
 	LaserFocus wb;
 	configurator.setSimulationStep(.5);
@@ -22,16 +20,14 @@ int main(int argc, char** argv) {
 	configurator.register_tracker(&tracker);
 	Reactive_Controller wc;
 	configurator.register_controller(&wc);
-	LidarInterface dataInterface(&configuratorInterface);
-	configurator.registerInterface(&configuratorInterface, &tracker);
+	LidarInterface dataInterface(&configurator);
+	configurator.registerInterface( &tracker);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&tracker);
-	configurator.start();
 	lidar.start();
 	motors.start();
 	getchar();
 	motors.stop();
-	configurator.stop();
 	lidar.stop();
 }
 	

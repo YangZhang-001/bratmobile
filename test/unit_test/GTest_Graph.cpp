@@ -1,4 +1,5 @@
 #include "test_classes.h"
+const bool DEBUG=false;
 
 class EdgeTest: public Edge, public testing::Test, public testing::WithParamInterface<int>{
 };

@@ -56,7 +56,6 @@ Disturbance set_target(int& run, b2Transform start){
 	Disturbance result;
 	return result;
 }
-#undef DEBUG
 #define DEBUG true
 
 int main(int argc, char** argv) {
@@ -66,8 +65,7 @@ int main(int argc, char** argv) {
 	A1Lidar lidar;
 	AlphaBot motors;
     Task controlGoal;
-	LIDAR_In configuratorInterface;
-	Motor_Out controlInterface;
+	MotorInterface controlInterface;
     Configurator configurator(controlGoal);
 	ClosedLoop_Tracker tracker;
 	configurator.register_tracker(&tracker);
@@ -82,16 +80,14 @@ int main(int argc, char** argv) {
 	if (argc>3){
 		ts =TaskSetter(Direction(atoi(argv[3])));
 	}
-	LidarInterface dataInterface(&configuratorInterface);
-	configurator.registerInterface(&configuratorInterface, &controlInterface);
+	LidarInterface dataInterface(&configurator);
+	configurator.registerInterface( &controlInterface);
 	MotorCallback cb(&controlInterface);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);
-	configurator.start();
 	lidar.start();
 	motors.start();
 	getchar();
-	configurator.stop();
 	motors.stop();
 	lidar.stop();
 }

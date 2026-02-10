@@ -224,14 +224,31 @@ Disturbance gt::getExpectedDisturbance(TransitionSystem& g, vertexDescriptor v, 
 }
 std::pair <bool,edgeDescriptor>  gt::visitedEdge(const std::vector <edgeDescriptor> &es, TransitionSystem& g, vertexDescriptor cv){
 	std::pair <bool,edgeDescriptor> result(false, edgeDescriptor());
+	std::vector<edgeDescriptor> possible_solutions;
 	for (edgeDescriptor e:es){
 		if ((g[e.m_source].visited() & g[e.m_target].visited()) || e.m_target==DUMMY){ 
 			result.second=e;
 			result.first=true;
-			break;
+			possible_solutions.push_back(result.second);
+			//break;
 			//return result;
 		}
-
+	}
+	if (possible_solutions.size()>1){
+	//pick most recent...
+		struct CompareIteration{
+			TransitionSystem & g;
+			public:
+			CompareIteration(TransitionSystem & _g):g(_g){}
+			bool operator()(edgeDescriptor e1, edgeDescriptor e2){
+				return g[e1].it_observed<=g[e2].it_observed;
+			}
+		};
+		auto it_recent=std::max_element(possible_solutions.begin(), possible_solutions.end(), CompareIteration(g));
+		if (it_recent!=possible_solutions.end()){
+			result.second=*it_recent;
+			result.first=true;
+		}
 	}
 	return result;
 }

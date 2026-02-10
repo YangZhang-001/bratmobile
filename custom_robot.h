@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #define _USE_MATH_DEFINES
 
+const bool DEBUG=false;
+
 /**
  * * * * DEFINITION OF DATA INTERFACES FOR ROBOT SENSORS/MOTORS
  * 				+ SOME DEBUGGING HELPER FUNCTIONS
@@ -17,63 +19,60 @@
 
 
 class LidarInterface : public A1Lidar::DataInterface{
-LIDAR_In * ci=NULL;
-public:
-    int mapCount =0;
+Configurator * configurator=NULL;
+bool debugOn=false; 
+int mapCount =0;
 
-    LidarInterface(LIDAR_In * _ci): ci(_ci){}
+public:
+
+	void setDebug(bool on){
+		debugOn=on;
+	}
+
+    LidarInterface(Configurator * _c): configurator(_c){}
 
 	void newScanAvail(float, A1LidarData (&data)[A1Lidar::nDistance]){ //uncomment sections to write x and y to files
-		if (ci == NULL){
-			std::cerr<<"null pointer to ci"<<std::endl;
+		if (configurator == NULL){
+			std::cerr<<"girl where's the configurator"<<std::endl;
 			return;
 		}
-    	ci->setReady(false);
-		ci->data2fp.clear();
 		mapCount++;
 		Pointf p2f;
 		FILE *f;
 		char name[256];
 		sprintf(name,"/tmp/map%04i.dat", mapCount);
 		printf("%s\n", name);
-		if (ci->debugOn){
+		configurator->clearData();
+		if (debugOn){
 			f=fopen(name, "w");
 		}
 		for (A1LidarData &data:data){
 			if (data.valid&& data.r <LIDAR_RANGE){
-				float x2 = round(data.x*100)/100; //resolution adjus
-				float y2 = round(data.y*100)/100;
-				p2f=Pointf(x2, y2);
-				ci->data2fp.insert(p2f);
-				if (ci->debugOn){
-					fprintf(f, "%.2f\t%.2f\n", p2f.x, p2f.y);
+				float x = round(data.x*100)/100; //resolution adjus
+				float y = round(data.y*100)/100;
+				configurator->insertCoordinate(x, y);
+				if (debugOn){
+					fprintf(f, "%.2f\t%.2f\n",x , y);
 				}
             }
 		}
-		if (ci->debugOn){
+		if (debugOn){
 		fclose(f);
 		}
-		ci->setReady(1);
-		ci->iteration++;
+		configurator->newScanEvent();
 
 	}
 
 
 };
 
-class MotorCallback :public AlphaBot::StepCallback { //every 100ms the callback updates the plan
-protected:
-	Motor_Out * mio;
+class MotorCallback :public AlphaBot::StepCallback, public MotorInterface { //every 100ms the callback updates the plan
 public:
 
-MotorCallback(Motor_Out *_mio): mio(_mio){}
 virtual void step( AlphaBot &motors){
-	if (mio==NULL){
-		std::cout<<("no motor out interface");
-	}
-    motors.setRightWheelSpeed(mio->get_R()); //temporary fix because motors on despacito are the wrong way around
-    motors.setLeftWheelSpeed(mio->get_L()*1.15);
-	printf(",R=%f\tL=%f\n",mio->get_R(), mio->get_L());
+    motors.setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
+    motors.setLeftWheelSpeed(L*1.15);
+	printf(",R=%f\tL=%f\n",R, L);
 }
 };
 
@@ -91,7 +90,7 @@ class TentativeConfigurator: public AttentiveConfigurator{
 
 	TentativeConfigurator(): AttentiveConfigurator(){}
 
-	TentativeConfigurator(const Task & goal): AttentiveConfigurator(goal){}
+	TentativeConfigurator(const Task & goal): FocusedConfigurator(goal){}
 };
 
 /**
@@ -100,10 +99,9 @@ class TentativeConfigurator: public AttentiveConfigurator{
  * determined upon task simulation. Automatically registers Motor_Out interface to the
  * MotorCallback, which tracks the number of steps and stops the robot when the task ends.
  */
-class OpenLooper: public DeadReckoner, public MotorCallback, public Motor_Out{
+class OpenLooper: public DeadReckoner, public MotorCallback{
     int motorStep=0;
     public:
-    OpenLooper():MotorCallback(this){}
 
     void on_new_task(const Task &task, const Task & goal){
         motorStep=task.getMotorStep();

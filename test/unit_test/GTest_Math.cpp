@@ -1,5 +1,6 @@
 #include "test_classes.h"
 #include <gtest/gtest.h>
+const bool DEBUG=false;
 
 //for me because I never remember linear algebra
 class LinearTransformationTest: public ::testing::TestWithParam<float>{};

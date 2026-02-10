@@ -1,6 +1,6 @@
 #include "control_interface.h"
 
-void Motor_Out::adjust_gain( float angle_D, b2Transform observed, float * y_D){
+void MotorInterface::adjust_gain( float angle_D, b2Transform observed, float * y_D){
     float angle_error=angle_D-observed.q.GetAngle();
     float y_error=0;
     if (y_D!=NULL){
@@ -15,7 +15,7 @@ void Motor_Out::adjust_gain( float angle_D, b2Transform observed, float * y_D){
 }
 
 
-void Motor_Out::PID(float e){ 
+void MotorInterface::PID(float e){ 
     integral+=e;
     float increment=Kp*e + Ki*integral +Kd*(prev_error-e);
     L_gain-=increment/2;
@@ -23,6 +23,6 @@ void Motor_Out::PID(float e){
     prev_error=e;
 }
 
-float Motor_Out::outer_loop(float e){ 
-    return 0.1*e; //0.1 is Kp for outer loop but don't know why it doesnt let me set it inside Motor_Out
+float MotorInterface::outer_loop(float e){ 
+    return 0.1*e; //0.1 is Kp for outer loop but don't know why it doesnt let me set it inside MotorInterface
 }

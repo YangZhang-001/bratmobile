@@ -1,4 +1,5 @@
 #include "test_classes.h"
+const bool DEBUG=false;
 
 
 // TEST_F(HighLevelTestB2B, TrickyScenarioB2B){
