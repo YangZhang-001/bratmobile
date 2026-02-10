@@ -18,8 +18,10 @@ include(FetchContent)
 
 include_directories(${GTEST_INCLUDE_DIRS})  # Var managed by CMake
 include(GoogleTest)
+message(STATUS "GTest include dirs: ${GTEST_INCLUDE_DIRS}")
 
-if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64|AMD64|x64") # for x86
+
+if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "x86_64|AMD64") # for x86
 
 
     add_executable(GTest_HighLevel GTest_HighLevel.cpp)
