@@ -1,5 +1,6 @@
 #include "../custom_robot.h"
 #include "realWorldTestHeaders.h"
+const bool DEBUG=false;
 
 
 int main(int argc, char** argv) {

@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #define _USE_MATH_DEFINES
 
-const bool DEBUG=false;
 
 /**
  * * * * DEFINITION OF DATA INTERFACES FOR ROBOT SENSORS/MOTORS

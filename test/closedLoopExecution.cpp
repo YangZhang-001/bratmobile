@@ -1,6 +1,7 @@
 #include "realWorldTestHeaders.h"
 #include "../custom_robot.h"
 #include "attentive.h"
+const bool DEBUG=false;
 
 int main(int argc, char** argv) {
 	A1Lidar lidar;

@@ -1,4 +1,5 @@
 #include "custom_robot.h"
+const bool DEBUG=false;
 
 class NoGoal:public GoalChanger{
 

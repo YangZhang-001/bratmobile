@@ -1,4 +1,5 @@
 #include "custom_robot.h"
+const bool DEBUG=false;
 
 int main(int argc, char** argv) {
 	std::cout<<"Navigating to Target with Brat2"<<std::endl;

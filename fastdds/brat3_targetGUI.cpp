@@ -1,6 +1,7 @@
 #include "../custom_robot.h"
 #include "gui.h"
 
+const bool DEBUG=false;
 
 class OpenLooperGUI: public OLTrackerGUI, public MotorCallback{
     int motorStep=0;
