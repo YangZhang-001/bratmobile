@@ -19,14 +19,9 @@
 
 class LidarInterface : public A1Lidar::DataInterface{
 Configurator * configurator=NULL;
-bool debugOn=false; 
 int mapCount =0;
 
 public:
-
-	void setDebug(bool on){
-		debugOn=on;
-	}
 
     LidarInterface(Configurator * _c): configurator(_c){}
 
@@ -42,7 +37,7 @@ public:
 		sprintf(name,"/tmp/map%04i.dat", mapCount);
 		printf("%s\n", name);
 		configurator->clearData();
-		if (debugOn){
+		if (DEBUG){
 			f=fopen(name, "w");
 		}
 		for (A1LidarData &data:data){
@@ -50,13 +45,13 @@ public:
 				float x = round(data.x*100)/100; //resolution adjus
 				float y = round(data.y*100)/100;
 				configurator->insertCoordinate(x, y);
-				if (debugOn){
+				if (DEBUG){
 					fprintf(f, "%.2f\t%.2f\n",x , y);
 				}
             }
 		}
-		if (debugOn){
-		fclose(f);
+		if (DEBUG){
+			fclose(f);
 		}
 		configurator->newScanEvent();
 
