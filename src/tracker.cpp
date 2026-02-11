@@ -129,15 +129,6 @@ void ClosedLoop_Tracker::correctAngle(BodyFeatures & found, const BodyFeatures &
             found.pose.q.Set(found.pose.q.GetAngle()+M_PI);
         }
     }
-
-        //     if (dist.pose.q.GetAngle()>0){
-        //     found.pose.q= b2Mul(b2Rot(-M_PI),found.pose.q);
-        // }
-        // else if (dist.pose.q.GetAngle()<0){
-        //     found.pose.q =b2Mul(b2Rot(M_PI),found.pose.q);
-        // }
-
-
 }
 
 void ClosedLoop_Tracker::on_new_task(const Task &task, const Task & goal){
@@ -146,6 +137,8 @@ void ClosedLoop_Tracker::on_new_task(const Task &task, const Task & goal){
     deltaTransform=b2Transform_zero;
     makeAttentionWindow(goal, task);
 }
+
+
 
 //void ClosedLoop_Tracker::on_new_reading(const Task & goal, const Task & currentTask){}
 
@@ -159,10 +152,6 @@ float ClosedLoop_Tracker::window_area(){
 
 void ClosedLoop_Tracker::makeAttentionWindow(const Task &goal, const Task & currentTask){
     float area=0;
-    // if(goal){
-    //     std::cout<<"no goal!"<<std::endl;
-    //     return;
-    // }
     Disturbance goalD=goal.get_disturbance();
     if (currentTask.get_disturbance().getAffIndex()==PURSUE && goal.get_disturbance().getAffIndex()){
         goalD=Disturbance();

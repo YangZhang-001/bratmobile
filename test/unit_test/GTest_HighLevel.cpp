@@ -268,7 +268,6 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     else{
     }        
     EXPECT_TRUE(success);
-
 }
 
 

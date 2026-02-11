@@ -65,10 +65,10 @@ class Tracker{
     /**
      * @brief Called every time a new reading is available
      * 
-     * @param t the task
+     * @param goal the goal task
+     * @param task current Task
      */
     virtual void on_new_reading(const Task & goal,const Task &task ){}
-
 
     virtual void init(const Task & goal)=0;
 

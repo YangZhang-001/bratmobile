@@ -61,7 +61,7 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 	Listener listener(&disturbance);
 	int _count=_world.GetBodyCount(), stepb2d=0;;
 	_world.SetContactListener(&listener);	
-	FILE * robotPath;
+	FILE * robotPath, *collisionPath;
 	if (DEBUG){
 		sprintf(planFile, "/tmp/robot%04i.txt", iteration);
 		robotPath = fopen(planFile, "a");
@@ -99,6 +99,14 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 			int index = int(listener.get_collisions().size()/2);
 			Disturbance collision = Disturbance(listener.get_collisions()[index]);
 			result = simResult(simResult::resultType::crashed, collision);
+			if (DEBUG){
+				sprintf(collisionFile, "/tmp/collisions%04i.txt", iteration);
+				collisionPath = fopen(collisionFile, "a");
+				for (auto v: collision.vertices()){
+					fprintf(collisionPath, "%f\t%f\n", v.x, v.y); //save predictions/
+				}
+				fclose(collisionPath);
+			}
 			break;
 		}
 	}

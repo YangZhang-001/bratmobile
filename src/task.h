@@ -48,7 +48,8 @@ class Task{
     friend class Configurator;
     protected:
     char planFile[250]; //for debug
-    bool debug_k=false; //delete this it's for debugging on the bhenchod pi
+    char collisionFile[50];//debug
+   // bool debug_k=false; //delete this it's for debugging on the bhenchod pi
     bool change =0;
     b2Transform start=b2Transform_zero;
     EndCriteria endCriteria; //end criteria other than task encounters a disturbance

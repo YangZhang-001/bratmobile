@@ -14,20 +14,14 @@ void Configurator::InvMul(const b2Transform& B, Task& task){
 void Configurator::Mul(const b2Transform&B , Task &task){
 	task.start=b2Mul(B, task.start);
 	task.disturbance.bf.pose=b2Mul(B, task.disturbance.pose());
-
 }
-
-
 
 void Configurator::init(Task _task){
 	controlGoal=_task;
 	currentTask=_task;
 	register_tracker(tracker);
-	//previousTimeScan = std::chrono::high_resolution_clock::now();
-	//MOVING_VERTEX=boost::add_vertex(transitionSystem);
 	transitionSystem[MOVING_VERTEX].Di=controlGoal.disturbance;
 	currentVertex=MOVING_VERTEX;
-	//boost::add_edge(MOVING_VERTEX, currentVertex,transitionSystem);
 	currentTask.action.setVelocities(0,0);
 	currentTask.set_change(1);
 	gt::fill(simResult(), &transitionSystem[MOVING_VERTEX]);
@@ -46,7 +40,6 @@ void Configurator::dummy_vertex(vertexDescriptor src){
 	currentEdge = boost::add_edge(src, currentVertex, transitionSystem).first;
 	transitionSystem[movingEdge].it_observed=iteration;
 	transitionSystem[currentEdge].it_observed=iteration;
-	// printf("dummy, current edge = %i, %i\n", src, currentVertex);
 	transitionSystem[MOVING_VERTEX].direction=STOP;
 	transitionSystem[currentVertex].direction=STOP;
 }
@@ -92,7 +85,6 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	simulatedTasks++;
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
 	//approximate angle to avoid rounding errors
-	//b2Transform travelTransform=b2MulT(result.endPose, t.start);
 	result.endPose.q.Set(approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode));
 	return result;
 }
@@ -105,7 +97,6 @@ float Configurator::remainingSimulationTime(const Task *const t){
 	return distance/controlGoal.action.getLinearSpeed();
 
 }
-
 
 
 std::pair<edgeDescriptor, bool> Configurator::addVertex(const vertexDescriptor & src, vertexDescriptor &v1, Edge edge, bool topDown){ //returns edge added
@@ -140,33 +131,6 @@ void Configurator::printPlan(std::vector <vertexDescriptor>* p){
 	printf("\n");
 }
 
-
-
-// void Configurator::start(){
-// 	if (ci == NULL){
-// 		throw std::invalid_argument("no LIDAR interface found");
-// 		return;
-// 	}
-// 	if (control==NULL){
-// 		throw std::invalid_argument("no motor interface found");
-// 		return;
-// 	}
-// 	running =1;
-// 	if (LIDAR_thread!=NULL){ //already running
-// 		return;
-// 	}
-// 	LIDAR_thread= new std::thread(Configurator::run, this);
-// }
-
-// void Configurator::stop(){
-// 	running =0;
-// 	if (LIDAR_thread!=NULL){
-// 		LIDAR_thread->join();
-// 		delete LIDAR_thread;
-// 		LIDAR_thread=NULL;
-// 	}
-
-// }
 
 void Configurator::registerInterface(MotorInterface * _control){
 	control=_control;
@@ -271,9 +235,15 @@ void Configurator::change_task(){
 void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
 	math::InvMul(tr.displacement, g);
 	Configurator::InvMul(tr.displacement, controlGoal);
-	//debug::print_pose(controlGoal.disturbance.pose(), "goal disturbance after tracking:");
 	currentTask.disturbance=tr.observed_disturbance;
-	if (!tracker){
+	if (DEBUG){
+		char goal[40];
+		sprintf(goal, "/tmp/goal%04i.txt", iteration);
+		FILE * goalFile=fopen(goal, "w");
+		fprintf(goalFile, "%0.3f\t%0.3f\n", controlGoal.disturbance.getPosition().x, controlGoal.disturbance.getPosition().y);
+		fclose(goalFile);
+	}
+		if (!tracker){
 		std::cout <<"tracker uninitialised!";
 		return;
 	}
