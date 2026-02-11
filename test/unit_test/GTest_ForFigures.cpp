@@ -118,8 +118,19 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     else{
     }        
     EXPECT_TRUE(success);
-
 }
+
+INSTANTIATE_TEST_CASE_P(CulDeSacTurning, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
+                                                                           ::testing::Values(std::string("../cul_de_sac/")),
+                                                                           ::testing::Values(2),
+                                                                           ::testing::Values(-1, 0) ));
+                                                                           //synth fails, debug later!
+
+INSTANTIATE_TEST_CASE_P(CulDeSacAvoided, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
+                                                                           ::testing::Values(std::string("../cul_de_sac/")),
+                                                                           ::testing::Values(30),
+                                                                           ::testing::Values(-1) ));
+
 
 TEST_F(HighLevelTest, TrickyScenario){
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
