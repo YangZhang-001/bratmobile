@@ -47,10 +47,11 @@ TEST_F(FigureTest, PrintTransform){
     sprintf(name,"/tmp/transform%s", info);
     FILE *f=fopen(name, "w+");
     CoordinateContainer cc;
-    for (auto p: points){
-        b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
-        fprintf(f, "%0.3f\t%0.3f\n", p2d.x, p2d.y);
-        newPoints.emplace(Pointf(p2d.x, p2d.y));
+    for (float y=.2; y<=-.2; y-=0.1){
+        Pointf p(0.50, y);
+       // b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
+        fprintf(f, "%0.3f\t%0.3f\n", p.x, p.y);
+        newPoints.emplace(Pointf(p.x, p.y));
     }
     fclose(f);
     configurator->set_data2fp(newPoints);
@@ -101,7 +102,7 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     std::vector<vertexDescriptor> plan= get_plan(folder);
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam()), taskToInterrupt=std::get<3>(GetParam());
-    trackFor(iteration);
+   // trackFor(iteration);
     Pointf interruptingPoint;
     std::vector<vertexDescriptor> updated_plan=get_InterruptedPlan(folder,iteration-1, taskToInterrupt, &interruptingPoint); //map 2
     int vertices_now=configurator->n_vertices();
