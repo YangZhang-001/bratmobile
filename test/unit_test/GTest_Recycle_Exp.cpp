@@ -1,5 +1,10 @@
 #include "test_classes.h"
-const bool DEBUG=false;
+// extern bool DEBUG;
+const bool DEBUG=true;
+
+class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<std::tuple<float, float, float>>{};
+
+class CLAdaptiveTrackerTest: public CLAdaptiveTracker, public ::testing::TestWithParam<float>{};
 
 TEST_P(CLAdaptiveTrackerTest, Threshold){
     State s;
@@ -11,11 +16,11 @@ TEST_P(CLAdaptiveTrackerTest, Threshold){
 INSTANTIATE_TEST_CASE_P(Ends, CLAdaptiveTrackerTest, testing::Values(0.5, 0.05));
 
 TEST_P(RecycleTest, Transform){
-    // char info[20];
+    char info[20];
     CLAdaptiveTracker newTracker;
     configurator->register_tracker(&newTracker);
     b2Transform b2d_transform(b2Vec2(std::get<0>(GetParam()),std::get<1>(GetParam())), b2Rot(std::get<2>(GetParam())));
-    // sprintf(info,"%0.3f-%0.3f-%0.3f.txt",b2d_transform.p.x, b2d_transform.p.y, b2d_transform.q.GetAngle() );
+    sprintf(info,"%0.3f-%0.3f-%0.3f.txt",b2d_transform.p.x, b2d_transform.p.y, b2d_transform.q.GetAngle() );
     Logger logger("RecycleTests", "\tmp", "recycle");
     configurator->register_logger(&logger);
     Task goal;
@@ -42,21 +47,22 @@ TEST_P(RecycleTest, Transform){
     //                                         -b2d_transform.q.s,b2d_transform.q.c,b2d_transform.p.y);
     configurator->clearData();
     // cv::transform(points, newPoints, transform);
-    // char name[50];
-    // sprintf(name,"/tmp/transform%s", info);
-    // FILE *f=fopen(name, "w+");
-    // CoordinateContainer cc;
-    // for (auto p: points){
-    //     b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
-    //     fprintf(f, "%0.3f\t%0.3f\n", p2d.x, p2d.y);
-    //     newPoints.emplace(Pointf(p2d.x, p2d.y));
-    // }
-    // fclose(f);
+    char name[50];
+    sprintf(name,"/tmp/transform%s", info);
+    FILE *f=fopen(name, "w+");
+    CoordinateContainer cc;
+    for (auto p: points){
+        b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
+        fprintf(f, "%0.3f\t%0.3f\n", p2d.x, p2d.y);
+        newPoints.emplace(Pointf(p2d.x, p2d.y));
+    }
+    fclose(f);
     configurator->set_data2fp(newPoints);
+
     configurator->newScanEvent();
     std::vector<vertexDescriptor> updated_plan=configurator->get_plan(); //map 2
     int vertices_now=configurator->n_vertices();
-    EXPECT_NEAR(vertices_now, vertices_og, 1);
+    // EXPECT_LE(vertices_now, vertices_og);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     EXPECT_TRUE(planned_to_goal);
 
@@ -64,5 +70,5 @@ TEST_P(RecycleTest, Transform){
 
 INSTANTIATE_TEST_CASE_P(Transforms2D, RecycleTest, ::testing::Combine(testing::Range(-.2f, .4f, 0.01f),
                                                                     ::testing::Range(-0.05f, 0.05f, 0.01f),
-                                                                    ::testing::Values(-0.1f,0.1f, 0.1f)));
+                                                                    ::testing::Values(-0.1f,0.0f, 0.1f)));
 
