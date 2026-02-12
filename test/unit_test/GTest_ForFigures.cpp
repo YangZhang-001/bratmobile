@@ -34,25 +34,14 @@ TEST_F(FigureTest, PrintTransform){
     configurator->set_current_v(last_v); //simulate plan finished
     configurator->getTask().set_change(true);
     configurator->set_plan({});
-    goal=Task(Disturbance(PURSUE, b2Vec2(1.2, 0), 0),DEFAULT);
+    goal=Task(Disturbance(PURSUE, b2Vec2(1, 0), 0),DEFAULT);
     configurator->init(goal);
-<<<<<<< HEAD
-
-=======
->>>>>>> 742cb9cab78617498bde80171a80a4c7d33a8d88
     configurator->setTask(wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(), finished_plan));
     configurator->getTask().set_change(true);
     math::MulT(shift, configurator->get_ts());
     auto points=configurator->get_data2fp();
     CoordinateContainer newPoints;
-<<<<<<< HEAD
-    // cv::Mat transform=(cv::Mat_<double>(2,3)<<b2d_transform.q.c,b2d_transform.q.s,b2d_transform.p.x,
-    //                                         -b2d_transform.q.s,b2d_transform.q.c,b2d_transform.p.y);
     configurator->clearData();
-    // cv::transform(points, newPoints, transform);
-=======
-    configurator->clearData();
->>>>>>> 742cb9cab78617498bde80171a80a4c7d33a8d88
     char name[50];
     sprintf(name,"/tmp/transform%s", info);
     FILE *f=fopen(name, "w+");
