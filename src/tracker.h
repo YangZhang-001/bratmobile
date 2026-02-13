@@ -202,10 +202,20 @@ class ClosedLoop_Tracker:public Tracker{
 //same as CL Tracker but creates custom threshold based on state
 class CLAdaptiveTracker:public ClosedLoop_Tracker{
     protected:
+
     Threshold get_threshold(const State &s){
         float distance=std::max(Threshold::FIXED_ENDPOSE, s.distance()/2);
         float dist=std::max(Threshold::FIXED_DISTPOS, s.distance()/2);
+        float dimensions=std::max(Threshold::FIXED_DIMENSIONS, getBiggestDisturbance(s));
         return Threshold(distance, Threshold::FIXED_ANGLE, dist, Threshold::FIXED_AFFORDANCE, Threshold::FIXED_DIMENSIONS);
+    }
+
+    float getBiggestDisturbance(const State &s){
+        return std::max(getMaxDim(s.Di), getMaxDim(s.Di));
+    }
+
+    float getMaxDim(const Disturbance &d){
+        return std::max(d.bf.halfLength, d.bf.halfWidth); 
     }
 
 };

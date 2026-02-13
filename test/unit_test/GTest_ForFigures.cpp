@@ -47,8 +47,8 @@ TEST_F(FigureTest, PrintTransform){
     sprintf(name,"/tmp/transform%s", info);
     FILE *f=fopen(name, "w+");
     CoordinateContainer cc;
-    for (float y=.2; y<=-.2; y-=0.1){
-        Pointf p(0.50, y);
+    for (float y=.2; y>=-.2; y-=0.01){
+        Pointf p(0.40, y);
        // b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
         fprintf(f, "%0.3f\t%0.3f\n", p.x, p.y);
         newPoints.emplace(Pointf(p.x, p.y));
