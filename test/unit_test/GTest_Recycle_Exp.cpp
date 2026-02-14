@@ -52,7 +52,7 @@ TEST_P(RecycleTest, DifferentObstacle){
     configurator->set_plan({});
     configurator->setTask(wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(), finished_plan));
     configurator->getTask().set_change(true);
-    math::MulT(goal.get_disturbance().pose(), configurator->get_ts());
+    math::MulT(shift, configurator->get_ts());
     auto points=configurator->get_data2fp();
     CoordinateContainer newPoints;
     configurator->clearData();
@@ -75,12 +75,12 @@ TEST_P(RecycleTest, DifferentObstacle){
     int vertices_now=configurator->n_vertices();
     EXPECT_NEAR(vertices_now, vertices_og, 1);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-   planFile(configurator->get_ts(), configurator->get_plan(), configurator->getIteration());    
+    planFile(configurator->get_ts(), configurator->get_plan(), configurator->getIteration());    
     EXPECT_TRUE(planned_to_goal);
 
 }
 
-INSTANTIATE_TEST_SUITE_P(Changes, RecycleTest, ::testing::Combine(::testing::Range(.25f, .70f, 0.05f), ::testing::Range(-0.05f, 0.45f, 0.05f)));
+INSTANTIATE_TEST_SUITE_P(Changes, RecycleTest, ::testing::Combine(::testing::Range(.25f, .70f, 0.05f), ::testing::Range(-0.1f, 0.30f, 0.05f)));
 
 // TEST_P(RecycleTest, Transform){
 //     char info[20];

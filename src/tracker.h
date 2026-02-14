@@ -206,16 +206,17 @@ class CLAdaptiveTracker:public ClosedLoop_Tracker{
     Threshold get_threshold(const State &s){
         float distance=std::max(Threshold::FIXED_ENDPOSE, s.distance()/2);
         float dist=std::max(Threshold::FIXED_DISTPOS, s.distance()/2);
-        float dimensions=std::max(Threshold::FIXED_DIMENSIONS, getBiggestDisturbance(s)*2);
-        return Threshold(distance, Threshold::FIXED_ANGLE, dist, Threshold::FIXED_AFFORDANCE, Threshold::FIXED_DIMENSIONS);
+        float dimensions=std::max(Threshold::FIXED_DIMENSIONS, tanh(getBiggestDimension(s)));
+        return Threshold(distance, Threshold::FIXED_ANGLE, dist, Threshold::FIXED_AFFORDANCE, dimensions);
     }
 
-    float getBiggestDisturbance(const State &s){
-        return std::max(getMaxDim(s.Di), getMaxDim(s.Di));
+    float getBiggestDimension(const State &s){
+        return std::max(getMaxDim(s.Di), getMaxDim(s.Dn));
     }
 
     float getMaxDim(const Disturbance &d){
         return std::max(d.bf.halfLength, d.bf.halfWidth); 
     }
+
 
 };
