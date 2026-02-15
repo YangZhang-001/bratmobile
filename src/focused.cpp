@@ -262,7 +262,7 @@ bool FocusedConfigurator::canReassignOutcome(vertexDescriptor v){
 	return v==currentVertex;
 }
 
-bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
+bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0){
 	if (transitionSystem[v1].outcome == simResult::successful || !boost::edge(v0, v1, transitionSystem).second){
 		return false; //can't propagate
 	}
@@ -270,7 +270,7 @@ bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, s
 		return false;
 	}
 	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
-	if (((canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE))|| (v0==DUMMY && !g[v0].filled)){
+	if (((canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE))){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
 	bool canReassign=canReassignOutcome(v0);
@@ -561,9 +561,13 @@ void FocusedConfigurator::shift_states(TransitionSystem & g, const std::vector<v
 	if (p.empty()){
 		return;
 	}
+	if (p.size()>1){
+		propagateD(p[1], p[0]);
+	}
 	for (const vertexDescriptor &v:p){
 		math::MulT(shift_start, g[v]);
 	}
+	
 	
 }
 

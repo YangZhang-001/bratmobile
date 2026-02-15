@@ -67,7 +67,7 @@ virtual std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d
  * 
  * @return whether a criteria to continue propagating is met
  */
-virtual bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE);
+virtual bool propagateD(vertexDescriptor v1, vertexDescriptor v0);
 
 //if in plan the vertex gets priority
 void planPriority(TransitionSystem&, vertexDescriptor); 
