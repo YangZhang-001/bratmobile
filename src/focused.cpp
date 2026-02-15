@@ -24,6 +24,9 @@ void FocusedConfigurator::resetPhi(){
 		transitionSystem[*vi].options.clear();
 		transitionSystem[*vi].filled=false;
 	}
+	if (transitionSystem.m_vertices.size()>1){
+		transitionSystem[DUMMY].outcome=simResult::successful;
+	}
 }
 
 float FocusedConfigurator::customSimulationStep(vertexDescriptor v){
@@ -562,7 +565,7 @@ void FocusedConfigurator::shift_states(TransitionSystem & g, const std::vector<v
 		return;
 	}
 	if (p.size()>1){
-		propagateD(p[1], p[0]);
+		propagateD(p[0], p[1]);
 	}
 	for (const vertexDescriptor &v:p){
 		math::MulT(shift_start, g[v]);

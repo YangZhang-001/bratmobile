@@ -145,7 +145,7 @@ TEST_P(DiscretePropagateTest, Propagate) {
     transitionSystem[v2].outcome= simResult::crashed;
     transitionSystem[v2].Dn=d;
     std::set<vertexDescriptor>closed;
-    propagateD(v2, v1, &closed);
+    propagateD(v2, v1);
     if (GetParam()==DEFAULT){
         EXPECT_EQ(transitionSystem[v1].outcome, simResult::safeForNow);
         EXPECT_TRUE(transitionSystem[v1].Dn.getAffIndex()==AVOID);
