@@ -140,7 +140,7 @@ std::vector<vertexDescriptor> FocusedConfigurator::explorer(vertexDescriptor v, 
 				}
 				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
 				g[v1].phi=evaluationFunction(er, v1, plan_prov);
-				propagateD(v1, v0, &closed); //if v0 is a dummy vertex it propagates the disturbance
+				propagateD(v1, v0); //if v0 is a dummy vertex it propagates the disturbance
 				v0_exp=v0;					
 				options=g[v0_exp].options;
 				v0=v1;
