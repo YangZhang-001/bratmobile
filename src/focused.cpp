@@ -269,8 +269,8 @@ bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, s
 	if (isTurning(transitionSystem[v1].direction)!=isTurning(transitionSystem[v0].direction)){
 		return false;
 	}
-	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di || v0==DUMMY_VERTEX;
-	if ((canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE)){
+	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
+	if (((canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE))|| (v0==DUMMY && !g[v0].filled)){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
 	bool canReassign=canReassignOutcome(v0);

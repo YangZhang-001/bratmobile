@@ -238,8 +238,6 @@ typedef boost::graph_traits<TransitionSystem>::edge_descriptor edgeDescriptor;
 typedef boost::graph_traits<TransitionSystem>::edge_iterator edgeIterator;
 
 //SPECIAL VERTICES
-const vertexDescriptor DUMMY=1;
-
 /**
  * @brief vertex reprensenting instantaneous position of the robot relative to itself
  * Trivial: in the graph it's always located at the origin with an orientation of 0 degrees, and
@@ -247,6 +245,14 @@ const vertexDescriptor DUMMY=1;
  * 
  */
 const vertexDescriptor MOVING_VERTEX=0; 
+
+/**
+* @brief first vertex added to transition system, by default represents the instantaneous state 
+* of the robot when it first starts planning, used so that any branches expanded out of it share the same root
+* once the moving vertex attaches to another state
+*/
+const vertexDescriptor DUMMY=1;
+
 
 /**
  * @brief Used as a predicate, gives info on whether a vertex is the current vertex
