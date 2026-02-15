@@ -117,8 +117,10 @@ virtual std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSys
 
 /**
  * @brief Resets all vertices evaluation function phi to a default unitialised value of 10
+ * Also resets all vertices filled flag as zero (used at each exploration round)
  */
 void resetPhi();
+
 
 /**
  * @brief Adds state after discovering it in exploration

@@ -22,6 +22,7 @@ void FocusedConfigurator::resetPhi(){
 	for (auto vi=vs.first; vi!=vs.second; vi++){
 		transitionSystem[*vi].resetVisited();
 		transitionSystem[*vi].options.clear();
+		transitionSystem[*vi].filled=false;
 	}
 }
 
