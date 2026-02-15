@@ -116,6 +116,7 @@ std::vector<vertexDescriptor> FocusedConfigurator::explorer(vertexDescriptor v, 
 					edge=setup_match_edge(match, v0, v1, sk.second, t.get_direction(), false);
 					if (currentTask.is_over()){
 						std::vector <vertexDescriptor> task_vs= task_vertices(v1);
+						vertexDescriptor task_start= task_vs[0];
 						startRecycle=getRecyclingStart(v, v1, task_start);
 						if (plan_prov.empty()){
 							recycle_plan(startRecycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
@@ -268,7 +269,7 @@ bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, s
 	if (isTurning(transitionSystem[v1].direction)!=isTurning(transitionSystem[v0].direction)){
 		return false;
 	}
-	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
+	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di || v0==DUMMY_VERTEX;
 	if ((canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE)){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
