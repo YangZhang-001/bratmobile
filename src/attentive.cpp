@@ -177,8 +177,8 @@ bool DiscreteConfigurator::shouldPartiallyExplore(const std::vector<edgeDescript
 
 
 
-bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed, StateMatcher::MATCH_TYPE match){
-	while(FocusedConfigurator::propagateD(v1, v0, closed, match)){
+bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0){
+	while(FocusedConfigurator::propagateD(v1, v0)){
 		v1=v0;
 		auto ve= gt::visitedEdge(inEdges(v1, DEFAULT),transitionSystem, currentVertex);
 		auto dummyEdge=boost::edge(DUMMY, v1, transitionSystem);
