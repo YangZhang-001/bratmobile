@@ -431,8 +431,8 @@ class DebugDiscreteConf: public virtual DebugConfigurator, public virtual Discre
         return DiscreteConfigurator::canReassignOutcome(v);
     }
 
-    bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE)override{
-        return DiscreteConfigurator::propagateD(v1, v0, closed, match);
+    bool propagateD(vertexDescriptor v1, vertexDescriptor v0)override{
+        return DiscreteConfigurator::propagateD(v1, v0);
     }
 
     float customSimulationStep(vertexDescriptor v)override{
