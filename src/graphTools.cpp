@@ -176,6 +176,7 @@ void gt::update(edgeDescriptor e, std::pair <State, Edge> sk, TransitionSystem& 
 }
 
 void gt::set(edgeDescriptor e, std::pair <State, Edge> sk, TransitionSystem& g, bool current, int it){
+	g[e.m_target].Di = sk.first.Di;
 	if (g[e.m_target].filled){
 		return;
 	}
