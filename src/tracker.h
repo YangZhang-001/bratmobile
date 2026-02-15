@@ -218,8 +218,11 @@ class CLAdaptiveTracker:public ClosedLoop_Tracker{
         return std::max(d.bf.halfLength, d.bf.halfWidth); 
     }
 
+    /**
+    @brief find a factor to multiply biggest disturbance dimension by in order to find match 
+    */
     float logistic(float biggest){
-        return (1/tanh(biggest))*0.5;
+        return (1/tanh(biggest))*0.2*biggest;
     }
 
 
