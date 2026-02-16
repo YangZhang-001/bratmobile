@@ -340,14 +340,16 @@ bool StateMatcher::match_equal(const MATCH_TYPE& candidate, const MATCH_TYPE& de
 		case _TRUE:
 			result=int(candidate)==int(desired);
 			break;
+		case D_SHAPES:
+			result=int(candidate)==int(desired) || int(candidate)==_TRUE || int(candidate)==ABSTRACT;
 		case DN_SHAPE:
-			result =(int(candidate)==int(desired))|| int(candidate)==_TRUE || int(candidate)==ABSTRACT || candidate== D_NEW;
+			result =(int(candidate)==int(desired))|| int(candidate)==_TRUE || int(candidate)==ABSTRACT || candidate== D_NEW || int(candidate)==D_SHAPES;
 			break;			
 		case DN_POSE:
 			result =(int(candidate)==int(desired))|| candidate==_TRUE || int(candidate)==ABSTRACT || candidate== D_NEW;
 			break;			
 		case DI_SHAPE:
-			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_INIT;
+			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_INIT  || int(candidate)==D_SHAPES;
 			break;			
 		case DI_POSE:
 			result =(int(candidate)==int(desired))|| candidate==_TRUE || candidate==ABSTRACT || candidate== D_INIT;

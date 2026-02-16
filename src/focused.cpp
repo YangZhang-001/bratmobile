@@ -706,7 +706,7 @@ std::vector <vertexDescriptor> FocusedConfigurator::task_vertices( vertexDescrip
 					}
 				}
 			}
-			else if (transitionSystem[ep2.second.m_target].direction==d &&
+			else if (transitionSystem[ep2.second.m_target].isTurning()==isTurning(d)&&
 			 	transitionSystem[ep2.second.m_target].Di == transitionSystem[_ep.second.m_target].Di &&
 			 	transitionSystem[ep2.second.m_target].Dn == transitionSystem[_ep.second.m_target].Dn){ //same task!
 				result.push_back(ep2.second.m_target); //source
@@ -716,6 +716,9 @@ std::vector <vertexDescriptor> FocusedConfigurator::task_vertices( vertexDescrip
 			break;
 		}
 		v=ep2.second.m_source;
+		if (v==DUMMY){
+			result.push_back(v);
+		}
 		if (ep2.second.m_target==currentVertex){ //source
 			break;
 		}
@@ -729,16 +732,15 @@ std::vector <vertexDescriptor> FocusedConfigurator::task_vertices( vertexDescrip
 
 bool FocusedConfigurator::isPreviousState(const State & s, const State & candidate){
 	StateMatcher::MATCH_TYPE match=matcher->isMatch(s, candidate, tracker->get_threshold(s));
-	if (!(matcher->match_equal(match, StateMatcher::DI_SHAPE) &&
-		matcher->match_equal(match, StateMatcher::DN_SHAPE))){
+	if (!(matcher->match_equal(match, StateMatcher::D_SHAPES))){
 			return false;
 	}
-	if (!(s.Di.getAffIndex()==candidate.Di.getAffIndex()&& //probably not needed but just in case
-		s.Dn.getAffIndex()==candidate.Dn.getAffIndex())){
-			return false;
+	//probably not needed but just in case
+	if (!(s.Di.getAffIndex()==candidate.Di.getAffIndex()&& s.Dn.getAffIndex()==candidate.Dn.getAffIndex())){
+		return false;
 	}
 	bool Dn=false, Di=false;//likey to be previous state in the same task based on Dn/Di
-	//assumes that Dn is an obstacle!
+	//assumes that Dn is an obstacle! or if no disturbance by default inf transform will be returned
 	if (s.end_from_Dn().p.Length()<=candidate.end_from_Dn().p.Length()){
 		Dn=true;
 	}
