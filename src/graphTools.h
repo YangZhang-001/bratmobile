@@ -466,7 +466,7 @@ typedef boost::filtered_graph<TransitionSystem, ViableEdge, Connected> FilteredT
 class StateMatcher{
 	public:
 		//@brief {_FALSE=0, D_NEW=2, DN_POSE=3, _TRUE=1, ANY=4, D_INIT=5, ABSTRACT=6, DI_POSE=7, DN_SHAPE=8, DI_SHAPE=9, POSE=10};
-		enum MATCH_TYPE {_FALSE, D_NEW, DN_POSE, _TRUE, ANY, D_INIT, ABSTRACT, DI_POSE, DN_SHAPE, DI_SHAPE, POSE};
+		enum MATCH_TYPE {_FALSE, D_NEW, DN_POSE, _TRUE, ANY, D_INIT, ABSTRACT, DI_POSE, DN_SHAPE, DI_SHAPE, POSE, D_SHAPES};
 
 		float mu=0.001;
 	    StateMatcher()=default;
@@ -516,6 +516,10 @@ class StateMatcher{
 				return Di_shape && Di_pose();
 			}
 
+			bool D_shapes(){
+				return Dn_shape && Di_shape;
+			}
+
 			StateMatch() =default;
 
 			StateMatch(const StateDifference& sd,const Threshold& threshold, float coefficient=1){
@@ -547,7 +551,10 @@ class StateMatcher{
 				}
 				else if (Di_exact()){
 					return D_INIT;
-				}				
+				}	
+				else if (D_shapes()){
+					return D_SHAPES;
+				}			
 				else if (Dn_pose()){
 					return DN_POSE;
 				}

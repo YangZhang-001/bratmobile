@@ -131,6 +131,30 @@ TEST_F(FCTest, ReplanDefault) {
     EXPECT_TRUE(currentTask.is_over());
 }
 
+TEST_F(FCTest, isPreviousState){
+    register_tracker(new CLAdaptiveTracker());
+    State s1, s2, s3;
+    s1.endPose.p.x=-1;
+    s1.Di.setPosition(b2Vec2(0,0));
+    s1.Di.set_affordance(PURSUE);
+    s1.Di.validate();
+    s1.Dn.setPosition(b2Vec2(-0.7,0));
+    s1.Dn.bf.halfWidth=0.045;
+    s1.Dn.set_affordance(AVOID);
+    s2.Di=s1.Di;
+    s3.Di=s1.Di;
+    s2.Di.setPosition(b2Vec2(1,0));
+    s2.Dn.setPosition(b2Vec2(0.35,0));
+    s2.Dn.bf.halfWidth=0.08;
+    s2.Dn.set_affordance(AVOID);
+    s2.endPose.p.x=.2;
+    EXPECT_FALSE(isPreviousState(s2, s3));
+    EXPECT_TRUE(isPreviousState(s2, s1));
+
+
+
+}
+
 // TEST_F(FCTest, DontReplan) {
 //     data2fp.emplace(Pointf(0.3, 0)); //make point corresponding to obstacle
 //     Spawner(); //should create obstacle avoidance plan

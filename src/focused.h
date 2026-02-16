@@ -300,10 +300,12 @@ std::pair<edgeDescriptor, bool> setup_match_edge(VertexMatch &match, vertexDescr
 virtual std::vector <vertexDescriptor> task_vertices(vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep=NULL);
 
 /**
- * @brief 
+ * @brief more flexible way to estimate whether the previous state represents the previous task
+ * based on matching shape of disturbances and logic applied to distance from Di/Dn
+ * @param s the target state in the edge
+ * @param candidate source state (candidate to being previous state)
  */
-bool isPreviousState(const State & s, const State & candidate){
-
+bool isPreviousState(const State & s, const State & candidate);
 // /**
 //  * @brief Returns a visited edge if present, or if the current 
 //  * 

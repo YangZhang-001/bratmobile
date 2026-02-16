@@ -368,14 +368,7 @@ StateMatcher::MATCH_TYPE StateMatcher::isMatch(const StateDifference& sd, const 
 }
 
 StateMatcher::MATCH_TYPE StateMatcher::isMatch(const State & s, const State &candidate, const Threshold& threshold, const State *src, StateDifference*_sd){
-	//src is the source of candidate
 	StateDifference sd(s, candidate);
-	// float stray=0;
-	// if ((stray>error.endPosition && s.label==candidate.label)){ //
-	// 	sd.pose.p.x=10000; // now pose will not be matched
-	// 	sd.pose.p.y=10000;
-	// 	sd.pose.q.Set(MAX_ANGLE_ERROR);
-	// }
 	if (NULL!=_sd){
 		*_sd=sd;
 	}
