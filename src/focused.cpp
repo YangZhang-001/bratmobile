@@ -727,6 +727,30 @@ std::vector <vertexDescriptor> FocusedConfigurator::task_vertices( vertexDescrip
 	return result;
 }
 
+bool FocusedConfigurator::isPreviousState(const State & s, const State & candidate){
+	StateMatcher::MATCH_TYPE match=matcher->isMatch(s, candidate, tracker->get_threshold(s));
+	if (!(matcher->match_equal(match, StateMatcher::DI_SHAPE) &&
+		matcher->match_equal(match, StateMatcher::DN_SHAPE))){
+			return false;
+	}
+	if (!(s.Di.getAffIndex()==candidate.Di.getAffIndex()&& //probably not needed but just in case
+		s.Dn.getAffIndex()==candidate.Dn.getAffIndex())){
+			return false;
+	}
+	bool Dn=false, Di=false;//likey to be previous state in the same task based on Dn/Di
+	//assumes that Dn is an obstacle!
+	if (s.end_from_Dn().p.Length()<=candidate.end_from_Dn().p.Length()){
+		Dn=true;
+	}
+	if (s.Di.getAffIndex()==PURSUE){
+		Di=s.end_from_Di().p.Length()<=candidate.end_from_Di().p.Length();
+	}
+	else{
+		Di=s.end_from_Di().p.Length()>=candidate.end_from_Di().p.Length();
+	}
+	return Di && Dn;
+}
+
 std::vector <edgeDescriptor> FocusedConfigurator::inEdges(vertexDescriptor v, Direction d){
 	std::vector <edgeDescriptor> result;
 	auto es = boost::in_edges(v, transitionSystem);

@@ -299,6 +299,11 @@ std::pair<edgeDescriptor, bool> setup_match_edge(VertexMatch &match, vertexDescr
  */
 virtual std::vector <vertexDescriptor> task_vertices(vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep=NULL);
 
+/**
+ * @brief 
+ */
+bool isPreviousState(const State & s, const State & candidate){
+
 // /**
 //  * @brief Returns a visited edge if present, or if the current 
 //  * 
