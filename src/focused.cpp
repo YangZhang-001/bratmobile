@@ -564,9 +564,6 @@ void FocusedConfigurator::shift_states(TransitionSystem & g, const std::vector<v
 	if (p.empty()){
 		return;
 	}
-	if (p.size()>1){
-		propagateD(p[0], p[1]);
-	}
 	for (const vertexDescriptor &v:p){
 		math::MulT(shift_start, g[v]);
 	}
