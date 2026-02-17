@@ -716,11 +716,11 @@ std::vector <vertexDescriptor> FocusedConfigurator::task_vertices( vertexDescrip
 			break;
 		}
 		v=ep2.second.m_source;
+		if (v==DUMMY){
+			result.push_back(v);
+		}
 		if (ep2.second.m_target==currentVertex){ //source
 			break;
-		}
-		if (isPreviousState(transitionSystem[_ep.second.m_target], transitionSystem[v])){
-			result.push_back(v);
 		}
 	}while(transitionSystem[ep2.second.m_target].direction==d);
 	std::reverse(result.begin(), result.end());
