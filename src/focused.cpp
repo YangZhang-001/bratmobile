@@ -276,6 +276,11 @@ bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0){
 	if (((canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE))){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
+	//make dummy special case i am so tired
+	auto ie=inEdges(v1, STOP);//dummy
+	if (!ie.empty()){
+		transitionSystem[ie[0].m_source].Dn== transitionSystem[v1].Dn;
+	}
 	bool canReassign=canReassignOutcome(v0);
 	if (canReassign){
 		transitionSystem[v0].outcome=simResult::safeForNow;
