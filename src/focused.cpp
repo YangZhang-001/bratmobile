@@ -232,7 +232,7 @@ void FocusedConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q
 			}
 		}
 		if (correctQueue(split, module_src, startRecycle, plan_prov.size())){
-			propagateD(split.front(), startRecycle);
+			propagateD(split.back(), startRecycle);
 		}
 		for (int i=split.size()-1; i>=0; i--){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
