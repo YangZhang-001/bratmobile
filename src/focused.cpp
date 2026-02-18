@@ -232,7 +232,7 @@ void FocusedConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q
 			}
 		}
 		if (correctQueue(split, module_src, startRecycle, plan_prov.size())){
-			propagateD(split.back(), startRecycle);
+			propagateD(split.front(), startRecycle);
 		}
 		for (int i=split.size()-1; i>=0; i--){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
@@ -814,7 +814,7 @@ std::pair<edgeDescriptor, bool> FocusedConfigurator::addEdgeRetrospectively(vert
 	return first_edge;
 }
 
-void FocusedConfigurator::correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize){
+bool FocusedConfigurator::correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize){
 	if (planProvSize==0 || startRecycle==v){
 		return false;
 	}

@@ -155,24 +155,6 @@ TEST_F(FCTest, isPreviousState){
 
 }
 
-// TEST_F(FCTest, DontReplan) {
-//     data2fp.emplace(Pointf(0.3, 0)); //make point corresponding to obstacle
-//     Spawner(); //should create obstacle avoidance plan
-//     transitionSystem[2].outcome=simResult::safeForNow;
-//     m_plan={2};
-//     int plan_size=1, simTasks=1;
-//     EXPECT_EQ(m_plan.size(), plan_size);
-//     change_task();
-//     estimate_current_vertex();
-//     b2Transform dp=currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
-//     //math::MulT(dp, transitionSystem);
-//     update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(), dp));
-//     Spawner(); //shouldnt replan
-//     plan_size--;
-//     EXPECT_EQ(m_plan.size(), plan_size);
-//     EXPECT_EQ(simulatedTasks, simTasks); 
-//     EXPECT_FALSE(currentTask.is_over());
-// }
 
 TEST_F(FCTest, TrickyScenario){
     init(DebugConfigurator::generateGoalTask());    
@@ -188,8 +170,9 @@ TEST_F(FCTest, TrickyScenario){
     }
     bool planned_to_goal=controlGoal.checkEnded(transitionSystem[*(m_plan.end()-1)].endPose).ended;
     EXPECT_TRUE(planned_to_goal);
-
 }
+
+
 
 // TEST_F(FCTest, ReplanNoisy) {
 //     init(DebugConfigurator::generateGoalTask());    
