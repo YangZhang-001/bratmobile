@@ -13,7 +13,7 @@ void Configurator::InvMul(const b2Transform& B, Task& task){
 
 void Configurator::Mul(const b2Transform&B , Task &task){
 	task.start=b2Mul(B, task.start);
-	task.disturbance.bf.pose=b2Mul(B, task.disturbance.pose());
+	task.disturbance.bf.pose=b2Mul(B, task.disturbance.bf.pose);
 
 }
 

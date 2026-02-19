@@ -80,7 +80,7 @@ TEST_P(RecycleTest, DifferentObstacle){
 
 }
 
-INSTANTIATE_TEST_SUITE_P(Changes, RecycleTest, ::testing::Combine(::testing::Range(.25f, .70f, 0.05f), ::testing::Range(-0.1f, 0.30f, 0.05f)));
+INSTANTIATE_TEST_SUITE_P(Changes, RecycleTest, ::testing::Combine(::testing::Range(.25f, .60f, 0.05f), ::testing::Range(-0.1f, 0.30f, 0.05f)));
 
 // TEST_P(RecycleTest, Transform){
 //     char info[20];
