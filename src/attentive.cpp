@@ -10,10 +10,10 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	//shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
 	shift_start= b2MulT( sk_first_start,transitionSystem[task_start].start);
 	b2Transform pov_goalStart=b2MulT(controlGoal.getStart(), sk_first_start); //simulated state from pov of goal start
-	b2Transformt adjustGoal=b2Mul(pov_GoalStart,transitionSystem[task_start].start);
+	b2Transform adjustGoal=b2Mul(pov_GoalStart,transitionSystem[task_start].start);
 	Mul(adjustGoal, controlGoal_adjusted);
 	if (edge.first.m_source!=v0){
-		edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
+		edge= gt::add_edgev0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
 	}
 	if (!boost::edge(edge.first.m_source, edge.first.m_target, transitionSystem).second){
 		return false;
