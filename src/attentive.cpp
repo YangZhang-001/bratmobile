@@ -9,7 +9,9 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	//position of task start with respect to goal disturbance (pov)
 	//shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
 	shift_start= b2MulT( sk_first_start,transitionSystem[task_start].start);
-	Mul(shift_start, controlGoal_adjusted);
+	b2Transform pov_goalStart=b2MulT(controlGoal.getStart(), sk_first_start); //simulated state from pov of goal start
+	b2Transformt adjustGoal=b2Mul(pov_GoalStart,transitionSystem[task_start].start);
+	Mul(adjustGoal, controlGoal_adjusted);
 	if (edge.first.m_source!=v0){
 		edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
 	}
