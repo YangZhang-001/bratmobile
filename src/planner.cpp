@@ -196,14 +196,14 @@ void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Front
 	queue.push_back(f);
 }
 
-std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, vertexDescriptor src, ExecutionInfo& info, bool *finished){
+std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem g, vertexDescriptor src, ExecutionInfo& info, bool *finished){
 	std::vector<std::vector<vertexDescriptor>> paths;
 	std::set<vertexDescriptor> closed;
 	paths.push_back(std::vector<vertexDescriptor>()={src});
 	std::vector <Frontier> frontier_v;
 	bool _finished=false;
 	std::vector <Frontier> priorityQueue={Frontier(src, std::vector<vertexDescriptor>())};
-
+	// costMap.init(g);
 	int no_out=0;
 	std::vector <vertexDescriptor> add;
 	std::vector<std::vector<vertexDescriptor>>::reverse_iterator path= paths.rbegin();

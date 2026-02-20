@@ -4,6 +4,7 @@
 #include "task.h"
 #include "graphTools.h"
 #include <algorithm>
+
 /** \file */
 
 /**
@@ -143,7 +144,7 @@ class Planner{
      * @param finished will return true if the planning process reaches the goal
      * @return std::vector<vertexDescriptor> 
      */
-    virtual std::vector<vertexDescriptor> plan(TransitionSystem& g, vertexDescriptor src, ExecutionInfo & info, bool *finished)=0;
+    virtual std::vector<vertexDescriptor> plan(TransitionSystem g, vertexDescriptor src, ExecutionInfo & info, bool *finished)=0;
 
 
 };
@@ -191,7 +192,6 @@ class HorizonStarPlanner:public Planner{
     std::vector <vertexDescriptor> best_path(const std::vector<std::vector<vertexDescriptor>>& paths, vertexDescriptor goal,  vertexDescriptor cv,  bool change, const TransitionSystem& g);
 
 
-
     /**
      * @brief Adds frontier to priority queue
      * 
@@ -202,10 +202,22 @@ class HorizonStarPlanner:public Planner{
      */
     void addToPriorityQueue(const Frontier &f, std::vector<Frontier>& queue, TransitionSystem &g,const  std::set<vertexDescriptor>&closed, vertexDescriptor goal=TransitionSystem::null_vertex());
 
+    // struct CostMap{
+    //     std::map<vertexDescriptor, float> map;
 
+    //     void init(TransitionSystem & g){
+    //         auto vs=boost::vertices(g);
+    //         for (auto vi=vs.first; vi!=vs.first; vi++){
+    //             if (g[*vi].visited()){
+    //                 map.emplace(std::make_pair(*vi,g[*vi].phi));
+    //             }
+    //         }
+    //     }
+    // }costMap;
+    
 public:
 
-    std::vector<vertexDescriptor> plan(TransitionSystem& g, vertexDescriptor src, ExecutionInfo & info, bool * finished=NULL)override;
+    std::vector<vertexDescriptor> plan(TransitionSystem g, vertexDescriptor src, ExecutionInfo & info, bool * finished=NULL)override;
 
 };
 
@@ -215,7 +227,7 @@ public:
  */
 class NoPlanner:public Planner{
 
-    std::vector<vertexDescriptor> plan(TransitionSystem& g, vertexDescriptor src, ExecutionInfo & info, bool * finished=NULL)override{
+    std::vector<vertexDescriptor> plan(TransitionSystem g, vertexDescriptor src, ExecutionInfo & info, bool * finished=NULL)override{
         return std::vector<vertexDescriptor>();
     }
 
