@@ -13,7 +13,7 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	b2Transform adjustGoal=b2Mul(pov_GoalStart,transitionSystem[task_start].start);
 	Mul(adjustGoal, controlGoal_adjusted);
 	if (edge.first.m_source!=v0){
-		edge= gt::add_edgev0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
+		edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
 	}
 	if (!boost::edge(edge.first.m_source, edge.first.m_target, transitionSystem).second){
 		return false;
