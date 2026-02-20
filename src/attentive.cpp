@@ -7,8 +7,8 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	bool been = matchType==StateMatcher::ABSTRACT || matchType==StateMatcher::_TRUE;
 	Task controlGoal_adjusted= controlGoal;
 	//position of task start with respect to goal disturbance (pov)
-//	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
-	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
+	//shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
+	shift_start= b2MulT( transitionSystem[task_start].start,sk_first_start);
 	Mul(shift_start, controlGoal_adjusted);
 	if (edge.first.m_source!=v0){
 		edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
