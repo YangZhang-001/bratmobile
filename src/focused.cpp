@@ -578,7 +578,7 @@ vertexDescriptor FocusedConfigurator::get_explore_start(TransitionSystem & g){
 		dummy_vertex(currentVertex);
 		currentTask.set_change(true);
 	}
-	if (!m_plan.empty() || !currentTask.is_over()||hasPlanFinished()){ //
+	if (!m_plan.empty() || !currentTask.is_over()){ //
 		return MOVING_VERTEX;
 	}
 	else{
