@@ -213,7 +213,7 @@ float Configurator::approximate_angle(float angle, Direction d, simResult::resul
 
 
 void Configurator::estimate_current_vertex(){
-	if(current_vertices.empty() ){
+	if(current_vertices.empty()){
 		currentVertex=MOVING_VERTEX;
 		return;
 	}

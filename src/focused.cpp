@@ -578,7 +578,7 @@ vertexDescriptor FocusedConfigurator::get_explore_start(TransitionSystem & g){
 		dummy_vertex(currentVertex);
 		currentTask.set_change(true);
 	}
-	if (!m_plan.empty() || !currentTask.is_over()){ //
+	if (!m_plan.empty() || !currentTask.is_over())||hasPlanFinished(){ //
 		return MOVING_VERTEX;
 	}
 	else{
@@ -590,13 +590,9 @@ void FocusedConfigurator::pre_explore(){
 	if (boost::out_degree(MOVING_VERTEX, transitionSystem)>0){
 		boost::remove_out_edge_if(MOVING_VERTEX, is_not_v(currentVertex), transitionSystem);
 	}	
-	//transitionSystem[MOVING_VERTEX].Di=currentTask.get_disturbance();
 	transitionSystem[MOVING_VERTEX].Di=transitionSystem[currentVertex].Di;
 	transitionSystem[MOVING_VERTEX].outcome=simResult::successful;
 	movingEdge=boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
-//  if (currentTask.get_change()){
-//  	transitionSystem[movingEdge].step=currentTask.getMotorStep();
-//  }
 }
 
 
