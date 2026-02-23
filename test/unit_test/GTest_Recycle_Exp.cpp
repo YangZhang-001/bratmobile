@@ -32,7 +32,7 @@ TEST_P(RecycleTest, DifferentObstacle){
     CLAdaptiveTracker newTracker;
     configurator->register_tracker(&newTracker);
     sprintf(info,"%0.3f-%0.3f.txt",std::get<0>(GetParam()), std::get<1>(GetParam()));
-    Logger logger("ABC");
+    Logger logger("DifferentObstacleTest");
     configurator->register_logger(&logger);
     Task goal;
     b2Transform shift=b2Transform_zero;
