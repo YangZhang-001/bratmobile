@@ -28,11 +28,12 @@ INSTANTIATE_TEST_CASE_P(Ends, CLAdaptiveTrackerTest, testing::Values(0.5, 0.05))
 class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<std::tuple<float,float>>{};
 
 TEST_P(RecycleTest, DifferentObstacle){
-    char info[20];
+    char info[20], dump[50];
     CLAdaptiveTracker newTracker;
     configurator->register_tracker(&newTracker);
     sprintf(info,"%0.3f-%0.3f.txt",std::get<0>(GetParam()), std::get<1>(GetParam()));
-    Logger logger("DifferentObstacleTest");
+    sprintf(dump,"/recycle%0.3f-%0.3f",std::get<0>(GetParam()), std::get<1>(GetParam()));
+    Logger logger("DifferentObstacleTest/", "/tmp", dump);
     configurator->register_logger(&logger);
     Task goal;
     b2Transform shift=b2Transform_zero;
