@@ -32,7 +32,8 @@ TEST_P(RecycleTest, DifferentObstacle){
     CLAdaptiveTracker newTracker;
     configurator->register_tracker(&newTracker);
     sprintf(info,"%0.3f-%0.3f.txt",std::get<0>(GetParam()), std::get<1>(GetParam()));
-    Logger logger("DifferentObTests", "\tmp", "recycle");
+    const char* test_deets=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(test_deets);
     configurator->register_logger(&logger);
     Task goal;
     b2Transform shift=b2Transform_zero;
