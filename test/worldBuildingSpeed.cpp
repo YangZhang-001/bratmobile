@@ -1,5 +1,7 @@
 #include "attentive.h"
 
+const bool DEBUG=true;
+
 int main(int argc, char **argv) {
   std::ifstream file("cds_test.dat");
   CoordinateContainer data;
@@ -17,7 +19,7 @@ int main(int argc, char **argv) {
     //make vector of worldbuilders
     std::vector <WorldBuilder*> builders={new WorldBuilder(), new WorldPointBuilder(), new EverythingBuilder(), new EveryOtherFeatureBuilder(), new EveryOtherPointBuilder(), new LaserFocus()};
     std::vector <std::string> names={"WorldBuilder", "WorldPointBuilder", "EverythingBuilder", "EveryOtherFeatureBuilder", "EveryOtherPointBuilder", "LaserFocus"};
-    int ct=0;
+    int ct=0, it=1;
     for (WorldBuilder *wb: builders){
         auto start = std::chrono::high_resolution_clock::now();
         wb->set_world_objects(wb->getFeatures(data, b2Transform_zero, WorldBuilder::PARTITION));
@@ -25,6 +27,7 @@ int main(int argc, char **argv) {
         Logger logger("WorldBuilderSpeedTest", ".", fileName.c_str(), false);
         auto end = std::chrono::high_resolution_clock::now();
         float buildTime=std::chrono::duration<float, std::milli>(end-start).count()/1000;
+        wb->add_iteration(it);
         for (float remaining=1/HZ; remaining<=10.f; remaining+=1/HZ){
             Task t;
             b2World world(GRAVITY);
@@ -42,6 +45,7 @@ int main(int argc, char **argv) {
         }
     std::cout<<"Tested "<<names[ct]<<std::endl;
     ct++;
+    it++;
     }
     //cleanup
     for (WorldBuilder *wb: builders){

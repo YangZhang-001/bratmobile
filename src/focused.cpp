@@ -625,8 +625,6 @@ void FocusedConfigurator::explore_plan(b2World&world){
 
 
 
-
-
 std::pair<State, Edge> FocusedConfigurator::simulation_setup(b2World& w, Task & t, vertexDescriptor v0, b2Transform shift, b2Transform &start, std::vector<Direction>v0_options){
 	start=b2Mul(shift, transitionSystem[v0].endPose);
 	Disturbance Di=getDisturbance(transitionSystem, v0, w, v0_options[0], start);
