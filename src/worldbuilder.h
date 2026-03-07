@@ -146,6 +146,18 @@ class WorldBuilder{
 
     void setSimulationStep(float f){simulationStep=f;}
 
+    void object_dump(){
+        char name[50];
+        sprintf(name, "/tmp/objectdump%04i.txt", iteration);
+        FILE *f=fopen(name, "w")
+        for (auto & bf: world_objects){
+            for (auto v: bf.vertices()){
+                fprintf(f, "%.3f\t%.3f\n", v.x, v.y);
+            }
+        }
+        fclose(f);
+    }
+
 
 };
 
