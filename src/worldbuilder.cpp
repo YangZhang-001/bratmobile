@@ -334,6 +334,15 @@ void EverythingBuilder::buildWorld(b2World & w, b2Transform start, Direction d, 
     for (const BodyFeatures & bf: world_objects){
         makeBody(w, bf);
     }
+    if (DEBUG){
+    FILE *file;
+    sprintf(bodyFile, "/tmp/bodies%03i.txt",iteration);
+    file = fopen(bodyFile, "a+");
+    for (b2Body * b = w.GetBodyList(); b!=NULL; b= b->GetNext()){
+        fprintf(file, "%f\t%f\n", b->GetPosition().x, b->GetPosition().y);
+    }
+    fclose(file);
+    }
 }
 
 std::vector <BodyFeatures> EveryOtherFeatureBuilder::getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering){
