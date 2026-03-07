@@ -1,5 +1,16 @@
 #include "worldbuilder.h"
 
+void WorldBuilder::object_dump(){
+    char name[50];
+    sprintf(name, "/tmp/objectdump%04i.txt", iteration);
+    FILE *f=fopen(name, "w");
+    for (auto & bf: world_objects){
+        for (auto v: bf.vertices()){
+            fprintf(f, "%.3f\t%.3f\n", v.x, v.y);
+        }
+    }
+    fclose(f);
+}
 
 std::pair<Pointf, Pointf> WorldBuilder::bounds(Direction d, b2Transform start, float boxLength, float halfWindowWidth, std::vector <Pointf> *_bounds){
     std::pair <Pointf, Pointf>result;
