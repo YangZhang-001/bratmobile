@@ -3,24 +3,33 @@
 Window::Window()
 {
 	vLayout = new QVBoxLayout();
+
+	h1Layout = new QHBoxLayout();
 	imageL = new QLabel;
 	imageR = new QLabel;
-	imageCombined = new QLabel;
-	h1Layout = new QHBoxLayout();
 	h1Layout->addWidget(imageL);
 	h1Layout->addWidget(imageR);
 	vLayout->addLayout(h1Layout);
+
 	h2Layout = new QHBoxLayout();
 	imageCombined = new QLabel;
 	h2Layout->addWidget(imageCombined);
+	imageDisparity = new QLabel;
+	h2Layout->addWidget(imageDisparity);
+	vLayout->addLayout(h2Layout);
+
+	h3Layout = new QHBoxLayout();
 	calibratePushbutton = new QPushButton("Calibrate");
 	connect(calibratePushbutton, &QPushButton::clicked, [this]()
 			{ triggerCalibration(); });
-	h2Layout->addWidget(calibratePushbutton);
+	h3Layout->addWidget(calibratePushbutton);
 	calInfo = new QLabel;
-	h2Layout->addWidget(calInfo);
-	vLayout->addLayout(h2Layout);
+	h3Layout->addWidget(calInfo);
+	vLayout->addLayout(h3Layout);
+
 	setLayout(vLayout);
+
+	stereo.registerCallback([&](cv::Mat d){currentD = d; refreshDisparity = true;});
 }
 
 void Window::updateImageL(const cv::Mat &leftInput)
@@ -35,7 +44,7 @@ void Window::updateImageL(const cv::Mat &leftInput)
 		leftImages4Cal.push_back(currentL);
 	}
 	check4Cal();
-	blendLR();
+	blendLRandDisplayD();
 }
 
 void Window::updateImageR(const cv::Mat &rightInput)
@@ -50,10 +59,10 @@ void Window::updateImageR(const cv::Mat &rightInput)
 		rightImages4Cal.push_back(currentR);
 	}
 	check4Cal();
-	blendLR();
+	blendLRandDisplayD();
 }
 
-void Window::blendLR()
+void Window::blendLRandDisplayD()
 {
 	if (currentL.empty())
 		return;
@@ -66,6 +75,19 @@ void Window::blendLR()
 	const QImage frame(blended.data, blended.cols, blended.rows, blended.step,
 					   QImage::Format_Grayscale8);
 	imageCombined->setPixmap(QPixmap::fromImage(frame.scaledToWidth(displaywidth)));
+
+	// trigger async calc
+	stereo.calcDepthMapAsync(currentL,currentR);
+
+	// however we can put that here in the callback as QT won't like it so we basically
+	// "poll" it.
+	if (!refreshDisparity) return;
+	cv::Mat disp8;
+	cv::normalize(currentD, disp8, 0, 255, cv::NORM_MINMAX, CV_8U);
+	const QImage dispImage(disp8.data, disp8.cols, disp8.rows, disp8.step,
+					   QImage::Format_Grayscale8);
+	imageDisparity->setPixmap(QPixmap::fromImage(dispImage.scaledToWidth(displaywidth)));
+	refreshDisparity = false;
 }
 
 void Window::triggerCalibration()

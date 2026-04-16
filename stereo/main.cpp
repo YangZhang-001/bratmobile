@@ -1,6 +1,7 @@
 #include "window.h"
 #include <QApplication>
 #include <opencv2/opencv.hpp>
+#include <libcamera/libcamera/camera_manager.h>
 
 // Main program
 int main(int argc, char *argv[])

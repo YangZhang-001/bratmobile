@@ -146,32 +146,66 @@ int Stereo::loadCal(const std::string calPath)
     return 0;
 }
 
-void Stereo::calcMaps() {
+void Stereo::calcMaps()
+{
     cv::initUndistortRectifyMap(K1, D1, R1, P1, imageSize, CV_16SC2, map1L, map2L);
     cv::initUndistortRectifyMap(K2, D2, R2, P2, imageSize, CV_16SC2, map1R, map2R);
 }
 
-cv::Mat Stereo::rectifyLeft(cv::Mat& left) {
+cv::Mat Stereo::rectifyLeft(const cv::Mat &left)
+{
+    if (map1L.empty() || map2L.empty())
+        return left;
     cv::Mat rectLeft;
     cv::remap(left, rectLeft, map1L, map2L, cv::INTER_LINEAR);
     return rectLeft;
 }
 
-cv::Mat Stereo::rectifyRight(cv::Mat& right) {
+cv::Mat Stereo::rectifyRight(const cv::Mat &right)
+{
+    if (map1R.empty() || map2R.empty())
+        return right;
     cv::Mat rectRight;
     cv::remap(right, rectRight, map1R, map2R, cv::INTER_LINEAR);
     return rectRight;
 }
 
-cv::Mat Stereo::calcDepthMap(cv::Mat& left, cv::Mat& right) {
+cv::Mat Stereo::calcDepthMapSync(const cv::Mat &left, const cv::Mat &right)
+{
+ //   fprintf(stderr,"Disp calc start.\n");
     cv::Mat rectLeft = rectifyLeft(left);
-    cv::Mat rectRight = rectifyRight(left);
+    cv::Mat rectRight = rectifyRight(right);
 
     stereoMatcher->setP1(8 * rectLeft.channels() * 5 * 5);
     stereoMatcher->setP2(32 * rectLeft.channels() * 5 * 5);
 
-    cv::Mat disparity, disp8;
+    cv::Mat disparity;
     stereoMatcher->compute(rectLeft, rectRight, disparity);
-
+//    fprintf(stderr,"Disp calc finished.\n");
     return disparity;
+}
+
+void Stereo::calcDepthMapAsync(const cv::Mat &left, const cv::Mat &right)
+{
+    if (isCalculatingDisparity)
+        return;
+    if (disparityCalcThread.joinable())
+    {
+        disparityCalcThread.join();
+    }
+    disparityCalcThread = std::thread([&]()
+                                        {     
+                                        isCalculatingDisparity = true;
+                                        const cv::Mat d = calcDepthMapSync(left, right); 
+                                        onDisparity(d);     
+                                        isCalculatingDisparity = false; 
+                                        });
+}
+
+Stereo::~Stereo()
+{
+    if (disparityCalcThread.joinable())
+    {
+        disparityCalcThread.join();
+    }
 }

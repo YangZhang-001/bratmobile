@@ -18,16 +18,25 @@ class Window : public QWidget
 
 public:
     Window();
+    ~Window() {
+        if (calThread.joinable())
+	    {
+		calThread.join();
+		return;
+        }
+    }
     void updateImageL(const cv::Mat &mat);
     void updateImageR(const cv::Mat &mat);
 
 private:
     QHBoxLayout  *h1Layout;
     QHBoxLayout  *h2Layout;
+    QHBoxLayout  *h3Layout;
     QVBoxLayout  *vLayout;
     QLabel       *imageL;
     QLabel       *imageR;
     QLabel       *imageCombined;
+    QLabel       *imageDisparity;
 
     QPushButton  *calibratePushbutton;
     QLabel       *calInfo;
@@ -40,6 +49,8 @@ private:
 
     cv::Mat currentL;
     cv::Mat currentR;
+    cv::Mat currentD;
+    bool refreshDisparity = false;
 
     Stereo stereo;
 
@@ -50,7 +61,7 @@ private:
     void check4Cal();
 
     // blends the current L and R images and displays it
-    void blendLR();
+    void blendLRandDisplayD();
 
     std::thread calThread;
 
