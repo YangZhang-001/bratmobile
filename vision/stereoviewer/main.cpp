@@ -14,25 +14,25 @@ int main(int argc, char *argv[])
 	Window window;
 	window.show();
 
-	Libcam2OpenCV camera1;
-	camera1.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
-							 { window.updateImage1(mat); });
+	Libcam2OpenCV cameraL;
+	cameraL.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
+							 { window.updateImageL(mat); });
 
-	Libcam2OpenCV camera2;
-	camera2.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
-							 { window.updateImage2(mat); });
+	Libcam2OpenCV cameraR;
+	cameraR.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
+							 { window.updateImageR(mat); });
 
 	Libcam2OpenCVSettings settings;
 	settings.cameraIndex = 0;
-	camera1.start(cm,settings);
+	cameraL.start(cm,settings);
 	settings.cameraIndex = 1;
-	camera2.start(cm,settings);
+	cameraR.start(cm,settings);
 
 	// execute the application
 	const int r = app.exec();
 
-	camera1.stop();
-	camera2.stop();
+	cameraL.stop();
+	cameraR.stop();
 	cm.stop();
 	return r;
 }

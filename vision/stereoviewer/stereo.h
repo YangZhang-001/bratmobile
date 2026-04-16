@@ -22,4 +22,7 @@ struct Stereo
 
     std::vector<std::vector<cv::Point2f>> imgPointsLeft;
     std::vector<std::vector<cv::Point2f>> imgPointsRight;
+
+    bool hasValidCalibration = false;
+    bool isCalibrating = false;
 };

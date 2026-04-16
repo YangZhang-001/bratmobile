@@ -7,6 +7,14 @@
 int Stereo::calibration(const std::vector<cv::Mat> leftImages,
                         const std::vector<cv::Mat> rightImages)
 {
+    if (isCalibrating)
+    {
+        fprintf(stderr, "calibration is called while another cal thread is running.\n");
+        return -1;
+    }
+
+    isCalibrating = true;
+
     cv::Size boardSize(9, 6);
     float squareSize = 0.025f;
 
@@ -15,7 +23,7 @@ int Stereo::calibration(const std::vector<cv::Mat> leftImages,
     imgPointsLeft.clear();
     imgPointsRight.clear();
 
-    // Prepare object points
+    fprintf(stderr, "Prepare object points\n");
     std::vector<cv::Point3f> obj;
     for (int i = 0; i < boardSize.height; i++)
     {
@@ -27,17 +35,13 @@ int Stereo::calibration(const std::vector<cv::Mat> leftImages,
 
     cv::Size imageSize;
 
-    // Detect corners
+    int nCorners = 0;
+
+    fprintf(stderr, "Detect corners.\n");
     for (size_t i = 0; i < leftImages.size(); i++)
     {
         cv::Mat left = leftImages[i];
         cv::Mat right = rightImages[i];
-
-        if (left.empty() || right.empty())
-        {
-            std::cout << "Error loading images\n";
-            return -1;
-        }
 
         imageSize = left.size();
 
@@ -59,10 +63,19 @@ int Stereo::calibration(const std::vector<cv::Mat> leftImages,
             objectPoints.push_back(obj);
 
             std::cout << "Corners detected for pair " << i << "\n";
+            nCorners++;
         }
     }
 
-    // Stereo calibration
+    if (0 == nCorners)
+    {
+        fprintf(stderr, "No corners detected!\n");
+        isCalibrating = false;
+        hasValidCalibration = false;
+        return -1;
+    }
+
+    fprintf(stderr, "Stereo calibration.\n");
     cv::stereoCalibrate(
         objectPoints,
         imgPointsLeft,
@@ -72,8 +85,7 @@ int Stereo::calibration(const std::vector<cv::Mat> leftImages,
         imageSize,
         R, T, E, F);
 
-    std::cerr << "Calibration done\n";
-
+    fprintf(stderr, "Stereo rectify.\n");
     cv::stereoRectify(
         K1, D1,
         K2, D2,
@@ -82,7 +94,12 @@ int Stereo::calibration(const std::vector<cv::Mat> leftImages,
         R1, R2,
         P1, P2,
         Q);
-        return 0;
+
+    isCalibrating = false;
+    hasValidCalibration = true;
+
+    fprintf(stderr, "Stereo calibration finished.\n");
+    return 0;
 }
 
 int Stereo::saveCal(const std::string calPath)
