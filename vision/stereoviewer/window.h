@@ -1,8 +1,6 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <qwt/qwt_thermo.h>
-
 #include <QBoxLayout>
 #include <QPushButton>
 #include <QLabel>
@@ -24,6 +22,8 @@ private:
     QHBoxLayout  *hLayout;
     QLabel       *image1;
     QLabel       *image2;
+
+    static constexpr int displaywidth = 640;
  };
 
 #endif // WINDOW_H

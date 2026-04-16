@@ -45,14 +45,15 @@ include_directories(
 )
 include(GNUInstallDirs)
 
-add_executable(qtviewer
+add_executable(stereoviewer
   window.cpp
+  stereo.cpp
   main.cpp
 )
 
-target_link_directories(qtviewer PUBLIC ..)
-target_link_libraries(qtviewer PkgConfig::LIBCAMERA)
-target_link_libraries(qtviewer Qt6::Widgets)
-target_link_libraries(qtviewer ${OpenCV_LIBS})
-target_link_libraries(qtviewer cam2opencv)
-target_link_libraries(qtviewer ${TURBOJPEG_LINK_LIBRARIES})
+target_link_directories(stereoviewer PUBLIC ..)
+target_link_libraries(stereoviewer PkgConfig::LIBCAMERA)
+target_link_libraries(stereoviewer Qt6::Widgets)
+target_link_libraries(stereoviewer ${OpenCV_LIBS})
+target_link_libraries(stereoviewer cam2opencv)
+target_link_libraries(stereoviewer ${TURBOJPEG_LINK_LIBRARIES})

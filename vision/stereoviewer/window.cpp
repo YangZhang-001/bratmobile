@@ -13,13 +13,13 @@ Window::Window()
 void Window::updateImage1(const cv::Mat &mat) {
 	const QImage frame(mat.data, mat.cols, mat.rows, mat.step,
 			   QImage::Format_BGR888);
-	image1->setPixmap(QPixmap::fromImage(frame));
+	image1->setPixmap(QPixmap::fromImage(frame.scaledToWidth(displaywidth)));
 	update();
 }
 
 void Window::updateImage2(const cv::Mat &mat) {
 	const QImage frame(mat.data, mat.cols, mat.rows, mat.step,
 			   QImage::Format_BGR888);
-	image2->setPixmap(QPixmap::fromImage(frame));
+	image2->setPixmap(QPixmap::fromImage(frame.scaledToWidth(displaywidth)));
 	update();
 }
