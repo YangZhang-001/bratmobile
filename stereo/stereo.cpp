@@ -33,8 +33,6 @@ int Stereo::calibration(const std::vector<cv::Mat> leftImages,
         }
     }
 
-    cv::Size imageSize;
-
     int nCorners = 0;
 
     fprintf(stderr, "Detect corners.\n");
@@ -99,6 +97,9 @@ int Stereo::calibration(const std::vector<cv::Mat> leftImages,
     hasValidCalibration = true;
 
     fprintf(stderr, "Stereo calibration finished.\n");
+
+    calcMaps();
+
     return 0;
 }
 
@@ -117,6 +118,7 @@ int Stereo::saveCal(const std::string calPath)
     fs << "P1" << P1;
     fs << "P2" << P2;
     fs << "Q" << Q;
+    fs << "imageSize" << imageSize;
 
     fs.release();
     return 0;
@@ -136,7 +138,40 @@ int Stereo::loadCal(const std::string calPath)
     fs["P1"] >> P1;
     fs["P2"] >> P2;
     fs["Q"] >> Q;
+    fs["imageSize"] >> imageSize;
 
     fs.release();
+
+    calcMaps();
     return 0;
+}
+
+void Stereo::calcMaps() {
+    cv::initUndistortRectifyMap(K1, D1, R1, P1, imageSize, CV_16SC2, map1L, map2L);
+    cv::initUndistortRectifyMap(K2, D2, R2, P2, imageSize, CV_16SC2, map1R, map2R);
+}
+
+cv::Mat Stereo::rectifyLeft(cv::Mat& left) {
+    cv::Mat rectLeft;
+    cv::remap(left, rectLeft, map1L, map2L, cv::INTER_LINEAR);
+    return rectLeft;
+}
+
+cv::Mat Stereo::rectifyRight(cv::Mat& right) {
+    cv::Mat rectRight;
+    cv::remap(right, rectRight, map1R, map2R, cv::INTER_LINEAR);
+    return rectRight;
+}
+
+cv::Mat Stereo::calcDepthMap(cv::Mat& left, cv::Mat& right) {
+    cv::Mat rectLeft = rectifyLeft(left);
+    cv::Mat rectRight = rectifyRight(left);
+
+    stereoMatcher->setP1(8 * rectLeft.channels() * 5 * 5);
+    stereoMatcher->setP2(32 * rectLeft.channels() * 5 * 5);
+
+    cv::Mat disparity, disp8;
+    stereoMatcher->compute(rectLeft, rectRight, disparity);
+
+    return disparity;
 }

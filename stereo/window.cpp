@@ -23,31 +23,31 @@ Window::Window()
 	setLayout(vLayout);
 }
 
-void Window::updateImageL(const cv::Mat &mat)
+void Window::updateImageL(const cv::Mat &leftInput)
 {
-	currentL = mat;
-	const QImage frame(mat.data, mat.cols, mat.rows, mat.step,
-					   QImage::Format_BGR888);
+	currentL = Stereo::convertColour2Grey(leftInput);
+	const QImage frame(currentL.data, currentL.cols, currentL.rows, currentL.step,
+					   QImage::Format_Grayscale8);
 	imageL->setPixmap(QPixmap::fromImage(frame.scaledToWidth(displaywidth)));
 	update();
 	if (leftImages4Cal.size() < numFrames4Calibration)
 	{
-		leftImages4Cal.push_back(mat);
+		leftImages4Cal.push_back(currentL);
 	}
 	check4Cal();
 	blendLR();
 }
 
-void Window::updateImageR(const cv::Mat &mat)
+void Window::updateImageR(const cv::Mat &rightInput)
 {
-	currentR = mat;
-	const QImage frame(mat.data, mat.cols, mat.rows, mat.step,
-					   QImage::Format_BGR888);
+	currentR = Stereo::convertColour2Grey(rightInput);
+	const QImage frame(currentR.data, currentR.cols, currentR.rows, currentR.step,
+					   QImage::Format_Grayscale8);
 	imageR->setPixmap(QPixmap::fromImage(frame.scaledToWidth(displaywidth)));
 	update();
 	if (rightImages4Cal.size() < numFrames4Calibration)
 	{
-		rightImages4Cal.push_back(mat);
+		rightImages4Cal.push_back(currentR);
 	}
 	check4Cal();
 	blendLR();
@@ -64,7 +64,7 @@ void Window::blendLR()
 	cv::Mat blended;
 	cv::addWeighted(currentL, 0.5, currentR, 0.5, 0.0, blended);
 	const QImage frame(blended.data, blended.cols, blended.rows, blended.step,
-					   QImage::Format_BGR888);
+					   QImage::Format_Grayscale8);
 	imageCombined->setPixmap(QPixmap::fromImage(frame.scaledToWidth(displaywidth)));
 }
 

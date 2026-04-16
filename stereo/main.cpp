@@ -1,6 +1,6 @@
 #include "window.h"
-
 #include <QApplication>
+#include <opencv2/opencv.hpp>
 
 // Main program
 int main(int argc, char *argv[])
@@ -16,17 +16,19 @@ int main(int argc, char *argv[])
 
 	Libcam2OpenCV cameraL;
 	cameraL.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
-							 { window.updateImageL(mat); });
+							 { 
+								window.updateImageL(mat); });
 
 	Libcam2OpenCV cameraR;
 	cameraR.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
-							 { window.updateImageR(mat); });
+							 { 
+								window.updateImageR(mat); });
 
 	Libcam2OpenCVSettings settings;
 	settings.cameraIndex = 0;
-	cameraL.start(cm,settings);
+	cameraL.start(cm, settings);
 	settings.cameraIndex = 1;
-	cameraR.start(cm,settings);
+	cameraR.start(cm, settings);
 
 	// execute the application
 	const int r = app.exec();
