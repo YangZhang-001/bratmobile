@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
 
 	Libcam2OpenCVSettings settings;
 	settings.cameraIndex = 0;
+	settings.width = 1920;
+	settings.height = 1080;
 	cameraL.start(cm, settings);
 
 	// execute the application

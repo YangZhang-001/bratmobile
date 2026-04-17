@@ -19,8 +19,8 @@ class Window : public QWidget
 public:
     Window();
     void updateImageL(const cv::Mat &mat);
-    void onQRdetected(cv::Point2f p) {
-        qrCoord = p;
+    void onQRdetected(std::vector<cv::Point2f> pts) {
+        qrCoord = targetDet.calcCentre(pts);
     }
 
 private:
