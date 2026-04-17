@@ -60,7 +60,7 @@ bool Measurement::operator==(Measurement & m2){
 float Measurement::getStandardError(Measurement m2, float max){ 
     float result =0;
     if (m2.isValid()& this->isValid()){
-        float num = get()-m2.get();
+        float num = get_signed()-m2.get_signed();
         if (num ==0){
             return result;
         }

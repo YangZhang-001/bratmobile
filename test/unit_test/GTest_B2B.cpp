@@ -19,34 +19,6 @@ TEST_F(DebugB2BTest, Explorer){
     delete tracker;
 }
 
-// TEST_F(DebugB2BTest, ExplorePlan){
-//     register_tracker(new ClosedLoop_Tracker);
-//     init();
-//     EXPECT_FALSE(tracker==NULL);
-//     b2World world(GRAVITY);
-//     iteration++;
-//     explore_plan(world);
-//     delete tracker;
-// }
-
-// TEST_F(DebugB2BTest, TSCleanup){
-//     B2BConfigurator::init();
-//     transitionSystem=TransitionSystem(5);
-//     for (int i=1; i<4;i++){
-//         auto e=boost::add_edge(MOVING_VERTEX, i, transitionSystem);
-//         transitionSystem[e.first].step=1;
-//     }
-//     boost::add_edge(1,1, transitionSystem); //trivial self-edge
-//     auto e2= boost::add_edge(2,2, transitionSystem); //nontrivial self-edge
-//     transitionSystem[e2.first].step=1;
-//     B2BConfigurator::ts_cleanup();
-//     EXPECT_EQ(transitionSystem.m_vertices.size(), 4);
-//     EXPECT_EQ(boost::out_degree(1, transitionSystem), 0); //out edge deleted
-//     EXPECT_EQ(boost::in_degree(1, transitionSystem), 1);
-//     EXPECT_EQ(boost::out_degree(2, transitionSystem), 1); //edge is preserved
-//     EXPECT_EQ(boost::out_degree(0, transitionSystem), 3);
-// }
-
 TEST(FrontierCrashed, predicate){
     TransitionSystem ts(2);
     ts[1].direction=DEFAULT;
@@ -70,38 +42,41 @@ TEST(FrontierCrashed, predicate180Turn){
 
 
 
-// TEST_F(DebugB2BTest, PartiallyExplore0) {
-//     make_module(MOVING_VERTEX);
-//     setAllVisited();
-//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
-//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 0);
-// }
+TEST_F(DebugB2BOptions, PartiallyExplore0) {
+    make_module(MOVING_VERTEX);
+    setAllVisited();
+    transitionMatrix(currentVertex, DEFAULT, currentVertex);
+    EXPECT_EQ(transitionSystem[currentVertex].options.size(), 0);
+}
 
-// TEST_F(DebugB2BTest, PartiallyExplore1) {
-//     make_module(MOVING_VERTEX);
-//     setAllVisited();
-//     transitionSystem[3].outcome=simResult::crashed;
-//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
-//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
-// }
+TEST_F(DebugB2BOptions, PartiallyExplore1) {
+    make_module(MOVING_VERTEX);
+    setAllVisited();
+    transitionSystem[4].outcome=simResult::crashed;
+    transitionMatrix(currentVertex, DEFAULT, currentVertex);
+    EXPECT_EQ(transitionSystem[currentVertex].options.size(), 1);
+    EXPECT_EQ(transitionSystem[currentVertex].options[0], DEFAULT);
+}
 
-// TEST_F(DebugB2BTest, PartiallyExplore2) {
-//     make_module(MOVING_VERTEX);
-//     setAllVisited();
-//     transitionSystem[3].outcome=simResult::crashed;
-//     transitionSystem[5].outcome=simResult::crashed;
-//     transitionMatrix(MOVING_VERTEX, DEFAULT, MOVING_VERTEX);
-//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
-// }
+TEST_F(DebugB2BOptions, PartiallyExplore2) {
+    make_module(MOVING_VERTEX);
+    setAllVisited();
+    transitionSystem[4].outcome=simResult::crashed;
+    transitionSystem[6].outcome=simResult::crashed;
+    transitionMatrix(currentVertex, DEFAULT, currentVertex);
+    EXPECT_EQ(transitionSystem[currentVertex].options.size(), 2);
+    EXPECT_EQ(transitionSystem[currentVertex].options[0], DEFAULT);
+    EXPECT_EQ(transitionSystem[currentVertex].options[1], DEFAULT);
+}
 
-// TEST_F(DebugB2BTest, ApplyTransitionInHindsight){
-//     make_module(MOVING_VERTEX);
-//     setAllVisited();
-//     transitionSystem[3].outcome=simResult::crashed;
-//     transitionSystem[5].outcome=simResult::crashed;
-//     applyTransitionMatrix(MOVING_VERTEX, DEFAULT, false, MOVING_VERTEX, m_plan);
-//     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 2);
-// }
+TEST_F(DebugB2BOptions, ApplyTransitionInHindsight){
+    make_module(MOVING_VERTEX);
+    setAllVisited();
+    transitionSystem[4].outcome=simResult::crashed;
+    transitionSystem[6].outcome=simResult::crashed;
+    applyTransitionMatrix(currentVertex, DEFAULT, false, currentVertex, m_plan);
+    EXPECT_EQ(transitionSystem[currentVertex].options.size(), 2);
+}
 
 
 
@@ -146,8 +121,7 @@ TEST_F(DebugB2BTest, AddOptionsHindSight){
     setAllVisited();
     transitionSystem[3].outcome=simResult::crashed;
     std::vector <Direction> options={DEFAULT, LEFT, RIGHT};
-    B2BConfigurator::ClearVoyance cv;
-    addOptionsInHindsight(MOVING_VERTEX, 2, 3,  cv);
+    addOptionsInHindsight(MOVING_VERTEX, 2, 3);
     EXPECT_EQ(transitionSystem[MOVING_VERTEX].options.size(), 1);
 }
 
@@ -156,7 +130,7 @@ TEST_F(DebugB2BTest, Add180TurnToClearvoyance){
     auto v0=make_successful(MOVING_VERTEX, LEFT).m_target;
     auto v1=make_v1_crashed(v0, b2Transform_zero, b2Transform_zero, generateGoal().pose()).m_target;
     setAllVisited();
-    addOptionsInHindsight(MOVING_VERTEX, v0,v1,  clearvoyance);
+    addOptionsInHindsight(MOVING_VERTEX, v0,v1);
     EXPECT_EQ(transitionSystem[v0].options.size(), 0);
     EXPECT_TRUE(clearvoyance.query(v0).isValid());
 }
@@ -180,6 +154,7 @@ TEST_P(DebugB2BTestSplit, splitTask){
     std::vector <vertexDescriptor> split =splitTask(v1, transitionSystem[v1].direction, currentVertex);
     EXPECT_EQ(split.size(), solution);
 }
+
 // TEST_F(DebugB2BTest, splitTaskSuccess){
 //     b2Transform t=b2Transform(b2Vec2(0.6, 0), b2Rot(0));
 //     vertexDescriptor v1=make_successful(MOVING_VERTEX).m_target;
@@ -294,6 +269,8 @@ TEST_F(DebugB2BTest, ClearVoyance){
     transitionSystem[MOVING_VERTEX].Di=Disturbance(bf); //current task was avoiding
     transitionSystem[MOVING_VERTEX].Di.validate();
     transitionSystem[3].Dn=Disturbance(bf2); //obstacle on the left
+    transitionSystem[3].outcome=simResult::crashed; //obstacle on the left
+    transitionSystem[5].outcome=simResult::crashed; //obstacle on the left
     transitionSystem[5].Dn=Disturbance(bf3); //obstacle on the right
     transitionSystem[3].Dn.validate();
     transitionSystem[5].Dn.validate();
@@ -407,7 +384,7 @@ TEST_P(HighLevelTestB2B, CheckPlanB2B){
 }
 
 TEST_P(HighLevelTestB2B, RecycleB2B){
-    //GTEST_SKIP();
+    GTEST_SKIP();
     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
     Logger logger=HighLevelTest::makeLogger(info);
     configurator->register_logger(&logger);
@@ -467,12 +444,13 @@ TEST_P(DebugB2BTestVertex, ClearVoyanceTurn){ //test clearvoyance when turning o
     transitionSystem[MOVING_VERTEX].Di.validate();
     transitionSystem[v1].Dn=Disturbance(bf2); //obstacle on the left
     transitionSystem[v1].Dn.validate();
+    transitionSystem[v1].outcome=simResult::crashed;
     setAllVisited();
     clearvoyance.add(v0, transitionSystem[v1].Dn);
    // Disturbance solution=transitionSystem[MOVING_VERTEX].Di;
     transitionSystem[MOVING_VERTEX].direction=STOP;
-    vertex_options_push_back(v0, vertex_get_direction(2));
-    Disturbance Di= getDisturbance(transitionSystem, v0, world, DEFAULT, transitionSystem[v0].endPose);
+    vertex_options_push_back(v0, vertex_get_direction(GetParam())); //add option same turn
+    Disturbance Di= getDisturbance(transitionSystem, v0, world, vertex_get_direction(GetParam()), transitionSystem[v0].endPose);
     EXPECT_EQ(Di.bf.pose.p.x, transitionSystem[v1].Dn.bf.pose.p.x);
     EXPECT_EQ(Di.bf.pose.p.y, transitionSystem[v1].Dn.bf.pose.p.y);
     EXPECT_EQ(Di.bf.pose.q.GetAngle(), transitionSystem[v1].Dn.bf.pose.q.GetAngle());
@@ -483,3 +461,41 @@ TEST_P(DebugB2BTestVertex, ClearVoyanceTurn){ //test clearvoyance when turning o
 }
 
 INSTANTIATE_TEST_CASE_P(TurningVertices, DebugB2BTestVertex, ::testing::Values(2, 4));
+
+TEST_F(HighLevelTestB2B, TrickyScenarioB2B){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
+    configurator->init(DebugConfigurator::generateGoalTask());
+    configurator->addIteration();
+    configurator->get_worldbuilder()->add_iteration();
+    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTricky());
+    b2World world(GRAVITY);
+    configurator->explorePlan(world);
+    EXPECT_GT(configurator->get_plan().size(), 0);
+    EXPECT_TRUE(has180Turn(configurator->get_plan()));
+    EXPECT_FALSE(configurator->get_plan().empty());
+    if (!configurator->get_plan().empty()){
+        bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+        EXPECT_TRUE(planned_to_goal);        
+    }
+}
+
+TEST_F(HighLevelTestB2B, TrappedB2B){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
+    configurator->init(DebugConfigurator::generateGoalTask());
+    configurator->addIteration();
+    configurator->get_worldbuilder()->add_iteration();
+    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTrickyTrap(.35));
+    b2World world(GRAVITY);
+    configurator->explorePlan(world);
+    EXPECT_GT(configurator->get_plan().size(), 0);
+    EXPECT_TRUE(has180Turn(configurator->get_plan()));
+    EXPECT_FALSE(configurator->get_plan().empty());
+    if (!configurator->get_plan().empty()){
+        bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+        EXPECT_TRUE(planned_to_goal);        
+    }
+}

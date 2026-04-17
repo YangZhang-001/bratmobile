@@ -13,7 +13,8 @@ void Configurator::InvMul(const b2Transform& B, Task& task){
 
 void Configurator::Mul(const b2Transform&B , Task &task){
 	task.start=b2Mul(B, task.start);
-	task.disturbance.bf.pose=b2Mul(B, task.disturbance.pose());
+	task.disturbance.bf.pose=b2Mul(B, task.disturbance.bf.pose);
+
 }
 
 void Configurator::init(Task _task){
@@ -177,7 +178,7 @@ float Configurator::approximate_angle(float angle, Direction d, simResult::resul
 
 
 void Configurator::estimate_current_vertex(){
-	if(current_vertices.empty() ){
+	if(current_vertices.empty()){
 		currentVertex=MOVING_VERTEX;
 		return;
 	}

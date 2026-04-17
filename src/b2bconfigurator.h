@@ -36,6 +36,7 @@ protected:
 
     /**
      * @brief Closes a vertex but the maximum out edges number for a default state to have is 5 instead of 3
+     * Also adds vertex v to the root of clearvoyance, helpful for adding options in hindsight
      * 
      * @param closed 
      * @param v 
@@ -44,16 +45,20 @@ protected:
 
     //std::vector<Direction> partiallyExplorativeOptions(std::pair<bool, edgeDescriptor> ve) override;
 
-    /**
-     * @brief Doesn't split the task, just returns the vertex of the task at hand; if Task fails or 
-     * it's currently executing, it returns the source vertex for the task aswell
-     * 
-     * @param v vertex of the task
-     * @param d direction of the task that are allowed to split (not used)
-     * @param src source of the task
-     * @return std::vector <vertexDescriptor> 
-     */
-    std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex()) override;
+    // /**
+    //  * @brief Doesn't split the task, just returns the vertex of the task at hand; if Task fails or 
+    //  * it's currently executing, it returns the source vertex for the task aswell
+    //  * 
+    //  * @param v vertex of the task
+    //  * @param d direction of the task that are allowed to split (not used)
+    //  * @param src source of the task
+    //  * @return std::vector <vertexDescriptor> 
+    //  */
+    // std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d, vertexDescriptor src=TransitionSystem::null_vertex()) override;
+
+
+    virtual float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex());
+
 
     /**
      * @brief Same as AttentiveConfigurator::backtrack, but also adds vertex to priority queue if the vertex is in the clearvoyance
@@ -156,6 +161,12 @@ virtual std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSys
 
 virtual simResult simulate(Task t, b2World & world, vertexDescriptor v0); 
 
+/**
+ * @brief same as Focused but adds additional default tasks in hindsight
+ */
+void applyTransitionMatrix(vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov);
+
+
 // /**
 //  * @brief Overload of makeRobot, uses a disturbance which may be the goal of the hindsight disturbance to make the sensor
 //  * 
@@ -173,7 +184,7 @@ class ClearVoyance{
     public:
     struct DisturbanceLookahead {
         std::vector<Disturbance> disturbances;
-        vertexDescriptor source;
+        vertexDescriptor source; //vertex from which additional DEFAULT Tasks will be explored 
 
         DisturbanceLookahead()=default;
 
@@ -203,8 +214,16 @@ class ClearVoyance{
     std::vector <DisturbanceLookahead> getLookaheads() const {
         return lookaheads;
     }
-    protected:
 
+    void setRoot(vertexDescriptor v){
+        root=v;
+    }
+
+    vertexDescriptor getRoot(){
+        return root;
+    }
+    protected:
+    vertexDescriptor root=TransitionSystem::null_vertex(); //root of modular expansion
     std::vector<DisturbanceLookahead> lookaheads;
 }clearvoyance;
 
@@ -216,7 +235,7 @@ class ClearVoyance{
  * @param v1 frontier state (has to be DEFAULT and crashed if option is to be added)
  * @param clearvoyance 
  */
-void addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1, ClearVoyance & clearvoyance);
+void addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1);
 
 
 };
