@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
 								window.updateImageR(mat); });
 
 	Libcam2OpenCVSettings settings;
+	settings.width=1920;
+	settings.height=1080;
 	settings.cameraIndex = 0;
 	cameraL.start(cm, settings);
 	settings.cameraIndex = 1;

@@ -193,13 +193,15 @@ void Stereo::calcDepthMapAsync(const cv::Mat &left, const cv::Mat &right)
     {
         disparityCalcThread.join();
     }
-    disparityCalcThread = std::thread([&]()
+    disparityCalcThread = std::thread([&](const cv::Mat &leftThr, const cv::Mat &rightThr)
                                         {     
                                         isCalculatingDisparity = true;
-                                        const cv::Mat d = calcDepthMapSync(left, right);
-                                        onDisparity(d);     
+                                        const cv::Mat d = calcDepthMapSync(leftThr, rightThr);
+					if (onDisparity) {
+					    onDisparity(d);
+					}
                                         isCalculatingDisparity = false; 
-                                        });
+                                        },left,right);
 }
 
 Stereo::~Stereo()

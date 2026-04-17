@@ -37,8 +37,7 @@ void Window::updateImageL(const cv::Mat &leftInput)
 	currentL = Stereo::convertColour2Grey(leftInput);
 	const QImage frame(currentL.data, currentL.cols, currentL.rows, currentL.step,
 					   QImage::Format_Grayscale8);
-	imageL->setPixmap(QPixmap::fromImage(frame.scaledToWidth(displaywidth)));
-	update();
+	imageL->setPixmap(QPixmap::fromImage(frame));
 	if (leftImages4Cal.size() < numFrames4Calibration)
 	{
 		leftImages4Cal.push_back(currentL);
@@ -52,8 +51,7 @@ void Window::updateImageR(const cv::Mat &rightInput)
 	currentR = Stereo::convertColour2Grey(rightInput);
 	const QImage frame(currentR.data, currentR.cols, currentR.rows, currentR.step,
 					   QImage::Format_Grayscale8);
-	imageR->setPixmap(QPixmap::fromImage(frame.scaledToWidth(displaywidth)));
-	update();
+	imageR->setPixmap(QPixmap::fromImage(frame));
 	if (rightImages4Cal.size() < numFrames4Calibration)
 	{
 		rightImages4Cal.push_back(currentR);
