@@ -8,14 +8,15 @@ class TargetDet
 {
 public:
     TargetDet();
+    ~TargetDet();
     std::shared_ptr<cv::QRCodeDetector> qrDetector;
 
     // callback for the coordinate
     using OnDetected = std::function<void(cv::Point2f)>;
 
-    std::vector<cv::Point2f> detectSync(const cv::Mat &img);
+    std::vector<cv::Point2f> detectSync(const cv::Mat img);
 
-    void detectAsync(const cv::Mat &img);
+    void detectAsync(const cv::Mat img);
 
     void registerDetCallback(OnDetected cb) {
         onDetected = cb;
