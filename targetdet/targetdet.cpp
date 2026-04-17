@@ -1,12 +1,9 @@
 #include "targetdet.h"
 
-TargetDet::TargetDet()
-{
-}
-
 TargetDet::~TargetDet()
 {
-    if (detThread.joinable()) {
+    if (detThread.joinable())
+    {
         detThread.join();
     }
 }
@@ -19,7 +16,12 @@ std::vector<cv::Point2f> TargetDet::detectSync(const cv::Mat img)
         fprintf(stderr, "TargetDetSync: image empty\n");
         return points;
     }
-    qrDetector->detect(img.clone(), points);
+    bool r = qrDetector.detect(img, points);
+    if (!r)
+    {
+        points.clear();
+        return points;
+    }
     return points;
 }
 
@@ -36,11 +38,23 @@ void TargetDet::detectAsync(const cv::Mat img)
     {
         detThread.join();
     }
-    detThread = std::thread([&](cv::Mat imgThr)
+    detThread = std::thread([&](const cv::Mat imgThr)
                             {
                             isDetecting=true;
-                            auto pt = detectSync(imgThr);
-                            if (pt.size()>0)
-                                onDetected(pt[0]);
-                            isDetecting=false; },img);
+                            auto pts = detectSync(imgThr);
+                            if ((pts.size()>0) && (onDetected))
+                                onDetected(pts);
+                            isDetecting=false; }, img);
+}
+
+cv::Point2f TargetDet::calcCentre(std::vector<cv::Point2f> points) const
+{
+
+    cv::Point2f centre{0, 0};
+    for (const auto &p : points)
+    {
+        centre += p;
+    }
+    centre *= (1.0f / points.size());
+    return centre;
 }
