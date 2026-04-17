@@ -84,8 +84,12 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 			disturbance.invalidate();
 		}
 		if (bool ended=checkEnded(robot->GetTransform(), direction, false, robot).ended; ended || out){ //out
+			//b2Transform expectNextStep=b2Mul(robot->GetTransform(), action.getTransform(1/HZ));
 			bool keep_going_out_x=(fabs(robot->GetTransform().p.x+instVelocity.x) >fabs(robot->GetTransform().p.x))&&out_x;
 			bool keep_going_out_y=(fabs(robot->GetTransform().p.y+instVelocity.y) >fabs(robot->GetTransform().p.y))&&out_y;
+			// bool keep_going_out_x=(fabs(expectNextStep.p.x) >fabs(robot->GetTransform().p.x))&&out_x;
+			// bool keep_going_out_y=(fabs(expectNextStep.p.y) >fabs(robot->GetTransform().p.y))&&out_y;
+
 			if (ended){
 				break;
 			}
@@ -270,12 +274,16 @@ EndedResult Task::checkEnded(b2Transform robotTransform, Direction dir,bool rela
 			r.ended = true;
 		}
 		else if (getAffIndex()==int(InnateAffordances::PURSUE)){
-			a = Angle(disturbance.getAngle(robotTransform));
+			a = Angle(atan2(from_Di().p.y, from_Di().p.x));
+			//a = Angle(disturbance.getAngle(robotTransform));
+			// b2Transform robotFromDi=b2MulT(robotTransform, disturbance.pose());
+			// float _a=atan2(robotFromDi.p.y, robotFromDi.p.x);
+			// a = Angle(_a);
 			//local level if D
 			if (robot!=NULL){
 				std::vector <b2Vec2> local_vertices=GetLocalPoints(disturbance.vertices(), robot);
 				b2Vec2 pos_local=*(std::min_element(local_vertices.begin(), local_vertices.end(), CompareX()));
-				r.ended=fabs(round(pos_local.x*100)/100)<=((endCriteria.distance.get()-0.001)/2); //-0.001 //was /2
+				r.ended=fabs(round(pos_local.x*100)/100)<=((endCriteria.distance.get()-0.001)/2) && start.p.x>0; //hard coded, start x assumes that if the robot has travelled backwards theeres an obstacle to avoid and doesn't make sense to get back in line with goal
 			}
 			else if (relax){
 				Distance _d(RELAXED_DIST_ERROR_TOLERANCE);

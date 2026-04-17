@@ -79,7 +79,6 @@ struct State{
 	Direction direction=DEFAULT;
 
 
-	
 	State()=default;
 
 	State(const b2Transform &_start): start(_start){}
@@ -132,6 +131,14 @@ struct State{
 	bool isGoingStraight()const{
 		return direction==DEFAULT || direction==STOP;
 	}
+
+
+
+	// float gamma(){
+	// 	Angle a(atan2(end_from_Dn().p.y, end_from_Dn().p.y));
+	// 	Distance d(end_from_Dn().p.Length());
+	// 	return getStanda
+	// }
 
 };
 
@@ -231,8 +238,6 @@ typedef boost::graph_traits<TransitionSystem>::edge_descriptor edgeDescriptor;
 typedef boost::graph_traits<TransitionSystem>::edge_iterator edgeIterator;
 
 //SPECIAL VERTICES
-const vertexDescriptor DUMMY=1;
-
 /**
  * @brief vertex reprensenting instantaneous position of the robot relative to itself
  * Trivial: in the graph it's always located at the origin with an orientation of 0 degrees, and
@@ -240,6 +245,14 @@ const vertexDescriptor DUMMY=1;
  * 
  */
 const vertexDescriptor MOVING_VERTEX=0; 
+
+/**
+* @brief first vertex added to transition system, by default represents the instantaneous state 
+* of the robot when it first starts planning, used so that any branches expanded out of it share the same root
+* once the moving vertex attaches to another state
+*/
+const vertexDescriptor DUMMY=1;
+
 
 /**
  * @brief Used as a predicate, gives info on whether a vertex is the current vertex
@@ -453,7 +466,7 @@ typedef boost::filtered_graph<TransitionSystem, ViableEdge, Connected> FilteredT
 class StateMatcher{
 	public:
 		//@brief {_FALSE=0, D_NEW=2, DN_POSE=3, _TRUE=1, ANY=4, D_INIT=5, ABSTRACT=6, DI_POSE=7, DN_SHAPE=8, DI_SHAPE=9, POSE=10};
-		enum MATCH_TYPE {_FALSE, D_NEW, DN_POSE, _TRUE, ANY, D_INIT, ABSTRACT, DI_POSE, DN_SHAPE, DI_SHAPE, POSE};
+		enum MATCH_TYPE {_FALSE, D_NEW, DN_POSE, _TRUE, ANY, D_INIT, ABSTRACT, DI_POSE, DN_SHAPE, DI_SHAPE, POSE, D_SHAPES};
 
 		float mu=0.001;
 	    StateMatcher()=default;
@@ -503,6 +516,10 @@ class StateMatcher{
 				return Di_shape && Di_pose();
 			}
 
+			bool D_shapes(){
+				return Dn_shape && Di_shape;
+			}
+
 			StateMatch() =default;
 
 			StateMatch(const StateDifference& sd,const Threshold& threshold, float coefficient=1){
@@ -534,7 +551,10 @@ class StateMatcher{
 				}
 				else if (Di_exact()){
 					return D_INIT;
-				}				
+				}	
+				else if (D_shapes()){
+					return D_SHAPES;
+				}			
 				else if (Dn_pose()){
 					return DN_POSE;
 				}

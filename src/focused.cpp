@@ -22,6 +22,10 @@ void FocusedConfigurator::resetPhi(){
 	for (auto vi=vs.first; vi!=vs.second; vi++){
 		transitionSystem[*vi].resetVisited();
 		transitionSystem[*vi].options.clear();
+		transitionSystem[*vi].filled=false;
+	}
+	if (transitionSystem.m_vertices.size()>1){
+		transitionSystem[DUMMY].outcome=simResult::successful;
 	}
 }
 
@@ -139,7 +143,7 @@ std::vector<vertexDescriptor> FocusedConfigurator::explorer(vertexDescriptor v, 
 				}
 				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
 				g[v1].phi=evaluationFunction(er, v1, plan_prov);
-				propagateD(v1, v0, &closed); //if v0 is a dummy vertex it propagates the disturbance
+				propagateD(v1, v0); //if v0 is a dummy vertex it propagates the disturbance
 				v0_exp=v0;					
 				options=g[v0_exp].options;
 				v0=v1;
@@ -150,7 +154,7 @@ std::vector<vertexDescriptor> FocusedConfigurator::explorer(vertexDescriptor v, 
 	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
 	bestNext=priorityQueue[0];
 	reassign_direction(bestNext, direction);
-}while(g[bestNext].options.size()>0 && !er.ended);
+}while(g[bestNext].options.size()>0 && !er.ended); //
 return plan_prov;
 }
 
@@ -227,7 +231,9 @@ void FocusedConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q
 				}
 			}
 		}
-		correctQueue(split, module_src, startRecycle, plan_prov.size());
+		if (correctQueue(split, module_src, startRecycle, plan_prov.size())){
+			propagateD(split.back(), startRecycle);
+		}
 		for (int i=split.size()-1; i>=0; i--){ //
 			vertexDescriptor split_v=split[i], src=TransitionSystem::null_vertex();
 			if (i<1){
@@ -261,7 +267,7 @@ bool FocusedConfigurator::canReassignOutcome(vertexDescriptor v){
 	return v==currentVertex;
 }
 
-bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set <vertexDescriptor>*closed,StateMatcher::MATCH_TYPE match){
+bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0){
 	if (transitionSystem[v1].outcome == simResult::successful || !boost::edge(v0, v1, transitionSystem).second){
 		return false; //can't propagate
 	}
@@ -269,7 +275,7 @@ bool FocusedConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, s
 		return false;
 	}
 	bool same_Di=transitionSystem[v0].Di==transitionSystem[v1].Di;
-	if ((canPropagate(v0)&& same_Di && transitionSystem[v0].Dn.getAffIndex()==NONE)){
+	if (((canPropagate(v0)&& same_Di && (transitionSystem[v0].Dn.getAffIndex()==NONE|| !transitionSystem[v0].filled)))){
  			transitionSystem[v0].Dn = transitionSystem[v1].Dn; //was target
  	}
 	bool canReassign=canReassignOutcome(v0);
@@ -306,6 +312,19 @@ void FocusedConfigurator::removeExploredTransitions( vertexDescriptor v){
     if (preventTransition(v)){
 		transitionSystem[v].options.clear();
 	}
+	removePointlessTransitions(v);
+}
+
+void FocusedConfigurator::removePointlessTransitions(vertexDescriptor v){
+	if(round(transitionSystem[v].endPose.p.Length()*100)/100>=BOX2DRANGE){ 
+		if (transitionSystem[v].isTurning()){
+			return;
+		}
+		if (auto def_it=std::find(transitionSystem[v].options.begin(), transitionSystem[v].options.end(), DEFAULT); def_it!=transitionSystem[v].options.end()){
+			transitionSystem[v].options.erase(def_it);
+		}
+	}
+
 }
 
 void FocusedConfigurator::transitionMatrix(vertexDescriptor v, Direction d, vertexDescriptor src){
@@ -415,6 +434,9 @@ void FocusedConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<ver
 	if (transitionSystem[v].outcome==simResult::crashed){
 		return;
 	}
+	// if (transitionSystem[v].options.empty()){
+	// 	return;
+	// }
 	auto found=closed.find(v); 
 	if(found==closed.end()){ //if not in closed
 		for (auto i =queue.begin(); i!=queue.end(); i++){
@@ -428,6 +450,17 @@ void FocusedConfigurator::addToPriorityQueue(vertexDescriptor v, std::vector<ver
 		}
 		queue.push_back(v);		
 	}
+}
+
+vertexDescriptor FocusedConfigurator::getNextSrc(const std::vector<vertexDescriptor>& q){
+	int index=0;
+	vertexDescriptor bestNext=q[index];
+	while (transitionSystem[bestNext].travel_transform()==b2Transform_zero && index<q.size()-1 && 
+			(bestNext!=MOVING_VERTEX&& bestNext!=currentVertex)){
+			index++;
+		bestNext=q[index];
+	}
+	return bestNext;
 }
 
 
@@ -537,6 +570,7 @@ void FocusedConfigurator::shift_states(TransitionSystem & g, const std::vector<v
 		math::MulT(shift_start, g[v]);
 	}
 	
+	
 }
 
 vertexDescriptor FocusedConfigurator::get_explore_start(TransitionSystem & g){
@@ -556,13 +590,9 @@ void FocusedConfigurator::pre_explore(){
 	if (boost::out_degree(MOVING_VERTEX, transitionSystem)>0){
 		boost::remove_out_edge_if(MOVING_VERTEX, is_not_v(currentVertex), transitionSystem);
 	}	
-	//transitionSystem[MOVING_VERTEX].Di=currentTask.get_disturbance();
 	transitionSystem[MOVING_VERTEX].Di=transitionSystem[currentVertex].Di;
 	transitionSystem[MOVING_VERTEX].outcome=simResult::successful;
 	movingEdge=boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;
-//  if (currentTask.get_change()){
-//  	transitionSystem[movingEdge].step=currentTask.getMotorStep();
-//  }
 }
 
 
@@ -588,8 +618,6 @@ void FocusedConfigurator::explore_plan(b2World&world){
 	//enforce_edge();
     printPlan(&m_plan);
 }
-
-
 
 
 
@@ -691,6 +719,30 @@ std::vector <vertexDescriptor> FocusedConfigurator::task_vertices( vertexDescrip
 	return result;
 }
 
+bool FocusedConfigurator::isPreviousState(const State & s, const State & candidate){
+	StateMatcher::MATCH_TYPE match=matcher->isMatch(s, candidate, tracker->get_threshold(s));
+	if (!(matcher->match_equal(match, StateMatcher::DI_SHAPE) &&
+		matcher->match_equal(match, StateMatcher::DN_SHAPE))){
+			return false;
+	}
+	if (!(s.Di.getAffIndex()==candidate.Di.getAffIndex()&& //probably not needed but just in case
+		s.Dn.getAffIndex()==candidate.Dn.getAffIndex())){
+			return false;
+	}
+	bool Dn=false, Di=false;//likey to be previous state in the same task based on Dn/Di
+	//assumes that Dn is an obstacle!
+	if (s.end_from_Dn().p.Length()<=candidate.end_from_Dn().p.Length()){
+		Dn=true;
+	}
+	if (s.Di.getAffIndex()==PURSUE){
+		Di=s.end_from_Di().p.Length()<=candidate.end_from_Di().p.Length();
+	}
+	else{
+		Di=s.end_from_Di().p.Length()>=candidate.end_from_Di().p.Length();
+	}
+	return Di && Dn;
+}
+
 std::vector <edgeDescriptor> FocusedConfigurator::inEdges(vertexDescriptor v, Direction d){
 	std::vector <edgeDescriptor> result;
 	auto es = boost::in_edges(v, transitionSystem);
@@ -752,12 +804,16 @@ std::pair<edgeDescriptor, bool> FocusedConfigurator::addEdgeRetrospectively(vert
 	return first_edge;
 }
 
-void FocusedConfigurator::correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize){
+bool FocusedConfigurator::correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize){
 	if (planProvSize==0 || startRecycle==v){
-		return;
+		return false;
 	}
-	auto v_it=check_vector_for(queue, v);
+	auto v_it=std::find(queue.begin(), queue.end(), v);
+	if (v_it==queue.end()){
+		return false;
+	}
 	*v_it=startRecycle;
+	return true;
 
 }
 

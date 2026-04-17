@@ -29,6 +29,13 @@ class FCTest:public FocusedConfigurator, public testing::TestWithParam<bool> {
 }
 };
 
+TEST_F(FCTest, getNextSrc){
+    transitionSystem=TransitionSystem(4);
+    std::vector<vertexDescriptor> q={2, 3};
+    transitionSystem[3].options={DEFAULT};
+    EXPECT_EQ(getNextSrc(q), 3);
+}
+
 /**
  * @brief Test if robot is able to self-correct motion! (it doesnt)
  */
@@ -124,24 +131,30 @@ TEST_F(FCTest, ReplanDefault) {
     EXPECT_TRUE(currentTask.is_over());
 }
 
-TEST_F(FCTest, DontReplan) {
-    data2fp.emplace(Pointf(0.3, 0)); //make point corresponding to obstacle
-    Spawner(); //should create obstacle avoidance plan
-    transitionSystem[2].outcome=simResult::safeForNow;
-    m_plan={2};
-    int plan_size=1, simTasks=1;
-    EXPECT_EQ(m_plan.size(), plan_size);
-    change_task();
-    estimate_current_vertex();
-    b2Transform dp=currentTask.getAction().getTransform(LIDAR_SAMPLING_RATE);
-    //math::MulT(dp, transitionSystem);
-    update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(), dp));
-    Spawner(); //should replan
-    plan_size--;
-    EXPECT_EQ(m_plan.size(), plan_size);
-    EXPECT_EQ(simulatedTasks, simTasks); 
-    EXPECT_FALSE(currentTask.is_over());
+TEST_F(FCTest, isPreviousState){
+    register_tracker(new CLAdaptiveTracker());
+    State s1, s2, s3;
+    s1.endPose.p.x=-1;
+    s1.Di.setPosition(b2Vec2(0,0));
+    s1.Di.set_affordance(PURSUE);
+    s1.Di.validate();
+    s1.Dn.setPosition(b2Vec2(-0.7,0));
+    s1.Dn.bf.halfWidth=0.045;
+    s1.Dn.set_affordance(AVOID);
+    s2.Di=s1.Di;
+    s3.Di=s1.Di;
+    s2.Di.setPosition(b2Vec2(1,0));
+    s2.Dn.setPosition(b2Vec2(0.35,0));
+    s2.Dn.bf.halfWidth=0.08;
+    s2.Dn.set_affordance(AVOID);
+    s2.endPose.p.x=.2;
+    EXPECT_FALSE(isPreviousState(s2, s3));
+    EXPECT_TRUE(isPreviousState(s2, s1));
+
+
+
 }
+
 
 TEST_F(FCTest, TrickyScenario){
     init(DebugConfigurator::generateGoalTask());    
@@ -157,8 +170,9 @@ TEST_F(FCTest, TrickyScenario){
     }
     bool planned_to_goal=controlGoal.checkEnded(transitionSystem[*(m_plan.end()-1)].endPose).ended;
     EXPECT_TRUE(planned_to_goal);
-
 }
+
+
 
 // TEST_F(FCTest, ReplanNoisy) {
 //     init(DebugConfigurator::generateGoalTask());    

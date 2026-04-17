@@ -7,11 +7,12 @@ bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v
 	bool been = matchType==StateMatcher::ABSTRACT || matchType==StateMatcher::_TRUE;
 	Task controlGoal_adjusted= controlGoal;
 	//position of task start with respect to goal disturbance (pov)
-//	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
-	shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
-	Mul(shift_start, controlGoal_adjusted);
+	//shift_start= b2MulT(b2MulT(sk_first_start, controlGoal.getStart()), transitionSystem[task_start].start);
+	shift_start= b2MulT( sk_first_start,transitionSystem[task_start].start);
+	b2Transform pov_goalStart=b2MulT(controlGoal.getStart(), sk_first_start); //simulated state from pov of goal start
+	b2Transform adjustGoal=b2Mul(pov_goalStart,transitionSystem[task_start].start);
+	Mul(adjustGoal, controlGoal_adjusted);
 	if (edge.first.m_source!=v0){
-		boost::remove_edge(edge.first, transitionSystem);
 		edge= gt::add_edge(v0, task_start, transitionSystem, iteration, transitionSystem[edge.first.m_target].direction);
 	}
 	if (!boost::edge(edge.first.m_source, edge.first.m_target, transitionSystem).second){
@@ -178,8 +179,8 @@ bool DiscreteConfigurator::shouldPartiallyExplore(const std::vector<edgeDescript
 
 
 
-bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed, StateMatcher::MATCH_TYPE match){
-	while(FocusedConfigurator::propagateD(v1, v0, closed, match)){
+bool DiscreteConfigurator::propagateD(vertexDescriptor v1, vertexDescriptor v0){
+	while(FocusedConfigurator::propagateD(v1, v0)){
 		v1=v0;
 		auto ve= gt::visitedEdge(inEdges(v1, DEFAULT),transitionSystem, currentVertex);
 		auto dummyEdge=boost::edge(DUMMY, v1, transitionSystem);

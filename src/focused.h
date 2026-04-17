@@ -67,7 +67,7 @@ virtual std::vector <vertexDescriptor> splitTask(vertexDescriptor v, Direction d
  * 
  * @return whether a criteria to continue propagating is met
  */
-virtual bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE);
+virtual bool propagateD(vertexDescriptor v1, vertexDescriptor v0);
 
 //if in plan the vertex gets priority
 void planPriority(TransitionSystem&, vertexDescriptor); 
@@ -117,8 +117,10 @@ virtual std::vector<vertexDescriptor> explorer(vertexDescriptor v, TransitionSys
 
 /**
  * @brief Resets all vertices evaluation function phi to a default unitialised value of 10
+ * Also resets all vertices filled flag as zero (used at each exploration round)
  */
 void resetPhi();
+
 
 /**
  * @brief Adds state after discovering it in exploration
@@ -146,7 +148,7 @@ std::vector <Direction> getExploredDirections(vertexDescriptor v, const std::vec
 
 /**
  * Guard Psi: prevents transitions beyond current vertex if there is a plan in execution
- * @param v candidate vertex for expansion
+ * @param v candidate vertex for expansion. Essentially guard Psi
  */
 virtual bool preventTransition(vertexDescriptor v){
     return v==currentVertex && (!m_plan.empty()||!currentTask.is_over());
@@ -154,6 +156,10 @@ virtual bool preventTransition(vertexDescriptor v){
 
 /** * only keeps unexplored transitions out of vertex @param v*/
 virtual void removeExploredTransitions(vertexDescriptor v);
+
+/** * only keeps unexplored transitions out of vertex @param v*/
+void removePointlessTransitions(vertexDescriptor v);
+
 
 /**
 *From Neural Comp paper: combines edges K with guard Psi
@@ -184,6 +190,7 @@ void applyTransitionMatrix(vertexDescriptor v0, Direction d, bool ended, vertexD
  */
 void addToPriorityQueue(vertexDescriptor v, std::vector<vertexDescriptor>& queue, const std::set <vertexDescriptor>& closed);
 
+vertexDescriptor getNextSrc(const std::vector<vertexDescriptor>& q);
 
 //removes singleton vertices and self-edges
 void ts_cleanup();
@@ -292,6 +299,13 @@ std::pair<edgeDescriptor, bool> setup_match_edge(VertexMatch &match, vertexDescr
  */
 virtual std::vector <vertexDescriptor> task_vertices(vertexDescriptor v, std::pair<bool, edgeDescriptor>* ep=NULL);
 
+/**
+ * @brief more flexible way to estimate whether the previous state represents the previous task
+ * based on matching shape of disturbances and logic applied to distance from Di/Dn
+ * @param s the target state in the edge
+ * @param candidate source state (candidate to being previous state)
+ */
+bool isPreviousState(const State & s, const State & candidate);
 // /**
 //  * @brief Returns a visited edge if present, or if the current 
 //  * 
@@ -343,7 +357,7 @@ std::pair<edgeDescriptor, bool> addEdgeRetrospectively(vertexDescriptor v, verte
  * @param startRecycle another state found to precede the frontier
  * @param planProvSize size of the provisional plan: indicates if the recycling was successful or not
  */
-void correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize);
+bool correctQueue(std::vector<vertexDescriptor>& queue, vertexDescriptor v, vertexDescriptor startRecycle, int planProvSize);
 
 /**
  * @brief Adjusts the probability that a continuous state (edge target) will occur after taking a discrete state transition from the edge source
@@ -392,6 +406,7 @@ class EvaluationQueueManager{
 		lastAdded=v;
 	}
 };
+
 
 /**
  * @brief Pushes directions visited at this iteration (not using phi) to input vector
