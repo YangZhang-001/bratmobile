@@ -166,9 +166,6 @@ TEST_F(HighLevelTest, Trapped){
     configurator->init(DebugConfigurator::generateGoalTask());
     configurator->addIteration();
     configurator->get_worldbuilder()->add_iteration();
-<<<<<<< HEAD
-    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTrickyTrap(.35));
-=======
     configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTrickyTrap(.3));
     b2World world(GRAVITY);
     configurator->explorePlan(world);
@@ -208,7 +205,6 @@ TEST_F(HighLevelTestDiscrete, Trapped){
     configurator->addIteration();
     configurator->get_worldbuilder()->add_iteration();
     configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTrickyTrap(.3));
->>>>>>> b2b
     b2World world(GRAVITY);
     configurator->explorePlan(world);
     EXPECT_LE(configurator->get_plan().size(), 0);
