@@ -148,6 +148,11 @@ class WorldBuilder{
 
     void object_dump();
 
+    void bodies_dump(b2World & w);
+
+    int getIteration(){
+        return iteration;
+    }
 
 };
 

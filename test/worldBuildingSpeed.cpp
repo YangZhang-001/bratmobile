@@ -40,6 +40,13 @@ int main(int argc, char **argv) {
             end = std::chrono::high_resolution_clock::now();
             logger.log("%f\t%i\t%i\t%i\t%f\t%i\n", std::chrono::duration<float, std::milli>(end-start).count()/1000, wb->get_world_objects().size(), bodyCount, data.size(), buildTime, result.step);
             if (result.resultCode==simResult::crashed){
+                char name[50];
+                sprintf(name, "/tmp/crash%003i.txt", wb->getIteration());
+                FILE * f=fopen(name, "w");
+                for (auto &v: result.collision.vertices()){
+                    fprintf(f, "%.3f\t%.3f\n", v.x, v.y);
+                }
+                fclose(f);
                 //break; //no need to simulate till it crashes
             }
             world_cleanup(world);

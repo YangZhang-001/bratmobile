@@ -12,6 +12,18 @@ void WorldBuilder::object_dump(){
     fclose(f);
 }
 
+void WorldBuilder::bodies_dump(b2World & w){
+    if (DEBUG){
+    FILE *file;
+    sprintf(bodyFile, "/tmp/bodies%03i.txt",iteration);
+    file = fopen(bodyFile, "a+");
+    for (b2Body * b = w.GetBodyList(); b!=NULL; b= b->GetNext()){
+        fprintf(file, "%f\t%f\n", b->GetPosition().x, b->GetPosition().y);
+    }
+    fclose(file);
+    }
+}
+
 std::pair<Pointf, Pointf> WorldBuilder::bounds(Direction d, b2Transform start, float boxLength, float halfWindowWidth, std::vector <Pointf> *_bounds){
     std::pair <Pointf, Pointf>result;
     std::vector <Pointf> bds;
@@ -240,15 +252,7 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
         }
     }
     int _count=world.GetBodyCount();
-	if (DEBUG){
-	    FILE *file;
-        sprintf(bodyFile, "/tmp/bodies%03i.txt",iteration);
-        file = fopen(bodyFile, "a+");
-		for (b2Body * b = world.GetBodyList(); b!=NULL; b= b->GetNext()){
-			fprintf(file, "%f\t%f\n", b->GetPosition().x, b->GetPosition().y);
-		}
-		fclose(file);
-	}
+	bodies_dump(world);
 }
 
 bool WorldBuilder::checkDisturbance(Pointf p, bool& obStillThere, Task * curr, float range){
@@ -334,15 +338,8 @@ void EverythingBuilder::buildWorld(b2World & w, b2Transform start, Direction d, 
     for (const BodyFeatures & bf: world_objects){
         makeBody(w, bf);
     }
-    if (DEBUG){
-    FILE *file;
-    sprintf(bodyFile, "/tmp/bodies%03i.txt",iteration);
-    file = fopen(bodyFile, "a+");
-    for (b2Body * b = w.GetBodyList(); b!=NULL; b= b->GetNext()){
-        fprintf(file, "%f\t%f\n", b->GetPosition().x, b->GetPosition().y);
-    }
-    fclose(file);
-    }
+    bodies_dump(w);
+
 }
 
 std::vector <BodyFeatures> EveryOtherFeatureBuilder::getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering){
@@ -379,5 +376,6 @@ void LaserFocus::buildWorld(b2World & w, b2Transform start, Direction d, Disturb
     for (const BodyFeatures & bf: features){
         makeBody(w, bf);
     }
+    bodies_dump(w);
 }
 
