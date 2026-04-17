@@ -321,6 +321,10 @@ std::pair <bool, Direction> Configurator::getOppositeDirection(Direction d){
 	return result;
 }
 
+bool Configurator::isCurrentTask(const Task & t){
+	return t.direction==currentTask.direction && t.start==b2Transform_zero && t.disturbance.getAffIndex()==currentTask.getAffIndex();
+}
+
 void ReactiveConfigurator::explore_plan(b2World &world){
 	if (iteration<=1){
 		movingEdge = boost::add_edge(MOVING_VERTEX, currentVertex, transitionSystem).first;

@@ -27,7 +27,8 @@ protected:
 	std::thread * LIDAR_thread=NULL;
 	float simulationStep=2*std::max(ROBOT_HALFLENGTH, ROBOT_HALFWIDTH);
 	std::chrono::high_resolution_clock::time_point previousTimeScan;
-	GoalChanger * goal_changer=NULL;	
+	GoalChanger * goal_changer=NULL;
+	CalibrationCallback * calibrationCallback=NULL;	
 	std::vector<vertexDescriptor>m_plan, current_vertices;
 	Task controlGoal;
 	CoordinateContainer data2fp;
@@ -233,6 +234,10 @@ void register_goalChanger(GoalChanger * gc){
 	goal_changer=gc;
 }
 
+void registerCalibrationCallback(CalibrationCallback * cb){
+	calibrationCallback=cb;
+}
+
 /**
  * @brief Matrix multiply by transpose
  * 
@@ -309,6 +314,13 @@ Direction get_direction(const Task *const t){
 	}
 	return t->direction;	
 }
+
+/**
+ * @brief Does this Task correspond to the Task being executed?
+ * Checks 1) if directions match, 2) if initial Disturbance Di match in their affordance, 
+ * 3) if the Task starts at the origin of the Cartesian plane (current robot position)
+ */
+bool isCurrentTask(const Task & t);
 };
 
 /**

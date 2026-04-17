@@ -112,13 +112,23 @@ class MotorInterface {
 
 
 /**
-* Customizable class, for changing goals.
+* Callback for changing goal
 */
 struct GoalChanger{
 	/**
-	* Customizable, for changing goals.
-	* @param  control goal pointer
+	* Changes goal to Task @param t 
 	*/
 	virtual Task change_goal(const Task & t)=0;
+};
+
+/**
+ * Callback for calibrating stereo vision
+ */
+
+struct CalibrationCallback{
+	/**
+	 * @brief Takes as input disturbance @param d extracted from the Box2D simulation of the current Task
+	 */
+	virtual void simulationReady(const Disturbance & d)=0;
 };
 #endif
