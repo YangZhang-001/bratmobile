@@ -4,6 +4,7 @@ bool B2BConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDes
 	int MAX_OUT=5;
 	if (transitionSystem[v].isTurning()){MAX_OUT=2;}
 	std::vector<Direction> directions={UNDEFINED};
+	clearvoyance.setRoot(v);
 	if (getExploredDirections(v, directions).size()>=MAX_OUT){
 		closed.emplace(v);
 		return true;
@@ -31,25 +32,29 @@ bool B2BConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDes
 // return result;
 // }
 
-std::vector <vertexDescriptor> B2BConfigurator::splitTask(vertexDescriptor v, Direction d, vertexDescriptor src){
-    std::vector <vertexDescriptor> split={v};
-	auto first_edge=boost::edge(src, v, transitionSystem); //assumes exists
-	if (transitionSystem[v].isTurning()){ //d
-		if ((src==MOVING_VERTEX || src==DUMMY )&& transitionSystem[v].outcome==simResult::crashed){
-			split.emplace(split.begin(), src);
-		}
-    	return split;
-	}
-	if (transitionSystem[v].outcome != simResult::crashed){
-		return split;
-	}
-	auto ie=inEdges(src);
-	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
-	if (!transitionSystem[src].isTurning()&& !ie.empty()){ //! //&& sameIterationEdgeIt!=ie.end()
-		transitionSystem[src].outcome=simResult::safeForNow;
-		split.insert(split.begin(), src);
-	}
-	return split;
+// std::vector <vertexDescriptor> B2BConfigurator::splitTask(vertexDescriptor v, Direction d, vertexDescriptor src){
+//     std::vector <vertexDescriptor> split={v};
+// 	auto first_edge=boost::edge(src, v, transitionSystem); //assumes exists
+// 	if (transitionSystem[v].isTurning()){ //d
+// 		if ((src==MOVING_VERTEX || src==DUMMY )&& transitionSystem[v].outcome==simResult::crashed){
+// 			split.emplace(split.begin(), src);
+// 		}
+//     	return split;
+// 	}
+// 	if (transitionSystem[v].outcome != simResult::crashed){
+// 		return split;
+// 	}
+// 	auto ie=inEdges(src);
+// 	auto sameIterationEdgeIt=check_vector_for(ie, SameIteration(transitionSystem, iteration));
+// 	if (!transitionSystem[src].isTurning()&& !ie.empty()){ //! //&& sameIterationEdgeIt!=ie.end()
+// 		transitionSystem[src].outcome=simResult::safeForNow;
+// 		split.insert(split.begin(), src);
+// 	}
+// 	return split;
+// }
+
+float B2BConfigurator::customSimulationStep(vertexDescriptor v){
+	return BOX2DRANGE;
 }
 
 void B2BConfigurator::backtrack(std::vector <vertexDescriptor>& evaluation_q, std::vector <vertexDescriptor>&priority_q, std::set<vertexDescriptor>& closed, std::vector <vertexDescriptor>& plan_prov, vertexDescriptor module_src, vertexDescriptor startRecycle){
@@ -152,6 +157,12 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 					return Di;
 				}
 			}
+			if (std::pair <bool, edgeDescriptor> visitedDefault=gt::visitedEdge(gt::outEdges(g, v, DEFAULT), g, v); visitedDefault.first && (g[v].isTurning() && isTurning(dir))){
+				if (visitedDefault.first && g[visitedDefault.second.m_target].outcome==simResult::crashed){
+					return g[visitedDefault.second.m_target].Dn;
+				}
+			} //if the vertex has been visited in the default direction
+
 			//check if Di was eliminated
 			return controlGoal.get_disturbance();
 		} 
@@ -216,85 +227,9 @@ Disturbance B2BConfigurator::getDisturbance(TransitionSystem&g,vertexDescriptor 
 // }
 
 std::vector<vertexDescriptor> B2BConfigurator::explorer(vertexDescriptor v, TransitionSystem& g, b2World & w){
-	if (transitionSystem.m_vertices.size()==0){
-		throw "no dummy vertex!";
-	}
-	vertexDescriptor v1=v, v0=v, bestNext=v, v0_exp=v;
-	Direction direction=currentTask.get_direction();
-	std::vector <vertexDescriptor> priorityQueue = {v}, evaluationQueue, plan_prov=m_plan;
-	std::set <vertexDescriptor> closed;
-	Task t=currentTask;
-	b2Transform start= b2Transform_zero, shift=b2Transform_zero, shift_start=shift;
-	EndedResult er;
-	do{
-		v=bestNext;
-		vertexDescriptor startRecycle=v;
-		bool wasClosed =closeVertex(closed, v);
-		priorityQueue.erase(priorityQueue.begin());
-		er = controlGoal.checkEnded(g[v], t.get_direction());
-		applyTransitionMatrix(v, direction, er.ended, v, plan_prov);
-		EvaluationQueueManager eqm;
-		for (Direction d: g[v].options){ //add and evaluate all vertices
-			v0_exp=v;
-			std::vector <Direction> options=g[v0_exp].options;
-			while (!options.empty()){
-				options.erase(options.begin());
-				v0=v0_exp; //node being expanded
-				v1 =v0; //frontier
-				do {
-				std::pair<State, Edge> sk=simulation_setup(w, t, v0, shift, start, g[v0].options);
-				simResult sim=simulate(t, w, v0);
-				gt::fill(sim, &sk.first, &sk.second); //find simulation result
-				sk.second.it_observed=iteration;
-				er  = estimateCost(sk.first, g[v0].endPose, sk.first.direction,controlGoal);
-				StateDifference sd;
-				VertexMatch match=findMatch(sk.first, t.get_direction(), StateMatcher::MATCH_TYPE::ABSTRACT, &sd);		//, closest_match
-				std::pair <edgeDescriptor, bool> edge(edgeDescriptor(), false); //, new_edge(edgeDescriptor(TransitionSystem::null_vertex(), TransitionSystem::null_vertex(), NULL), false);
-				if (matcher->match_equal(match.first,StateMatcher::MATCH_TYPE::ABSTRACT)){
-					g[v0].options.erase(g[v0].options.begin());
-					edge=setup_match_edge(match, v0, v1, sk.second, t.get_direction(), false);
-					if (currentTask.is_over()){
-						std::vector <vertexDescriptor> task_vs= task_vertices(v1);
-						vertexDescriptor task_start= task_vs[0];
-						startRecycle=getRecyclingStart(v, v1, task_start);
-						if (plan_prov.empty()){
-							recycle_plan(startRecycle, v0, task_start, match.first, shift_start, sk.first.start, edge, plan_prov, t.get_direction());
-						}
-						if (m_plan.empty() && g[task_start].options.empty() && g[v].options.empty()){
-							if (startRecycle!=v){
-								task_vs.push_back(startRecycle);
-							}
-							shift_states(g, task_vs, shift_start);
-						}
-					}
-				}
-				else{
-					edge= add_vertex_now(v0, v1,sk.first.Di, sk.second); //addVertex
-					abandonPlan(plan_prov, v0, v1);
-					shift=b2Transform_zero;
-				}
-				if(edge.second){
-					gt::set(edge.first, sk, g, v1==currentVertex, iteration);
-					//adjustProbability(edge.first); //new_edge to allow to adjust prob if the sim state has been previously ecountered and split
-				}
-				applyTransitionMatrix(v1, t.get_direction(), er.ended, v0, plan_prov);
-				g[v1].phi=evaluationFunction(er, v1, plan_prov);
-				propagateD(v1, v0, &closed); //if v0 is a dummy vertex it propagates the disturbance
-				addOptionsInHindsight(v, v0, v1, clearvoyance); //if default move fails, adds another default option to avoid this disturbance
-				v0_exp=v0;
-				options=g[v0_exp].options;
-				v0=v1;
-				eqm.addToEvaluationQueue(evaluationQueue, v1, transitionSystem, v);
-			}while(t.get_direction() !=DEFAULT & int(g[v0].options.size())!=0);
-		}
-	}
-	backtrack(evaluationQueue, priorityQueue, closed, plan_prov, v, startRecycle);
-	bestNext=priorityQueue[0];
-	reassign_direction(bestNext, direction);
-//}while(g[bestNext].options.size()>0 && !er.ended);
-}while(!priorityQueue.empty() && !er.ended);
-clearvoyance.reset();
-return plan_prov;
+	std::vector<vertexDescriptor>plan_prov=FocusedConfigurator::explorer(v, g, w);
+	clearvoyance.reset();
+	return plan_prov;
 }
 
 simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ //State& state, State src,
@@ -318,6 +253,14 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 	return result;
 }
 
+void B2BConfigurator::applyTransitionMatrix(vertexDescriptor v0, Direction d, bool ended, vertexDescriptor src, std::vector<vertexDescriptor>& plan_prov){
+	applyTransitionMatrix(v0, d, ended, src, plan_prov);
+	if (v0!=src){
+		addOptionsInHindsight(v0, clearvoyance.getRoot(), src);
+	}
+}
+
+
 // Robot B2BConfigurator::makeRobot( b2World & world, const Task& task, const Disturbance & focus){
 // 	Robot robot=Configurator::makeRobot(world, task);
 // 	b2AABB sensor_aabb=worldBuilder->makeRobotSensor(robot.body(), task);
@@ -326,7 +269,7 @@ simResult B2BConfigurator::simulate(Task  t, b2World & w, vertexDescriptor v){ /
 // }
 
 
-void B2BConfigurator::addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1, ClearVoyance & clearvoyance){
+void B2BConfigurator::addOptionsInHindsight(vertexDescriptor v, vertexDescriptor v0, vertexDescriptor v1){
 	if (!transitionSystem[v1].isTurning() && transitionSystem[v0].isTurning() && transitionSystem[v1].outcome==simResult::crashed){ //
 		transitionSystem[v].options.push_back(DEFAULT);
 		clearvoyance.add(v, transitionSystem[v1].Dn);
@@ -345,7 +288,7 @@ bool B2BConfigurator::ClearVoyance::add(vertexDescriptor v, const Disturbance &d
 		lookaheads.emplace_back(ClearVoyance::DisturbanceLookahead(v, d));
 		result=true;
 	}
-	else if (std::find_if(vIt->disturbances.begin(), vIt->disturbances.end(), [&](const Disturbance & dd){return dd==d;})!=vIt->disturbances.end()){
+	else if (std::find_if(vIt->disturbances.begin(), vIt->disturbances.end(), [&](const Disturbance & dd){return !(dd==d);})!=vIt->disturbances.end()){
 		vIt->disturbances.push_back(d); //update disturbance
 		result=true;
 	}

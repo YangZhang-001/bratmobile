@@ -202,10 +202,28 @@ class ClosedLoop_Tracker:public Tracker{
 //same as CL Tracker but creates custom threshold based on state
 class CLAdaptiveTracker:public ClosedLoop_Tracker{
     protected:
+
     Threshold get_threshold(const State &s){
         float distance=std::max(Threshold::FIXED_ENDPOSE, s.distance()/2);
-	    return Threshold(distance, Threshold::FIXED_ANGLE, Threshold::FIXED_DISTPOS, Threshold::FIXED_AFFORDANCE, Threshold::FIXED_DIMENSIONS);
+//        float dist=std::max(Threshold::FIXED_DISTPOS, s.distance()/2);
+        float dimensions=std::max(Threshold::FIXED_DIMENSIONS, logistic(getBiggestDimension(s)));
+        return Threshold(distance, Threshold::FIXED_ANGLE, dimensions, Threshold::FIXED_AFFORDANCE, dimensions);
     }
 
+    float getBiggestDimension(const State &s){
+        return std::max(getMaxDim(s.Di), getMaxDim(s.Dn));
+    }
+
+    float getMaxDim(const Disturbance &d){
+        return std::max(d.bf.halfLength, d.bf.halfWidth); 
+    }
+
+    /**
+    @brief find a factor to multiply biggest disturbance dimension by in order to find match 
+    */
+    float logistic(float biggest){
+        return (1/tanh(biggest))*0.2*biggest;
+    }
+
+
 };
-#endif

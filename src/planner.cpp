@@ -175,9 +175,14 @@ std::vector <Frontier> frontierVertices(vertexDescriptor v, TransitionSystem& g,
 }
 
 void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Frontier>& queue, TransitionSystem &g,const  std::set<vertexDescriptor>&closed, vertexDescriptor goal){
-	if (auto it_q=std::find(queue.cbegin(), queue.cend(), f); it_q!=queue.end()){
+	auto it_q=std::find(queue.cbegin(), queue.cend(), f);
+	if (it_q!=queue.end()){
 		return;
 	}
+	// vertexDescriptor frnt_tmp=(*it_q).frontier;
+	// if (auto oe=boost::out_edges(frnt_tmp,g); oe.first==oe.second){
+	// 	return;
+	// }
 	for (auto i =queue.begin(); i!=queue.end(); i++){
 		auto it=std::find(closed.begin(), closed.end(), f.frontier);
 		if (it!=closed.end()){
@@ -191,14 +196,14 @@ void HorizonStarPlanner::addToPriorityQueue(const Frontier& f, std::vector<Front
 	queue.push_back(f);
 }
 
-std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem& g, vertexDescriptor src, ExecutionInfo& info, bool *finished){
+std::vector <vertexDescriptor> HorizonStarPlanner::plan( TransitionSystem g, vertexDescriptor src, ExecutionInfo& info, bool *finished){
 	std::vector<std::vector<vertexDescriptor>> paths;
 	std::set<vertexDescriptor> closed;
 	paths.push_back(std::vector<vertexDescriptor>()={src});
 	std::vector <Frontier> frontier_v;
 	bool _finished=false;
 	std::vector <Frontier> priorityQueue={Frontier(src, std::vector<vertexDescriptor>())};
-
+	// costMap.init(g);
 	int no_out=0;
 	std::vector <vertexDescriptor> add;
 	std::vector<std::vector<vertexDescriptor>>::reverse_iterator path= paths.rbegin();

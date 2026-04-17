@@ -34,8 +34,11 @@ TEST_F(FigureTest, PrintTransform){
     configurator->set_current_v(last_v); //simulate plan finished
     configurator->getTask().set_change(true);
     configurator->set_plan({});
+<<<<<<< HEAD
     goal=Task(Disturbance(PURSUE, b2Vec2(1.2, 0), 0),DEFAULT);
     configurator->init(goal);
+=======
+>>>>>>> b2b
     configurator->setTask(wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(), finished_plan));
     configurator->getTask().set_change(true);
     math::MulT(shift, configurator->get_ts());
@@ -46,10 +49,11 @@ TEST_F(FigureTest, PrintTransform){
     sprintf(name,"/tmp/transform%s", info);
     FILE *f=fopen(name, "w+");
     CoordinateContainer cc;
-    for (auto p: points){
-        b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
-        fprintf(f, "%0.3f\t%0.3f\n", p2d.x, p2d.y);
-        newPoints.emplace(Pointf(p2d.x, p2d.y));
+    for (float y=.2; y>=-.2; y-=0.01){
+        Pointf p(0.40, y);
+       // b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
+        fprintf(f, "%0.3f\t%0.3f\n", p.x, p.y);
+        newPoints.emplace(Pointf(p.x, p.y));
     }
     fclose(f);
     configurator->set_data2fp(newPoints);
@@ -100,7 +104,11 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     std::vector<vertexDescriptor> plan= get_plan(folder);
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam()), taskToInterrupt=std::get<3>(GetParam());
+<<<<<<< HEAD
     trackFor(iteration);
+=======
+   // trackFor(iteration);
+>>>>>>> b2b
     Pointf interruptingPoint;
     std::vector<vertexDescriptor> updated_plan=get_InterruptedPlan(folder,iteration-1, taskToInterrupt, &interruptingPoint); //map 2
     int vertices_now=configurator->n_vertices();
@@ -158,7 +166,45 @@ TEST_F(HighLevelTest, Trapped){
     configurator->init(DebugConfigurator::generateGoalTask());
     configurator->addIteration();
     configurator->get_worldbuilder()->add_iteration();
-    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTrickyTrap(.35));
+    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTrickyTrap(.3));
+    b2World world(GRAVITY);
+    configurator->explorePlan(world);
+    EXPECT_LE(configurator->get_plan().size(), 0);
+    EXPECT_FALSE(has180Turn(configurator->get_plan()));
+    EXPECT_TRUE(configurator->get_plan().empty());
+    if (!configurator->get_plan().empty()){
+        bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+        EXPECT_TRUE(planned_to_goal);        
+    }
+}
+
+TEST_F(HighLevelTestDiscrete, TrickyScenario){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
+    configurator->init(DebugConfigurator::generateGoalTask());
+    configurator->addIteration();
+    configurator->get_worldbuilder()->add_iteration();
+    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTricky());
+    b2World world(GRAVITY);
+    configurator->explorePlan(world);
+    EXPECT_GT(configurator->get_plan().size(), 0);
+    EXPECT_TRUE(has180Turn(configurator->get_plan()));
+    EXPECT_FALSE(configurator->get_plan().empty());
+    if (!configurator->get_plan().empty()){
+        bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+        EXPECT_TRUE(planned_to_goal);        
+    }
+}
+
+TEST_F(HighLevelTestDiscrete, Trapped){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
+    configurator->init(DebugConfigurator::generateGoalTask());
+    configurator->addIteration();
+    configurator->get_worldbuilder()->add_iteration();
+    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTrickyTrap(.3));
     b2World world(GRAVITY);
     configurator->explorePlan(world);
     EXPECT_LE(configurator->get_plan().size(), 0);

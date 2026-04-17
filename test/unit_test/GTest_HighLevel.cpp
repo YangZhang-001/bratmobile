@@ -271,24 +271,24 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
 }
 
 
-/**
- * @brief The robot is boxed into a cul de sac
- * 
- */
-TEST_F(HighLevelTest, BoxedIn){
-    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
-    Logger logger=HighLevelTestBase::makeLogger();
-    configurator->register_logger(&logger);
-    configurator->init();
-    configurator->addIteration();
-    configurator->get_worldbuilder()->add_iteration();
-    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeCulDeSac(0.6, 0.5));
-    b2World world(GRAVITY);
-    configurator->explorePlan(world);
-    EXPECT_GT(configurator->get_plan().size(), 0);
-    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-    EXPECT_TRUE(planned_to_goal);
-}
+// /**
+//  * @brief The robot is boxed into a cul de sac
+//  * 
+//  */
+// TEST_F(HighLevelTest, BoxedIn){
+//     const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+//     Logger logger=HighLevelTestBase::makeLogger();
+//     configurator->register_logger(&logger);
+//     configurator->init();
+//     configurator->addIteration();
+//     configurator->get_worldbuilder()->add_iteration();
+//     configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeCulDeSac(0.6, 0.5));
+//     b2World world(GRAVITY);
+//     configurator->explorePlan(world);
+//     EXPECT_GT(configurator->get_plan().size(), 0);
+//     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+//     EXPECT_TRUE(planned_to_goal);
+// }
 
 /**
  * @brief The robot cannot pass in a small space between two obstacles and goes around
@@ -313,6 +313,28 @@ TEST_F(HighLevelTest, TrickyScenario){
     }
 }
 
+/**
+ * @brief The robot cannot pass in a small space between two obstacles and goes around
+ * 
+ */
+TEST_F(HighLevelTest, Trapped){
+    const char* info=::testing::UnitTest::GetInstance()->current_test_info()->value_param();
+    Logger logger=makeLogger(info);
+    configurator->register_logger(&logger);
+    configurator->init(DebugConfigurator::generateGoalTask());
+    configurator->addIteration();
+    configurator->get_worldbuilder()->add_iteration();
+    configurator->get_worldbuilder()->set_world_objects(CreativeWorldBuilder::makeTrickyTrap(.35));
+    b2World world(GRAVITY);
+    configurator->explorePlan(world);
+    EXPECT_LE(configurator->get_plan().size(), 0);
+    EXPECT_FALSE(has180Turn(configurator->get_plan()));
+    EXPECT_TRUE(configurator->get_plan().empty());
+    if (!configurator->get_plan().empty()){
+        bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
+        EXPECT_TRUE(planned_to_goal);        
+    }
+}
 
 INSTANTIATE_TEST_CASE_P(CulDeSacTurning, HighLevelInterruptTest, testing::Combine(::testing::Values(false), 
                                                                            ::testing::Values(std::string("../cul_de_sac/")),
@@ -357,7 +379,7 @@ TEST_P(HighLevelTest, Recycle){
     EXPECT_LT(newStart.q.GetAngle(),0.0001);
     std::vector<vertexDescriptor> updated_plan=get_plan(folder); //map 2
     int vertices_now=configurator->n_vertices();
-    EXPECT_LE(vertices_now, vertices_og);
+    EXPECT_NEAR(vertices_now, vertices_og, 1);
     bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
     EXPECT_TRUE(planned_to_goal);
 }

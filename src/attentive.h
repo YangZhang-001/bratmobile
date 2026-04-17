@@ -90,7 +90,7 @@ bool canPropagate(vertexDescriptor v) override;
 
 bool canReassignOutcome(vertexDescriptor v) override;
 
-bool propagateD(vertexDescriptor v1, vertexDescriptor v0, std::set<vertexDescriptor>*closed=NULL, StateMatcher::MATCH_TYPE match=StateMatcher::_FALSE)override;
+bool propagateD(vertexDescriptor v1, vertexDescriptor v0)override;
 
 float customSimulationStep(vertexDescriptor v=TransitionSystem::null_vertex())override{
 	return simulationStep;
