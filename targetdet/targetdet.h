@@ -9,6 +9,13 @@ class TargetDet
 public:
     ~TargetDet();
     cv::QRCodeDetector qrDetector;
+    cv::barcode::BarcodeDetector barcodeDetector;
+
+    enum DetectorType {QR, Barcode};
+
+    void setDetectorType(DetectorType dt) {
+	detectorType = dt;
+    }
 
     // callback for the coordinate
     using OnDetected = std::function<void(std::vector<cv::Point2f>)>;
@@ -26,7 +33,7 @@ public:
     std::atomic<bool> isDetecting = false;
 
 private:
-
+    DetectorType detectorType = QR;
     OnDetected onDetected;
     std::thread detThread;
 };

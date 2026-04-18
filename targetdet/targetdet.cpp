@@ -16,7 +16,15 @@ std::vector<cv::Point2f> TargetDet::detectSync(const cv::Mat img)
         fprintf(stderr, "TargetDetSync: image empty\n");
         return points;
     }
-    bool r = qrDetector.detect(img, points);
+    bool r = false;
+    switch (detectorType) {
+    case QR:
+	r = qrDetector.detect(img, points);
+	break;
+    case Barcode:
+	r = barcodeDetector.detect(img, points);
+	break;
+    }
     if (!r)
     {
         points.clear();
