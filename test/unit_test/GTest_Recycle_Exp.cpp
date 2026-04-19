@@ -20,7 +20,12 @@ TEST_P(CLAdaptiveTrackerTest, Threshold){
     State s;
     s.endPose.p.x=GetParam();
     Threshold _threshold=get_threshold(s);
-    EXPECT_NEAR(_threshold.for_robot_position(), GetParam()/2, 0.01);
+    if (GetParam()>ROBOT_HALFWIDTH*2){
+        EXPECT_NEAR(_threshold.for_robot_position(), GetParam()/2, 0.01);
+    }
+    else{
+        EXPECT_NEAR(_threshold.for_robot_position(), Threshold::FIXED_ENDPOSE, 0.01);
+    }
 }
 
 INSTANTIATE_TEST_CASE_P(Ends, CLAdaptiveTrackerTest, testing::Values(0.5, 0.05));
