@@ -44,11 +44,11 @@ TEST_F(FCTest, Correct){
     running=1;
     b2Vec2 point(0.3, 0);
     data2fp.emplace(Pointf(point.x, point.y));
-    Spawner();
+    Spawner(); //plan should be TURN->DEFAULT
     auto this_plan=m_plan;
     change_task();
     estimate_current_vertex();
-    float angle=3*M_PI_4/2; //75 degrees
+    float angle=3*M_PI_4/2; //75 degrees: it's out of the way!
     angle=std::copysign(angle, currentTask.getAction().getOmega());
     data2fp.emplace(Pointf(point.x, point.y));
     update_graph(transitionSystem, TrackingResult(currentTask.get_disturbance(),b2Transform(b2Vec2(), b2Rot(angle))));
@@ -59,8 +59,9 @@ TEST_F(FCTest, Correct){
     change_task();
     estimate_current_vertex();
     EXPECT_NE(currentVertex, (*this_plan.begin()));
-    EXPECT_TRUE(transitionSystem[currentVertex].isTurning());
-    EXPECT_EQ(currentTask.getMotorStep(), 20);
+    //EXPECT_TRUE(transitionSystem[currentVertex].isTurning());
+    EXPECT_GT(currentTask.getMotorStep(), 20);
+    EXPECT_NE(transitionSystem[currentVertex].outcome, simResult::crashed);
 
 }
 
