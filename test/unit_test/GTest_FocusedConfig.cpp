@@ -135,6 +135,7 @@ TEST_F(FCTest, ReplanDefault) {
 TEST_F(FCTest, isPreviousState){
     register_tracker(new CLAdaptiveTracker());
     State s1, s2, s3;
+    s1.start.p.x=-1;
     s1.endPose.p.x=-1;
     s1.Di.setPosition(b2Vec2(0,0));
     s1.Di.set_affordance(PURSUE);
