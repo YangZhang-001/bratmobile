@@ -227,3 +227,4 @@ class CLAdaptiveTracker:public ClosedLoop_Tracker{
 
 
 };
+#endif
