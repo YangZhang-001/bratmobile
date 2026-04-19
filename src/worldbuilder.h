@@ -119,7 +119,7 @@ class WorldBuilder{
     }
 
     void add_iteration(int i=1){
-        iteration+=1;
+        iteration+=i;
     }
 
     b2Body * get_robot(b2World *);
@@ -146,6 +146,13 @@ class WorldBuilder{
 
     void setSimulationStep(float f){simulationStep=f;}
 
+    void object_dump();
+
+    void bodies_dump(b2World & w);
+
+    int getIteration(){
+        return iteration;
+    }
 
 };
 

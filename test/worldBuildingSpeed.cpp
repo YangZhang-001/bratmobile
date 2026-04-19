@@ -1,5 +1,7 @@
 #include "attentive.h"
 
+const bool DEBUG=true;
+
 int main(int argc, char **argv) {
   std::ifstream file("cds_test.dat");
   CoordinateContainer data;
@@ -17,10 +19,12 @@ int main(int argc, char **argv) {
     //make vector of worldbuilders
     std::vector <WorldBuilder*> builders={new WorldBuilder(), new WorldPointBuilder(), new EverythingBuilder(), new EveryOtherFeatureBuilder(), new EveryOtherPointBuilder(), new LaserFocus()};
     std::vector <std::string> names={"WorldBuilder", "WorldPointBuilder", "EverythingBuilder", "EveryOtherFeatureBuilder", "EveryOtherPointBuilder", "LaserFocus"};
-    int ct=0;
+    int ct=0, it=1;
     for (WorldBuilder *wb: builders){
         auto start = std::chrono::high_resolution_clock::now();
+        wb->add_iteration(it);
         wb->set_world_objects(wb->getFeatures(data, b2Transform_zero, WorldBuilder::PARTITION));
+        wb->object_dump();
         std::string fileName=std::string("/")+names[ct];
         Logger logger("WorldBuilderSpeedTest", ".", fileName.c_str(), false);
         auto end = std::chrono::high_resolution_clock::now();
@@ -36,12 +40,20 @@ int main(int argc, char **argv) {
             end = std::chrono::high_resolution_clock::now();
             logger.log("%f\t%i\t%i\t%i\t%f\t%i\n", std::chrono::duration<float, std::milli>(end-start).count()/1000, wb->get_world_objects().size(), bodyCount, data.size(), buildTime, result.step);
             if (result.resultCode==simResult::crashed){
+                char name[50];
+                sprintf(name, "/tmp/crash%003i.txt", wb->getIteration());
+                FILE * f=fopen(name, "w");
+                for (auto &v: result.collision.vertices()){
+                    fprintf(f, "%.3f\t%.3f\n", v.x, v.y);
+                }
+                fclose(f);
                 //break; //no need to simulate till it crashes
             }
             world_cleanup(world);
         }
     std::cout<<"Tested "<<names[ct]<<std::endl;
     ct++;
+    it++;
     }
     //cleanup
     for (WorldBuilder *wb: builders){

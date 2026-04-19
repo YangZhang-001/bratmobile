@@ -1,5 +1,28 @@
 #include "worldbuilder.h"
 
+void WorldBuilder::object_dump(){
+    char name[50];
+    sprintf(name, "/tmp/objectdump%04i.txt", iteration);
+    FILE *f=fopen(name, "w");
+    for (auto & bf: world_objects){
+        for (auto v: bf.vertices()){
+            fprintf(f, "%.3f\t%.3f\n", v.x, v.y);
+        }
+    }
+    fclose(f);
+}
+
+void WorldBuilder::bodies_dump(b2World & w){
+    if (DEBUG){
+    FILE *file;
+    sprintf(bodyFile, "/tmp/bodies%03i.txt",iteration);
+    file = fopen(bodyFile, "a+");
+    for (b2Body * b = w.GetBodyList(); b!=NULL; b= b->GetNext()){
+        fprintf(file, "%f\t%f\n", b->GetPosition().x, b->GetPosition().y);
+    }
+    fclose(file);
+    }
+}
 
 std::pair<Pointf, Pointf> WorldBuilder::bounds(Direction d, b2Transform start, float boxLength, float halfWindowWidth, std::vector <Pointf> *_bounds){
     std::pair <Pointf, Pointf>result;
@@ -229,15 +252,7 @@ std::vector <BodyFeatures> WorldBuilder::getFeatures(const CoordinateContainer &
         }
     }
     int _count=world.GetBodyCount();
-	if (DEBUG){
-	    FILE *file;
-        sprintf(bodyFile, "/tmp/bodies%03i.txt",iteration);
-        file = fopen(bodyFile, "a+");
-		for (b2Body * b = world.GetBodyList(); b!=NULL; b= b->GetNext()){
-			fprintf(file, "%f\t%f\n", b->GetPosition().x, b->GetPosition().y);
-		}
-		fclose(file);
-	}
+	bodies_dump(world);
 }
 
 bool WorldBuilder::checkDisturbance(Pointf p, bool& obStillThere, Task * curr, float range){
@@ -323,6 +338,8 @@ void EverythingBuilder::buildWorld(b2World & w, b2Transform start, Direction d, 
     for (const BodyFeatures & bf: world_objects){
         makeBody(w, bf);
     }
+    bodies_dump(w);
+
 }
 
 std::vector <BodyFeatures> EveryOtherFeatureBuilder::getFeatures(const CoordinateContainer & current, b2Transform start, CLUSTERING clustering){
@@ -359,5 +376,6 @@ void LaserFocus::buildWorld(b2World & w, b2Transform start, Direction d, Disturb
     for (const BodyFeatures & bf: features){
         makeBody(w, bf);
     }
+    bodies_dump(w);
 }
 
