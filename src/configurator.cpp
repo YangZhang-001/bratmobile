@@ -87,7 +87,7 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
 	//approximate angle to avoid rounding errors
 	result.endPose.q.Set(approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode));
-	if (iteration<1 && isCurrentTask(t)){
+	if (iteration<1 && isCurrentTask(t) && calibrationCallback){
 		calibrationCallback->simulationReady(result.collision);
 	}
 	return result;
