@@ -99,11 +99,7 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     std::vector<vertexDescriptor> plan= get_plan(folder);
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam()), taskToInterrupt=std::get<3>(GetParam());
-<<<<<<< HEAD
-    trackFor(iteration);
-=======
    // trackFor(iteration);
->>>>>>> b2b
     Pointf interruptingPoint;
     std::vector<vertexDescriptor> updated_plan=get_InterruptedPlan(folder,iteration-1, taskToInterrupt, &interruptingPoint); //map 2
     int vertices_now=configurator->n_vertices();
