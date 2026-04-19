@@ -1,5 +1,5 @@
-#ifndef CONTROL_IF_H
-#define CONTROL_IF_H
+#ifndef CONFIG_CALLBACKS_H
+#define CONFIG_CALLBACKS_H
 
 #include "worldbuilder.h"
 #include "task.h"

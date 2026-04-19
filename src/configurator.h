@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include "debug.h"
 #include "planner.h"
-#include "control_interface.h"
+#include "config_callbacks.h"
 #include "task_controller.h"
 #include "tracker.h"
 
