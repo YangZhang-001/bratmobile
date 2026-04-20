@@ -10,6 +10,8 @@
 
 #include "stereo.h"
 
+#define STEREO_ALGO Stereo::PrimeStereo
+
 // class definition 'Window'
 class Window : public QWidget
 {
