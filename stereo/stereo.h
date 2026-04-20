@@ -3,16 +3,18 @@
 #include <vector>
 #include <thread>
 #include <atomic>
+#include "PrimeStereoMatch.h"
 
 #pragma once
 
 class Stereo
 {
 public:
-    static inline cv::Mat convertColour2Grey(const cv::Mat& colourImage) {
+    static inline cv::Mat convertColour2Grey(const cv::Mat &colourImage)
+    {
         cv::Mat greyImage;
-	cv::cvtColor(colourImage, greyImage, cv::COLOR_BGR2GRAY);
-	cv::resize(greyImage, greyImage, cv::Size(640,360));
+        cv::cvtColor(colourImage, greyImage, cv::COLOR_BGR2GRAY);
+        cv::resize(greyImage, greyImage, cv::Size(640, 360));
         return greyImage;
     }
 
@@ -41,39 +43,21 @@ public:
     void calcDepthMapAsync(const cv::Mat &left, const cv::Mat &right);
 
     // registers callback
-    void registerCallback(OnDisparity cb) {
+    void registerCallback(OnDisparity cb)
+    {
         onDisparity = cb;
     }
-
-    // Camera matrices
-    cv::Mat K1,
-        D1, K2, D2;
-    cv::Mat R, T, E, F;
-
-    // Rectification
-    cv::Mat R1, R2, P1, P2, Q;
-
-    // Maps: raw->rect images
-    cv::Mat map1L, map2L, map1R, map2R;
-
-    // checker board points
-    std::vector<std::vector<cv::Point2f>> imgPointsLeft;
-    std::vector<std::vector<cv::Point2f>> imgPointsRight;
-
-    bool hasValidCalibration = false;
-    bool isCalibrating = false;
 
     ~Stereo();
 
 private:
-    void calcMaps();
-        // Stereo matching
+    // Stereo matching
     cv::Ptr<cv::StereoSGBM> stereoMatcher = cv::StereoSGBM::create(
-								   0,// minDisp
-								   16*5,//numDisp,
-								   3// block size
+        0,      // minDisp
+        16 * 5, // numDisp,
+        3       // block size
     );
-    cv::Size imageSize{0,0};
+    cv::Size imageSize{0, 0};
 
     std::thread disparityCalcThread;
     std::atomic<bool> isCalculatingDisparity = false;
