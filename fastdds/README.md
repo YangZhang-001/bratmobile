@@ -8,10 +8,6 @@ Fast CDR
 
 `sudo apt-get install libfastcdr-dev`
 
-Fast RTPS
-
-`sudo apt-get install libfastrtps-dev`
-
 Fast DDS tools
 
 `sudo apt-get install fastddsgen fastdds-tools`

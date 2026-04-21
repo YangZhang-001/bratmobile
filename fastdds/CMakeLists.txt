@@ -13,23 +13,23 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(fastcdr REQUIRED)
-find_package(fastrtps REQUIRED)
+
 find_package(Qt5 REQUIRED COMPONENTS Widgets Core )
 # Create a library for the message / topic
 add_custom_target(
     objects
     COMMAND fastddsgen ObjectPackage.idl
 )
-add_library(ObjectPackage STATIC ObjectPackage.cxx ObjectPackagePubSubTypes.cxx)
+add_library(ObjectPackage STATIC ObjectPackagePubSubTypes.cxx)
 add_dependencies(ObjectPackage objects)
 
 # Publisher
 add_executable(publisher publisher.cpp)
-target_link_libraries(publisher fastcdr fastrtps ObjectPackage)
+target_link_libraries(publisher fastcdr ObjectPackage)
 
 # Subscriber
 add_executable(subscriber subscriber.cpp print_helpers.h)
-target_link_libraries(subscriber fastcdr fastrtps ObjectPackage)
+target_link_libraries(subscriber fastcdr ObjectPackage)
 
 # Pub/Sub library
 add_library(fastdds-tracker publisher.h subscriber.h)

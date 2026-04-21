@@ -11,7 +11,6 @@ find_package(PkgConfig)
 find_package(Threads)
 
 find_package(fastcdr REQUIRED)
-find_package(fastrtps REQUIRED)
 
 include(CTest)
 
