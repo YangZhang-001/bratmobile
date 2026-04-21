@@ -60,7 +60,7 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/.. ${LIBCAMERA_INCLUDE_DIRS} ${OPENCV_INCLUDE_DIRS})
   include(GNUInstallDirs)
   add_executable(brat3_targetGUI ../custom_robot.h gui.h brat3_targetGUI.cpp)
-  target_link_libraries(brat3_targetGUI fastcdr fastrtps ObjectPackage ${OpenCV_LIBS}  alphabot a1lidarrpi brat box2d pigpio pthread)
+  target_link_libraries(brat3_targetGUI fastcdr ObjectPackage ${OpenCV_LIBS}  alphabot a1lidarrpi brat box2d pigpio pthread)
 
   message("detected architecture aarch64, building executables")
 else()
