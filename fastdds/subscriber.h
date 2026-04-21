@@ -19,7 +19,7 @@
 #ifndef SUBSCRIBER_H
 #define SUBSCRIBER_H
 
-#include "ObjectPackagePubSubTypes.h"
+#include "ObjectPackagePubSubTypes.hpp"
 #include "print_helpers.h"
 
 #include <chrono>

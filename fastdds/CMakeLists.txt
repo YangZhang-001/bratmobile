@@ -20,7 +20,7 @@ add_custom_target(
     objects
     COMMAND fastddsgen ObjectPackage.idl
 )
-add_library(ObjectPackage STATIC ObjectPackagePubSubTypes.cxx)
+add_library(ObjectPackage STATIC ObjectPackageTypeObjectSupport.cxx ObjectPackagePubSubTypes.cxx)
 add_dependencies(ObjectPackage objects)
 
 # Publisher
