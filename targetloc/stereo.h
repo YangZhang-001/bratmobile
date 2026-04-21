@@ -35,7 +35,7 @@ public:
 
 private:
     // Stereo matching
-    cv::Ptr<cv::StereoSGBM> stereoMatcher  = cv::StereoSGBM::create(
+    cv::Ptr<cv::StereoSGBM> stereoMatcher = cv::StereoSGBM::create(
         0,      // minDisp
         16 * 5, // numDisp,
         3       // block size

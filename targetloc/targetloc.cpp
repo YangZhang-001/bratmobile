@@ -2,25 +2,34 @@
 
 void TargetLoc::start()
 {
-    	Libcam2OpenCV cameraL;
-	cameraL.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
-							 { 
-								window.updateImageL(mat); });
+    cm.start();
 
-	Libcam2OpenCV cameraR;
-	cameraR.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
-							 { 
-								window.updateImageR(mat); });
+    cameraL.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
+                             { updateImageL(mat); });
 
-	Libcam2OpenCVSettings settings;
-	settings.width=1920;
-	settings.height=1080;
-	settings.cameraIndex = 0;
-	cameraL.start(cm, settings);
-	settings.cameraIndex = 1;
-	cameraR.start(cm, settings);
+    cameraR.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
+                             { updateImageR(mat); });
+
+    Libcam2OpenCVSettings settings;
+    settings.width = 1920;
+    settings.height = 1080;
+    settings.cameraIndex = 0;
+    cameraL.start(cm, settings);
+    settings.cameraIndex = 1;
+    cameraR.start(cm, settings);
 }
 
 void TargetLoc::stop()
+{
+    cameraL.stop();
+    cameraR.stop();
+    cm.stop();
+}
+
+void TargetLoc::updateImageL(cv::Mat& l)
+{
+}
+
+void TargetLoc::updateImageR(cv::Mat& r)
 {
 }

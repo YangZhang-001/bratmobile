@@ -6,9 +6,7 @@
 #include <QLabel>
 #include <QPushButton>
 
-#include "libcam2opencv.h"
-
-#include "stereo.h"
+#include "targetloc.h"
 
 // class definition 'Window'
 class Window : public QWidget
@@ -41,6 +39,8 @@ private:
     void blendLRandDisplayD();
 
     const cv::Size imageSize{640,360};
+
+    TargetLoc targetLoc;
 };
 
 #endif // WINDOW_H
