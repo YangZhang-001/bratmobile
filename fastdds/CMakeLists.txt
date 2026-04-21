@@ -41,17 +41,17 @@ install(TARGETS fastdds-tracker
 
 ##Qt Window
 add_library(brat-gui window.h window.cpp publisher.h subscriber.h)
-target_link_libraries(brat-gui Qt5::Core Qt5::Widgets fastcdr fastrtps ObjectPackage)
+target_link_libraries(brat-gui Qt5::Core Qt5::Widgets fastcdr ObjectPackage)
 add_executable(qt_window qt_main.cpp window.h window.cpp topics.h)
-target_link_libraries(qt_window PRIVATE brat-gui Qt5::Widgets Qt5::Core fastcdr fastrtps ObjectPackage)
+target_link_libraries(qt_window PRIVATE brat-gui Qt5::Widgets Qt5::Core fastcdr ObjectPackage)
 target_link_libraries(qt_window PRIVATE qwt-qt5)
 
 #TESTS
 add_executable(test_tracker topics.h test_tracker.cpp gui.h publisher.h )
-target_link_libraries(test_tracker fastcdr fastrtps ObjectPackage brat ${OpenCV_LIBS} box2d )
+target_link_libraries(test_tracker fastcdr ObjectPackage brat ${OpenCV_LIBS} box2d )
 
 add_executable(test_obstacleQt topics.h test_obstacleQt.cpp gui.h publisher.h )
-target_link_libraries(test_obstacleQt fastcdr fastrtps ObjectPackage brat ${OpenCV_LIBS} box2d )
+target_link_libraries(test_obstacleQt fastcdr ObjectPackage brat ${OpenCV_LIBS} box2d )
 
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
