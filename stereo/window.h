@@ -10,7 +10,7 @@
 
 #include "stereo.h"
 
-#define STEREO_ALGO Stereo::PrimeStereo
+#define STEREO_ALGO Stereo::OpenCVStereo
 
 // class definition 'Window'
 class Window : public QWidget
