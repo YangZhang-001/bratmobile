@@ -21,7 +21,6 @@ Window::Window()
 	setLayout(vLayout);
 
 	stereo.registerCallback([&](cv::Mat d){currentD = d; refreshDisparity = true;});
-	stereo.start(imageSize,STEREO_ALGO);
 }
 
 void Window::updateImageL(const cv::Mat &leftInput)

@@ -10,13 +10,6 @@
 class Stereo
 {
 public:
-    enum StereoAlgo {
-        OpenCVStereo,
-        PrimeStereo
-    };
-
-    void start(cv::Size inputImageSize, StereoAlgo algo = OpenCVStereo);
-
     // un-distorts the left camera image
     cv::Mat rectifyLeft(const cv::Mat &left);
 
@@ -42,13 +35,13 @@ public:
 
 private:
     // Stereo matching
-    cv::Ptr<cv::StereoSGBM> stereoMatcher;
-    std::shared_ptr<PrimeStereoMatch> primeStereoMatch;
-
-    cv::Size imageSize{0, 0};
+    cv::Ptr<cv::StereoSGBM> stereoMatcher  = cv::StereoSGBM::create(
+        0,      // minDisp
+        16 * 5, // numDisp,
+        3       // block size
+    );
 
     std::thread disparityCalcThread;
     std::atomic<bool> isCalculatingDisparity = false;
     OnDisparity onDisparity;
-    StereoAlgo stereoAlgo;
 };
