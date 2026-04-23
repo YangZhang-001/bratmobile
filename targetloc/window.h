@@ -16,8 +16,9 @@ class Window : public QWidget
 
 public:
     Window();
-    void updateImageL(const cv::Mat &mat);
-    void updateImageR(const cv::Mat &mat);
+    ~Window() {
+        targetLoc.stop();
+    }
 
 private:
     QHBoxLayout  *h1Layout;
@@ -28,19 +29,13 @@ private:
     QLabel       *imageCombined;
     QLabel       *imageDisparity;
 
-    cv::Mat currentL;
-    cv::Mat currentR;
-    cv::Mat currentD;
-    bool refreshDisparity = false;
-
-    Stereo stereo;
-
     // blends the current L and R images and displays it
     void blendLRandDisplayD();
 
-    const cv::Size imageSize{640,360};
+    void timerEvent(QTimerEvent *event);
 
     TargetLoc targetLoc;
+
 };
 
 #endif // WINDOW_H

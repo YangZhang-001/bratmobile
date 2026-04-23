@@ -10,12 +10,6 @@
 class Stereo
 {
 public:
-    // un-distorts the left camera image
-    cv::Mat rectifyLeft(const cv::Mat &left);
-
-    // un-distorts the right camera image
-    cv::Mat rectifyRight(const cv::Mat &right);
-
     // blocking call to calc depth map
     cv::Mat calcDepthMapSync(const cv::Mat &left, const cv::Mat &right);
 
@@ -44,4 +38,5 @@ private:
     std::thread disparityCalcThread;
     std::atomic<bool> isCalculatingDisparity = false;
     OnDisparity onDisparity;
+    const cv::Size disparityImageSize{640,360};
 };

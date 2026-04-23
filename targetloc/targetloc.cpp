@@ -4,11 +4,15 @@ void TargetLoc::start()
 {
     cm.start();
 
-    cameraL.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
-                             { updateImageL(mat); });
+    cameraL.registerCallback([&](const cv::Mat &left, const libcamera::ControlList &)
+                             { updateImageL(left); });
 
-    cameraR.registerCallback([&](const cv::Mat &mat, const libcamera::ControlList &)
-                             { updateImageR(mat); });
+    cameraR.registerCallback([&](const cv::Mat &right, const libcamera::ControlList &)
+                             { updateImageR(right); });
+
+    targetDet.registerDetCallback([&](const std::vector<cv::Point2f> coord){onTargetDetected(coord);});
+
+    stereo.registerCallback([&](cv::Mat d){currentD = d;});
 
     Libcam2OpenCVSettings settings;
     settings.width = 1920;
@@ -26,10 +30,29 @@ void TargetLoc::stop()
     cm.stop();
 }
 
-void TargetLoc::updateImageL(cv::Mat& l)
+void TargetLoc::newScanAvail(C1LidarData (&data)[C1Lidar::nDistance])
 {
 }
 
-void TargetLoc::updateImageR(cv::Mat& r)
+void TargetLoc::updateStereo()
 {
+    stereo.calcDepthMapAsync(currentL,currentR);
+}
+
+void TargetLoc::updateImageL(const cv::Mat& l)
+{
+    currentL = l;
+    updateStereo();
+    targetDet.detectAsync(l);
+}
+
+void TargetLoc::updateImageR(const cv::Mat& r)
+{
+    currentR = r;
+    updateStereo();
+}
+
+// here it's where it's getting interesting!
+void TargetLoc::onTargetDetected(std::vector<cv::Point2f> coord) {
+
 }

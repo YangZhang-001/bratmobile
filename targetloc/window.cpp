@@ -20,7 +20,9 @@ Window::Window()
 
 	setLayout(vLayout);
 
-	stereo.registerCallback([&](cv::Mat d){currentD = d; refreshDisparity = true;});
+	startTimer(std::chrono::milliseconds{100});
+
+	targetLoc.start();
 }
 
 void Window::updateImageL(const cv::Mat &leftInput)
@@ -43,29 +45,26 @@ void Window::updateImageR(const cv::Mat &rightInput)
 
 void Window::blendLRandDisplayD()
 {
-	if (currentL.empty())
+	if (targetLoc.currentL.empty())
 		return;
-	if (currentR.empty())
+	if (targetLoc.currentR.empty())
 		return;
-	if (currentL.size != currentR.size)
+	if (targetLoc.currentL.size != targetLoc.currentR.size)
 		return;
 	cv::Mat blended;
-	cv::addWeighted(currentL, 0.5, currentR, 0.5, 0.0, blended);
+	cv::addWeighted(targetLoc.currentL, 0.5, targetLoc.currentR, 0.5, 0.0, blended);
 	const QImage frame(blended.data, blended.cols, blended.rows, blended.step,
 					   QImage::Format_BGR888);
 	imageCombined->setPixmap(QPixmap::fromImage(frame));
 
-	// trigger async calc
-	stereo.calcDepthMapAsync(currentL,currentR);
-
-	// however we can put that here in the callback as QT won't like it so we basically
-	// "poll" it.
-	if (!refreshDisparity) return;
 	cv::Mat disp8;
-	cv::normalize(currentD, disp8, 0, 255, cv::NORM_MINMAX, CV_8U);
+	cv::normalize(targetLoc.currentD, disp8, 0, 255, cv::NORM_MINMAX, CV_8U);
 	const QImage dispImage(disp8.data, disp8.cols, disp8.rows, disp8.step,
-					   QImage::Format_Grayscale8);
+						   QImage::Format_Grayscale8);
 	imageDisparity->setPixmap(QPixmap::fromImage(dispImage));
-	refreshDisparity = false;
 }
 
+void Window::timerEvent(QTimerEvent *event)
+{
+	blendLRandDisplayD();
+}

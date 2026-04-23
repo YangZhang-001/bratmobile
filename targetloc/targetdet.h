@@ -11,20 +11,26 @@ public:
     cv::QRCodeDetector qrDetector;
     cv::barcode::BarcodeDetector barcodeDetector;
 
-    enum DetectorType {QR, Barcode};
+    enum DetectorType
+    {
+        QR,
+        Barcode
+    };
 
-    void setDetectorType(DetectorType dt) {
-	detectorType = dt;
+    void setDetectorType(DetectorType dt)
+    {
+        detectorType = dt;
     }
 
     // callback for the coordinate
-    using OnDetected = std::function<void(std::vector<cv::Point2f>)>;
+    using OnDetected = std::function<void(const std::vector<cv::Point2f>)>;
 
     std::vector<cv::Point2f> detectSync(const cv::Mat img);
 
     void detectAsync(const cv::Mat img);
 
-    void registerDetCallback(OnDetected cb) {
+    void registerDetCallback(OnDetected cb)
+    {
         onDetected = cb;
     }
 

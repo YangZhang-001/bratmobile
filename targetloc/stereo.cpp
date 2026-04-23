@@ -4,23 +4,16 @@
 
 #include "stereo.h"
 
-cv::Mat Stereo::rectifyLeft(const cv::Mat &left)
-{
-    return left;
-}
-
-cv::Mat Stereo::rectifyRight(const cv::Mat &right)
-{
-    return right;
-}
-
 cv::Mat Stereo::calcDepthMapSync(const cv::Mat &left, const cv::Mat &right)
 {
     cv::Mat disparity;
     stereoMatcher->setP1(8 * left.channels() * 5 * 5);
     stereoMatcher->setP2(32 * left.channels() * 5 * 5);
-    stereoMatcher->compute(left, right, disparity);
-        //    fprintf(stderr,"Disp calc finished.\n");
+    cv::Mat lScaled;
+    cv::resize(left, lScaled, disparityImageSize);
+    cv::Mat rScaled;
+    cv::resize(right, rScaled, disparityImageSize);
+    stereoMatcher->compute(lScaled, rScaled, disparity);
     return disparity;
 }
 
