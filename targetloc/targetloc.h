@@ -11,7 +11,7 @@ class TargetLoc : public C1Lidar::DataInterface
 {
 public:
     TargetLoc() = default;
-    
+
     struct DetectionInterface
     {
         virtual void hasNewTargetDetection(float x, float y) = 0;
@@ -56,7 +56,7 @@ private:
 
     const char *LIDAR_SERIAL_DEV = "/dev/ttyAMA0";
 
-    void onTargetDetected(std::vector<cv::Point2f> coord);
+    void onTargetDetected(const cv::Point2f coord);
 
     Libcam2OpenCV cameraL;
     Libcam2OpenCV cameraR;
@@ -64,8 +64,6 @@ private:
     libcamera::CameraManager cm;
 
     Stereo stereo;
-
-    C1Lidar lidar;
 
     TargetDet targetDet;
 

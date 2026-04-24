@@ -17,13 +17,14 @@ std::vector<cv::Point2f> TargetDet::detectSync(const cv::Mat img)
         return points;
     }
     bool r = false;
-    switch (detectorType) {
+    switch (detectorType)
+    {
     case QR:
-	r = qrDetector.detect(img, points);
-	break;
+        r = qrDetector.detect(img, points);
+        break;
     case Barcode:
-	r = barcodeDetector.detect(img, points);
-	break;
+        r = barcodeDetector.detect(img, points);
+        break;
     }
     if (!r)
     {
@@ -50,12 +51,13 @@ void TargetDet::detectAsync(const cv::Mat img)
                             {
                             isDetecting=true;
                             auto pts = detectSync(imgThr);
-                            if ((pts.size()>0) && (onDetected))
-                                onDetected(pts);
+                            if ((pts.size()>0) && (onDetected)) {
+                                onDetected(calcCentre(pts));
+                            }
                             isDetecting=false; }, img);
 }
 
-cv::Point2f TargetDet::calcCentre(std::vector<cv::Point2f> points) const
+cv::Point2f TargetDet::calcCentre(const std::vector<cv::Point2f> points) const
 {
 
     cv::Point2f centre{0, 0};

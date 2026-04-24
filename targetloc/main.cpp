@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 	Window window;
 	window.show();
 
-	getchar();
+	const int r = app.exec();
 
-	return 0;
+	return r;
 }

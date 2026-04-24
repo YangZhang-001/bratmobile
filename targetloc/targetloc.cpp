@@ -11,9 +11,11 @@ void TargetLoc::start()
     cameraR.registerCallback([&](const cv::Mat &right, const libcamera::ControlList &)
                              { updateImageR(right); });
 
-    targetDet.registerDetCallback([&](const std::vector<cv::Point2f> coord){onTargetDetected(coord);});
+    targetDet.registerDetCallback([&](const cv::Point2f coord)
+                                  { onTargetDetected(coord); });
 
-    stereo.registerCallback([&](cv::Mat d){currentD = d;});
+    stereo.registerCallback([&](cv::Mat d)
+                            { currentD = d; });
 
     Libcam2OpenCVSettings settings;
     settings.width = 1920;
@@ -37,23 +39,33 @@ void TargetLoc::newScanAvail(C1LidarData (&data)[C1Lidar::nDistance])
 
 void TargetLoc::updateStereo()
 {
-    stereo.calcDepthMapAsync(currentL,currentR);
+    // let's check if we have really images from both cameras!
+    if (currentL.empty())
+        return;
+    if (currentR.empty())
+        return;
+    if (currentL.size != currentR.size)
+        return;
+    // yes, we have!
+    stereo.calcDepthMapAsync(currentL, currentR);
 }
 
-void TargetLoc::updateImageL(const cv::Mat& l)
+void TargetLoc::updateImageL(const cv::Mat &l)
 {
     currentL = l;
     updateStereo();
+    // We detect the target from the left eye!
     targetDet.detectAsync(l);
 }
 
-void TargetLoc::updateImageR(const cv::Mat& r)
+void TargetLoc::updateImageR(const cv::Mat &r)
 {
     currentR = r;
     updateStereo();
 }
 
 // here it's where it's getting interesting!
-void TargetLoc::onTargetDetected(std::vector<cv::Point2f> coord) {
-
+void TargetLoc::onTargetDetected(const cv::Point2f coord)
+{
+    printf("Target/camera: %f,%f\n",coord.x,coord.y);    
 }

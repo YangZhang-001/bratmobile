@@ -20,8 +20,10 @@ Window::Window()
 
 	setLayout(vLayout);
 
+	fprintf(stderr,"Starting screen update timer.\n");
 	startTimer(std::chrono::milliseconds{100});
 
+	fprintf(stderr,"Starting Targetloc.\n");
 	targetLoc.start();
 }
 
@@ -59,6 +61,7 @@ void Window::updateGUI()
 	const QImage frameR(rightResized.data, rightResized.cols, rightResized.rows, rightResized.step,
 					   QImage::Format_BGR888);
 	imageR->setPixmap(QPixmap::fromImage(frameR));
+	update();
 }
 
 void Window::timerEvent(QTimerEvent*)
