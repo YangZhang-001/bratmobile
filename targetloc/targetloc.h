@@ -7,13 +7,55 @@
 #include <libcamera/libcamera/camera_manager.h>
 #include "c1lidarrpi.h"
 
-class TargetLoc : public C1Lidar::DataInterface {
-    public:
+class TargetLoc : public C1Lidar::DataInterface
+{
+public:
+    TargetLoc() = default;
+    
+    struct DetectionInterface
+    {
+        virtual void hasNewTargetDetection(float x, float y) = 0;
+    };
 
     void start();
     void stop();
 
+    /**
+     * Needs to be registered with the LIDAR from main()
+     */
     void newScanAvail(C1LidarData (&data)[C1Lidar::nDistance]);
+
+    /**
+     * For debugging purposes and the GUI we can get the current left camera image
+     */
+    const cv::Mat getCurrentLCameraImage() const
+    {
+        return currentL;
+    }
+
+    /**
+     * For debugging purposes and the GUI we can get the current right camera image
+     */
+    const cv::Mat getCurrentRCameraImage() const
+    {
+        return currentR;
+    }
+
+    /**
+     * For debugging purposes and the GUI we can get the current disparity readings
+     */
+    const cv::Mat getCurrentDisparityMap() const
+    {
+        return currentD;
+    }
+
+private:
+    cv::Mat currentL;
+    cv::Mat currentR;
+    cv::Mat currentD;
+
+    const char *LIDAR_SERIAL_DEV = "/dev/ttyAMA0";
+
     void onTargetDetected(std::vector<cv::Point2f> coord);
 
     Libcam2OpenCV cameraL;
@@ -27,15 +69,9 @@ class TargetLoc : public C1Lidar::DataInterface {
 
     TargetDet targetDet;
 
-    void updateImageL(const cv::Mat& l);
+    void updateImageL(const cv::Mat &l);
 
-    void updateImageR(const cv::Mat& r);
+    void updateImageR(const cv::Mat &r);
 
     void updateStereo();
-
-    cv::Mat currentL;
-    cv::Mat currentR;
-    cv::Mat currentD;
-
-    const char* LIDAR_SERIAL_DEV = "/dev/ttyAMA0";
 };

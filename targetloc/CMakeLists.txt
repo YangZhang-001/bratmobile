@@ -55,6 +55,7 @@ target_link_libraries(targetloc PkgConfig::LIBCAMERA)
 target_link_libraries(targetloc ${OpenCV_LIBS})
 target_link_libraries(targetloc cam2opencv)
 target_link_libraries(targetloc ${TURBOJPEG_LINK_LIBRARIES})
+target_link_libraries(targetloc c1lidarrpi)
 
 include(GNUInstallDirs)
 
@@ -65,3 +66,7 @@ add_executable(targetlocviewer
 
 target_link_libraries(targetlocviewer Qt6::Widgets)
 target_link_libraries(targetlocviewer targetloc)
+target_link_libraries(targetlocviewer PkgConfig::LIBCAMERA)
+target_link_libraries(targetlocviewer ${OpenCV_LIBS})
+target_link_libraries(targetlocviewer cam2opencv)
+target_link_libraries(targetlocviewer ${TURBOJPEG_LINK_LIBRARIES})

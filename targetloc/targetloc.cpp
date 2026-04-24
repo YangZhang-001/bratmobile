@@ -1,4 +1,5 @@
 #include "targetloc.h"
+#include <libcamera/libcamera/camera_manager.h>
 
 void TargetLoc::start()
 {

@@ -25,46 +25,43 @@ Window::Window()
 	targetLoc.start();
 }
 
-void Window::updateImageL(const cv::Mat &leftInput)
+void Window::updateGUI()
 {
-	cv::resize(leftInput, currentL, imageSize);
-	const QImage frame(currentL.data, currentL.cols, currentL.rows, currentL.step,
-					   QImage::Format_BGR888);
-	imageL->setPixmap(QPixmap::fromImage(frame));
-	blendLRandDisplayD();
-}
+	cv::Mat leftResized;
+	cv::Mat rightResized;
 
-void Window::updateImageR(const cv::Mat &rightInput)
-{
-	cv::resize(rightInput, currentR, imageSize);
-	const QImage frame(currentR.data, currentR.cols, currentR.rows, currentR.step,
-					   QImage::Format_BGR888);
-	imageR->setPixmap(QPixmap::fromImage(frame));
-	blendLRandDisplayD();
-}
+	if (targetLoc.getCurrentLCameraImage().empty())
+		return;
+	if (targetLoc.getCurrentRCameraImage().empty())
+		return;
+	if (targetLoc.getCurrentLCameraImage().size != targetLoc.getCurrentRCameraImage().size)
+		return;
 
-void Window::blendLRandDisplayD()
-{
-	if (targetLoc.currentL.empty())
-		return;
-	if (targetLoc.currentR.empty())
-		return;
-	if (targetLoc.currentL.size != targetLoc.currentR.size)
-		return;
+	cv::resize(targetLoc.getCurrentLCameraImage(), leftResized, displayImageSize);
+	cv::resize(targetLoc.getCurrentRCameraImage(), rightResized, displayImageSize);
+
 	cv::Mat blended;
-	cv::addWeighted(targetLoc.currentL, 0.5, targetLoc.currentR, 0.5, 0.0, blended);
-	const QImage frame(blended.data, blended.cols, blended.rows, blended.step,
+	cv::addWeighted(leftResized, 0.5, rightResized, 0.5, 0.0, blended);
+	const QImage frameD(blended.data, blended.cols, blended.rows, blended.step,
 					   QImage::Format_BGR888);
-	imageCombined->setPixmap(QPixmap::fromImage(frame));
+	imageCombined->setPixmap(QPixmap::fromImage(frameD));
 
 	cv::Mat disp8;
-	cv::normalize(targetLoc.currentD, disp8, 0, 255, cv::NORM_MINMAX, CV_8U);
+	cv::normalize(targetLoc.getCurrentDisparityMap(), disp8, 0, 255, cv::NORM_MINMAX, CV_8U);
 	const QImage dispImage(disp8.data, disp8.cols, disp8.rows, disp8.step,
 						   QImage::Format_Grayscale8);
 	imageDisparity->setPixmap(QPixmap::fromImage(dispImage));
+
+	const QImage frameL(leftResized.data, leftResized.cols, leftResized.rows, leftResized.step,
+					   QImage::Format_BGR888);
+	imageL->setPixmap(QPixmap::fromImage(frameL));
+
+	const QImage frameR(rightResized.data, rightResized.cols, rightResized.rows, rightResized.step,
+					   QImage::Format_BGR888);
+	imageR->setPixmap(QPixmap::fromImage(frameR));
 }
 
-void Window::timerEvent(QTimerEvent *event)
+void Window::timerEvent(QTimerEvent*)
 {
-	blendLRandDisplayD();
+	updateGUI();
 }

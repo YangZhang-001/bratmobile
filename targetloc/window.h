@@ -29,13 +29,13 @@ private:
     QLabel       *imageCombined;
     QLabel       *imageDisparity;
 
-    // blends the current L and R images and displays it
-    void blendLRandDisplayD();
+    void updateGUI();
 
     void timerEvent(QTimerEvent *event);
 
     TargetLoc targetLoc;
 
+    const cv::Size displayImageSize{640,360};
 };
 
 #endif // WINDOW_H
