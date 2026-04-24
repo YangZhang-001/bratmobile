@@ -14,7 +14,7 @@ set (CMAKE_CXX_FLAGS "-Wall")
 
 find_package(PkgConfig)
 find_package(OpenCV REQUIRED)
-find_package(Qt6 COMPONENTS Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Widgets Charts REQUIRED)
 pkg_check_modules(TURBOJPEG REQUIRED libturbojpeg)
 pkg_check_modules(LIBCAMERA REQUIRED IMPORTED_TARGET libcamera)
 
@@ -64,7 +64,7 @@ add_executable(targetlocviewer
   main.cpp
 )
 
-target_link_libraries(targetlocviewer Qt6::Widgets)
+target_link_libraries(targetlocviewer Qt6::Widgets Qt6::Charts)
 target_link_libraries(targetlocviewer targetloc)
 target_link_libraries(targetlocviewer PkgConfig::LIBCAMERA)
 target_link_libraries(targetlocviewer ${OpenCV_LIBS})

@@ -5,8 +5,13 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QPushButton>
+#include <QtCharts/QChartView>
+#include <QtCharts/QScatterSeries>
+#include <QtCharts/QValueAxis>
 
 #include "targetloc.h"
+
+const char RPI_SERIAL_DEV* = "/dev/ttyAMA0";
 
 // class definition 'Window'
 class Window : public QWidget
@@ -18,14 +23,13 @@ public:
     Window();
     ~Window() {
         targetLoc.stop();
+        lidar.stop();
     }
 
 private:
-    QHBoxLayout  *h1Layout;
     QHBoxLayout  *h2Layout;
     QVBoxLayout  *vLayout;
-    QLabel       *imageL;
-    QLabel       *imageR;
+
     QLabel       *imageCombined;
     QLabel       *imageDisparity;
 
@@ -35,7 +39,13 @@ private:
 
     TargetLoc targetLoc;
 
+	C1Lidar lidar;
+
     const cv::Size displayImageSize{640,360};
+
+    QChart *chart;
+    QChartView *chartView;
+    QScatterSeries *series;
 };
 
 #endif // WINDOW_H

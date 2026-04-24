@@ -35,6 +35,10 @@ void TargetLoc::stop()
 
 void TargetLoc::newScanAvail(C1LidarData (&data)[C1Lidar::nDistance])
 {
+    currentLidarCoords.clear();
+    for(const auto& v:data) {
+        currentLidarCoords.push_back({v.x,v.y});
+    }
 }
 
 void TargetLoc::updateStereo()

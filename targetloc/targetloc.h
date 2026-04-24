@@ -49,7 +49,12 @@ public:
         return currentD;
     }
 
-private:
+    const std::vector<cv::Point2f> getCurrentLidarCoords() const
+    {
+        return currentLidarCoords;
+    }
+
+    private:
     cv::Mat currentL;
     cv::Mat currentR;
     cv::Mat currentD;
@@ -66,6 +71,8 @@ private:
     Stereo stereo;
 
     TargetDet targetDet;
+
+    std::vector<cv::Point2f> currentLidarCoords;
 
     void updateImageL(const cv::Mat &l);
 

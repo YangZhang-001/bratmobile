@@ -4,12 +4,26 @@ Window::Window()
 {
 	vLayout = new QVBoxLayout();
 
-	h1Layout = new QHBoxLayout();
-	imageL = new QLabel;
-	imageR = new QLabel;
-	h1Layout->addWidget(imageL);
-	h1Layout->addWidget(imageR);
-	vLayout->addLayout(h1Layout);
+	series = new QScatterSeries();
+	series->setMarkerSize(5.0);
+
+	QVector<QPointF> lidarPoints = {
+		{100.0, 200.0},
+		{200.0, 350},
+		{300, 102}};
+
+	for (const QPointF &p : lidarPoints)
+		series->append(p);
+
+	chart = new QChart();
+	chart->addSeries(series);
+	chart->createDefaultAxes();
+	chart->setTitle("LiDAR XY Plot");
+
+	chartView = new QChartView(chart);
+	chartView->setRenderHint(QPainter::Antialiasing);
+
+	vLayout->addWidget(chartView);
 
 	h2Layout = new QHBoxLayout();
 	imageCombined = new QLabel;
@@ -20,11 +34,15 @@ Window::Window()
 
 	setLayout(vLayout);
 
-	fprintf(stderr,"Starting screen update timer.\n");
+	fprintf(stderr, "Starting screen update timer.\n");
 	startTimer(std::chrono::milliseconds{100});
 
-	fprintf(stderr,"Starting Targetloc.\n");
+	fprintf(stderr, "Starting Targetloc.\n");
 	targetLoc.start();
+
+    lidar.registerInterface(&targetLoc);
+
+	lidar.start(RPI_SERIAL_DEV);
 }
 
 void Window::updateGUI()
@@ -45,7 +63,7 @@ void Window::updateGUI()
 	cv::Mat blended;
 	cv::addWeighted(leftResized, 0.5, rightResized, 0.5, 0.0, blended);
 	const QImage frameD(blended.data, blended.cols, blended.rows, blended.step,
-					   QImage::Format_BGR888);
+						QImage::Format_BGR888);
 	imageCombined->setPixmap(QPixmap::fromImage(frameD));
 
 	cv::Mat disp8;
@@ -54,17 +72,13 @@ void Window::updateGUI()
 						   QImage::Format_Grayscale8);
 	imageDisparity->setPixmap(QPixmap::fromImage(dispImage));
 
-	const QImage frameL(leftResized.data, leftResized.cols, leftResized.rows, leftResized.step,
-					   QImage::Format_BGR888);
-	imageL->setPixmap(QPixmap::fromImage(frameL));
-
-	const QImage frameR(rightResized.data, rightResized.cols, rightResized.rows, rightResized.step,
-					   QImage::Format_BGR888);
-	imageR->setPixmap(QPixmap::fromImage(frameR));
-	update();
+	series->clear();
+	for(auto& v:targetLoc.getCurrentLidarCoords()) {
+		series->append({v.x,v.y});
+	}
 }
 
-void Window::timerEvent(QTimerEvent*)
+void Window::timerEvent(QTimerEvent *)
 {
 	updateGUI();
 }
