@@ -3,6 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include <thread>
 #include <atomic>
+#include <vector>
 
 class TargetDet
 {
@@ -23,9 +24,9 @@ public:
     }
 
     // callback for the coordinate
-    using OnDetected = std::function<void(const cv::Point2f)>;
+    using OnDetected = std::function<void(const std::vector<cv::Point2f>&)>;
 
-    std::vector<cv::Point2f> detectSync(const cv::Mat img);
+    const std::vector<cv::Point2f> detectSync(const cv::Mat img);
 
     void detectAsync(const cv::Mat img);
 

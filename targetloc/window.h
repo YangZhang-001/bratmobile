@@ -10,6 +10,20 @@
 
 #include "targetloc.h"
 
+
+class QLIDARPlot:public QCustomPlot
+{
+public:
+    QLIDARPlot():QCustomPlot(){
+	QSizePolicy p(sizePolicy());
+        p.setHeightForWidth(true);
+        setSizePolicy(p);
+    };
+    virtual int heightForWidth ( int w ) const override { return w;};
+};
+
+
+
 static const char RPI_SERIAL_DEV[] = "/dev/ttyAMA0";
 
 // class definition 'Window'
@@ -44,8 +58,7 @@ private:
 
     const cv::Size displayImageSize{640, 360};
 
-    QCustomPlot *customPlot;
-    QSharedPointer<QCPDataContainer<QCPGraphData> > lidarData;
+    QLIDARPlot *lidarPlot;
 };
 
 #endif // WINDOW_H

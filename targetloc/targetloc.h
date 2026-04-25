@@ -7,6 +7,8 @@
 #include <libcamera/libcamera/camera_manager.h>
 #include "c1lidarrpi.h"
 #include <mutex>
+#include <vector>
+#include <functional>
 
 class TargetLoc : public C1Lidar::DataInterface
 {
@@ -58,6 +60,8 @@ public:
 
     static constexpr int LIDAR_DATA_POINTS = C1Lidar::nDistance;
 
+    float disp2meter = 300; // just now only a very rought estimate
+
 private:
     cv::Mat currentL;
     cv::Mat currentR;
@@ -65,10 +69,11 @@ private:
 
     const char *LIDAR_SERIAL_DEV = "/dev/ttyAMA0";
 
-    void onTargetDetected(const cv::Point2f coord);
+    void onTargetDetected(const std::vector<cv::Point2f>& coords);
 
     Libcam2OpenCV cameraL;
     Libcam2OpenCV cameraR;
+    Libcam2OpenCVSettings settings;
 
     libcamera::CameraManager cm;
 

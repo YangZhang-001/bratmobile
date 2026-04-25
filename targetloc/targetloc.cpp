@@ -11,8 +11,8 @@ void TargetLoc::start()
     cameraR.registerCallback([&](const cv::Mat &right, const libcamera::ControlList &)
                              { updateImageR(right); });
 
-    targetDet.registerDetCallback([&](const cv::Point2f coord)
-                                  { onTargetDetected(coord); });
+    targetDet.registerDetCallback([&](const std::vector<cv::Point2f> &coords)
+                                  { onTargetDetected(coords); });
 
     stereo.registerCallback([&](cv::Mat d)
                             { 
@@ -20,7 +20,6 @@ void TargetLoc::start()
                                 currentD = d; 
                                 disparityData_mutex.unlock(); });
 
-    Libcam2OpenCVSettings settings;
     settings.width = 1920;
     settings.height = 1080;
     settings.cameraIndex = 0;
@@ -81,7 +80,38 @@ void TargetLoc::updateImageR(const cv::Mat &r)
 }
 
 // here it's where it's getting interesting!
-void TargetLoc::onTargetDetected(const cv::Point2f coord)
+void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
 {
-    //printf("Target/camera: %f,%f\n", coord.x, coord.y);
+    float targetLocX = 0;
+    float targetLocY = 0;
+    std::vector<cv::Point> scaledContour;
+    printf("Contour: ");
+    int i = 0;
+    for(auto &c:contour) {
+	const int x = c.x * currentD.size().width / settings.width;
+	const int y = c.y * currentD.size().height / settings.height;
+	scaledContour.emplace_back(x,y);
+	printf("[%d,%d]", x, y);
+	targetLocX = targetLocX + c.x;
+	i++;
+    }
+    targetLocX = targetLocX / i;
+    printf("\n");
+
+    if (currentD.empty()) return;
+
+    // Create mask
+    cv::Mat mask = cv::Mat::zeros(currentD.size(), CV_8UC1);
+    std::cout << mask.size() << std::endl;
+
+    // Draw filled contour
+    std::vector<std::vector<cv::Point>> scaledContours{scaledContour};
+    cv::drawContours(mask, scaledContours,-1, cv::Scalar(255), cv::FILLED);
+
+    // Compute mean gray value inside contour
+    float avgDisp = cv::mean(currentD, mask)[0];
+
+    targetLocY = disp2meter / avgDisp;
+
+    printf("Disparity: %f, Target location: [%f,%f]\n",avgDisp,targetLocX,targetLocY);
 }

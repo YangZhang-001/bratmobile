@@ -8,7 +8,7 @@ TargetDet::~TargetDet()
     }
 }
 
-std::vector<cv::Point2f> TargetDet::detectSync(const cv::Mat img)
+const std::vector<cv::Point2f> TargetDet::detectSync(const cv::Mat img)
 {
     std::vector<cv::Point2f> points;
     if (img.empty())
@@ -52,7 +52,7 @@ void TargetDet::detectAsync(const cv::Mat img)
                             isDetecting=true;
                             auto pts = detectSync(imgThr);
                             if ((pts.size()>0) && (onDetected)) {
-                                onDetected(calcCentre(pts));
+                                onDetected(pts);
                             }
                             isDetecting=false; }, img);
 }

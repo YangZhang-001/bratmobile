@@ -5,23 +5,14 @@ Window::Window()
 	vLayout = new QVBoxLayout();
 	h1Layout = new QHBoxLayout();
 
-	customPlot = new QCustomPlot;
-	customPlot->addGraph();
-	customPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
-	customPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
+	lidarPlot = new QLIDARPlot;
+	lidarPlot->addGraph();
+	lidarPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
+	lidarPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
+	lidarPlot->xAxis->setRange(-5, 5);
+	lidarPlot->yAxis->setRange(-5, 5);
 
-	lidarData.reset(new QCPDataContainer<QCPGraphData>);
-	for (int i = 0; i < 9000; i++)
-	{
-		QCPGraphData data(0, 0);
-		lidarData->add(data);
-	}
-	customPlot->graph()->setData(lidarData);
-
-	customPlot->xAxis->setRange(-5, 5);
-	customPlot->yAxis->setRange(-5, 5);
-
-	h1Layout->addWidget(customPlot);
+	h1Layout->addWidget(lidarPlot);
 
 	imageDisparity = new QLabel;
 	h1Layout->addWidget(imageDisparity);
@@ -73,14 +64,14 @@ void Window::updateGUI()
 						   QImage::Format_Grayscale8);
 	imageDisparity->setPixmap(QPixmap::fromImage(dispImage));
 
-
-	lidarData.clear();
+	QVector<double> x, y;
 	for (const auto &v : targetLoc.getCurrentLidarCoords())
-	{
-	    QCPGraphData data(v.x,v.y);
-	    lidarData->add(data);
-	}
-	customPlot->replot();
+	    {
+		x.append(v.x);
+		y.append(v.y);
+	    }
+	lidarPlot->graph(0)->setData(x, y);
+	lidarPlot->replot();
 }
 
 void Window::timerEvent(QTimerEvent *)
