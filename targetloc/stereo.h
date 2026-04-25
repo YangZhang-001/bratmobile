@@ -3,7 +3,6 @@
 #include <vector>
 #include <thread>
 #include <atomic>
-#include "PrimeStereoMatch.h"
 
 #pragma once
 
