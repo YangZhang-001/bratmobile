@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <libcamera/libcamera/camera_manager.h>
 #include "c1lidarrpi.h"
+#include <mutex>
 
 class TargetLoc : public C1Lidar::DataInterface
 {
@@ -49,12 +50,15 @@ public:
         return currentD;
     }
 
-    const std::vector<cv::Point2f> getCurrentLidarCoords() const
+    const std::vector<cv::Point2f> getCurrentLidarCoords()
     {
+        std::lock_guard<std::mutex> guard(lidarData_mutex);
         return currentLidarCoords;
     }
 
-    private:
+    static constexpr int LIDAR_DATA_POINTS = C1Lidar::nDistance;
+
+private:
     cv::Mat currentL;
     cv::Mat currentR;
     cv::Mat currentD;
@@ -79,4 +83,9 @@ public:
     void updateImageR(const cv::Mat &r);
 
     void updateStereo();
+
+    std::mutex lidarData_mutex;
+    std::mutex disparityData_mutex;
+    std::mutex leftImage_mutex;
+    std::mutex rightImage_mutex;
 };

@@ -15,7 +15,10 @@ void TargetLoc::start()
                                   { onTargetDetected(coord); });
 
     stereo.registerCallback([&](cv::Mat d)
-                            { currentD = d; });
+                            { 
+                                disparityData_mutex.lock();
+                                currentD = d; 
+                                disparityData_mutex.unlock(); });
 
     Libcam2OpenCVSettings settings;
     settings.width = 1920;
@@ -35,9 +38,14 @@ void TargetLoc::stop()
 
 void TargetLoc::newScanAvail(C1LidarData (&data)[C1Lidar::nDistance])
 {
+    std::lock_guard<std::mutex> guard(lidarData_mutex);
     currentLidarCoords.clear();
-    for(const auto& v:data) {
-        currentLidarCoords.push_back({v.x,v.y});
+    for (const auto &v : data)
+    {
+        if (v.valid)
+        {
+            currentLidarCoords.push_back({v.x, v.y});
+        }
     }
 }
 
@@ -56,7 +64,9 @@ void TargetLoc::updateStereo()
 
 void TargetLoc::updateImageL(const cv::Mat &l)
 {
+    leftImage_mutex.lock();
     currentL = l;
+    leftImage_mutex.unlock();
     updateStereo();
     // We detect the target from the left eye!
     targetDet.detectAsync(l);
@@ -64,12 +74,14 @@ void TargetLoc::updateImageL(const cv::Mat &l)
 
 void TargetLoc::updateImageR(const cv::Mat &r)
 {
+    rightImage_mutex.lock();
     currentR = r;
+    rightImage_mutex.unlock();
     updateStereo();
 }
 
 // here it's where it's getting interesting!
 void TargetLoc::onTargetDetected(const cv::Point2f coord)
 {
-    printf("Target/camera: %f,%f\n",coord.x,coord.y);    
+    //printf("Target/camera: %f,%f\n", coord.x, coord.y);
 }

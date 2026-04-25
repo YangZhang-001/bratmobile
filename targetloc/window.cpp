@@ -3,28 +3,34 @@
 Window::Window()
 {
 	vLayout = new QVBoxLayout();
+	h1Layout = new QHBoxLayout();
 
-	series = new QScatterSeries();
-	series->setMarkerSize(10.0);
+	customPlot = new QCustomPlot;
+	customPlot->addGraph();
+	customPlot->graph(0)->setLineStyle(QCPGraph::lsNone);
+	customPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
 
-	chart = new QChart();
-	chart->addSeries(series);
-	chart->createDefaultAxes();
-	auto xAxis = chart->axes(Qt::Horizontal);
-	auto yAxis = chart->axes(Qt::Vertical);
-	xAxis.back()->setRange(-5, 5);
-	yAxis.back()->setRange(-5, 5);
-	chart->setTitle("LiDAR XY Plot");
+	lidarData.reset(new QCPDataContainer<QCPGraphData>);
+	for (int i = 0; i < 9000; i++)
+	{
+		QCPGraphData data(0, 0);
+		lidarData->add(data);
+	}
+	customPlot->graph()->setData(lidarData);
 
-	chartView = new QChartView(chart);
+	customPlot->xAxis->setRange(-5, 5);
+	customPlot->yAxis->setRange(-5, 5);
 
-	vLayout->addWidget(chartView);
+	h1Layout->addWidget(customPlot);
+
+	imageDisparity = new QLabel;
+	h1Layout->addWidget(imageDisparity);
+
+	vLayout->addLayout(h1Layout);
 
 	h2Layout = new QHBoxLayout();
 	imageCombined = new QLabel;
 	h2Layout->addWidget(imageCombined);
-	imageDisparity = new QLabel;
-	h2Layout->addWidget(imageDisparity);
 	vLayout->addLayout(h2Layout);
 
 	setLayout(vLayout);
@@ -67,13 +73,14 @@ void Window::updateGUI()
 						   QImage::Format_Grayscale8);
 	imageDisparity->setPixmap(QPixmap::fromImage(dispImage));
 
-	series->clear();
-	QList<QPointF> points;
+
+	lidarData.clear();
 	for (const auto &v : targetLoc.getCurrentLidarCoords())
 	{
-		points.append({v.x, v.y});
+	    QCPGraphData data(v.x,v.y);
+	    lidarData->add(data);
 	}
-	series->replace(points);
+	customPlot->replot();
 }
 
 void Window::timerEvent(QTimerEvent *)
