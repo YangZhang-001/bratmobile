@@ -29,10 +29,10 @@ include_directories(
 
 include(GNUInstallDirs)
 
-add_executable(targetlocviewer
+add_executable(fakelidarviewer
   window.cpp
   main.cpp
 )
 
-target_link_libraries(targetlocviewer Qt6::Widgets QCustomPlotQt6)
+target_link_libraries(fakelidarviewer Qt6::Widgets QCustomPlotQt6)
 
