@@ -5,23 +5,18 @@ Window::Window()
 	vLayout = new QVBoxLayout();
 
 	series = new QScatterSeries();
-	series->setMarkerSize(5.0);
-
-	QVector<QPointF> lidarPoints = {
-		{100.0, 200.0},
-		{200.0, 350},
-		{300, 102}};
-
-	for (const QPointF &p : lidarPoints)
-		series->append(p);
+	series->setMarkerSize(10.0);
 
 	chart = new QChart();
 	chart->addSeries(series);
 	chart->createDefaultAxes();
+	auto xAxis = chart->axes(Qt::Horizontal);
+	auto yAxis = chart->axes(Qt::Vertical);
+	xAxis.back()->setRange(-5, 5);
+	yAxis.back()->setRange(-5, 5);
 	chart->setTitle("LiDAR XY Plot");
 
 	chartView = new QChartView(chart);
-	chartView->setRenderHint(QPainter::Antialiasing);
 
 	vLayout->addWidget(chartView);
 
@@ -40,7 +35,7 @@ Window::Window()
 	fprintf(stderr, "Starting Targetloc.\n");
 	targetLoc.start();
 
-    lidar.registerInterface(&targetLoc);
+	lidar.registerInterface(&targetLoc);
 
 	lidar.start(RPI_SERIAL_DEV);
 }
@@ -73,9 +68,12 @@ void Window::updateGUI()
 	imageDisparity->setPixmap(QPixmap::fromImage(dispImage));
 
 	series->clear();
-	for(auto& v:targetLoc.getCurrentLidarCoords()) {
-		series->append({v.x,v.y});
+	QList<QPointF> points;
+	for (const auto &v : targetLoc.getCurrentLidarCoords())
+	{
+		points.append({v.x, v.y});
 	}
+	series->replace(points);
 }
 
 void Window::timerEvent(QTimerEvent *)
