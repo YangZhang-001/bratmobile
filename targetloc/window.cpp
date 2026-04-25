@@ -11,8 +11,8 @@ Window::Window()
 	chart->addSeries(series);
 	chart->createDefaultAxes();
 	auto xAxis = chart->axes(Qt::Horizontal);
-	auto yAxis = chart->axes(Qt::Vertical);
 	xAxis.back()->setRange(-5, 5);
+	auto yAxis = chart->axes(Qt::Vertical);
 	yAxis.back()->setRange(-5, 5);
 	chart->setTitle("LiDAR XY Plot");
 
