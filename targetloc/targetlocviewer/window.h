@@ -27,7 +27,7 @@ public:
 static const char RPI_SERIAL_DEV[] = "/dev/ttyAMA0";
 
 // class definition 'Window'
-class Window : public QWidget
+class Window : public QWidget, public TargetLoc::DetectionInterface
 {
     // must include the Q_OBJECT macro for the Qt signals/slots framework to work with this class
     Q_OBJECT
@@ -41,8 +41,7 @@ public:
     }
 
 private:
-    QHBoxLayout *h1Layout;
-    QHBoxLayout *h2Layout;
+    QHBoxLayout *hLayout;
     QVBoxLayout *vLayout;
 
     QLabel *imageCombined;
@@ -59,6 +58,8 @@ private:
     const cv::Size displayImageSize{640, 360};
 
     QLIDARPlot *lidarPlot;
+
+    virtual void newTargetDetected(const float x, const float y);
 };
 
 #endif // WINDOW_H

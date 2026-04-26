@@ -17,8 +17,12 @@ public:
 
     struct DetectionInterface
     {
-        virtual void hasNewTargetDetection(float x, float y) = 0;
+        virtual void newTargetDetected(const float x, const float y) = 0;
     };
+
+    void registerNewTargetDetectedCallback(DetectionInterface* cb) {
+	detectionInterface = cb;
+    }
 
     void start();
     void stop();
@@ -47,8 +51,9 @@ public:
     /**
      * For debugging purposes and the GUI we can get the current disparity readings
      */
-    const cv::Mat getCurrentDisparityMap() const
+    const cv::Mat getCurrentDisparityMap()
     {
+	std::lock_guard<std::mutex> guard(disparityData_mutex);
         return currentD;
     }
 
@@ -58,9 +63,22 @@ public:
         return currentLidarCoords;
     }
 
+    const std::vector<cv::Point> getQRcodeContour() {
+        std::lock_guard<std::mutex> guard(contour_mutex);
+	return scaledContour;
+    }
+
     static constexpr int LIDAR_DATA_POINTS = C1Lidar::nDistance;
 
-    float disp2meter = 300; // just now only a very rought estimate
+    /**
+     * How inverse disparity maps to meter.
+     **/
+    float disp2meter = 500;
+
+    /**
+     * Factor which maps the x-pixel pos to meter
+     **/
+    float xpos2meter = 1.0/400.0;
 
 private:
     cv::Mat currentL;
@@ -93,4 +111,9 @@ private:
     std::mutex disparityData_mutex;
     std::mutex leftImage_mutex;
     std::mutex rightImage_mutex;
+    std::mutex contour_mutex;
+
+    std::vector<cv::Point> scaledContour;
+
+    DetectionInterface* detectionInterface = nullptr;
 };

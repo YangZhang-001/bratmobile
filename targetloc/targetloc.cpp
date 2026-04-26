@@ -14,11 +14,10 @@ void TargetLoc::start()
     targetDet.registerDetCallback([&](const std::vector<cv::Point2f> &coords)
                                   { onTargetDetected(coords); });
 
-    stereo.registerCallback([&](cv::Mat d)
-                            { 
-                                disparityData_mutex.lock();
-                                currentD = d; 
-                                disparityData_mutex.unlock(); });
+    stereo.registerCallback([&](cv::Mat d) {
+	std::lock_guard<std::mutex> guard(disparityData_mutex);
+	currentD = d; 
+    });
 
     settings.width = 1920;
     settings.height = 1080;
@@ -82,20 +81,21 @@ void TargetLoc::updateImageR(const cv::Mat &r)
 // here it's where it's getting interesting!
 void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
 {
-    float targetLocX = 0;
-    float targetLocY = 0;
-    std::vector<cv::Point> scaledContour;
     printf("Contour: ");
     int i = 0;
+    float avgX = 0;
+    contour_mutex.lock();
+    scaledContour.clear();
     for(auto &c:contour) {
 	const int x = c.x * currentD.size().width / settings.width;
 	const int y = c.y * currentD.size().height / settings.height;
 	scaledContour.emplace_back(x,y);
 	printf("[%d,%d]", x, y);
-	targetLocX = targetLocX + c.x;
+	avgX = avgX + c.x;
 	i++;
     }
-    targetLocX = targetLocX / i;
+    contour_mutex.unlock();    
+    avgX = avgX / i;
     printf("\n");
 
     if (currentD.empty()) return;
@@ -104,14 +104,21 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
     cv::Mat mask = cv::Mat::zeros(currentD.size(), CV_8UC1);
     std::cout << mask.size() << std::endl;
 
-    // Draw filled contour
+    // Draw filled contour for the mask
     std::vector<std::vector<cv::Point>> scaledContours{scaledContour};
     cv::drawContours(mask, scaledContours,-1, cv::Scalar(255), cv::FILLED);
 
     // Compute mean gray value inside contour
     float avgDisp = cv::mean(currentD, mask)[0];
 
-    targetLocY = disp2meter / avgDisp;
+    const float targetLocX = disp2meter / avgDisp;
+    const float targetLocY = xpos2meter * ((settings.width/2) - avgX);
 
     printf("Disparity: %f, Target location: [%f,%f]\n",avgDisp,targetLocX,targetLocY);
+
+    // callback!
+    if (detectionInterface)
+    {
+        detectionInterface->newTargetDetected(targetLocX, targetLocY);
+    }
 }

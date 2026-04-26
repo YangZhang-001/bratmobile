@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
 
 	// create the window
 	Window window;
+	window.setWindowState(Qt::WindowMaximized);
 	window.show();
 
 	const int r = app.exec();

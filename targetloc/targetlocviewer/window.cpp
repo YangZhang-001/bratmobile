@@ -2,8 +2,7 @@
 
 Window::Window()
 {
-	vLayout = new QVBoxLayout();
-	h1Layout = new QHBoxLayout();
+	hLayout = new QHBoxLayout();
 
 	lidarPlot = new QLIDARPlot;
 	lidarPlot->addGraph();
@@ -12,24 +11,33 @@ Window::Window()
 	lidarPlot->xAxis->setRange(-5, 5);
 	lidarPlot->yAxis->setRange(-5, 5);
 
-	h1Layout->addWidget(lidarPlot);
+	lidarPlot->addGraph();
+	lidarPlot->graph(1)->setLineStyle(QCPGraph::lsNone);
+	lidarPlot->graph(1)->setScatterStyle(QCPScatterStyle::ssDiamond);
+	QPen pen;
+	pen.setColor(QColor(255,0,0));
+	pen.setWidth(5);
+	lidarPlot->graph(1)->setPen(pen);
+
+	hLayout->addWidget(lidarPlot);
+
+	vLayout = new QVBoxLayout();
 
 	imageDisparity = new QLabel;
-	h1Layout->addWidget(imageDisparity);
+	vLayout->addWidget(imageDisparity);
 
-	vLayout->addLayout(h1Layout);
-
-	h2Layout = new QHBoxLayout();
 	imageCombined = new QLabel;
-	h2Layout->addWidget(imageCombined);
-	vLayout->addLayout(h2Layout);
+	vLayout->addWidget(imageCombined);
 
-	setLayout(vLayout);
+	hLayout->addLayout(vLayout);
+
+	setLayout(hLayout);
 
 	fprintf(stderr, "Starting screen update timer.\n");
 	startTimer(std::chrono::milliseconds{100});
 
 	fprintf(stderr, "Starting Targetloc.\n");
+	targetLoc.registerNewTargetDetectedCallback(this);
 	targetLoc.start();
 
 	lidar.registerInterface(&targetLoc);
@@ -60,8 +68,16 @@ void Window::updateGUI()
 
 	cv::Mat disp8;
 	cv::normalize(targetLoc.getCurrentDisparityMap(), disp8, 0, 255, cv::NORM_MINMAX, CV_8U);
-	const QImage dispImage(disp8.data, disp8.cols, disp8.rows, disp8.step,
-						   QImage::Format_Grayscale8);
+
+	cv::Mat dispBGR;
+	cv::cvtColor(disp8, dispBGR, cv::COLOR_GRAY2BGR);
+
+	if (!targetLoc.getQRcodeContour().empty()) {
+	    std::vector<std::vector<cv::Point>> contours{targetLoc.getQRcodeContour()};
+	    cv::drawContours(dispBGR, contours, -1, {0,255,0}, 3);
+	}
+	const QImage dispImage(dispBGR.data, dispBGR.cols, dispBGR.rows, dispBGR.step,
+			       QImage::Format_BGR888);
 	imageDisparity->setPixmap(QPixmap::fromImage(dispImage));
 
 	QVector<double> x, y;
@@ -74,6 +90,17 @@ void Window::updateGUI()
 	lidarPlot->replot();
 }
 
+
+// properly done with a callback!
+void Window::newTargetDetected(const float x, const float y) {
+    QVector<double> xv, yv;
+    xv.append(x);
+    yv.append(y);
+    fprintf(stderr,"Plotting target at [%f,%f].\n",x,y);
+    lidarPlot->graph(1)->setData(xv, yv);
+}
+
+// the rest just with a timer
 void Window::timerEvent(QTimerEvent *)
 {
 	updateGUI();
