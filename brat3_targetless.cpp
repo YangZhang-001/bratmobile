@@ -1,4 +1,5 @@
 #include "custom_robot.h"
+#include <c1lidarrpi.h>
 const bool DEBUG=false;
 
 class NoGoal:public GoalChanger{
@@ -36,16 +37,10 @@ int main(int argc, char** argv) {
 	lidar.registerInterface(&dataInterface);
 
 	printf("all registered\n");
-	lidar.start(RPI_SERIAL_DEV);
+	lidar.start(C1Lidar::RPI_SERIAL_DEV);
 	tracker.start();
 	getchar();
 	tracker.stop();
 	lidar.stop();
 	logger.~Logger();
 }
-	
-	
-
-	
-
-	

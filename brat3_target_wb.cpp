@@ -1,4 +1,5 @@
 #include "custom_robot.h"
+#include <c1lidarrpi.h>
 const bool DEBUG=false;
 
 int main(int argc, char** argv) {
@@ -21,7 +22,7 @@ int main(int argc, char** argv) {
 	configurator.registerInterface(&tracker);
 	lidar.registerInterface(&dataInterface);
 	
-	lidar.start(RPI_SERIAL_DEV);
+	lidar.start(C1Lidar::RPI_SERIAL_DEV);
 	tracker.start();
 	getchar();
 	tracker.stop();
