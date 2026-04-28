@@ -132,9 +132,6 @@ class TargetLoc : public C1Lidar::DataInterface
     // current disparity map
     cv::Mat currentD;
 
-    // Serial device of the LIDAR
-    const char *LIDAR_SERIAL_DEV = "/dev/ttyAMA0";
-
     // Callback when a target has been detected
     void onTargetDetected (const std::vector<cv::Point2f> &coords);
 

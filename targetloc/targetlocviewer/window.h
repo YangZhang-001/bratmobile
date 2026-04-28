@@ -23,10 +23,6 @@ public:
     virtual int heightForWidth ( int w ) const override { return w;};
 };
 
-
-
-static const char RPI_SERIAL_DEV[] = "/dev/ttyAMA0";
-
 // class definition 'Window'
 class Window : public QWidget, public TargetLoc::DetectionInterface
 {

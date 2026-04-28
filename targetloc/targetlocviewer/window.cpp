@@ -1,4 +1,5 @@
 #include "window.h"
+#include <c1lidarrpi.h>
 
 Window::Window()
 {
@@ -42,7 +43,7 @@ Window::Window()
 
     lidar.registerInterface(&targetLoc);
 
-    lidar.start(RPI_SERIAL_DEV);
+    lidar.start(C1Lidar::RPI_SERIAL_DEV);
 }
 
 void Window::updateGUI()
