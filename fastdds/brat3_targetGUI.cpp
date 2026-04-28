@@ -32,7 +32,7 @@ class OpenLooperGUI: public OLTrackerGUI, public MotorCallback{
 
 int main(int argc, char** argv) {
 	std::cout<<"Navigating to Target with Brat2"<<std::endl;
-	A1Lidar lidar;
+	C1Lidar lidar;
 	AlphaBot motors;
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 	configurator.registerInterface( &tracker);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&tracker);
-	lidar.start(rpi_serial_dev);
+	lidar.start(RPI_SERIAL_DEV);
 	motors.start();
 	getchar();
 	motors.stop();

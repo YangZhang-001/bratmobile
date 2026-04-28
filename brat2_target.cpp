@@ -4,7 +4,6 @@ const bool DEBUG=false;
 int main(int argc, char** argv) {
 	std::cout<<"Navigating to Target with Brat2"<<std::endl;
 	C1Lidar lidar;
-	ZetaBot motors;
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
 	//Motor_Out controlInterface;
@@ -13,7 +12,7 @@ int main(int argc, char** argv) {
 	LaserFocus wb;
 	configurator.register_worldBuilder(&wb);
 	HorizonStarPlanner planner;
-	OpenLooper tracker;
+	OpenLooper tracker; 
 	configurator.register_planner(&planner);
 	configurator.register_tracker(&tracker);
 	OpenLoopController wc;
@@ -24,11 +23,10 @@ int main(int argc, char** argv) {
 	LidarInterface dataInterface(&configurator);
 	configurator.registerInterface(&tracker);
 	lidar.registerInterface(&dataInterface);
-	motors.registerStepCallback(&tracker);
-	lidar.start(rpi_serial_dev);
-	motors.start();
+	lidar.start(RPI_SERIAL_DEV);
+	tracker.start();
 	getchar();
-	motors.stop();
+	tracker.stop();
 	lidar.stop();
 	logger.~Logger();
 }

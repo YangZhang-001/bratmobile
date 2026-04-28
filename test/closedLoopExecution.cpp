@@ -4,7 +4,7 @@
 const bool DEBUG=false;
 
 int main(int argc, char** argv) {
-	A1Lidar lidar;
+	C1Lidar lidar;
 	AlphaBot motors;
 	MotorCallback controlInterface;
     AffordanceSetter as;
@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 	configurator.registerInterface( &controlInterface);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&controlInterface);
-	lidar.start(rpi_serial_dev);
+	lidar.start(RPI_SERIAL_DEV);
 	motors.start();
 	do{
     }while(!getchar());

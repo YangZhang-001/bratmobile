@@ -3,7 +3,7 @@ const bool DEBUG=false;
 
 int main(int argc, char** argv) {
 	C1Lidar lidar;
-	ZetaBot motors;
+	;
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
     FocusedConfigurator configurator;
@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&tracker);
 	printf("all registered\n");
-	lidar.start(rpi_serial_dev);
+	lidar.start(RPI_SERIAL_DEV);
 	motors.start();
 	getchar();
 	motors.stop();

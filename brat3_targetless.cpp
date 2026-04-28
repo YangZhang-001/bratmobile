@@ -16,7 +16,7 @@ class NoGoal:public GoalChanger{
 
 int main(int argc, char** argv) {
 	C1Lidar lidar;
-	ZetaBot motors;
+	;
 	//Motor_Out controlInterface;
     FocusedConfigurator configurator;
 	LaserFocus wb;
@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&tracker);
 	printf("all registered\n");
-	lidar.start(rpi_serial_dev);
+	lidar.start(RPI_SERIAL_DEV);
 	motors.start();
 	getchar();
 	motors.stop();

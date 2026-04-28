@@ -4,7 +4,7 @@ const bool DEBUG=false;
 
 
 int main(int argc, char** argv) {
-	A1Lidar lidar;
+	C1Lidar lidar;
 	AlphaBot motors;
     OpenLooper openLooper;
     AffordanceSetter as;
@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 	configurator.registerInterface(&openLooper);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&openLooper);
-	lidar.start(rpi_serial_dev);
+	lidar.start(RPI_SERIAL_DEV);
 	motors.start();
 	do{
     }while(!getchar());
