@@ -1,5 +1,6 @@
 #include "targetloc.h"
 #include <libcamera/libcamera/camera_manager.h>
+#include <opencv2/core/types.hpp>
 
 void TargetLoc::start()
 {
@@ -84,11 +85,44 @@ void TargetLoc::updateImageR(const cv::Mat &r)
 // here it's where it's getting interesting!
 void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
 {
-    printf("Contour: ");
+    // removing scaled contour which is used here for debuggin and visualisation
+    // doing it in a thread-safe way in case it's being plotted by the QT GUI.
+    contour_mutex.lock();
+    scaledContour.clear();
+    contour_mutex.unlock();
+
+    // We put the detection contours into a double ended queue of 3
+    // and check if all the detection points are within an error margin
+    // of maxContourPixelErrorBetweenDetectionContours.
+    contoursRingbuffer.push_front(contour);
+    if (contoursRingbuffer.size() < 3) {
+        return;
+    }
+    contoursRingbuffer.pop_back();
+    for (int i = 1; i < 3; i++) {
+        std::vector<cv::Point2f> contour1 = contoursRingbuffer[i - 1];
+        std::vector<cv::Point2f> contour2 = contoursRingbuffer[i];
+        for (unsigned long int j = 0;
+             (j < contour1.size()) && (j < contour2.size()); j++) {
+            if (point2point(contour1[j], contour2[j]) >
+                maxContourPixelErrorBetweenDetectionContours) {
+                fprintf(stderr, "Contour discarded.\n");
+                return;
+            }
+        }
+    }
+
+    // Checking if the disparity map is actually there as we need it to find out
+    // how far the target is.
+    if (currentD.empty())
+        return;
+
+    // We need to scale the contour from full resolution to the resolution
+    // of the disparity map.
+    printf("We have a contour around a target:");
     int i = 0;
     float avgX = 0;
     contour_mutex.lock();
-    scaledContour.clear();
     for (auto &c : contour) {
         const int x = c.x * currentD.size().width / settings.width;
         const int y = c.y * currentD.size().height / settings.height;
@@ -99,30 +133,34 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
     }
     contour_mutex.unlock();
     avgX = avgX / i;
+    printf(", avgX = %f",avgX);
     printf("\n");
-
-    if (currentD.empty())
-        return;
 
     // Create mask
     cv::Mat mask = cv::Mat::zeros(currentD.size(), CV_8UC1);
-    std::cout << mask.size() << std::endl;
 
     // Draw filled contour for the mask
     std::vector<std::vector<cv::Point>> scaledContours{scaledContour};
     cv::drawContours(mask, scaledContours, -1, cv::Scalar(255), cv::FILLED);
 
-    // Compute mean gray value inside contour
+    // Compute mean disparity value inside contour
     float avgDisp = cv::mean(currentD, mask)[0];
 
-    const float targetLocX = disp2meter / avgDisp;
-    const float targetLocY = xpos2meter * ((int)(settings.width / 2) - avgX);
+    cv::Point2f targetLoc;
 
-    printf("Disparity: %f, Target location: [%f,%f]\n", avgDisp, targetLocX,
-           targetLocY);
+    // mapping disparity to distance in meter for the LIDAR / egocentric
+    // x-coordinate
+    targetLoc.x = disp2meter / avgDisp;
+
+    // mapping the x-coordinate pixels of the camera to the LIDAR y-coordinate
+    // of the target in meter
+    targetLoc.y = xpos2meter * (xposAtCentre - avgX);
+
+    printf("Disparity: %f, Target location: [%f,%f]\n", avgDisp, targetLoc.x,
+           targetLoc.y);
 
     // callback!
     if (detectionInterface) {
-        detectionInterface->newTargetDetected(targetLocX, targetLocY);
+        detectionInterface->newTargetDetected(targetLoc);
     }
 }

@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QPushButton>
 
+#include <opencv2/core/types.hpp>
 #include <qcustomplot.h>
 
 #include "targetloc.h"
@@ -59,7 +60,7 @@ private:
 
     QLIDARPlot *lidarPlot;
 
-    virtual void newTargetDetected(const float x, const float y);
+    virtual void newTargetDetected(const cv::Point2f topViewEgoCoordinate);
 };
 
 #endif // WINDOW_H

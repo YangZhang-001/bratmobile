@@ -9,7 +9,8 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-class TargetLoc : public C1Lidar::DataInterface {
+class TargetLoc : public C1Lidar::DataInterface
+{
   public:
     TargetLoc() = default;
 
@@ -19,19 +20,19 @@ class TargetLoc : public C1Lidar::DataInterface {
     struct DetectionInterface {
         /**
          * Callback that a new target has been detected.
-         * @param x The x-coordinate of the target relative from the robot in
-         * meter.
-         * @param y The y-coordinage of the target relative from the robot in
+         * @param topViewEgoCoordinage The top view egocentric xy coordinate in
          * meter.
          */
-        virtual void newTargetDetected(const float x, const float y) = 0;
+        virtual void
+        newTargetDetected(const cv::Point2f topViewEgoCoordinate) = 0;
     };
 
     /**
      * Registers the detection callback.
      * @param cb Pointer to the callback interface.
      */
-    void registerNewTargetDetectedCallback(DetectionInterface *cb) {
+    void registerNewTargetDetectedCallback(DetectionInterface *cb)
+    {
         detectionInterface = cb;
     }
 
@@ -49,7 +50,8 @@ class TargetLoc : public C1Lidar::DataInterface {
      * For debugging purposes and the GUI we can get the current left camera
      * image. This is pure polling but thread-safe.
      */
-    const cv::Mat getCurrentLCameraImage() {
+    const cv::Mat getCurrentLCameraImage()
+    {
         std::lock_guard<std::mutex> guard(leftImage_mutex);
         return currentL;
     }
@@ -58,7 +60,8 @@ class TargetLoc : public C1Lidar::DataInterface {
      * For debugging purposes and the GUI we can get the current right camera
      * image. This is pure polling but thread-safe.
      */
-    const cv::Mat getCurrentRCameraImage() {
+    const cv::Mat getCurrentRCameraImage()
+    {
         std::lock_guard<std::mutex> guard(rightImage_mutex);
         return currentR;
     }
@@ -67,17 +70,20 @@ class TargetLoc : public C1Lidar::DataInterface {
      * For debugging purposes and the GUI we can get the current disparity
      * readings. This is pure polling but thread-safe.
      */
-    const cv::Mat getCurrentDisparityMap() {
+    const cv::Mat getCurrentDisparityMap()
+    {
         std::lock_guard<std::mutex> guard(disparityData_mutex);
         return currentD;
     }
 
-    const std::vector<cv::Point2f> getCurrentLidarCoords() {
+    const std::vector<cv::Point2f> getCurrentLidarCoords()
+    {
         std::lock_guard<std::mutex> guard(lidarData_mutex);
         return currentLidarCoords;
     }
 
-    const std::vector<cv::Point> getQRcodeContour() {
+    const std::vector<cv::Point> getQRcodeContour()
+    {
         std::lock_guard<std::mutex> guard(contour_mutex);
         return scaledContour;
     }
@@ -87,12 +93,17 @@ class TargetLoc : public C1Lidar::DataInterface {
     /**
      * How inverse disparity maps to meter.
      **/
-    float disp2meter = 500;
+    const float disp2meter = 500;
 
     /**
      * Factor which maps the x-pixel pos to meter
      **/
-    float xpos2meter = 1.0 / 400.0;
+    const float xpos2meter = 1.0 / 2000.0;
+
+    /**
+     * The x pixel position in the camera image where it's the centre pos
+     */
+    const float xposAtCentre = 1140;
 
   private:
     cv::Mat currentL;
@@ -129,5 +140,17 @@ class TargetLoc : public C1Lidar::DataInterface {
 
     std::vector<cv::Point> scaledContour;
 
+    std::deque<std::vector<cv::Point2f>> contoursRingbuffer;
+
     DetectionInterface *detectionInterface = nullptr;
+
+    float point2point(cv::Point2f a, cv::Point2f b)
+    {
+        const float dx = a.x - b.x;
+        const float dy = a.y - b.y;
+        return sqrt(dx * dx + dy * dy);
+    }
+
+    // error in pixels between contours
+    const float maxContourPixelErrorBetweenDetectionContours = 10;
 };
