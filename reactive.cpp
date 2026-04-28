@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 	configurator.registerInterface( &tracker);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&tracker);
-	lidar.start();
+	lidar.start(rpi_serial_dev);
 	motors.start();
 	getchar();
 	motors.stop();

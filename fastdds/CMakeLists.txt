@@ -1,9 +1,12 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.20)
 
 project(DDSDraw)
 
 find_package(OpenCV REQUIRED)
 find_package(box2d REQUIRED)
+
+find_package(fastcdr REQUIRED)
+find_package(fastdds REQUIRED)
 
 set (CMAKE_CXX_STANDARD 17)
 
@@ -25,11 +28,11 @@ add_dependencies(ObjectPackage objects)
 
 # Publisher
 add_executable(publisher publisher.cpp)
-target_link_libraries(publisher fastcdr ObjectPackage)
+target_link_libraries(publisher fastcdr fastdds ObjectPackage)
 
 # Subscriber
 add_executable(subscriber subscriber.cpp print_helpers.h)
-target_link_libraries(subscriber fastcdr ObjectPackage)
+target_link_libraries(subscriber fastcdr fastdds ObjectPackage)
 
 # Pub/Sub library
 add_library(fastdds-tracker publisher.h subscriber.h)
@@ -41,17 +44,17 @@ install(TARGETS fastdds-tracker
 
 ##Qt Window
 add_library(brat-gui window.h window.cpp publisher.h subscriber.h)
-target_link_libraries(brat-gui Qt5::Core Qt5::Widgets fastcdr ObjectPackage)
+target_link_libraries(brat-gui Qt5::Core Qt5::Widgets fastcdr fastdds ObjectPackage)
 add_executable(qt_window qt_main.cpp window.h window.cpp topics.h)
-target_link_libraries(qt_window PRIVATE brat-gui Qt5::Widgets Qt5::Core fastcdr ObjectPackage)
+target_link_libraries(qt_window PRIVATE brat-gui Qt5::Widgets Qt5::Core fastcdr fastdds ObjectPackage)
 target_link_libraries(qt_window PRIVATE qwt-qt5)
 
 #TESTS
 add_executable(test_tracker topics.h test_tracker.cpp gui.h publisher.h )
-target_link_libraries(test_tracker fastcdr ObjectPackage brat ${OpenCV_LIBS} box2d )
+target_link_libraries(test_tracker fastcdr fastdds ObjectPackage brat ${OpenCV_LIBS} box2d )
 
 add_executable(test_obstacleQt topics.h test_obstacleQt.cpp gui.h publisher.h )
-target_link_libraries(test_obstacleQt fastcdr ObjectPackage brat ${OpenCV_LIBS} box2d )
+target_link_libraries(test_obstacleQt fastcdr fastdds ObjectPackage brat ${OpenCV_LIBS} box2d )
 
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
@@ -60,7 +63,7 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/.. ${LIBCAMERA_INCLUDE_DIRS} ${OPENCV_INCLUDE_DIRS})
   include(GNUInstallDirs)
   add_executable(brat3_targetGUI ../custom_robot.h gui.h brat3_targetGUI.cpp)
-  target_link_libraries(brat3_targetGUI fastcdr ObjectPackage ${OpenCV_LIBS}  alphabot a1lidarrpi brat box2d pigpio pthread)
+  target_link_libraries(brat3_targetGUI fastcdr fastdds ObjectPackage ${OpenCV_LIBS}  alphabot a1lidarrpi brat box2d pigpio pthread)
 
   message("detected architecture aarch64, building executables")
 else()

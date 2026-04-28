@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20.0)
 
 project(brat LANGUAGES CXX)
 
@@ -29,12 +29,12 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   add_executable(reactive custom_robot.h reactive.cpp)
 
 
-  target_link_libraries(brat2_targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio)
-  target_link_libraries(brat2_target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
-  target_link_libraries(brat3_targetless ${OpenCV_LIBS}  box2d alphabot a1lidarrpi brat pigpio)
-  target_link_libraries(brat3_target ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
-  target_link_libraries(brat3_target_wb ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
-  target_link_libraries(reactive ${OpenCV_LIBS} box2d alphabot a1lidarrpi brat pigpio)
+  target_link_libraries(brat2_targetless ${OpenCV_LIBS}  box2d zetabot gpiodcxx c1lidarrpi brat pigpio)
+  target_link_libraries(brat2_target ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat pigpio)
+  target_link_libraries(brat3_targetless ${OpenCV_LIBS}  box2d zetabot c1lidarrpi brat pigpio)
+  target_link_libraries(brat3_target ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat pigpio)
+  target_link_libraries(brat3_target_wb ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat pigpio)
+  target_link_libraries(reactive ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat pigpio)
   
   add_subdirectory(test)
   message("detected architecture aarch64, building executables")

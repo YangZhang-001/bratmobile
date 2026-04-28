@@ -1,7 +1,7 @@
 #ifndef CUSTOM_INTERFACES
 #define CUSTOM_INTERFACES
-#include "a1lidarrpi.h"
-#include "alphabot.h"
+#include "c1lidarrpi.h"
+#include "zetabot.h"
 #include "attentive.h"
 //#include "Iir.h"
 //#include "CppTimer.h"
@@ -17,7 +17,7 @@
  */
 
 
-class LidarInterface : public A1Lidar::DataInterface{
+class LidarInterface : public C1Lidar::DataInterface{
 Configurator * configurator=NULL;
 int mapCount =0;
 
@@ -25,7 +25,7 @@ public:
 
     LidarInterface(Configurator * _c): configurator(_c){}
 
-	void newScanAvail(float, A1LidarData (&data)[A1Lidar::nDistance]){ //uncomment sections to write x and y to files
+	void newScanAvail(C1LidarData (&data)[C1Lidar::nDistance]){ //uncomment sections to write x and y to files
 		if (configurator == NULL){
 			std::cerr<<"girl where's the configurator"<<std::endl;
 			return;
@@ -40,7 +40,7 @@ public:
 		if (DEBUG){
 			f=fopen(name, "w");
 		}
-		for (A1LidarData &data:data){
+		for (C1LidarData &data:data){
 			if (data.valid&& data.r <LIDAR_RANGE){
 				float x = round(data.x*100)/100; //resolution adjus
 				float y = round(data.y*100)/100;
@@ -60,12 +60,12 @@ public:
 
 };
 
-class MotorCallback :public AlphaBot::StepCallback, public MotorInterface { //every 100ms the callback updates the plan
+class MotorCallback :public ZetaBot, public MotorInterface { //every 100ms the callback updates the plan
 public:
 
-virtual void step( AlphaBot &motors){
-    motors.setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
-    motors.setLeftWheelSpeed(L*1.15);
+virtual void step(){
+    setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
+    setLeftWheelSpeed(L*1.15);
 	printf(",R=%f\tL=%f\n",R, L);
 }
 };
@@ -107,7 +107,7 @@ class OpenLooper: public DeadReckoner, public MotorCallback{
         
     }
 
-    void step(AlphaBot& motors)override{
+    void step()override{
         if (L!=0 && R!=0){
             motorStep--;
             std::cout<<"motorStep="<<motorStep<<std::endl;
@@ -116,8 +116,8 @@ class OpenLooper: public DeadReckoner, public MotorCallback{
             L=0;
             R=0;
         }
-		motors.setLeftWheelSpeed(L*1.18);
-        motors.setRightWheelSpeed(R*1.18);
+		setLeftWheelSpeed(L*1.18);
+        setRightWheelSpeed(R*1.18);
 		
     }
 };

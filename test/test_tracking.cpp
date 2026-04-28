@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
 	motors.registerStepCallback(&cb);
 	printf("all registered\n");
 	configurator.start();
-	lidar.start();
+	lidar.start(rpi_serial_dev);
 	motors.start();
 	getchar();
 	motors.stop();

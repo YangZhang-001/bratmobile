@@ -15,8 +15,8 @@ class CLTracker: public ClosedLoop_Tracker, public MotorCallback, public Motor_O
 };
 
 int main(int argc, char** argv) {
-	A1Lidar lidar;
-	AlphaBot motors;
+	C1Lidar lidar;
+	ZetaBot motors;
 	LaserFocus wb;
 	//Motor_Out controlInterface;
     FocusedConfigurator configurator;
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 	motors.registerStepCallback(&tracker);
 	printf("all registered\n");
 	configurator.start();
-	lidar.start();
+	lidar.start(rpi_serial_dev);
 	motors.start();
 	getchar();
 	motors.stop();
