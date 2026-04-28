@@ -17,7 +17,7 @@ class OpenLooperGUI: public OLTrackerGUI, public MotorCallback{
         
     }
 
-    void step(AlphaBot& motors)override{
+    void step()override{
         if (L!=0 && R!=0){
             motorStep--;
 		}
@@ -25,15 +25,15 @@ class OpenLooperGUI: public OLTrackerGUI, public MotorCallback{
             L=0;
             R=0;
         }
-		motors.setLeftWheelSpeed(L*1.18);
-        motors.setRightWheelSpeed(R*1.18);
+		setLeftWheelSpeed(L*1.18);
+        setRightWheelSpeed(R*1.18);
     }
 };
 
 int main(int argc, char** argv) {
 	std::cout<<"Navigating to Target with Brat2"<<std::endl;
 	C1Lidar lidar;
-	AlphaBot motors;
+	
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
 	//Motor_Out controlInterface;

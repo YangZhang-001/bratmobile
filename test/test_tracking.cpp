@@ -73,7 +73,7 @@ class LearningNothing:public ThresholdLearner{
 
 int main(int argc, char** argv) {
 	C1Lidar lidar;
-	AlphaBot motors;
+	
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;

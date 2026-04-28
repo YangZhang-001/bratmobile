@@ -24,7 +24,7 @@ Giulia Lafratta, Bernd Porr, Christopher Chandler, Alice Miller; Closed-Loop Mul
 ## Hardware
 The indoor robot is equipped with 
 * Raspberry Pi model 3b+
-* 360 Parallax Continuous Rotation Servo motors (see [here](https://github.com/berndporr/alphabot/blob/main/alphabot.cpp) for wiring)
+* 360 Parallax Continuous Rotation Servo motors (see [here](https://github.com/berndporr/zetabot/blob/main/zetabot.cpp) for wiring)
 * A1 SLAMTEC LIDAR (see [here](https://github.com/berndporr/rplidar_rpi) for wiring)
 
 
@@ -36,7 +36,7 @@ The indoor robot is equipped with
 ### Libraries to compile from source
 
 * [LIDAR API](https://github.com/berndporr/rplidar_rpi)
-* [Motors API](https://github.com/berndporr/alphabot)
+* [Motors API](https://github.com/berndporr/zetabot)
 * [Cpp Timer](https://github.com/berndporr/cppTimer)
 * [Box2D v2.4.1](https://github.com/glafratta/box2d)
   ** if not installed automatically, go to `box2d/build` and run `sudo make install`

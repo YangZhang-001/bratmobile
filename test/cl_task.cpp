@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
 	#define PLANNING false
 	printf("PLANNING =%i\n", PLANNING);
 	C1Lidar lidar;
-	AlphaBot motors;
+	
     Task controlGoal;
 	MotorInterface controlInterface;
     Configurator configurator(controlGoal);

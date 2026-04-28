@@ -16,9 +16,9 @@ include(CTest)
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
 	add_executable(closedLoopExecution realWorldTestHeaders.h unit_test/test_classes.h closedLoopExecution.cpp)
-	target_link_libraries(closedLoopExecution gtest gtest_main box2d ${OpenCV_LIBS} brat C1Lidarrpi alphabot pthread pigpio)
+	target_link_libraries(closedLoopExecution gtest gtest_main box2d ${OpenCV_LIBS} brat c1lidarrpi zetabot pthread pigpio)
 	add_executable(openLoopExecution ../custom_robot.h realWorldTestHeaders.h unit_test/test_classes.h openLoopExecution.cpp)
-	target_link_libraries(openLoopExecution gtest gtest_main box2d ${OpenCV_LIBS} brat C1Lidarrpi alphabot pthread pigpio)
+	target_link_libraries(openLoopExecution gtest gtest_main box2d ${OpenCV_LIBS} brat c1lidarrpi zetabot pthread pigpio)
 
 	message("build test cases")
 endif()
