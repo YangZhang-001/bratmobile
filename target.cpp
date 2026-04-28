@@ -3,7 +3,6 @@ const bool DEBUG=false;
 
 int main(int argc, char** argv) {
 	C1Lidar lidar;
-	;
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
     FocusedConfigurator configurator;
@@ -21,12 +20,12 @@ int main(int argc, char** argv) {
 	configurator.registerInterface( &tracker);
 	MotorCallback cb(&tracker);
 	lidar.registerInterface(&dataInterface);
-	motors.registerStepCallback(&tracker);
+	
 	printf("all registered\n");
 	lidar.start(RPI_SERIAL_DEV);
-	motors.start();
+	tracker.start();
 	getchar();
-	motors.stop();
+	tracker.stop();
 	lidar.stop();
 	logger.~Logger();
 }

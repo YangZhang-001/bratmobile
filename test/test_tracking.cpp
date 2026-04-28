@@ -99,9 +99,9 @@ int main(int argc, char** argv) {
 	printf("all registered\n");
 	configurator.start();
 	lidar.start(RPI_SERIAL_DEV);
-	motors.start();
+	tracker.start();
 	getchar();
-	motors.stop();
+	tracker.stop();
 	configurator.stop();
 	lidar.stop();
 }

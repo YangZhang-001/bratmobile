@@ -86,9 +86,9 @@ int main(int argc, char** argv) {
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);
 	lidar.start(RPI_SERIAL_DEV);
-	motors.start();
+	tracker.start();
 	getchar();
-	motors.stop();
+	tracker.stop();
 	lidar.stop();
 }
 	

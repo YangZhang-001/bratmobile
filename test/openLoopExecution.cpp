@@ -24,10 +24,10 @@ int main(int argc, char** argv) {
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&openLooper);
 	lidar.start(RPI_SERIAL_DEV);
-	motors.start();
+	tracker.start();
 	do{
     }while(!getchar());
-	motors.stop();
+	tracker.stop();
 	lidar.stop();
 }
 	

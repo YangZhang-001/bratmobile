@@ -16,7 +16,6 @@ class NoGoal:public GoalChanger{
 
 int main(int argc, char** argv) {
 	C1Lidar lidar;
-	;
 	//Motor_Out controlInterface;
     FocusedConfigurator configurator;
 	LaserFocus wb;
@@ -35,12 +34,12 @@ int main(int argc, char** argv) {
 	LidarInterface dataInterface(&configurator);
 	configurator.registerInterface(&tracker);
 	lidar.registerInterface(&dataInterface);
-	motors.registerStepCallback(&tracker);
+
 	printf("all registered\n");
 	lidar.start(RPI_SERIAL_DEV);
-	motors.start();
+	tracker.start();
 	getchar();
-	motors.stop();
+	tracker.stop();
 	lidar.stop();
 	logger.~Logger();
 }
