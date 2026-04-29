@@ -6,11 +6,12 @@ include(CTest)
 set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
 
+set (CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
 find_package(Threads)
 find_package(PkgConfig)
 find_package(OpenCV REQUIRED)
 find_package(box2d REQUIRED)
-
 
 add_subdirectory(src "${CMAKE_CURRENT_BINARY_DIR}/src")
 
