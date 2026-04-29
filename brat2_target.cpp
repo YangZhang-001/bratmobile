@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 	LidarInterface dataInterface(&configurator);
 	configurator.registerInterface(&tracker);
 	lidar.registerInterface(&dataInterface);
-	lidar.start(RPI_SERIAL_DEV);
+	lidar.start(C1Lidar::RPI_SERIAL_DEV);
 	tracker.start();
 	getchar();
 	tracker.stop();
