@@ -13,39 +13,22 @@
 // class definition 'Window'
 class Window : public QWidget
 {
-    // must include the Q_OBJECT macro for for the Qt signals/slots framework to work with this class
+    // must include the Q_OBJECT macro for the Qt signals/slots framework to work with this class
     Q_OBJECT
 
 public:
     Window();
-    ~Window() {
-        if (calThread.joinable())
-	    {
-		calThread.join();
-		return;
-        }
-    }
     void updateImageL(const cv::Mat &mat);
     void updateImageR(const cv::Mat &mat);
 
 private:
     QHBoxLayout  *h1Layout;
     QHBoxLayout  *h2Layout;
-    QHBoxLayout  *h3Layout;
     QVBoxLayout  *vLayout;
     QLabel       *imageL;
     QLabel       *imageR;
     QLabel       *imageCombined;
     QLabel       *imageDisparity;
-
-    QPushButton  *calibratePushbutton;
-    QLabel       *calInfo;
-
-    static constexpr int displaywidth = 640;
-    static constexpr int numFrames4Calibration = 60;
-
-    std::vector<cv::Mat> leftImages4Cal;
-    std::vector<cv::Mat> rightImages4Cal;
 
     cv::Mat currentL;
     cv::Mat currentR;
@@ -54,18 +37,10 @@ private:
 
     Stereo stereo;
 
-    // this clears our image pairs and cellects numFrames4Calibration frames
-    void triggerCalibration();
-
-    // checks if we have all frame for calibraton and starts it
-    void check4Cal();
-
     // blends the current L and R images and displays it
     void blendLRandDisplayD();
 
-    std::thread calThread;
-
-    bool calibrationTriggered = false;
+    const cv::Size imageSize{640,360};
 };
 
 #endif // WINDOW_H

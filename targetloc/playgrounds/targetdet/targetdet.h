@@ -7,12 +7,18 @@
 class TargetDet
 {
 public:
-    TargetDet();
     ~TargetDet();
-    std::shared_ptr<cv::QRCodeDetector> qrDetector;
+    cv::QRCodeDetector qrDetector;
+    cv::barcode::BarcodeDetector barcodeDetector;
+
+    enum DetectorType {QR, Barcode};
+
+    void setDetectorType(DetectorType dt) {
+	detectorType = dt;
+    }
 
     // callback for the coordinate
-    using OnDetected = std::function<void(cv::Point2f)>;
+    using OnDetected = std::function<void(std::vector<cv::Point2f>)>;
 
     std::vector<cv::Point2f> detectSync(const cv::Mat img);
 
@@ -22,10 +28,12 @@ public:
         onDetected = cb;
     }
 
+    cv::Point2f calcCentre(std::vector<cv::Point2f>) const;
+
     std::atomic<bool> isDetecting = false;
 
 private:
-
+    DetectorType detectorType = QR;
     OnDetected onDetected;
     std::thread detThread;
 };

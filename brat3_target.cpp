@@ -1,4 +1,5 @@
 #include "custom_robot.h"
+#include <c1lidarrpi.h>
 const bool DEBUG=true;
 
 int main(int argc, char** argv) {

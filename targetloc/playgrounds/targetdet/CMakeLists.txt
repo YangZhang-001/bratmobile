@@ -8,6 +8,8 @@ project(CamViewer
 	DESCRIPTION "Example QT application which displays the camera image"
 	LANGUAGES CXX)
 
+enable_testing()
+
 set (CMAKE_CXX_STANDARD 17)
 
 set (CMAKE_CXX_FLAGS "-Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wno-unused-parameter")
@@ -45,15 +47,22 @@ include_directories(
 )
 include(GNUInstallDirs)
 
-add_executable(stereoviewer
+add_executable(qtqrdet
   window.cpp
-  stereo.cpp
+  targetdet.cpp
   main.cpp
 )
 
-target_link_directories(stereoviewer PUBLIC ..)
-target_link_libraries(stereoviewer PkgConfig::LIBCAMERA)
-target_link_libraries(stereoviewer Qt6::Widgets)
-target_link_libraries(stereoviewer ${OpenCV_LIBS})
-target_link_libraries(stereoviewer cam2opencv)
-target_link_libraries(stereoviewer ${TURBOJPEG_LINK_LIBRARIES})
+target_link_libraries(qtqrdet PkgConfig::LIBCAMERA)
+target_link_libraries(qtqrdet Qt6::Widgets)
+target_link_libraries(qtqrdet ${OpenCV_LIBS})
+target_link_libraries(qtqrdet cam2opencv)
+target_link_libraries(qtqrdet ${TURBOJPEG_LINK_LIBRARIES})
+
+add_executable(testdetect
+  testdetect.cpp
+  targetdet.cpp
+)
+
+target_link_libraries(testdetect ${OpenCV_LIBS})
+add_test(TestDetect testdetect)
