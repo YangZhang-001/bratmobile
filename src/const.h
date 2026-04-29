@@ -11,7 +11,7 @@
 #include <mutex>
 
 
-const float SAFE_ANGLE =M_PI_2;
+const float SAFE_ANGLE =M_PI_2; 
 const float MAX_TURN =M_PI;
 const float ROBOT_HALFWIDTH =0.135; 
 const float ROBOT_HALFLENGTH =0.09; 
@@ -28,8 +28,8 @@ const float HZ =10.0;
 const float MAX_ANGLE_ERROR= M_PI;
 const float SAFE_DISTANCE =sqrt(ROBOT_HALFLENGTH*ROBOT_HALFLENGTH+ROBOT_HALFWIDTH*ROBOT_HALFWIDTH); //DEFAULT backtracking distance
 const float MAX_DISTANCE_ERROR =2*BOX2DRANGE;
-const float MOTOR_CALLBACK =.1; //MOTOR CALL BACK EVERY .1 s
-const float LIDAR_SAMPLING_RATE=0.2;
+const float LIDAR_SAMPLING_RATE=0.1;
+const float MOTOR_CALLBACK =LIDAR_SAMPLING_RATE; //there is no motor callback now 
 const float TURN_FRICTION =.86; //.75
 const float DISTANCE_ERROR_TOLERANCE=.02; //0.02
 const float RELAXED_DIST_ERROR_TOLERANCE=0.06;
