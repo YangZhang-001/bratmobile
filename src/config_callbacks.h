@@ -7,36 +7,6 @@
 class Configurator; 
 
 /**
-* Input/Output interface for Configurator
-*/
-// class IOInterface{
-// 	protected:
-// 	bool ready=false;
-// 	public:
-// 	IOInterface()=default;
-
-// 	bool isReady(){
-// 		return ready;
-// 	}
-
-// 	void setReady(bool b){
-// 		ready=b;
-// 	}
-
-// };
-
-/**
-* Receives LIDAR data
-*/
-// class LIDAR_In:public IOInterface{ 
-// public:
-// 	bool debugOn=0;
-// 	int iteration=0;
-// 	bool stop=0;
-// 	CoordinateContainer data2fp;
-// };
-
-/**
 * Output from Configurator to Motors
 */
 class MotorInterface { 
@@ -50,7 +20,7 @@ class MotorInterface {
 
 	MotorInterface(float kp, float ki, float kd):Kp(kp), Ki(ki), Kd(kd){}
 
-	void getData(const Task::Action &a){
+	virtual void getData(const Task::Action &a){
 		L=a.getLWheelSpeed();
 		R=a.getRWheelSpeed();
 	}

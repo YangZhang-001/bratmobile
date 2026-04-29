@@ -54,7 +54,6 @@ public:
 			fclose(f);
 		}
 		configurator->newScanEvent();
-
 	}
 
 
@@ -65,10 +64,16 @@ public:
 
 void getData(const Task::Action &a)override{
 	MotorInterface::getData(a);
+	std::cout<<"New data received!"<<std::endl;
+	this->otherStuff();
     setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
-    setLeftWheelSpeed(L*1.15);
+    setLeftWheelSpeed(L);
 	printf(",R=%f\tL=%f\n",R, L);
 }
+
+virtual void otherStuff(){
+	std::cout<<"Base class"<<std::endl;
+} //function where other stuff can be done within getData
 };
 
 /**
@@ -105,23 +110,20 @@ class OpenLooper: public DeadReckoner, public MotorCallback{
 
     bool hasTaskEnded(Task & t)override{
         return motorStep<=0;
-        
     }
 
-    void getData(const Task::Action &a)override{
-		MotorInterface::getData(a);
+	void otherStuff()override{
+		std::cout<<"Open looping!"<<std::endl;
         if (L!=0 && R!=0){
             motorStep--;
-            std::cout<<"motorStep="<<motorStep<<std::endl;
         }
         if (motorStep==0){
             L=0;
             R=0;
         }
-		setLeftWheelSpeed(L*1.18);
-        setRightWheelSpeed(R*1.18);
-		
-    }
+		std::cout<<"Motor step "<<motorStep<<std::endl;
+	}
+
 };
 
 

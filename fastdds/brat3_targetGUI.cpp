@@ -17,16 +17,19 @@ class OpenLooperGUI: public OLTrackerGUI, public MotorCallback{
         
     }
 
-    void step()override{
+ void getData(const Task::Action &a)override{
+		MotorInterface::getData(a);
         if (L!=0 && R!=0){
             motorStep--;
-		}
+            std::cout<<"motorStep="<<motorStep<<std::endl;
+        }
         if (motorStep==0){
             L=0;
             R=0;
         }
 		setLeftWheelSpeed(L*1.18);
         setRightWheelSpeed(R*1.18);
+		
     }
 };
 
