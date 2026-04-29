@@ -63,7 +63,8 @@ public:
 class MotorCallback :public ZetaBot, public MotorInterface { //every 100ms the callback updates the plan
 public:
 
-virtual void step(){
+void getData(const Task::Action &a)override{
+	MotorInterface::getData(a);
     setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
     setLeftWheelSpeed(L*1.15);
 	printf(",R=%f\tL=%f\n",R, L);
@@ -107,7 +108,8 @@ class OpenLooper: public DeadReckoner, public MotorCallback{
         
     }
 
-    void step()override{
+    void getData(const Task::Action &a)override{
+		MotorInterface::getData(a);
         if (L!=0 && R!=0){
             motorStep--;
             std::cout<<"motorStep="<<motorStep<<std::endl;

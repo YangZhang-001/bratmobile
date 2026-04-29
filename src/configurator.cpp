@@ -150,7 +150,7 @@ void Configurator::newScanEvent(){
 			trackingResult= tracker->track((currentTask),data2fp, worldBuilder->get_world_objects());
 			update_graph(transitionSystem, trackingResult);
 		}
-		tracker->on_new_reading(currentTask, controlGoal);
+		tracker->on_new_reading(currentTask, controlGoal); //could be useful?
 		if (goal_changer!=NULL){
 			if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
 				controlGoal=goal_changer->change_goal(controlGoal);
