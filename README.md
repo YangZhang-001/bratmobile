@@ -1,3 +1,5 @@
+# Bratmobile
+
 ![alt tag](brat-overtaking.png)
 
 The purpose of this library is to showcase a framework for multi-step ahead planning using pure input control (see [Braitenberg vehicles](https://en.wikipedia.org/wiki/Braitenberg_vehicle)). The navigation problem is broken down into several unique closed-loop input controllers, called Tasks. Each Task produces a unique control behaviour (go straight, turn left/right 90 degrees) in response to a [Disturbance](https://en.wikipedia.org/wiki/Errors_and_residuals) (an obstacle or target), which determines a Task's duration. A supervising module, called the Configurator, can simulate sequences of Tasks at runtime in game engine [Box2D](https://github.com/glafratta/box2d), retain their outcomes in a cognitive map, which can be searched to extract plans. The physics simulation represents the robot's [Core Knowledge](https://www.harvardlds.org/wp-content/uploads/2017/01/SpelkeKinzler07-1.pdf) (Spelke, 2007).
