@@ -35,7 +35,7 @@ public:
 		FILE *f;
 		char name[256];
 		sprintf(name,"/tmp/map%04i.dat", mapCount);
-		printf("%s\n", name);
+		//printf("%s\n", name);
 		configurator->clearData();
 		if (DEBUG){
 			f=fopen(name, "w");
@@ -65,15 +65,18 @@ public:
 void getData(const Task::Action &a)override{
 	MotorInterface::getData(a);
 	std::cout<<"New data received!"<<std::endl;
-	this->otherStuff();
+	otherStuff();
     setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
     setLeftWheelSpeed(L);
 	printf(",R=%f\tL=%f\n",R, L);
 }
 
+/**
+* A function to implement any other procedure before wheel speeds are changed
+*/
 virtual void otherStuff(){
 	std::cout<<"Base class"<<std::endl;
-} //function where other stuff can be done within getData
+}
 };
 
 /**

@@ -62,7 +62,7 @@ enum Direction{LEFT, RIGHT, DEFAULT, BACK, STOP, UNDEFINED};
 //KINEMATICS
 
 const float WHEEL_SPEED_DEFAULT=0.5f;
-const float WHEEL_SPEED_TURN=(M_PI_4*BETWEEN_WHEELS)/(MAX_SPEED*2); //0.353429f; //0.218182f;
+const float WHEEL_SPEED_TURN=(M_PI_4*BETWEEN_WHEELS)/(MAX_SPEED*2); //0.294524f;
  
 const std::map <Direction, std::pair<float, float>> default_kinematics={{DEFAULT, std::pair<float, float>(WHEEL_SPEED_DEFAULT*MAX_SPEED, 0)},
                                                                          {LEFT, std::pair<float, float>(0, WHEEL_SPEED_TURN)},

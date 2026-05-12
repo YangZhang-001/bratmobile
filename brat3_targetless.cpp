@@ -17,7 +17,6 @@ class NoGoal:public GoalChanger{
 
 int main(int argc, char** argv) {
 	C1Lidar lidar;
-	//Motor_Out controlInterface;
     FocusedConfigurator configurator;
 	LaserFocus wb;
 	configurator.register_worldBuilder(&wb);

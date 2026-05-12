@@ -616,7 +616,7 @@ void FocusedConfigurator::explore_plan(b2World&world){
     }
     m_plan=plan_tmp;
 	//enforce_edge();
-    printPlan(&m_plan);
+    //printPlan(&m_plan);
 }
 
 
