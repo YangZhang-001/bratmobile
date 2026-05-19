@@ -13,13 +13,13 @@
 
 const float SAFE_ANGLE =M_PI_2; 
 const float MAX_TURN =M_PI;
-const float ROBOT_HALFWIDTH =0.135; 
-const float ROBOT_HALFLENGTH =0.09; 
-const float ROBOT_BOX_OFFSET_X= 0.09-ROBOT_HALFWIDTH;
+const float ROBOT_HALFWIDTH =0.1275; //local x axis
+const float ROBOT_HALFLENGTH =0.08;  //local y axis
+const float ROBOT_BOX_OFFSET_X= 0.105-ROBOT_HALFWIDTH;
 const float ROBOT_BOX_OFFSET_Y =0;
 const float ROBOT_BOX_OFFSET_ANGLE =0;
 const float BETWEEN_WHEELS =.14;
-const float MAX_SPEED=.2;
+const float MAX_SPEED=.78;
 const float MAX_OMEGA =2; //2 radians
 const float ANGLE_ERROR_TOLERANCE =5 * M_PI/180;
 const float BOX2DRANGE =1.0;

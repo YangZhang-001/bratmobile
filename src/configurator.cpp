@@ -354,7 +354,7 @@ float ReactiveConfigurator::remainingSimulationTime(const Task *const t){
 	}
 	if (get_direction(t)==DEFAULT){
     	float r_step=Controller::motor_step(t->getAction(),simulationStep)*MOTOR_CALLBACK;
-	 	printf("r_step=%i\n", r_step);
+	 	printf("r_step=%f\n", r_step);
 		return 	r_step;
     }
     return Configurator::remainingSimulationTime();
