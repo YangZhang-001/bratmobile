@@ -249,12 +249,12 @@ void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
 		fprintf(goalFile, "%0.3f\t%0.3f\n", controlGoal.disturbance.getPosition().x, controlGoal.disturbance.getPosition().y);
 		fclose(goalFile);
 	}
-		if (!tracker){
+	if (!tracker){
 		std::cout <<"tracker uninitialised!";
 		return;
 	}
+	//std::cout<<"Checking ask has ended!"<<std::endl;
 	if (tracker->hasTaskEnded(currentTask)){
-		std::cout<<"Task has ended!"<<std::endl;
 		currentTask.change=true;
 	}
 }

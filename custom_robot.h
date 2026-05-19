@@ -112,11 +112,23 @@ class OpenLooper: public DeadReckoner, public MotorCallback{
     }
 
     bool hasTaskEnded(Task & t)override{
+		std::cout<<"Open loop checking task has ended ="<<motorStep<=0 <<std::endl;
         return motorStep<=0;
     }
 
-	void otherStuff()override{
-		std::cout<<"Open looping!"<<std::endl;
+	// void otherStuff()override{
+	// 	// //std::cout<<"Open looping!"<<std::endl;
+    //     // if (L!=0 && R!=0){
+    //     //     motorStep--;
+    //     // }
+    //     // if (motorStep==0){
+    //     //     L=0;
+    //     //     R=0;
+    //     // }
+	// 	// std::cout<<"Motor step "<<motorStep<<std::endl;
+	// }
+
+	void on_new_reading(const Task &task, const Task & goal){
         if (L!=0 && R!=0){
             motorStep--;
         }
@@ -125,7 +137,7 @@ class OpenLooper: public DeadReckoner, public MotorCallback{
             R=0;
         }
 		std::cout<<"Motor step "<<motorStep<<std::endl;
-	}
+    }
 
 };
 
