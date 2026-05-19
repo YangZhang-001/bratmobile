@@ -16,8 +16,9 @@ bool Tracker::hasTaskEnded(Task & t){
 }
 
 bool ClosedLoop_Tracker::hasTaskEnded(Task & t){
+    //check if task has ended according to disturbance
     bool ended=t.checkEnded(attention_window, b2Transform_zero, &tracked_disturbance); //the attention_window moves with the robot
-    return t.getMotorStep()==0 || ended;
+    return t.getMotorStep()<=0 || ended;
 }
 
 TrackingResult DeadReckoner::track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){

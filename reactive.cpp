@@ -4,7 +4,6 @@ const bool DEBUG=false;
 int main(int argc, char** argv) {
 	std::cout<<"Navigating to Target with Brat2"<<std::endl;
 	C1Lidar lidar;
-	
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
     ReactiveConfigurator configurator;

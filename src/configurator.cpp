@@ -141,17 +141,19 @@ void Configurator::registerInterface(MotorInterface * _control){
 }
 
 void Configurator::newScanEvent(){
-		if (!areInterfacesSetUp()){
+		if (!areInterfacesSetUp()){ //health check
 			return;
 		}
-		Spawner();
+		Spawner(); //simulate tasks/generate plans
 		if (getIteration()>1){
-			TrackingResult trackingResult(currentTask.get_disturbance());
-			trackingResult= tracker->track((currentTask),data2fp, worldBuilder->get_world_objects());
+			TrackingResult trackingResult(currentTask.get_disturbance()); //default tracking returns a zero transform and the current disturbance
+			// find displacement matrix and update current Disturbance
+			trackingResult= tracker->track((currentTask),data2fp, worldBuilder->get_world_objects()); 
+			//update the cognitive map of states using 2D transform and disturbance
 			update_graph(transitionSystem, trackingResult);
 		}
-		tracker->on_new_reading(currentTask, controlGoal); //could be useful?
-		if (goal_changer!=NULL){
+		tracker->on_new_reading(currentTask, controlGoal); //do something at every LiDAR reading
+		if (goal_changer!=NULL){ //not super well implemented maybe
 			if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
 				controlGoal=goal_changer->change_goal(controlGoal);
 			}					
@@ -252,6 +254,7 @@ void Configurator::update_graph(TransitionSystem&g, const TrackingResult & tr){
 		return;
 	}
 	if (tracker->hasTaskEnded(currentTask)){
+		std::cout<<"Task has ended!"<<std::endl;
 		currentTask.change=true;
 	}
 }
