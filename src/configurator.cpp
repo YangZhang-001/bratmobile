@@ -217,17 +217,18 @@ void Configurator::estimate_current_vertex(){
 
 void Configurator::change_task(){
 	if (!currentTask.is_over()){
+		std::cout<<"Task change: "<< currentTask.get_change()<< "Task step"<< currentTask.motorStep<<std::endl;
 		return;
 	}
 	if (task_controller==NULL){
 		throw std::invalid_argument("no controller, please add!");
 	}
-	currentTask=task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
-	std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
-	tracker->on_new_task(currentTask, controlGoal);
+	currentTask=task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan); //generate next Task following any extracted plan
+	std::cout<<"new task step = "<<currentTask.getMotorStep()<<std::endl;
+	tracker->on_new_task(currentTask, controlGoal); //reset tracker to track execution of current task and current goal
 	if (control){
-		control->reset();
-		control->getData(currentTask.action);
+		control->reset(); //resets PID controller which right now is not implemented
+		control->getData(currentTask.action); //actually sends data to the motor controller!
 	}
 	else{
 		std::cerr<<("no motor interface found");
@@ -340,6 +341,7 @@ void ReactiveConfigurator::explore_plan(b2World &world){
 	simResult result = simulate(t, world); //transitionSystem[currentVertex],transitionSystem[currentVertex],
 	printf("crashed=%i, step=%i\n", result.resultCode==simResult::crashed, result.step);
 	gt::fill(result, &transitionSystem[currentVertex], &transitionSystem[currentEdge]);
+	//if task crashes, it has to be changed
 	currentTask.set_change(transitionSystem[currentVertex].outcome!=simResult::successful);
 }
 

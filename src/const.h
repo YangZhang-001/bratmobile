@@ -46,13 +46,13 @@ const float DEG_TO_RAD_K=0.01745329252;
 const float SIM_DURATION = int(BOX2DRANGE*2 /MAX_SPEED);
 
 //camera filtering
-const int POS_IT=2;
-const int VEL_IT=6;
-const int FPS=30;
-const int order=3;
-const int DC=0; //HZ
-const int cutoff_frequency=4; //HZ
-const float band_width=0.5;
+// const int POS_IT=2;
+// const int VEL_IT=6;
+// const int FPS=30;
+// const int order=3;
+// const int DC=0; //HZ
+// const int cutoff_frequency=4; //HZ
+// const float band_width=0.5;
 const uintptr_t ROBOT_FLAG=0x1, DISTURBANCE_FLAG=0x2;
 
 //enums
