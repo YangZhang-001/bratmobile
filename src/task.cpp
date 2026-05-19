@@ -97,7 +97,7 @@ simResult Task::bumping_that(b2World & _world, int iteration, b2Body * robot, fl
 				break;
 			}
 		}
-		_world.Step(1.0f/HZ, 3, 8); //time step 100 ms which also is alphabot callback time, possibly put it higher in the future if fast
+		_world.Step(1.0f/HZ, 3, 8); //time step 100 ms which also is zetabot callback time, possibly put it higher in the future if fast
 		theta += action.getOmega()/HZ; //= omega *t
 		if (listener.get_collisions().size()>0){ //
 			int index = int(listener.get_collisions().size()/2);

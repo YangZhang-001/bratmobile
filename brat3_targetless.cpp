@@ -1,4 +1,5 @@
 #include "custom_robot.h"
+#include <c1lidarrpi.h>
 const bool DEBUG=false;
 
 class NoGoal:public GoalChanger{
@@ -15,9 +16,7 @@ class NoGoal:public GoalChanger{
 // };
 
 int main(int argc, char** argv) {
-	A1Lidar lidar;
-	AlphaBot motors;
-	//Motor_Out controlInterface;
+	C1Lidar lidar;
     FocusedConfigurator configurator;
 	LaserFocus wb;
 	configurator.register_worldBuilder(&wb);
@@ -35,18 +34,10 @@ int main(int argc, char** argv) {
 	LidarInterface dataInterface(&configurator);
 	configurator.registerInterface(&tracker);
 	lidar.registerInterface(&dataInterface);
-	motors.registerStepCallback(&tracker);
-	printf("all registered\n");
-	lidar.start();
-	motors.start();
+	lidar.start(C1Lidar::RPI_SERIAL_DEV);
+	tracker.start();
 	getchar();
-	motors.stop();
+	tracker.stop();
 	lidar.stop();
 	logger.~Logger();
 }
-	
-	
-
-	
-
-	

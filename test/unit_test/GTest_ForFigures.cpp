@@ -34,11 +34,6 @@ TEST_F(FigureTest, PrintTransform){
     configurator->set_current_v(last_v); //simulate plan finished
     configurator->getTask().set_change(true);
     configurator->set_plan({});
-<<<<<<< HEAD
-    goal=Task(Disturbance(PURSUE, b2Vec2(1.2, 0), 0),DEFAULT);
-    configurator->init(goal);
-=======
->>>>>>> b2b
     configurator->setTask(wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(), finished_plan));
     configurator->getTask().set_change(true);
     math::MulT(shift, configurator->get_ts());
@@ -104,11 +99,7 @@ TEST_P(HighLevelInterruptTest, CheckNoisyPlan){
     std::vector<vertexDescriptor> plan= get_plan(folder);
     int vertices_og=configurator->n_vertices();
     int iteration=std::get<2>(GetParam()), taskToInterrupt=std::get<3>(GetParam());
-<<<<<<< HEAD
-    trackFor(iteration);
-=======
    // trackFor(iteration);
->>>>>>> b2b
     Pointf interruptingPoint;
     std::vector<vertexDescriptor> updated_plan=get_InterruptedPlan(folder,iteration-1, taskToInterrupt, &interruptingPoint); //map 2
     int vertices_now=configurator->n_vertices();

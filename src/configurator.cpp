@@ -87,6 +87,9 @@ simResult Configurator::simulate(Task  t, b2World & w){ //State& state, State sr
 	result =t.bumping_that(w, iteration, robot.body(), remaining); //default start from 0
 	//approximate angle to avoid rounding errors
 	result.endPose.q.Set(approximate_angle(result.endPose.q.GetAngle(), t.direction, result.resultCode));
+	if (iteration<1 && isCurrentTask(t) && calibrationCallback){
+		calibrationCallback->simulationReady(result.collision);
+	}
 	return result;
 }
 
@@ -147,7 +150,7 @@ void Configurator::newScanEvent(){
 			trackingResult= tracker->track((currentTask),data2fp, worldBuilder->get_world_objects());
 			update_graph(transitionSystem, trackingResult);
 		}
-		tracker->on_new_reading(currentTask, controlGoal);
+		tracker->on_new_reading(currentTask, controlGoal); //could be useful?
 		if (goal_changer!=NULL){
 			if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
 				controlGoal=goal_changer->change_goal(controlGoal);
@@ -220,7 +223,6 @@ void Configurator::change_task(){
 		throw std::invalid_argument("no controller, please add!");
 	}
 	currentTask=task_controller->next_task(currentTask, controlGoal, transitionSystem, current_vertices, m_plan);
-	//transitionSystem[movingEdge].step=currentTask.getMotorStep();
 	std::cout<<"new task step= "<<currentTask.getMotorStep()<<std::endl;
 	tracker->on_new_task(currentTask, controlGoal);
 	if (control){
@@ -319,6 +321,10 @@ std::pair <bool, Direction> Configurator::getOppositeDirection(Direction d){
 		break;
 	}
 	return result;
+}
+
+bool Configurator::isCurrentTask(const Task & t){
+	return t.direction==currentTask.direction && t.start==b2Transform_zero && t.disturbance.getAffIndex()==currentTask.getAffIndex();
 }
 
 void ReactiveConfigurator::explore_plan(b2World &world){

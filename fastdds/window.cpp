@@ -4,7 +4,7 @@
 void RobotReaderListener::on_data_available(DataReader* reader){
         SampleInfo info;
         ObjectPackage object;
-        if (reader->take_next_sample(&object, &info) == ReturnCode_t::RETCODE_OK)
+        if (reader->take_next_sample(&object, &info) ==  eprosima::fastdds::dds::RETCODE_OK)
         {
             if (info.valid_data)
             {   

@@ -1,10 +1,10 @@
 #include "custom_robot.h"
+#include <c1lidarrpi.h>
 const bool DEBUG=true;
 
 int main(int argc, char** argv) {
 	std::cout<<"Navigating to Target with Brat2"<<std::endl;
-	A1Lidar lidar;
-	AlphaBot motors;
+	C1Lidar lidar;
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
     FocusedConfigurator configurator;
@@ -23,11 +23,11 @@ int main(int argc, char** argv) {
 	LidarInterface dataInterface(&configurator);
 	configurator.registerInterface(&tracker);
 	lidar.registerInterface(&dataInterface);
-	motors.registerStepCallback(&tracker);
-	lidar.start();
-	motors.start();
+	
+	lidar.start(C1Lidar::RPI_SERIAL_DEV);
+	tracker.start();
 	getchar();
-	motors.stop();
+	tracker.stop();
 	lidar.stop();
 	logger.~Logger();
 }

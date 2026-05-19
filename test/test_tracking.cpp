@@ -72,8 +72,8 @@ class LearningNothing:public ThresholdLearner{
 };
 
 int main(int argc, char** argv) {
-	A1Lidar lidar;
-	AlphaBot motors;
+	C1Lidar lidar;
+	
 	Disturbance target(2, b2Vec2(BOX2DRANGE, 0));
     Task controlGoal(target, DEFAULT);
 	LIDAR_In configuratorInterface;
@@ -98,10 +98,10 @@ int main(int argc, char** argv) {
 	motors.registerStepCallback(&cb);
 	printf("all registered\n");
 	configurator.start();
-	lidar.start();
-	motors.start();
+	lidar.start(C1Lidar::RPI_SERIAL_DEV);
+	tracker.start();
 	getchar();
-	motors.stop();
+	tracker.stop();
 	configurator.stop();
 	lidar.stop();
 }

@@ -11,14 +11,14 @@
 #include <mutex>
 
 
-const float SAFE_ANGLE =M_PI_2;
+const float SAFE_ANGLE =M_PI_2; 
 const float MAX_TURN =M_PI;
 const float ROBOT_HALFWIDTH =0.135; 
 const float ROBOT_HALFLENGTH =0.09; 
 const float ROBOT_BOX_OFFSET_X= 0.09-ROBOT_HALFWIDTH;
 const float ROBOT_BOX_OFFSET_Y =0;
 const float ROBOT_BOX_OFFSET_ANGLE =0;
-const float BETWEEN_WHEELS =.15;
+const float BETWEEN_WHEELS =.14;
 const float MAX_SPEED=.2;
 const float MAX_OMEGA =2; //2 radians
 const float ANGLE_ERROR_TOLERANCE =5 * M_PI/180;
@@ -28,8 +28,8 @@ const float HZ =10.0;
 const float MAX_ANGLE_ERROR= M_PI;
 const float SAFE_DISTANCE =sqrt(ROBOT_HALFLENGTH*ROBOT_HALFLENGTH+ROBOT_HALFWIDTH*ROBOT_HALFWIDTH); //DEFAULT backtracking distance
 const float MAX_DISTANCE_ERROR =2*BOX2DRANGE;
-const float MOTOR_CALLBACK =.1; //MOTOR CALL BACK EVERY .1 s
-const float LIDAR_SAMPLING_RATE=0.2;
+const float LIDAR_SAMPLING_RATE=0.1;
+const float MOTOR_CALLBACK =LIDAR_SAMPLING_RATE; //there is no motor callback now 
 const float TURN_FRICTION =.86; //.75
 const float DISTANCE_ERROR_TOLERANCE=.02; //0.02
 const float RELAXED_DIST_ERROR_TOLERANCE=0.06;
@@ -62,7 +62,7 @@ enum Direction{LEFT, RIGHT, DEFAULT, BACK, STOP, UNDEFINED};
 //KINEMATICS
 
 const float WHEEL_SPEED_DEFAULT=0.5f;
-const float WHEEL_SPEED_TURN=(M_PI_4*BETWEEN_WHEELS)/(MAX_SPEED*2); //0.353429f; //0.218182f;
+const float WHEEL_SPEED_TURN=(M_PI_4*BETWEEN_WHEELS)/(MAX_SPEED*2); 
  
 const std::map <Direction, std::pair<float, float>> default_kinematics={{DEFAULT, std::pair<float, float>(WHEEL_SPEED_DEFAULT*MAX_SPEED, 0)},
                                                                          {LEFT, std::pair<float, float>(0, WHEEL_SPEED_TURN)},

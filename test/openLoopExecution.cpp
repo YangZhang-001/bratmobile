@@ -4,9 +4,8 @@ const bool DEBUG=false;
 
 
 int main(int argc, char** argv) {
-	A1Lidar lidar;
-	AlphaBot motors;
-    OpenLooper openLooper;
+	C1Lidar lidar;
+    OpenLooper tracker;
     AffordanceSetter as;
     DirectionSetter ds;
     std::cout<<as.getAffIndex()<<", "<<ds.getDirection()<<std::endl;
@@ -14,20 +13,20 @@ int main(int argc, char** argv) {
     b2Vec2 goalPos(1,0);
     Disturbance goal(PURSUE, goalPos);
     Task controlGoal(goal, UNDEFINED);
-    configurator.register_tracker(&openLooper);
+    configurator.register_tracker(&tracker);
     configurator.init(controlGoal);
 	OpenLoopController rc;
 	configurator.register_controller(&rc);
 	configurator.setSimulationStep(.5);
 	LidarInterface dataInterface(&configurator);
-	configurator.registerInterface(&openLooper);
+	configurator.registerInterface(&tracker);
 	lidar.registerInterface(&dataInterface);
-	motors.registerStepCallback(&openLooper);
-	lidar.start();
-	motors.start();
+	
+	lidar.start(C1Lidar::RPI_SERIAL_DEV);
+	tracker.start();
 	do{
     }while(!getchar());
-	motors.stop();
+	tracker.stop();
 	lidar.stop();
 }
 	

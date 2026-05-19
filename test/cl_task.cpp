@@ -62,8 +62,8 @@ int main(int argc, char** argv) {
 	#undef PLANNING
 	#define PLANNING false
 	printf("PLANNING =%i\n", PLANNING);
-	A1Lidar lidar;
-	AlphaBot motors;
+	C1Lidar lidar;
+	
     Task controlGoal;
 	MotorInterface controlInterface;
     Configurator configurator(controlGoal);
@@ -85,10 +85,10 @@ int main(int argc, char** argv) {
 	MotorCallback cb(&controlInterface);
 	lidar.registerInterface(&dataInterface);
 	motors.registerStepCallback(&cb);
-	lidar.start();
-	motors.start();
+	lidar.start(C1Lidar::RPI_SERIAL_DEV);
+	tracker.start();
 	getchar();
-	motors.stop();
+	tracker.stop();
 	lidar.stop();
 }
 	

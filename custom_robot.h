@@ -1,7 +1,7 @@
 #ifndef CUSTOM_INTERFACES
 #define CUSTOM_INTERFACES
-#include "a1lidarrpi.h"
-#include "alphabot.h"
+#include "c1lidarrpi.h"
+#include "zetabot.h"
 #include "attentive.h"
 //#include "Iir.h"
 //#include "CppTimer.h"
@@ -17,7 +17,7 @@
  */
 
 
-class LidarInterface : public A1Lidar::DataInterface{
+class LidarInterface : public C1Lidar::DataInterface{
 Configurator * configurator=NULL;
 int mapCount =0;
 
@@ -25,7 +25,7 @@ public:
 
     LidarInterface(Configurator * _c): configurator(_c){}
 
-	void newScanAvail(float, A1LidarData (&data)[A1Lidar::nDistance]){ //uncomment sections to write x and y to files
+	void newScanAvail(C1LidarData (&data)[C1Lidar::nDistance]){ //uncomment sections to write x and y to files
 		if (configurator == NULL){
 			std::cerr<<"girl where's the configurator"<<std::endl;
 			return;
@@ -35,12 +35,12 @@ public:
 		FILE *f;
 		char name[256];
 		sprintf(name,"/tmp/map%04i.dat", mapCount);
-		printf("%s\n", name);
+		//printf("%s\n", name);
 		configurator->clearData();
 		if (DEBUG){
 			f=fopen(name, "w");
 		}
-		for (A1LidarData &data:data){
+		for (C1LidarData &data:data){
 			if (data.valid&& data.r <LIDAR_RANGE){
 				float x = round(data.x*100)/100; //resolution adjus
 				float y = round(data.y*100)/100;
@@ -54,19 +54,28 @@ public:
 			fclose(f);
 		}
 		configurator->newScanEvent();
-
 	}
 
 
 };
 
-class MotorCallback :public AlphaBot::StepCallback, public MotorInterface { //every 100ms the callback updates the plan
+class MotorCallback :public ZetaBot, public MotorInterface { //every 100ms the callback updates the plan
 public:
 
-virtual void step( AlphaBot &motors){
-    motors.setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
-    motors.setLeftWheelSpeed(L*1.15);
+void getData(const Task::Action &a)override{
+	MotorInterface::getData(a);
+	std::cout<<"New data received!"<<std::endl;
+	otherStuff();
+    setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
+    setLeftWheelSpeed(L);
 	printf(",R=%f\tL=%f\n",R, L);
+}
+
+/**
+* A function to implement any other procedure before wheel speeds are changed
+*/
+virtual void otherStuff(){
+	std::cout<<"Base class"<<std::endl;
 }
 };
 
@@ -104,22 +113,20 @@ class OpenLooper: public DeadReckoner, public MotorCallback{
 
     bool hasTaskEnded(Task & t)override{
         return motorStep<=0;
-        
     }
 
-    void step(AlphaBot& motors)override{
+	void otherStuff()override{
+		std::cout<<"Open looping!"<<std::endl;
         if (L!=0 && R!=0){
             motorStep--;
-            std::cout<<"motorStep="<<motorStep<<std::endl;
         }
         if (motorStep==0){
             L=0;
             R=0;
         }
-		motors.setLeftWheelSpeed(L*1.18);
-        motors.setRightWheelSpeed(R*1.18);
-		
-    }
+		std::cout<<"Motor step "<<motorStep<<std::endl;
+	}
+
 };
 
 
