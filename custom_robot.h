@@ -117,9 +117,9 @@ class OpenLooper: public DeadReckoner, public MotorCallback{
 
 	void otherStuff()override{
 		std::cout<<"Open looping!"<<std::endl;
-        if (L!=0 && R!=0){
-            motorStep--;
-        }
+        // if (L!=0 && R!=0){
+        //     motorStep--;
+        // }
         if (motorStep==0){
             L=0;
             R=0;
