@@ -48,6 +48,7 @@ The indoor robot is equipped with
 * [Cpp Timer](https://github.com/berndporr/cppTimer)
 * [Box2D v2.4.1](https://github.com/glafratta/box2d)
   ** if not installed automatically, go to `box2d/build` and run `sudo make install`
+* https://github.com/berndporr/cppTimer
 
 ## Clone 
 

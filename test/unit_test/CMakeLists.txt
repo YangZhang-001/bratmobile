@@ -1,5 +1,5 @@
  
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.25)
 set (CMAKE_CXX_STANDARD 17)
 project(brat_test LANGUAGES CXX)
 
@@ -11,6 +11,7 @@ find_package(PkgConfig)
 
 find_package(Threads)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 
 add_library(test_classes test_classes.h ../test_essentials.h ../callbacks.h)
 target_link_libraries(test_classes gtest gtest_main)

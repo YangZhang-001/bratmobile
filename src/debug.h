@@ -130,7 +130,7 @@ void graph_file(const int &it, const T &g, const Disturbance &goal, std::vector<
 		fprintf(f,"%i -> ", (*vi));
 		for (auto ei=es.first; ei!=es.second; ei++){
 
-			fprintf(f, "%i (%f) ", (*ei).m_target, g[(*ei)].probability);
+			fprintf(f, "%li (%f) ", (*ei).m_target, g[(*ei)].probability);
 		}
 		fprintf(f, "\t(x=%.3f, y= %.3f, theta= %.3f)\n", g[*vi].endPose.p.x, g[*vi].endPose.p.y, g[*vi].endPose.q.GetAngle());
 	}

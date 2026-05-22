@@ -16,8 +16,8 @@ public:
 
 	bool newScanAvail(bool doPlan=true){ //uncomment sections to write x and y to files		
         iteration++;
-		char filePath[256];
-        char folderName[256];
+	char filePath[1024];
+        char folderName[1024];
         sprintf(folderName,"%s", folder.c_str());
         configurator->clearData();
         if (folderName != NULL){

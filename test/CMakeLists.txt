@@ -1,6 +1,6 @@
- PROJECT(test)
+PROJECT(test)
  
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.25.0)
 
 find_package(OpenCV REQUIRED)
 
@@ -13,6 +13,8 @@ find_package(Threads)
 find_package(fastcdr REQUIRED)
 
 include(CTest)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src)
 
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
 	add_executable(closedLoopExecution realWorldTestHeaders.h unit_test/test_classes.h closedLoopExecution.cpp)
