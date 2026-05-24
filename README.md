@@ -17,49 +17,35 @@ Note this is a fork of the orig Bratmobile repo: https://github.com/glafratta/br
 
 * `fastdds` folder: provides classes to publish Task data to a Qt window 
 
-### Documentation
-
-Available at [https://glafratta.github.io/bratmobile/](https://glafratta.github.io/bratmobile/)
-
 ### Publications
 
 Giulia Lafratta, Bernd Porr, Christopher Chandler, Alice Miller; Closed-Loop Multistep Planning. Neural Computation 2025; 37 (7): 1288–1319. doi: [https://doi.org/10.1162/neco_a_01761](https://doi.org/10.1162/neco_a_01761), [Preprint](https://arxiv.org/pdf/2402.15384) and [Final publication on Glasgow University's repository](https://eprints.gla.ac.uk/348892/).
 
 ## Hardware
 The indoor robot is equipped with 
-* Raspberry Pi model 3b+
-<<<<<<< HEAD
-* 360 Parallax Continuous Rotation Servo motors (see [here](https://github.com/berndporr/alphabot/) for wiring)
-=======
-* 360 Parallax Continuous Rotation Servo motors (see [here](https://github.com/berndporr/zetabot/blob/main/zetabot.cpp) for wiring)
->>>>>>> adding_callbacks
-* A1 SLAMTEC LIDAR (see [here](https://github.com/berndporr/rplidar_rpi) for wiring)
-
+* Raspberry Pi model 5
+* [Zetabot with 360 Parallax Continuous Rotation Servo motors and stereo cameras](https://github.com/berndporr/zetabot))
+* [C1 SLAMTEC LIDAR](https://github.com/berndporr/c1lidar)
 
 ## Prerequisites
 ### Development packages
 
-`sudo apt install g++ cmake libpigpio-dev libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev`
+```
+sudo apt install g++ cmake libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev
+```
 
 ### Libraries to compile from source
 
-* [LIDAR API](https://github.com/berndporr/rplidar_rpi)
-* [Motors API](https://github.com/berndporr/zetabot)
+* [C1 LIDAR API](https://github.com/berndporr/c1lidar)
+* [Zetabot API](https://github.com/berndporr/zetabot)
 * [Cpp Timer](https://github.com/berndporr/cppTimer)
-* [Box2D v2.4.1](https://github.com/glafratta/box2d)
-  ** if not installed automatically, go to `box2d/build` and run `sudo make install`
-* https://github.com/berndporr/cppTimer
-
-## Clone 
-
-`git clone git@github.com:glafratta/bratmobile.git`
 
 ## Build
+
 ```
 cd bratmobile
-cmake .  
+cmake .
 make
-sudo make install
 ```
 
 ## Run
@@ -71,8 +57,8 @@ Demo prefixes:
 
 Demos:
 
-* `sudo ./*targetless` : these programs demonstrates planning over a 1m distance horizon for a control goal that is not a target location but rather an objective to drive straight for the longest time with the least amount of disturbances
-* `sudo ./*target`: these program demonstrates target seeking behaviour, where the target is imaginary and located at x=1.0m, y=0m.
+* `./*targetless` : these programs demonstrates planning over a 1m distance horizon for a control goal that is not a target location but rather an objective to drive straight for the longest time with the least amount of disturbances
+* `./*target`: these program demonstrates target seeking behaviour, where the target is imaginary and located at x=1.0m, y=0m.
 
 ### Unit tests 
 `ctest`
