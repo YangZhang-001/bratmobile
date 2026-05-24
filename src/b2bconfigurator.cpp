@@ -1,4 +1,5 @@
 #include "b2bconfigurator.h"
+#include "brat_math.h"
 
 bool B2BConfigurator::closeVertex(std::set<vertexDescriptor> & closed, vertexDescriptor v){
 	int MAX_OUT=5;

@@ -2,15 +2,13 @@
 #define CONFIGURATOR_H
 #include <dirent.h>
 #include <thread>
-#include <filesystem>
 #include <ncurses.h>
-#include <fstream>
 #include <algorithm>
-#include <random>
 #include <sys/stat.h>
 #include "debug.h"
 #include "planner.h"
 #include "config_callbacks.h"
+#include "robot.h"
 #include "task_controller.h"
 #include "tracker.h"
 

@@ -1,4 +1,5 @@
 #include "attentive.h"
+#include "brat_math.h"
 
 bool AttentiveConfigurator::recycle_plan(vertexDescriptor v, vertexDescriptor &v0, vertexDescriptor & task_start, StateMatcher::MATCH_TYPE& matchType, 
 											b2Transform & shift_start, b2Transform& sk_first_start, std::pair<edgeDescriptor, bool>&edge, 

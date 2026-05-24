@@ -1,15 +1,13 @@
 #ifndef GENERAL_H
 #define GENERAL_H
-#include <set>
+
 #include <opencv2/calib3d.hpp> //LMEDS
 #include <vector>
 #include <utility>                   // for std::pair
-#include <algorithm>                 // for std::for_each
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/graph_utility.hpp>
-#include <map>
 #include <boost/property_map/property_map.hpp> //property map
 #include <boost/graph/copy.hpp>
 #include <utility>
@@ -447,7 +445,7 @@ TransitionSystem * g=NULL;
 };
 
 struct SameIteration{
-	SameIteration()=default;
+	SameIteration()=delete;
 	SameIteration(TransitionSystem & _g, int _i): g(_g), iteration(_i){}
 
 	bool operator()(const edgeDescriptor & e) const {

@@ -82,17 +82,16 @@ const char * Logger::getSystemArchitecture(){
 b2Vec2 GetWorldPoints(b2Body* b, b2Vec2 v){
 	b2Vec2 wp=b->GetWorldPoint(v);
 	printf("x=%f, y=%f\t", wp.x, wp.y);
+	return wp;
 }
 
-char* debug::print_pose(const b2Transform& p, char* msg){
+void debug::print_pose(const b2Transform& p, const char* msg){
 	if (NULL!=msg){
 		printf("%s\t", msg);
 	}
 	char str[256];
 	sprintf(str,"x=%f, y=%f, theta=%f", p.p.x, p.p.y, p.q.GetAngle());
 	printf("%s\n", str);
-	return str;
-	
 }
 
 void debug::print_matrix(const cv::Mat & m){
@@ -112,7 +111,7 @@ void debug::print_state_difference(const StateDifference & sd, vertexDescriptor 
 		printf("no match no sd");
 		return;
 	}
-	printf("STATE DIFFERENCE between %i and %i\n", v, v1);
+	printf("STATE DIFFERENCE between %li and %li\n", v, v1);
 	print_pose(sd.Di.pose, "Di pose");
 	printf("Di width=%f, Di length=%f", sd.Di.halfWidth, sd.Di.halfLength);
 	print_pose(sd.Di.pose, "Dn pose");

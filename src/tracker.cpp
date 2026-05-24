@@ -1,4 +1,5 @@
 #include "tracker.h"
+#include "brat_math.h"
 
 TrackingResult Tracker::get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects){
     TrackingResult result;

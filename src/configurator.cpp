@@ -1,6 +1,8 @@
 #include "configurator.h"
 #include <chrono>
 
+#include "brat_math.h"
+
 void Configurator::MulT(const b2Transform& B, Task& task){
 	math::MulT(B, task.start);
 	math::MulT(B, task.disturbance);
@@ -130,7 +132,7 @@ void Configurator::printPlan(std::vector <vertexDescriptor>* p){
 	printf("PLAN:");
 	for (vertexDescriptor v: _plan){
 		auto a=dirmap.find(transitionSystem[v].direction);
-		printf("%i, %s; ", v, (*a).second); //, transitionSystem[edge.first].step	
+		printf("%li, %s; ", v, (*a).second); //, transitionSystem[edge.first].step	
 		}
 	printf("\n");
 }
@@ -154,7 +156,7 @@ void Configurator::newScanEvent(){
 		}
 		tracker->on_new_reading(currentTask, controlGoal); //do something at every LiDAR reading
 		if (goal_changer!=NULL){ //not super well implemented maybe
-			if (( currentTask.is_over()& transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
+			if (( currentTask.is_over() && transitionSystem[currentVertex].direction!=STOP && m_plan.empty() && getIteration()>1)){
 				controlGoal=goal_changer->change_goal(controlGoal);
 			}					
 		}
@@ -211,7 +213,7 @@ void Configurator::estimate_current_vertex(){
 			sum=sum_diff;
 		}				
 	}
-	printf("current vertex cv=%i\n", cv);
+	printf("current vertex cv=%li\n", cv);
 	currentVertex=cv;
 
 }

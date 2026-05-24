@@ -1,6 +1,9 @@
 #ifndef WORLDBUILDER_H
 #define WORLDBUILDER_H
+
+#include "disturbance.h"
 #include "sensor.h"
+#include "task.h"
 
 class WorldBuilder{
     protected:

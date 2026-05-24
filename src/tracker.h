@@ -1,6 +1,11 @@
 #ifndef TRACKER_H
 #define TRACKER_H
+#include "const.h"
+#include "disturbance.h"
+#include "graphTools.h"
 #include "sensor.h"
+#include "robot.h"
+#include "task.h"
 
 struct TrackingResult{
     b2Transform displacement=b2Transform_zero; //estimated displacement
@@ -104,11 +109,11 @@ class DeadReckoner: public Tracker{
     public:
     DeadReckoner(){}   
     
-    TrackingResult track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
+    TrackingResult track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects) override;
 
     void on_new_task(const Task &task, const Task & goal)override{} //does nothing
 
-    void init(const Task & goal){}
+    void init(const Task & goal) override {}
 
 
 };
@@ -146,7 +151,7 @@ class ClosedLoop_Tracker:public Tracker{
     */
     TrackingResult get_transform(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects)override;    
     
-    TrackingResult track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects);
+    TrackingResult track(const Task &t, const CoordinateContainer &pts, const std::vector <BodyFeatures> & objects) override;
 
     /**
     * @brief returns an upright rectangle which represents a focus of attention for finding points corresponding to input task's disturbance
@@ -181,12 +186,12 @@ class ClosedLoop_Tracker:public Tracker{
         attention_window=ps;
     }
 
-    void init(const Task & goal){
+    void init(const Task & goal) override {
         attention_window=sensor_box(Robot::get_vertices(),b2Transform_zero, goal.get_disturbance());
 
     }
 
-    virtual bool hasTaskEnded(Task & t);
+    virtual bool hasTaskEnded(Task & t) override;
 
     /**
      * @brief Updates the attention window at each sensor reading

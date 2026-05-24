@@ -1,3 +1,6 @@
+#ifndef _THRESHOLD_H
+#define _THRESHOLD_H
+
 #include <cmath>
 #include <vector>
 #include <cstdio>
@@ -84,9 +87,8 @@ Bundle linear_rectify(const Bundle &);
 
 
 /**
-*Error threshold used to match states or components of states
-/*!
-Essentially uses distance calculations and (adaptive) thresholding
+* Error threshold used to match states or components of states.
+* Essentially uses distance calculations and (adaptive) thresholding.
 */
 class Threshold{
     public:
@@ -217,3 +219,5 @@ class ThresholdLearner{
 
 
 };
+
+#endif
