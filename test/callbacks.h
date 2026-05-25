@@ -16,11 +16,10 @@ class DataInterface
     bool newScanAvail (bool doPlan = true)
     { //uncomment sections to write x and y to files
         iteration++;
-        char filePath[1024];
-        char folderName[1024];
-        sprintf (folderName, "%s", folder.c_str ());
+        char filePath[256];
         configurator->clearData ();
-        sprintf (filePath, "%smap%04d.dat", folderName, iteration);
+        snprintf (filePath, sizeof(filePath)-1,
+		  "%smap%04d.dat", folder.c_str(), iteration);
         printf ("%s\n", filePath);
         FILE *f;
         if (!(f = fopen (filePath, "r")))

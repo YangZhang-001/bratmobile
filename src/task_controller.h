@@ -32,6 +32,7 @@ class Controller
 
   public:
     Controller () = default;
+    virtual ~Controller () = default;
 
     /**
      * @brief Virtual function used to choose the next task
@@ -81,6 +82,7 @@ class Wise_Controller : public Controller
 {
   public:
     Wise_Controller () = default;
+    virtual ~Wise_Controller () = default;
 
     Task next_task (Task currentTask, const Task &controlGoal,
                     const TransitionSystem &g,
@@ -124,6 +126,7 @@ class Reactive_Controller : public Controller
 {
   public:
     Reactive_Controller () = default;
+    virtual ~Reactive_Controller () = default;
 
     virtual Task next_task (Task currentTask, const Task &controlGoal,
                             const TransitionSystem &g,
@@ -133,6 +136,8 @@ class Reactive_Controller : public Controller
 
 class OpenLoopController : public Controller
 {
+    OpenLoopController () = default;
+    virtual ~OpenLoopController () = default;
     Task next_task (Task currentTask, const Task &controlGoal,
                     const TransitionSystem &g,
                     std::vector<vertexDescriptor> &current_vertices,

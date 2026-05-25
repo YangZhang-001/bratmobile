@@ -34,6 +34,7 @@ class FCTest : public FocusedConfigurator, public testing::TestWithParam<bool>
                 return true;
             }
         }
+        return false;
     }
 };
 

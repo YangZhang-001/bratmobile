@@ -27,6 +27,8 @@ struct FrontierCrashed{
 class B2BConfigurator : public virtual AttentiveConfigurator {
 public:
     B2BConfigurator() = default;
+    B2BConfigurator(B2BConfigurator&&) = delete;
+    B2BConfigurator& operator=(B2BConfigurator&&) = delete;
 
     B2BConfigurator(Task & task) {
         init(task);

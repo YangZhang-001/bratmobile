@@ -22,7 +22,7 @@ class Logger
     int fileCount = 0; //files with the same name
 
   public:
-    Logger () {}
+    Logger () = default;
 
     /**
 	 * @brief Construct a new Logger object

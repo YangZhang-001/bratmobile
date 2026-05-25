@@ -8,11 +8,11 @@ const bool DEBUG=false;
 class LoggerTest: public Logger, public testing::Test{
     public:
 
-	LoggerTest(){}
+    LoggerTest() = default;
 
-	LoggerTest(char * new_folder, char * _dir=NULL, char * customName="/stats"){
+    LoggerTest(const char * new_folder, const char * _dir=NULL, const char * customName="/stats"){
 		init(new_folder, _dir, customName);
-	}
+    }
 
     ~LoggerTest(){}
 

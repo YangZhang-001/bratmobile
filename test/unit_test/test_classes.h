@@ -72,6 +72,10 @@ class DebugConfigurator : public virtual AttentiveConfigurator
     friend class HighLevelTestBase;
     friend class HighLevelInterruptBase;
 
+    DebugConfigurator() = default;
+    DebugConfigurator(DebugConfigurator&&) = delete;
+    DebugConfigurator& operator=(DebugConfigurator&&) = delete;
+
     void unregister_tracker ()
     {
         if (tracker)
