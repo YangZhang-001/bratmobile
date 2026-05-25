@@ -1,85 +1,114 @@
+#include "brat_math.h"
 #include "test_classes.h"
 // extern bool DEBUG;
-const bool DEBUG=true;
+const bool DEBUG = true;
 
-void planFile(TransitionSystem & g, std::vector<vertexDescriptor> plan, int it){
+void planFile (TransitionSystem &g, std::vector<vertexDescriptor> plan, int it)
+{
     char fileName[50];
-    sprintf(fileName, "/tmp/plan%03i.txt");
-    FILE * f=fopen(fileName, "w");
-    for (auto & p: plan){
-        fprintf(f, "%0.3f\t%0.3f\n", g[p].endPose.p.x, g[p].endPose.p.y);
+    sprintf (fileName, "/tmp/plan%03i.txt");
+    FILE *f = fopen (fileName, "w");
+    for (auto &p : plan)
+    {
+        fprintf (f, "%0.3f\t%0.3f\n", g[p].endPose.p.x, g[p].endPose.p.y);
     }
-    fclose(f);
+    fclose (f);
 }
 
 //class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<std::tuple<float, float, float>>{};
 
-TEST_P(CLAdaptiveTrackerTest, Threshold){
+TEST_P (CLAdaptiveTrackerTest, Threshold)
+{
     State s;
-    s.endPose.p.x=GetParam();
-    Threshold _threshold=get_threshold(s);
-    EXPECT_NEAR(_threshold.for_robot_position(), GetParam()/2, 0.01);
+    s.endPose.p.x = GetParam ();
+    Threshold _threshold = get_threshold (s);
+    EXPECT_NEAR (_threshold.for_robot_position (), GetParam () / 2, 0.01);
 }
 
-INSTANTIATE_TEST_CASE_P(Ends, CLAdaptiveTrackerTest, testing::Values(0.5, 0.05));
+INSTANTIATE_TEST_CASE_P (Ends, CLAdaptiveTrackerTest,
+                         testing::Values (0.5, 0.05));
 
-class RecycleTest: public HighLevelTestBase, public testing::WithParamInterface<std::tuple<float,float>>{};
+class RecycleTest
+    : public HighLevelTestBase,
+      public testing::WithParamInterface<std::tuple<float, float> >
+{
+};
 
-TEST_P(RecycleTest, DifferentObstacle){
+TEST_P (RecycleTest, DifferentObstacle)
+{
     char info[20], dump[50];
     CLAdaptiveTracker newTracker;
-    configurator->register_tracker(&newTracker);
-    sprintf(info,"%0.3f-%0.3f.txt",std::get<0>(GetParam()), std::get<1>(GetParam()));
-    sprintf(dump,"/recycle%0.3f-%0.3f",std::get<0>(GetParam()), std::get<1>(GetParam()));
-    Logger logger("DifferentObstacleTest/", "/tmp", dump);
-    configurator->register_logger(&logger);
+    configurator->register_tracker (&newTracker);
+    sprintf (info, "%0.3f-%0.3f.txt", std::get<0> (GetParam ()),
+             std::get<1> (GetParam ()));
+    sprintf (dump, "/recycle%0.3f-%0.3f", std::get<0> (GetParam ()),
+             std::get<1> (GetParam ()));
+    Logger logger ("DifferentObstacleTest/", "/tmp", dump);
+    configurator->register_logger (&logger);
     Task goal;
-    b2Transform shift=b2Transform_zero;
-    goal=Task(Disturbance(PURSUE, b2Vec2(1.0, 0), 0),DEFAULT);
-    configurator->init(goal);
-    std::string folder=std::string("../target_40cm/");
-    std::vector<vertexDescriptor> plan= get_plan(folder), finished_plan;
-    EXPECT_GE(configurator->get_plan().size(), 1);
-    planFile(configurator->get_ts(), configurator->get_plan(), configurator->getIteration());
-    vertexDescriptor second_last_v=configurator->get_plan()[configurator->get_plan().size()-2];
-    vertexDescriptor last_v=configurator->get_plan()[configurator->get_plan().size()-1];
-    shift=configurator->vertex_get_endPose(last_v);
-    int vertices_og=configurator->n_vertices();
-    configurator->addIteration(100);
-    configurator->set_current_v(last_v); //simulate plan finished
-    configurator->getTask().set_change(true);
-    configurator->set_plan({});
-    configurator->setTask(wc.next_task(configurator->getTask(), configurator->getGoal(), configurator->get_ts(), configurator->get_current_vertices(), finished_plan));
-    configurator->getTask().set_change(true);
-    math::MulT(shift, configurator->get_ts());
-    auto points=configurator->get_data2fp();
+    b2Transform shift = b2Transform_zero;
+    goal = Task (Disturbance (PURSUE, b2Vec2 (1.0, 0), 0), DEFAULT);
+    configurator->init (goal);
+    std::string folder = std::string ("../target_40cm/");
+    std::vector<vertexDescriptor> plan = get_plan (folder), finished_plan;
+    EXPECT_GE (configurator->get_plan ().size (), 1);
+    planFile (configurator->get_ts (), configurator->get_plan (),
+              configurator->getIteration ());
+    vertexDescriptor second_last_v
+        = configurator->get_plan ()[configurator->get_plan ().size () - 2];
+    vertexDescriptor last_v
+        = configurator->get_plan ()[configurator->get_plan ().size () - 1];
+    shift = configurator->vertex_get_endPose (last_v);
+    int vertices_og = configurator->n_vertices ();
+    configurator->addIteration (100);
+    configurator->set_current_v (last_v); //simulate plan finished
+    configurator->getTask ().set_change (true);
+    configurator->set_plan ({});
+    configurator->setTask (
+        wc.next_task (configurator->getTask (), configurator->getGoal (),
+                      configurator->get_ts (),
+                      configurator->get_current_vertices (), finished_plan));
+    configurator->getTask ().set_change (true);
+    math::MulT (shift, configurator->get_ts ());
+    auto points = configurator->get_data2fp ();
     CoordinateContainer newPoints;
-    configurator->clearData();
+    configurator->clearData ();
     char name[50];
-    sprintf(name,"/tmp/newObstacle%s", info);
-    FILE *f=fopen(name, "w+");
+    sprintf (name, "/tmp/newObstacle%s", info);
+    FILE *f = fopen (name, "w+");
     CoordinateContainer cc;
-    float y=std::get<1>(GetParam());
-    for (int i=1; i<=18; i++){
-        Pointf p(std::get<0>(GetParam()), y);
-       // b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
-        fprintf(f, "%0.3f\t%0.3f\n", p.x, p.y);
-        newPoints.emplace(Pointf(p.x, p.y));
-        y-=0.01;
+    float y = std::get<1> (GetParam ());
+    for (int i = 1; i <= 18; i++)
+    {
+        Pointf p (std::get<0> (GetParam ()), y);
+        // b2Vec2 p2d=b2Mul(b2d_transform, b2Vec2(p.x, p.y));
+        fprintf (f, "%0.3f\t%0.3f\n", p.x, p.y);
+        newPoints.emplace (Pointf (p.x, p.y));
+        y -= 0.01;
     }
     // fclose(f);
-    configurator->set_data2fp(newPoints);
-    configurator->newScanEvent();
-    std::vector<vertexDescriptor> updated_plan=configurator->get_plan(); //map 2
-    int vertices_now=configurator->n_vertices();
-    EXPECT_NEAR(vertices_now, vertices_og, 1);
-    bool planned_to_goal=configurator->getGoal().checkEnded(configurator->get_ts()[*(configurator->get_plan().end()-1)].endPose).ended;
-    planFile(configurator->get_ts(), configurator->get_plan(), configurator->getIteration());    
-    EXPECT_TRUE(planned_to_goal);
-
+    configurator->set_data2fp (newPoints);
+    configurator->newScanEvent ();
+    std::vector<vertexDescriptor> updated_plan
+        = configurator->get_plan (); //map 2
+    int vertices_now = configurator->n_vertices ();
+    EXPECT_NEAR (vertices_now, vertices_og, 1);
+    bool planned_to_goal
+        = configurator->getGoal ()
+              .checkEnded (
+                  configurator
+                      ->get_ts ()[*(configurator->get_plan ().end () - 1)]
+                      .endPose)
+              .ended;
+    planFile (configurator->get_ts (), configurator->get_plan (),
+              configurator->getIteration ());
+    EXPECT_TRUE (planned_to_goal);
 }
 
-INSTANTIATE_TEST_SUITE_P(Changes, RecycleTest, ::testing::Combine(::testing::Range(.25f, .60f, 0.05f), ::testing::Range(-0.1f, 0.30f, 0.05f)));
+INSTANTIATE_TEST_SUITE_P (
+    Changes, RecycleTest,
+    ::testing::Combine (::testing::Range (.25f, .60f, 0.05f),
+                        ::testing::Range (-0.1f, 0.30f, 0.05f)));
 
 // TEST_P(RecycleTest, Transform){
 //     char info[20];
@@ -137,4 +166,3 @@ INSTANTIATE_TEST_SUITE_P(Changes, RecycleTest, ::testing::Combine(::testing::Ran
 // INSTANTIATE_TEST_CASE_P(Transforms2D, RecycleTest, ::testing::Combine(testing::Range(-.2f, .4f, 0.01f),
 //                                                                     ::testing::Range(-0.05f, 0.05f, 0.01f),
 //                                                                     ::testing::Values(-0.1f,0.0f, 0.1f)));
-
