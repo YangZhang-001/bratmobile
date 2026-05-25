@@ -1,31 +1,36 @@
 #ifndef BRAT_MATH_H
 #define BRAT_MATH_H
 
-#include "task.h"
 
-namespace math {
+#include "graphTools.h"
+#include <box2d/b2_math.h>
 
-	void MulT(const b2Transform& deltaPose, b2Transform& pose);
+namespace math
+{
 
-	void MulT(const b2Transform&, State& );
+void MulT (const b2Transform &deltaPose, b2Transform &pose);
 
-	void MulT(const b2Transform&, TransitionSystem&);
+void MulT (const b2Transform &, State &);
 
-	void MulT(const b2Transform&, Disturbance&);
+void MulT (const b2Transform &, TransitionSystem &);
 
-	void InvMul(const b2Transform& deltaPose, b2Transform& pose);
+void MulT (const b2Transform &, Disturbance &);
 
-	void InvMul(const b2Transform&, State& );
+void InvMul (const b2Transform &deltaPose, b2Transform &pose);
 
-	void InvMul(const b2Transform&, TransitionSystem&);
+void InvMul (const b2Transform &, State &);
 
-	void InvMul(const b2Transform&, Disturbance&);
+void InvMul (const b2Transform &, TransitionSystem &);
 
-	cv::Mat cv_affine_matrix33(const b2Transform &); //returns an opencv object
+void InvMul (const b2Transform &, Disturbance &);
 
-	b2Transform transform_2d(const cv::Mat&); //bets box2d 2dtransform from 3x3 matrix
+cv::Mat cv_affine_matrix33 (const b2Transform &); //returns an opencv object
 
-	b2Transform solveAxB(const b2Transform& x, const b2Transform & B); //solve for A
+b2Transform
+transform_2d (const cv::Mat &); //bets box2d 2dtransform from 3x3 matrix
+
+b2Transform solveAxB (const b2Transform &x,
+                      const b2Transform &B); //solve for A
 };
 
 /**
@@ -35,7 +40,8 @@ namespace math {
  * @param t_new transform of the new disturbance
  * @param t_tracked transform of tracked disturbance
  */
-void calc_transform(b2Transform & result, b2Transform t_new, b2Transform t_prev);
+void calc_transform (b2Transform &result, b2Transform t_new,
+                     b2Transform t_prev);
 
-bool isTurning(Direction);
+bool isTurning (Direction);
 #endif

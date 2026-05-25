@@ -1,45 +1,38 @@
 #include "sensor.h"
 
-bool Pointf::isin(Pointf tl, Pointf br){
-	bool result= this->x>tl.x & this->x<br.x & this->y>br.y& this->y<tl.y;
-	return result;
+bool Pointf::isin (Pointf tl, Pointf br)
+{
+    bool result
+        = this->x > tl.x & this->x<br.x &this->y> br.y & this->y < tl.y;
+    return result;
 }
 
-
-float length(cv::Point2f const& p){
-	return sqrt(pow(p.x,2)+ pow(p.y, 2));
+float length (cv::Point2f const &p)
+{
+    return sqrt (pow (p.x, 2) + pow (p.y, 2));
 }
 
+float angle (cv::Point2f const &p) { return atan2 (p.y, p.x); }
 
-float angle(cv::Point2f const& p){
-	return atan2(p.y, p.x);
+bool operator< (Pointf const &p1, Pointf const &p2)
+{
+    float a1 = angle (p1);
+    float l1 = length (p1);
+    float a2 = angle (p2);
+    float l2 = length (p2);
+    return std::tie (a1, l1) < std::tie (a2, l2);
 }
 
-bool operator <(Pointf const & p1, Pointf const& p2){
-	float a1 = angle(p1);
-	float l1=length(p1);
-	float a2=angle(p2);
-	float l2=length(p2); 
-	return std::tie(a1, l1)< std::tie(a2, l2);
-}	
+bool operator> (const Pointf &p1, const Pointf &p2) { return p2 < p1; }
 
-bool operator >(const Pointf& p1,  const Pointf& p2){
-	return p2<p1;
+b2Vec2 getb2Vec2 (cv::Point2f p) { return b2Vec2 (p.x, p.y); }
+
+Pointf Polar2f (float radius, float angle)
+{
+    float x = radius * cos (angle);
+    float y = radius * sin (angle);
+    return Pointf (x, y);
 }
-
-b2Vec2 getb2Vec2(cv::Point2f p){
-	return b2Vec2(p.x,p.y);
-
-}
-
-
-Pointf Polar2f(float radius, float angle){
-	float x = radius *cos(angle);
-	float y = radius *sin(angle);
-	return Pointf(x,y);
-}
-
-
 
 // b2Transform PointCloudProc::affineTransEstimate(std::vector <Pointf> current, Task::Action a,float timeElapsed, float range){
 //         b2Transform result;
@@ -69,7 +62,7 @@ Pointf Polar2f(float radius, float angle){
 // 		result.p.x= -(transformMatrix.at<double>(0,2))/timeElapsed;
 // 		result.p.y = -(transformMatrix.at<double>(1,2))/timeElapsed;
 // 		result.q.Set(acos(transformMatrix.at<double>(0,0))/timeElapsed);
-// 		float posAngle=0; 
+// 		float posAngle=0;
 //         float tan = atan(result.p.y/result.p.x);//atan2 gives results between pi and -pi, atan gives pi/2 to -pi/2
 // 		if (result.p.y !=0 && result.p.x !=0 && tan < MAX_OMEGA*timeElapsed){
 // 			posAngle =tan;
@@ -143,14 +136,13 @@ Pointf Polar2f(float radius, float angle){
 // 	return result;
 // }
 
-
 // std::pair <bool, cv::Vec4f> PointCloudProc::findOrientationCV(std::vector<Pointf> vec){
 // 	std::pair <bool, cv::Vec4f>result(false, 0);
 // 	if (vec.size()<6){
 // 		return result;
 // 	}
 // 	result.first=true;
-// 	cv::Vec4f line; //vx, vy, x0, y0 -> (vx, vy) normalised collinear vector 
+// 	cv::Vec4f line; //vx, vy, x0, y0 -> (vx, vy) normalised collinear vector
 // 							    // -> (x0, y0) a point on the line
 // 	cv::fitLine(vec, line, cv::DIST_L2, 0, 0.1, 0.1);
 // 	result.second=line;
@@ -171,7 +163,7 @@ Pointf Polar2f(float radius, float angle){
 // 	std::vector <Pointf> nb=std::vector<Pointf>(neighbours(d.getPosition(), NEIGHBOURHOOD,v));
 // 	//cv::Rect2f rect =worldBuilder.getRect(nb);
 // 	//std::pair<bool, cv::Vec4f> orientation =findOrientationCV(nb);
-// 	std::pair<bool, b2Vec2> orientation =findOrientation(nb);	
+// 	std::pair<bool, b2Vec2> orientation =findOrientation(nb);
 // 	float dtheta=0;
 // 	if (orientation.first){
 // //		d.setOrientation(orientation.second[1], orientation.second[0]);
@@ -180,8 +172,6 @@ Pointf Polar2f(float radius, float angle){
 // 	return nb;
 
 // }
-
-
 
 // cv::Mat ImgProc::cropLeft(cv::Mat mat){
 // 		float w=mat.size().width;
@@ -279,7 +269,7 @@ Pointf Polar2f(float radius, float angle){
 //                 good_corners.push_back(corners[i]); //og corners
 // 				if (new_corners.size()==corners.size()){
 // 					optic_flow[0]=double(corners[i].x-new_corners[i].x);
-// 					optic_flow[1]=double(corners[i].y-new_corners[i].y);					
+// 					optic_flow[1]=double(corners[i].y-new_corners[i].y);
 // 				}
 
 //             }
@@ -289,7 +279,6 @@ Pointf Polar2f(float radius, float angle){
 // 		corners=good_corners;
 // 		previous=frame_grey.clone();
 //        // printf("good corners = %i, new corners %i\n", good_corners.size(),i);
-
 
 //      //   printf("updated %i\n", it);
 //         it++;
@@ -305,35 +294,48 @@ Pointf Polar2f(float radius, float angle){
 // 	return previous;
 // }
 
-
-std::pair <bool, BodyFeatures> bounding_rotated_box(std::vector <cv::Point2f>nb){
-    for (cv::Point2f & p: nb){
-        p.x= round(p.x*100)/100;
-        p.y=round(p.y*100)/100;
+std::pair<bool, BodyFeatures>
+bounding_rotated_box (std::vector<cv::Point2f> nb)
+{
+    for (cv::Point2f &p : nb)
+    {
+        p.x = round (p.x * 100) / 100;
+        p.y = round (p.y * 100) / 100;
     }
-    std::pair <bool, BodyFeatures> result(0, BodyFeatures());
-    if (nb.empty()){
+    std::pair<bool, BodyFeatures> result (0, BodyFeatures ());
+    if (nb.empty ())
+    {
         return result;
     }
-    cv::RotatedRect rotated_rect = cv::minAreaRect(nb);
-    if (rotated_rect.size.width>rotated_rect.size.height){
-        result.second.setHalfLength(rotated_rect.size.width/2); //NVM THIS ///THEY ARE SWAPPED IN OPENCV DO NOT TOUCH
-        result.second.setHalfWidth(rotated_rect.size.height/2);
-        if (rotated_rect.angle>90){
-            rotated_rect.angle-=90;
+    cv::RotatedRect rotated_rect = cv::minAreaRect (nb);
+    if (rotated_rect.size.width > rotated_rect.size.height)
+    {
+        result.second.setHalfLength (
+            rotated_rect.size.width
+            / 2); //NVM THIS ///THEY ARE SWAPPED IN OPENCV DO NOT TOUCH
+        result.second.setHalfWidth (rotated_rect.size.height / 2);
+        if (rotated_rect.angle > 90)
+        {
+            rotated_rect.angle -= 90;
         }
-        else{
-            rotated_rect.angle+=90;
+        else
+        {
+            rotated_rect.angle += 90;
         }
     }
-    else{
-        result.second.setHalfLength(rotated_rect.size.height/2); //NVM THIS ///THEY ARE SWAPPED IN OPENCV DO NOT TOUCH
-        result.second.setHalfWidth(rotated_rect.size.width/2);
+    else
+    {
+        result.second.setHalfLength (
+            rotated_rect.size.height
+            / 2); //NVM THIS ///THEY ARE SWAPPED IN OPENCV DO NOT TOUCH
+        result.second.setHalfWidth (rotated_rect.size.width / 2);
     }
-    result.second.pose.p=b2Vec2(rotated_rect.center.x, rotated_rect.center.y);
-    float angle_rad=rotated_rect.angle*DEG_TO_RAD_K;
-    result.second.pose.q.Set(angle_rad);
-    result.second.pose.q.Set(atan(result.second.pose.q.s/result.second.pose.q.c));
-    result.first=true;
+    result.second.pose.p
+        = b2Vec2 (rotated_rect.center.x, rotated_rect.center.y);
+    float angle_rad = rotated_rect.angle * DEG_TO_RAD_K;
+    result.second.pose.q.Set (angle_rad);
+    result.second.pose.q.Set (
+        atan (result.second.pose.q.s / result.second.pose.q.c));
+    result.first = true;
     return result;
 }

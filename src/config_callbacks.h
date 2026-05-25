@@ -1,57 +1,63 @@
 #ifndef CONFIG_CALLBACKS_H
 #define CONFIG_CALLBACKS_H
 
-#include "worldbuilder.h"
 #include "task.h"
 
-class Configurator; 
+class Configurator;
 
 /**
 * Output from Configurator to Motors
 */
-class MotorInterface { 
-	protected:
-	float L=0, R=0, L_gain=1.0f, R_gain=1.0f, Kp=0.45, Ki=0.25, Kd=0.2; //from empirical, Kp should be 1.2
-	float prev_error=0;
-	float integral=0;
-    public:
+class MotorInterface
+{
+  protected:
+    float L = 0, R = 0, L_gain = 1.0f, R_gain = 1.0f, Kp = 0.45, Ki = 0.25,
+          Kd = 0.2; //from empirical, Kp should be 1.2
+    float prev_error = 0;
+    float integral = 0;
 
-	MotorInterface()=default;
+  public:
+    MotorInterface () = default;
 
-	MotorInterface(float kp, float ki, float kd):Kp(kp), Ki(ki), Kd(kd){}
+    MotorInterface (float kp, float ki, float kd) : Kp (kp), Ki (ki), Kd (kd)
+    {
+    }
 
-	virtual void getData(const Task::Action &a){
-		L=a.getLWheelSpeed();
-		R=a.getRWheelSpeed();
-	}
+    virtual void getData (const Task::Action &a)
+    {
+        L = a.getLWheelSpeed ();
+        R = a.getRWheelSpeed ();
+    }
 
-	float get_L(){
-		float f=L*L_gain;
-		return f;
-	}
+    float get_L ()
+    {
+        float f = L * L_gain;
+        return f;
+    }
 
-	float get_R(){
-		float f=R*R_gain;
-		return f;
-	}
+    float get_R ()
+    {
+        float f = R * R_gain;
+        return f;
+    }
 
-	/**
+    /**
 	 * @brief Adjusts L/R wheel gain, implements a PID controller with option to turn it into cascaded controller
 	 * 
 	 * @param angle_D desired angle from disturbance
 	 * @param observed observed transform
 	 * @param y_D desired distance from disturbance on the y axis (pointer so optional) 
 	 */
-	void adjust_gain( float angle_D, b2Transform observed, float * y_D=NULL);
+    void adjust_gain (float angle_D, b2Transform observed, float *y_D = NULL);
 
-	/**
+    /**
 	 * @brief Implements a PID controller
 	 * 
 	 * @param e 
 	 */
-	void PID(float e);
+    void PID (float e);
 
-	/**
+    /**
 	 * @brief Implements a P controller in the outer loop of the cascade controller
 	 * 
 	 * max dl/dt and dr/dt = 2.0 (going from -1->1 and viceversa)
@@ -62,43 +68,42 @@ class MotorInterface {
 	 * @param e distance error
 	 * @returns desired angle
 	 */
-	float outer_loop(float e);
+    float outer_loop (float e);
 
+    void reset ()
+    {
+        L_gain = 1.0f;
+        R_gain = 1.0f;
+        reset_error ();
+    }
 
-	void reset(){
-		L_gain=1.0f;
-		R_gain=1.0f;
-		reset_error();
-	}
-
-	void reset_error(){
-		integral=0;
-		prev_error=0;
-	}
-
-};	
-
-
-
+    void reset_error ()
+    {
+        integral = 0;
+        prev_error = 0;
+    }
+};
 
 /**
 * Callback for changing goal
 */
-struct GoalChanger{
-	/**
+struct GoalChanger
+{
+    /**
 	* Changes goal to Task @param t 
 	*/
-	virtual Task change_goal(const Task & t)=0;
+    virtual Task change_goal (const Task &t) = 0;
 };
 
 /**
  * Callback for calibrating stereo vision
  */
 
-struct CalibrationCallback{
-	/**
+struct CalibrationCallback
+{
+    /**
 	 * @brief Takes as input disturbance @param d extracted from the Box2D simulation of the current Task
 	 */
-	virtual void simulationReady(const Disturbance & d)=0;
+    virtual void simulationReady (const Disturbance &d) = 0;
 };
 #endif
