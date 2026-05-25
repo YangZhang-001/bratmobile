@@ -143,6 +143,7 @@ class Planner
   protected:
   public:
     Planner () = default;
+    virtual ~Planner() = default;
 
     /**
      * @brief Implements custom algorithm to search transition system for a plan

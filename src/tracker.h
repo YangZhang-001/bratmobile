@@ -30,7 +30,8 @@ class Tracker{
 
     public:
 
-    Tracker(){}
+    Tracker()=default;
+    virtual ~Tracker()=default;
 
     virtual Threshold get_threshold(const State &s){
         return threshold;

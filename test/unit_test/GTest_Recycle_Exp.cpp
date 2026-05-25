@@ -6,7 +6,7 @@ const bool DEBUG = true;
 void planFile (TransitionSystem &g, std::vector<vertexDescriptor> plan, int it)
 {
     char fileName[50];
-    sprintf (fileName, "/tmp/plan%03i.txt");
+    sprintf (fileName, "/tmp/plan%03i.txt",it);
     FILE *f = fopen (fileName, "w");
     for (auto &p : plan)
     {

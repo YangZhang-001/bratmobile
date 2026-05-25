@@ -50,7 +50,7 @@ TEST_F (FigureTest, PrintTransform)
     auto points = configurator->get_data2fp ();
     CoordinateContainer newPoints;
     configurator->clearData ();
-    char name[50];
+    char name[256];
     sprintf (name, "/tmp/transform%s", info);
     FILE *f = fopen (name, "w+");
     CoordinateContainer cc;
