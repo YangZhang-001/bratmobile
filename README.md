@@ -31,7 +31,7 @@ The indoor robot is equipped with
 ### Development packages
 
 ```
-sudo apt install g++ cmake libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev
+sudo apt install g++ cmake libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-dev libgtest-dev xauth x11-apps xfonts-base
 ```
 
 ### Libraries to compile from source
@@ -39,6 +39,15 @@ sudo apt install g++ cmake libopencv-dev libboost-all-dev xorg-dev libglu1-mesa-
 * [C1 LIDAR API](https://github.com/berndporr/c1lidar)
 * [Zetabot API](https://github.com/berndporr/zetabot)
 * [Cpp Timer](https://github.com/berndporr/cppTimer)
+* [libcamera2opencv](https://github.com/berndporr/libcamera2opencv)
+
+### Install powersave service
+
+The rpi5 draws too much current under load to run off the battery so we need to enable powersave:
+
+sudo cp powersave.service /etc/systemd/system
+sudo systemctl enable --now powersave.service
+
 
 ## Build
 
