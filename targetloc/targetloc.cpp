@@ -44,7 +44,12 @@ void TargetLoc::stop()
 {
     cameraL.stop();
     cameraR.stop();
+
+#ifndef TARGETLOC_USE_ROCK5_V4L_CAMERA
+    // stop cameras in Raspiberry Pi model
     cm.stop();
+#endif
+
 }
 
 void TargetLoc::newScanAvail(C1LidarData (&data)[C1Lidar::nDistance])
