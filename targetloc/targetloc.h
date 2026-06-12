@@ -1,10 +1,16 @@
 #pragma once
 
 #include "c1lidarrpi.h"
-#include "libcam2opencv.h"
 #include "stereo.h"
 #include "targetdet.h"
+
+#ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
+#include "rock5_V4Lcamera_backend.h"
+#else
+#include "libcam2opencv.h"
 #include <libcamera/libcamera/camera_manager.h>
+#endif
+
 #include <mutex>
 #include <opencv2/opencv.hpp>
 #include <vector>
