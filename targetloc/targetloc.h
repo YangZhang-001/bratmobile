@@ -141,17 +141,27 @@ class TargetLoc : public C1Lidar::DataInterface
     // Callback when a target has been detected
     void onTargetDetected (const std::vector<cv::Point2f> &coords);
 
-    // Left camera
-    Libcam2OpenCV cameraL;
+    #ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
+        // rock5 opencv/v4l cameras
+        // Left camera & Right camera
+        V4L2Camera cameraL;
+        V4L2Camera cameraR;
 
-    // Right camera
-    Libcam2OpenCV cameraR;
+    #else
+        // Pi libcamera cameras
+        // Left camera
+        Libcam2OpenCV cameraL;
 
-    // The common settings for both cameras
-    Libcam2OpenCVSettings settings;
+        // Right camera
+        Libcam2OpenCV cameraR;
 
-    // Cameramanager for both cameras
-    libcamera::CameraManager cm;
+        // The common settings for both cameras
+        Libcam2OpenCVSettings settings;
+
+        // Cameramanager for both cameras
+        libcamera::CameraManager cm;
+
+    #endif
 
     // Stereo detector
     Stereo stereo;
