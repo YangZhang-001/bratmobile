@@ -1,6 +1,13 @@
 #include "targetloc.h"
-#include <libcamera/libcamera/camera_manager.h>
 #include <opencv2/core/types.hpp>
+
+#ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
+#include "rock5_V4Lcamera_backend.h"
+#include <linux/videodev2.h>
+#include <opencv2/videoio.hpp>
+#else
+#include <libcamera/libcamera/camera_manager.h>
+#endif
 
 void TargetLoc::start()
 {
