@@ -141,6 +141,11 @@ class TargetLoc : public C1Lidar::DataInterface
     // Callback when a target has been detected
     void onTargetDetected (const std::vector<cv::Point2f> &coords);
 
+    // camera image size used for contour scaling
+    // initialized with the default values and updated in start()
+    int cameraWidth = 1920;
+    int cameraHeight = 1080;
+
     #ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
         // rock5 opencv/v4l cameras
         // Left camera & Right camera

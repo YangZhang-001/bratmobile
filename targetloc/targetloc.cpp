@@ -34,8 +34,12 @@ void TargetLoc::start()
 
     settings.width = 1920;
     settings.height = 1080;
+    cameraWidth = settings.width;
+    cameraHeight = settings.height;
+
     settings.cameraIndex = 0;
     cameraL.start(cm, settings);
+
     settings.cameraIndex = 1;
     cameraR.start(cm, settings);
 }
@@ -136,8 +140,8 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
     float avgX = 0;
     contour_mutex.lock();
     for (auto &c : contour) {
-        const int x = c.x * currentD.size().width / settings.width;
-        const int y = c.y * currentD.size().height / settings.height;
+        const int x = c.x * currentD.size().width / cameraWidth;
+        const int y = c.y * currentD.size().height / cameraHeight;
         scaledContour.emplace_back(x, y);
         printf("[%d,%d]", x, y);
         avgX = avgX + c.x;
