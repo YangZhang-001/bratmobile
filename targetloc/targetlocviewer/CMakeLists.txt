@@ -29,7 +29,10 @@ add_executable(targetlocviewer
 
 target_link_libraries(targetlocviewer Qt6::Widgets QCustomPlotQt6)
 target_link_libraries(targetlocviewer targetloc)
-target_link_libraries(targetlocviewer PkgConfig::LIBCAMERA)
 target_link_libraries(targetlocviewer ${OpenCV_LIBS})
-target_link_libraries(targetlocviewer cam2opencv)
-target_link_libraries(targetlocviewer ${TURBOJPEG_LINK_LIBRARIES})
+
+if(NOT TARGETLOC_USE_ROCK5_V4L_CAMERA)
+  target_link_libraries(targetlocviewer PkgConfig::LIBCAMERA)
+  target_link_libraries(targetlocviewer cam2opencv)
+  target_link_libraries(targetlocviewer ${TURBOJPEG_LINK_LIBRARIES})
+endif()
