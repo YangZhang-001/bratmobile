@@ -11,6 +11,72 @@
 
 void TargetLoc::start()
 {
+    targetDet.registerDetCallback([&](const std::vector<cv::Point2f> &coords) {
+        onTargetDetected(coords);
+    });
+
+    stereo.registerCallback([&](cv::Mat d) {
+        std::lock_guard<std::mutex> guard(disparityData_mutex);
+        currentD = d;
+    });
+
+// start cameras in rock5 model
+#ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
+
+    // regester frame callbacks for left/right camera
+    cameraL.registerFrameCallback([&](const cv::Mat &left) {
+            updateImageL(left);
+        });
+    cameraR.registerFrameCallback([&](const cv::Mat &right) {
+            updateImageR(right);
+        });
+
+    V4L2OpenCVParameters leftParameters;
+    leftParameters.width = 1920;
+    leftParameters.height = 1080;
+    leftParameters.deviceID = 23;
+    leftParameters.fourcc = cv::VideoWriter::fourcc('N', 'V', '1', '2');
+    leftParameters.framerate = 10;
+
+    V4L2OpenCVParameters rightParameters = leftParameters;
+    rightParameters.deviceID = 32;
+
+    const std::vector<V4L2ControlParameter> leftControls = {
+        {"/dev/v4l-subdev2", V4L2_CID_GAIN, 0.25},
+        {"/dev/v4l-subdev2", V4L2_CID_HFLIP, 1},
+        {"/dev/v4l-subdev2", V4L2_CID_VFLIP, 1}
+    };
+
+    const std::vector<V4L2ControlParameter> rightControls = {
+        {"/dev/v4l-subdev7", V4L2_CID_GAIN, 0.25},
+        {"/dev/v4l-subdev7", V4L2_CID_HFLIP, 1},
+        {"/dev/v4l-subdev7", V4L2_CID_VFLIP, 1}
+    };
+    // start left camera
+    const V4L2OpenCVParameters actualLeft = cameraL.start(leftParameters, leftControls);
+
+    // start right camera
+    const V4L2OpenCVParameters actualRight = cameraR.start(rightParameters, rightControls);
+
+    const int leftWidth =
+        actualLeft.width > 0 ? actualLeft.width : leftParameters.width;
+    const int leftHeight =
+        actualLeft.height > 0 ? actualLeft.height : leftParameters.height;
+    const int rightWidth =
+        actualRight.width > 0 ? actualRight.width : rightParameters.width;
+    const int rightHeight =
+        actualRight.height > 0 ? actualRight.height : rightParameters.height;
+
+    cameraWidth = leftWidth;
+    cameraHeight = leftHeight;
+
+    if ((leftWidth != rightWidth) || (leftHeight != rightHeight)) {
+        fprintf(stderr, "Warning: Left and right camera have different resolution! Left: %dx%d, Right: %dx%d\n",
+                leftWidth, leftHeight, rightWidth, rightHeight);
+    }
+
+
+#else
     cm.start();
 
     cameraL.registerCallback(
@@ -23,14 +89,7 @@ void TargetLoc::start()
             updateImageR(right);
         });
 
-    targetDet.registerDetCallback([&](const std::vector<cv::Point2f> &coords) {
-        onTargetDetected(coords);
-    });
 
-    stereo.registerCallback([&](cv::Mat d) {
-        std::lock_guard<std::mutex> guard(disparityData_mutex);
-        currentD = d;
-    });
 
     settings.width = 1920;
     settings.height = 1080;
@@ -42,6 +101,7 @@ void TargetLoc::start()
 
     settings.cameraIndex = 1;
     cameraR.start(cm, settings);
+#endif
 }
 
 void TargetLoc::stop()
