@@ -42,13 +42,17 @@ void TargetLoc::start()
     rightParameters.deviceID = 32;
 
     const std::vector<V4L2ControlParameter> leftControls = {
-        {"/dev/v4l-subdev2", V4L2_CID_GAIN, 0.25},
+        // Keep exposure and gain moderate to reduce noise and overbright images
+        // exposure: 0~4095, gain: 256~43663.
+        {"/dev/v4l-subdev2", V4L2_CID_EXPOSURE, 0.25},
+        {"/dev/v4l-subdev2", V4L2_CID_GAIN, 0.12},
         {"/dev/v4l-subdev2", V4L2_CID_HFLIP, 1},
         {"/dev/v4l-subdev2", V4L2_CID_VFLIP, 1}
     };
 
     const std::vector<V4L2ControlParameter> rightControls = {
-        {"/dev/v4l-subdev7", V4L2_CID_GAIN, 0.25},
+        {"/dev/v4l-subdev7", V4L2_CID_EXPOSURE, 0.25},
+        {"/dev/v4l-subdev7", V4L2_CID_GAIN, 0.12},
         {"/dev/v4l-subdev7", V4L2_CID_HFLIP, 1},
         {"/dev/v4l-subdev7", V4L2_CID_VFLIP, 1}
     };
