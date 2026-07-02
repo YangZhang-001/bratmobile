@@ -1,4 +1,5 @@
 #include "rock5_V4Lcamera_backend.h"
+#include <algorithm>  //std::max
 
 #include <cmath>
 
@@ -10,6 +11,7 @@ void V4L2Camera::threadLoop ()
         cv::Mat cap;
 
         videoCapture.set (cv::CAP_PROP_CONVERT_RGB, true);
+        // read a new frame from camera
         videoCapture.read (cap);
         if (cap.empty ()) 
         {
@@ -17,6 +19,32 @@ void V4L2Camera::threadLoop ()
             isOn = false;
             return;
         }
+
+        // the rock5 test pattern has correct colors
+        // the image on rock5 platform is green when the ISP/AWB pipeline is not used,
+        // so apply a lightweight grey-world white balance
+        if (cap.channels () == 3)
+        {
+            //store B/G/R channels in "channels"
+            std::vector<cv::Mat> channels;
+            cv::split (cap, channels);
+
+            const double meanB = cv::mean (channels[0])[0];
+            const double meanG = cv::mean (channels[1])[0];
+            const double meanR = cv::mean (channels[2])[0];
+
+            const double gray = (meanB + meanG + meanR) / 3.0;
+
+            channels[0].convertTo (channels[0], -1, gray / std::max (meanB, 1.0));
+            channels[1].convertTo (channels[1], -1, gray / std::max (meanG, 1.0));
+            channels[2].convertTo (channels[2], -1, gray / std::max (meanR, 1.0));
+
+            cv::merge (channels, cap);
+
+            // slightly increase contrast and brightness
+            cap.convertTo (cap, -1, 1.25, 8.0);
+        }
+
         if (onFrame) 
         {
             onFrame (cap);

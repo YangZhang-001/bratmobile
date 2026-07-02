@@ -43,7 +43,14 @@ Window::Window()
 
     lidar.registerInterface(&targetLoc);
 
+// choose the correct platform for the LIDAR
+#ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
+    fprintf(stderr, "Starting LIDAR on ROCK5 serial device.\n");
+    lidar.start(C1Lidar::ROCK5_SERIAL_DEV);
+#else
+    fprintf(stderr, "Starting LIDAR on RPI serial device.\n");
     lidar.start(C1Lidar::RPI_SERIAL_DEV);
+#endif
 }
 
 void Window::updateGUI()
