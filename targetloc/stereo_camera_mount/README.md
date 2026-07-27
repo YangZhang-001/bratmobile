@@ -10,7 +10,7 @@ Several angle variants were printed and tested. The final design was selected ba
 
 The mount is printed as a single component to maintain a fixed relative position between the two cameras. This improves durability and reduces the risk of camera movement or alignment changes during operation.
 
-With the current mount installed, the two camera images overlap at **65 mm** with no observable alignment error. This value provides a reference for subsequent stereo matching and target-coordinate calculation.
+With the current mount installed, the two camera views overlap at a point approximately **65 mm** with no observable alignment error. This convergence distance provides a repeatable reference for reproducing the camera geometry used in subsequent stereo matching and target-coordinate calculation tests.
 
 ## Specifications
 
