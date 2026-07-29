@@ -40,7 +40,7 @@ After printing and installation:
 1. Confirm that the mount has no visible deformation.
 2. Secure the two camera modules using the specified M2 and M3 bolts.
 3. Check that both cameras remain firmly fixed.
-4. Verify image overlap at the 65 mm calibration position.
+4. Verify image overlap at the **800 mm** calibration position.
 5. Confirm the stereo image alignment before performing coordinate-calculation tests.
 
 Any change to the printed geometry, camera position, fastening method, or mounting angle may alter the stereo camera relationship and should be validated again.
