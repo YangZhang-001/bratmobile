@@ -19,7 +19,7 @@ This convergence distance provides a repeatable reference for reproducing the ca
 - Dimensions: **108 × 28 × 21 mm**
 - Printing method: **single-piece 3D printing**
 - Recommended layer height: **0.2 mm**
-- Camera alignment reference: **65 mm**
+- Camera alignment reference: **800 mm**
 - Required fasteners:
   - **2 × M2 bolts**
   - **2 × M3 bolts**
