@@ -77,8 +77,13 @@ void Window::updateGUI()
                         QImage::Format_BGR888);
     imageCombined->setPixmap(QPixmap::fromImage(frameD));
 
+    // Added preprocessing to prevent errors caused by empty frames at startuo
+    cv::Mat disparity = targetLoc.getCurrentDisparityMap();
+    if (disparity.empty())
+        return;
+        
     cv::Mat disp8;
-    cv::normalize(targetLoc.getCurrentDisparityMap(), disp8, 0, 255,
+    cv::normalize(disparity, disp8, 0, 255,
                   cv::NORM_MINMAX, CV_8U);
 
     cv::Mat dispBGR;
