@@ -10,7 +10,7 @@ Several angle variants were printed and tested. The final design was selected ba
 
 The mount is printed as a single component to maintain a fixed relative position between the two cameras. This improves durability and reduces the risk of camera movement or alignment changes during operation.
 
-With the current mount installed, the two camera views overlap at a point approximately **800 mm** with no observable alignment error. 
+With the current mount installed, the two camera views overlap at a point approximately **750 mm** with no observable alignment error. 
 
 This convergence distance provides a repeatable reference for reproducing the camera geometry used in subsequent stereo matching and target-coordinate calculation tests.
 
@@ -19,7 +19,7 @@ This convergence distance provides a repeatable reference for reproducing the ca
 - Dimensions: **108 × 28 × 21 mm**
 - Printing method: **single-piece 3D printing**
 - Recommended layer height: **0.2 mm**
-- Camera alignment reference: **800 mm**
+- Camera alignment reference: **750 mm**
 - Required fasteners:
   - **2 × M2 bolts**
   - **2 × M3 bolts**
@@ -40,7 +40,7 @@ After printing and installation:
 1. Confirm that the mount has no visible deformation.
 2. Secure the two camera modules using the specified M2 and M3 bolts.
 3. Check that both cameras remain firmly fixed.
-4. Verify image overlap at the **800 mm** calibration position.
+4. Verify image overlap at the **750 mm** calibration position.
 5. Confirm the stereo image alignment before performing coordinate-calculation tests.
 
 Any change to the printed geometry, camera position, fastening method, or mounting angle may alter the stereo camera relationship and should be validated again.
