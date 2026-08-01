@@ -1,5 +1,8 @@
 #include "targetloc.h"
+#include <chrono> // rock5 stereo throttling timing
+#include <opencv2/core/utility.hpp> // limit and report opencv thread count
 #include <opencv2/core/types.hpp>
+#include <mutex>  //protect stereo throttle and startup
 
 #ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
 #include "rock5_V4Lcamera_backend.h"
@@ -9,8 +12,32 @@
 #include <libcamera/libcamera/camera_manager.h>
 #endif
 
+#ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
+namespace {
+// limit opencv threads on rock5, 4 threads for opencv
+// the default opencv thread count is 8, which caused high load 
+// when stereo, camera capture, lidar and QT were running together
+constexpr int ROCK5_OPENCV_THREADS  = 4;
+
+// limit rock5 stereo disparity calculation to 1 per second
+// reduce the peak and accumulated load from StereoSGBM, on rock5
+constexpr int ROCK5_STEREO_INTERVAL_SECONDS = 1;
+
+}
+#endif
+
 void TargetLoc::start()
 {
+#ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
+    // limit opencv threads on rock5, 4 threads for opencv
+    cv::setNumThreads(ROCK5_OPENCV_THREADS);
+
+    // print the active rock5 load-control settings. used for testing
+    printf("Rock5 load control: opencv_threads=%d, stereo_interval_s=%d, cpu_count=%d\n", 
+        cv::getNumThreads(), ROCK5_STEREO_INTERVAL_SECONDS, cv::getNumberOfCPUs());
+    fflush(stdout);
+#endif
+
     targetDet.registerDetCallback([&](const std::vector<cv::Point2f> &coords) {
         onTargetDetected(coords);
     });
@@ -140,6 +167,28 @@ void TargetLoc::updateStereo()
         return;
     if (currentL.size != currentR.size)
         return;
+
+#ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
+    // camera L&R callbcks may both call updatestereo()
+    static std::mutex stereoStartMutex;
+     
+    // On Rock 5, avoid starting StereoSGBM too frequently.
+    // This keeps the load close to the tested 1Hz configuration.
+    static auto lastStereoTime =
+        std::chrono::steady_clock::now() -
+        std::chrono::seconds(ROCK5_STEREO_INTERVAL_SECONDS);
+
+    std::lock_guard<std::mutex> stereoStartLock(stereoStartMutex);
+
+    const auto now = std::chrono::steady_clock::now();
+
+    if (now - lastStereoTime <
+        std::chrono::seconds(ROCK5_STEREO_INTERVAL_SECONDS))
+        return;
+
+    lastStereoTime = now;
+#endif
+
     // yes, we have!
     stereo.calcDepthMapAsync(currentL, currentR);
 }
