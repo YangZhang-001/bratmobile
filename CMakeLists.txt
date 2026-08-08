@@ -21,6 +21,28 @@ option(BRAT_BUILD_TARGETLOC_NAVIGATION
        "Link TargetLoc into the brat3 target executable"
        OFF)
 
+# optinal mode for rock5 motor backend
+option(BRAT_USE_ROCK5_WHEELEDDRIVE
+       "Use Rock 5 sysfs PWM wheel backend"
+       OFF)
+
+option(BRAT_ROCK5_MOTOR_DRY_RUN
+       "Print Rock 5 navigation motor commands without driving PWM"
+       ON)
+
+if(BRAT_USE_ROCK5_WHEELEDDRIVE)
+  add_subdirectory(wheeleddrive)
+  set(BRAT_MOTOR_BACKEND deltabotdrive)
+  # use the same macro in the code to conditionally compile the motor backend
+  add_compile_definitions(BRAT_USE_ROCK5_WHEELEDDRIVE=1)
+
+  if(BRAT_ROCK5_MOTOR_DRY_RUN)
+    add_compile_definitions(BRAT_ROCK5_MOTOR_DRY_RUN=1)
+  endif()
+else()
+  set(BRAT_MOTOR_BACKEND zetabot)
+endif()
+
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
  # find_package(iir)
 #  pkg_check_modules(LIBCAMERA REQUIRED IMPORTED_TARGET libcamera)
@@ -46,16 +68,15 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
       PRIVATE
       BRAT_BUILD_TARGETLOC_NAVIGATION=1
     )
-
+    
   endif()
-
-  target_link_libraries(brat2_targetless ${OpenCV_LIBS}  box2d zetabot gpiodcxx c1lidarrpi brat gpiod)
-  target_link_libraries(brat2_target ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat gpiod)
-  target_link_libraries(brat3_targetless ${OpenCV_LIBS}  box2d zetabot c1lidarrpi brat gpiod)
-  target_link_libraries(brat3_target ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat gpiod)
-  target_link_libraries(brat3_target_wb ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat gpiod)
-  target_link_libraries(reactive ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat gpiod)
-
+  target_link_libraries(brat2_targetless ${OpenCV_LIBS}  box2d ${BRAT_MOTOR_BACKEND} gpiodcxx c1lidarrpi brat gpiod)
+  target_link_libraries(brat2_target ${OpenCV_LIBS} box2d ${BRAT_MOTOR_BACKEND} c1lidarrpi brat gpiod)
+  target_link_libraries(brat3_targetless ${OpenCV_LIBS}  box2d ${BRAT_MOTOR_BACKEND} c1lidarrpi brat gpiod)
+  target_link_libraries(brat3_target ${OpenCV_LIBS} box2d ${BRAT_MOTOR_BACKEND} c1lidarrpi brat gpiod)
+  target_link_libraries(brat3_target_wb ${OpenCV_LIBS} box2d ${BRAT_MOTOR_BACKEND} c1lidarrpi brat gpiod)
+  target_link_libraries(reactive ${OpenCV_LIBS} box2d ${BRAT_MOTOR_BACKEND} c1lidarrpi brat gpiod)
+  
   if (BUILD_TESTING)
   add_subdirectory(test)
   endif()

@@ -154,9 +154,20 @@ int main(int argc, char** argv) {
 
 #ifdef BRAT_BUILD_TARGETLOC_NAVIGATION
 
-	// start the motor backend before navigation receives scans
-	// Rock 5 is still using dry-run mode for this test
+// Start the motor backend before navigation receives scans.
+#ifdef BRAT_USE_ROCK5_WHEELEDDRIVE
+
+	if (!tracker.start()) {
+    tracker.stop();
+    lidar.stop();
+    return 1;
+}
+
+#else
+
 	tracker.start();
+
+#endif
 
 	//the same LiDAR stream now belongs only to navigation.
 	dataInterface.startNavigation(&configurator);
@@ -176,13 +187,26 @@ int main(int argc, char** argv) {
 
 #ifdef BRAT_BUILD_TARGETLOC_NAVIGATION
 
-	//let the current navigation callback finish before shutdown.
+#ifdef BRAT_USE_ROCK5_WHEELEDDRIVE
+
+	//rock5 + targetloc navigaiton
+	tracker.stop();
 	dataInterface.beginTransition();
+
+#else
+
+	// respiberry + targetloc navigation
+	dataInterface.beginTransition();
+	tracker.stop();
 
 #endif
 
+#else
+	// no targetloc navigation
 	tracker.stop();
+
+#endif
+
 	lidar.stop();
 }
-	
 	

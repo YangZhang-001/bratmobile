@@ -1,7 +1,14 @@
 #ifndef CUSTOM_INTERFACES
 #define CUSTOM_INTERFACES
 #include "c1lidarrpi.h"
+
+#ifdef BRAT_USE_ROCK5_WHEELEDDRIVE
+#include "wheeleddrive/Driving.h"
+#include <exception>
+#else
 #include "zetabot.h"
+#endif
+
 #include "attentive.h"
 //#include "Iir.h"
 //#include "CppTimer.h"
@@ -93,23 +100,100 @@ public:
 
 };
 
-class MotorCallback :public ZetaBot, public MotorInterface { //every 100ms the callback updates the plan
+/**
+ * @brief connects navigation motor commands to the selected robot backend.
+ *
+ * the Raspberry Pi path keeps the existing ZetaBot interface, while the
+ * Rock 5 path uses Driving. Rock 5 dry-run mode prints navigation commands
+ * without accessing PWM, so command direction and sequencing can be checked
+ * before powered navigation and full TargetLoc shutdown are validated.
+ */
+
+#ifdef BRAT_USE_ROCK5_WHEELEDDRIVE
+class MotorCallback : public MotorInterface {
+#else
+class MotorCallback : public ZetaBot, public MotorInterface {
+#endif
+
 public:
 
-void getData(const Task::Action &a)override{
-	MotorInterface::getData(a);
-	std::cout<<"New data received!"<<std::endl;
-	otherStuff();
+#ifdef BRAT_USE_ROCK5_WHEELEDDRIVE
+bool start()
+{
+#ifdef BRAT_ROCK5_MOTOR_DRY_RUN
+    std::cout << "Rock 5 navigation motor dry-run enabled.\n";
+    return true;
+#else
+    try {
+        driving.start();
+        std::cout << "Rock 5 wheeleddrive backend started.\n";
+        return true;
+    } catch (const std::exception &e) {
+        std::cerr << "Could not start Rock 5 wheeleddrive backend: "
+                  << e.what() << '\n';
+        return false;
+    }
+#endif
+}
+
+void stop()
+{
+#ifndef BRAT_ROCK5_MOTOR_DRY_RUN
+    driving.stop();
+#endif
+}
+#endif
+
+void getData(const Task::Action &a) override
+{
+    MotorInterface::getData(a);
+    std::cout << "New data received!" << std::endl;
+    otherStuff();
+
+#ifdef BRAT_USE_ROCK5_WHEELEDDRIVE
+
+#ifdef BRAT_ROCK5_MOTOR_DRY_RUN
+    if (L != lastCommandLeft || R != lastCommandRight) {
+        std::cout
+            << "Rock 5 motor dry-run: command not sent, L="
+            << L << ", R=" << R << '\n';
+
+        lastCommandLeft = L;
+        lastCommandRight = R;
+    }
+#else
+    const int result = driving.setMotorSpeeds(L, R);
+
+    if (result < 0) {
+        std::cerr << "Could not set Rock 5 motor speeds.\n";
+    }
+#endif
+
+#else
     setRightWheelSpeed(R); //temporary fix because motors on despacito are the wrong way around
     setLeftWheelSpeed(L);
+#endif
 }
 
 /**
 * A function to implement any other procedure before wheel speeds are changed
 */
-virtual void otherStuff(){
-	std::cout<<"Base class"<<std::endl;
+virtual void otherStuff()
+{
+    std::cout << "Base class" << std::endl;
 }
+
+#ifdef BRAT_USE_ROCK5_WHEELEDDRIVE
+private:
+
+    Driving driving;
+
+#ifdef BRAT_ROCK5_MOTOR_DRY_RUN
+    float lastCommandLeft = 2.0F;
+    float lastCommandRight = 2.0F;
+#endif
+
+#endif
 };
 
 /**
