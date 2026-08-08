@@ -7,6 +7,7 @@
 //#include "CppTimer.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <mutex>
 #define _USE_MATH_DEFINES
 
 
@@ -19,17 +20,51 @@
 
 class LidarInterface : public C1Lidar::DataInterface{
 Configurator * configurator=NULL;
+
+// targetInterface != NULL: target acquisition
+// both pointers are NULL: transition; configurator != NULL: navigation
+C1Lidar::DataInterface * targetInterface=NULL;
+std::mutex routeMutex;
+
 int mapCount =0;
 
 public:
 
     LidarInterface(Configurator * _c): configurator(_c){}
 
-	void newScanAvail(C1LidarData (&data)[C1Lidar::nDistance]){ //uncomment sections to write x and y to files
-		if (configurator == NULL){
-			std::cerr<<"girl where's the configurator"<<std::endl;
+    /**
+     * @brief startTargetAcquisition sets the targetInterface to the given pointer and clears the configurator.
+     * @param _target pointer to the target data interface.
+     */
+    void startTargetAcquisition(C1Lidar::DataInterface * _target){
+    std::lock_guard<std::mutex> guard(routeMutex);
+    configurator=NULL;
+    targetInterface=_target;
+    }
+
+    void beginTransition(){
+        std::lock_guard<std::mutex> guard(routeMutex);
+        targetInterface=NULL;
+        configurator=NULL;
+    }
+ 
+    void startNavigation(Configurator * _c){
+        std::lock_guard<std::mutex> guard(routeMutex);
+        targetInterface=NULL;
+        configurator=_c;
+    }
+
+	void newScanAvail(C1LidarData (&data)[C1Lidar::nDistance]) override{ //uncomment sections to write x and y to files
+		std::lock_guard<std::mutex> guard(routeMutex);
+        
+        if (targetInterface != NULL){
+			targetInterface->newScanAvail(data);
 			return;
 		}
+
+        if (configurator == NULL) {
+            return;
+        }
 		mapCount++;
 		Pointf p2f;
 		FILE *f;
@@ -55,7 +90,6 @@ public:
 		}
 		configurator->newScanEvent();
 	}
-
 
 };
 
