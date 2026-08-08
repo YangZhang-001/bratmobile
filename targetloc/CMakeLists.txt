@@ -44,8 +44,8 @@ include_directories(
 	${OpenCV_INCLUDE_DIRS}
 )
 
-set(LIBSRC stereo.cpp targetloc.cpp targetdet.cpp)
-set(LIBINCLUDE stereo.h targetloc.h targetdet.h)
+set(LIBSRC stereo.cpp targetloc.cpp targetdet.cpp targetlocreceiver.cpp)
+set(LIBINCLUDE stereo.h targetloc.h targetdet.h targetlocreceiver.h)
 
 if(TARGETLOC_USE_ROCK5_V4L_CAMERA)
 	list(APPEND LIBSRC rock5_V4Lcamera_backend.cpp)
