@@ -9,6 +9,12 @@ class TargetDet
 {
 public:
     ~TargetDet();
+    /**
+    * Blocks until the current asynchronous detection has completed.
+     * Frame callbacks must be stopped before this function is called.
+     */
+    void waitUntilIdle();
+
     cv::QRCodeDetector qrDetector;
     cv::barcode::BarcodeDetector barcodeDetector;
 

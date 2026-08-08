@@ -3,9 +3,14 @@
 
 #include <cmath>
 
+V4L2Camera::~V4L2Camera ()
+{
+    stop ();
+}
+
 void V4L2Camera::threadLoop ()
 {
-    isOn = true;
+    //isOn = true;
     while (isOn) 
     {
         cv::Mat cap;
@@ -121,7 +126,14 @@ V4L2OpenCVParameters V4L2Camera::start (V4L2OpenCVParameters openCVparameters,
 
     if ((openCVparameters.height > 0) && (openCVparameters.width > 0)) 
     {
+        // Set this before creating the thread so an immediate stop cannot
+        // be overwritten when threadLoop starts.
+        isOn = true;
         cameraThread = std::thread (&V4L2Camera::threadLoop, this);
+    }
+    else
+    {
+        isOn = false;
     }
 
     return openCVparameters;

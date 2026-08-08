@@ -31,11 +31,7 @@ class Window : public QWidget, public TargetLoc::DetectionInterface
 
 public:
     Window();
-    ~Window()
-    {
-        targetLoc.stop();
-        lidar.stop();
-    }
+    ~Window();
 
 private:
     QHBoxLayout *hLayout;

@@ -50,6 +50,7 @@ class V4L2Camera
     using OnFrame = std::function<void (const cv::Mat &)>;
 
     V4L2Camera () = default;
+    ~V4L2Camera ();
 
     V4L2OpenCVParameters
     start (const V4L2OpenCVParameters openCVparameters = V4L2OpenCVParameters (),

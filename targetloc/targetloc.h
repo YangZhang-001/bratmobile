@@ -50,7 +50,11 @@ class TargetLoc : public C1Lidar::DataInterface
     void start ();
 
     /**
-     * Stops the cameras and the lidar.
+     * stops camera capture and blocks until asynchronous stereo and
+     * target-detection work has completed.
+     *
+     * external LiDAR forwarding and target-result acceptance must be
+     * disabled before this function is called.
      */
     void stop ();
 

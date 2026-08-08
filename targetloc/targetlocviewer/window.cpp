@@ -53,6 +53,20 @@ Window::Window()
 #endif
 }
 
+Window::~Window()
+{
+    // LiDAR motor and serial reader.
+    fprintf(stderr, "Stopping LIDAR.\n");
+    lidar.stop();
+
+    // Camera, stereo and TargetLoc workers.
+    fprintf(stderr, "Stopping Targetloc.\n");
+    targetLoc.stop();
+
+    // Shutdown trace.
+    fprintf(stderr, "Targetloc viewer stopped cleanly.\n");
+}
+
 void Window::updateGUI()
 {
     cv::Mat leftResized;

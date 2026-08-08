@@ -191,6 +191,12 @@ void TargetLoc::stop()
     cm.stop();
 #endif
 
+
+    // camera callbacks are quiescent here, so no new asynchronous
+    // disparity or target-detection work can be started.
+    stereo.waitUntilIdle();
+    targetDet.waitUntilIdle();
+
 }
 
 void TargetLoc::newScanAvail(C1LidarData (&data)[C1Lidar::nDistance])
@@ -322,12 +328,24 @@ TargetLoc::LidarTargetEstimate TargetLoc::estimateTargetFromLidar(float targetY)
 
 void TargetLoc::updateStereo()
 {
-    // let's check if we have really images from both cameras!
-    if (currentL.empty())
+    cv::Mat leftSnapshot;
+    cv::Mat rightSnapshot;
+
+    {
+        std::lock_guard<std::mutex> guard(leftImage_mutex);
+        leftSnapshot = currentL;
+    }
+
+    {
+        std::lock_guard<std::mutex> guard(rightImage_mutex);
+        rightSnapshot = currentR;
+    }
+
+    // work on snapshots because both camera callbacks can update
+    // the stored frames while stereo is being started.
+    if (leftSnapshot.empty() || rightSnapshot.empty())
         return;
-    if (currentR.empty())
-        return;
-    if (currentL.size != currentR.size)
+    if (leftSnapshot.size != rightSnapshot.size)
         return;
 
 #ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
@@ -352,7 +370,7 @@ void TargetLoc::updateStereo()
 #endif
 
     // yes, we have!
-    stereo.calcDepthMapAsync(currentL, currentR);
+    stereo.calcDepthMapAsync(leftSnapshot, rightSnapshot);
 }
 
 void TargetLoc::updateImageL(const cv::Mat &l)
@@ -403,9 +421,16 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
         }
     }
 
+    cv::Mat disparitySnapshot;
+
+    {
+        std::lock_guard<std::mutex> guard(disparityData_mutex);
+        disparitySnapshot = currentD;
+    }
+
     // Checking if the disparity map is actually there as we need it to find out
     // how far the target is.
-    if (currentD.empty())
+    if (disparitySnapshot.empty())
         return;
 
     // We need to scale the contour from full resolution to the resolution
@@ -415,8 +440,8 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
     float avgX = 0;
     contour_mutex.lock();
     for (auto &c : contour) {
-        const int x = c.x * currentD.size().width / cameraWidth;
-        const int y = c.y * currentD.size().height / cameraHeight;
+        const int x = c.x * disparitySnapshot.size().width / cameraWidth;
+        const int y = c.y * disparitySnapshot.size().height / cameraHeight;
         scaledContour.emplace_back(x, y);
         printf("[%d,%d]", x, y);
         avgX = avgX + c.x;
@@ -440,14 +465,14 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
            lidarSnapshot.size());
 
     // Create mask
-    cv::Mat mask = cv::Mat::zeros(currentD.size(), CV_8UC1);
+    cv::Mat mask = cv::Mat::zeros(disparitySnapshot.size(), CV_8UC1);
 
     // Draw filled contour for the mask
     std::vector<std::vector<cv::Point>> scaledContours{scaledContour};
     cv::drawContours(mask, scaledContours, -1, cv::Scalar(255), cv::FILLED);
 
     // Compute mean disparity value inside contour
-    float avgDisp = cv::mean(currentD, mask)[0];
+    float avgDisp = cv::mean(disparitySnapshot, mask)[0];
 
     cv::Point2f targetLoc;
 

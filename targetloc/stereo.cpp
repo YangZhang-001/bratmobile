@@ -37,8 +37,15 @@ void Stereo::calcDepthMapAsync(const cv::Mat &left, const cv::Mat &right)
 
 Stereo::~Stereo()
 {
+    waitUntilIdle();
+}
+
+void Stereo::waitUntilIdle()
+{
     if (disparityCalcThread.joinable())
     {
         disparityCalcThread.join();
     }
+
+    isCalculatingDisparity = false;
 }
