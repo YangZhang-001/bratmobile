@@ -10,12 +10,23 @@
 #include <map>
 #include <mutex>
 
-
 const float SAFE_ANGLE =M_PI_2; 
 const float MAX_TURN =M_PI;
+
+#ifdef BRAT_USE_ROCK5_WHEELEDDRIVE
+
+// measured Rock 5 body size
+const float ROBOT_HALFWIDTH =0.135; //local x axis
+const float ROBOT_BOX_OFFSET_X =-0.075; //0.06 m front, 0.21 m rear
+
+#else
+
+// original Raspberry Pi geometry
 const float ROBOT_HALFWIDTH =0.1275; //local x axis
-const float ROBOT_HALFLENGTH =0.08;  //local y axis
 const float ROBOT_BOX_OFFSET_X= 0.105-ROBOT_HALFWIDTH;
+#endif
+
+const float ROBOT_HALFLENGTH =0.08;  //local y axis
 const float ROBOT_BOX_OFFSET_Y =0;
 const float ROBOT_BOX_OFFSET_ANGLE =0;
 const float BETWEEN_WHEELS =.14;

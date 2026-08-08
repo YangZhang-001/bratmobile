@@ -33,8 +33,12 @@ option(BRAT_ROCK5_MOTOR_DRY_RUN
 if(BRAT_USE_ROCK5_WHEELEDDRIVE)
   add_subdirectory(wheeleddrive)
   set(BRAT_MOTOR_BACKEND deltabotdrive)
-  # use the same macro in the code to conditionally compile the motor backend
+
+  # Rock 5 platform code
   add_compile_definitions(BRAT_USE_ROCK5_WHEELEDDRIVE=1)
+
+  # same geometry inside brat planner
+  target_compile_definitions(brat PRIVATE BRAT_USE_ROCK5_WHEELEDDRIVE=1)
 
   if(BRAT_ROCK5_MOTOR_DRY_RUN)
     add_compile_definitions(BRAT_ROCK5_MOTOR_DRY_RUN=1)

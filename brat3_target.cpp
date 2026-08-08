@@ -122,10 +122,39 @@ int main(int argc, char** argv) {
 	std::cout<<"Target accepted for navigation: range="
 		     <<targetRange<<" m"<<std::endl;
 
-	//replace the old fixed position with the measured one.
+	// front edge from navigation origin
+	const float robotFrontReach =
+		ROBOT_BOX_OFFSET_X + ROBOT_HALFWIDTH;
+
+	// leave room before the physical target
+	const float navigationStandoff =
+		robotFrontReach
+		+ RELAXED_DIST_ERROR_TOLERANCE
+		+ TRACKING_ERROR_TOLERANCE
+		+ DISTANCE_ERROR_TOLERANCE;
+
+	// no forward motion needed
+	if (targetRange <= navigationStandoff) {
+		std::cout<<"Target already within navigation standoff: "
+			 <<navigationStandoff<<" m"<<std::endl;
+
+		lidar.stop();
+		return 0;
+	}
+
+	// keep the measured bearing
+	const float navigationScale =
+		(targetRange - navigationStandoff) / targetRange;
+
+	// safe robot-centre goal
 	b2Vec2 targetPosition(
-		targetCoordinate.x,
-		targetCoordinate.y);
+		targetCoordinate.x * navigationScale,
+		targetCoordinate.y * navigationScale);
+
+	std::cout<<"Navigation approach target: x="
+		     <<targetPosition.x<<" m, y="
+		     <<targetPosition.y<<" m, standoff="
+		     <<navigationStandoff<<" m"<<std::endl;
 
 #else
 
@@ -134,7 +163,9 @@ int main(int argc, char** argv) {
 #endif
 
 	Disturbance target(2, targetPosition);
-    Task controlGoal(target, DEFAULT);
+
+	// keep goal positional
+	Task controlGoal(target, DEFAULT, b2Transform_zero, true);
 
     FocusedConfigurator configurator;
 	configurator.init(controlGoal);
