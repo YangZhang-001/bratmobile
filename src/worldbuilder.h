@@ -16,6 +16,7 @@ class WorldBuilder
     friend class Configurator;
 
   public:
+    virtual ~WorldBuilder () = default;
     enum CLUSTERING
     {
         BOX = 0,

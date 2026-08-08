@@ -22,6 +22,23 @@ class TargetLoc : public C1Lidar::DataInterface
     TargetLoc () = default;
 
     /**
+     * Controls how much runtime information TargetLoc prints.
+     */
+    enum class OutputMode
+    {
+        Detailed,
+        Compact
+    };
+
+    /**
+     * Set before start(); detection and callbackbehaviour are unchanged
+     */
+    void setOutputMode (const OutputMode mode)
+    {
+        outputMode = mode;
+    }
+
+    /**
      * Callback interface which reports a new target location.
      */
     struct DetectionInterface
@@ -230,6 +247,9 @@ class TargetLoc : public C1Lidar::DataInterface
 
     // ringbuffer of countours to check if they are consistently det
     std::deque<std::vector<cv::Point2f> > contoursRingbuffer;
+
+    // Keep existing detailed output unless an application requests compact mode.
+    OutputMode outputMode = OutputMode::Detailed;
 
     // Detection Callback
     DetectionInterface *detectionInterface = nullptr;

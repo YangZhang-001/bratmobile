@@ -38,6 +38,10 @@ Window::Window()
     startTimer(std::chrono::milliseconds{100});
 
     fprintf(stderr, "Starting Targetloc.\n");
+
+    // Keep full diagnostic output in targetlocviewer.
+    targetLoc.setOutputMode(TargetLoc::OutputMode::Detailed);
+
     targetLoc.registerNewTargetDetectedCallback(this);
     targetLoc.start();
 

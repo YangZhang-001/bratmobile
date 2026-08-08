@@ -394,6 +394,9 @@ void TargetLoc::updateImageR(const cv::Mat &r)
 // here it's where it's getting interesting!
 void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
 {
+    // Detailed mode is intended for targetlocviewer diagnostics.
+    const bool detailedOutput = outputMode == OutputMode::Detailed;
+
     // removing scaled contour which is used here for debuggin and visualisation
     // doing it in a thread-safe way in case it's being plotted by the QT GUI.
     contour_mutex.lock();
@@ -415,7 +418,8 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
              (j < contour1.size()) && (j < contour2.size()); j++) {
             if (point2point(contour1[j], contour2[j]) >
                 maxContourPixelErrorBetweenDetectionContours) {
-                fprintf(stderr, "Contour discarded.\n");
+                if (detailedOutput)
+                    fprintf(stderr, "Contour discarded.\n");
                 return;
             }
         }
@@ -435,7 +439,9 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
 
     // We need to scale the contour from full resolution to the resolution
     // of the disparity map.
-    printf("We have a contour around a target:");
+    if (detailedOutput) {
+        printf("We have a contour around a target:");
+    }
     int i = 0;
     float avgX = 0;
     contour_mutex.lock();
@@ -443,26 +449,32 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
         const int x = c.x * disparitySnapshot.size().width / cameraWidth;
         const int y = c.y * disparitySnapshot.size().height / cameraHeight;
         scaledContour.emplace_back(x, y);
-        printf("[%d,%d]", x, y);
+        if (detailedOutput) {
+            printf("[%d,%d]", x, y);
+        }
         avgX = avgX + c.x;
         i++;
     }
     contour_mutex.unlock();
     avgX = avgX / i;
-    printf(", avgX = %f",avgX);
-    printf("\n");
-
-    // LiDAR data-path check.
-    // copy callback data with short mutex scope.
-    std::vector<cv::Point2f> lidarSnapshot;
-    {
-        std::lock_guard<std::mutex> guard(lidarData_mutex);
-        lidarSnapshot = currentLidarCoords;
+    if (detailedOutput) {
+        printf(", avgX = %f",avgX);
+        printf("\n");
     }
 
-    // point count during visual detection.
-    printf("Latest LIDAR points during detection: %zu\n",
-           lidarSnapshot.size());
+    if (detailedOutput) {
+        // LiDAR data-path check.
+        // copy callback data with short mutex scope.
+        std::vector<cv::Point2f> lidarSnapshot;
+        {
+            std::lock_guard<std::mutex> guard(lidarData_mutex);
+            lidarSnapshot = currentLidarCoords;
+        }
+
+        // point count during visual detection.
+        printf("Latest LIDAR points during detection: %zu\n",
+                lidarSnapshot.size());
+    }
 
     // Create mask
     cv::Mat mask = cv::Mat::zeros(disparitySnapshot.size(), CV_8UC1);
@@ -530,30 +542,46 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
             targetLoc.x = calibratedLidarX;
             targetLoc.y = calibratedLidarY;
 
-            // selected LiDAR target cluster.
-            printf("LiDAR target: camera_y=%f, raw_lidar_x=%f, raw_lidar_y=%f, "
-                "calibrated_x=%f, calibrated_y=%f, range=%f, angle=%f, "
-                "candidates=%zu, cluster_points=%zu\n",
-                   cameraTargetY,
-                   lidarEstimate.x,
-                   lidarEstimate.y,
-                   calibratedLidarX,
-                   calibratedLidarY,
-                   lidarEstimate.range,
-                   lidarEstimate.angleDeg,
-                   lidarEstimate.candidates,
-                   lidarEstimate.clusterPoints);
+            // Raw cluster details are useful in viewer diagnostics only.
+            if (detailedOutput) {
+                // selected LiDAR target cluster.
+                printf("LiDAR target: camera_y=%f, raw_lidar_x=%f, raw_lidar_y=%f, "
+                    "calibrated_x=%f, calibrated_y=%f, range=%f, angle=%f, "
+                    "candidates=%zu, cluster_points=%zu\n",
+                    cameraTargetY,
+                    lidarEstimate.x,
+                    lidarEstimate.y,
+                    calibratedLidarX,
+                    calibratedLidarY,
+                    lidarEstimate.range,
+                    lidarEstimate.angleDeg,
+                    lidarEstimate.candidates,
+                    lidarEstimate.clusterPoints);
+            }
         } else {
-            // no valid LiDAR cluster in target direction.
-            printf("LiDAR target: no valid estimate, camera_y=%f, candidates=%zu\n",
+            // A visual target exists, but no final coordinate can be produced.
+            if (detailedOutput) {
+                // no valid LiDAR cluster in target direction.
+                printf("LiDAR target: no valid estimate, camera_y=%f, candidates=%zu\n",
                    cameraTargetY,
                    lidarEstimate.candidates);
+            } else {
+                printf("TargetLoc: visual target detected, "
+                       "waiting for a valid LiDAR estimate.\n");
+            }
             return;
         }
     }
 
-    printf("Disparity: %f, Target location: [%f,%f]\n", avgDisp, targetLoc.x,
-           targetLoc.y);
+    if (detailedOutput) {
+        printf("TargetLoc: visual target detected, "
+               "disparity=%f, target_loc=[%f,%f]\n",
+               avgDisp, targetLoc.x, targetLoc.y);
+    } else {
+        // Report the final calibrated LiDAR coordinate.
+        printf("TargetLoc final coordinate: x=%.3f m, y=%.3f m\n",
+               targetLoc.x, targetLoc.y);
+    }
 
     // callback!
     if (detectionInterface) {

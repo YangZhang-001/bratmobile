@@ -136,6 +136,7 @@ class Reactive_Controller : public Controller
 
 class OpenLoopController : public Controller
 {
+  public:
     OpenLoopController () = default;
     virtual ~OpenLoopController () = default;
     Task next_task (Task currentTask, const Task &controlGoal,

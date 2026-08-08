@@ -17,6 +17,10 @@ add_subdirectory(src "${CMAKE_CURRENT_BINARY_DIR}/src")
 
 option(BUILD_FASTDDS "Building FastDDS directory" 0)
 
+option(BRAT_BUILD_TARGETLOC_NAVIGATION
+       "Link TargetLoc into the brat3 target executable"
+       OFF)
+
 if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
  # find_package(iir)
 #  pkg_check_modules(LIBCAMERA REQUIRED IMPORTED_TARGET libcamera)
@@ -29,6 +33,21 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   add_executable(brat3_targetless custom_robot.h brat3_targetless.cpp)
   add_executable(reactive custom_robot.h reactive.cpp)
 
+  if(BRAT_BUILD_TARGETLOC_NAVIGATION)
+    set(TARGETLOC_BUILD_VIEWER OFF CACHE BOOL
+        "Build the TargetLoc Qt viewer")
+
+    add_subdirectory(targetloc)
+
+    target_link_libraries(brat3_target targetloc)
+
+    target_compile_definitions(
+      brat3_target
+      PRIVATE
+      BRAT_BUILD_TARGETLOC_NAVIGATION=1
+    )
+
+  endif()
 
   target_link_libraries(brat2_targetless ${OpenCV_LIBS}  box2d zetabot gpiodcxx c1lidarrpi brat gpiod)
   target_link_libraries(brat2_target ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat gpiod)
@@ -36,12 +55,16 @@ if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "aarch64") # for Raspberry Pi
   target_link_libraries(brat3_target ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat gpiod)
   target_link_libraries(brat3_target_wb ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat gpiod)
   target_link_libraries(reactive ${OpenCV_LIBS} box2d zetabot c1lidarrpi brat gpiod)
-  
+
+  if (BUILD_TESTING)
   add_subdirectory(test)
+  endif()
   message("detected architecture aarch64, building executables")
 else()
+  if (BUILD_TESTING)
   add_subdirectory(test/unit_test "${CMAKE_CURRENT_BINARY_DIR}/test/unit_test")
   add_subdirectory(test "${CMAKE_CURRENT_BINARY_DIR}/test")
+  endif()
 
 	message("not building any executable")
 endif()
