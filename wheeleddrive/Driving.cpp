@@ -73,7 +73,15 @@ int Driving::setMotorSpeeds(const float left_speed, const float right_speed)
         return -1;
     }
 
-    int result = leftMotor.setSpeed(left_speed);
+    // apply the calibrated left-wheel response correction
+    float adjustedLeftSpeed = left_speed;
+
+    if (left_speed > 0.0F)
+        adjustedLeftSpeed *= leftForwardSpeedScale;
+    else if (left_speed < 0.0F)
+        adjustedLeftSpeed *= leftReverseSpeedScale;
+
+    int result = leftMotor.setSpeed(adjustedLeftSpeed);
 
     if (result < 0) {
         std::fprintf(stderr,

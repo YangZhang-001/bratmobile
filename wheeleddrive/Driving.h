@@ -39,9 +39,13 @@ public:
 
 private:
 
-    // Measured neutral pulse for each physical wheel servo.
-    static constexpr int leftNeutralHighTimeNs = 1521500;
+    // calibrated neutral
+    static constexpr int leftNeutralHighTimeNs = 1521800;
     static constexpr int rightNeutralHighTimeNs = 1524000;
+
+    // wheel balance for Rock 5
+    static constexpr float leftForwardSpeedScale = 0.946F;
+    static constexpr float leftReverseSpeedScale = 0.980F;
 
     // Servo motor settings for left and right motors
     ServoMotorSetting leftMotor;
