@@ -55,6 +55,14 @@ constexpr float LIDAR_CLUSTER_GAP_M = 0.12F;
 // Minimum support for a valid cluster.
 constexpr std::size_t LIDAR_MIN_CLUSTER_POINTS = 2;
 
+// Calibration from Rock 5 lab test data.
+// Validated mainly in the 0.30 m to 0.60 m forward range.
+constexpr float LIDAR_X_SCALE = 1.00255F;
+constexpr float LIDAR_X_OFFSET_M = 0.01556F;
+
+constexpr float LIDAR_Y_SCALE = 1.12269F;
+constexpr float LIDAR_Y_OFFSET_M = -0.02852F;
+
 // LiDAR candidate with full geometry.
 struct LidarCandidate {
     float x;
@@ -473,19 +481,39 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
     const bool runLidarLookup = true;
 #endif
 
-    // LiDAR estimate rate.
-    if (runLidarLookup) {
+    // ===================**LiDAR estimate rate.**==========
+    // camera-derived y is only used as a direction cue for LiDAR lookup.
+    const float cameraTargetY = targetLoc.y;
 
-        // estimate only, no TargetLoc output change.
+    // on Rock 5, LiDAR lookup is throttled.
+    // do not output stereo-only coordinates between LiDAR lookup ticks.
+    if (!runLidarLookup){
+        return;
+    } else {
+        // estimate target coordinate from LiDAR using the camera direction cue.
         const LidarTargetEstimate lidarEstimate =
-            estimateTargetFromLidar(targetLoc.y);
+            estimateTargetFromLidar(cameraTargetY);
 
         if (lidarEstimate.valid) {
+
+            // final robot-frame coordinate from calibrated LiDAR estimate.
+            const float calibratedLidarX =
+                LIDAR_X_SCALE * lidarEstimate.x + LIDAR_X_OFFSET_M;
+            const float calibratedLidarY =
+                LIDAR_Y_SCALE * lidarEstimate.y + LIDAR_Y_OFFSET_M;
+
+            targetLoc.x = calibratedLidarX;
+            targetLoc.y = calibratedLidarY;
+
             // selected LiDAR target cluster.
-            printf("LiDAR target: camera_y=%f, lidar_x=%f, lidar_y=%f, range=%f, angle=%f, candidates=%zu, cluster_points=%zu\n",
-                   targetLoc.y,
+            printf("LiDAR target: camera_y=%f, raw_lidar_x=%f, raw_lidar_y=%f, "
+                "calibrated_x=%f, calibrated_y=%f, range=%f, angle=%f, "
+                "candidates=%zu, cluster_points=%zu\n",
+                   cameraTargetY,
                    lidarEstimate.x,
                    lidarEstimate.y,
+                   calibratedLidarX,
+                   calibratedLidarY,
                    lidarEstimate.range,
                    lidarEstimate.angleDeg,
                    lidarEstimate.candidates,
@@ -493,8 +521,9 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
         } else {
             // no valid LiDAR cluster in target direction.
             printf("LiDAR target: no valid estimate, camera_y=%f, candidates=%zu\n",
-                   targetLoc.y,
+                   cameraTargetY,
                    lidarEstimate.candidates);
+            return;
         }
     }
 
