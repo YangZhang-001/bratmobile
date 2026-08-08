@@ -136,9 +136,21 @@ class Reactive_Controller : public Controller
 
 class OpenLoopController : public Controller
 {
-  public:
+    // fianl planner interface
+    bool finalApproachEnabled = false;
+    Direction finalApproachTurn = STOP;
+    bool finalApproachTurnDone = false;
+
+    public:
     OpenLoopController () = default;
     virtual ~OpenLoopController () = default;
+
+    void setFinalApproach (Direction d)
+    {
+        finalApproachEnabled = true;
+        finalApproachTurn = d;
+    }
+
     Task next_task (Task currentTask, const Task &controlGoal,
                     const TransitionSystem &g,
                     std::vector<vertexDescriptor> &current_vertices,

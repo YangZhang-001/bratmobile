@@ -114,9 +114,51 @@ Task Reactive_Controller::next_task( Task currentTask, const Task & controlGoal,
 
 Task OpenLoopController::next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
 	if (plan.empty() && currentTask.is_over()){
+
+	if (finalApproachTurnDone && currentTask.is_over()){
+		// stop after the final heading correction
+		plan.clear();
 		current_vertices={MOVING_VERTEX};
 		return stopTask(controlGoal);
 	}
+
+    if (finalApproachEnabled){
+		const b2Vec2 remaining = controlGoal.get_disturbance().getPosition();
+
+        if (remaining.Length() <= RELAXED_DIST_ERROR_TOLERANCE){
+            if (remaining.x > DISTANCE_ERROR_TOLERANCE
+                && remaining.y >= -DISTANCE_ERROR_TOLERANCE
+                && remaining.y <= DISTANCE_ERROR_TOLERANCE){
+
+                // finish the remaining approach
+                currentTask = Task(controlGoal.get_disturbance(), DEFAULT, b2Transform_zero, true);
+
+                currentTask.setMotorStep(
+					motor_step(currentTask.getAction(), remaining.x));
+
+                return currentTask;
+            }
+
+            if (finalApproachTurn != STOP
+                && !finalApproachTurnDone){
+
+                // restore the forward heading
+                currentTask = Task(controlGoal.get_disturbance(), finalApproachTurn, b2Transform_zero, true);
+
+                currentTask.setMotorStep(
+					motor_step(currentTask.getAction()));
+
+                finalApproachTurnDone = true;
+                return currentTask;
+            }
+        }
+    }
+		current_vertices={MOVING_VERTEX};
+		return stopTask(controlGoal);
+	}
+
+
+
 	currentTask=Task(g[plan[0]].Di, g[plan[0]].direction, b2Transform_zero, true);
 	vertexDescriptor currentVertex=get_current_vertex(current_vertices);
 	auto e=boost::edge(currentVertex, plan[0], g);

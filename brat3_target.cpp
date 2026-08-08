@@ -151,6 +151,18 @@ int main(int argc, char** argv) {
 		targetCoordinate.x * navigationScale,
 		targetCoordinate.y * navigationScale);
 
+#ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
+
+	const float smallLateralLimit =
+		ROBOT_HALFLENGTH + DISTANCE_ERROR_TOLERANCE + TRACKING_ERROR_TOLERANCE;
+
+	// avoid a 90-degree manoeuvre for small lateral approaches
+	if (std::abs(targetPosition.y) <= smallLateralLimit)
+	{
+		targetPosition.y = 0.0F;
+	}
+#endif
+
 	std::cout<<"Navigation approach target: x="
 		     <<targetPosition.x<<" m, y="
 		     <<targetPosition.y<<" m, standoff="
@@ -176,6 +188,19 @@ int main(int argc, char** argv) {
 	configurator.register_planner(&planner);
 	configurator.register_tracker(&tracker);
 	OpenLoopController wc;
+
+#ifdef BRAT_BUILD_TARGETLOC_NAVIGATION
+
+	// restore heading after a lateral approach
+	if (targetPosition.y > ROBOT_HALFLENGTH)
+		wc.setFinalApproach(RIGHT);
+	else if (targetPosition.y < -ROBOT_HALFLENGTH)
+		wc.setFinalApproach(LEFT);
+	else
+		wc.setFinalApproach(STOP);
+
+#endif
+
 	configurator.register_controller(&wc);
 	Logger logger( "brat3-target", "/tmp");
 	configurator.register_logger(&logger);
