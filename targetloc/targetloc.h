@@ -3,6 +3,7 @@
 #include "c1lidarrpi.h"
 #include "stereo.h"
 #include "targetdet.h"
+#include <cstddef>
 
 #ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
 #include "rock5_V4Lcamera_backend.h"
@@ -176,6 +177,31 @@ class TargetLoc : public C1Lidar::DataInterface
 
     // current LIDAR coordinates updated by the LIDAR callback
     std::vector<cv::Point2f> currentLidarCoords;
+
+    // LiDAR estimate for the current visual target.
+    struct LidarTargetEstimate
+    {
+        // estimate state.
+        bool valid = false;
+
+        // robot-frame coordinate from LiDAR cluster.
+        float x = 0.0F;
+        float y = 0.0F;
+
+        // range and bearing for calibration logs.
+        float range = 0.0F;
+        float angleDeg = 0.0F;
+
+        // candidate support counts.
+        std::size_t candidates = 0;
+        std::size_t clusterPoints = 0;
+    };
+
+    // camera y to approximate LiDAR bearing.
+    static float cameraYToLidarAngle(float targetY);
+
+    // full LiDAR target lookup.
+    LidarTargetEstimate estimateTargetFromLidar(float targetY);
 
     // callback from libcamera with a fresh left image
     void updateImageL (const cv::Mat &l);

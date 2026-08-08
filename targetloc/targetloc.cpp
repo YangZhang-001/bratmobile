@@ -3,6 +3,8 @@
 #include <opencv2/core/utility.hpp> // limit and report opencv thread count
 #include <opencv2/core/types.hpp>
 #include <mutex>  //protect stereo throttle and startup
+#include <algorithm> // std::sort
+#include <cmath> // std::fabs, std::hypot, std::atan2
 
 #ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
 #include "rock5_V4Lcamera_backend.h"
@@ -12,8 +14,8 @@
 #include <libcamera/libcamera/camera_manager.h>
 #endif
 
-#ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
 namespace {
+#ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
 // limit opencv threads on rock5, 4 threads for opencv
 // the default opencv thread count is 8, which caused high load 
 // when stereo, camera capture, lidar and QT were running together
@@ -23,8 +25,44 @@ constexpr int ROCK5_OPENCV_THREADS  = 4;
 // reduce the peak and accumulated load from StereoSGBM, on rock5
 constexpr int ROCK5_STEREO_INTERVAL_SECONDS = 1;
 
-}
+// LiDAR debug print rate.
+constexpr int ROCK5_LIDAR_LOOKUP_INTERVAL_SECONDS = 1;
 #endif
+
+// shared LiDAR lookup limits.
+// near noise rejection.
+constexpr float LIDAR_MIN_RANGE_M = 0.10F;
+
+// far background rejection.
+constexpr float LIDAR_MAX_RANGE_M = 3.00F;
+
+// target direction window.
+constexpr float LIDAR_ANGLE_WINDOW_DEG = 4.0F;
+
+// camera y to LiDAR bearing calibration.
+constexpr float CAMERA_Y_TO_LIDAR_ANGLE = 56.0F;
+
+// bearing offset from calibration.
+constexpr float CAMERA_Y_ANGLE_OFFSET_DEG = -1.0F;
+
+// radian to degree conversion.
+constexpr float RAD_TO_DEG = 57.2957795F;
+
+
+// range gap between separate surfaces(12cm).
+constexpr float LIDAR_CLUSTER_GAP_M = 0.12F;
+
+// Minimum support for a valid cluster.
+constexpr std::size_t LIDAR_MIN_CLUSTER_POINTS = 2;
+
+// LiDAR candidate with full geometry.
+struct LidarCandidate {
+    float x;
+    float y;
+    float range;
+    float angleDeg;
+};
+}
 
 void TargetLoc::start()
 {
@@ -158,6 +196,122 @@ void TargetLoc::newScanAvail(C1LidarData (&data)[C1Lidar::nDistance])
     }
 }
 
+float TargetLoc::cameraYToLidarAngle(float targetY)
+{
+    // linear calibration: camera lateral y to LiDAR bearing.
+    return CAMERA_Y_TO_LIDAR_ANGLE * targetY + CAMERA_Y_ANGLE_OFFSET_DEG;
+}
+
+TargetLoc::LidarTargetEstimate TargetLoc::estimateTargetFromLidar(float targetY)
+{
+    // empty estimate until a valid cluster is selected.
+    LidarTargetEstimate estimate;
+
+    // visual target direction.
+    const float targetAngleDeg = cameraYToLidarAngle(targetY);
+
+    // snapshot callback data with short mutex scope.
+    std::vector<cv::Point2f> lidarSnapshot;
+    {
+        std::lock_guard<std::mutex> guard(lidarData_mutex);
+        lidarSnapshot = currentLidarCoords;
+    }
+
+    // angle-filtered LiDAR candidates.
+    std::vector<LidarCandidate> candidates;
+
+    for (const auto &p : lidarSnapshot) {
+        // LiDAR robot-frame point.
+        const float lidarX = p.x;
+        const float lidarY = p.y;
+
+        // camera-visible half-plane only.
+        if (lidarX <= 0.0F)
+            continue;
+
+        // polar range.
+        const float lidarRange = std::hypot(lidarX, lidarY);
+
+        // useful range ring.
+        if (lidarRange < LIDAR_MIN_RANGE_M)
+            continue;
+        if (lidarRange > LIDAR_MAX_RANGE_M)
+            continue;
+
+        // LiDAR bearing.
+        const float lidarAngleDeg =
+            std::atan2(lidarY, lidarX) * RAD_TO_DEG;
+
+        // bearing-window match.
+        if (std::fabs(lidarAngleDeg - targetAngleDeg) >
+            LIDAR_ANGLE_WINDOW_DEG)
+            continue;
+
+        // accepted candidate.
+        candidates.push_back({lidarX, lidarY, lidarRange, lidarAngleDeg});
+    }
+
+    // candidate count for debug output.
+    estimate.candidates = candidates.size();
+
+    // no direction-matched points.
+    if (candidates.empty())
+        return estimate;
+
+    // nearest range first.
+    std::sort(candidates.begin(), candidates.end(),
+              [](const LidarCandidate &a, const LidarCandidate &b) {
+                  return a.range < b.range;
+              });
+
+    // first range cluster.
+    std::size_t clusterStart = 0;
+
+    // walk through continuous range clusters.
+    while (clusterStart < candidates.size()) {
+        std::size_t clusterEnd = clusterStart + 1;
+
+        // same surface while range gap is small.
+        while (clusterEnd < candidates.size() &&
+               candidates[clusterEnd].range -
+                   candidates[clusterEnd - 1].range <=
+                   LIDAR_CLUSTER_GAP_M) {
+            ++clusterEnd;
+        }
+
+        // current cluster size.
+        const std::size_t clusterCount = clusterEnd - clusterStart;
+
+        // require enough LiDAR support.
+        if (clusterCount >= LIDAR_MIN_CLUSTER_POINTS) {
+            // Median point inside selected cluster.
+            const std::size_t medianIndex =
+                clusterStart + clusterCount / 2;
+
+            // mean bearing for readable debug output.
+            float angleSumDeg = 0.0F;
+            for (std::size_t i = clusterStart; i < clusterEnd; ++i)
+                angleSumDeg += candidates[i].angleDeg;
+
+            // valid selected cluster.
+            estimate.valid = true;
+            estimate.x = candidates[medianIndex].x;
+            estimate.y = candidates[medianIndex].y;
+            estimate.range = candidates[medianIndex].range;
+            estimate.angleDeg = angleSumDeg / clusterCount;
+            estimate.clusterPoints = clusterCount;
+
+            return estimate;
+        }
+
+        // next separated range cluster.
+        clusterStart = clusterEnd;
+    }
+
+    // no supported cluster.
+    return estimate;
+}
+
 void TargetLoc::updateStereo()
 {
     // let's check if we have really images from both cameras!
@@ -265,6 +419,18 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
     printf(", avgX = %f",avgX);
     printf("\n");
 
+    // LiDAR data-path check.
+    // copy callback data with short mutex scope.
+    std::vector<cv::Point2f> lidarSnapshot;
+    {
+        std::lock_guard<std::mutex> guard(lidarData_mutex);
+        lidarSnapshot = currentLidarCoords;
+    }
+
+    // point count during visual detection.
+    printf("Latest LIDAR points during detection: %zu\n",
+           lidarSnapshot.size());
+
     // Create mask
     cv::Mat mask = cv::Mat::zeros(currentD.size(), CV_8UC1);
 
@@ -284,6 +450,53 @@ void TargetLoc::onTargetDetected(const std::vector<cv::Point2f> &contour)
     // mapping the x-coordinate pixels of the camera to the LIDAR y-coordinate
     // of the target in meter
     targetLoc.y = xpos2meter * (xposAtCentre - avgX);
+
+#ifdef TARGETLOC_USE_ROCK5_V4L_CAMERA
+    // LiDAR debug rate limit on rock5.
+    // target detection can run faster than this lookup needs.
+    static auto lastLidarLookupTime =
+        std::chrono::steady_clock::now() -
+        std::chrono::seconds(ROCK5_LIDAR_LOOKUP_INTERVAL_SECONDS);
+
+    // current lookup time.
+    const auto lidarLookupNow = std::chrono::steady_clock::now();
+
+    // run one LiDAR lookup window per second on rock5.
+    const bool runLidarLookup = 
+        lidarLookupNow - lastLidarLookupTime >=
+        std::chrono::seconds(ROCK5_LIDAR_LOOKUP_INTERVAL_SECONDS);
+    
+    // update Rock 5 lookup timestamp.
+    if (runLidarLookup)
+        lastLidarLookupTime = lidarLookupNow;
+#else
+    const bool runLidarLookup = true;
+#endif
+
+    // LiDAR estimate rate.
+    if (runLidarLookup) {
+
+        // estimate only, no TargetLoc output change.
+        const LidarTargetEstimate lidarEstimate =
+            estimateTargetFromLidar(targetLoc.y);
+
+        if (lidarEstimate.valid) {
+            // selected LiDAR target cluster.
+            printf("LiDAR target: camera_y=%f, lidar_x=%f, lidar_y=%f, range=%f, angle=%f, candidates=%zu, cluster_points=%zu\n",
+                   targetLoc.y,
+                   lidarEstimate.x,
+                   lidarEstimate.y,
+                   lidarEstimate.range,
+                   lidarEstimate.angleDeg,
+                   lidarEstimate.candidates,
+                   lidarEstimate.clusterPoints);
+        } else {
+            // no valid LiDAR cluster in target direction.
+            printf("LiDAR target: no valid estimate, camera_y=%f, candidates=%zu\n",
+                   targetLoc.y,
+                   lidarEstimate.candidates);
+        }
+    }
 
     printf("Disparity: %f, Target location: [%f,%f]\n", avgDisp, targetLoc.x,
            targetLoc.y);
