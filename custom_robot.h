@@ -219,8 +219,13 @@ class TentativeConfigurator: public AttentiveConfigurator{
  * determined upon task simulation. Automatically registers Motor_Out interface to the
  * MotorCallback, which tracks the number of steps and stops the robot when the task ends.
  */
-class OpenLooper: public DeadReckoner, public MotorCallback{
+class OpenLooper: public DeadReckoner, public MotorCallback, public TurnStepSource{
     int motorStep=0;
+
+
+    // +LEFT executed step, -RIGHT executed step.
+    int turnStepBalance=0;
+
     public:
 
     void on_new_task(const Task &task, const Task & goal){
@@ -231,6 +236,11 @@ class OpenLooper: public DeadReckoner, public MotorCallback{
     bool hasTaskEnded(Task & t)override{
 		//std::cout<<"Open loop checking task has ended ="<<int(motorStep<=0) <<std::endl;
         return motorStep<=0;
+    }
+
+    // expose only the accumulated executed turn steps.
+    int getTurnStepBalance() const override{
+        return turnStepBalance;
     }
 
 	void otherStuff()override{
@@ -248,7 +258,20 @@ class OpenLooper: public DeadReckoner, public MotorCallback{
 	void on_new_reading(const Task &task, const Task & goal){
         if (L!=0 && R!=0){
             motorStep--;
+
+            // count only executed turning; straight motion has zero omega.
+            const float omega=task.getAction().getOmega();
+
+            if (omega>0){
+                // LEFT contributes a positive step.
+                turnStepBalance++;
+            }
+            else if (omega<0){
+                // RIGHT contributes a negative step.
+                turnStepBalance--;
+            }
         }
+
         if (motorStep==0){
             L=0;
             R=0;

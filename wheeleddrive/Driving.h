@@ -44,8 +44,8 @@ private:
     static constexpr int rightNeutralHighTimeNs = 1524000;
 
     // wheel balance for Rock 5
-    static constexpr float leftForwardSpeedScale = 0.946F;
-    static constexpr float leftReverseSpeedScale = 0.980F;
+    static constexpr float leftForwardSpeedScale = 0.990F;
+    static constexpr float leftReverseSpeedScale = 0.985F;
 
     // Servo motor settings for left and right motors
     ServoMotorSetting leftMotor;

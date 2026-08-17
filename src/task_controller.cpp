@@ -112,19 +112,51 @@ Task Reactive_Controller::next_task( Task currentTask, const Task & controlGoal,
 
 }
 
+int OpenLoopController::normalizedTurnStepBalance () const
+{
+    if (turnStepSource == nullptr)
+    {
+        return 0;
+    }
+
+    // Use the existing calibrated 90-degree turn duration.
+    Task quarterTurn (LEFT);
+    const int quarterTurnSteps = motor_step (quarterTurn.getAction ());
+    const int fullTurnSteps = 4 * quarterTurnSteps;
+
+    if (fullTurnSteps <= 0)
+    {
+        return turnStepSource->getTurnStepBalance ();
+    }
+
+    // wrap the accumulated turn to one full rotation.
+    int balance =
+        turnStepSource->getTurnStepBalance () % fullTurnSteps;
+
+    const int halfTurnSteps = fullTurnSteps / 2;
+
+    // choose the shortest equivalent heading recovery.
+    if (balance > halfTurnSteps)
+    {
+        balance -= fullTurnSteps;
+    }
+    else if (balance < -halfTurnSteps)
+    {
+        balance += fullTurnSteps;
+    }
+
+    return balance;
+}
+
 Task OpenLoopController::next_task(Task currentTask, const Task & controlGoal, const TransitionSystem & g, std::vector <vertexDescriptor> & current_vertices, std::vector<vertexDescriptor> & plan){
 	if (plan.empty() && currentTask.is_over()){
 
-	if (finalApproachTurnDone && currentTask.is_over()){
-		// stop after the final heading correction
-		plan.clear();
-		current_vertices={MOVING_VERTEX};
-		return stopTask(controlGoal);
-	}
 
-    if (finalApproachEnabled){
+
+    if (finalHeadingRecoveryEnabled){
 		const b2Vec2 remaining = controlGoal.get_disturbance().getPosition();
 
+		//complete position first; recover heading only at navigation end
         if (remaining.Length() <= RELAXED_DIST_ERROR_TOLERANCE){
             if (remaining.x > DISTANCE_ERROR_TOLERANCE
                 && remaining.y >= -DISTANCE_ERROR_TOLERANCE
@@ -139,23 +171,37 @@ Task OpenLoopController::next_task(Task currentTask, const Task & controlGoal, c
                 return currentTask;
             }
 
-            if (finalApproachTurn != STOP
-                && !finalApproachTurnDone){
+			const int turnStepBalance = normalizedTurnStepBalance();
 
-                // restore the forward heading
-                currentTask = Task(controlGoal.get_disturbance(), finalApproachTurn, b2Transform_zero, true);
+			if (turnStepBalance != 0){
+				// Undo only the net turn that was actually executed.
+				const Direction recoveryDirection =
+					turnStepBalance > 0 ? RIGHT : LEFT;
 
-                currentTask.setMotorStep(
-					motor_step(currentTask.getAction()));
+				currentTask = Task(
+					controlGoal.get_disturbance(),
+					recoveryDirection,
+					b2Transform_zero,
+					true);
 
-                finalApproachTurnDone = true;
-                return currentTask;
-            }
+				// Use the exact residual step count instead of a fixed 90-degree turn.
+				currentTask.setMotorStep(abs(turnStepBalance));
+
+				return currentTask;
+			}
+				// Position and final heading are both complete.
+				current_vertices={MOVING_VERTEX};
+				return stopTask(controlGoal);
         }
+
+		// A local plan ended, but navigation is not complete yet.
+		// Keep the current vertex so the planner can continue next scan.
+		return stopTask(controlGoal);
+
     }
 		current_vertices={MOVING_VERTEX};
 		return stopTask(controlGoal);
-	}
+}
 
 
 

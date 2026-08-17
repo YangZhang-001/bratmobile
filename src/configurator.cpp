@@ -1,5 +1,6 @@
 #include "configurator.h"
 #include <chrono>
+#include <algorithm>
 
 #include "brat_math.h"
 
@@ -136,8 +137,11 @@ float Configurator::remainingSimulationTime (const Task *const t)
             // only target ahead
             if (targetFromTask.p.x > 0.0F)
             {
-                // remaining forward distance
-                return targetFromTask.p.x / (WHEEL_SPEED_DEFAULT * MAX_SPEED);
+                // Limit one forward plan to the configured planning horizon.
+                const float forwardDistance =
+                    std::min(targetFromTask.p.x, simulationStep);
+
+                return forwardDistance / (WHEEL_SPEED_DEFAULT * MAX_SPEED);
             }
         }
     }

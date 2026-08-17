@@ -191,13 +191,9 @@ int main(int argc, char** argv) {
 
 #ifdef BRAT_BUILD_TARGETLOC_NAVIGATION
 
-	// restore heading after a lateral approach
-	if (targetPosition.y > ROBOT_HALFLENGTH)
-		wc.setFinalApproach(RIGHT);
-	else if (targetPosition.y < -ROBOT_HALFLENGTH)
-		wc.setFinalApproach(LEFT);
-	else
-		wc.setFinalApproach(STOP);
+
+// Recover final heading from turn steps actually executed by OpenLooper.
+wc.enableFinalHeadingRecovery(&tracker);
 
 #endif
 
