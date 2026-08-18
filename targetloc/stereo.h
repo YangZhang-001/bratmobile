@@ -26,6 +26,13 @@ public:
 
     ~Stereo();
 
+    /**
+     * Blocks until the current asynchronous disparity calculation
+     * has completed. Frame callbacks must be stopped before this
+     * function is called.
+     */
+    void waitUntilIdle();
+
 private:
     // Stereo matching
     cv::Ptr<cv::StereoSGBM> stereoMatcher = cv::StereoSGBM::create(

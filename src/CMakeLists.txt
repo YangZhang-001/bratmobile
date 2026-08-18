@@ -20,6 +20,13 @@ find_package(box2d REQUIRED)
 
 add_library(brat ${SRC} ${HEAD})
 
+# export brat headers to executables that link against the brat library.
+target_include_directories(brat
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
 #add_subdirectory(fastdds)
 
 if(box2d_FOUND)

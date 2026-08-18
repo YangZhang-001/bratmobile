@@ -10,16 +10,40 @@
 #include <map>
 #include <mutex>
 
-
 const float SAFE_ANGLE =M_PI_2; 
 const float MAX_TURN =M_PI;
+
+#ifdef BRAT_USE_ROCK5_WHEELEDDRIVE
+
+// measured Rock 5 body size
+const float ROBOT_HALFWIDTH =0.135; //local x axis
+const float ROBOT_BOX_OFFSET_X =-0.075; //0.06 m front, 0.21 m rear
+
+#else
+
+// original Raspberry Pi geometry
 const float ROBOT_HALFWIDTH =0.1275; //local x axis
-const float ROBOT_HALFLENGTH =0.08;  //local y axis
 const float ROBOT_BOX_OFFSET_X= 0.105-ROBOT_HALFWIDTH;
+#endif
+
+const float ROBOT_HALFLENGTH =0.08;  //local y axis
 const float ROBOT_BOX_OFFSET_Y =0;
 const float ROBOT_BOX_OFFSET_ANGLE =0;
+
+// different values form rock5 testing
+#ifdef BRAT_USE_ROCK5_WHEELEDDRIVE
+
+const float BETWEEN_WHEELS =0.1814F;
+const float MAX_SPEED =0.1684F;
+
+#else
+
+// original respiberry Pi value
 const float BETWEEN_WHEELS =.14;
 const float MAX_SPEED=.78;
+
+#endif
+
 const float MAX_OMEGA =1.8; //radians
 const float ANGLE_ERROR_TOLERANCE =5 * M_PI/180;
 const float BOX2DRANGE =1.0;
@@ -62,7 +86,17 @@ enum Direction{LEFT, RIGHT, DEFAULT, BACK, STOP, UNDEFINED};
 //KINEMATICS
 
 const float WHEEL_SPEED_DEFAULT=0.5f;
+
+
+#ifdef BRAT_USE_ROCK5_WHEELEDDRIVE
+// calibrated Rock 5 turn command
+const float WHEEL_SPEED_TURN=0.281938F;
+
+#else
+
 const float WHEEL_SPEED_TURN=(M_PI_2*BETWEEN_WHEELS)/(MAX_SPEED); 
+
+#endif
  
 const std::map <Direction, std::pair<float, float>> default_kinematics={{DEFAULT, std::pair<float, float>(WHEEL_SPEED_DEFAULT*MAX_SPEED, 0)},
                                                                          {LEFT, std::pair<float, float>(0, WHEEL_SPEED_TURN)},

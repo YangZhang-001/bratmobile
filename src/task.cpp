@@ -244,11 +244,17 @@ Direction Task::H (Disturbance ob, Direction d, bool topDown)
         {
             if (d == Direction::DEFAULT && !topDown)
             { //REACTIVE BEHAVIOUR
-                if (ob.getAngle (start) < -.1)
+
+                //signed target angle in robot coordinates
+                b2Transform targetFromRobot = from_Di ();
+                float targetAngle
+                    = atan2 (targetFromRobot.p.y, targetFromRobot.p.x);
+
+                if (targetAngle < -.1)
                 { //angle formed with robot at last safe pose
                     d = Direction::RIGHT; //go left
                 }
-                else if (ob.getAngle (start) > 0.1)
+                else if (targetAngle > 0.1)
                 { //angle formed with robot at last safe pose, around .1 rad tolerance
                     d = Direction::LEFT; //
                 }

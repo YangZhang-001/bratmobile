@@ -1180,6 +1180,17 @@ void FocusedConfigurator::abandonPlan (std::vector<vertexDescriptor> &planProv,
         current_vertices.clear ();
     }
     planProv.clear ();
+
+    // Report when the existing planner invalidates an active motion.
+    if (!currentTask.get_change ())
+    {
+        printf(
+            "[NAV SAFETY STOP] abandonPlan invalidated the current path: "
+            "taskStep=%d direction=%d\n",
+            currentTask.getMotorStep (),
+            static_cast<int> (currentTask.get_direction ()));
+    }
+
     currentTask.set_change (true);
 }
 

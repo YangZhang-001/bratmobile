@@ -2,10 +2,17 @@
 
 TargetDet::~TargetDet()
 {
+    waitUntilIdle();
+}
+
+void TargetDet::waitUntilIdle()
+{
     if (detThread.joinable())
     {
         detThread.join();
     }
+
+    isDetecting = false;
 }
 
 const std::vector<cv::Point2f> TargetDet::detectSync(const cv::Mat img)

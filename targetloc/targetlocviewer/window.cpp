@@ -38,6 +38,10 @@ Window::Window()
     startTimer(std::chrono::milliseconds{100});
 
     fprintf(stderr, "Starting Targetloc.\n");
+
+    // Keep full diagnostic output in targetlocviewer.
+    targetLoc.setOutputMode(TargetLoc::OutputMode::Detailed);
+
     targetLoc.registerNewTargetDetectedCallback(this);
     targetLoc.start();
 
@@ -51,6 +55,20 @@ Window::Window()
     fprintf(stderr, "Starting LIDAR on RPI serial device.\n");
     lidar.start(C1Lidar::RPI_SERIAL_DEV);
 #endif
+}
+
+Window::~Window()
+{
+    // LiDAR motor and serial reader.
+    fprintf(stderr, "Stopping LIDAR.\n");
+    lidar.stop();
+
+    // Camera, stereo and TargetLoc workers.
+    fprintf(stderr, "Stopping Targetloc.\n");
+    targetLoc.stop();
+
+    // Shutdown trace.
+    fprintf(stderr, "Targetloc viewer stopped cleanly.\n");
 }
 
 void Window::updateGUI()

@@ -9,6 +9,11 @@ project(TargetLocator
 	LANGUAGES CXX)
 option(TARGETLOC_USE_ROCK5_V4L_CAMERA "Use Rock 5 OpenCV/V4L camera backend" OFF)
 
+# when build targetloc, targetlocviewer will run successfully
+option(TARGETLOC_BUILD_VIEWER
+       "Build the TargetLoc Qt viewer"
+       ON)
+
 set (CMAKE_CXX_STANDARD 17)
 
 set (CMAKE_CXX_FLAGS "-Wall")
@@ -44,8 +49,8 @@ include_directories(
 	${OpenCV_INCLUDE_DIRS}
 )
 
-set(LIBSRC stereo.cpp targetloc.cpp targetdet.cpp)
-set(LIBINCLUDE stereo.h targetloc.h targetdet.h)
+set(LIBSRC stereo.cpp targetloc.cpp targetdet.cpp targetlocreceiver.cpp)
+set(LIBINCLUDE stereo.h targetloc.h targetdet.h targetlocreceiver.h)
 
 if(TARGETLOC_USE_ROCK5_V4L_CAMERA)
 	list(APPEND LIBSRC rock5_V4Lcamera_backend.cpp)
@@ -53,6 +58,12 @@ if(TARGETLOC_USE_ROCK5_V4L_CAMERA)
 endif()
 
 add_library(targetloc STATIC ${LIBSRC})
+
+# expose the header file directory. so the root CMake can directly link to it.
+target_include_directories(targetloc
+  PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
 if(TARGETLOC_USE_ROCK5_V4L_CAMERA)
   target_compile_definitions(targetloc PUBLIC TARGETLOC_USE_ROCK5_V4L_CAMERA=1)
@@ -71,4 +82,6 @@ endif()
 
 include(GNUInstallDirs)
 
-add_subdirectory(targetlocviewer)
+if(TARGETLOC_BUILD_VIEWER)
+  add_subdirectory(targetlocviewer)
+endif()

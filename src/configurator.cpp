@@ -1,5 +1,6 @@
 #include "configurator.h"
 #include <chrono>
+#include <algorithm>
 
 #include "brat_math.h"
 
@@ -118,9 +119,31 @@ simResult Configurator::simulate (Task t, b2World &w)
 float Configurator::remainingSimulationTime (const Task *const t)
 {
     float distance = BOX2DRANGE;
+
+    // target range
     if (controlGoal.disturbance.isValid ())
     {
         distance = controlGoal.disturbance.getPosition ().Length ();
+
+        // pursuit forward step
+        if (controlGoal.getAffIndex () == PURSUE
+            && t != nullptr
+            && t->direction == DEFAULT) {
+            // target in current task frame
+            const b2Transform targetFromTask
+                = b2MulT (t->start,
+                          controlGoal.disturbance.pose ());
+
+            // only target ahead
+            if (targetFromTask.p.x > 0.0F)
+            {
+                // Limit one forward plan to the configured planning horizon.
+                const float forwardDistance =
+                    std::min(targetFromTask.p.x, simulationStep);
+
+                return forwardDistance / (WHEEL_SPEED_DEFAULT * MAX_SPEED);
+            }
+        }
     }
     return distance / controlGoal.action.getLinearSpeed ();
 }

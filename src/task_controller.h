@@ -134,10 +134,42 @@ class Reactive_Controller : public Controller
                             std::vector<vertexDescriptor> &plan);
 };
 
+/**
+ * @brief provides the net number of turn steps actually executed.
+ *
+ * Positive balance represents executed LEFT steps and
+ * negative balance represents executed RIGHT steps.
+ */
+class TurnStepSource
+{
+  public:
+    virtual ~TurnStepSource () = default;
+    virtual int getTurnStepBalance () const = 0;
+};
+
 class OpenLoopController : public Controller
 {
+
+    // final heading is recovered from executed motion, not target side.
+    bool finalHeadingRecoveryEnabled = false;
+    const TurnStepSource *turnStepSource = nullptr;
+
+    // reduce accumulated turning to the shortest equivalent rotation.
+    int normalizedTurnStepBalance () const;
+
+    public:
     OpenLoopController () = default;
     virtual ~OpenLoopController () = default;
+
+    /**
+     * @brief enable final heading recovery from executed turn steps.
+     */
+    void enableFinalHeadingRecovery (const TurnStepSource *source)
+    {
+        finalHeadingRecoveryEnabled = source != nullptr;
+        turnStepSource = source;
+    }
+
     Task next_task (Task currentTask, const Task &controlGoal,
                     const TransitionSystem &g,
                     std::vector<vertexDescriptor> &current_vertices,

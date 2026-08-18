@@ -33,8 +33,12 @@ class Configurator
     Task controlGoal;
     CoordinateContainer data2fp;
     TransitionSystem transitionSystem = TransitionSystem (1);
+
     WorldBuilder *worldBuilder = new WorldBuilder ();
+    bool ownsWorldBuilder = true;
     vertexDescriptor currentVertex = MOVING_VERTEX;
+
+
     edgeDescriptor movingEdge = edgeDescriptor (), currentEdge = movingEdge;
 
   public:
@@ -42,10 +46,16 @@ class Configurator
 
     Configurator (Task _task) { init (_task); }
 
+   /**
+   * @brief Configurator destructor, deletes worldbuilder if it was created by the configurator
+   */
     virtual ~Configurator ()
     {
-        delete worldBuilder;
-        worldBuilder = NULL;
+        if (ownsWorldBuilder)
+        {
+            delete worldBuilder;
+        }
+            worldBuilder = NULL;
     }
 
     /**
@@ -274,11 +284,12 @@ class Configurator
 
     void register_worldBuilder (WorldBuilder *wb)
     {
-        if (worldBuilder)
+        if (ownsWorldBuilder && worldBuilder)
         {
             delete worldBuilder;
         }
         worldBuilder = wb;
+        ownsWorldBuilder = false;
     }
 
     b2Transform get_start (const Task *const t)
